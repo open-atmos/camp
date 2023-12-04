@@ -77,7 +77,7 @@ module camp_aero_rep_single_particle_layers
     !! aerosol representaiton
     type(string_t), allocatable, private :: unique_names_(:)
     !> Layer names, ordered inner-most to outer-most
-    type(string_t), allocatable, private :: layer_names(:)
+    type(string_t), allocatable, private :: layer_names_(:)
     !> First state id for the representation (only used during initialization)
     integer(kind=i_kind) :: state_id_start = -99999
   contains
@@ -328,8 +328,8 @@ contains
                                            cover_names_unordered)
 
     ! set the layer names
-    allocate(this%layer_names(size(ordered_layer_id)))
-    this%layer_names(:) = layer_names_unordered(ordered_layer_id(:))
+    allocate(this%layer_names_(size(ordered_layer_id)))
+    this%layer_names_(:) = layer_names_unordered(ordered_layer_id(:))
 
     ! Allocate condensed data arrays
     num_int_param = NUM_INT_PROP_ + 2 * layers%size() + 3 * num_phases
@@ -477,101 +477,9 @@ contains
     integer(kind=i_kind), optional, intent(in) :: tracer_type
     !> Aerosol-phase species name
     character(len=*), optional, intent(in) :: spec_name
-#if 0
-    integer(kind=i_kind) :: num_spec 
-    integer(kind=i_kind) :: i_part, i_spec, j_spec
-    integer(kind=i_kind) :: i_layer, i_phase, i_phase_layer
-    integer(kind=i_kind) :: curr_tracer_type
-    character(len=:), allocatable :: curr_layer_name
-    character(len=:), allocatable :: curr_phase_name
-    type(string_t), allocatable :: spec_names(:)
 
-    ! Copy saved unique names when no filters are included
-    ! TODO: find out if needed - not in modal/binned
-    if (.not. present(layer_name) .and. &
-        .not. present(phase_name) .and. &
-        .not. present(tracer_type) .and. &
-        .not. present(spec_name) .and. &
-        allocated(this%unique_names_)) then
-      unique_names = this%unique_names_
-      return
-    end if
+    allocate(unique_names(0))
 
-    ! Loop through layers and count number of unique names 
-    ! for one particle
-    ! Need to know how many spec in each layer
-    ! Count the number of unique names
-    num_spec = 0
-    do i_layer = 1, TOTAL_NUM_LAYERS_
-      do i_phase = 1, TOTAL_NUM_PHASE_
-        curr_layer_name = this%aero_layer_set_names(i_layer)
-        curr_phase_name = this%aero_phase(i_phase)%val%name()
-        if (present(phase_name).and.present(layer_name)) then
-          if ((phase_name.ne.curr_phase_name).or. &
-             (layer_name.ne.curr_layer_name)) cycle
-        end if
-        if (present(spec_name).or.present(tracer_type)) then
-          spec_names = this%aero_phase(i_phase)%val%get_species_names()
-          do j_spec = 1, size(spec_names)
-            curr_tracer_type = &
-                    this%aero_phase(i_phase)%val%get_species_type( &
-                    spec_names(j_spec)%string)
-            if (present(spec_name)) then
-              if (spec_name.ne.spec_names(j_spec)%string) cycle
-            end if
-            if (present(tracer_type)) then
-              if (tracer_type.ne.curr_tracer_type) cycle
-            end if
-            num_spec = num_spec + 1
-          end do
-        deallocate(spec_names)
-        else
-          num_spec = num_spec + this%aero_phase(i_phase)%val%size()
-        end if
-      end do
-    end do
-
-    ! Allocate space for the unique names and assign them
-    allocate(unique_names(num_spec*MAX_PARTICLES_))
-    i_spec = 1
-    do i_part = 1, MAX_PARTICLES_
-      do i_layer = 1, TOTAL_NUM_LAYERS_
-        do i_phase = 1, TOTAL_NUM_PHASE_
-          curr_layer_name = this%aero_layer_set_names(i_layer)
-          ! TODO - how do i initialize aero_phase_layer
-          !aero_phase_layer = &
-          !     (this%aero_phase(LAYER_STATE_ID_(i_layer)): &
-          !     this%aero_phase(LAYER_STATE_ID_(i_layer+1)))
-          do i_phase_layer = 1, size(aero_phase_layer)
-            ! what is aero_phase_layer?
-            !curr_phase_name = aero_phase_layer(i_phase_layer)%val%name()
-            if (present(phase_name).and.present(layer_name)) then
-              if ((phase_name.ne.curr_phase_name).or. &
-                 (layer_name.ne.curr_layer_name)) cycle
-            end if
-            spec_names = this%aero_phase_layer(i_phase_layer)%val%get_species_names()
-            num_spec = this%aero_phase_layer(i_phase_layer)%val%size()
-            do j_spec = 1, num_spec
-              curr_tracer_type = &
-                      this%aero_phase_layer(i_phase_layer)%val%get_species_type( &
-                      spec_names(j_spec)%string)
-              if (present(spec_name)) then
-                if (spec_name.ne.spec_names(j_spec)%string) cycle
-              end if
-              if (present(tracer_type)) then
-                if (tracer_type.ne.curr_tracer_type) cycle
-              end if
-              unique_names(i_spec)%string = 'P'//trim(integer_to_string(i_part))//&
-                      '.'//curr_layer_name//'.'//curr_phase_name//'.'//&
-                      spec_names(j_spec)%string
-              i_spec = i_spec + 1
-            end do
-          end do
-        end do
-      end do
-      deallocate(spec_names)
-    end do
-#endif
   end function unique_names
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -694,22 +602,21 @@ contains
 
     !> Aerosol representation data
     type(aero_rep_single_particle_layers_t), intent(inout) :: this
-#if 0
+
     if (allocated(this%rep_name)) deallocate(this%rep_name)
     if (allocated(this%aero_phase)) then
       ! The core will deallocate the aerosol phases
       call this%aero_phase(:)%dereference()
       deallocate(this%aero_phase)
     end if
-    if (allocated(this%aero_layer)) then
-      ! The core will deallocate the aerosol layers
-      call this%aero_layer(:)%dereference()
-      deallocate(this%aero_layer)
-    end if
+    if (allocated(this%unique_names_)) deallocate(this%unique_names_)
+    if (allocated(this%layer_names_)) deallocate(this%layer_names_)
     if (associated(this%property_set)) deallocate(this%property_set)
-    if (allocated(this%condensed_data_real)) deallocate(this%condensed_data_real)
-    if (allocated(this%condensed_data_int)) deallocate(this%condensed_data_int)
-#endif
+    if (allocated(this%condensed_data_real)) &
+        deallocate(this%condensed_data_real)
+    if (allocated(this%condensed_data_int)) &
+        deallocate(this%condensed_data_int)
+
   end subroutine finalize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
