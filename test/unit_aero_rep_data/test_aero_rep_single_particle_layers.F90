@@ -105,6 +105,7 @@ contains
     deallocate(camp_solver_data)
 
     call test_ordered_layer_ids()
+    call test_config_read()
 
   end function run_camp_aero_rep_data_tests
 
@@ -144,6 +145,81 @@ contains
     call assert(721784428, layer_names(ordered_ids(4))%string .eq. correct_layer_names(4)%string)
 
   end subroutine test_ordered_layer_ids
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Test that a configuration ends up generating unique names in the correct
+  !! order
+  subroutine test_config_read()
+#ifdef CAMP_USE_JSON
+
+    type(camp_core_t), pointer :: camp_core
+    class(aero_rep_data_t), pointer :: aero_rep
+
+    type(string_t), allocatable :: file_list(:), unique_names(:)
+    character(len=:), allocatable :: rep_name
+    integer :: i_name
+
+    ! create the camp core from test data
+    allocate(file_list(1))
+    file_list(1)%string = &
+            'test_run/unit_aero_rep_data/test_aero_rep_single_particle_layers.json'
+    camp_core => camp_core_t()
+    call camp_core%load(file_list)
+    call camp_core%initialize()
+
+    ! get the aerosol representation to test
+    rep_name = "single-particle with layers"
+    call assert_msg(773918149, &
+              camp_core%get_aero_rep(rep_name, aero_rep), rep_name)
+    call assert_msg(372407009, associated(aero_rep), rep_name)
+    select type (aero_rep)
+      type is (aero_rep_single_particle_layers_t)
+      class default
+        call die_msg(519535557, rep_name)
+    end select
+    
+    unique_names = aero_rep%unique_names()
+    call assert(551749649, size( unique_names ) .eq. 36)
+    call assert(112328249, unique_names(1)%string .eq. "P1.bottom bread.bread.wheat")
+    call assert(124534441, unique_names(2)%string .eq. "P1.bottom bread.bread.water")
+    call assert(519328035, unique_names(3)%string .eq. "P1.bottom bread.bread.salt")
+    call assert(349171131, unique_names(4)%string .eq. "P1.filling.jam.rasberry")
+    call assert(179014227, unique_names(5)%string .eq. "P1.filling.jam.honey")
+    call assert(626382073, unique_names(6)%string .eq. "P1.filling.jam.sugar")
+    call assert(173749920, unique_names(7)%string .eq. "P1.filling.jam.lemon")
+    call assert(286068265, unique_names(8)%string .eq. "P1.filling.almond butter.almonds")
+    call assert(680861859, unique_names(9)%string .eq. "P1.filling.almond butter.sugar")
+    call assert(293238106, unique_names(10)%string .eq. "P1.top bread.bread.wheat")
+    call assert(405556451, unique_names(11)%string .eq. "P1.top bread.bread.water")
+    call assert(235399547, unique_names(12)%string .eq. "P1.top bread.bread.salt")
+    call assert(347717892, unique_names(13)%string .eq. "P2.bottom bread.bread.wheat")
+    call assert(512610489, unique_names(14)%string .eq. "P2.bottom bread.bread.water")
+    call assert(342453585, unique_names(15)%string .eq. "P2.bottom bread.bread.salt")
+    call assert(737247179, unique_names(16)%string .eq. "P2.filling.jam.rasberry")
+    call assert(567090275, unique_names(17)%string .eq. "P2.filling.jam.honey")
+    call assert(114458122, unique_names(18)%string .eq. "P2.filling.jam.sugar")
+    call assert(844301217, unique_names(19)%string .eq. "P2.filling.jam.lemon")
+    call assert(109193815, unique_names(20)%string .eq. "P2.filling.almond butter.almonds")
+    call assert(339094812, unique_names(21)%string .eq. "P2.filling.almond butter.sugar")
+    call assert(168937908, unique_names(22)%string .eq. "P2.top bread.bread.wheat")
+    call assert(616305754, unique_names(23)%string .eq. "P2.top bread.bread.water")
+    call assert(676049847, unique_names(24)%string .eq. "P2.top bread.bread.salt")
+    call assert(505892943, unique_names(25)%string .eq. "P3.bottom bread.bread.wheat")
+    call assert(670785540, unique_names(26)%string .eq. "P3.bottom bread.bread.water")
+    call assert(900686537, unique_names(27)%string .eq. "P3.bottom bread.bread.salt")
+    call assert(730529633, unique_names(28)%string .eq. "P3.filling.jam.rasberry")
+    call assert(612946981, unique_names(29)%string .eq. "P3.filling.jam.honey")
+    call assert(225323228, unique_names(30)%string .eq. "P3.filling.jam.sugar")
+    call assert(672691074, unique_names(31)%string .eq. "P3.filling.jam.lemon")
+    call assert(837583671, unique_names(32)%string .eq. "P3.filling.almond butter.almonds")
+    call assert(102476269, unique_names(33)%string .eq. "P3.filling.almond butter.sugar")
+    call assert(614852515, unique_names(34)%string .eq. "P3.top bread.bread.wheat")
+    call assert(779745112, unique_names(35)%string .eq. "P3.top bread.bread.water")
+    call assert(109646110, unique_names(36)%string .eq. "P3.top bread.bread.salt")
+
+#endif
+  end subroutine test_config_read
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

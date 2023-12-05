@@ -419,12 +419,13 @@ void aero_rep_single_particle_print(int *aero_rep_int_data,
   printf("\n\nEnd single particle aerosol representation\n");
   return;
 }
+#endif
 
 /** \brief Create update data for new particle number
  *
  * \return Pointer to a new number update data object
  */
-void *aero_rep_single_particle_create_number_update_data() {
+void *aero_rep_single_particle_layers_create_number_update_data() {
   int *update_data = (int *)malloc(3 * sizeof(int) + sizeof(double));
   if (update_data == NULL) {
     printf("\n\nERROR allocating space for number update data\n\n");
@@ -440,7 +441,7 @@ void *aero_rep_single_particle_create_number_update_data() {
  * \param particle_id Id of the computational particle
  * \param number_conc New particle number (#/m3)
  */
-void aero_rep_single_particle_set_number_update_data__n_m3(void *update_data,
+void aero_rep_single_particle_layers_set_number_update_data__n_m3(void *update_data,
                                                            int aero_rep_id,
                                                            int particle_id,
                                                            double number_conc) {
@@ -454,4 +455,3 @@ void aero_rep_single_particle_set_number_update_data__n_m3(void *update_data,
   *new_number_conc = number_conc;
 }
 
-#endif

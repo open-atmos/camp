@@ -66,7 +66,7 @@ module camp_aero_rep_single_particle_layers
   integer(kind=i_kind), parameter, public :: UPDATE_NUMBER_CONC = 0
 
   public :: aero_rep_single_particle_layers_t, &
-            aero_rep_update_data_single_particle_number_t, &
+            aero_rep_update_data_single_particle_layers_number_t, &
             ordered_layer_ids
 
   !> Single particle aerosol representation
@@ -146,7 +146,7 @@ module camp_aero_rep_single_particle_layers
 
   !> Single particle update number concentration object
   type, extends(aero_rep_update_data_t) :: &
-            aero_rep_update_data_single_particle_number_t
+            aero_rep_update_data_single_particle_layers_number_t
   private
     !> Flag indicating whether the update data is allocated
     logical :: is_malloced = .false.
@@ -165,21 +165,21 @@ module camp_aero_rep_single_particle_layers
     procedure :: internal_bin_unpack => internal_bin_unpack_number
     !> Finalize the number update data
     final :: update_data_number_finalize
-  end type aero_rep_update_data_single_particle_number_t
+  end type aero_rep_update_data_single_particle_layers_number_t
 
   !> Interface to c aerosol representation functions
   interface
 
     !> Allocate space for a number update
-    function aero_rep_single_particle_create_number_update_data() &
+    function aero_rep_single_particle_layers_create_number_update_data() &
               result (update_data) bind (c)
       use iso_c_binding
       !> Allocated update_data object
       type(c_ptr) :: update_data
-    end function aero_rep_single_particle_create_number_update_data
+    end function aero_rep_single_particle_layers_create_number_update_data
 
     !> Set a new particle number concentration
-    subroutine aero_rep_single_particle_set_number_update_data__n_m3( &
+    subroutine aero_rep_single_particle_layers_set_number_update_data__n_m3( &
               update_data, aero_rep_unique_id, particle_id, number_conc) &
               bind (c)
       use iso_c_binding
@@ -191,7 +191,7 @@ module camp_aero_rep_single_particle_layers
       integer(kind=c_int), value :: particle_id
       !> New number (m)
       real(kind=c_double), value :: number_conc
-    end subroutine aero_rep_single_particle_set_number_update_data__n_m3
+    end subroutine aero_rep_single_particle_layers_set_number_update_data__n_m3
 
     !> Free an update data object
     pure subroutine aero_rep_free_update_data(update_data) bind (c)
@@ -242,7 +242,8 @@ contains
     ! layer
     integer(kind=i_kind), allocatable :: ordered_layer_id(:)
 
-    character(len=:), allocatable :: key_name, layer_covers, phase_name
+    character(len=:), allocatable :: key_name, layer_name, layer_covers, &
+                                     phase_name
     type(property_t), pointer :: layers, layer
     type(property_ptr), allocatable :: phases(:)
     integer(kind=i_kind) :: i_particle, i_phase, i_layer, i_aero, curr_id
@@ -278,19 +279,19 @@ contains
     call layers%iter_reset()
     do i_layer = 1, layers%size()
 
-      ! Get the layer name
-      call assert(364496472, layers%get_key(key_name))
-      call assert_msg(784799080, len(key_name).gt.0, "Missing layer "// &
-              "name in single-particle layer aerosol representation '"// &
-              this%rep_name//"'")
-      layer_names_unordered(i_layer)%string = key_name
-
       ! Get the layer properties
       call assert_msg(303808978, layers%get_property_t(val=layer), &
               "Invalid structure for layer '"// &
               layer_names_unordered(i_layer)%string// &
               "' in single-particle layer representation '"// &
               this%rep_name//"'")
+
+      ! Get the layer name
+      key_name = "name"
+      call assert_msg(364496472, layer%get_string(key_name, layer_name), &
+              "Missing layer name in single-particle layer aerosol "// &
+              "representation '"//this%rep_name//"'")
+      layer_names_unordered(i_layer)%string = layer_name
 
       ! Get the cover name
       key_name = "covers"
@@ -304,7 +305,7 @@ contains
       ! Get the set of phases
       key_name = "phases"
       call assert_msg(647756433, &
-              layers%get_property_t(key_name, phases(i_layer)%val_), &
+              layer%get_property_t(key_name, phases(i_layer)%val_), &
               "Missing phases for layer '"// &
               layer_names_unordered(i_layer)%string// &
               "' in single-particle layer aerosol representation '"// &
@@ -359,7 +360,6 @@ contains
       ! Set the starting and ending indices for the phases in this layer
       LAYER_PHASE_START_(i_layer) = curr_phase
       LAYER_PHASE_END_(i_layer) = curr_phase + phases(j_layer)%val_%size() - 1
-      curr_phase = curr_phase + phases(j_layer)%val_%size()
 
       ! Loop through the phases and make sure they exist
       call phases(j_layer)%val_%iter_reset()
@@ -379,12 +379,13 @@ contains
           if (aero_phase_set(j_phase)%val%name() .eq. phase_name) then
             found = .true.
             do i_particle = 0, num_particles-1
-              this%aero_phase(i_particle*num_phases + i_phase) = &
+              this%aero_phase(i_particle*num_phases + curr_phase) = &
                 aero_phase_set(j_phase)
             end do
             PHASE_STATE_ID_(i_layer,i_phase) = curr_id
             PHASE_MODEL_DATA_ID_(i_layer,i_phase) = j_phase
             curr_id = curr_id + aero_phase_set(j_phase)%val%size()
+            curr_phase = curr_phase + 1
             exit
           end if
         end do
@@ -518,6 +519,7 @@ contains
     end do            
 
     ! allocate space for the unique names and assign them
+    num_spec = num_spec / MAX_PARTICLES_ ! we need per-particle value for indexing
     allocate(unique_names(num_spec*MAX_PARTICLES_))
     i_spec = 1
     do i_layer = 1, NUM_LAYERS_
@@ -606,8 +608,8 @@ contains
 
     l_unique_name%string = unique_name
     substrs = l_unique_name%split(".")
-    call assert(407537518, size( substrs ) .eq. 3 )
-    spec_name = substrs(3)%string
+    call assert(407537518, size( substrs ) .eq. 4 )
+    spec_name = substrs(4)%string
 
   end function spec_name
 
@@ -627,6 +629,7 @@ contains
 
     integer(kind=i_kind) ::  i_phase
 
+    ! TODO - this needs to be updated
     num_phase_instances = 0
     do i_phase = 1, TOTAL_NUM_PHASES_
       if (this%aero_phase(i_phase)%val%name().eq.phase_name) then
@@ -698,7 +701,7 @@ contains
     !> Aerosol representation to update
     class(aero_rep_single_particle_layers_t), intent(inout) :: this
     !> Update data object
-    class(aero_rep_update_data_single_particle_number_t), intent(out) :: &
+    class(aero_rep_update_data_single_particle_layers_number_t), intent(out) :: &
         update_data
     !> Aerosol representaiton id
     integer(kind=i_kind), intent(in) :: aero_rep_type
@@ -713,7 +716,7 @@ contains
         this%maximum_computational_particles( )
     update_data%aero_rep_type = int(aero_rep_type, kind=c_int)
     update_data%update_data = &
-      aero_rep_single_particle_create_number_update_data()
+      aero_rep_single_particle_layers_create_number_update_data()
     update_data%is_malloced = .true.
 
   end subroutine update_data_init_number
@@ -773,7 +776,7 @@ contains
   subroutine update_data_set_number__n_m3(this, particle_id, number_conc)
 
     !> Update data
-    class(aero_rep_update_data_single_particle_number_t), intent(inout) :: &
+    class(aero_rep_update_data_single_particle_layers_number_t), intent(inout) :: &
             this
     !> Computational particle index
     integer(kind=i_kind), intent(in) :: particle_id
@@ -786,7 +789,7 @@ contains
                     particle_id .le. this%maximum_computational_particles, &
                     "Invalid computational particle index: "// &
                     trim(integer_to_string(particle_id)))
-    call aero_rep_single_particle_set_number_update_data__n_m3( &
+    call aero_rep_single_particle_layers_set_number_update_data__n_m3( &
             this%get_data(), this%aero_rep_unique_id, particle_id-1, &
             number_conc)
 
@@ -799,7 +802,7 @@ contains
       result(pack_size)
 
     !> Aerosol representation update data
-    class(aero_rep_update_data_single_particle_number_t), intent(in) :: this
+    class(aero_rep_update_data_single_particle_layers_number_t), intent(in) :: this
     !> MPI communicator
     integer, intent(in) :: comm
 
@@ -816,7 +819,7 @@ contains
   subroutine internal_bin_pack_number(this, buffer, pos, comm)
 
     !> Aerosol representation update data
-    class(aero_rep_update_data_single_particle_number_t), intent(in) :: this
+    class(aero_rep_update_data_single_particle_layers_number_t), intent(in) :: this
     !> Memory buffer
     character, intent(inout) :: buffer(:)
     !> Current buffer position
@@ -844,7 +847,7 @@ contains
   subroutine internal_bin_unpack_number(this, buffer, pos, comm)
 
     !> Aerosol representation update data
-    class(aero_rep_update_data_single_particle_number_t), intent(inout) :: this
+    class(aero_rep_update_data_single_particle_layers_number_t), intent(inout) :: this
     !> Memory buffer
     character, intent(inout) :: buffer(:)
     !> Current buffer position
@@ -862,7 +865,7 @@ contains
     call camp_mpi_unpack_integer(buffer, pos, this%aero_rep_unique_id, comm)
     call assert(351557153, &
          pos - prev_position <= this%pack_size(comm))
-    this%update_data = aero_rep_single_particle_create_number_update_data()
+    this%update_data = aero_rep_single_particle_layers_create_number_update_data()
 #endif
 
   end subroutine internal_bin_unpack_number
@@ -873,7 +876,7 @@ contains
   elemental subroutine update_data_number_finalize(this)
 
     !> Update data object to free
-    type(aero_rep_update_data_single_particle_number_t), intent(inout) :: this
+    type(aero_rep_update_data_single_particle_layers_number_t), intent(inout) :: this
 
     if (this%is_malloced) call aero_rep_free_update_data(this%update_data)
 
