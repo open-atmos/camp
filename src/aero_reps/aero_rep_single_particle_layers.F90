@@ -58,6 +58,7 @@ module camp_aero_rep_single_particle_layers
 #define LAYER_PHASE_START_(l) this%condensed_data_int(NUM_INT_PROP_+l)
 #define LAYER_PHASE_END_(l) this%condensed_data_int(NUM_INT_PROP_+NUM_LAYERS_+l)
 #define TOTAL_NUM_PHASES_ (LAYER_PHASE_END_(NUM_LAYERS_))
+#define NUM_PHASES_(l) (LAYER_PHASE_END_(l)-LAYER_PHASE_START_(l)+1)
 #define PHASE_STATE_ID_(l,p) this%condensed_data_int(NUM_INT_PROP_+2*NUM_LAYERS_+LAYER_PHASE_START_(l)+p-1)
 #define PHASE_MODEL_DATA_ID_(l,p) this%condensed_data_int(NUM_INT_PROP_+2*NUM_LAYERS_+TOTAL_NUM_PHASES_+LAYER_PHASE_START_(l)+p-1)
 #define PHASE_NUM_JAC_ELEM_(l,p) this%condensed_data_int(NUM_INT_PROP_+2*NUM_LAYERS_+2*TOTAL_NUM_PHASES_+LAYER_PHASE_START_(l)+p-1)
@@ -135,6 +136,12 @@ module camp_aero_rep_single_particle_layers
     !> Get the number of Jacobian elements used in calculations of aerosol
     !! mass, volume, number, etc. for a particular phase
     procedure :: num_jac_elem
+    !> Returns the number of layers
+    procedure :: num_layers
+    !> Returns the number of phases in a layer or overall
+    procedure :: num_phases
+    !> Returns the number of state variables for a layer and phase
+    procedure :: phase_state_size
     !> Finalize the aerosol representation
     final :: finalize
   end type aero_rep_single_particle_layers_t
@@ -351,8 +358,6 @@ contains
     ! each layer in each particle, and set PHASE_STATE_ID and
     ! PHASE_MODEL_DATA_ID for each phase
     allocate(this%aero_phase(num_phases * num_particles))
-    curr_id = spec_state_id
-    this%state_id_start = spec_state_id
     curr_phase = 1
     do i_layer = 1, size(ordered_layer_id)
       j_layer = ordered_layer_id(i_layer)
@@ -360,6 +365,15 @@ contains
       ! Set the starting and ending indices for the phases in this layer
       LAYER_PHASE_START_(i_layer) = curr_phase
       LAYER_PHASE_END_(i_layer) = curr_phase + phases(j_layer)%val_%size() - 1
+
+      curr_phase = curr_phase + phases(j_layer)%val_%size()
+    end do
+
+    curr_id = spec_state_id
+    this%state_id_start = spec_state_id
+    curr_phase = 1
+    do i_layer = 1, size(ordered_layer_id)
+      j_layer = ordered_layer_id(i_layer)
 
       ! Loop through the phases and make sure they exist
       call phases(j_layer)%val_%iter_reset()
@@ -666,6 +680,78 @@ contains
     end do
 
   end function num_jac_elem
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    !> Returns the number of layers
+    integer function num_layers(this)
+
+      !> Aerosol representation data
+      class(aero_rep_single_particle_layers_t), intent(in) :: this
+
+      num_layers = NUM_LAYERS_
+
+    end function num_layers
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    !> Returns the number of phases in a layer or overall
+    integer function num_phases(this, layer)
+
+      !> Aerosol representation data
+      class(aero_rep_single_particle_layers_t), intent(in) :: this
+      !> Layer id
+      integer, optional, intent(in) :: layer
+
+      if (present(layer)) then
+        num_phases = LAYER_PHASE_END_(layer) - LAYER_PHASE_START_(layer) + 1
+      else
+        num_phases = LAYER_PHASE_END_(NUM_LAYERS_) - LAYER_PHASE_START_(1) + 1
+      end if
+
+    end function num_phases
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    !> Returns the number of state variables for a layer and phase
+    integer function phase_state_size(this, layer, phase)
+
+      use camp_util,                   only : die_msg
+
+      !> Aerosol representation data
+      class(aero_rep_single_particle_layers_t), intent(in) :: this
+      !> Layer id
+      integer, optional, intent(in) :: layer
+      !> Phase id
+      integer, optional, intent(in) :: phase
+
+      if (present(layer) .and. present(phase)) then
+        if (layer .eq. NUM_LAYERS_ .and. phase .eq. NUM_PHASES_(layer)) then
+          phase_state_size = PHASE_STATE_ID_(1,1) + PARTICLE_STATE_SIZE_ - &
+                             PHASE_STATE_ID_(layer, phase)
+        else if (phase .eq. NUM_PHASES_(layer)) then
+          phase_state_size = PHASE_STATE_ID_(layer+1, 1) - &
+                             PHASE_STATE_ID_(layer, phase)
+        else
+          phase_state_size = PHASE_STATE_ID_(layer, phase+1) - &
+                             PHASE_STATE_ID_(layer, phase)
+        end if
+      else if (present(layer)) then
+        if (layer .eq. NUM_LAYERS_) then
+          phase_state_size = PHASE_STATE_ID_(1,1) + PARTICLE_STATE_SIZE_ - &
+                             PHASE_STATE_ID_(layer, 1)
+        else
+          phase_state_size = PHASE_STATE_ID_(layer+1, 1) - &
+                             PHASE_STATE_ID_(layer, 1)
+        end if
+      else if (present(phase)) then
+        call die_msg(917793122, "Must specify layer if including phase is "// &
+                     "state size request")
+      else
+          phase_state_size = PARTICLE_STATE_SIZE_
+      end if
+
+    end function phase_state_size
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

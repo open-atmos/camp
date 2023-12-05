@@ -175,6 +175,22 @@ contains
     call assert_msg(372407009, associated(aero_rep), rep_name)
     select type (aero_rep)
       type is (aero_rep_single_particle_layers_t)
+
+        ! check dimensions of the system
+        call assert(118129615, aero_rep%num_layers() .eq. 3)
+        call assert(792039685, aero_rep%num_phases() .eq. 4)
+        call assert(958837816, aero_rep%num_phases(1) .eq. 1)
+        call assert(230900255, aero_rep%num_phases(2) .eq. 2)
+        call assert(113317603, aero_rep%num_phases(3) .eq. 1)
+        call assert(902904791, aero_rep%phase_state_size() .eq. 12)
+        call assert(154362297, aero_rep%phase_state_size(layer=1) .eq. 3)
+        call assert(266680642, aero_rep%phase_state_size(layer=2) .eq. 6)
+        call assert(714048488, aero_rep%phase_state_size(layer=3) .eq. 3)
+        call assert(326424735, aero_rep%phase_state_size(layer=1,phase=1) .eq. 3)
+        call assert(491317332, aero_rep%phase_state_size(layer=2,phase=1) .eq. 4)
+        call assert(603635677, aero_rep%phase_state_size(layer=2,phase=2) .eq. 2)
+        call assert(768528274, aero_rep%phase_state_size(layer=3,phase=1) .eq. 3)
+
       class default
         call die_msg(519535557, rep_name)
     end select
