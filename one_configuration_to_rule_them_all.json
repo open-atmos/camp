@@ -1,0 +1,305 @@
+{
+  "camp-data": [
+    {
+      "type": "RELATIVE_TOLERANCE",
+      "value": 1.0e-30
+    },
+    {
+      "name": "A",
+      "type": "CHEM_SPEC",
+      "absolute tolerance": 1.0e-30
+    },
+    {
+      "name": "B",
+      "type": "CHEM_SPEC",
+      "absolute tolerance": 1.0e-30
+    },
+    {
+      "name": "C",
+      "type": "CHEM_SPEC",
+      "absolute tolerance": 1.0e-30
+    },
+    {
+      "name": "H2O2",
+      "type": "CHEM_SPEC",
+      "HLC(298K) [M Pa-1]": 1.011596348,
+      "HLC exp factor [K]": 6340,
+      "diffusion coeff [m2 s-1]": 1.46E-05,
+      "N star": 1.74,
+      "molecular weight [kg mol-1]": 0.0340147,
+      "density [kg m-3]": 1000.0,
+      "absolute tolerance": 1.0e-10
+    },
+    {
+      "name": "ethanol",
+      "type": "CHEM_SPEC",
+      "diffusion coeff [m2 s-1]": 0.95E-05,
+      "N star": 2.55,
+      "molecular weight [kg mol-1]": 0.04607,
+      "absolute tolerance": 1.0e-20
+    },
+    {
+      "name": "ethanol_aq",
+      "type": "CHEM_SPEC",
+      "phase": "AEROSOL",
+      "molecular weight [kg mol-1]": 0.04607,
+      "density [kg m-3]": 1000.0,
+      "absolute tolerance": 1.0e-20
+    },
+    {
+      "name": "H2O2_aq",
+      "type": "CHEM_SPEC",
+      "phase": "AEROSOL",
+      "molecular weight [kg mol-1]": 0.0340147,
+      "density [kg m-3]": 1000.0,
+      "absolute tolerance": 1.0e-10
+    },
+    {
+      "name": "H2O_aq",
+      "type": "CHEM_SPEC",
+      "phase": "AEROSOL",
+      "density [kg m-3]": 1000.0,
+      "molecular weight [kg mol-1]": 0.01801
+    },
+    {
+      "name": "aqueous aerosol",
+      "type": "AERO_PHASE",
+      "species": [
+        "H2O2_aq",
+        "H2O_aq",
+        "ethanol_aq"
+      ]
+    },
+    {
+      "name": "aerosol stuff",
+      "type": "CHEM_SPEC",
+      "phase": "AEROSOL",
+      "molecular weight [kg mol-1]": 0.5,
+      "density [kg m-3]": 1000.0,
+      "absolute tolerance": 1.0e-20
+    },
+    {
+      "name": "more aerosol stuff",
+      "type": "CHEM_SPEC",
+      "phase": "AEROSOL",
+      "molecular weight [kg mol-1]": 0.2,
+      "density [kg m-3]": 1000.0,
+      "absolute tolerance": 1.0e-20
+    },
+    {
+      "name": "surface reacting phase",
+      "type": "AERO_PHASE",
+      "species": [
+        "aerosol stuff",
+        "more aerosol stuff"
+      ]
+    },
+    {
+      "name": "cloud",
+      "type": "AERO_PHASE",
+      "species": [
+        "B",
+        "C"
+      ]
+    },
+    {
+      "name": "CMAQ_H2O2",
+      "type": "MECHANISM",
+      "reactions": [
+        {
+          "type": "CMAQ_H2O2",
+          "reactants": {
+            "B": {}
+          },
+          "products": {
+            "C": {}
+          },
+          "k1_A": 1476.0,
+          "k1_B": 60,
+          "k1_C": -398,
+          "k2_A": 4e-20,
+          "k2_B": 1.5,
+          "k2_C": -2,
+          "time unit": "MIN"
+        },
+        {
+          "type": "CMAQ_OH_HNO3",
+          "reactants": {
+            "B": {}
+          },
+          "products": {
+            "C": {}
+          },
+          "k0_A": 1476.0,
+          "k0_B": 60,
+          "k0_C": -398,
+          "k2_A": 1350,
+          "k2_B": 58,
+          "k2_C": -450,
+          "k3_A": 4e-20,
+          "k3_B": 1.5,
+          "k3_C": -2,
+          "time unit": "MIN"
+        },
+        {
+          "type": "HL_PHASE_TRANSFER",
+          "gas-phase species": "H2O2",
+          "aerosol phase": "aqueous aerosol",
+          "aerosol-phase species": "H2O2_aq",
+          "aerosol-phase water": "H2O_aq"
+        },
+        {
+          "type": "SIMPOL_PHASE_TRANSFER",
+          "gas-phase species": "ethanol",
+          "aerosol phase": "aqueous aerosol",
+          "aerosol-phase species": "ethanol_aq",
+          "B": [
+            -1.97E+03,
+            2.91E+00,
+            1.96E-03,
+            -4.96E-01
+          ]
+        },
+        {
+          "type": "AQUEOUS_EQUILIBRIUM",
+          "aerosol phase": "aqueous aerosol",
+          "aerosol-phase water": "H2O_aq",
+          "A": 1.14e-2,
+          "C": 2300.0,
+          "k_reverse": 0.32,
+          "ion pair": "B-C",
+          "reactants": {
+            "A": {
+              "qty": 2
+            }
+          },
+          "products": {
+            "B": {},
+            "C": {}
+          }
+        },
+        {
+          "type": "CONDENSED_PHASE_ARRHENIUS",
+          "aerosol phase": "aqueous aerosol",
+          "aerosol-phase water": "H2O_aq",
+          "units": "M",
+          "reactants": {
+            "A": {},
+            "B": {}
+          },
+          "products": {
+            "C": {}
+          }
+        },
+        {
+          "type": "CONDENSED_PHASE_PHOTOLYSIS",
+          "aerosol phase": "aqueous aerosol",
+          "aerosol-phase water": "H2O_aq",
+          "units": "M",
+          "reactants": {
+            "B": {}
+          },
+          "products": {
+            "C": {}
+          },
+          "scaling factor": 12.3,
+          "photo id": "photo B"
+        },
+        {
+          "type": "EMISSION",
+          "species": "B",
+          "rxn id": "rxn B",
+          "scaling factor": 12.3
+        },
+        {
+          "type": "FIRST_ORDER_LOSS",
+          "species": "B",
+          "rxn id": "rxn B",
+          "scaling factor": 12.3
+        },
+        {
+          "type": "PHOTOLYSIS",
+          "reactants": {
+            "B": {}
+          },
+          "products": {
+            "C": {}
+          },
+          "photo id": "photo B",
+          "scaling factor": 12.3
+        },
+        {
+          "type": "SURFACE",
+          "gas-phase reactant": "foo",
+          "reaction probability": 2.0e-2,
+          "gas-phase products": {
+            "bar": {},
+            "baz": {
+              "yield": 0.4
+            }
+          },
+          "aerosol phase": "surface reacting phase"
+        },
+        {
+          "type": "TERNARY_CHEMICAL_ACTIVATION",
+          "reactants": {
+            "B": {}
+          },
+          "products": {
+            "C": {}
+          },
+          "k0_A": 1.2e-6,
+          "k0_B": 167,
+          "k0_C": 3,
+          "kinf_A": 136e6,
+          "kinf_B": 5,
+          "kinf_C": 24,
+          "Fc": 0.9,
+          "N": 0.8,
+          "time unit": "MIN"
+        },
+        {
+          "type": "TROE",
+          "reactants": {
+            "B": {}
+          },
+          "products": {
+            "C": {}
+          },
+          "k0_A": 1.2e-12,
+          "k0_B": 167,
+          "k0_C": 3,
+          "kinf_A": 136,
+          "kinf_B": 5,
+          "kinf_C": 24,
+          "Fc": 0.9,
+          "N": 0.8,
+          "time unit": "MIN"
+        },
+        {
+          "type": "WENNBERG_NO_RO2",
+          "reactants": {
+            "A": {}
+          },
+          "alkoxy products": {
+            "B": {}
+          },
+          "nitrate products": {
+            "C": {}
+          },
+          "X": 1.2e-4,
+          "Y": 167,
+          "a0": 0.15,
+          "n": 9,
+          "time unit": "MIN"
+        },
+        {
+          "type": "WET_DEPOSITION",
+          "aerosol phase": "cloud",
+          "rxn id": "rxn cloud",
+          "scaling factor": 12.3
+        }
+      ]
+    }
+  ]
+}
