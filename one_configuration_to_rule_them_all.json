@@ -108,28 +108,41 @@
       "reactions": [
         {
           "type": "CMAQ_H2O2",
-          "reactants": {
-            "B": {}
-          },
-          "products": {
-            "C": {}
-          },
+          "reactants": [
+            {
+              "speices name": "B",
+              "coeff": 1
+            }
+          ],
+          "products": [
+            {
+              "speices name": "C",
+              "coeff": 1
+            }
+          ],
           "k1_A": 1476.0,
           "k1_B": 60,
           "k1_C": -398,
           "k2_A": 4e-20,
           "k2_B": 1.5,
           "k2_C": -2,
-          "time unit": "MIN"
+          "time unit": "MIN",
+          "rxn id": "my cmaq2"
         },
         {
           "type": "CMAQ_OH_HNO3",
-          "reactants": {
-            "B": {}
-          },
-          "products": {
-            "C": {}
-          },
+          "reactants": [
+            {
+              "speices name": "B",
+              "coeff": 1
+            }
+          ],
+          "products": [
+            {
+              "speices name": "C",
+              "coeff": 1
+            }
+          ],
           "k0_A": 1476.0,
           "k0_B": 60,
           "k0_C": -398,
@@ -139,14 +152,16 @@
           "k3_A": 4e-20,
           "k3_B": 1.5,
           "k3_C": -2,
-          "time unit": "MIN"
+          "time unit": "MIN",
+          "rxn id": "my cmaq1"
         },
         {
           "type": "HL_PHASE_TRANSFER",
           "gas-phase species": "H2O2",
           "aerosol phase": "aqueous aerosol",
           "aerosol-phase species": "H2O2_aq",
-          "aerosol-phase water": "H2O_aq"
+          "aerosol-phase water": "H2O_aq",
+          "rxn id": "my henry's law"
         },
         {
           "type": "SIMPOL_PHASE_TRANSFER",
@@ -158,7 +173,8 @@
             2.91E+00,
             1.96E-03,
             -4.96E-01
-          ]
+          ],
+          "rxn id": "my simpl"
         },
         {
           "type": "AQUEOUS_EQUILIBRIUM",
@@ -168,64 +184,94 @@
           "C": 2300.0,
           "k_reverse": 0.32,
           "ion pair": "B-C",
-          "reactants": {
-            "A": {
-              "qty": 2
+          "reactants": [
+            {
+              "speices name": "A",
+              "coeff": 2
             }
-          },
-          "products": {
-            "B": {},
-            "C": {}
-          }
+          ],
+          "products": [
+            {
+              "speices name": "B",
+              "coeff": 1
+            },
+            {
+              "speices name": "C",
+              "coeff": 1
+            }
+          ],
+          "rxn id": "my aqueous eq"
         },
         {
           "type": "CONDENSED_PHASE_ARRHENIUS",
           "aerosol phase": "aqueous aerosol",
           "aerosol-phase water": "H2O_aq",
           "units": "M",
-          "reactants": {
-            "A": {},
-            "B": {}
-          },
-          "products": {
-            "C": {}
-          }
+          "reactants": [
+            {
+              "speices name": "A",
+              "coeff": 1
+            },
+            {
+              "speices name": "B",
+              "coeff": 1
+            }
+          ],
+          "products": [
+            {
+              "speices name": "C",
+              "coeff": 1
+            }
+          ],
+          "rxn id": "my condensed arrhenius"
         },
         {
           "type": "CONDENSED_PHASE_PHOTOLYSIS",
           "aerosol phase": "aqueous aerosol",
           "aerosol-phase water": "H2O_aq",
           "units": "M",
-          "reactants": {
-            "B": {}
-          },
-          "products": {
-            "C": {}
-          },
+          "reactants": [
+            {
+              "speices name": "B",
+              "coeff": 1
+            }
+          ],
+          "products": [
+            {
+              "speices name": "C",
+              "coeff": 1
+            }
+          ],
           "scaling factor": 12.3,
-          "photo id": "photo B"
+          "rxn id": "condensed photo B"
         },
         {
           "type": "EMISSION",
           "species": "B",
-          "rxn id": "rxn B",
+          "rxn id": "my emission",
           "scaling factor": 12.3
         },
         {
           "type": "FIRST_ORDER_LOSS",
           "species": "B",
-          "rxn id": "rxn B",
+          "rxn id": "my first order loss",
           "scaling factor": 12.3
         },
         {
           "type": "PHOTOLYSIS",
-          "reactants": {
-            "B": {}
-          },
-          "products": {
-            "C": {}
-          },
-          "photo id": "photo B",
+          "reactants": [
+            {
+              "speices name": "B",
+              "coeff": 1
+            }
+          ],
+          "products": [
+            {
+              "speices name": "C",
+              "coeff": 1
+            }
+          ],
+          "rxn id": "photo B",
           "scaling factor": 12.3
         },
         {
@@ -238,16 +284,23 @@
               "yield": 0.4
             }
           },
-          "aerosol phase": "surface reacting phase"
+          "aerosol phase": "surface reacting phase",
+          "rxn id": "my surface"
         },
         {
           "type": "TERNARY_CHEMICAL_ACTIVATION",
-          "reactants": {
-            "B": {}
-          },
-          "products": {
-            "C": {}
-          },
+          "reactants": [
+            {
+              "speices name": "B",
+              "coeff": 1
+            }
+          ],
+          "products": [
+            {
+              "speices name": "C",
+              "coeff": 1
+            }
+          ],
           "k0_A": 1.2e-6,
           "k0_B": 167,
           "k0_C": 3,
@@ -256,16 +309,23 @@
           "kinf_C": 24,
           "Fc": 0.9,
           "N": 0.8,
-          "time unit": "MIN"
+          "time unit": "MIN",
+          "rxn id": "my ternary"
         },
         {
           "type": "TROE",
-          "reactants": {
-            "B": {}
-          },
-          "products": {
-            "C": {}
-          },
+          "reactants": [
+            {
+              "speices name": "B",
+              "coeff": 1
+            }
+          ],
+          "products": [
+            {
+              "speices name": "C",
+              "coeff": 1
+            }
+          ],
           "k0_A": 1.2e-12,
           "k0_B": 167,
           "k0_C": 3,
@@ -274,30 +334,62 @@
           "kinf_C": 24,
           "Fc": 0.9,
           "N": 0.8,
-          "time unit": "MIN"
+          "time unit": "MIN",
+          "rxn id": "my troe"
         },
         {
           "type": "WENNBERG_NO_RO2",
-          "reactants": {
-            "A": {}
-          },
-          "alkoxy products": {
-            "B": {}
-          },
-          "nitrate products": {
-            "C": {}
-          },
+          "reactants": [
+            {
+              "speices name": "A",
+              "coeff": 1
+            }
+          ],
+          "alkoxy products": [
+            {
+              "speices name": "B",
+              "coeff": 1
+            }
+          ],
+          "nitrate products": [
+            {
+              "speices name": "C",
+              "coeff": 1
+            }
+          ],
           "X": 1.2e-4,
           "Y": 167,
           "a0": 0.15,
           "n": 9,
-          "time unit": "MIN"
+          "time unit": "MIN",
+          "rxn id": "my wennberg"
         },
         {
           "type": "WET_DEPOSITION",
           "aerosol phase": "cloud",
           "rxn id": "rxn cloud",
           "scaling factor": 12.3
+        },
+        {
+          "type" : "ARRHENIUS",
+          "reactants": [
+            {
+              "speices name": "B",
+              "coeff": 1
+            }
+          ],
+          "products": [
+            {
+              "speices name": "C",
+              "coeff": 1
+            }
+          ],
+          "A": 32.1,
+          "B": -2.3,
+          "C": 102.3,
+          "D": 63.4,
+          "E": -1.3,
+          "rxn id": "my arrhenius"
         }
       ]
     }
