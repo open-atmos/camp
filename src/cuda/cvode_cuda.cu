@@ -665,14 +665,6 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
   } else {
     yout[i] = 0.0;
   }
-  //print_double(y,86,"y646");
-  //print_double(md->J_state,86,"J_state644");
-  //print_double(md->J_tmp,86,"J_tmp643");
-  //print_double(md->J_deriv,86,"J_deriv644");
-  //print_double(md->J_tmp2,86,"J_tmp2645");
-  //print_double(deriv_data.loss_rates,86,"loss_rates");
-  //print_double(deriv_data.production_rates,86,"production_rates");
-  //print_double(yout,86,"deriv_data645");
   __syncthreads();
 }
 
