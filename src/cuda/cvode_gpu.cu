@@ -12,13 +12,6 @@ extern "C" {
 #include <mpi.h>
 #endif
 
-void print_double_cv_gpu(double *x, int len, const char *s){
-#ifdef USE_PRINT_ARRAYS
-  for (int i=0; i<len; i++){
-    printf("%s[%d]=%.17le\n",s,i,x[i]);
-  }
-#endif
-}
 
 int cvHandleFailure_gpu(CVodeMem cv_mem, int flag){
   switch (flag) {
@@ -617,10 +610,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
                     cudaMemcpyHostToDevice, stream);
     cudaMemcpyAsync(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice, stream);
   }
-  //double *zn0 = NV_DATA_S(cv_mem->cv_zn[0]);
-  //print_double_cv_gpu(zn0,86,"dzn807");
-  //double *zn1 = NV_DATA_S(cv_mem->cv_zn[1]);
-  //print_double_cv_gpu(zn1,86,"dzn825");
   cvodeRun(mGPU,stream);
   cudaMemcpyAsync(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
   cudaMemcpyAsync(youtArray, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);

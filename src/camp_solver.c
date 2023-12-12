@@ -594,16 +594,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     aero_rep_update_env_state(md);
     sub_model_update_env_state(md);
     rxn_update_env_state(md);
-    //if(i_cell==0){
-      //print_double(md->grid_cell_env,CAMP_NUM_ENV_PARAM_,"env689");
-      //print_double(md->grid_cell_state,n_state_var,"state688");
-      //double *yp = N_VGetArrayPointer(sd->y);
-      //print_double(yp,md->n_per_cell_dep_var,"y660");
-    //}
-    //print_double(md->grid_cell_env,CAMP_NUM_ENV_PARAM_,"env689");
-    //double *yp = N_VGetArrayPointer(sd->y)+i_cell*md->n_per_cell_dep_var;
-    //print_double(yp,md->n_per_cell_dep_var,"y660");
-    //print_double(md->grid_cell_state,md->n_per_cell_state_var,"state688");
   }
 
   //Reset jac solving, otherwise values from previous iteration would be carried to current iteration
@@ -919,7 +909,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
   N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
 
-  //print_double(md->total_state,n_state_var,"state602");
   // Loop through the grid cells and update the derivative array
   for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
     // Set the grid cell state pointers
@@ -952,20 +941,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     } else {
       time_derivative_output(sd->time_deriv, deriv_data, NULL,
                              sd->output_precision);
-    }
-    if(i_cell==0) {
-      //double *yp = N_VGetArrayPointer(y);
-      //print_double(yp,86,"y646");
-      //double *J_state = N_VGetArrayPointer(md->J_state);
-      //print_double(J_state,86,"J_state644");
-      //print_double(jac_deriv_data,86,"J_tmp643");
-      //double *J_deriv = N_VGetArrayPointer(md->J_deriv);
-      //print_double(J_deriv,86,"J_deriv644");
-      //double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2);
-      //print_double(J_tmp2,86,"J_tmp2645");
-      //print_double(sd->time_deriv.loss_rates,sd->time_deriv.num_spec,"loss_rates");
-      //print_double(sd->time_deriv.production_rates,sd->time_deriv.num_spec,"production_rates");
-      //print_double(deriv_data,86,"deriv_data645");
     }
 #ifdef CAMP_DEBUG
     sd->max_loss_precision = time_derivative_max_loss_precision(sd->time_deriv);
