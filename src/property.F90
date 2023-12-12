@@ -18,7 +18,7 @@ module camp_property
   implicit none
   private
 
-  public :: property_t
+  public :: property_t, property_ptr
 
   !> Property data
   !!
@@ -77,6 +77,11 @@ module camp_property
   interface property_t
     procedure :: constructor
   end interface property_t
+
+  ! Pointer type for property_t
+  type property_ptr
+    type(property_t), pointer :: val_ => null()
+  end type property_ptr
 
   !> Property link data
   !!

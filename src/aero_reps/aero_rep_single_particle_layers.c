@@ -20,20 +20,21 @@
 
 #define UPDATE_NUMBER 0
 
-#define TOTAL_NUM_PHASES_ int_data[0]
-#define TOTAL_NUM_LAYERS_ int_data[1]
-#define AERO_REP_ID_ int_data[2]
-#define MAX_PARTICLES_ int_data[3]
-#define PARTICLE_STATE_SIZE_ int_data[4]
+#define NUM_LAYERS_ int_data[0]
+#define AERO_REP_ID_ int_data[1]
+#define MAX_PARTICLES_ int_data[2]
+#define PARTICLE_STATE_SIZE_ int_data[3]
 #define NUMBER_CONC_(x) aero_rep_env_data[x]
-#define NUM_INT_PROP_ 5 
+#define NUM_INT_PROP_ 4
 #define NUM_FLOAT_PROP_ 0
 #define NUM_ENV_PARAM_ MAX_PARTICLES_
-#define NUM_PHASE_(l) (int_data[NUM_INT_PROP_ + l] - 1)
-#define PHASE_STATE_ID_(p) (int_data[NUM_INT_PROP_ + TOTAL_NUM_PHASES_ + p] - 1)
-#define LAYER_STATE_ID_(l) (int_data[NUM_INT_PROP_ + TOTAL_NUM_LAYERS_ + l + 1] - 1)
-#define PHASE_MODEL_DATA_ID_(p) (int_data[NUM_INT_PROP_ + TOTAL_NUM_PHASES_ + p] - 1)
-#define PHASE_NUM_JAC_ELEM_(p) (int_data[NUM_INT_PROP_ + 2*TOTAL_NUM_PHASES_ + p] - 1)
+#define LAYER_PHASE_START_(l) (int_data[NUM_INT_PROP_+l])
+#define LAYER_PHASE_END_(l) (int_data[NUM_INT_PROP_+NUM_LAYERS_+l])
+#define TOTAL_NUM_PHASES_ (LAYER_PHASE_END_(NUM_LAYERS_-1)-LAYER_PHASE_START_(0)+1)
+#define NUM_PHASES_(l) (LAYER_PHASE_END_(l)-LAYER_PHASE_START_(l)+1)
+#define PHASE_STATE_ID_(l,p) (int_data[NUM_INT_PROP_+2*NUM_LAYERS_+LAYER_PHASE_START_(l)+p]-1)
+#define PHASE_MODEL_DATA_ID_(l,p) (int_data[NUM_INT_PROP_+2*NUM_LAYERS_+TOTAL_NUM_PHASES_+LAYER_PHASE_START_(l)+p]-1)
+#define PHASE_NUM_JAC_ELEM_(l,p) int_data[NUM_INT_PROP_+2*NUM_LAYERS_+2*TOTAL_NUM_PHASES_+LAYER_PHASE_START_(l)+p]
 #if 0
 /** \brief Flag Jacobian elements used in calcualtions of mass and volume
  *
@@ -419,12 +420,13 @@ void aero_rep_single_particle_print(int *aero_rep_int_data,
   printf("\n\nEnd single particle aerosol representation\n");
   return;
 }
+#endif
 
 /** \brief Create update data for new particle number
  *
  * \return Pointer to a new number update data object
  */
-void *aero_rep_single_particle_create_number_update_data() {
+void *aero_rep_single_particle_layers_create_number_update_data() {
   int *update_data = (int *)malloc(3 * sizeof(int) + sizeof(double));
   if (update_data == NULL) {
     printf("\n\nERROR allocating space for number update data\n\n");
@@ -440,7 +442,7 @@ void *aero_rep_single_particle_create_number_update_data() {
  * \param particle_id Id of the computational particle
  * \param number_conc New particle number (#/m3)
  */
-void aero_rep_single_particle_set_number_update_data__n_m3(void *update_data,
+void aero_rep_single_particle_layers_set_number_update_data__n_m3(void *update_data,
                                                            int aero_rep_id,
                                                            int particle_id,
                                                            double number_conc) {
@@ -454,4 +456,3 @@ void aero_rep_single_particle_set_number_update_data__n_m3(void *update_data,
   *new_number_conc = number_conc;
 }
 
-#endif

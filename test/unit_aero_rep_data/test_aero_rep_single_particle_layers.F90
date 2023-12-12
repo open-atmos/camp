@@ -104,142 +104,141 @@ contains
 
     deallocate(camp_solver_data)
 
-    call test_ordered_layer_array()
-    call test_num_phase_array()
-    call test_layer_state_id_array()
-    call test_ordered_phase_array()
+    call test_ordered_layer_ids()
+    call test_config_read()
 
   end function run_camp_aero_rep_data_tests
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   ! Tests the ordered layer array function
-  subroutine test_ordered_layer_array()
+  subroutine test_ordered_layer_ids()
 
-    type(aero_rep_single_particle_layers_t) :: aero_rep
-    character(len=50), dimension(4) :: layer_name_unordered, correct_layer_names
-    character(len=50), dimension(4) :: cover_name
-    type(string_t), allocatable :: ordered_layer_set_names(:)
+    use camp_aero_rep_single_particle_layers, only : ordered_layer_ids
+
+    type(string_t), dimension(4) :: layer_names, correct_layer_names
+    type(string_t), dimension(4) :: cover_names
+    integer, allocatable :: ordered_ids(:)
 
     ! Assemble input arguments
-    layer_name_unordered = [ character(len=50) :: 'almond butter','top bread','jam','bottom bread' ]
-    cover_name = [ character(len=50) :: 'bottom bread','jam','almond butter','none' ]
-    correct_layer_names = [ character(len=50) :: 'bottom bread','almond butter','jam','top bread' ]
+    layer_names(1)%string = 'almond butter'
+    layer_names(2)%string = 'top bread'
+    layer_names(3)%string = 'jam'
+    layer_names(4)%string = 'bottom bread'
+    cover_names(1)%string = 'bottom bread'
+    cover_names(2)%string = 'jam'
+    cover_names(3)%string = 'almond butter'
+    cover_names(4)%string = 'none'
+    correct_layer_names(1)%string = 'bottom bread'
+    correct_layer_names(2)%string = 'almond butter'
+    correct_layer_names(3)%string = 'jam'
+    correct_layer_names(4)%string = 'top bread'
 
     ! Call the function and enter inputs 
-    ordered_layer_set_names = aero_rep%ordered_layer_array(layer_name_unordered, cover_name)
-    ! check individual values:
-    call assert(903386486, ordered_layer_set_names(1)%string .eq. correct_layer_names(1))
-    call assert(468777371, ordered_layer_set_names(2)%string .eq. correct_layer_names(2))
-    call assert(487966491, ordered_layer_set_names(3)%string .eq. correct_layer_names(3))
-    call assert(721784428, ordered_layer_set_names(4)%string .eq. correct_layer_names(4))
+    ordered_ids = ordered_layer_ids(layer_names, cover_names)
 
-  end subroutine test_ordered_layer_array
+    ! check individual values:
+    call assert(476179048, size(ordered_ids) .eq. 4)
+    call assert(903386486, layer_names(ordered_ids(1))%string .eq. correct_layer_names(1)%string)
+    call assert(468777371, layer_names(ordered_ids(2))%string .eq. correct_layer_names(2)%string)
+    call assert(487966491, layer_names(ordered_ids(3))%string .eq. correct_layer_names(3)%string)
+    call assert(721784428, layer_names(ordered_ids(4))%string .eq. correct_layer_names(4)%string)
+
+  end subroutine test_ordered_layer_ids
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  ! Tests the ordered num phase array function
-  subroutine test_num_phase_array()
+  !> Test that a configuration ends up generating unique names in the correct
+  !! order
+  subroutine test_config_read()
+#ifdef CAMP_USE_JSON
 
-    type(aero_rep_single_particle_layers_t) :: aero_rep
-    character(len=50), dimension(4) :: correct_layer_names
-    character(len=50), dimension(4) :: cover_name
-    !> Num phase array input
-    integer, dimension(4) :: num_phase_array, correct_num_phase_array
-    !> Ordered num phase array output
-    integer, allocatable :: ordered_num_phase_array(:)
+    type(camp_core_t), pointer :: camp_core
+    class(aero_rep_data_t), pointer :: aero_rep
 
-    ! Assemble input arguments
-    cover_name = [ character(len=50) :: 'bottom bread','jam','almond butter','none' ]
-    correct_layer_names = [ character(len=50) :: 'bottom bread','almond butter','jam','top bread' ]
-    num_phase_array = (/ 2,2,4,3 /)
-    correct_num_phase_array = (/ 3,2,4,2 /)
+    type(string_t), allocatable :: file_list(:), unique_names(:)
+    character(len=:), allocatable :: rep_name
+    integer :: i_name
 
-    ! Call the function and enter inputs 
-    ordered_num_phase_array = aero_rep%ordered_num_phase_array(num_phase_array,&
-                              correct_layer_names, cover_name)
-    ! check individual values:
-    call assert(500109071, ordered_num_phase_array(1) .eq. correct_num_phase_array(1))
-    call assert(195255637, ordered_num_phase_array(2) .eq. correct_num_phase_array(2))
-    call assert(165185913, ordered_num_phase_array(3) .eq. correct_num_phase_array(3))
-    call assert(735490318, ordered_num_phase_array(4) .eq. correct_num_phase_array(4))
+    ! create the camp core from test data
+    allocate(file_list(1))
+    file_list(1)%string = &
+            'test_run/unit_aero_rep_data/test_aero_rep_single_particle_layers.json'
+    camp_core => camp_core_t()
+    call camp_core%load(file_list)
+    call camp_core%initialize()
 
-  end subroutine test_num_phase_array
+    ! get the aerosol representation to test
+    rep_name = "single-particle with layers"
+    call assert_msg(773918149, &
+              camp_core%get_aero_rep(rep_name, aero_rep), rep_name)
+    call assert_msg(372407009, associated(aero_rep), rep_name)
+    select type (aero_rep)
+      type is (aero_rep_single_particle_layers_t)
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        ! check dimensions of the system
+        call assert(118129615, aero_rep%num_layers() .eq. 3)
+        call assert(792039685, aero_rep%num_phases() .eq. 4)
+        call assert(958837816, aero_rep%num_phases(1) .eq. 1)
+        call assert(230900255, aero_rep%num_phases(2) .eq. 2)
+        call assert(113317603, aero_rep%num_phases(3) .eq. 1)
+        call assert(902904791, aero_rep%phase_state_size() .eq. 12)
+        call assert(154362297, aero_rep%phase_state_size(layer=1) .eq. 3)
+        call assert(266680642, aero_rep%phase_state_size(layer=2) .eq. 6)
+        call assert(714048488, aero_rep%phase_state_size(layer=3) .eq. 3)
+        call assert(326424735, aero_rep%phase_state_size(layer=1,phase=1) .eq. 3)
+        call assert(491317332, aero_rep%phase_state_size(layer=2,phase=1) .eq. 4)
+        call assert(603635677, aero_rep%phase_state_size(layer=2,phase=2) .eq. 2)
+        call assert(768528274, aero_rep%phase_state_size(layer=3,phase=1) .eq. 3)
 
-  ! Tests the layer state id array function
-  subroutine test_layer_state_id_array()
+      class default
+        call die_msg(519535557, rep_name)
+    end select
+    
+    unique_names = aero_rep%unique_names()
+    call assert(551749649, size( unique_names ) .eq. 36)
+    call assert(112328249, unique_names(1)%string .eq. "P1.bottom bread.bread.wheat")
+    call assert(124534441, unique_names(2)%string .eq. "P1.bottom bread.bread.water")
+    call assert(519328035, unique_names(3)%string .eq. "P1.bottom bread.bread.salt")
+    call assert(349171131, unique_names(4)%string .eq. "P1.filling.jam.rasberry")
+    call assert(179014227, unique_names(5)%string .eq. "P1.filling.jam.honey")
+    call assert(626382073, unique_names(6)%string .eq. "P1.filling.jam.sugar")
+    call assert(173749920, unique_names(7)%string .eq. "P1.filling.jam.lemon")
+    call assert(286068265, unique_names(8)%string .eq. "P1.filling.almond butter.almonds")
+    call assert(680861859, unique_names(9)%string .eq. "P1.filling.almond butter.sugar")
+    call assert(293238106, unique_names(10)%string .eq. "P1.top bread.bread.wheat")
+    call assert(405556451, unique_names(11)%string .eq. "P1.top bread.bread.water")
+    call assert(235399547, unique_names(12)%string .eq. "P1.top bread.bread.salt")
+    call assert(347717892, unique_names(13)%string .eq. "P2.bottom bread.bread.wheat")
+    call assert(512610489, unique_names(14)%string .eq. "P2.bottom bread.bread.water")
+    call assert(342453585, unique_names(15)%string .eq. "P2.bottom bread.bread.salt")
+    call assert(737247179, unique_names(16)%string .eq. "P2.filling.jam.rasberry")
+    call assert(567090275, unique_names(17)%string .eq. "P2.filling.jam.honey")
+    call assert(114458122, unique_names(18)%string .eq. "P2.filling.jam.sugar")
+    call assert(844301217, unique_names(19)%string .eq. "P2.filling.jam.lemon")
+    call assert(109193815, unique_names(20)%string .eq. "P2.filling.almond butter.almonds")
+    call assert(339094812, unique_names(21)%string .eq. "P2.filling.almond butter.sugar")
+    call assert(168937908, unique_names(22)%string .eq. "P2.top bread.bread.wheat")
+    call assert(616305754, unique_names(23)%string .eq. "P2.top bread.bread.water")
+    call assert(676049847, unique_names(24)%string .eq. "P2.top bread.bread.salt")
+    call assert(505892943, unique_names(25)%string .eq. "P3.bottom bread.bread.wheat")
+    call assert(670785540, unique_names(26)%string .eq. "P3.bottom bread.bread.water")
+    call assert(900686537, unique_names(27)%string .eq. "P3.bottom bread.bread.salt")
+    call assert(730529633, unique_names(28)%string .eq. "P3.filling.jam.rasberry")
+    call assert(612946981, unique_names(29)%string .eq. "P3.filling.jam.honey")
+    call assert(225323228, unique_names(30)%string .eq. "P3.filling.jam.sugar")
+    call assert(672691074, unique_names(31)%string .eq. "P3.filling.jam.lemon")
+    call assert(837583671, unique_names(32)%string .eq. "P3.filling.almond butter.almonds")
+    call assert(102476269, unique_names(33)%string .eq. "P3.filling.almond butter.sugar")
+    call assert(614852515, unique_names(34)%string .eq. "P3.top bread.bread.wheat")
+    call assert(779745112, unique_names(35)%string .eq. "P3.top bread.bread.water")
+    call assert(109646110, unique_names(36)%string .eq. "P3.top bread.bread.salt")
 
-    type(aero_rep_single_particle_layers_t) :: aero_rep
-    !> Num phase array input
-    integer, dimension(4) :: correct_num_phase_array
-    !> Correct layer state id for validating test
-    integer, dimension(5) :: correct_layer_state_id
-    !> Ordered num phase array output
-    integer, allocatable :: layer_state_id_array(:)
-
-    ! Assemble input arguments
-    correct_num_phase_array = (/ 3,2,4,2 /)
-    correct_layer_state_id = (/ 1,4,6,10,12 /)
-
-    ! Call the function and enter inputs 
-    layer_state_id_array = aero_rep%construct_layer_state_id(correct_num_phase_array)
-    ! check individual values:
-    call assert(963138391, layer_state_id_array(1) .eq. correct_layer_state_id(1))
-    call assert(947594419, layer_state_id_array(2) .eq. correct_layer_state_id(2))
-    call assert(114607250, layer_state_id_array(3) .eq. correct_layer_state_id(3))
-    call assert(062008253, layer_state_id_array(4) .eq. correct_layer_state_id(4))
-    call assert(785130714, layer_state_id_array(5) .eq. correct_layer_state_id(5))
-    print *, layer_state_id_array
-
-  end subroutine test_layer_state_id_array
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  ! Tests the ordered layer array function
-  subroutine test_ordered_phase_array()
-
-    type(aero_rep_single_particle_layers_t) :: aero_rep
-    character(len=50), dimension(4) :: correct_layer_names
-    character(len=50), dimension(4) :: cover_name
-    character(len=50), dimension(4) :: ordered_layer_set_names
-    integer, allocatable :: layer_state_id_unordered_array(:), LAYER_STATE_ID(:)
-    character(len=50), dimension(11) :: phase_name_unordered, correct_phase_name
-    type(string_t), allocatable :: ordered_phase_set_names(:)
-    ! Assemble input arguments
-    cover_name = [ character(len=50) :: 'bottom bread','jam','almond butter','none' ]
-    correct_layer_names = [ character(len=50) :: 'bottom bread','almond butter','jam','top bread' ]
-    phase_name_unordered = [character(len=50) :: 'almonds','salt','wheat','water','rasberry',&
-                                       'honey','sugar','lemon','wheat', 'water','salt']
-    correct_phase_name = [character(len=50) :: 'wheat','water','salt','almonds','salt','rasberry',&
-                                       'honey','sugar','lemon','wheat','water' ]
-    LAYER_STATE_ID = (/ 1,4,6,10,12 /)
-    layer_state_id_unordered_array = (/ 1,3,5,9,12 /)
-
-    ! Call the function and enter inputs 
-    ordered_phase_set_names = aero_rep%ordered_phase_array(cover_name,correct_layer_names,&
-           LAYER_STATE_ID,layer_state_id_unordered_array, phase_name_unordered)
-    ! check individual values:
-    call assert(339098038, ordered_phase_set_names(1)%string .eq. correct_phase_name(1))
-    call assert(199474991, ordered_phase_set_names(2)%string .eq. correct_phase_name(2))
-    call assert(457236155, ordered_phase_set_names(3)%string .eq. correct_phase_name(3))  
-    call assert(301795824, ordered_phase_set_names(4)%string .eq. correct_phase_name(4))
-    call assert(313407860, ordered_phase_set_names(5)%string .eq. correct_phase_name(5))
-    call assert(657858049, ordered_phase_set_names(6)%string .eq. correct_phase_name(6))
-    call assert(100854544, ordered_phase_set_names(7)%string .eq. correct_phase_name(7)) 
-    call assert(292581267, ordered_phase_set_names(8)%string .eq. correct_phase_name(8))
-    call assert(550954164, ordered_phase_set_names(9)%string .eq. correct_phase_name(9))
-    call assert(962490372, ordered_phase_set_names(10)%string .eq. correct_phase_name(10))
-    call assert(476629486, ordered_phase_set_names(11)%string .eq. correct_phase_name(11))
-    print *, ordered_phase_set_names(2)%string
-    print *, correct_phase_name(2)
-    print *, ordered_phase_set_names(3)%string
-    print *, correct_phase_name(3)
-
-  end subroutine test_ordered_phase_array
+#endif
+  end subroutine test_config_read
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
   !> Build aero_rep_data set
   logical function build_aero_rep_data_set_test()
 
