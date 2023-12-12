@@ -346,7 +346,6 @@ __device__ void cudaDevicemin_2(double *g_odata, double in, volatile double *sda
   unsigned int tid = threadIdx.x;
   __syncthreads();
   sdata[tid] = in;
-  __syncthreads();
   if(tid<n_shr_empty)
     sdata[tid+blockDim.x]=sdata[tid];
   __syncthreads();
@@ -360,21 +359,6 @@ __device__ void cudaDevicemin_2(double *g_odata, double in, volatile double *sda
   *g_odata = sdata[0];
   __syncthreads();
 }
-
-#ifdef DEBUG_CVODE_GPU
-__device__
-void printmin(ModelDataGPU *md,double* y, const char *s) {
-  __syncthreads();
-  extern __shared__ double flag_shr2[];
-  int tid= threadIdx.x + blockDim.x*blockIdx.x;
-  __syncthreads();
-  double min;
-  cudaDevicemin_2(&min, y[tid], flag_shr2, md->n_shr_empty);
-  __syncthreads();
-  if(tid==0)printf("%s min %le\n",s,min);
-  __syncthreads();
-}
-#endif
 
 __device__ void cudaDeviceBCGprecond_2(double* dA, int* djA, int* diA, double* ddiag, double alpha){
   int row= threadIdx.x + blockDim.x*blockIdx.x;
@@ -447,7 +431,7 @@ __device__ void cudaDevicedotxy_2(double *g_idata1, double *g_idata2,
   __syncthreads();
 #ifdef IS_DEBUG_MODE_cudaDevicedotxy_2
   //used for compare with cpu
-  sdata[0]=0.;
+  sdata[0] = 0.;
   __syncthreads();
   if(tid==0){
     for(int j=0;j<blockDim.x;j++){
@@ -500,7 +484,7 @@ __device__ void cudaDeviceVWRMS_Norm_2(double *g_idata1, double *g_idata2, doubl
     for(int j=0;j<blockDim.x;j++){
       sum+=sdata[j];
     }
-    sdata[0]=sum;
+    sdata[0] = sum;
   }
   __syncthreads();
 #else
@@ -721,7 +705,7 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
       }
       if (i_fast >= 0 && h_n > 0.)
         h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
-      sdata[0]=h_j;
+      sdata[0] = h_j;
     }
     __syncthreads();
     h_j=sdata[0];
@@ -1070,7 +1054,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
       sc->cv_crate = SUNMAX(0.3 * sc->cv_crate, del / delp);
     }
     dcon = del * SUNMIN(1.0, sc->cv_crate) / md->cv_tq[4+blockIdx.x*(NUM_TESTS + 1)];
-    flag_shr2[0]=0;
+    flag_shr2[0] = 0;
     __syncthreads();
     if (dcon <= 1.) {
       cudaDeviceVWRMS_Norm_2(md->cv_acor, md->dewt, &sc->cv_acnrm, md->n_shr_empty);
@@ -1179,11 +1163,9 @@ int cudaDevicecvNlsNewton(int nflag,
     }
     __syncthreads();
     md->cv_acor[i] = md->cv_acor_init[i];
-    __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     start = clock();
 #endif
-    __syncthreads();
     int nItflag=cudaDevicecvNewtonIteration(md, sc);
     __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
@@ -1194,7 +1176,6 @@ int cudaDevicecvNlsNewton(int nflag,
     }
     __syncthreads();
     callSetup = 1;
-    __syncthreads();
     convfail = CV_FAIL_BAD_J;
     __syncthreads();
   } //for(;;)
@@ -1720,7 +1701,6 @@ int cudaDevicecvEwtSetSV(ModelDataGPU *md, ModelDataVariable *sc,double *weight)
   double min;
   md->dtempv[i]=md->cv_reltol*md->dtempv[i]+md->cv_Vabstol[i];
   cudaDevicemin_2(&min, md->dtempv[i], flag_shr2, md->n_shr_empty);
-__syncthreads();
   if (min <= 0.) return(-1);
   weight[i]= 1./md->dtempv[i];
   return(0);
