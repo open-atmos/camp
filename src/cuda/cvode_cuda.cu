@@ -500,20 +500,18 @@ __device__ void cudaDeviceVWRMS_Norm_2(double *g_idata1, double *g_idata2, doubl
 
 __device__
 void cudaDeviceJacCopy(int* Ap, double* Ax, double* Bx) {
-  __syncthreads();
   int nnz=Ap[blockDim.x];
   for(int j=Ap[threadIdx.x]; j<Ap[threadIdx.x+1]; j++){
     Bx[j+nnz*blockIdx.x]=Ax[j+nnz*blockIdx.x];
   }
-  __syncthreads();
 }
 
 __device__
 int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable *sc, double *y, int *flag)
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-  __syncthreads();
   extern __shared__ int flag_shr[];
+  __syncthreads();
   flag_shr[0] = 0;
   __syncthreads();
   if (y[i] < -SMALL) {
@@ -688,7 +686,6 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
   }
   double t_0 = h_n > 0. ? sc->cv_tn - h_n : sc->cv_tn - 1.;
   double t_j = 0.;
-  __syncthreads();
   for (int iter = 0; iter < GUESS_MAX_ITER && t_0 + t_j < sc->cv_tn; iter++) {
     __syncthreads();
     double h_j = sc->cv_tn - (t_0 + t_j);
