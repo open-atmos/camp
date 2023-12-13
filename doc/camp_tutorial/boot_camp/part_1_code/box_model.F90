@@ -94,6 +94,7 @@ program box_model
   call camp_mpi_finalize( )
 #endif
 
+  deallocate( camp_core )
   deallocate( camp_state )
 
 end program box_model
