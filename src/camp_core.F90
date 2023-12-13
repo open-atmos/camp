@@ -680,7 +680,7 @@ contains
 
     ! Variables for setting initial state values
     class(aero_rep_data_t), pointer :: rep
-    integer(kind=i_kind) :: i, i_state_elem, i_name
+    integer(kind=i_kind) :: i_state_elem, i_name
 
     ! Species name for looking up properties
     character(len=:), allocatable :: spec_name
@@ -1514,6 +1514,7 @@ contains
     call solver%init_export_solver_data_state()
   end subroutine
 
+  !> Export output concentrations to calculate accuracy between CPU and GPU versions at checkGPU test
   subroutine export_solver_state(this)
     use camp_rxn_data
     use iso_c_binding
@@ -1531,6 +1532,7 @@ contains
     call solver%export_solver_data_state()
   end subroutine
 
+  !> Joins the files created by each MPI process at "export_solver_state" function into a single file.
   subroutine join_solver_state(this)
     use camp_rxn_data
     use iso_c_binding
@@ -1548,6 +1550,7 @@ contains
     call solver%join_solver_data_state()
   end subroutine
 
+  !> Export execution time of GPU and CPU code to calculate speedups at TestMonarch.py
   subroutine export_solver_stats(this)
     use camp_rxn_data
     use iso_c_binding
@@ -1571,7 +1574,7 @@ contains
   integer(kind=i_kind) function pack_size(this, comm)
 
     !> Chemical model
-    class(camp_core_t), intent(inout) :: this
+    class(camp_core_t), intent(in) :: this
     !> MPI communicator
     integer, intent(in), optional :: comm
 
@@ -1630,7 +1633,7 @@ contains
   subroutine bin_pack(this, buffer, pos, comm)
 
     !> Chemical model
-    class(camp_core_t), intent(inout) :: this
+    class(camp_core_t), intent(in) :: this
     !> Memory buffer
     character, intent(inout) :: buffer(:)
     !> Current buffer position
