@@ -166,8 +166,7 @@ module camp_camp_solver_data
                     RHS_evals, LS_setups, error_test_fails, NLS_iters, &
                     NLS_convergence_fails, DLS_Jac_evals, DLS_RHS_evals, &
                     last_time_step__s, next_time_step__s, Jac_eval_fails, &
-                    RHS_evals_total, Jac_evals_total, RHS_time__s, &
-                    Jac_time__s, max_loss_precision) bind (c)
+                    max_loss_precision) bind (c)
       use iso_c_binding
       !> Pointer to the solver data
       type(c_ptr), value :: solver_data
@@ -195,14 +194,6 @@ module camp_camp_solver_data
       type(c_ptr), value :: next_time_step__s
       !> Number of Jacobian evaluation failures
       type(c_ptr), value :: Jac_eval_fails
-      !> Total number of calls to `f()`
-      type(c_ptr), value :: RHS_evals_total
-      !> Total number of calls to `Jac()`
-      type(c_ptr), value :: Jac_evals_total
-      !> Compute time for calls to `f()`
-      type(c_ptr), value :: RHS_time__s
-      !> Compute time for calls to `Jac()`
-      type(c_ptr), value :: Jac_time__s
       !> Maximum loss of precision on last call the f()
       type(c_ptr), value :: max_loss_precision
     end subroutine solver_get_statistics
@@ -966,10 +957,6 @@ contains
             c_loc( solver_stats%last_time_step__s     ),   & ! Last time step [s]
             c_loc( solver_stats%next_time_step__s     ),   & ! Next time step [s]
             c_loc( solver_stats%Jac_eval_fails        ),   & ! Number of Jac eval fails
-            c_loc( solver_stats%RHS_evals_total       ),   & ! total f() calls
-            c_loc( solver_stats%Jac_evals_total       ),   & ! total Jac() calls
-            c_loc( solver_stats%RHS_time__s           ),   & ! Compute time f() [s]
-            c_loc( solver_stats%Jac_time__s           ),   & ! Compute time Jac() [s]
             c_loc( solver_stats%max_loss_precision) & ! Maximum loss of precision
     )
 

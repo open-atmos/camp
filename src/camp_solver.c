@@ -677,7 +677,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   }
   // Update the species concentrations on the state array
   i_dep_var = 0;
-  //printf("NV_Ith_S(sd->y, i_dep_var)\n");
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
     for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
       if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
@@ -720,10 +719,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
  * \param last_time_step__s     Pointer to set to the last time step size [s]
  * \param next_time_step__s     Pointer to set to the next time step size [s]
  * \param Jac_eval_fails        Number of Jacobian evaluation failures
- * \param RHS_evals_total       Total calls to `f()`
- * \param Jac_evals_total       Total calls to `Jac()`
- * \param RHS_time__s           Compute time for calls to f() [s]
- * \param Jac_time__s           Compute time for calls to Jac() [s]
  * \param max_loss_precision    Indicators of loss of precision in derivative
  *                              calculation for each species
  */
@@ -733,8 +728,6 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            int *NLS_convergence_fails, int *DLS_Jac_evals,
                            int *DLS_RHS_evals, double *last_time_step__s,
                            double *next_time_step__s, int *Jac_eval_fails,
-                           int *RHS_evals_total, int *Jac_evals_total,
-                           double *RHS_time__s, double *Jac_time__s,
                            double *max_loss_precision
                            ) {
   SolverData *sd = (SolverData *)solver_data;
@@ -786,16 +779,8 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   }
 #endif
 #ifdef CAMP_DEBUG
-  *RHS_evals_total = -1;
-  *Jac_evals_total = -1;
-  *RHS_time__s = 0.0;
-  *Jac_time__s = 0.0;
   *max_loss_precision = sd->max_loss_precision;
 #else
-  *RHS_evals_total = -1;
-  *Jac_evals_total = -1;
-  *RHS_time__s = 0.0;
-  *Jac_time__s = 0.0;
   *max_loss_precision = 0.0;
 #endif
 

@@ -373,8 +373,6 @@ contains
             end do
             this%camp_state%state_var(this%map_camp_id(:)) = &
                             MONARCH_conc(i,j,k,this%map_monarch_id(:))
-            !print*,"MONARCH_conc381",MONARCH_conc(i,j,k,this%map_monarch_id(:))
-            !print*,"state_var421",this%camp_state%state_var(:)
             if(this%output_file_title=="monarch_cb05") then
               this%camp_state%state_var(this%gas_phase_water_id) = &
               water_conc(1,1,1,water_vapor_index)
@@ -383,14 +381,12 @@ contains
                       water_conc(1,1,1,water_vapor_index) * &
                               mwair / mwwat * 1.e6
             end if
-            !print*,"state_var430",this%camp_state%state_var(:)
             if(this%output_file_title=="cb05_paperV2") then
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r))=&
                         this%camp_state%state_var(this%specs_emi_id(r))&
                                 +this%specs_emi(r)*rate_emi(i_hour,z+1)*conv(i,j,k)
               end do
-            !print*,"state_var436",this%camp_state%state_var(1)
             end if
             call cpu_time(comp_start)
             call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp))
@@ -417,8 +413,6 @@ contains
             call this%camp_state%env_states(z+1)%set_pressure_Pa(real(pressure(i,j,k),kind=dp))
             this%camp_state%state_var(this%map_camp_id(:) + (z*state_size_per_cell))&
              = MONARCH_conc(i,j,k,this%map_monarch_id(:))
-            !print*,"MONARCH_conc381",MONARCH_conc(i,j,k,this%map_monarch_id(:))
-            !print*,"state_var421",this%camp_state%state_var(:)
             if(this%output_file_title=="monarch_cb05") then
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
                       water_conc(1,1,1,water_vapor_index)
@@ -426,7 +420,6 @@ contains
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
                       water_conc(1,1,1,water_vapor_index) * mwair / mwwat * 1.e6
             end if
-            !print*,"state_var430",this%camp_state%state_var(:)
             if(this%output_file_title=="cb05_paperV2") then
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)=&
@@ -434,7 +427,6 @@ contains
                                 +this%specs_emi(r)*rate_emi(i_hour,z+1)*conv(i,j,k)
               end do
             endif
-            !print*,"state_var436",this%camp_state%state_var(1+z*state_size_per_cell)
           end do
         end do
       end do

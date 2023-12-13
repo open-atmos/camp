@@ -583,7 +583,6 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
 #ifdef IS_DEBUG_MODE_removeAtomic
   if(threadIdx.x==0){
     for (int j = 0; j < n_rxn; j++){
-      //printf("n_rxn %d i %d j %d \n",n_rxn,i,j);
       solveRXN(j,deriv_data, time_step, md, sc);
     }
   }

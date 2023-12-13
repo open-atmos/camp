@@ -38,8 +38,6 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            int *NLS_convergence_fails, int *DLS_Jac_evals,
                            int *DLS_RHS_evals, double *last_time_step__s,
                            double *next_time_step__s, int *Jac_eval_fails,
-                           int *RHS_evals_total, int *Jac_evals_total,
-                           double *RHS_time__s, double *Jac_time__s,
                            double *max_loss_precision);
 void init_export_solver_state();
 void export_solver_state(void *solver_data);
