@@ -658,8 +658,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #endif
     sd->solver_flag = flag;
 #ifdef FAILURE_DETAIL
-    if (flag < 0) {
-#else
     if (check_flag(&flag, "CVode", 1) != CAMP_SOLVER_SUCCESS) {
       if (flag == -6) {
         long int lsflag;
@@ -671,6 +669,8 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       if (flag != 0)
         printf("\nCall to f() at failed state failed with flag %d \n",flag);
       solver_print_stats(sd->cvode_mem);
+#else
+    if (flag < 0) {
 #endif
       return CAMP_SOLVER_FAIL;
     }
