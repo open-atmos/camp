@@ -6,12 +6,11 @@
  * SPDX-License-Identifier: MIT
  */
 
-#include "camp_debug_2.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "../camp_solver.h"
+#include "camp_solver.h"
 
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_USE_MPI
