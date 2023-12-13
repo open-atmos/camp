@@ -796,7 +796,7 @@ contains
               +r*state_size_per_cell) = this%init_conc(i_spec)
             end forall
             do i_spec=1, size(this%map_monarch_id)
-              MONARCH_conc(i,j,kW,this%map_monarch_id(i_spec)) = &
+              MONARCH_conc(i,j,k,this%map_monarch_id(i_spec)) = &
                 this%camp_state%state_var(this%map_camp_id(i_spec))
             end do
             this%camp_state%state_var(this%gas_phase_water_id +(r*state_size_per_cell)) = &
@@ -810,7 +810,27 @@ contains
 
   elemental subroutine finalize(this)
     type(camp_monarch_interface_t), intent(inout) :: this
-    if (associated(this%camp_core)) deallocate(this%camp_core)
+    if (associated(this%camp_core)) &
+            deallocate(this%camp_core)
+    if (associated(this%camp_state)) &
+            deallocate(this%camp_state)
+    if (allocated(this%monarch_species_names)) &
+            deallocate(this%monarch_species_names)
+    if (allocated(this%map_monarch_id)) &
+            deallocate(this%map_monarch_id)
+    if (allocated(this%map_camp_id)) &
+            deallocate(this%map_camp_id)
+    if (allocated(this%init_conc_camp_id)) &
+            deallocate(this%init_conc_camp_id)
+    if (allocated(this%init_conc)) &
+            deallocate(this%init_conc)
+    if (associated(this%species_map_data)) &
+            deallocate(this%species_map_data)
+    if (associated(this%init_conc_data)) &
+            deallocate(this%init_conc_data)
+    if (associated(this%property_set)) &
+            deallocate(this%property_set)
+
   end subroutine finalize
 
 end module
