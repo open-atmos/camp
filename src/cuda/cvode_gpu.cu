@@ -638,8 +638,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       int rank;
       MPI_Comm_rank(MPI_COMM_WORLD, &rank);
       printf("cudaCVode2 kflag %d cell %d rank %d\n",istate,i,rank);
+      printf("Exiting...\n");
+      MPI_Abort(MPI_COMM_WORLD, 1);
       istate = cvHandleFailure_gpu(cv_mem, istate);
-      //Optional: call EXPORT_NETCDF after this fail
     }
   }
   return(istate);

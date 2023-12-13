@@ -728,7 +728,6 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
     return -1;
     }
     atmp1[i]+=h_j*acorr[i];
-    __syncthreads();
     t_j += h_j;
     int aux_flag=0;
     int fflag=cudaDevicef(t_0 + t_j, atmp1, acorr,md,sc,&aux_flag);
@@ -878,14 +877,11 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *sc)
 #endif
   md->use_deriv_est=0;
   int aux_flag=0;
-  __syncthreads();
   retval=cudaDevicef(sc->cv_next_h, md->dcv_y, md->dftemp,md,sc,&aux_flag);
   md->use_deriv_est=1;
-  __syncthreads();
   if(retval==CAMP_SOLVER_FAIL)
     return CAMP_SOLVER_FAIL;
   cudaDevicecalc_Jac(md->dcv_y,md, sc);
-  __syncthreads();
   int nnz = md->n_mapped_values[0];
   int n_iters = nnz / blockDim.x;
   for (int z = 0; z < n_iters; z++) {
@@ -987,7 +983,6 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *sc)
     rho0 = rho1;
     it++;
   __syncthreads();
-  //if(i==0)printf("end iter %d BCG GPU\n",it);
   }
   __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
@@ -1032,7 +1027,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
     );
     __syncthreads();
     if (guessflag < 0) {
-      if (!(sc->cv_jcur)) { //Bool set up during linsolsetup just before Jacobian
+      if (!(sc->cv_jcur)) {
         return TRY_AGAIN;
       } else {
         return RHSFUNC_RECVR;
@@ -1113,12 +1108,10 @@ int cudaDevicecvNlsNewton(int nflag,
   __syncthreads();
   md->dftemp[i]=md->dzn[i]-md->cv_last_yn[i];
   md->cv_acor_init[i]=0.;
-  __syncthreads();
   int guessflag=CudaDeviceguess_helper(sc->cv_h, md->dzn,
        md->cv_last_yn, md->dftemp, md->dtempv1,
        md->cv_acor_init,  &flagDevice,md, sc
   );
-  __syncthreads();
   if(guessflag<0){
     return RHSFUNC_RECVR;
   }
