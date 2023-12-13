@@ -428,7 +428,6 @@ __device__ void cudaDevicedotxy_2(double *g_idata1, double *g_idata2,
   __syncthreads();
   if(tid<n_shr_empty)
     sdata[tid+blockDim.x]=0.;
-  __syncthreads();
 #ifdef IS_DEBUG_MODE_cudaDevicedotxy_2
   //used for compare with cpu
   sdata[0] = 0.;
@@ -473,7 +472,6 @@ __device__ void cudaDeviceVWRMS_Norm_2(double *g_idata1, double *g_idata2, doubl
   __syncthreads();
   if(tid<n_shr_empty)
     sdata[tid+blockDim.x]=0.;
-  __syncthreads();
   sdata[tid] = g_idata1[i]*g_idata2[i];
   sdata[tid] = sdata[tid]*sdata[tid];
   __syncthreads();
@@ -572,6 +570,7 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
   cudaDeviceSpmv_2(md->J_tmp2, md->J_tmp, md->J_solver, md->djA, md->diA);
   md->J_tmp[i]=md->J_deriv[i]+md->J_tmp2[i];
   TimeDerivativeGPU deriv_data;
+  __syncthreads();
   deriv_data.production_rates = md->production_rates;
   deriv_data.loss_rates = md->loss_rates;
   __syncthreads();
