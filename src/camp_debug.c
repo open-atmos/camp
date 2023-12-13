@@ -6,10 +6,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 #include "camp_solver.h"
 
 #ifdef CAMP_DEBUG_GPU

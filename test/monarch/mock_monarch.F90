@@ -7,7 +7,7 @@ program mock_monarch_t
 
   use camp_constants, only: const
   use camp_util, only : assert_msg, almost_equal, to_string
-  use camp_monarch_interface_2
+  use camp_monarch_interface
   use camp_mpi
   use json_module
 

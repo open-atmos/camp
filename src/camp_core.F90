@@ -183,9 +183,13 @@ module camp_camp_core
     procedure :: get_rel_tol
     !> Get the absolute tolerance for a species on the state array
     procedure :: get_abs_tol
+    !> Create a file for saving output concentrations
     procedure :: init_export_solver_state
+    !> Export output concentrations to calculate accuracy between CPU and GPU versions at checkGPU test
     procedure :: export_solver_state
+    !> Join the files created by each MPI process at "export_solver_state" function into a single file.
     procedure :: join_solver_state
+    !> Export execution time of GPU and CPU code to calculate speedups at TestMonarch.py
     procedure :: export_solver_stats
     !> Get a new model state variable
     procedure :: new_state_one_cell

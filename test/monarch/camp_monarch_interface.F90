@@ -6,7 +6,7 @@
 !> The camp_monarch_interface_t object and related functions
 
 !> Interface for the MONACH model and CAMP-camp
-module camp_monarch_interface_2
+module camp_monarch_interface
 
   use camp_constants, only : i_kind
   use camp_mpi
@@ -266,10 +266,6 @@ contains
         call this%camp_core%update_data(update_data_GSD)
       end if
     end do
-    !unique_names=this%camp_core%unique_names()
-    !do i=1, size(unique_names)
-    !  print*,i,trim(unique_names(i)%string)
-    !end do
     call this%camp_core%init_export_solver_state()
     if (MONARCH_PROCESS==0) then
       call cpu_time(comp_end)
@@ -800,7 +796,7 @@ contains
               +r*state_size_per_cell) = this%init_conc(i_spec)
             end forall
             do i_spec=1, size(this%map_monarch_id)
-              MONARCH_conc(i,j,k,this%map_monarch_id(i_spec)) = &
+              MONARCH_conc(i,j,kW,this%map_monarch_id(i_spec)) = &
                 this%camp_state%state_var(this%map_camp_id(i_spec))
             end do
             this%camp_state%state_var(this%gas_phase_water_id +(r*state_size_per_cell)) = &
@@ -812,11 +808,9 @@ contains
     end if
   end subroutine get_init_conc
 
-
   elemental subroutine finalize(this)
     type(camp_monarch_interface_t), intent(inout) :: this
     if (associated(this%camp_core)) deallocate(this%camp_core)
-
   end subroutine finalize
 
 end module
