@@ -581,8 +581,8 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
   deriv_data.production_rates = &( md->production_rates[blockDim.x*blockIdx.x]);
   deriv_data.loss_rates = &( md->loss_rates[blockDim.x*blockIdx.x]);
   sc->grid_cell_state = &( md->state[md->state_size_cell*blockIdx.x]);
-  int n_rxn = md->n_rxn;
   __syncthreads();
+  int n_rxn = md->n_rxn;
 #ifdef IS_DEBUG_MODE_removeAtomic
   if(threadIdx.x==0){
     for (int j = 0; j < n_rxn; j++){
@@ -621,14 +621,12 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
   } else {
     yout[i] = 0.0;
   }
-  __syncthreads();
 }
 
 __device__
 int cudaDevicef(double time_step, double *y,
         double *yout, ModelDataGPU *md, ModelDataVariable *sc)
 {
-  __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int clock_khz=md->clock_khz;
   clock_t start;
@@ -637,9 +635,7 @@ int cudaDevicef(double time_step, double *y,
   time_step = sc->cv_next_h;
   time_step = time_step > 0. ? time_step : md->init_time_step;
   int checkflag=cudaDevicecamp_solver_check_model_state(md, sc, y);
-  __syncthreads();
   if(checkflag==CAMP_SOLVER_FAIL){
-    __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     if(threadIdx.x==0) sc->timef += ((double)(int)(clock() - start))/(clock_khz*1000);
