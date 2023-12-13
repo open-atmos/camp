@@ -312,7 +312,8 @@ endif()
 # camp library
 
 set(STD_C_FLAGS "-std=c99")
-set(STD_CUDA_FLAGS "-g -O3 -arch=compute_70 -code=sm_70") #-G for assembly code nsight
+#todo change -O0 for -O3
+set(STD_CUDA_FLAGS "-g -O0 -arch=compute_70 -code=sm_70") #-G for assembly code nsight
 
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
   set(STD_F_FLAGS "-extend_source -warn truncated_source")
