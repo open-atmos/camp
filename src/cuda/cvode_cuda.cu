@@ -802,12 +802,10 @@ __device__ void solveRXNJac(
 
 __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable *sc
 ){
-  __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int clock_khz=md->clock_khz;
   clock_t start;
   start = clock();
-  __syncthreads();
 #endif
   JacobianGPU *jac = &md->jac;
   JacobianGPU jacBlock;
@@ -815,7 +813,6 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
   jacBlock.num_elem = jac->num_elem;
   jacBlock.production_partials = &( jac->production_partials[jacBlock.num_elem[0]*blockIdx.x]);
   jacBlock.loss_partials = &( jac->loss_partials[jacBlock.num_elem[0]*blockIdx.x]);
-  __syncthreads();
   sc->grid_cell_state = &( md->state[md->state_size_cell*blockIdx.x]);
   __syncthreads();
   int n_rxn = md->n_rxn;
@@ -858,7 +855,7 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
     jacBlock.production_partials[jac_map[j].rxn_id] = 0.0;
     jacBlock.loss_partials[jac_map[j].rxn_id] = 0.0;
   }
-    __syncthreads();
+  __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) sc->timecalc_Jac += ((double)(clock() - start))/(clock_khz*1000);
 #endif
