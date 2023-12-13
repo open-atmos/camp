@@ -1532,7 +1532,7 @@ contains
     call solver%export_solver_data_state()
   end subroutine
 
-  !> Joins the files created by each MPI process at "export_solver_state" function into a single file.
+  !> Join the files created by each MPI process at "export_solver_state" function into a single file.
   subroutine join_solver_state(this)
     use camp_rxn_data
     use iso_c_binding

@@ -1789,7 +1789,9 @@ bool is_anything_going_on_here(SolverData *sd, realtype t_initial,
         }
       }
     }
+#ifdef CAMP_DEBUG
     printf("DEBUG: is_anything_going_on_here is false, returning success without cvode computing\n");
+#endif
     return false;
   }
   return true;

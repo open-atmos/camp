@@ -411,10 +411,15 @@ module camp_camp_solver_data
     procedure :: update_aero_rep_data
     !> Integrate over a given time step
     procedure :: solve
+    !> Get solver statistics after an integration attempt
     procedure:: get_solver_stats
+    !> Create a file for saving output concentrations
     procedure:: init_export_solver_data_state
+    !> Export output concentrations to calculate accuracy between CPU and GPU versions at checkGPU test
     procedure:: export_solver_data_state
+    !> Join the files created by each MPI process at "export_solver_state" function into a single file.
     procedure:: join_solver_data_state
+    !> Export execution time of GPU and CPU code to calculate speedups at TestMonarch.py
     procedure:: export_solver_data_stats
     !> Checks whether a solver is available
     procedure :: is_solver_available
