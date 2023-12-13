@@ -507,7 +507,7 @@ void cudaDeviceJacCopy(int* Ap, double* Ax, double* Bx) {
 }
 
 __device__
-int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable *sc, double *y, int *flag)
+int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable *sc, double *y)
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   extern __shared__ int flag_shr[];
@@ -522,9 +522,9 @@ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md, ModelDataVariable 
             TINY : y[i];
   }
   __syncthreads();
-  *flag = flag_shr[0];
+  int flag = flag_shr[0];
   __syncthreads();
-  return *flag;
+  return flag;
 }
 
 __device__ void solveRXN(
@@ -626,7 +626,7 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
 
 __device__
 int cudaDevicef(double time_step, double *y,
-        double *yout, ModelDataGPU *md, ModelDataVariable *sc, int *flag)
+        double *yout, ModelDataGPU *md, ModelDataVariable *sc)
 {
   __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
@@ -636,10 +636,9 @@ int cudaDevicef(double time_step, double *y,
 #endif
   time_step = sc->cv_next_h;
   time_step = time_step > 0. ? time_step : md->init_time_step;
-  int checkflag=cudaDevicecamp_solver_check_model_state(md, sc, y, flag);
+  int checkflag=cudaDevicecamp_solver_check_model_state(md, sc, y);
   __syncthreads();
   if(checkflag==CAMP_SOLVER_FAIL){
-    *flag=CAMP_SOLVER_FAIL;
     __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -652,16 +651,13 @@ int cudaDevicef(double time_step, double *y,
     int i = blockIdx.x * blockDim.x + threadIdx.x;
     if(threadIdx.x==0) sc->timef += ((double)(int)(clock() - start))/(clock_khz*1000);
 #endif
-  __syncthreads();
-  *flag=0;
-  __syncthreads();
   return 0;
 }
 
 __device__
 int CudaDeviceguess_helper(double h_n, double* y_n,
    double* y_n1, double* hf, double* atmp1,
-   double* acorr, int *flag, ModelDataGPU *md, ModelDataVariable *sc
+   double* acorr, ModelDataGPU *md, ModelDataVariable *sc
 ) {
   extern __shared__ double sdata[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -723,8 +719,7 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
     }
     atmp1[i]+=h_j*acorr[i];
     t_j += h_j;
-    int aux_flag=0;
-    int fflag=cudaDevicef(t_0 + t_j, atmp1, acorr,md,sc,&aux_flag);
+    int fflag=cudaDevicef(t_0 + t_j, atmp1, acorr,md,sc);
     if (fflag == CAMP_SOLVER_FAIL) {
       acorr[i] = 0.;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
@@ -849,7 +844,7 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
 }
 
 __device__
-int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *sc)
+int cudaDeviceJac(ModelDataGPU *md, ModelDataVariable *sc)
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int retval;
@@ -859,8 +854,7 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *sc)
   start = clock();
 #endif
   md->use_deriv_est=0;
-  int aux_flag=0;
-  retval=cudaDevicef(sc->cv_next_h, md->dcv_y, md->dftemp,md,sc,&aux_flag);
+  retval=cudaDevicef(sc->cv_next_h, md->dcv_y, md->dftemp,md,sc);
   md->use_deriv_est=1;
   if(retval==CAMP_SOLVER_FAIL)
     return CAMP_SOLVER_FAIL;
@@ -881,7 +875,6 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *sc)
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0)  sc->timeJac += ((double)(clock() - start))/(clock_khz*1000);
 #endif
-  *flag = 0;
   return 0;
 }
 
@@ -904,8 +897,7 @@ int cudaDevicelinsolsetup(
   } else {
     sc->nstlj = sc->cv_nst;
     sc->cv_jcur = 1;
-    int aux_flag=0;
-    int guess_flag=cudaDeviceJac(&aux_flag,md,sc);
+    int guess_flag=cudaDeviceJac(md,sc);
     if (guess_flag < 0) {
       return -1;}
     if (guess_flag > 0) {
@@ -964,7 +956,6 @@ __device__
 int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
   extern __shared__ double flag_shr2[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-  int aux_flag=0;
   double del, delp, dcon;
   int m = 0;
   del = delp = 0.0;
@@ -987,8 +978,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
     cudaDeviceVWRMS_Norm_2(md->dx, md->dewt, &del, md->n_shr_empty);
     md->dftemp[i]=md->dcv_y[i]+md->dtempv[i];
     int guessflag=CudaDeviceguess_helper(0., md->dftemp,
-       md->dcv_y, md->dtempv, md->dtempv1,md->dtempv2, &aux_flag, md, sc
-    );
+       md->dcv_y, md->dtempv, md->dtempv1,md->dtempv2, md, sc);
     if (guessflag < 0) {
       if (!(sc->cv_jcur)) {
         return TRY_AGAIN;
@@ -1025,7 +1015,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
       }
     }
     delp = del;
-    retval=cudaDevicef(sc->cv_next_h, md->dcv_y, md->dftemp, md, sc, &aux_flag);
+    retval=cudaDevicef(sc->cv_next_h, md->dcv_y, md->dftemp, md, sc);
     md->cv_acor[i]=md->dcv_y[i]+md->dzn[i];
     if (retval < 0) {
       return CV_RHSFUNC_FAIL;
@@ -1048,7 +1038,6 @@ int cudaDevicecvNlsNewton(int nflag,
         ModelDataGPU *md, ModelDataVariable *sc
 ) {
   extern __shared__ int flag_shr[];
-  int flagDevice = 0;
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int retval=0;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
@@ -1066,15 +1055,14 @@ int cudaDevicecvNlsNewton(int nflag,
   md->cv_acor_init[i]=0.;
   int guessflag=CudaDeviceguess_helper(sc->cv_h, md->dzn,
        md->cv_last_yn, md->dftemp, md->dtempv1,
-       md->cv_acor_init,  &flagDevice,md, sc
+       md->cv_acor_init, md, sc
   );
   if(guessflag<0){
     return RHSFUNC_RECVR;
   }
   for(;;) {
     md->dcv_y[i] = md->dzn[i]+md->cv_acor_init[i];
-    int aux_flag=0;
-    retval=cudaDevicef(sc->cv_tn, md->dcv_y,md->dftemp,md,sc,&aux_flag);
+    retval=cudaDevicef(sc->cv_tn, md->dcv_y,md->dftemp,md,sc);
     if (retval < 0) {
       return CV_RHSFUNC_FAIL;
     }
@@ -1325,8 +1313,7 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *sc,
   sc->cv_next_h = sc->cv_h;
   sc->cv_hscale = sc->cv_h;
   sc->cv_qwait = 10;
-  int aux_flag=0;
-  retval=cudaDevicef(sc->cv_tn, md->dzn, md->dtempv,md,sc, &aux_flag);
+  retval=cudaDevicef(sc->cv_tn, md->dzn, md->dtempv,md,sc);
   if (retval < 0)  return(CV_RHSFUNC_FAIL);
   if (retval > 0)  return(CV_UNREC_RHSFUNC_ERR);
   md->dzn[i+md->nrows]=sc->cv_h*md->dtempv[i];
