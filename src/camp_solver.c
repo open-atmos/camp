@@ -30,7 +30,6 @@
 #include <gsl/gsl_roots.h>
 #endif
 #include "camp_debug.h"
-#include "debug_and_stats/camp_debug_2.h"
 
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_USE_MPI
@@ -96,8 +95,9 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
                  int n_sub_model_float_param, int n_sub_model_env_param,
-                 int use_cpu, int nGPUs) {
+                 int use_cpu) {
   // Create the SolverData object
+
   SolverData *sd = (SolverData *)malloc(sizeof(SolverData));
   if (sd == NULL) {
     printf("\n\nERROR allocating space for SolverData\n\n");
@@ -124,7 +124,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.n_per_cell_state_var = n_state_var;
 
   sd->use_cpu = use_cpu;
-  sd->nGPUs = nGPUs;
 #ifdef DEV_CPU_GPU
   sd->rate_cells_gpu=1;
   printf("Set cells to gpu to %lf %\n",sd->rate_cells_gpu*100);
@@ -373,8 +372,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
 #ifdef CAMP_DEBUG_GPU
   sd->timeCVode = 0.;
-  init_export_stats();
-  init_export_state();
 #endif
 
   // Return a pointer to the new SolverData object
@@ -596,16 +593,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     aero_rep_update_env_state(md);
     sub_model_update_env_state(md);
     rxn_update_env_state(md);
-    //if(i_cell==0){
-      //print_double(md->grid_cell_env,CAMP_NUM_ENV_PARAM_,"env689");
-      //print_double(md->grid_cell_state,n_state_var,"state688");
-      //double *yp = N_VGetArrayPointer(sd->y);
-      //print_double(yp,md->n_per_cell_dep_var,"y660");
-    //}
-    //print_double(md->grid_cell_env,CAMP_NUM_ENV_PARAM_,"env689");
-    //double *yp = N_VGetArrayPointer(sd->y)+i_cell*md->n_per_cell_dep_var;
-    //print_double(yp,md->n_per_cell_dep_var,"y660");
-    //print_double(md->grid_cell_state,md->n_per_cell_state_var,"state688");
   }
 
   //Reset jac solving, otherwise values from previous iteration would be carried to current iteration
@@ -670,8 +657,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #endif
     sd->solver_flag = flag;
 #ifdef FAILURE_DETAIL
-    if (flag < 0) {
-#else
     if (check_flag(&flag, "CVode", 1) != CAMP_SOLVER_SUCCESS) {
       if (flag == -6) {
         long int lsflag;
@@ -683,13 +668,14 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
       if (flag != 0)
         printf("\nCall to f() at failed state failed with flag %d \n",flag);
       solver_print_stats(sd->cvode_mem);
+#else
+    if (flag < 0) {
 #endif
       return CAMP_SOLVER_FAIL;
     }
   }
   // Update the species concentrations on the state array
   i_dep_var = 0;
-  //printf("NV_Ith_S(sd->y, i_dep_var)\n");
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
     for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
       if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
@@ -732,10 +718,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
  * \param last_time_step__s     Pointer to set to the last time step size [s]
  * \param next_time_step__s     Pointer to set to the next time step size [s]
  * \param Jac_eval_fails        Number of Jacobian evaluation failures
- * \param RHS_evals_total       Total calls to `f()`
- * \param Jac_evals_total       Total calls to `Jac()`
- * \param RHS_time__s           Compute time for calls to f() [s]
- * \param Jac_time__s           Compute time for calls to Jac() [s]
  * \param max_loss_precision    Indicators of loss of precision in derivative
  *                              calculation for each species
  */
@@ -745,8 +727,6 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            int *NLS_convergence_fails, int *DLS_Jac_evals,
                            int *DLS_RHS_evals, double *last_time_step__s,
                            double *next_time_step__s, int *Jac_eval_fails,
-                           int *RHS_evals_total, int *Jac_evals_total,
-                           double *RHS_time__s, double *Jac_time__s,
                            double *max_loss_precision
                            ) {
   SolverData *sd = (SolverData *)solver_data;
@@ -798,19 +778,15 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   }
 #endif
 #ifdef CAMP_DEBUG
-  *RHS_evals_total = -1;
-  *Jac_evals_total = -1;
-  *RHS_time__s = 0.0;
-  *Jac_time__s = 0.0;
   *max_loss_precision = sd->max_loss_precision;
 #else
-  *RHS_evals_total = -1;
-  *Jac_evals_total = -1;
-  *RHS_time__s = 0.0;
-  *Jac_time__s = 0.0;
   *max_loss_precision = 0.0;
 #endif
 
+}
+
+void init_export_solver_state(){
+  init_export_state();
 }
 
 void export_solver_state(void *solver_data){
@@ -917,7 +893,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
   N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
 
-  //print_double(md->total_state,n_state_var,"state602");
   // Loop through the grid cells and update the derivative array
   for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
     // Set the grid cell state pointers
@@ -950,20 +925,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     } else {
       time_derivative_output(sd->time_deriv, deriv_data, NULL,
                              sd->output_precision);
-    }
-    if(i_cell==0) {
-      //double *yp = N_VGetArrayPointer(y);
-      //print_double(yp,86,"y646");
-      //double *J_state = N_VGetArrayPointer(md->J_state);
-      //print_double(J_state,86,"J_state644");
-      //print_double(jac_deriv_data,86,"J_tmp643");
-      //double *J_deriv = N_VGetArrayPointer(md->J_deriv);
-      //print_double(J_deriv,86,"J_deriv644");
-      //double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2);
-      //print_double(J_tmp2,86,"J_tmp2645");
-      //print_double(sd->time_deriv.loss_rates,sd->time_deriv.num_spec,"loss_rates");
-      //print_double(sd->time_deriv.production_rates,sd->time_deriv.num_spec,"production_rates");
-      //print_double(deriv_data,86,"deriv_data645");
     }
 #ifdef CAMP_DEBUG
     sd->max_loss_precision = time_derivative_max_loss_precision(sd->time_deriv);
@@ -1066,8 +1027,8 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
     JacMap *jac_map = md->jac_map;
     SM_DATA_S(md->J_params)[0] = 1.0;  // dummy value for non-sub model calcs
     for (int i_map = 0; i_map < md->n_mapped_values; ++i_map){
-      long double drf_dy = sd->jac.production_partials[jac_map[i_map].rxn_id];
-      long double drr_dy = sd->jac.loss_partials[jac_map[i_map].rxn_id];
+      double drf_dy = sd->jac.production_partials[jac_map[i_map].rxn_id];
+      double drr_dy = sd->jac.loss_partials[jac_map[i_map].rxn_id];
 
       SM_DATA_S(J)
       [i_cell * md->n_per_cell_solver_jac_elem + jac_map[i_map].solver_id] +=
@@ -1827,7 +1788,9 @@ bool is_anything_going_on_here(SolverData *sd, realtype t_initial,
         }
       }
     }
+#ifdef CAMP_DEBUG
     printf("DEBUG: is_anything_going_on_here is false, returning success without cvode computing\n");
+#endif
     return false;
   }
   return true;

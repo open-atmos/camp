@@ -270,7 +270,6 @@ typedef struct {
   float rate_cells_gpu;
 #endif
   int use_cpu;
-  int nGPUs;
 
   void *cvode_mem;       // CVodeMem object
   ModelData model_data;  // Model data (used during initialization and solving)

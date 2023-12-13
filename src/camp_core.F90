@@ -183,8 +183,13 @@ module camp_camp_core
     procedure :: get_rel_tol
     !> Get the absolute tolerance for a species on the state array
     procedure :: get_abs_tol
+    !> Create a file for saving output concentrations
+    procedure :: init_export_solver_state
+    !> Export output concentrations to calculate accuracy between CPU and GPU versions at checkGPU test
     procedure :: export_solver_state
+    !> Join the files created by each MPI process at "export_solver_state" function into a single file.
     procedure :: join_solver_state
+    !> Export execution time of GPU and CPU code to calculate speedups at TestMonarch.py
     procedure :: export_solver_stats
     !> Get a new model state variable
     procedure :: new_state_one_cell
@@ -679,7 +684,7 @@ contains
 
     ! Variables for setting initial state values
     class(aero_rep_data_t), pointer :: rep
-    integer(kind=i_kind) :: i, i_state_elem, i_name
+    integer(kind=i_kind) :: i_state_elem, i_name
 
     ! Species name for looking up properties
     character(len=:), allocatable :: spec_name
@@ -1151,22 +1156,17 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize the solver
-  subroutine solver_initialize(this, use_cpu, nGPUs)
+  subroutine solver_initialize(this, use_cpu)
     class(camp_core_t), intent(inout) :: this
     integer, intent(in), optional :: use_cpu
-    integer, intent(in), optional :: nGPUs
     type(string_t), allocatable :: spec_names(:)
-    integer :: i_spec, n_gas_spec, use_cpu1, nGPUs1
+    integer :: i_spec, n_gas_spec, use_cpu1
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
 
     use_cpu1=1
-    nGPUs1=1
     if (present(use_cpu)) then
       use_cpu1=use_cpu
-    end if
-    if (present(nGPUs)) then
-      nGPUs1=nGPUs
     end if
 
     ! Set up either two solvers (gas and aerosol) or one solver (combined)
@@ -1193,8 +1193,7 @@ contains
                 GAS_RXN,         & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                use_cpu1, &
-                nGPUs1 &
+                use_cpu1&
       )
       call this%solver_data_aero%initialize( &
                 this%var_type,   & ! State array variable types
@@ -1206,8 +1205,7 @@ contains
                 AERO_RXN,        & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                use_cpu1, &
-                nGPUs1 &
+                use_cpu1&
               )
     else
 
@@ -1230,10 +1228,8 @@ contains
                 GAS_AERO_RXN,    & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                use_cpu1, &
-                nGPUs1 &
+                use_cpu1&
                 )
-
     end if
 
     this%solver_is_initialized = .true.
@@ -1505,6 +1501,24 @@ contains
 
   end subroutine solve
 
+  subroutine init_export_solver_state(this)
+    use camp_rxn_data
+    use iso_c_binding
+    class(camp_core_t), intent(inout) :: this
+    integer(kind=i_kind) :: phase
+    type(camp_solver_data_t), pointer :: solver
+    phase = GAS_AERO_RXN
+    if (phase.eq.GAS_RXN) then
+      solver => this%solver_data_gas
+    else if (phase.eq.AERO_RXN) then
+      solver => this%solver_data_aero
+    else if (phase.eq.GAS_AERO_RXN) then
+      solver => this%solver_data_gas_aero
+    end if
+    call solver%init_export_solver_data_state()
+  end subroutine
+
+  !> Export output concentrations to calculate accuracy between CPU and GPU versions at checkGPU test
   subroutine export_solver_state(this)
     use camp_rxn_data
     use iso_c_binding
@@ -1522,6 +1536,7 @@ contains
     call solver%export_solver_data_state()
   end subroutine
 
+  !> Join the files created by each MPI process at "export_solver_state" function into a single file.
   subroutine join_solver_state(this)
     use camp_rxn_data
     use iso_c_binding
@@ -1539,6 +1554,7 @@ contains
     call solver%join_solver_data_state()
   end subroutine
 
+  !> Export execution time of GPU and CPU code to calculate speedups at TestMonarch.py
   subroutine export_solver_stats(this)
     use camp_rxn_data
     use iso_c_binding
@@ -1562,7 +1578,7 @@ contains
   integer(kind=i_kind) function pack_size(this, comm)
 
     !> Chemical model
-    class(camp_core_t), intent(inout) :: this
+    class(camp_core_t), intent(in) :: this
     !> MPI communicator
     integer, intent(in), optional :: comm
 
@@ -1621,7 +1637,7 @@ contains
   subroutine bin_pack(this, buffer, pos, comm)
 
     !> Chemical model
-    class(camp_core_t), intent(inout) :: this
+    class(camp_core_t), intent(in) :: this
     !> Memory buffer
     character, intent(inout) :: buffer(:)
     !> Current buffer position

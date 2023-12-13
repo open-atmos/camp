@@ -50,7 +50,7 @@ module camp_camp_solver_data
                     n_aero_rep_int_param, n_aero_rep_float_param, &
                     n_aero_rep_env_param, n_sub_model, n_sub_model_int_param,&
                     n_sub_model_float_param, n_sub_model_env_param,&
-                    use_cpu, nGPUs) bind (c)
+                    use_cpu) bind (c)
       use iso_c_binding
       !> Number of variables on the state array per grid cell
       !! (including const, PSSA, etc.)
@@ -92,7 +92,6 @@ module camp_camp_solver_data
       !> Total number of environment-dependent parameters for all sub models
       integer(kind=c_int), value :: n_sub_model_env_param
       integer(kind=c_int), value :: use_cpu
-      integer(kind=c_int), value :: nGPUs
     end function solver_new
 
     !> Set specie name
@@ -167,8 +166,7 @@ module camp_camp_solver_data
                     RHS_evals, LS_setups, error_test_fails, NLS_iters, &
                     NLS_convergence_fails, DLS_Jac_evals, DLS_RHS_evals, &
                     last_time_step__s, next_time_step__s, Jac_eval_fails, &
-                    RHS_evals_total, Jac_evals_total, RHS_time__s, &
-                    Jac_time__s, max_loss_precision) bind (c)
+                    max_loss_precision) bind (c)
       use iso_c_binding
       !> Pointer to the solver data
       type(c_ptr), value :: solver_data
@@ -196,17 +194,13 @@ module camp_camp_solver_data
       type(c_ptr), value :: next_time_step__s
       !> Number of Jacobian evaluation failures
       type(c_ptr), value :: Jac_eval_fails
-      !> Total number of calls to `f()`
-      type(c_ptr), value :: RHS_evals_total
-      !> Total number of calls to `Jac()`
-      type(c_ptr), value :: Jac_evals_total
-      !> Compute time for calls to `f()`
-      type(c_ptr), value :: RHS_time__s
-      !> Compute time for calls to `Jac()`
-      type(c_ptr), value :: Jac_time__s
       !> Maximum loss of precision on last call the f()
       type(c_ptr), value :: max_loss_precision
     end subroutine solver_get_statistics
+
+    subroutine init_export_solver_state() bind (c)
+      use iso_c_binding
+    end subroutine
 
     subroutine export_solver_state( solver_data) bind (c)
       use iso_c_binding
@@ -417,9 +411,15 @@ module camp_camp_solver_data
     procedure :: update_aero_rep_data
     !> Integrate over a given time step
     procedure :: solve
+    !> Get solver statistics after an integration attempt
     procedure:: get_solver_stats
+    !> Create a file for saving output concentrations
+    procedure:: init_export_solver_data_state
+    !> Export output concentrations to calculate accuracy between CPU and GPU versions at checkGPU test
     procedure:: export_solver_data_state
+    !> Join the files created by each MPI process at "export_solver_state" function into a single file.
     procedure:: join_solver_data_state
+    !> Export execution time of GPU and CPU code to calculate speedups at TestMonarch.py
     procedure:: export_solver_data_stats
     !> Checks whether a solver is available
     procedure :: is_solver_available
@@ -454,7 +454,7 @@ contains
   !> Initialize the solver
   subroutine initialize(this, var_type, abs_tol, mechanisms, aero_phases, &
           aero_reps, sub_models, rxn_phase, n_cells,&
-          spec_names, use_cpu, nGPUs)
+          spec_names, use_cpu)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
@@ -474,7 +474,6 @@ contains
     !> Sub models to include
     type(sub_model_data_ptr), pointer, intent(in) :: sub_models(:)
     integer, intent(in) :: use_cpu
-    integer, intent(in) :: nGPUs
     !> Reactions phase to solve -- gas, aerosol, or both (default)
     !! Use parameters in camp_rxn_data to specify phase:
     !! GAS_RXN, AERO_RXN, GAS_AERO_RXN
@@ -658,8 +657,7 @@ contains
             n_sub_model_int_param,             & ! # of sub model int params
             n_sub_model_float_param,           & ! # of sub model real params
             n_sub_model_env_param,              & ! # of sub model env params
-            use_cpu,&
-            nGPUs&
+            use_cpu&
             )
 
     ! Add all the condensed reaction data to the solver data block for
@@ -964,13 +962,14 @@ contains
             c_loc( solver_stats%last_time_step__s     ),   & ! Last time step [s]
             c_loc( solver_stats%next_time_step__s     ),   & ! Next time step [s]
             c_loc( solver_stats%Jac_eval_fails        ),   & ! Number of Jac eval fails
-            c_loc( solver_stats%RHS_evals_total       ),   & ! total f() calls
-            c_loc( solver_stats%Jac_evals_total       ),   & ! total Jac() calls
-            c_loc( solver_stats%RHS_time__s           ),   & ! Compute time f() [s]
-            c_loc( solver_stats%Jac_time__s           ),   & ! Compute time Jac() [s]
             c_loc( solver_stats%max_loss_precision) & ! Maximum loss of precision
     )
 
+  end subroutine
+
+  subroutine init_export_solver_data_state( this)
+    class(camp_solver_data_t), intent(inout) :: this
+    call init_export_solver_state()
   end subroutine
 
   subroutine export_solver_data_state( this)

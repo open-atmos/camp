@@ -21,7 +21,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
                  int n_sub_model_float_param, int n_sub_model_env_param,
-                 int use_cpu, int nGPUs);
+                 int use_cpu);
 void solver_set_spec_name(void *solver_data, char *spec_name,
                           int size_spec_name, int i);
 void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
@@ -38,9 +38,8 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
                            int *NLS_convergence_fails, int *DLS_Jac_evals,
                            int *DLS_RHS_evals, double *last_time_step__s,
                            double *next_time_step__s, int *Jac_eval_fails,
-                           int *RHS_evals_total, int *Jac_evals_total,
-                           double *RHS_time__s, double *Jac_time__s,
                            double *max_loss_precision);
+void init_export_solver_state();
 void export_solver_state(void *solver_data);
 void join_solver_state(void *solver_data);
 void export_solver_stats(void *solver_data);

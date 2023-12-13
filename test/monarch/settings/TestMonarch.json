@@ -8,8 +8,6 @@
     "caseGpuCpu": "GPU",
     "caseMulticellsOnecell": "BDF",
     "mpiProcesses": 20,
-    "allocatedNodes": 1,
-    "allocatedTasksPerNode": 160,
     "diffCellsL": [
         "Realistic"
     ],
@@ -32,9 +30,5 @@
     "exportPath": "exports",
     "results_file": "_solver_stats.csv",
     "nCellsProcesses": 40,
-    "campConf": "settings/config_variables_c_solver.txt",
-    "nGPUsCaseBase": 1,
-    "nGPUsCaseOptimList": [
-        2
-    ]
+    "campConf": "settings/config_variables_c_solver.txt"
 }

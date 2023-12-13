@@ -692,13 +692,6 @@ contains
 
 #ifdef DEBUG
       if (i_repeat.eq.1) then
-        ! TIMERS - timers and counters are available here for the last call
-        ! to solve()
-        write(*,*) "Calls to f()", solver_stats%RHS_evals_total
-        write(*,*) "Calls to Jac()", solver_stats%Jac_evals_total
-        write(*,*) "Compute time f()", solver_stats%RHS_time__s, "s"
-        write(*,*) "Compute time Jac()", solver_stats%Jac_time__s, "s"
-
         call solver_stats%print()
 
         ! Check the Jacobian evaluations

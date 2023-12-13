@@ -138,7 +138,7 @@ void rxn_arrhenius_calc_deriv_contrib(ModelData *model_data,
   double *env_data = model_data->grid_cell_env;
 
   // Calculate the reaction rate
-  long double rate = RATE_CONSTANT_;
+  double rate = RATE_CONSTANT_;
   for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++)
     rate *= state[REACT_(i_spec)];
 
@@ -186,7 +186,7 @@ void rxn_arrhenius_calc_jac_contrib(ModelData *model_data, Jacobian jac,
   int i_elem = 0;
   for (int i_ind = 0; i_ind < NUM_REACT_; i_ind++) {
     // Calculate d_rate / d_i_ind
-    long double rate = RATE_CONSTANT_;
+    double rate = RATE_CONSTANT_;
     for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++)
       if (i_spec != i_ind) rate *= state[REACT_(i_spec)];
 

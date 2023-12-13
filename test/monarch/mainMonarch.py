@@ -8,8 +8,6 @@ import numpy as np
 import json
 import subprocess
 from pandas import read_csv as pd_read_csv
-import time
-from math import ceil
 
 
 class TestMonarch:
@@ -24,8 +22,6 @@ class TestMonarch:
     self.caseGpuCpu = ""
     self.caseMulticellsOnecell = ""
     self.mpiProcesses = 1
-    self.allocatedNodes = 1
-    self.allocatedTasksPerNode = 160
     # Cases configuration
     self.diffCellsL = ""
     self.mpiProcessesCaseBase = 1
@@ -45,33 +41,9 @@ class TestMonarch:
     self.campConf = "settings/config_variables_c_solver.txt"
 
 
-def write_camp_config_file(conf):
-  try:
-    file1 = open(conf.campConf, "w")
-    if conf.caseGpuCpu == "CPU":
-      file1.write("USE_CPU=ON\n")
-    else:
-      file1.write("USE_CPU=OFF\n")
-    file1.write(str(nGPUs) + "\n")
-    file1.close()
-  except Exception as e:
-    print("write_camp_config_file fails", e)
-
-
 # from line_profiler_pycharm import profile
 # @profile
 def run(conf):
-  if conf.caseGpuCpu == "GPU":
-    maxCoresPerNode = 40
-    if (conf.mpiProcesses > maxCoresPerNode and
-        conf.mpiProcesses % maxCoresPerNode != 0):
-      print(
-        "ERROR: MORE THAN 40 MPI PROCESSES AND NOT "
-        "MULTIPLE OF 40, WHEN CTE-POWER ONLY HAS 40 CORES "
-        "PER NODE\n");
-      raise
-  coresPerGPU = 10
-  nGPUs = ceil(conf.mpiProcesses / coresPerGPU)
   exec_str = ""
   try:
     ddt_pid = subprocess.check_output(
@@ -80,8 +52,13 @@ def run(conf):
       exec_str += 'ddt --connect '
   except Exception:
     pass
-  exec_str += "mpirun -v -np " + str(
-    conf.mpiProcesses) + " --bind-to core "
+  maxCoresPerNode = 40
+  if conf.mpiProcesses <= maxCoresPerNode:
+    exec_str += "mpirun -v -np " + str(
+      conf.mpiProcesses) + " --bind-to core " #for plogin (fails squeue)
+  else:
+    exec_str += "srun --cpu-bind=core -n " + str(
+      conf.mpiProcesses) + " " #foqueue (slow plogin)
   if (conf.profileCuda == "nvprof" and conf.caseGpuCpu ==
       "GPU"):
     pathNvprof = ("../../compile/power9/" +
@@ -111,14 +88,13 @@ def run(conf):
       file1.write("USE_CPU=ON\n")
     else:
       file1.write("USE_CPU=OFF\n")
-    file1.write(str(nGPUs) + "\n")
     file1.close()
   except Exception as e:
     print("write_camp_config_file fails", e)
   print("exec_str:", exec_str, conf.diffCells,
         conf.caseGpuCpu,
         conf.caseMulticellsOnecell, "ncellsPerMPIProcess:",
-        conf.nCells, "nGPUs:", nGPUs)
+        conf.nCells)
   conf_name = "settings/TestMonarch.json"
   with open(conf_name, 'w', encoding='utf-8') as jsonFile:
     json.dump(conf.__dict__, jsonFile, indent=4,
@@ -126,10 +102,8 @@ def run(conf):
   nCellsStr = str(conf.nCells)
   if conf.nCells >= 1000:
     nCellsStr = str(int(conf.nCells / 1000)) + "k"
-  if conf.caseGpuCpu == "GPU":
-    caseGpuCpuName = str(nGPUs) + conf.caseGpuCpu
-  else:
-    caseGpuCpuName = str(conf.mpiProcesses) + "CPUcores"
+  caseGpuCpuName=conf.caseGpuCpu+str(conf.mpiProcesses) + "cores"
+  out = 0
   is_import = False
   data_path = ("out/stats" + caseGpuCpuName + nCellsStr +
                "cells" + str(conf.timeSteps) + "tsteps.csv")
@@ -137,30 +111,38 @@ def run(conf):
   data_path2 = ("out/state" + caseGpuCpuName + nCellsStr +
                 "cells" + str(conf.timeSteps) + "tsteps.csv")
   if conf.is_import and os.path.exists(data_path):
-    is_import = True
-    if conf.is_out and not os.path.exists(data_path2):
-      is_import = False
+    nRows_csv = (conf.timeSteps * conf.nCells *conf.mpiProcesses)
+    df = pd_read_csv(data_path, nrows=nRows_csv)
+    data = df.to_dict('list')
+    y_key_words = conf.plotYKey.split()
+    y_key = y_key_words[-1]
+    data = data[y_key]
+    print("data stats",data)
+    if data:
+      is_import = True
+    if conf.is_out:
+      if os.path.exists(data_path2):
+        is_import = True
+      else:
+        is_import = False
   if not is_import:
     os.system(exec_str)
-  data_path = ("out/stats" + caseGpuCpuName + nCellsStr +
-               "cells" + str(conf.timeSteps) + "tsteps.csv")
-  if not is_import:
     os.rename("out/stats.csv", data_path)
-  nRows_csv = (conf.timeSteps * conf.nCells *
-               conf.mpiProcesses)
-  df = pd_read_csv(data_path, nrows=nRows_csv)
-  data = df.to_dict('list')
-  y_key_words = conf.plotYKey.split()
-  y_key = y_key_words[-1]
-  data = data[y_key][0]
-  out = 0
-  if conf.is_out:
-    if not is_import:
+    if conf.is_out:
       os.rename("out/state.csv", data_path2)
-    df = pd_read_csv(data_path2, header=None,
-                     names=["Column1"])
-    out = df["Column1"].tolist()
-  return data, out
+    nRows_csv = (conf.timeSteps * conf.nCells *conf.mpiProcesses)
+    df = pd_read_csv(data_path, nrows=nRows_csv)
+    data = df.to_dict('list')
+    y_key_words = conf.plotYKey.split()
+    y_key = y_key_words[-1]
+    data = data[y_key]
+    print("data stats",data)
+  if conf.is_out:
+    if os.path.exists(data_path2):
+      df = pd_read_csv(data_path2, header=None,
+                       names=["Column1"])
+      out = df["Column1"].tolist()
+  return data[0], out
 
 
 # @profile
@@ -324,7 +306,7 @@ def plot_cases(conf, datay):
     datax = list(range(1, conf.timeSteps + 1, 1))
     plot_x_key = "Timesteps"
   namex = plot_x_key
-  print(namex, ":", datax)
+  print(namex, ":", datax[0],"to",datax[-1])
   if legend:
     print("plotTitle: ", plotTitle, " legend:", legend)
   else:
@@ -355,4 +337,4 @@ def run_main(conf):
         conf.mpiProcessesCaseOptimList[i] = cellsProcesses
 
   datay = run_diffCells(conf)
-  #plot_cases(conf, datay)
+  plot_cases(conf, datay)

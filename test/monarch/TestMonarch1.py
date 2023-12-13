@@ -19,11 +19,8 @@ def all_timesteps():
   # conf.profileCuda = "nsight"
   conf.is_import = True
   conf.mpiProcessesCaseBase = 1
-  conf.mpiProcessesCaseOptimList = [10]
-  conf.allocatedNodes = 1
-  conf.allocatedTasksPerNode = 160
-  conf.cells = [100000]
-  # conf.cells = [100, 500, 1000, 5000, 10000]
+  conf.mpiProcessesCaseOptimList = [1]
+  conf.cells = [10000]
   conf.timeSteps = 720
   conf.caseBase = "CPU One-cell"
   # conf.caseBase = "GPU BDF"
@@ -33,6 +30,7 @@ def all_timesteps():
   conf.plotYKey = "Speedup timecvStep"
 
   run_main(conf)
+
 
 if __name__ == "__main__":
   all_timesteps()

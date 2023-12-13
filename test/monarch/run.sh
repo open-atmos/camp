@@ -15,11 +15,9 @@ make_and_check() {
 }
 
 make_run() {
-  ln -rs -fL out ../../build/out
-  ln -rs -fL settings ../../build/settings
   curr_path=$(pwd)
   cd ../../build
-  make
+  make -j 4
   cd $curr_path
   #python TestMonarch.py
   python checkGPU.py

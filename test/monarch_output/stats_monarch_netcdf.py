@@ -54,8 +54,9 @@ def process_variable(dataset1, dataset2, var_name):
     quantile75, quantile95, max_error, relative_error
 
 
-file1_path_header = "../../../../monarch_out/cpu_tstep479_O3/"
-file2_path_header = "../../../../monarch_out/gpu_tstep479_O3/"
+file1_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/cpu_tstep6_O3/"
+#file2_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/gpu_tstep6_O3/"
+file2_path_header = "/gpfs/scratch/bsc32/bsc32815/a591/nmmb-monarch/OUTPUT/regional/000/20160721/CURRENT_RUN/"
 
 # Calculate the speedup
 file1 = file1_path_header + "out/stats.csv"
@@ -105,6 +106,6 @@ sns.boxplot(data=data, orient='v', showfliers=False)
 plt.ylabel("Relative Error [%]")
 plt.xticks(range(len(variable_names)), variable_names, rotation=90)
 plt.title("Box Plot of highest NRMSE for MONARCH-CAMP 2 GPUs 24h")
-plt.show()
+#plt.show()
 #worst_variables.to_csv("exports/summary_table.csv", index=False)
 

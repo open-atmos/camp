@@ -225,12 +225,10 @@ endif()
 
 ######################################################################
 # copy dirs
-if(DISABLE_TESTS)
-else ()
-SET(ENABLE_TESTS ON)
-endif ()
 
-if(ENABLE_TESTS)
+SET(USE_TESTS ON)
+
+if(USE_TESTS)
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
 add_custom_target(copy_test ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/test ${CMAKE_BINARY_DIR}/test_run)
 add_custom_target(copy_mechanism ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/mechanisms ${CMAKE_BINARY_DIR}/mechanisms_run)
@@ -241,23 +239,24 @@ endif()
 ######################################################################
 # Unit test macro
 
-if (ENABLE_TESTS)
-  macro(do_unit_test test_name result)
-    if(ENABLE_MPI)
-      add_test(unit_test_${test_name} mpirun -v -np 1 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
-    else()
-      add_test(unit_test_${test_name} ${CMAKE_BINARY_DIR}/unit_test_${test_name})
-    endif()
-    set_tests_properties(unit_test_${test_name}
-            PROPERTIES PASS_REGULAR_EXPRESSION ${result})
-  endmacro(do_unit_test)
+if (USE_TESTS)
+macro(do_unit_test test_name result)
+if(ENABLE_MPI)
+  add_test(unit_test_${test_name} mpirun -v -np 2 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
+else()
+  add_test(unit_test_${test_name} ${CMAKE_BINARY_DIR}/unit_test_${test_name})
+endif()
+set_tests_properties(unit_test_${test_name}
+        PROPERTIES PASS_REGULAR_EXPRESSION ${result})
+endmacro(do_unit_test)
 endif()
 
 ######################################################################
 # tests
 
 enable_testing()
-if (ENABLE_TESTS)
+
+if (USE_TESTS)
 do_unit_test(property "PASS")
 do_unit_test(chem_spec_data "PASS")
 do_unit_test(aero_phase_data "PASS")
@@ -277,7 +276,7 @@ if (ENABLE_GPU)
   add_test(NAME test_gpu COMMAND checkGPU.sh WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch)
 endif()
 
-if (ENABLE_TESTS)
+if (USE_TESTS)
     # New unit tests (UNDER DEVELOPMENT)
   add_test(test_rxn_arrhenius_mech ${CMAKE_BINARY_DIR}/test_run/unit_tests/input_files/run_rxn_arrhenius.sh ${MPI_TEST_FLAG})
 
@@ -406,7 +405,7 @@ set(SUB_MODELS_SRC ${SUB_MODELS_F_SRC} ${SUB_MODELS_C_SRC})
 set(CAMP_C_SRC
         src/camp_solver.c src/rxn_solver.c src/aero_phase_solver.c
         src/aero_rep_solver.c src/sub_model_solver.c
-        src/debug_and_stats/camp_debug_2.c
+        src/camp_debug.c
         src/time_derivative.c
         src/Jacobian.c src/debug_diff_check.c)
 
@@ -480,14 +479,6 @@ install(
 endif()
 
 ######################################################################
-# camp-chem box model
-
-add_executable(camp_box_model test/camp_box_model_data.F90
-                              test/camp_box_model.F90)
-
-target_link_libraries(camp_box_model camplib)
-
-######################################################################
 # test_chemistry_cb05cl_ae5
 
 set(CB5_EBI_SOLVER
@@ -538,7 +529,16 @@ if (ENABLE_GPU)
   target_link_libraries(mock_monarch camplib)
 endif()
 
-if (ENABLE_TESTS)
+if (USE_TESTS)
+
+######################################################################
+# camp-chem box model
+
+add_executable(camp_box_model test/camp_box_model_data.F90
+    test/camp_box_model.F90)
+
+target_link_libraries(camp_box_model camplib)
+
 
 ######################################################################
 # test_chemistry_cb05cl_ae5

@@ -344,6 +344,9 @@ program mock_monarch
   ! finalize mpi
   call camp_mpi_finalize()
 
+  ! Free the interface and the solver
+  deallocate(camp_interface)
+
 contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

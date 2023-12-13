@@ -173,7 +173,7 @@ void sub_model_PDFiTE_calculate(int *sub_model_int_data,
   double *float_data = sub_model_float_data;
 
   // Calculate the water activity---i.e., relative humidity (0-1)
-  long double a_w = PPM_TO_RH_ * state[GAS_WATER_ID_];
+  double a_w = PPM_TO_RH_ * state[GAS_WATER_ID_];
 
   // Keep a_w within 0-1
   // TODO Filter =( try to remove
@@ -205,16 +205,16 @@ void sub_model_PDFiTE_calculate(int *sub_model_int_data,
       // across all other ion pairs (not i_ion_pair)
       // where v_x is the stoichiometric coefficient for species x in
       // the other ion_pair and N_x is its concentration.
-      long double omega = 0.0;
+      double omega = 0.0;
       for (int j_ion_pair = 0; j_ion_pair < NUM_ION_PAIRS_; ++j_ion_pair) {
         if (i_ion_pair == j_ion_pair) continue;
-        omega += (long double)2.0 *
+        omega += (double)2.0 *
                  (NUM_CATION_(j_ion_pair) + NUM_ANION_(j_ion_pair)) *
                  CATION_N_(j_ion_pair) * ANION_N_(j_ion_pair);
       }
 
       // Initialize ln(gamma)
-      long double ln_gamma = 0.0;
+      double ln_gamma = 0.0;
 
       // Add contributions from each interacting ion_pair
       for (int i_inter = 0; i_inter < NUM_INTER_(i_ion_pair); i_inter++) {
@@ -230,7 +230,7 @@ void sub_model_PDFiTE_calculate(int *sub_model_int_data,
         int j_ion_pair = INTER_SPEC_ID_(i_ion_pair, i_inter);
 
         // Calculate ln_gamma_inter
-        long double ln_gamma_inter = 0.0;
+        double ln_gamma_inter = 0.0;
         for (int i_B = 0; i_B < NUM_B_(i_ion_pair, i_inter); i_B++) {
           ln_gamma_inter += B_Z_(i_ion_pair, i_inter, i_B) * pow(a_w, i_B);
         }
@@ -317,16 +317,16 @@ void sub_model_PDFiTE_get_jac_contrib(int *sub_model_int_data,
       // across all other ion pairs (not i_ion_pair)
       // where v_x is the stoichiometric coefficient for species x in
       // the other ion_pair and N_x is its concentration.
-      long double omega = 0.0;
+      double omega = 0.0;
       for (int j_ion_pair = 0; j_ion_pair < NUM_ION_PAIRS_; ++j_ion_pair) {
         if (i_ion_pair == j_ion_pair) continue;
-        omega += (long double)2.0 *
+        omega += (double)2.0 *
                  (NUM_CATION_(j_ion_pair) + NUM_ANION_(j_ion_pair)) *
                  CATION_N_(j_ion_pair) * ANION_N_(j_ion_pair);
       }
 
       // Initialize ln(gamma)
-      long double ln_gamma = 0.0;
+      double ln_gamma = 0.0;
 
       // Add contributions from each interacting ion_pair
       for (int i_inter = 0; i_inter < NUM_INTER_(i_ion_pair); i_inter++) {
@@ -342,7 +342,7 @@ void sub_model_PDFiTE_get_jac_contrib(int *sub_model_int_data,
         int j_ion_pair = INTER_SPEC_ID_(i_ion_pair, i_inter);
 
         // Calculate ln_gamma_inter
-        long double ln_gamma_inter = 0.0;
+        double ln_gamma_inter = 0.0;
         for (int i_B = 0; i_B < NUM_B_(i_ion_pair, i_inter); i_B++) {
           ln_gamma_inter += B_Z_(i_ion_pair, i_inter, i_B) * pow(a_w, i_B);
         }
@@ -367,7 +367,7 @@ void sub_model_PDFiTE_get_jac_contrib(int *sub_model_int_data,
 
       }  // Loop on interacting ion_pairs
 
-      long double gamma_i = exp(ln_gamma);
+      double gamma_i = exp(ln_gamma);
 
       // Loop through the ion pairs to set the partial derivatives
       for (int i_inter = 0; i_inter < NUM_INTER_(i_ion_pair); i_inter++) {
@@ -383,8 +383,8 @@ void sub_model_PDFiTE_get_jac_contrib(int *sub_model_int_data,
         int j_ion_pair = INTER_SPEC_ID_(i_ion_pair, i_inter);
 
         // Calculate ln_gamma_inter and dln_gamma_inter_d_water
-        long double ln_gamma_inter = B_Z_(i_ion_pair, i_inter, 0);
-        long double d_ln_gamma_inter_d_water = 0.0;
+        double ln_gamma_inter = B_Z_(i_ion_pair, i_inter, 0);
+        double d_ln_gamma_inter_d_water = 0.0;
         for (int i_B = 1; i_B < NUM_B_(i_ion_pair, i_inter); i_B++) {
           ln_gamma_inter += B_Z_(i_ion_pair, i_inter, i_B) * pow(a_w, i_B);
           d_ln_gamma_inter_d_water +=

@@ -6,7 +6,7 @@
 !> The camp_monarch_interface_t object and related functions
 
 !> Interface for the MONACH model and CAMP-camp
-module camp_monarch_interface_2
+module camp_monarch_interface
 
   use camp_constants, only : i_kind
   use camp_mpi
@@ -82,7 +82,7 @@ contains
     integer, optional :: n_cells
     type(camp_solver_data_t), pointer :: camp_solver_data
     character, allocatable :: buffer(:)
-    integer(kind=i_kind) :: pos, pack_size
+    integer(kind=i_kind) :: pos, pack_size, size
     integer(kind=i_kind) :: i_spec, i_photo_rxn, rank, n_ranks, ierr
     type(string_t), allocatable :: unique_names(:)
     character(len=:), allocatable :: spec_name, settings_interface_file
@@ -94,7 +94,7 @@ contains
     type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
     real(kind=dp) :: comp_start, comp_end
     character(len=128) :: i_str
-    integer :: local_comm,use_cpu, nGPUs
+    integer :: local_comm,use_cpu
 
     if (present(mpi_comm)) then
       local_comm = mpi_comm
@@ -225,15 +225,13 @@ contains
     end if
     deallocate(buffer)
     use_cpu=1
-    nGPUs=1
     open(unit=32, file='settings/config_variables_c_solver.txt', status='old')
     read(32,'(A)') i_str
     if(trim(i_str) == "USE_CPU=OFF") then
       use_cpu = 0
     end if
-    read(32, *) nGPUs
     close(32)
-    call this%camp_core%solver_initialize(use_cpu,nGPUs)
+    call this%camp_core%solver_initialize(use_cpu)
     this%camp_state => this%camp_core%new_state()
     if(this%output_file_title=="cb05_paperV2") then
       allocate(this%offset_photo_rates_cells(this%n_cells))
@@ -268,10 +266,7 @@ contains
         call this%camp_core%update_data(update_data_GSD)
       end if
     end do
-    !unique_names=this%camp_core%unique_names()
-    !do i=1, size(unique_names)
-    !  print*,i,trim(unique_names(i)%string)
-    !end do
+    call this%camp_core%init_export_solver_state()
     if (MONARCH_PROCESS==0) then
       call cpu_time(comp_end)
       write(*,*) "Initialization time: ", comp_end-comp_start, " s"
@@ -374,8 +369,6 @@ contains
             end do
             this%camp_state%state_var(this%map_camp_id(:)) = &
                             MONARCH_conc(i,j,k,this%map_monarch_id(:))
-            !print*,"MONARCH_conc381",MONARCH_conc(i,j,k,this%map_monarch_id(:))
-            !print*,"state_var421",this%camp_state%state_var(:)
             if(this%output_file_title=="monarch_cb05") then
               this%camp_state%state_var(this%gas_phase_water_id) = &
               water_conc(1,1,1,water_vapor_index)
@@ -384,14 +377,12 @@ contains
                       water_conc(1,1,1,water_vapor_index) * &
                               mwair / mwwat * 1.e6
             end if
-            !print*,"state_var430",this%camp_state%state_var(:)
             if(this%output_file_title=="cb05_paperV2") then
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r))=&
                         this%camp_state%state_var(this%specs_emi_id(r))&
                                 +this%specs_emi(r)*rate_emi(i_hour,z+1)*conv(i,j,k)
               end do
-            !print*,"state_var436",this%camp_state%state_var(1)
             end if
             call cpu_time(comp_start)
             call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp))
@@ -418,8 +409,6 @@ contains
             call this%camp_state%env_states(z+1)%set_pressure_Pa(real(pressure(i,j,k),kind=dp))
             this%camp_state%state_var(this%map_camp_id(:) + (z*state_size_per_cell))&
              = MONARCH_conc(i,j,k,this%map_monarch_id(:))
-            !print*,"MONARCH_conc381",MONARCH_conc(i,j,k,this%map_monarch_id(:))
-            !print*,"state_var421",this%camp_state%state_var(:)
             if(this%output_file_title=="monarch_cb05") then
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
                       water_conc(1,1,1,water_vapor_index)
@@ -427,7 +416,6 @@ contains
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
                       water_conc(1,1,1,water_vapor_index) * mwair / mwwat * 1.e6
             end if
-            !print*,"state_var430",this%camp_state%state_var(:)
             if(this%output_file_title=="cb05_paperV2") then
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)=&
@@ -435,7 +423,6 @@ contains
                                 +this%specs_emi(r)*rate_emi(i_hour,z+1)*conv(i,j,k)
               end do
             endif
-            !print*,"state_var436",this%camp_state%state_var(1+z*state_size_per_cell)
           end do
         end do
       end do
@@ -821,10 +808,28 @@ contains
     end if
   end subroutine get_init_conc
 
-
   elemental subroutine finalize(this)
     type(camp_monarch_interface_t), intent(inout) :: this
-    if (associated(this%camp_core)) deallocate(this%camp_core)
+    if (associated(this%camp_core)) &
+            deallocate(this%camp_core)
+    if (associated(this%camp_state)) &
+            deallocate(this%camp_state)
+    if (allocated(this%monarch_species_names)) &
+            deallocate(this%monarch_species_names)
+    if (allocated(this%map_monarch_id)) &
+            deallocate(this%map_monarch_id)
+    if (allocated(this%map_camp_id)) &
+            deallocate(this%map_camp_id)
+    if (allocated(this%init_conc_camp_id)) &
+            deallocate(this%init_conc_camp_id)
+    if (allocated(this%init_conc)) &
+            deallocate(this%init_conc)
+    if (associated(this%species_map_data)) &
+            deallocate(this%species_map_data)
+    if (associated(this%init_conc_data)) &
+            deallocate(this%init_conc_data)
+    if (associated(this%property_set)) &
+            deallocate(this%property_set)
 
   end subroutine finalize
 

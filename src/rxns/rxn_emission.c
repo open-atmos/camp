@@ -141,7 +141,7 @@ void rxn_emission_calc_deriv_contrib(ModelData *model_data,
 
   // Add contributions to the time derivative
   if (DERIV_ID_ >= 0)
-    time_derivative_add_value(time_deriv, DERIV_ID_, (long double)RATE_);
+    time_derivative_add_value(time_deriv, DERIV_ID_, (double)RATE_);
 
   return;
 }

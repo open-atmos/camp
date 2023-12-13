@@ -303,18 +303,18 @@ void rxn_HL_phase_transfer_calc_deriv_contrib(
 
     // this was replaced with transition-regime rate equation
 #if 0
-    long double cond_rate =
-        ((long double)1.0) / (radius * radius / (3.0 * DIFF_COEFF_) +
+    double cond_rate =
+        ((double)1.0) / (radius * radius / (3.0 * DIFF_COEFF_) +
                               4.0 * radius / (3.0 * MFP_M_));
 #endif
 
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (1/s)
-    long double cond_rate =
+    double cond_rate =
         gas_aerosol_transition_rxn_rate_constant(DIFF_COEFF_, MFP_M_, radius, ALPHA_);
 
     // Calculate the evaporation rate constant (1/s)
-    long double evap_rate = cond_rate / (EQUIL_CONST_);
+    double evap_rate = cond_rate / (EQUIL_CONST_);
 
     // Calculate the evaporation and condensation rates (ppm/s)
     cond_rate *= state[GAS_SPEC_];
@@ -397,17 +397,17 @@ void rxn_HL_phase_transfer_calc_jac_contrib(ModelData *model_data, Jacobian jac,
 
     // this was replaced with transition-regime rate equation
 #if 0
-    long double cond_rate = 1.0 / (radius * radius / (3.0 * DIFF_COEFF_) +
+    double cond_rate = 1.0 / (radius * radius / (3.0 * DIFF_COEFF_) +
                                    4.0 * radius / (3.0 * MFP_M_));
 #endif
 
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (1/s)
-    long double cond_rate =
+    double cond_rate =
         gas_aerosol_transition_rxn_rate_constant(DIFF_COEFF_, MFP_M_, radius, ALPHA_);
 
     // Calculate the evaporation rate constant (1/s)
-    long double evap_rate = cond_rate / (EQUIL_CONST_);
+    double evap_rate = cond_rate / (EQUIL_CONST_);
 
     // Change in the gas-phase is evaporation - condensation (ppm/s)
     if (JAC_ID_(0) >= 0)
@@ -447,14 +447,14 @@ void rxn_HL_phase_transfer_calc_jac_contrib(ModelData *model_data, Jacobian jac,
     // Calculate d_rate/d_effecive_radius and d_rate/d_number_concentration
     // ( This was replaced with transition-regime rate equation. )
 #if 0
-    long double d_rate_d_radius =
+    double d_rate_d_radius =
         -rate * cond_rate *
         (2.0 * radius / (3.0 * DIFF_COEFF_) + 4.0 / (3.0 * MFP_M_));
 #endif
-    long double d_cond_d_radius =
+    double d_cond_d_radius =
         d_gas_aerosol_transition_rxn_rate_constant_d_radius(
             DIFF_COEFF_, MFP_M_, radius, ALPHA_) * state[GAS_SPEC_];
-    long double d_evap_d_radius = d_cond_d_radius / state[GAS_SPEC_] /
+    double d_evap_d_radius = d_cond_d_radius / state[GAS_SPEC_] /
                                   (EQUIL_CONST_)*state[AERO_SPEC_(i_phase)] /
                                   state[AERO_WATER_(i_phase)];
 

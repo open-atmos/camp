@@ -332,22 +332,22 @@ void rxn_SIMPOL_phase_transfer_calc_deriv_contrib(
     // This was replaced with the transition-regime condensation rate
     // equations
 #if 0
-    long double cond_rate =
-        ((long double)1.0) / (radius * radius / (3.0 * DIFF_COEFF_) +
+    double cond_rate =
+        ((double)1.0) / (radius * radius / (3.0 * DIFF_COEFF_) +
                               4.0 * radius / (3.0 * MFP_M_));
 #endif
 
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (m3/#/s)
-    long double cond_rate =
+    double cond_rate =
         gas_aerosol_transition_rxn_rate_constant(DIFF_COEFF_, MFP_M_, radius, ALPHA_);
 
     // Calculate the evaporation rate constant (ppm_x*m^3/kg_x/s)
-    long double evap_rate =
+    double evap_rate =
         cond_rate * (EQUIL_CONST_ * aero_phase_avg_MW / aero_phase_mass);
 
     // Get the activity coefficient (if one exists)
-    long double act_coeff = 1.0;
+    double act_coeff = 1.0;
     if (AERO_ACT_ID_(i_phase) > -1) {
       act_coeff = state[AERO_ACT_ID_(i_phase)];
     }
@@ -470,22 +470,22 @@ void rxn_SIMPOL_phase_transfer_calc_jac_contrib(ModelData *model_data,
     // This was replaced with the transition-regime condensation rate
     // equations
 #if 0
-    long double cond_rate =
-        ((long double)1.0) / (radius * radius / (3.0 * DIFF_COEFF_) +
+    double cond_rate =
+        ((double)1.0) / (radius * radius / (3.0 * DIFF_COEFF_) +
                               4.0 * radius / (3.0 * MFP_M_));
 #endif
 
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (m3/#/s)
-    long double cond_rate =
+    double cond_rate =
         gas_aerosol_transition_rxn_rate_constant(DIFF_COEFF_, MFP_M_, radius, ALPHA_);
 
     // Calculate the evaporation rate constant (ppm_x*m^3/kg_x/s)
-    long double evap_rate =
+    double evap_rate =
         cond_rate * (EQUIL_CONST_ * aero_phase_avg_MW / aero_phase_mass);
 
     // Get the activity coefficient (if one exists)
-    long double act_coeff = 1.0;
+    double act_coeff = 1.0;
     if (AERO_ACT_ID_(i_phase) > -1) {
       act_coeff = state[AERO_ACT_ID_(i_phase)];
     }

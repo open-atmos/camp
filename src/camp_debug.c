@@ -6,12 +6,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-#include "camp_debug_2.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include "../camp_solver.h"
+#include "camp_solver.h"
 
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_USE_MPI
@@ -95,49 +90,22 @@ void join_export_state(){
 #endif
 }
 
-void init_export_stats(){
-#ifdef CAMP_DEBUG_GPU
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  char file_path[]="out/stats.csv";
-  if(rank==0){
-    printf("export_stats enabled\n");
-    FILE *fptr;
-    fptr = fopen(file_path,"w");
-    fprintf(fptr, "timecvStep,timeCVode\n");
-    fclose(fptr);
-  }
-#endif
-}
-
 void export_stats(SolverData *sd){
 #ifdef CAMP_DEBUG_GPU
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if (rank == 0) {
     FILE *fptr;
-    fptr = fopen("out/stats.csv", "a");
-    CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
-    fprintf(fptr, "%.17le,",cv_mem->timecvStep);
-    fprintf(fptr, "%.17le",sd->timeCVode);
-    fprintf(fptr, "\n");
-    fclose(fptr);
-  }
-#endif
-}
-
-void print_double(double *x, int len, const char *s){
-#ifdef USE_PRINT_ARRAYS
-  for (int i=0; i<len; i++){
-    printf("%s[%d]=%.17le\n",s,i,x[i]);
-  }
-#endif
-}
-
-void print_int(int *x, int len, const char *s){
-#ifdef USE_PRINT_ARRAYS
-  for (int i=0; i<len; i++){
-    printf("%s[%d]=%d\n",s,i,x[i]);
+    if ((fptr = fopen("out/stats.csv", "w")) != NULL) {
+      fprintf(fptr, "timecvStep,timeCVode\n");
+      CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
+      fprintf(fptr, "%.17le,",cv_mem->timecvStep);
+      fprintf(fptr, "%.17le",sd->timeCVode);
+      fprintf(fptr, "\n");
+      fclose(fptr);
+    }else {
+      printf("File '%s' does not exist.\n", "out/stats.csv");
+    }
   }
 #endif
 }
