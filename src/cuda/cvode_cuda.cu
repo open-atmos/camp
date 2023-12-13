@@ -342,7 +342,7 @@ void rxn_gpu_photolysis_calc_jac_contrib(ModelDataVariable *sc, JacobianGPU jac,
   }
 }
 
-__device__ void cudaDevicemin_2(double *g_odata, double in, volatile double *sdata, int n_shr_empty){
+__device__ void cudaDevicemin(double *g_odata, double in, volatile double *sdata, int n_shr_empty){
   unsigned int tid = threadIdx.x;
   __syncthreads();
   sdata[tid] = in;
@@ -655,7 +655,7 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
   extern __shared__ double sdata[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   double min;
-  cudaDevicemin_2(&min, y_n[i], sdata, md->n_shr_empty);
+  cudaDevicemin(&min, y_n[i], sdata, md->n_shr_empty);
   if(min>-SMALL){
     return 0;
   }
@@ -697,7 +697,7 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
     if (t_star < 0. || (t_star == 0. && acorr[i] >= 0.)){
       t_star=h_j;
     }
-    cudaDevicemin_2(&min, t_star, sdata, md->n_shr_empty);
+    cudaDevicemin(&min, t_star, sdata, md->n_shr_empty);
     if(min<h_j){
       h_j = min;
       h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
@@ -981,7 +981,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
     }
     md->dftemp[i]=md->dcv_y[i]+md->dtempv[i];
     double min;
-    cudaDevicemin_2(&min, md->dftemp[i], flag_shr2, md->n_shr_empty);
+    cudaDevicemin(&min, md->dftemp[i], flag_shr2, md->n_shr_empty);
     if (min < -CAMP_TINY) {
       return CONV_FAIL;
     }
@@ -1268,7 +1268,7 @@ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *sc,
   double min_val;
   int retval;
   md->dftemp[i]=md->cv_l[blockIdx.x*L_MAX]*md->cv_acor[i]+md->dzn[i];
-  cudaDevicemin_2(&min_val, md->dftemp[i], flag_shr2, md->n_shr_empty);
+  cudaDevicemin(&min_val, md->dftemp[i], flag_shr2, md->n_shr_empty);
   if (min_val < 0. && min_val > -CAMP_TINY) {
     md->dftemp[i]=fabs(md->dftemp[i]);
     md->dzn[i]=md->dftemp[i]-md->cv_l[0+blockIdx.x*L_MAX]*md->cv_acor[i];
@@ -1533,7 +1533,7 @@ int cudaDevicecvEwtSetSV(ModelDataGPU *md, ModelDataVariable *sc,double *weight)
   md->dtempv[i]=fabs(md->dzn[i]);
   double min;
   md->dtempv[i]=md->cv_reltol*md->dtempv[i]+md->cv_Vabstol[i];
-  cudaDevicemin_2(&min, md->dtempv[i], flag_shr2, md->n_shr_empty);
+  cudaDevicemin(&min, md->dtempv[i], flag_shr2, md->n_shr_empty);
   if (min <= 0.) return(-1);
   weight[i]= 1./md->dtempv[i];
   return(0);
