@@ -1791,28 +1791,20 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   ModelDataGPU *md = &md_object;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-  //TODO CHECK IF USING SC AS LOCAL INSTEAD OF MD->SCELLS HAS BETTER MAPE AND FINE IN MONARCH
-  //IF WANT TO USE SC 1 PER BLOCK, THEN CHECK ALL SC->SOMETHING = SOMETHING AND BLOCKIDX.X CALLS AND ADD IF(THREADIDX.X==0)...SYNCTHREADS() TO AVOID OVERLAPPING
-  //ModelDataVariable *sc = &md->sCells[blockIdx.x];
   ModelDataVariable sc_object = md->sCells[blockIdx.x];
   ModelDataVariable *sc = &sc_object;
-  __syncthreads();
   int istate;
   if(i<md->nrows){
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz=md->clock_khz;
     clock_t start;
     start = clock();
-    __syncthreads();
 #endif
     istate=cudaDeviceCVode(md,sc);
-    __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   if(threadIdx.x==0) sc->dtcudaDeviceCVode += ((double)(int)(clock() - start))/(clock_khz*1000);
-  __syncthreads();
 #endif
   }
-  __syncthreads();
   if(threadIdx.x==0) md->flagCells[blockIdx.x]=istate;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   ModelDataVariable *mdvo = md->mdvo;
