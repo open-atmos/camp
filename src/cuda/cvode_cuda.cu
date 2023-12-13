@@ -387,15 +387,13 @@ __device__ void cudaDeviceSpmv_2CSR(double* dx, double* db, double* dA, int* djA
   }
   __syncthreads();
   dx[row]=sum;
-  __syncthreads();
 }
 
 __device__ void cudaDeviceSpmv_2CSC_block(double* dx, double* db, double* dA, int* djA, int* diA){
   int row = threadIdx.x + blockDim.x*blockIdx.x;
-  __syncthreads();
   dx[row]=0.0;
-  __syncthreads();
   int nnz=diA[blockDim.x];
+  __syncthreads();
   for(int j=diA[threadIdx.x]; j<diA[threadIdx.x+1]; j++){
     double mult = db[row]*dA[j+nnz*blockIdx.x];
     atomicAdd_block(&(dx[djA[j]+blockDim.x*blockIdx.x]),mult);
