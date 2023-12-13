@@ -665,20 +665,17 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
 ) {
   extern __shared__ double sdata[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-  __syncthreads();
   double min;
   cudaDevicemin_2(&min, y_n[i], sdata, md->n_shr_empty);
   if(min>-SMALL){
     return 0;
   }
-  __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int clock_khz=md->clock_khz;
   clock_t start;
   start = clock();
 #endif
   atmp1[i]=y_n1[i];
-  __syncthreads();
   if (h_n > 0.) {
     acorr[i]=(1./h_n)*hf[i];
   } else {
@@ -687,7 +684,6 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
   double t_0 = h_n > 0. ? sc->cv_tn - h_n : sc->cv_tn - 1.;
   double t_j = 0.;
   for (int iter = 0; iter < GUESS_MAX_ITER && t_0 + t_j < sc->cv_tn; iter++) {
-    __syncthreads();
     double h_j = sc->cv_tn - (t_0 + t_j);
 #ifdef IS_DEBUG_MODE_CudaDeviceguess_helper
     if(threadIdx.x==0){
@@ -719,9 +715,7 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
     }
 #endif
     h_j = sc->cv_tn < t_0 + t_j + h_j ? sc->cv_tn - (t_0 + t_j) : h_j;
-    __syncthreads();
     if (h_n == 0. && sc->cv_tn - (h_j + t_j + t_0) > md->cv_reltol) {
-      __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) sc->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
 #endif
@@ -731,10 +725,8 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
     t_j += h_j;
     int aux_flag=0;
     int fflag=cudaDevicef(t_0 + t_j, atmp1, acorr,md,sc,&aux_flag);
-    __syncthreads();
     if (fflag == CAMP_SOLVER_FAIL) {
       acorr[i] = 0.;
-      __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) sc->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
 #endif
@@ -742,24 +734,19 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
     }
     if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < sc->cv_tn) {
       if (h_n == 0.){
-        __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) sc->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
 #endif
         return -1;
       }
     }
-    __syncthreads();
   }
-  __syncthreads();
   acorr[i]=atmp1[i]-y_n[i];
   if (h_n > 0.) acorr[i]=acorr[i]*0.999;
   hf[i]=atmp1[i]-y_n1[i];
-  __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0)  sc->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
 #endif
-  __syncthreads();
   return 1;
 }
 
