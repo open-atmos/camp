@@ -869,7 +869,6 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *sc)
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int retval;
-  __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int clock_khz=md->clock_khz;
   clock_t start;
@@ -893,16 +892,12 @@ int cudaDeviceJac(int *flag, ModelDataGPU *md, ModelDataVariable *sc)
     int j = threadIdx.x + n_iters*blockDim.x + nnz * blockIdx.x;
     md->J_solver[j]=md->dA[j];
   }
-  __syncthreads();
   md->J_state[i]=md->dcv_y[i];
   md->J_deriv[i]=md->dftemp[i];
-  __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0)  sc->timeJac += ((double)(clock() - start))/(clock_khz*1000);
 #endif
-  __syncthreads();
   *flag = 0;
-  __syncthreads();
   return 0;
 }
 
@@ -920,30 +915,22 @@ int cudaDevicelinsolsetup(
          (convfail == CV_FAIL_OTHER);
   jok = !jbad;
   if (jok==1) {
-    __syncthreads();
     sc->cv_jcur = 0;
     cudaDeviceJacCopy(md->diA, md->dsavedJ, md->dA);
-    __syncthreads();
   } else {
-    __syncthreads();
     sc->nstlj = sc->cv_nst;
     sc->cv_jcur = 1;
-    __syncthreads();
     int aux_flag=0;
-    __syncthreads();
     int guess_flag=cudaDeviceJac(&aux_flag,md,sc);
-    __syncthreads();
     if (guess_flag < 0) {
       return -1;}
     if (guess_flag > 0) {
       return 1;}
    cudaDeviceJacCopy(md->diA, md->dA, md->dsavedJ);
   }
-  __syncthreads();
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   md->dx[i]=0.;
   cudaDeviceBCGprecond_2(md->dA, md->djA, md->diA, md->ddiag, -sc->cv_gamma);
-  __syncthreads();
   return 0;
 }
 
@@ -982,9 +969,7 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *sc)
     temp1 = sqrt(temp1);
     rho0 = rho1;
     it++;
-  __syncthreads();
   }
-  __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   if(threadIdx.x==0) sc->counterBCGInternal += it;
   if(threadIdx.x==0) sc->counterBCG++;
@@ -1000,32 +985,26 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
   int m = 0;
   del = delp = 0.0;
   int retval;
-  __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int clock_khz=md->clock_khz;
   clock_t start;
 #endif
   for(;;) {
-    __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     start = clock();
 #endif
     md->dtempv[i]=sc->cv_rl1*md->dzn[i+md->nrows]+md->cv_acor[i];
     md->dtempv[i]=sc->cv_gamma*md->dftemp[i]-md->dtempv[i];
     solveBcgCudaDeviceCVODE(md, sc);
-    __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) sc->dtBCG += ((double)(int)(clock() - start))/(clock_khz*1000);
 #endif
     md->dtempv[i] = md->dx[i];
-    __syncthreads();
     cudaDeviceVWRMS_Norm_2(md->dx, md->dewt, &del, md->n_shr_empty);
     md->dftemp[i]=md->dcv_y[i]+md->dtempv[i];
-    __syncthreads();
     int guessflag=CudaDeviceguess_helper(0., md->dftemp,
        md->dcv_y, md->dtempv, md->dtempv1,md->dtempv2, &aux_flag, md, sc
     );
-    __syncthreads();
     if (guessflag < 0) {
       if (!(sc->cv_jcur)) {
         return TRY_AGAIN;
@@ -1039,20 +1018,18 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
     if (min < -CAMP_TINY) {
       return CONV_FAIL;
     }
-    __syncthreads();
     md->cv_acor[i]+=md->dtempv[i];
     md->dcv_y[i]=md->dzn[i]+md->cv_acor[i];
     if (m > 0) {
       sc->cv_crate = SUNMAX(0.3 * sc->cv_crate, del / delp);
     }
     dcon = del * SUNMIN(1.0, sc->cv_crate) / md->cv_tq[4+blockIdx.x*(NUM_TESTS + 1)];
+    __syncthreads();
     flag_shr2[0] = 0;
     __syncthreads();
     if (dcon <= 1.) {
       cudaDeviceVWRMS_Norm_2(md->cv_acor, md->dewt, &sc->cv_acnrm, md->n_shr_empty);
-      __syncthreads();
       sc->cv_jcur = 0;
-      __syncthreads();
       return CV_SUCCESS;
     }
     m++;
@@ -1064,9 +1041,7 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
       }
     }
     delp = del;
-    __syncthreads();
     retval=cudaDevicef(sc->cv_next_h, md->dcv_y, md->dftemp, md, sc, &aux_flag);
-    __syncthreads();
     md->cv_acor[i]=md->dcv_y[i]+md->dzn[i];
     if (retval < 0) {
       return CV_RHSFUNC_FAIL;
@@ -1078,7 +1053,6 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
         return RHSFUNC_RECVR;
       }
     }
-    __syncthreads();
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) sc->dtPostBCG += ((double)(clock() - start))/(clock_khz*1000);
 #endif
