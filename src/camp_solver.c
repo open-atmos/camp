@@ -30,7 +30,6 @@
 #include <gsl/gsl_roots.h>
 #endif
 #include "camp_debug.h"
-#include "debug_and_stats/camp_debug_2.h"
 
 #ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_USE_MPI

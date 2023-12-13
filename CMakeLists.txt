@@ -403,7 +403,7 @@ set(SUB_MODELS_SRC ${SUB_MODELS_F_SRC} ${SUB_MODELS_C_SRC})
 set(CAMP_C_SRC
         src/camp_solver.c src/rxn_solver.c src/aero_phase_solver.c
         src/aero_rep_solver.c src/sub_model_solver.c
-        src/debug_and_stats/camp_debug_2.c
+        src/camp_debug.c
         src/time_derivative.c
         src/Jacobian.c src/debug_diff_check.c)
 

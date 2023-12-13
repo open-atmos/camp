@@ -8,6 +8,13 @@
 #ifndef CAMP_DEBUG_H
 #define CAMP_DEBUG_H
 
+#include "camp_common.h"
+
+void init_export_state();
+void export_state(SolverData *sd);
+void join_export_state();
+void export_stats(SolverData *sd);
+
 // file name prefix
 int file_name_prefix = 1;
 
