@@ -46,7 +46,6 @@ void constructor_cvode_gpu(SolverData *sd){
   int MPIsPerGPU = (sizeNode + nGPUsMax - 1) / nGPUsMax;
   int iDevice = rankNode / MPIsPerGPU;
   cudaSetDevice(iDevice);
-  printf("nGPUsMax %d MPIsPerGPU %d rankNode %d sizeNode %d iDevice %d\n", nGPUsMax, MPIsPerGPU, rankNode, sizeNode,iDevice);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->state, state_size));
