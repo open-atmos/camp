@@ -54,10 +54,10 @@ module camp_monarch_interface
   contains
     procedure :: integrate
     procedure :: get_init_conc
+    procedure :: finalize
     procedure, private :: load
     procedure, private :: create_map
     procedure, private :: load_init_conc
-    final :: finalize
   end type camp_monarch_interface_t
 
   interface camp_monarch_interface_t
@@ -808,8 +808,8 @@ contains
     end if
   end subroutine get_init_conc
 
-  elemental subroutine finalize(this)
-    type(camp_monarch_interface_t), intent(inout) :: this
+  subroutine finalize(this)
+    class(camp_monarch_interface_t) :: this
     if (associated(this%camp_core)) &
             deallocate(this%camp_core)
     if (associated(this%camp_state)) &
@@ -824,13 +824,14 @@ contains
             deallocate(this%init_conc_camp_id)
     if (allocated(this%init_conc)) &
             deallocate(this%init_conc)
-    if (associated(this%species_map_data)) &
-            deallocate(this%species_map_data)
-    if (associated(this%init_conc_data)) &
-            deallocate(this%init_conc_data)
-    if (associated(this%property_set)) &
-            deallocate(this%property_set)
-
-  end subroutine finalize
+    if(camp_mpi_rank()==0) then
+      if (associated(this%init_conc_data)) &
+              deallocate(this%init_conc_data)
+      if (associated(this%species_map_data)) &
+              deallocate(this%species_map_data)
+      if (associated(this%property_set)) &
+              deallocate(this%property_set)
+    end if
+  end subroutine
 
 end module
