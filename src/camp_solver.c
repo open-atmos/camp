@@ -96,8 +96,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_sub_model, int n_sub_model_int_param,
                  int n_sub_model_float_param, int n_sub_model_env_param,
                  int use_cpu) {
-  // Create the SolverData object
 
+  // Create the SolverData object
   SolverData *sd = (SolverData *)malloc(sizeof(SolverData));
   if (sd == NULL) {
     printf("\n\nERROR allocating space for SolverData\n\n");
