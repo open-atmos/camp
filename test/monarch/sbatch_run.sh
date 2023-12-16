@@ -17,6 +17,7 @@ make_run(){
   make -j 4
   cd $curr_path
   python TestMonarch2.py
+  python TestMonarch3.py
   python TestMonarch4.py
 }
 time make_run

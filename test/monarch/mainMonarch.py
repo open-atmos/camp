@@ -258,7 +258,7 @@ def plot_cases(conf, datay):
         if not legend_name == "":
           legend.append(legend_name)
   plotTitle = ""
-  nGPUsOptim = [int(i / 10) for i in conf.mpiProcessesCaseOptimList]
+  nGPUsOptim = [i if i < 5 else 4 for i in conf.mpiProcessesCaseOptimList]
   if not is_same_diff_cells and len(conf.diffCellsL) == 1:
     plotTitle += conf.diffCells + " test: "
   plotXKey = ""

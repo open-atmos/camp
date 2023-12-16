@@ -18,8 +18,8 @@ def all_timesteps():
   # conf.profileCuda = "nvprof"
   # conf.profileCuda = "nsight"
   conf.is_import = True
-  conf.mpiProcessesCaseBase = 20
-  conf.mpiProcessesCaseOptimList = [20]
+  conf.mpiProcessesCaseBase = 16
+  conf.mpiProcessesCaseOptimList = [16]
   conf.cells = [100000]
   conf.timeSteps = 720
   conf.caseBase = "CPU One-cell"
