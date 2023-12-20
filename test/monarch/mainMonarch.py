@@ -151,12 +151,12 @@ def run_cases(conf):
   conf.mpiProcesses = conf.mpiProcessesCaseBase
   if conf.nCellsProcesses % conf.mpiProcesses != 0:
     print(
-      "ERROR: On base case conf.nCellsProcesses % "
+      "WARNING: On base case conf.nCellsProcesses % "
       "conf.mpiProcesses != 0, nCellsProcesses, "
       "mpiProcesses",
-      conf.nCellsProcesses,
-      conf.mpiProcesses)
-    raise
+      conf.nCellsProcesses, conf.mpiProcesses,
+      "setting cells to", int(
+      conf.nCellsProcesses / conf.mpiProcesses)*conf.mpiProcesses)
   conf.nCells = int(
     conf.nCellsProcesses / conf.mpiProcesses)
   cases_words = conf.caseBase.split()
@@ -174,7 +174,9 @@ def run_cases(conf):
         "WARNING: On optim case conf.nCellsProcesses % "
         "conf.mpiProcesses != 0,nCellsProcesses, "
         "mpiProcesses",
-        conf.nCellsProcesses, conf.mpiProcesses)
+        conf.nCellsProcesses, conf.mpiProcesses,
+        "setting cells to", int(
+        conf.nCellsProcesses / conf.mpiProcesses)*conf.mpiProcesses)
     conf.nCells = int(
       conf.nCellsProcesses / conf.mpiProcesses)
     for caseOptim in conf.casesOptim:
