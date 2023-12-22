@@ -149,20 +149,21 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   
   !> Test num_phase_instances function 
-  subroutine test_num_phase_instances()
+!  subroutine test_num_phase_instances()
 
-    type(aero_rep_single_particle_layers_t) :: aero_rep    
-    character(len=50), dimension(1) :: phase_name_test 
-    integer(kind=i_kind) :: num_phases, num_phase_instances
-    phase_name_test = [ character(len=50) :: 'bread' ]
-    num_phases = 2
+!    type(aero_rep_single_particle_layers_t) :: aero_rep    
+!    character(len=50) :: phase_name_test 
+!    integer(kind=i_kind) :: num_phases, num_phase_instances
+
+!    phase_name_test = 'bread' 
+!    num_phases = 2
     ! Call the function and enter the inputs 
-    num_phase_instances = aero_rep%num_phase_instances(phase_name_test) 
+!    num_phase_instances = aero_rep%num_phase_instances(phase_name_test) 
     
     ! check value
-    call assert(734138496, num_phases .eq. num_phase_instances)
+!    call assert(734138496, num_phases .eq. num_phase_instances)
 
-  end subroutine test_num_phase_instances
+!  end subroutine test_num_phase_instances
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   !> Test that a configuration ends up generating unique names in the correct
@@ -174,8 +175,8 @@ contains
     class(aero_rep_data_t), pointer :: aero_rep
 
     type(string_t), allocatable :: file_list(:), unique_names(:)
-    character(len=:), allocatable :: rep_name
-    integer :: i_name
+    character(len=:), allocatable :: rep_name, phase_name_test
+    integer :: i_name, num_bread
 
     ! create the camp core from test data
     allocate(file_list(1))
@@ -208,6 +209,12 @@ contains
         call assert(603635677, aero_rep%phase_state_size(layer=2,phase=2) .eq. 2)
         call assert(768528274, aero_rep%phase_state_size(layer=3,phase=1) .eq. 3)
 
+        ! test num_phase_instances funtion
+        phase_name_test = 'bread'
+        num_bread = 2
+        !check value
+        call assert(734138496, num_bread .eq. aero_rep%num_phase_instances(phase_name_test))
+        
       class default
         call die_msg(519535557, rep_name)
     end select

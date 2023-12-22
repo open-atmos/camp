@@ -633,11 +633,11 @@ contains
   !! particle representation, if an aerosol phase is present, is exists once
   !! in each computational particle.
   function num_phase_instances(this, phase_name)
-
-    !> Number of instances of the aerosol phase
-    integer(kind=i_kind) :: num_phase_instances
+  
     !> Aerosol representation data
     class(aero_rep_single_particle_layers_t), intent(in) :: this
+    !> Number of instances of the aerosol phase
+    integer(kind=i_kind) :: num_phase_instances
     !> Aerosol phase name
     character(len=*), intent(in) :: phase_name
 
