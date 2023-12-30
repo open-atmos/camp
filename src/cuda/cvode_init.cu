@@ -35,16 +35,12 @@ void constructor_cvode_gpu(SolverData *sd){
   mCPU->env_size = CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double); //Temp and pressure
   size_t rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
   size_t map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
-  int nGPUsMax;
-  cudaGetDeviceCount(&nGPUsMax);
-  int rankNode, sizeNode;
-  MPI_Comm commNode;
-  MPI_Comm_split_type(MPI_COMM_WORLD, MPI_COMM_TYPE_SHARED, 0,
-                      MPI_INFO_NULL, &commNode);
-  MPI_Comm_rank(commNode, &rankNode);
-  MPI_Comm_size(commNode, &sizeNode);
-  int MPIsPerGPU = (sizeNode + nGPUsMax - 1) / nGPUsMax;
-  int iDevice = rankNode / MPIsPerGPU;
+  int nGPUs;
+  cudaGetDeviceCount(&nGPUs);
+  int rank, size;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  int iDevice = rank % nGPUs;
   cudaSetDevice(iDevice);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
