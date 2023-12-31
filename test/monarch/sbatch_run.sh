@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 ##SBATCH --qos=debug
-##SBATCH -t 00:09:00
+#SBATCH -t 00:09:00
 #SBATCH --job-name=camp_test_monarch
 #SBATCH --output=out_sbatch.txt
 #SBATCH --error=err_sbatch.txt
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=40
-#SBATCH --cpus-per-task=4
+#SBATCH --nodes=2
+#SBATCH --ntasks-per-node=160
+#SBATCH --cpus-per-task=1
 #SBATCH --gres=gpu:4
 #SBATCH --exclusive
 
@@ -16,8 +16,6 @@ make_run(){
   cd ../../build
   make -j 4
   cd $curr_path
-  python TestMonarch2.py
-  python TestMonarch3.py
-  python TestMonarch4.py
+  python TestMonarch.py
 }
 time make_run

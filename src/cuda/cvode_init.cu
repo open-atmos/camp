@@ -42,6 +42,10 @@ void constructor_cvode_gpu(SolverData *sd){
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   int iDevice = rank % nGPUs;
   cudaSetDevice(iDevice);
+  char hostname[1024];
+  gethostname(hostname, 1024);
+  puts(hostname);
+  printf("hostname %s rank %d iDevice %d\n",hostname, rank, iDevice);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->state, state_size));
