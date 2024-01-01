@@ -54,9 +54,9 @@ def process_variable(dataset1, dataset2, var_name):
     quantile75, quantile95, max_error, relative_error
 
 
-file1_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/cpu_tstep6_O3/"
-file2_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/gpu_tstep6_O3/"
-#file2_path_header = "/gpfs/scratch/bsc32/bsc32815/a591/nmmb-monarch/OUTPUT/regional/000/20160721/CURRENT_RUN/"
+file1_path_header = "/gpfs/scratch/bsc32/bsc32815/a591/nmmb-monarch/OUTPUT/regional/000/20160721/CURRENT_RUN/"
+file2_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/gpu_tstep20_O3/"
+#file2_path_header = "/gpfs/scratch/bsc32/bsc32815/a5hl/nmmb-monarch/OUTPUT/regional/000/20160721/CURRENT_RUN/"
 
 # Calculate the speedup
 file1 = file1_path_header + "out/stats.csv"

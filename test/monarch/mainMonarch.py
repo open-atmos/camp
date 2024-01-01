@@ -80,6 +80,7 @@ def run(conf):
     print("Saving nsight file in ",
           os.path.abspath(os.getcwd())
           + "/" + pathNvprof + ".ncu-rep")
+    "/apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le/21.3/profilers/Nsight_Compute/ncu --set full -f -o out/profile.ncu-rep"
   path_exec = "../../build/mock_monarch"
   exec_str += path_exec
   try:

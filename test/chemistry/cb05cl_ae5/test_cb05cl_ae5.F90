@@ -52,7 +52,7 @@ program camp_test_cb05cl_ae5
   ! file unit
   integer(kind=i_kind), parameter :: EBI_KPP_FILE_UNIT = 16
   ! Number of timesteps to integrate over
-  integer(kind=i_kind), parameter :: NUM_TIME_STEPS = 10
+  integer(kind=i_kind), parameter :: NUM_TIME_STEPS = 100
   ! Number of EBI-solver species
   integer(kind=i_kind), parameter :: NUM_EBI_SPEC = 72
   ! Number of EBI-solever photolysis reactions

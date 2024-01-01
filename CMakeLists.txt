@@ -529,6 +529,13 @@ if (ENABLE_GPU)
   target_link_libraries(mock_monarch camplib)
 endif()
 
+add_executable(test_chemistry_cb05cl_ae5
+        test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
+        ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+        test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+target_link_libraries(test_chemistry_cb05cl_ae5 camplib)
+
+
 if (USE_TESTS)
 
 ######################################################################
@@ -543,11 +550,7 @@ target_link_libraries(camp_box_model camplib)
 ######################################################################
 # test_chemistry_cb05cl_ae5
 
-add_executable(test_chemistry_cb05cl_ae5
-    test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
-    ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-    test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(test_chemistry_cb05cl_ae5 camplib)
+
 
 ######################################################################
 # test_property
