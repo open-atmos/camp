@@ -630,8 +630,8 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get the number of instances of a specified aerosol phase. In the single
-  !! particle representation, if an aerosol phase is present, is exists once
-  !! in each computational particle.
+  !! particle representation with layers, a phase can exist in multiple layers
+  !! in one particle.  
   integer(kind=i_kind) function num_phase_instances(this, phase_name)
   
     !> Aerosol representation data
@@ -669,6 +669,7 @@ contains
 
     integer(kind=i_kind) :: i_phase
 
+    ! TODO : does this need to be updated?
     call assert_msg(927040495, phase_id .ge. 1 .and. &
                                 phase_id .le. size( this%aero_phase ), &
                      "Aerosol phase index out of range. Got "// &

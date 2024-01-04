@@ -147,25 +147,6 @@ contains
   end subroutine test_ordered_layer_ids
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  
-  !> Test num_phase_instances function 
-!  subroutine test_num_phase_instances()
-
-!    type(aero_rep_single_particle_layers_t) :: aero_rep    
-!    character(len=50) :: phase_name_test 
-!    integer(kind=i_kind) :: num_phases, num_phase_instances
-
-!    phase_name_test = 'bread' 
-!    num_phases = 2
-    ! Call the function and enter the inputs 
-!    num_phase_instances = aero_rep%num_phase_instances(phase_name_test) 
-    
-    ! check value
-!    call assert(734138496, num_phases .eq. num_phase_instances)
-
-!  end subroutine test_num_phase_instances
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   !> Test that a configuration ends up generating unique names in the correct
   !! order
   subroutine test_config_read()
