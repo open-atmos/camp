@@ -18,7 +18,7 @@ def all_timesteps():
   # conf.profileCuda = "nvprof"
   conf.profileCuda = "nsight"
   #conf.is_import = True
-  conf.mpiProcessesCaseBase = 5
+  conf.mpiProcessesCaseBase = 3
   conf.mpiProcessesCaseOptimList = [1]
   conf.cells = [80]
   conf.timeSteps = 1

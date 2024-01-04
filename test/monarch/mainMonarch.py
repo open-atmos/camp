@@ -63,26 +63,22 @@ def run(conf):
       "GPU"):
     pathNvprof = ("../../compile/power9/" +
                   conf.caseMulticellsOnecell
-                  + str(conf.nCells) + "Cells" + ".nvprof ")
+                  + str(conf.cells) + "Cells" + ".nvprof ")
     exec_str += ("nvprof --analysis-metrics -f -o " +
                  pathNvprof)
     print("Saving profiling file in ",
           os.path.abspath(os.getcwd())
           + "/" + pathNvprof + ".nvprof")
   elif (conf.profileCuda == "nsight" and conf.caseGpuCpu
-        == "GPU" and os.environ['OMPI_COMM_WORLD_RANK'] == 0):
-    print(os.environ['OMPI_COMM_WORLD_RANK'])
-
-    exec_str2 = ("/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu ")
+        == "GPU"):
+    exec_str += ("/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu ")
     pathNvprof = ("../../compile/power9/" +
                   conf.caseMulticellsOnecell
-                  + str(conf.nCells) + "Cells.ncu-rep ")
-    exec_str2 += "--set full -f -o " + pathNvprof + "--target-processes all '$@'"
+                  + str(conf.nCells) + "Cells ")
+    exec_str += " --target-processes=application-only --set full -f -o " + pathNvprof + ""
     print("Saving nsight file in ",
           os.path.abspath(os.getcwd())
           + "/" + pathNvprof + ".ncu-rep")
-    print(exec_str2)
-    os.system(exec_str2)
   path_exec = "../../build/mock_monarch"
   exec_str += path_exec
   try:
