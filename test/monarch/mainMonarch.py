@@ -63,7 +63,7 @@ def run(conf):
       "GPU"):
     pathNvprof = ("../../compile/power9/" +
                   conf.caseMulticellsOnecell
-                  + str(conf.nCells) + "Cells" + ".nvprof ")
+                  + str(conf.cells) + "Cells" + ".nvprof ")
     exec_str += ("nvprof --analysis-metrics -f -o " +
                  pathNvprof)
     print("Saving profiling file in ",
@@ -71,12 +71,11 @@ def run(conf):
           + "/" + pathNvprof + ".nvprof")
   elif (conf.profileCuda == "nsight" and conf.caseGpuCpu
         == "GPU"):
-    exec_str += ("/apps/NVIDIA-HPC-SDK/21.3/Linux_ppc64le"
-                 "/21.3/profilers/Nsight_Compute/ncu ")
+    exec_str += ("/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu ")
     pathNvprof = ("../../compile/power9/" +
                   conf.caseMulticellsOnecell
                   + str(conf.nCells) + "Cells ")
-    exec_str += "--set full -f -o " + pathNvprof  # last
+    exec_str += " --target-processes=application-only --set full -f -o " + pathNvprof + ""
     print("Saving nsight file in ",
           os.path.abspath(os.getcwd())
           + "/" + pathNvprof + ".ncu-rep")
