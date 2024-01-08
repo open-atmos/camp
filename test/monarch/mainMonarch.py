@@ -57,7 +57,7 @@ def run(conf):
     exec_str += "mpirun -v -np " + str(
       conf.mpiProcesses) + " --bind-to core " #for plogin (fails squeue)
   else:
-    exec_str += "srun --cpu-bind=core -n " + str(
+    exec_str += "srun -n " + str(
       conf.mpiProcesses) + " " #for queue (slow plogin)
   if (conf.profileCuda == "nvprof" and conf.caseGpuCpu ==
       "GPU"):
@@ -147,6 +147,10 @@ def run(conf):
 # @profile
 def run_cases(conf):
   # Base case
+  if conf.is_import_base:
+    conf.is_import=True
+  else:
+    conf.is_import=False
   conf.mpiProcesses = conf.mpiProcessesCaseBase
   if conf.nCellsProcesses % conf.mpiProcesses != 0:
     print(
@@ -164,6 +168,10 @@ def run_cases(conf):
   conf.case = conf.caseBase
   timeBase, valuesBase = run(conf)
   # OptimCases
+  if conf.is_import_base:
+    conf.is_import=False
+  else:
+    conf.is_import=True
   datacases = []
   for mpiProcessesCaseOptim in (
       conf.mpiProcessesCaseOptimList):

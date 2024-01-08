@@ -18,9 +18,10 @@ def all_timesteps():
   # conf.profileCuda = "nvprof"
   # conf.profileCuda = "nsight"
   #conf.is_import = True
-  conf.mpiProcessesCaseBase = 80
-  conf.mpiProcessesCaseOptimList = [80]
-  conf.cells = [80]
+  conf.is_import_base = True
+  conf.mpiProcessesCaseBase = 40
+  conf.mpiProcessesCaseOptimList = [40]
+  conf.cells = [160000]
   conf.timeSteps = 1
   conf.caseBase = "CPU One-cell"
   #conf.caseBase = "GPU BDF"
