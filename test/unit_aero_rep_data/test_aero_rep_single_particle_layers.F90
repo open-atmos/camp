@@ -147,7 +147,6 @@ contains
   end subroutine test_ordered_layer_ids
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   !> Test that a configuration ends up generating unique names in the correct
   !! order
   subroutine test_config_read()
@@ -157,8 +156,8 @@ contains
     class(aero_rep_data_t), pointer :: aero_rep
 
     type(string_t), allocatable :: file_list(:), unique_names(:)
-    character(len=:), allocatable :: rep_name
-    integer :: i_name
+    character(len=:), allocatable :: rep_name, phase_name_test
+    integer :: i_name, num_bread, max_part, bread_phase_instance
 
     ! create the camp core from test data
     allocate(file_list(1))
@@ -191,6 +190,15 @@ contains
         call assert(603635677, aero_rep%phase_state_size(layer=2,phase=2) .eq. 2)
         call assert(768528274, aero_rep%phase_state_size(layer=3,phase=1) .eq. 3)
 
+        ! test num_phase_instances funtion
+        phase_name_test = "bread"
+        num_bread = 2
+        max_part = aero_rep%maximum_computational_particles()
+        bread_phase_instance = num_bread * max_part
+        !check value
+        call assert(417730478, 3 .eq. max_part)
+        call assert(734138496, bread_phase_instance .eq. aero_rep%num_phase_instances(phase_name_test))
+        
       class default
         call die_msg(519535557, rep_name)
     end select

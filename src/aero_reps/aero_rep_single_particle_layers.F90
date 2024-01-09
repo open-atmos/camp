@@ -630,27 +630,28 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get the number of instances of a specified aerosol phase. In the single
-  !! particle representation, if an aerosol phase is present, is exists once
-  !! in each computational particle.
-  function num_phase_instances(this, phase_name)
-
-    !> Number of instances of the aerosol phase
-    integer(kind=i_kind) :: num_phase_instances
+  !! particle representation with layers, a phase can exist in multiple layers
+  !! in one particle.  
+  integer(kind=i_kind) function num_phase_instances(this, phase_name)
+  
     !> Aerosol representation data
     class(aero_rep_single_particle_layers_t), intent(in) :: this
     !> Aerosol phase name
     character(len=*), intent(in) :: phase_name
 
-    integer(kind=i_kind) ::  i_phase
+    integer(kind=i_kind) ::  i_phase, i_layer, phase_index
 
-    ! TODO - this needs to be updated
     num_phase_instances = 0
-    do i_phase = 1, TOTAL_NUM_PHASES_
-      if (this%aero_phase(i_phase)%val%name().eq.phase_name) then
-        num_phase_instances = MAX_PARTICLES_
-        return
-      end if
+    phase_index = 0
+    do i_layer = 1, NUM_LAYERS_
+      do i_phase = LAYER_PHASE_START_(i_layer), LAYER_PHASE_END_(i_layer)
+        if (this%aero_phase(i_phase)%val%name() .eq. phase_name) then
+          phase_index = phase_index + 1
+        end if
+      end do
     end do
+    num_phase_instances = phase_index * MAX_PARTICLES_
+
   end function num_phase_instances
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
