@@ -40,13 +40,7 @@ void constructor_cvode_gpu(SolverData *sd){
   int rank, size;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
-#ifdef DEV_MPIsPerNode
-  int MPIsPerNode=40;
-  int processesPerGPU=MPIsPerNode/nGPUs;
-  int iDevice = (rank % MPIsPerNode) / processesPerGPU;
-#else
   int iDevice = rank % nGPUs;
-#endif
   cudaSetDevice(iDevice);
   char hostname[1024];
   gethostname(hostname, 1024);

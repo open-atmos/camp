@@ -57,7 +57,7 @@ def run(conf):
     exec_str += "mpirun -v -np " + str(
       conf.mpiProcesses) + " --bind-to core " #for plogin (fails squeue)
   else:
-    exec_str += "srun -n " + str(
+    exec_str += "srun --cpu-bind=core -n " + str(
       conf.mpiProcesses) + " " #for queue (slow plogin)
   if (conf.profileCuda == "nvprof" and conf.caseGpuCpu ==
       "GPU"):
