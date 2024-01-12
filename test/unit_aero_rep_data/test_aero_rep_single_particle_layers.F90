@@ -253,17 +253,13 @@ contains
     type(camp_core_t), pointer :: camp_core
     type(camp_state_t), pointer :: camp_state
     class(aero_rep_data_t), pointer :: aero_rep
-#if 0
+
 #ifdef CAMP_USE_JSON
 
-    integer(kind=i_kind) :: i_spec, j_spec, i_rep, i_phase, i_layer 
+    integer(kind=i_kind) :: i_spec, j_spec, i_rep, i_phase
     type(string_t), allocatable :: rep_names(:)
     character(len=:), allocatable :: rep_name, spec_name, phase_name
-    character(len=:), dimension(4) :: correct_layer_names
-    character(len=:), dimension(11) :: correct_phase_names
     type(string_t), allocatable :: file_list(:), unique_names(:)
-    type(string_t), allocatable :: ordered_layer_set_names(:)
-    type(string_t), allocatable :: ordered_layer_phase_set_names(:)
 #ifdef CAMP_USE_MPI
     type(aero_rep_factory_t) :: aero_rep_factory
     type(aero_rep_data_ptr), allocatable :: aero_rep_passed_data_set(:)
@@ -272,12 +268,11 @@ contains
 #endif
     build_aero_rep_data_set_test = .false.
 
-    camp_core => camp_core_t()
 
     allocate(file_list(1))
     file_list(1)%string = &
             'test_run/unit_aero_rep_data/test_aero_rep_single_particle_layers.json'
-
+    camp_core => camp_core_t()
     call camp_core%load(file_list)
     call camp_core%initialize()
     camp_state => camp_core%new_state()
@@ -285,7 +280,7 @@ contains
     ! Set up the list of aerosol representation names
     ! !!! Add new aero_rep_data_t extending types here !!!
     allocate(rep_names(1))
-    rep_names(1)%string = "AERO_REP_SINGLE_PARTICLE"
+    rep_names(1)%string = "single-particle with layers"
 
     ! Loop through all the aerosol representations
     do i_rep = 1, size(rep_names)
@@ -300,7 +295,7 @@ contains
         class default
           call die_msg(519535557, rep_name)
       end select
-
+#if 0
       ! Check the unique name functions
       unique_names = aero_rep%unique_names()
       call assert_msg(885541843, allocated(unique_names), rep_name)
@@ -317,37 +312,8 @@ contains
         end do
       end do
 
-      ! Check ordered layer array function 
-      ordered_layer_set_names = aero_rep%ordered_layer_set_names()
-      call assert_msg(707721241, allocated(ordered_layer_set_names),rep_name)
-      call assert_msg(278772661, size(ordered_layer_set_names).eq.aero_rep%layers%size(), &
-                      rep_name)
-
-      ! Must modify for different test case!!
-      correct_layer_names = [character(len=:) :: 'bommom bread','almond butter','jam','top bread']
-      do i_layer = 1,size(ordered_layer_set_names)
-        call assert_msg(072051383, ordered_layer_set_names(i_layer).ne.&
-                          correct_layer_names(i_layer), rep_name)
-      end do
-
-      ! Check ordered phase array function 
-      ordered_layer_phase_set_names = aero_rep%ordered_layer_phase_set_names()
-      call assert_msg(508633493, allocated(ordered_layer_phase_set_names, rep_name))
-      call assert_msg(226117433, size(ordered_layer_phase_set_names).eq.aero_rep%phases%size())
-      do i_phase = 1,size(ordered_layer_phase_set_names)
-        call assert_msg(306833160, ordered_layer_phase_set_names(i_phase).gt.0, rep_name)
-      end do
-   
-      ! Must modify for different test case!!
-      correct_phase_names = character(len=11) :: ["wheat","water","salt","almonds","salt","rasberry", &
-                                                  "honey","sugar","lemon","wheat","water"]
-      do i_phase = 1,size(ordered_layer_phase_set_names)
-        call assert_msg(417878787, ordered_layer_phase_set_names(i_phase).ne.&
-                          correct_phase_names(i_phase), rep_name)
-      end do
-  
       ! Set the species concentrations
-      phase_name = "my test phase one"ordered_layer_set_names
+      phase_name = "my test phase one"
       spec_name = "species a"
       unique_names = aero_rep%unique_names(phase_name = phase_name, &
               spec_name = spec_name)
@@ -398,13 +364,14 @@ contains
       i_spec = aero_rep%spec_state_id(unique_names(1)%string)
       call assert_msg(291101806, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 8.5
-
+#endif
     end do
 
+#if 0
     rep_name = "AERO_REP_BAD_NAME"
     call assert(676257369, .not.camp_core%get_aero_rep(rep_name, aero_rep))
     call assert(453526213, .not.associated(aero_rep))
-
+#endif
 #ifdef CAMP_USE_MPI
     pack_size = 0
     do i_rep = 1, size(rep_names)
@@ -449,22 +416,21 @@ contains
     deallocate(buffer)
     deallocate(aero_rep_passed_data_set)
 #endif
-
+#if 0
     ! Evaluate the aerosol representation c functions
     build_aero_rep_data_set_test = eval_c_func(camp_core)
 
     deallocate(camp_state)
     deallocate(camp_core)
+#endif
+#endif
 
-#endif
-#endif
   end function build_aero_rep_data_set_test
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Evaluate the aerosol representation c functions
   logical function eval_c_func(camp_core) result(passed)
-
     !> CAMP-core
     type(camp_core_t), intent(inout) :: camp_core
 #if 0
@@ -519,5 +485,4 @@ contains
   end function eval_c_func
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 end program camp_test_aero_rep_data
