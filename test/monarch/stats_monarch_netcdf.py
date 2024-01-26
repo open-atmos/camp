@@ -51,7 +51,7 @@ def process_variable(dataset1, dataset2, var_name):
         std_dev = np.std(relative_error)
 
     return var_name, nrmse, std_dev,mean, median, quantile25, quantile50,\
-    quantile75, quantile95, max_error
+    quantile75, quantile95, max_error, relative_error
 
 
 file1_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/cpu_tstep480_O3/"
@@ -62,7 +62,7 @@ file2_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/gpu_tstep480_O3/"
 speedup = -1
 file1 = file1_path_header + "out/stats.csv"
 file2 = file2_path_header + "out/stats.csv"
-speedup = calculate_speedup(file1, file2)
+#speedup = calculate_speedup(file1, file2)
 
 #Path to netCDF
 file1 = file1_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
@@ -92,22 +92,22 @@ if not summary_data:
 
 summary_table = pd.DataFrame(summary_data, columns=[
     'Variable','NRMSE[%]','Std Dev','Mean','Median','Quantiles 25', 'Quantile 50','Quantile 75',
-    'Quantile 95','Max'])
+    'Quantile 95','Max','Relative Error'])
 
 worst_variables = summary_table.nlargest(6, 'NRMSE[%]')
-highest_nrmse_row = worst_variables.iloc[0]
-highest_nrmse_variable = highest_nrmse_row['Variable']
-highest_nrmse = highest_nrmse_row['NRMSE[%]']
-#worst_variables.to_csv("summary_table.csv", index=False)
-print("worst_variables",worst_variables)
-print(f"Highest NRMSE[%]: {highest_nrmse:.2f} for variable: {highest_nrmse_variable}")
-print("Speedup:", speedup)
 plt.figure()
 data = [row['Relative Error'].reshape(-1) * 100 for _, row in worst_variables.iterrows()]
 variable_names = [row['Variable'] for _, row in worst_variables.iterrows()]
+worst_variables = worst_variables.drop('Relative Error', axis=1)
+highest_nrmse_row = worst_variables.iloc[0]
+highest_nrmse_variable = highest_nrmse_row['Variable']
+highest_nrmse = highest_nrmse_row['NRMSE[%]']
+print("worst_variables",worst_variables)
+print(f"Highest NRMSE[%]: {highest_nrmse:.2f} for variable: {highest_nrmse_variable}")
+print("Speedup:", speedup)
 sns.boxplot(data=data, orient='v', showfliers=False)
 plt.ylabel("Relative Error [%]")
 plt.xticks(range(len(variable_names)), variable_names, rotation=90)
 plt.title("Species with highest NRMSE for MONARCH-CAMP") #4 GPUs 480 time-steps
 #plt.savefig("fig.png")
-#plt.show()
+plt.show()
