@@ -221,7 +221,7 @@ contains
 
       ! Get species indices
       if (scenario.eq.1) then
-        idx_prefix = "P1."
+        idx_prefix = "P1.one layer."
       else if (scenario.eq.2) then
         idx_prefix = "the mode."
       endif

@@ -41,12 +41,32 @@
   {
     "type" : "AERO_REP_SINGLE_PARTICLE",
     "name" : "my first particle",
-    "maximum computational particles" : 1
+    "maximum computational particles" : 1,
+    "layers": [
+            {
+                    "name": "one layer",
+                    "phases": [
+                               "cloud",
+                               "rain"
+                    ],
+                    "covers": "none"
+            }
+       ]
   },
   {
     "type" : "AERO_REP_SINGLE_PARTICLE",
     "name" : "my second particle",
-    "maximum computational particles" : 1
+    "maximum computational particles" : 1,
+    "layers": [
+            {
+                    "name": "one layer",
+                    "phases": [
+                               "cloud",
+                               "rain"
+                    ],
+                    "covers": "none"
+            }
+       ]
   },
   {
     "name" : "wet deposition",

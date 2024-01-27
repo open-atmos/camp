@@ -20,7 +20,7 @@
 
 #define UPDATE_NUMBER 0
 
-#define NUM_LAYERS_ int_data[0]
+#define NUM_PHASE_ int_data[0]
 #define AERO_REP_ID_ int_data[1]
 #define MAX_PARTICLES_ int_data[2]
 #define PARTICLE_STATE_SIZE_ int_data[3]
@@ -28,13 +28,9 @@
 #define NUM_INT_PROP_ 4
 #define NUM_FLOAT_PROP_ 0
 #define NUM_ENV_PARAM_ MAX_PARTICLES_
-#define LAYER_PHASE_START_(l) (int_data[NUM_INT_PROP_+l])
-#define LAYER_PHASE_END_(l) (int_data[NUM_INT_PROP_+NUM_LAYERS_+l])
-#define TOTAL_NUM_PHASES_ (LAYER_PHASE_END_(NUM_LAYERS_-1)-LAYER_PHASE_START_(0)+1)
-#define NUM_PHASES_(l) (LAYER_PHASE_END_(l)-LAYER_PHASE_START_(l)+1)
-#define PHASE_STATE_ID_(l,p) (int_data[NUM_INT_PROP_+2*NUM_LAYERS_+LAYER_PHASE_START_(l)+p]-1)
-#define PHASE_MODEL_DATA_ID_(l,p) (int_data[NUM_INT_PROP_+2*NUM_LAYERS_+TOTAL_NUM_PHASES_+LAYER_PHASE_START_(l)+p]-1)
-#define PHASE_NUM_JAC_ELEM_(l,p) int_data[NUM_INT_PROP_+2*NUM_LAYERS_+2*TOTAL_NUM_PHASES_+LAYER_PHASE_START_(l)+p]
+#define PHASE_STATE_ID_(x) (int_data[NUM_INT_PROP_ + x] - 1)
+#define PHASE_MODEL_DATA_ID_(x) (int_data[NUM_INT_PROP_ + NUM_PHASE_ + x] - 1)
+#define PHASE_NUM_JAC_ELEM_(x) int_data[NUM_INT_PROP_ + 2 * NUM_PHASE_ + x]
 
 /** \brief Flag Jacobian elements used in calcualtions of mass and volume
  *
@@ -48,7 +44,6 @@
  *                   been chosen by the calling function.)
  * \return Number of Jacobian elements flagged
  */
-
 int aero_rep_single_particle_get_used_jac_elem(ModelData *model_data,
                                                int aero_phase_idx,
                                                int *aero_rep_int_data,
@@ -56,8 +51,7 @@ int aero_rep_single_particle_get_used_jac_elem(ModelData *model_data,
                                                bool *jac_struct) {
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
-}
-/*
+
   int n_jac_elem = 0;
   int i_part = aero_phase_idx / NUM_PHASE_;
 
@@ -71,7 +65,7 @@ int aero_rep_single_particle_get_used_jac_elem(ModelData *model_data,
   }
   return n_jac_elem;
 }
-/*
+
 /** \brief Flag elements on the state array used by this aerosol representation
  *
  * The single particle aerosol representation functions do not use state array
@@ -82,7 +76,6 @@ int aero_rep_single_particle_get_used_jac_elem(ModelData *model_data,
  *                            floating-point data
  * \param state_flags Array of flags indicating state array elements used
  */
-
 void aero_rep_single_particle_get_dependencies(int *aero_rep_int_data,
                                                double *aero_rep_float_data,
                                                bool *state_flags) {
@@ -104,7 +97,6 @@ void aero_rep_single_particle_get_dependencies(int *aero_rep_int_data,
  * \param aero_rep_env_data Pointer to the aerosol representation
  *                          environment-dependent parameters
  */
-
 void aero_rep_single_particle_update_env_state(ModelData *model_data,
                                                int *aero_rep_int_data,
                                                double *aero_rep_float_data,
@@ -125,7 +117,6 @@ void aero_rep_single_particle_update_env_state(ModelData *model_data,
  * \param aero_rep_env_data Pointer to the aerosol representation
  *                          environment-dependent parameters
  */
-
 void aero_rep_single_particle_update_state(ModelData *model_data,
                                            int *aero_rep_int_data,
                                            double *aero_rep_float_data,
@@ -149,13 +140,10 @@ void aero_rep_single_particle_update_state(ModelData *model_data,
  * \param aero_rep_env_data Pointer to the aerosol representation
  *                          environment-dependent parameters
  */
-
 void aero_rep_single_particle_get_effective_radius__m(
     ModelData *model_data, int aero_phase_idx, double *radius,
     double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
     double *aero_rep_env_data) {
-}
-/*
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
   int i_part = aero_phase_idx / NUM_PHASE_;
@@ -172,7 +160,6 @@ void aero_rep_single_particle_get_effective_radius__m(
     if (partial_deriv) curr_partial += PHASE_NUM_JAC_ELEM_(i_phase);
     *radius += volume;
   }
-  // QUESTION: need to subtract sortption monolayer?
   *radius = pow(((*radius) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
   if (!partial_deriv) return;
   for (int i_phase = 0; i_phase < NUM_PHASE_; ++i_phase) {
@@ -184,22 +171,6 @@ void aero_rep_single_particle_get_effective_radius__m(
   }
   return;
 }
-*/
-/** \brief Get the number of available sorption sites
- *
- * A limited number of available sorption sites is available on specified
- * particles.  The number of available sites is dependent upon the radius 
- * and the cross sectional area of the adsorbing species.
- * 
- * 1. calculate circumference/volume of sorption layer
- * 2. call cross sectional area of sorption molecule
- * 3. calculate number of sorption molecules that can fit on surface using 
- *    cross-sectional area of molecule
- * QUESTION: competitive co-adsorption?
- *
- */
-
-
 
 /** \brief Get the particle number concentration \f$n\f$
  * (\f$\mbox{\si{\#\per\cubic\metre}}\f$)
@@ -222,13 +193,10 @@ void aero_rep_single_particle_get_effective_radius__m(
  * \param aero_rep_env_data Pointer to the aerosol representation
  *                          environment-dependent parameters
  */
-
 void aero_rep_single_particle_get_number_conc__n_m3(
     ModelData *model_data, int aero_phase_idx, double *number_conc,
     double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
     double *aero_rep_env_data) {
-}
-/*
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
   int i_part = aero_phase_idx / NUM_PHASE_;
@@ -243,7 +211,7 @@ void aero_rep_single_particle_get_number_conc__n_m3(
 
   return;
 }
-*/
+
 /** \brief Get the type of aerosol concentration used.
  *
  * Single particle concentrations are per-particle.
@@ -258,7 +226,6 @@ void aero_rep_single_particle_get_number_conc__n_m3(
  * \param aero_rep_env_data Pointer to the aerosol representation
  *                          environment-dependent parameters
  */
-
 void aero_rep_single_particle_get_aero_conc_type(int aero_phase_idx,
                                                  int *aero_conc_type,
                                                  int *aero_rep_int_data,
@@ -271,7 +238,7 @@ void aero_rep_single_particle_get_aero_conc_type(int aero_phase_idx,
 
   return;
 }
-/*
+
 /** \brief Get the total mass in an aerosol phase \f$m\f$
  * (\f$\mbox{\si{\kilogram\per\cubic\metre}}\f$)
  *
@@ -290,19 +257,15 @@ void aero_rep_single_particle_get_aero_conc_type(int aero_phase_idx,
  * \param aero_rep_env_data Pointer to the aerosol representation
  *                          environment-dependent parameters
  */
-
 void aero_rep_single_particle_get_aero_phase_mass__kg_m3(
     ModelData *model_data, int aero_phase_idx, double *aero_phase_mass,
     double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
     double *aero_rep_env_data) {
-}
-/*
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
   int i_part = aero_phase_idx / NUM_PHASE_;
   aero_phase_idx -= i_part * NUM_PHASE_;
 
-// QUESTION: how to add layers here
   for (int i_phase = 0; i_phase < NUM_PHASE_; ++i_phase) {
     if (i_phase == aero_phase_idx) {
       double *state = (double *)(model_data->grid_cell_state);
@@ -319,7 +282,7 @@ void aero_rep_single_particle_get_aero_phase_mass__kg_m3(
 
   return;
 }
-*/
+
 /** \brief Get the average molecular weight in an aerosol phase
  **        \f$m\f$ (\f$\mbox{\si{\kilo\gram\per\mol}}\f$)
  *
@@ -338,13 +301,10 @@ void aero_rep_single_particle_get_aero_phase_mass__kg_m3(
  * \param aero_rep_env_data Pointer to the aerosol representation
  *                          environment-dependent parameters
  */
-
 void aero_rep_single_particle_get_aero_phase_avg_MW__kg_mol(
     ModelData *model_data, int aero_phase_idx, double *aero_phase_avg_MW,
     double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
     double *aero_rep_env_data) {
-}
-/*
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
   int i_part = aero_phase_idx / NUM_PHASE_;
@@ -366,7 +326,7 @@ void aero_rep_single_particle_get_aero_phase_avg_MW__kg_mol(
 
   return;
 }
-*/
+
 /** \brief Update aerosol representation data
  *
  * Single particle aerosol representation update data is structured as follows:
@@ -388,7 +348,6 @@ void aero_rep_single_particle_get_aero_phase_avg_MW__kg_mol(
  *                          environment-dependent parameters
  * \return Flag indicating whether this is the aerosol representation to update
  */
-
 bool aero_rep_single_particle_update_data(void *update_data,
                                           int *aero_rep_int_data,
                                           double *aero_rep_float_data,
@@ -419,15 +378,13 @@ bool aero_rep_single_particle_update_data(void *update_data,
  * \param aero_rep_float_data Pointer to the aerosol representation
  *                            floating-point data
  */
-
 void aero_rep_single_particle_print(int *aero_rep_int_data,
                                     double *aero_rep_float_data) {
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
-}
-/*
+
   printf("\n\nSingle particle aerosol representation\n");
-  printf("\nNumber of phases: %d", TOTAL_NUM_PHASES_);
+  printf("\nNumber of phases: %d", NUM_PHASE_);
   printf("\nAerosol representation id: %d", AERO_REP_ID_);
   printf("\nMax computational particles: %d", MAX_PARTICLES_);
   printf("\nParticle state size: %d", PARTICLE_STATE_SIZE_);
@@ -440,7 +397,6 @@ void aero_rep_single_particle_print(int *aero_rep_int_data,
   printf("\n\nEnd single particle aerosol representation\n");
   return;
 }
-*/
 
 /** \brief Create update data for new particle number
  *
@@ -475,4 +431,3 @@ void aero_rep_single_particle_set_number_update_data__n_m3(void *update_data,
   *new_particle_id = particle_id;
   *new_number_conc = number_conc;
 }
-

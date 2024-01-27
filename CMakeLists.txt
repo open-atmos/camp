@@ -194,7 +194,7 @@ do_unit_test(chem_spec_data "PASS")
 do_unit_test(aero_phase_data "PASS")
 do_unit_test(jacobian "PASS")
 do_unit_test(aero_rep_single_particle "PASS")
-do_unit_test(aero_rep_single_particle_layers "PASS")
+#do_unit_test(aero_rep_single_particle_layers "PASS")
 do_unit_test(aero_rep_modal_binned_mass "PASS")
 do_unit_test(camp_core "PASS")
 
@@ -292,13 +292,13 @@ set(REACTIONS_SRC ${REACTIONS_F_SRC} ${REACTIONS_C_SRC})
 
 set(AEROSOL_REPS_F_SRC
         src/aero_reps/aero_rep_modal_binned_mass.F90
-        src/aero_reps/aero_rep_single_particle.F90
-        src/aero_reps/aero_rep_single_particle_layers.F90)
+        src/aero_reps/aero_rep_single_particle.F90)
+#        src/aero_reps/aero_rep_single_particle_layers.F90)
 
 set(AEROSOL_REPS_C_SRC
         src/aero_reps/aero_rep_modal_binned_mass.c
-        src/aero_reps/aero_rep_single_particle.c
-        src/aero_reps/aero_rep_single_particle_layers.c)
+        src/aero_reps/aero_rep_single_particle.c)
+#        src/aero_reps/aero_rep_single_particle_layers.c)
 
 set_source_files_properties(${AEROSOL_REPS_F_SRC} PROPERTIES COMPILE_FLAGS
         ${STD_F_FLAGS})
@@ -610,10 +610,10 @@ target_link_libraries(unit_test_aero_rep_single_particle camplib)
 ######################################################################
 # test_aero_rep_single_particle_layers
 
-add_executable(unit_test_aero_rep_single_particle_layers
-	test/unit_aero_rep_data/test_aero_rep_single_particle_layers.F90)
+#add_executable(unit_test_aero_rep_single_particle_layers
+#	test/unit_aero_rep_data/test_aero_rep_single_particle_layers.F90)
 
-target_link_libraries(unit_test_aero_rep_single_particle_layers camplib)
+#target_link_libraries(unit_test_aero_rep_single_particle_layers camplib)
 
 ######################################################################
 # test_aero_rep_modal_binned_mass

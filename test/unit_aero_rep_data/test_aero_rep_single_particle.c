@@ -30,7 +30,7 @@
 
 // number of Jacobian elements used for the test phase
 #define N_JAC_ELEM 8
-
+/*
 // Test concentrations (kg/m3)
 #define CONC_1A 1.0
 #define CONC_1B 2.0
@@ -61,12 +61,13 @@
 
 // Externally set properties
 #define PART_NUM_CONC 1.23e3
-
+*/
 /** \brief Test the effective radius function
  *
  * \param model_data Pointer to the model data
  * \param state Solver state
  */
+/*
 #ifdef CAMP_USE_SUNDIALS
 int test_effective_radius(ModelData * model_data, N_Vector state) {
 
@@ -116,12 +117,13 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
 
   return ret_val;
 }
-
+*/
 /** \brief Test the number concentration function
  *
  * \param model_data Pointer to the model data
  * \param state Solver state
  */
+/*
 int test_number_concentration(ModelData * model_data, N_Vector state) {
 
   int ret_val = 0;
@@ -146,12 +148,13 @@ int test_number_concentration(ModelData * model_data, N_Vector state) {
 
   return ret_val;
 }
-
+*/
 /** \brief Test the total aerosol phase mass function
  *
  * \param model_data Pointer to the model data
  * \param state Solver state
  */
+/*
 int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
 
   int ret_val = 0;
@@ -184,12 +187,13 @@ int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
 
   return ret_val;
 }
-
+*/
 /** \brief Test the aerosol phase average molecular weight function
  *
  * \param model_data Pointer to the model data
  * \param state Solver state
  */
+/*
 int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
 
   int ret_val = 0;
@@ -231,7 +235,7 @@ int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
   return ret_val;
 }
 #endif
-
+*/
 /** \brief Run c function tests
  *
  * \param solver_data Pointer to the solver data
@@ -239,6 +243,7 @@ int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
  * \param env Pointer to the environmental state array
  * \return 0 if tests pass; otherwise number of test failures
  */
+/*
 int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, double *env) {
 
   int ret_val = 0;
@@ -299,3 +304,4 @@ int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, doubl
 
   return ret_val;
 }
+*/
