@@ -125,12 +125,12 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
   sd->use_cpu = use_cpu;
 #ifdef DEV_CPU_GPU
-  sd->rate_cells_gpu=50;
+  sd->rate_cells_gpu=50;// Percentage [%]
   printf("Set cells to gpu to %lf %\n",sd->rate_cells_gpu);
   sd->rate_cells_gpu = sd->rate_cells_gpu/100;
   sd->model_data.n_cells_gpu = n_cells * sd->rate_cells_gpu;
-  sd->model_data.n_cells_cpu_gpu = n_cells;
-  n_cells=sd->model_data.n_cells_gpu;
+  sd->model_data.n_cells_cpu = n_cells-sd->model_data.n_cells_gpu;
+  n_cells=1;
 #endif
   sd->model_data.n_cells = n_cells;
 

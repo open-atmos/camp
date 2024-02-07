@@ -90,10 +90,6 @@ typedef struct{
   int*    iA;
   int cells_method;
   int nnz;
-  int nnz_J_solver;
-  size_t deriv_size;
-  size_t jac_size;
-  size_t env_size;
   ModelDataVariable mdvCPU; //cpu equivalent to gpu
   cudaStream_t *streams;
 #ifdef CAMP_DEBUG_GPU

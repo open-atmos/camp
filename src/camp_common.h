@@ -260,8 +260,8 @@ typedef struct {
 #ifdef CAMP_DEBUG_GPU
   double timeCVode;
 #endif
-
 #endif
+
 #ifdef CAMP_USE_GPU
   ModelDataCPU mCPU;
   ModelDataGPU *mGPU;

@@ -1650,7 +1650,7 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
 #endif
 }
 
-int nextPowerOfTwoCVODE2(int v){
+static int nextPowerOfTwoCVODE2(int v){
   v--;
   v |= v >> 1;
   v |= v >> 2;

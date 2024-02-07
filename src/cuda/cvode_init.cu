@@ -7,7 +7,6 @@
 extern "C" {
 #include "cvode_gpu.h"
 }
-#include <unistd.h>
 #ifdef CAMP_USE_MPI
 #include <mpi.h>
 #endif
@@ -17,18 +16,14 @@ void constructor_cvode_gpu(SolverData *sd){
   ModelDataCPU *mCPU = &(sd->mCPU);
   ModelData *md = &(sd->model_data);
   CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
-  SUNMatrix J = cvdls_mem->A;
   sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
   ModelDataGPU *mGPU = sd->mGPU;
-  int n_cells = md->n_cells;
+  int n_cells = md->n_cells_gpu;
   mGPU->n_cells= n_cells;
   sd->flagCells = (int *) malloc((n_cells) * sizeof(int));
   int n_dep_var = md->n_per_cell_dep_var;
   int n_state_var = md->n_per_cell_state_var;
   int n_rxn = md->n_rxn;
-  size_t state_size = n_state_var * n_cells * sizeof(double);
-  mCPU->deriv_size = n_dep_var * n_cells * sizeof(double);
-  mCPU->env_size = CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double); //Temp and pressure
   size_t rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
   size_t map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
   int nGPUs;
@@ -38,14 +33,10 @@ void constructor_cvode_gpu(SolverData *sd){
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   int iDevice = rank % nGPUs;
   cudaSetDevice(iDevice);
-  char hostname[1024];
-  gethostname(hostname, 1024);
-  puts(hostname);
-  printf("hostname %s rank %d iDevice %d\n",hostname, rank, iDevice);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
-  HANDLE_ERROR(cudaMalloc((void **) &mGPU->state, state_size));
-  HANDLE_ERROR(cudaMalloc((void **) &mGPU->env, mCPU->env_size));
+  HANDLE_ERROR(cudaMalloc((void **) &mGPU->state, n_state_var * n_cells * sizeof(double)));
+  HANDLE_ERROR(cudaMalloc((void **) &mGPU->env, CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double)));
   cudaMalloc((void **) &mGPU->rxn_env_data, md->n_rxn_env_data * n_cells * sizeof(double));
   cudaMalloc((void **) &mGPU->rxn_env_data_idx, rxn_env_data_idx_size);
   cudaMalloc((void **) &mGPU->map_state_deriv, map_state_deriv_size);
@@ -70,26 +61,27 @@ void constructor_cvode_gpu(SolverData *sd){
            " use CPU case instead\n");
     exit(0);
   }
-  mCPU->jac_size = md->n_per_cell_solver_jac_elem * n_cells * sizeof(double);
-  mCPU->nnz_J_solver = SM_NNZ_S(md->J_solver);
-  cudaMalloc((void **) &mGPU->dA, mCPU->jac_size);
-  cudaMalloc((void **) &mGPU->J_solver, mCPU->jac_size);
-  cudaMalloc((void **) &mGPU->J_state, mCPU->deriv_size);
-  cudaMalloc((void **) &mGPU->J_deriv, mCPU->deriv_size);
-  cudaMalloc((void **) &mGPU->J_tmp, mCPU->deriv_size);
-  cudaMalloc((void **) &mGPU->J_tmp2, mCPU->deriv_size);
+  size_t deriv_size = n_dep_var * n_cells * sizeof(double);
+  size_t jac_size = md->n_per_cell_solver_jac_elem * n_cells * sizeof(double);
+  cudaMalloc((void **) &mGPU->dA, jac_size);
+  cudaMalloc((void **) &mGPU->J_solver, jac_size);
+  cudaMalloc((void **) &mGPU->J_state, deriv_size);
+  cudaMalloc((void **) &mGPU->J_deriv, deriv_size);
+  cudaMalloc((void **) &mGPU->J_tmp, deriv_size);
+  cudaMalloc((void **) &mGPU->J_tmp2, deriv_size);
   cudaMalloc((void **) &mGPU->jac_map, sizeof(JacMap) * md->n_mapped_values);
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->n_mapped_values, 1 * sizeof(int)));
+  SUNMatrix J = cvdls_mem->A;
   mCPU->A = ((double *) SM_DATA_S(J));
-  HANDLE_ERROR(cudaMemcpy(mGPU->dA, mCPU->A, mCPU->jac_size, cudaMemcpyHostToDevice));
+  HANDLE_ERROR(cudaMemcpy(mGPU->dA, mCPU->A, jac_size, cudaMemcpyHostToDevice));
   double *J_solver = SM_DATA_S(md->J_solver);
-  cudaMemcpy(mGPU->J_solver, J_solver, mCPU->jac_size, cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->J_solver, J_solver, jac_size, cudaMemcpyHostToDevice);
   double *J_state = N_VGetArrayPointer(md->J_state);
-  HANDLE_ERROR(cudaMemcpy(mGPU->J_state, J_state, mCPU->deriv_size, cudaMemcpyHostToDevice));
+  HANDLE_ERROR(cudaMemcpy(mGPU->J_state, J_state, deriv_size, cudaMemcpyHostToDevice));
   double *J_deriv = N_VGetArrayPointer(md->J_deriv);
-  HANDLE_ERROR(cudaMemcpy(mGPU->J_deriv, J_deriv, mCPU->deriv_size, cudaMemcpyHostToDevice));
+  HANDLE_ERROR(cudaMemcpy(mGPU->J_deriv, J_deriv, deriv_size, cudaMemcpyHostToDevice));
   double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2);
-  HANDLE_ERROR(cudaMemcpy(mGPU->J_tmp2, J_tmp2, mCPU->deriv_size, cudaMemcpyHostToDevice));
+  HANDLE_ERROR(cudaMemcpy(mGPU->J_tmp2, J_tmp2, deriv_size, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->n_mapped_values, &md->n_mapped_values, 1 * sizeof(int), cudaMemcpyHostToDevice));
   Jacobian *jac = &sd->jac;

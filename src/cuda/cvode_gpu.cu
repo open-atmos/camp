@@ -13,7 +13,7 @@ extern "C" {
 #endif
 
 
-int cvHandleFailure_gpu(CVodeMem cv_mem, int flag){
+static int cvHandleFailure_gpu(CVodeMem cv_mem, int flag){
   switch (flag) {
     case CV_ERR_FAILURE:
       cvProcessError(cv_mem, CV_ERR_FAILURE, "CVODE", "CVode", MSGCV_ERR_FAILS,
@@ -56,7 +56,7 @@ int cvHandleFailure_gpu(CVodeMem cv_mem, int flag){
   return(flag);
 }
 
-int cvYddNorm_gpu(CVodeMem cv_mem, realtype hg, realtype *yddnrm){
+static int cvYddNorm_gpu(CVodeMem cv_mem, realtype hg, realtype *yddnrm){
   int retval;
   N_VLinearSum(hg, cv_mem->cv_zn[1], ONE, cv_mem->cv_zn[0], cv_mem->cv_y);
   retval = f(cv_mem->cv_tn+hg, cv_mem->cv_y, cv_mem->cv_tempv, cv_mem->cv_user_data);
@@ -69,7 +69,7 @@ int cvYddNorm_gpu(CVodeMem cv_mem, realtype hg, realtype *yddnrm){
   return(CV_SUCCESS);
 }
 
-realtype cvUpperBoundH0_gpu(CVodeMem cv_mem, realtype tdist){
+static realtype cvUpperBoundH0_gpu(CVodeMem cv_mem, realtype tdist){
   realtype hub_inv, hub;
   N_Vector temp1, temp2;
   temp1 = cv_mem->cv_tempv;
@@ -86,7 +86,7 @@ realtype cvUpperBoundH0_gpu(CVodeMem cv_mem, realtype tdist){
   return(hub);
 }
 
-int cvHin_gpu(CVodeMem cv_mem, realtype tout){
+static int cvHin_gpu(CVodeMem cv_mem, realtype tout){
   int retval, sign, count1, count2;
   realtype tdiff, tdist, tround, hlb, hub;
   realtype hg, hgs, hs, hnew, hrat, h0, yddnrm;
@@ -141,7 +141,7 @@ int cvHin_gpu(CVodeMem cv_mem, realtype tout){
   return(CV_SUCCESS);
 }
 
-int cvRcheck1_gpu(CVodeMem cv_mem){
+static int cvRcheck1_gpu(CVodeMem cv_mem){
   int i, retval;
   realtype smallh, hratio, tplus;
   booleantype zroot;
@@ -179,7 +179,7 @@ int cvRcheck1_gpu(CVodeMem cv_mem){
   return(CV_SUCCESS);
 }
 
-int cvRcheck2_gpu(CVodeMem cv_mem){
+static int cvRcheck2_gpu(CVodeMem cv_mem){
   int i, retval;
   realtype smallh, hratio, tplus;
   booleantype zroot;
@@ -229,7 +229,7 @@ int cvRcheck2_gpu(CVodeMem cv_mem){
   return(CV_SUCCESS);
 }
 
-int cvRootfind_gpu(CVodeMem cv_mem){
+static int cvRootfind_gpu(CVodeMem cv_mem){
   realtype alph, tmid, gfrac, maxfrac, fracint, fracsub;
   int i, retval, imax, side, sideprev;
   booleantype zroot, sgnchg;
@@ -349,7 +349,7 @@ int cvRootfind_gpu(CVodeMem cv_mem){
   return(RTFOUND);
 }
 
-int cvRcheck3_gpu(CVodeMem cv_mem){
+static int cvRcheck3_gpu(CVodeMem cv_mem){
   int i, ier, retval;
   if ( (cv_mem->cv_toutc - cv_mem->cv_tn)*cv_mem->cv_h >= ZERO) {
     cv_mem->cv_thi = cv_mem->cv_tn;
@@ -394,13 +394,15 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   int n_cells = md->n_cells;
 #endif
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->rxn_env_data,md->rxn_env_data,md->n_rxn_env_data * mGPU->n_cells * sizeof(double),cudaMemcpyHostToDevice,stream));
-  HANDLE_ERROR(cudaMemcpyAsync(mGPU->env,md->total_env,mCPU->env_size,cudaMemcpyHostToDevice,stream));
+  HANDLE_ERROR(cudaMemcpyAsync(mGPU->env,md->total_env,CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double),cudaMemcpyHostToDevice,stream));
   double *J_state = N_VGetArrayPointer(md->J_state);
-  cudaMemcpyAsync(mGPU->J_state,J_state,mCPU->deriv_size,cudaMemcpyHostToDevice,stream);
+  size_t deriv_size = md->n_per_cell_dep_var * n_cells * sizeof(double);
+  cudaMemcpyAsync(mGPU->J_state,J_state,deriv_size,cudaMemcpyHostToDevice,stream);
   double *J_deriv = N_VGetArrayPointer(md->J_deriv);
-  cudaMemcpyAsync(mGPU->J_deriv,J_deriv,mCPU->deriv_size,cudaMemcpyHostToDevice,stream);
+  size_t jac_size = md->n_per_cell_solver_jac_elem * n_cells * sizeof(double);
+  cudaMemcpyAsync(mGPU->J_deriv,J_deriv,deriv_size,cudaMemcpyHostToDevice,stream);
   double *J_solver = SM_DATA_S(md->J_solver);
-  cudaMemcpy(mGPU->J_solver, J_solver, mCPU->jac_size, cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->J_solver, J_solver, jac_size, cudaMemcpyHostToDevice);
   cv_mem = (CVodeMem) cvode_mem;
   cv_mem->cv_y = yout;
   cv_mem->cv_toutc = tout;
