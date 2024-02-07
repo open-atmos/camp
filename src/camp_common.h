@@ -259,7 +259,7 @@ typedef struct {
 
 #ifdef CAMP_DEBUG_GPU
   double timeCVode;
-  cudaEvent_t startcvStep; //todo check if this compiles, if no, remove, if yes, remove from mcpu and just use mdvcpu
+  cudaEvent_t startcvStep;
   cudaEvent_t stopcvStep;
 #endif
 #endif
@@ -267,6 +267,7 @@ typedef struct {
 #ifdef CAMP_USE_GPU
   ModelDataCPU mCPU;
   ModelDataGPU *mGPU;
+
   int *flagCells;
   float rate_cells_gpu;
 /*

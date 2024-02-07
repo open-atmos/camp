@@ -577,7 +577,7 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
   __syncthreads();
   deriv_data.production_rates = &( md->production_rates[blockDim.x*blockIdx.x]);
   deriv_data.loss_rates = &( md->loss_rates[blockDim.x*blockIdx.x]);
-  sc->grid_cell_state = &( md->state[md->state_size_cell*blockIdx.x]);
+  sc->grid_cell_state = &( md->state[md->n_per_cell_state_var*blockIdx.x]);
   __syncthreads();
   int n_rxn = md->n_rxn;
 #ifdef IS_DEBUG_MODE_removeAtomic
@@ -787,7 +787,7 @@ __device__ void cudaDevicecalc_Jac(double *y,ModelDataGPU *md, ModelDataVariable
   jacBlock.num_elem = jac->num_elem;
   jacBlock.production_partials = &( jac->production_partials[jacBlock.num_elem[0]*blockIdx.x]);
   jacBlock.loss_partials = &( jac->loss_partials[jacBlock.num_elem[0]*blockIdx.x]);
-  sc->grid_cell_state = &( md->state[md->state_size_cell*blockIdx.x]);
+  sc->grid_cell_state = &( md->state[md->n_per_cell_state_var*blockIdx.x]);
   __syncthreads();
   int n_rxn = md->n_rxn;
 #ifdef IS_DEBUG_MODE_removeAtomic

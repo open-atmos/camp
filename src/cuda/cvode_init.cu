@@ -173,13 +173,13 @@ void constructor_cvode_gpu(SolverData *sd){
   cudaMemcpy(mGPU->dx, tempv, nrows * sizeof(double), cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->cv_last_yn, cv_last_yn, nrows * sizeof(double), cudaMemcpyHostToDevice);
   HANDLE_ERROR(cudaMemcpy(mGPU->cv_acor_init, cv_acor_init, nrows * sizeof(double), cudaMemcpyHostToDevice));
-  mGPU->state_size_cell = md->n_per_cell_state_var;
+  mGPU->n_per_cell_state_var = md->n_per_cell_state_var;
   int flag = 999;
   cudaMemcpy(mGPU->flag, &flag, 1 * sizeof(int), cudaMemcpyHostToDevice);
   mCPU->mdvCPU.nstlj = 0;
 #ifdef CAMP_DEBUG_GPU
-  cudaEventCreate(&mCPU->startcvStep);
-  cudaEventCreate(&mCPU->stopcvStep);
+  cudaEventCreate(&sd->startcvStep);
+  cudaEventCreate(&sd->stopcvStep);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   cudaMalloc((void **) &mGPU->mdvo, sizeof(ModelDataVariable));
   cudaDeviceGetAttribute(&mGPU->clock_khz, cudaDevAttrClockRate, 0);
