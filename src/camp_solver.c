@@ -131,6 +131,9 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.n_cells_gpu = n_cells * sd->rate_cells_gpu;
   sd->model_data.n_cells_cpu = n_cells-sd->model_data.n_cells_gpu;
   n_cells=1;
+#else
+  sd->model_data.n_cells_gpu = n_cells;
+  sd->model_data.n_cells_cpu = n_cells;
 #endif
   sd->model_data.n_cells = n_cells;
 
