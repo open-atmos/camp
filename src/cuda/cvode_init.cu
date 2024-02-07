@@ -116,20 +116,18 @@ void constructor_cvode_gpu(SolverData *sd){
   HANDLE_ERROR(cudaMalloc(ddiag,nrows*sizeof(double)));
   SUNMatrix J = cvdls_mem->A;
   double *A = ((double *) SM_DATA_S(J));
-
-  /*
-  double *aux=(double*)malloc(sizeof(double)*num_elem);
-  for (int i = 0; i < num_elem; i++) {
-    aux[i]=0.;
+  aux=(double*)malloc(jac_size);
+  for (int i = 0; i < n_cells; i++) {
+    for (int j = 0; j < md->n_per_cell_solver_jac_elem; j++) {
+      aux[j+i*md->n_per_cell_solver_jac_elem] = A[j];
+    }
   }
-  HANDLE_ERROR(cudaMemcpy(jacgpu->production_partials, aux, num_elem * sizeof(double), cudaMemcpyHostToDevice));
-  HANDLE_ERROR(cudaMemcpy(jacgpu->loss_partials, aux, num_elem * sizeof(double), cudaMemcpyHostToDevice));
+  cudaMalloc((void **) &mGPU->dsavedJ, nnz * sizeof(double));
+  cudaMemcpy(mGPU->dsavedJ, aux, jac_size, cudaMemcpyHostToDevice);
   free(aux);
-*/
-  cudaMemcpy(mGPU->dsavedJ, A, jac_size, cudaMemcpyHostToDevice);
   //Translate from int64 (sunindextype) to int
-  int *jA = (int *) malloc(sizeof(int) *nnz/n_cells);
-  int *iA = (int *) malloc(sizeof(int) * (nrows/n_cells + 1));
+  int *jA = (int *) malloc(sizeof(int) *md->n_per_cell_solver_jac_elem);
+  int *iA = (int *) malloc(sizeof(int) * (n_dep_var + 1));
   for (int i = 0; i < nnz/n_cells; i++)
     jA[i] = SM_INDEXVALS_S(J)[i];
   for (int i = 0; i <= nrows/n_cells; i++)
@@ -146,7 +144,6 @@ void constructor_cvode_gpu(SolverData *sd){
   cudaMalloc((void **) &mGPU->sCells, sizeof(ModelDataVariable)*n_cells);
   cudaMalloc((void **) &mGPU->flag, 1 * sizeof(int));
   cudaMalloc((void **) &mGPU->flagCells, n_cells * sizeof(int));
-  cudaMalloc((void **) &mGPU->dsavedJ, nnz * sizeof(double));
   cudaMalloc((void **) &mGPU->dewt, nrows * sizeof(double));
   cudaMalloc((void **) &mGPU->cv_acor, nrows * sizeof(double));
   cudaMalloc((void **) &mGPU->dtempv, nrows * sizeof(double));
