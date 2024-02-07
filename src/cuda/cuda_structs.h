@@ -85,13 +85,7 @@ typedef struct {
 }ModelDataVariable; //variables to pass between gpu and cpu (different data between cells)
 
 typedef struct{
-  double* A;
-  int*    jA;
-  int*    iA;
-  int cells_method;
-  int nnz;
   ModelDataVariable mdvCPU; //cpu equivalent to gpu
-  cudaStream_t *streams;
 #ifdef CAMP_DEBUG_GPU
   cudaEvent_t startcvStep;
   cudaEvent_t stopcvStep;

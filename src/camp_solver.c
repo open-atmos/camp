@@ -498,7 +498,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
-    constructor_cvode_gpu(sd,rel_tol,max_steps,max_conv_fails);
+    constructor_cvode_gpu(sd);
   }
 #endif
 #ifdef FAILURE_DETAIL
