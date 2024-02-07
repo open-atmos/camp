@@ -84,13 +84,16 @@ typedef struct {
 #endif
 }ModelDataVariable; //variables to pass between gpu and cpu (different data between cells)
 
+typedef struct{
+  ModelDataVariable mdvCPU; // WARNING: Moving this to struct "sd" cause errors when running gpu version
+} ModelDataCPU;
+
 typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     int *map_state_deriv;
     double *J_solver;
     double *J_state;
     double *J_deriv;
     double *J_tmp;
-    double *J_tmp2;
     int *indexvals;
     int *indexptrs;
     int *rxn_int;

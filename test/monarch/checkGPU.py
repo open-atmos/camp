@@ -12,8 +12,8 @@ def checkGPU():
   conf.chemFile = "cb05_paperV2"
   conf.diffCellsL = []
   conf.diffCellsL.append("Realistic")
-  conf.mpiProcessesCaseBase = 2
-  conf.mpiProcessesCaseOptimList.append(2)
+  conf.mpiProcessesCaseBase = 1
+  conf.mpiProcessesCaseOptimList.append(1)
   conf.cells = [10]
   conf.timeSteps = 3
   conf.timeStepsDt = 2

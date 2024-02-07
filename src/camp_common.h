@@ -265,8 +265,8 @@ typedef struct {
 #endif
 
 #ifdef CAMP_USE_GPU
+  ModelDataCPU mCPU;
   ModelDataGPU *mGPU;
-  ModelDataVariable mdvCPU;
 
   int *flagCells;
   float rate_cells_gpu;

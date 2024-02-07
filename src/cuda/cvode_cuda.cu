@@ -565,8 +565,8 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   md->J_tmp[i]=y[i]-md->J_state[i];
-  cudaDeviceSpmv_2(md->J_tmp2, md->J_tmp, md->J_solver, md->djA, md->diA);
-  md->J_tmp[i]=md->J_deriv[i]+md->J_tmp2[i];
+  cudaDeviceSpmv_2(md->dy, md->J_tmp, md->J_solver, md->djA, md->diA);
+  md->J_tmp[i]=md->J_deriv[i]+md->dy[i];
   TimeDerivativeGPU deriv_data;
   __syncthreads();
   deriv_data.production_rates = md->production_rates;

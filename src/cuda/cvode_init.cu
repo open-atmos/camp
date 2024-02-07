@@ -13,7 +13,7 @@ extern "C" {
 
 void constructor_cvode_gpu(SolverData *sd){
   CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
-  ModelDataVariable *mdvCPU = &(sd->mdvCPU);
+  ModelDataCPU *mCPU = &(sd->mCPU);
   ModelData *md = &(sd->model_data);
   CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
   sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
@@ -68,21 +68,8 @@ void constructor_cvode_gpu(SolverData *sd){
   cudaMalloc((void **) &mGPU->J_state, deriv_size);
   cudaMalloc((void **) &mGPU->J_deriv, deriv_size);
   cudaMalloc((void **) &mGPU->J_tmp, deriv_size);
-  cudaMalloc((void **) &mGPU->J_tmp2, deriv_size);
   cudaMalloc((void **) &mGPU->jac_map, sizeof(JacMap) * md->n_mapped_values);
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->n_mapped_values, 1 * sizeof(int)));
-  double *J_solver = SM_DATA_S(md->J_solver);
-  cudaMemcpy(mGPU->J_solver, J_solver, jac_size, cudaMemcpyHostToDevice);
-
-  //todo j_solver is required to also copy in cvode_run?
-
-
-  double *J_state = N_VGetArrayPointer(md->J_state);
-  HANDLE_ERROR(cudaMemcpy(mGPU->J_state, J_state, deriv_size, cudaMemcpyHostToDevice));
-  double *J_deriv = N_VGetArrayPointer(md->J_deriv);
-  HANDLE_ERROR(cudaMemcpy(mGPU->J_deriv, J_deriv, deriv_size, cudaMemcpyHostToDevice));
-  double *J_tmp2 = N_VGetArrayPointer(md->J_tmp2);
-  HANDLE_ERROR(cudaMemcpy(mGPU->J_tmp2, J_tmp2, deriv_size, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->n_mapped_values, &md->n_mapped_values, 1 * sizeof(int), cudaMemcpyHostToDevice));
   Jacobian *jac = &sd->jac;
@@ -176,30 +163,30 @@ void constructor_cvode_gpu(SolverData *sd){
   mGPU->n_per_cell_state_var = md->n_per_cell_state_var;
   int flag = 999;
   cudaMemcpy(mGPU->flag, &flag, 1 * sizeof(int), cudaMemcpyHostToDevice);
-  mdvCPU->nstlj = 0;
+  mCPU->mdvCPU.nstlj = 0;
 #ifdef CAMP_DEBUG_GPU
   cudaEventCreate(&sd->startcvStep);
   cudaEventCreate(&sd->stopcvStep);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   cudaMalloc((void **) &mGPU->mdvo, sizeof(ModelDataVariable));
   cudaDeviceGetAttribute(&mGPU->clock_khz, cudaDevAttrClockRate, 0);
-  mdvCPU->countercvStep=0;
-  mdvCPU->counterBCGInternal=0;
-  mdvCPU->counterBCG=0;
-  mdvCPU->timeNewtonIteration=0.;
-  mdvCPU->timeJac=0.;
-  mdvCPU->timelinsolsetup=0.;
-  mdvCPU->timecalc_Jac=0.;
-  mdvCPU->timef=0.;
-  mdvCPU->timeguess_helper=0.;
-  mdvCPU->dtBCG=0.;
-  mdvCPU->dtcudaDeviceCVode=0.;
-  mdvCPU->dtPostBCG=0.;
-  HANDLE_ERROR(cudaMemcpy(mGPU->mdvo, &mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice));
+  mCPU->mdvCPU.countercvStep=0;
+  mCPU->mdvCPU.counterBCGInternal=0;
+  mCPU->mdvCPU.counterBCG=0;
+  mCPU->mdvCPU.timeNewtonIteration=0.;
+  mCPU->mdvCPU.timeJac=0.;
+  mCPU->mdvCPU.timelinsolsetup=0.;
+  mCPU->mdvCPU.timecalc_Jac=0.;
+  mCPU->mdvCPU.timef=0.;
+  mCPU->mdvCPU.timeguess_helper=0.;
+  mCPU->mdvCPU.dtBCG=0.;
+  mCPU->mdvCPU.dtcudaDeviceCVode=0.;
+  mCPU->mdvCPU.dtPostBCG=0.;
+  HANDLE_ERROR(cudaMemcpy(mGPU->mdvo, &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice));
 #endif
 #endif
   for (int i = 0; i < n_cells; i++){
-    cudaMemcpy(&mGPU->sCells[i], &mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
+    cudaMemcpy(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
   }
 #ifdef IS_DEBUG_MODE_CSR_ODE_GPU
   int n_row=nrows/n_cells;
@@ -314,7 +301,6 @@ void free_gpu_cu(SolverData *sd) {
   cudaFree(mGPU->J_state);
   cudaFree(mGPU->J_deriv);
   cudaFree(mGPU->J_tmp);
-  cudaFree(mGPU->J_tmp2);
   cudaFree(mGPU->indexvals);
   cudaFree(mGPU->indexptrs);
   cudaFree(mGPU->rxn_int);
