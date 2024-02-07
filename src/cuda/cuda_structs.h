@@ -84,14 +84,6 @@ typedef struct {
 #endif
 }ModelDataVariable; //variables to pass between gpu and cpu (different data between cells)
 
-typedef struct{
-  ModelDataVariable mdvCPU; //cpu equivalent to gpu
-#ifdef CAMP_DEBUG_GPU
-  cudaEvent_t startcvStep;
-  cudaEvent_t stopcvStep;
-#endif
-} ModelDataCPU;
-
 typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     int *map_state_deriv;
     double *J_solver;

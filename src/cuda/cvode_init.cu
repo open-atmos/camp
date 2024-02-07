@@ -13,7 +13,7 @@ extern "C" {
 
 void constructor_cvode_gpu(SolverData *sd){
   CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
-  ModelDataCPU *mCPU = &(sd->mCPU);
+  ModelDataVariable *mdvCPU = &(sd->mdvCPU);
   ModelData *md = &(sd->model_data);
   CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
   sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
@@ -176,30 +176,30 @@ void constructor_cvode_gpu(SolverData *sd){
   mGPU->n_per_cell_state_var = md->n_per_cell_state_var;
   int flag = 999;
   cudaMemcpy(mGPU->flag, &flag, 1 * sizeof(int), cudaMemcpyHostToDevice);
-  mCPU->mdvCPU.nstlj = 0;
+  mdvCPU->nstlj = 0;
 #ifdef CAMP_DEBUG_GPU
   cudaEventCreate(&sd->startcvStep);
   cudaEventCreate(&sd->stopcvStep);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   cudaMalloc((void **) &mGPU->mdvo, sizeof(ModelDataVariable));
   cudaDeviceGetAttribute(&mGPU->clock_khz, cudaDevAttrClockRate, 0);
-  mCPU->mdvCPU.countercvStep=0;
-  mCPU->mdvCPU.counterBCGInternal=0;
-  mCPU->mdvCPU.counterBCG=0;
-  mCPU->mdvCPU.timeNewtonIteration=0.;
-  mCPU->mdvCPU.timeJac=0.;
-  mCPU->mdvCPU.timelinsolsetup=0.;
-  mCPU->mdvCPU.timecalc_Jac=0.;
-  mCPU->mdvCPU.timef=0.;
-  mCPU->mdvCPU.timeguess_helper=0.;
-  mCPU->mdvCPU.dtBCG=0.;
-  mCPU->mdvCPU.dtcudaDeviceCVode=0.;
-  mCPU->mdvCPU.dtPostBCG=0.;
-  HANDLE_ERROR(cudaMemcpy(mGPU->mdvo, &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice));
+  mdvCPU->countercvStep=0;
+  mdvCPU->counterBCGInternal=0;
+  mdvCPU->counterBCG=0;
+  mdvCPU->timeNewtonIteration=0.;
+  mdvCPU->timeJac=0.;
+  mdvCPU->timelinsolsetup=0.;
+  mdvCPU->timecalc_Jac=0.;
+  mdvCPU->timef=0.;
+  mdvCPU->timeguess_helper=0.;
+  mdvCPU->dtBCG=0.;
+  mdvCPU->dtcudaDeviceCVode=0.;
+  mdvCPU->dtPostBCG=0.;
+  HANDLE_ERROR(cudaMemcpy(mGPU->mdvo, &mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice));
 #endif
 #endif
   for (int i = 0; i < n_cells; i++){
-    cudaMemcpy(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
+    cudaMemcpy(&mGPU->sCells[i], &mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice);
   }
 #ifdef IS_DEBUG_MODE_CSR_ODE_GPU
   int n_row=nrows/n_cells;
