@@ -258,7 +258,6 @@ void constructor_cvode_gpu(SolverData *sd){
   free(Bx);
   free(jac_solver_id);
   free(aux_solver_id);
-  nnz=nnz*n_cells;
 #endif
 
   /*

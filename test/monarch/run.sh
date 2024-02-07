@@ -19,8 +19,8 @@ make_run() {
   cd ../../build
   make -j 4
   cd $curr_path
-  python TestMonarch.py
-  #python checkGPU.py
+  #python TestMonarch.py
+  python checkGPU.py
 }
 
 make_run

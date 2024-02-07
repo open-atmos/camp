@@ -31,6 +31,7 @@ class TestMonarch:
     self.casesOptim = [""]
     self.plotYKey = ""
     self.is_import = False
+    self.is_import_base = False
     self.profileCuda = ""
     self.is_out = True
     # Auxiliary
