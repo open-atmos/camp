@@ -14,7 +14,7 @@ def checkGPU():
   conf.diffCellsL.append("Realistic")
   conf.mpiProcessesCaseBase = 1
   conf.mpiProcessesCaseOptimList.append(1)
-  conf.cells = [10]
+  conf.cells = [100]
   conf.timeSteps = 3
   conf.timeStepsDt = 2
   conf.caseBase = "CPU One-cell"

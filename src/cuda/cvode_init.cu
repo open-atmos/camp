@@ -24,8 +24,6 @@ void constructor_cvode_gpu(SolverData *sd){
   int n_dep_var = md->n_per_cell_dep_var;
   int n_state_var = md->n_per_cell_state_var;
   int n_rxn = md->n_rxn;
-  size_t rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
-  size_t map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
   int nGPUs;
   cudaGetDeviceCount(&nGPUs);
   int rank, size;
@@ -38,11 +36,11 @@ void constructor_cvode_gpu(SolverData *sd){
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->state, n_state_var * n_cells * sizeof(double)));
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->env, CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double)));
   cudaMalloc((void **) &mGPU->rxn_env_data, md->n_rxn_env_data * n_cells * sizeof(double));
-  cudaMalloc((void **) &mGPU->rxn_env_data_idx, rxn_env_data_idx_size);
-  cudaMalloc((void **) &mGPU->map_state_deriv, map_state_deriv_size);
   int num_spec = md->n_per_cell_dep_var*n_cells;
   cudaMalloc((void **) &(mGPU->production_rates),num_spec*sizeof(mGPU->production_rates));
   cudaMalloc((void **) &(mGPU->loss_rates),num_spec*sizeof(mGPU->loss_rates));
+  size_t map_state_deriv_size = n_dep_var * n_cells * sizeof(int);
+  cudaMalloc((void **) &mGPU->map_state_deriv, map_state_deriv_size);
   int *map_state_derivCPU = (int *)malloc(map_state_deriv_size);
   int i_dep_var = 0;
   for (int i_cell = 0; i_cell < n_cells; i_cell++) {
@@ -62,7 +60,8 @@ void constructor_cvode_gpu(SolverData *sd){
     exit(0);
   }
   size_t deriv_size = n_dep_var * n_cells * sizeof(double);
-  size_t jac_size = md->n_per_cell_solver_jac_elem * n_cells * sizeof(double);
+  int nnz = md->n_per_cell_solver_jac_elem * n_cells;
+  size_t jac_size = nnz * sizeof(double);
   cudaMalloc((void **) &mGPU->dA, jac_size);
   cudaMalloc((void **) &mGPU->J_solver, jac_size);
   cudaMalloc((void **) &mGPU->J_state, deriv_size);
@@ -85,12 +84,15 @@ void constructor_cvode_gpu(SolverData *sd){
   }
   HANDLE_ERROR(cudaMemcpy(jacgpu->production_partials, aux, num_elem * sizeof(double), cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(jacgpu->loss_partials, aux, num_elem * sizeof(double), cudaMemcpyHostToDevice));
+  free(aux);
   cudaMalloc((void **) &mGPU->rxn_int, (md->n_rxn_int_param + md->n_rxn)*sizeof(int));
   cudaMalloc((void **) &mGPU->rxn_double, md->n_rxn_float_param*sizeof(double));
   cudaMalloc((void **) &mGPU->rxn_int_indices, (md->n_rxn+1)*sizeof(int));
   cudaMalloc((void **) &mGPU->rxn_float_indices, (md->n_rxn+1)*sizeof(int));
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_int, md->rxn_int_data,(md->n_rxn_int_param + md->n_rxn)*sizeof(int), cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_double, md->rxn_float_data, md->n_rxn_float_param*sizeof(double), cudaMemcpyHostToDevice));
+  size_t rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
+  cudaMalloc((void **) &mGPU->rxn_env_data_idx, rxn_env_data_idx_size);
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_env_data_idx, md->rxn_env_idx, rxn_env_data_idx_size, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_int_indices, md->rxn_int_indices,(md->n_rxn+1)*sizeof(int), cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_float_indices, md->rxn_float_indices,(md->n_rxn+1)*sizeof(int), cudaMemcpyHostToDevice));
@@ -114,8 +116,17 @@ void constructor_cvode_gpu(SolverData *sd){
   HANDLE_ERROR(cudaMalloc(ddiag,nrows*sizeof(double)));
   SUNMatrix J = cvdls_mem->A;
   double *A = ((double *) SM_DATA_S(J));
-  HANDLE_ERROR(cudaMemcpy(mGPU->dA, A, jac_size, cudaMemcpyHostToDevice));
-  int nnz = SM_NNZ_S(J);
+
+  /*
+  double *aux=(double*)malloc(sizeof(double)*num_elem);
+  for (int i = 0; i < num_elem; i++) {
+    aux[i]=0.;
+  }
+  HANDLE_ERROR(cudaMemcpy(jacgpu->production_partials, aux, num_elem * sizeof(double), cudaMemcpyHostToDevice));
+  HANDLE_ERROR(cudaMemcpy(jacgpu->loss_partials, aux, num_elem * sizeof(double), cudaMemcpyHostToDevice));
+  free(aux);
+*/
+  cudaMemcpy(mGPU->dsavedJ, A, jac_size, cudaMemcpyHostToDevice);
   //Translate from int64 (sunindextype) to int
   int *jA = (int *) malloc(sizeof(int) *nnz/n_cells);
   int *iA = (int *) malloc(sizeof(int) * (nrows/n_cells + 1));
@@ -153,7 +164,6 @@ void constructor_cvode_gpu(SolverData *sd){
   cudaMalloc((void **) &mGPU->cv_tq, (NUM_TESTS + 1) * n_cells * sizeof(double));
   cudaMalloc((void **) &mGPU->cv_Vabstol, nrows * sizeof(double));
   HANDLE_ERROR(cudaMemset(mGPU->flagCells, CV_SUCCESS, n_cells * sizeof(int)));
-  cudaMemcpy(mGPU->dsavedJ, A, nnz * sizeof(double), cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->dewt, ewt, nrows * sizeof(double), cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->cv_acor, ewt, nrows * sizeof(double), cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->dftemp, ewt, nrows * sizeof(double), cudaMemcpyHostToDevice);
@@ -246,50 +256,6 @@ void constructor_cvode_gpu(SolverData *sd){
   free(jac_solver_id);
   free(aux_solver_id);
 #endif
-
-  /*
-#ifdef DEV_CPU_GPU
-  //CPU cvode
-  sd->cvode_mem2 = CVodeCreate(CV_BDF
-#ifndef SUNDIALS_VERSION_MAJOR
-#  error SUNDIALS_VERSION_MAJOR not defined
-#elif SUNDIALS_VERSION_MAJOR < 4
-      , CV_NEWTON
-#endif
-  );
-  int n_state_var = sd->model_data.n_per_cell_state_var;
-  int n_dep_var = sd->model_data.n_per_cell_dep_var;
-  int var_type = sd->model_data.var_type;
-  int n_cells = 1;
-  flag = CVodeSetUserData(sd->cvode_mem2, sd);
-  sd->y = N_VNew_Serial(n_dep_var);
-  sd->deriv = N_VNew_Serial(n_dep_var);
-  flag = CVodeInit(sd->cvode_mem, f, (realtype)0.0, sd->y2);
-  sd->abs_tol_nv2 = N_VNew_Serial(n_dep_var);
-  i_dep_var = 0;
-  for (int i_spec = 0; i_spec < n_dep_var; i_spec++)
-    NV_Ith_S(sd->abs_tol_nv2, i_spec) = md->abs_tol[i_spec];
-  flag = CVodeSVtolerances(sd->cvode_mem2, rel_tol, sd->abs_tol_nv2);
-  flag = CVodeSetMaxNumSteps(sd->cvode_mem2, max_steps);
-  flag = CVodeSetMaxConvFails(sd->cvode_mem2, max_conv_fails);
-  flag = CVodeSetMaxErrTestFails(sd->cvode_mem2, max_conv_fails);
-  flag = CVodeSetMaxHnilWarns(sd->cvode_mem2, -1);
-  //get_jac_init
-
-
-
-  sd->model_data.J_init = SUNMatClone(sd->J);
-  SUNMatCopy(sd->J, sd->model_data.J_init);
-  sd->J_guess = SUNMatClone(sd->J);
-  SUNMatCopy(sd->J, sd->J_guess);
-  sd->ls = SUNKLU(sd->y, sd->J);
-  flag = CVDlsSetLinearSolver(sd->cvode_mem2, sd->ls, sd->J);
-  flag = CVDlsSetJacFn(sd->cvode_mem2, Jac);
-#ifdef CAMP_CUSTOM_CVODE
-  flag = CVodeSetDlsGuessHelper(sd->cvode_mem2, guess_helper);
-#endif
-#endif
-  */
 }
 
 void free_gpu_cu(SolverData *sd) {
