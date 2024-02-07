@@ -148,6 +148,7 @@ def run(conf):
 # @profile
 def run_cases(conf):
   # Base case
+  save_is_import=conf.is_import
   if conf.is_import_base:
     conf.is_import=True
   else:
@@ -169,8 +170,7 @@ def run_cases(conf):
   conf.case = conf.caseBase
   timeBase, valuesBase = run(conf)
   # OptimCases
-  if conf.is_import_base:
-    conf.is_import=False
+  conf.is_import=save_is_import
   datacases = []
   for mpiProcessesCaseOptim in (
       conf.mpiProcessesCaseOptimList):
