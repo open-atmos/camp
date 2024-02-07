@@ -177,6 +177,7 @@ void constructor_cvode_gpu(SolverData *sd){
 
 
 
+
   HANDLE_ERROR(cudaMemcpy(mGPU->dx, tempv, nrows * sizeof(double), cudaMemcpyHostToDevice));
   mGPU->n_per_cell_state_var = md->n_per_cell_state_var;
   int flag = 999;
