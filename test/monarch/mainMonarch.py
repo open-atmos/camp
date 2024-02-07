@@ -171,8 +171,6 @@ def run_cases(conf):
   # OptimCases
   if conf.is_import_base:
     conf.is_import=False
-  else:
-    conf.is_import=True
   datacases = []
   for mpiProcessesCaseOptim in (
       conf.mpiProcessesCaseOptimList):
