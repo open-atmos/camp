@@ -399,9 +399,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   size_t deriv_size = md->n_per_cell_dep_var * n_cells * sizeof(double);
   cudaMemcpyAsync(mGPU->J_state,J_state,deriv_size,cudaMemcpyHostToDevice,stream);
   double *J_deriv = N_VGetArrayPointer(md->J_deriv);
-  size_t jac_size = md->n_per_cell_solver_jac_elem * n_cells * sizeof(double);
   cudaMemcpyAsync(mGPU->J_deriv,J_deriv,deriv_size,cudaMemcpyHostToDevice,stream);
   double *J_solver = SM_DATA_S(md->J_solver);
+  size_t jac_size = md->n_per_cell_solver_jac_elem * n_cells * sizeof(double);
   cudaMemcpy(mGPU->J_solver, J_solver, jac_size, cudaMemcpyHostToDevice);
   cv_mem = (CVodeMem) cvode_mem;
   cv_mem->cv_y = yout;
