@@ -54,25 +54,19 @@ def process_variable(dataset1, dataset2, var_name):
     quantile75, quantile95, max_error, relative_error
 
 
-file1_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/cpu_tstep480_O3/"
-file2_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/gpu_tstep480_O3/"
-#file2_path_header = "/gpfs/scratch/bsc32/bsc32815/a591/nmmb-monarch/OUTPUT/regional/000/20160721/CURRENT_RUN/"
+file1_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/cpu_tstep480_2nodes/"
+file2_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/gpu_tstep480_2nodes/"
 
-# Calculate the speedup
 speedup = -1
 file1 = file1_path_header + "out/stats.csv"
 file2 = file2_path_header + "out/stats.csv"
-#speedup = calculate_speedup(file1, file2)
+speedup = calculate_speedup(file1, file2)
 
-#Path to netCDF
 file1 = file1_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
 file2 = file2_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
-
 dataset1 = nc.Dataset(file1)
 dataset2 = nc.Dataset(file2)
-
 variable_names = dataset1.variables.keys()
-
 summary_data = []
 start_time = time.time()
 
@@ -109,5 +103,4 @@ sns.boxplot(data=data, orient='v', showfliers=False)
 plt.ylabel("Relative Error [%]")
 plt.xticks(range(len(variable_names)), variable_names, rotation=90)
 plt.title("Species with highest NRMSE for MONARCH-CAMP") #4 GPUs 480 time-steps
-#plt.savefig("fig.png")
 plt.show()

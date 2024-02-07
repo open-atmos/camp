@@ -388,6 +388,11 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   ModelData *md = &(sd->model_data);
   cudaStream_t stream = 0;
   mGPU = sd->mGPU;
+#ifdef DEV_CPU_GPU
+  if (n_cells==0) goto dev_cpu;
+#else
+  int n_cells = md->n_cells;
+#endif
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->rxn_env_data,md->rxn_env_data,md->n_rxn_env_data * mGPU->n_cells * sizeof(double),cudaMemcpyHostToDevice,stream));
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->env,md->total_env,mCPU->env_size,cudaMemcpyHostToDevice,stream));
   double *J_state = N_VGetArrayPointer(md->J_state);
@@ -642,6 +647,11 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       istate = cvHandleFailure_gpu(cv_mem, istate);
     }
   }
+
+#ifdef DEV_CPU_GPU
+dev_cpu:
+  printf("n_cells=0\n");
+#endif
   return(istate);
 }
 

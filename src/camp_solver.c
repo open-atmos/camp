@@ -125,11 +125,12 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
   sd->use_cpu = use_cpu;
 #ifdef DEV_CPU_GPU
-  sd->rate_cells_gpu=1;
-  printf("Set cells to gpu to %lf %\n",sd->rate_cells_gpu*100);
+  sd->rate_cells_gpu=50;
+  printf("Set cells to gpu to %lf %\n",sd->rate_cells_gpu);
+  sd->rate_cells_gpu = sd->rate_cells_gpu/100;
   sd->model_data.n_cells_gpu = n_cells * sd->rate_cells_gpu;
   sd->model_data.n_cells_cpu_gpu = n_cells;
-  n_cells=1;
+  n_cells=sd->model_data.n_cells_gpu;
 #endif
   sd->model_data.n_cells = n_cells;
 
@@ -494,7 +495,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 
 #ifdef CAMP_USE_GPU
   if(sd->use_cpu==0){
-    constructor_cvode_gpu(sd);
+    constructor_cvode_gpu(sd,rel_tol,max_steps,max_conv_fails);
   }
 #endif
 #ifdef FAILURE_DETAIL
@@ -861,8 +862,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
   realtype time_step;
-
-
 
   // Get a pointer to the derivative data
   double *deriv_data = N_VGetArrayPointer(deriv);

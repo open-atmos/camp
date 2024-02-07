@@ -266,8 +266,16 @@ typedef struct {
   ModelDataCPU mCPU;
   ModelDataGPU *mGPU;
   int *flagCells;
-  void *cvode_mem2;
   float rate_cells_gpu;
+/*
+#ifdef DEV_CPU_GPU
+  //CPU+GPU
+    void *cvode_mem2;
+    N_Vector y2;
+    N_Vector deriv2;
+    N_Vector abs_tol_nv2;
+#endif
+*/
 #endif
   int use_cpu;
 

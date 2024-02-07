@@ -20,11 +20,7 @@ void constructor_cvode_gpu(SolverData *sd){
   SUNMatrix J = cvdls_mem->A;
   sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
   ModelDataGPU *mGPU = sd->mGPU;
-#ifdef DEV_CPU_GPU
-  int n_cells=md->n_cells_gpu; //todo use only mgpu->n_cells
-#else
   int n_cells = md->n_cells;
-#endif
   mGPU->n_cells= n_cells;
   sd->flagCells = (int *) malloc((n_cells) * sizeof(int));
   int n_dep_var = md->n_per_cell_dep_var;
@@ -73,7 +69,7 @@ void constructor_cvode_gpu(SolverData *sd){
     printf("CAMP ERROR: TOO FEW SPECIES FOR GPU (Species < 32),"
            " use CPU case instead\n");
     exit(0);
-}
+  }
   mCPU->jac_size = md->n_per_cell_solver_jac_elem * n_cells * sizeof(double);
   mCPU->nnz_J_solver = SM_NNZ_S(md->J_solver);
   cudaMalloc((void **) &mGPU->dA, mCPU->jac_size);
@@ -267,6 +263,50 @@ void constructor_cvode_gpu(SolverData *sd){
   free(jac_solver_id);
   free(aux_solver_id);
 #endif
+
+  /*
+#ifdef DEV_CPU_GPU
+  //CPU cvode
+  sd->cvode_mem2 = CVodeCreate(CV_BDF
+#ifndef SUNDIALS_VERSION_MAJOR
+#  error SUNDIALS_VERSION_MAJOR not defined
+#elif SUNDIALS_VERSION_MAJOR < 4
+      , CV_NEWTON
+#endif
+  );
+  int n_state_var = sd->model_data.n_per_cell_state_var;
+  int n_dep_var = sd->model_data.n_per_cell_dep_var;
+  int var_type = sd->model_data.var_type;
+  int n_cells = 1;
+  flag = CVodeSetUserData(sd->cvode_mem2, sd);
+  sd->y = N_VNew_Serial(n_dep_var);
+  sd->deriv = N_VNew_Serial(n_dep_var);
+  flag = CVodeInit(sd->cvode_mem, f, (realtype)0.0, sd->y2);
+  sd->abs_tol_nv2 = N_VNew_Serial(n_dep_var);
+  i_dep_var = 0;
+  for (int i_spec = 0; i_spec < n_dep_var; i_spec++)
+    NV_Ith_S(sd->abs_tol_nv2, i_spec) = md->abs_tol[i_spec];
+  flag = CVodeSVtolerances(sd->cvode_mem2, rel_tol, sd->abs_tol_nv2);
+  flag = CVodeSetMaxNumSteps(sd->cvode_mem2, max_steps);
+  flag = CVodeSetMaxConvFails(sd->cvode_mem2, max_conv_fails);
+  flag = CVodeSetMaxErrTestFails(sd->cvode_mem2, max_conv_fails);
+  flag = CVodeSetMaxHnilWarns(sd->cvode_mem2, -1);
+  //get_jac_init
+
+
+
+  sd->model_data.J_init = SUNMatClone(sd->J);
+  SUNMatCopy(sd->J, sd->model_data.J_init);
+  sd->J_guess = SUNMatClone(sd->J);
+  SUNMatCopy(sd->J, sd->J_guess);
+  sd->ls = SUNKLU(sd->y, sd->J);
+  flag = CVDlsSetLinearSolver(sd->cvode_mem2, sd->ls, sd->J);
+  flag = CVDlsSetJacFn(sd->cvode_mem2, Jac);
+#ifdef CAMP_CUSTOM_CVODE
+  flag = CVodeSetDlsGuessHelper(sd->cvode_mem2, guess_helper);
+#endif
+#endif
+  */
 }
 
 void free_gpu_cu(SolverData *sd) {
