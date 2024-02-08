@@ -21,7 +21,7 @@ def all_timesteps():
   #conf.is_import_base = True
   conf.mpiProcessesCaseBase = 1
   conf.mpiProcessesCaseOptimList = [1]
-  conf.cells = [10]
+  conf.cells = [200]
   conf.timeSteps = 3
   conf.caseBase = "CPU One-cell"
   #conf.caseBase = "GPU BDF"
