@@ -395,13 +395,23 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->rxn_env_data,md->rxn_env_data,md->n_rxn_env_data * mGPU->n_cells * sizeof(double),cudaMemcpyHostToDevice,stream));
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->env,md->total_env,CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double),cudaMemcpyHostToDevice,stream));
   double *J_state = N_VGetArrayPointer(md->J_state);
-  size_t deriv_size = md->n_per_cell_dep_var * n_cells * sizeof(double);
-  cudaMemcpyAsync(mGPU->J_state,J_state,deriv_size,cudaMemcpyHostToDevice,stream);
+  cudaMemcpyAsync(mGPU->J_state,J_state,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice,stream);
   double *J_deriv = N_VGetArrayPointer(md->J_deriv);
-  cudaMemcpyAsync(mGPU->J_deriv,J_deriv,deriv_size,cudaMemcpyHostToDevice,stream);
-  double *J_solver = SM_DATA_S(md->J_solver);
+  cudaMemcpyAsync(mGPU->J_deriv,J_deriv,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice,stream);
+
+  /*
+  double *aux=(double*)malloc(mGPU->nrows*sizeof(double));
+  for (int i = 0; i < mGPU->nrows; i++) {
+    aux[i] = 0.;
+  }
+  cudaMemcpyAsync(mGPU->J_state,J_state,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice,stream);
+  cudaMemcpyAsync(mGPU->J_deriv,J_deriv,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice,stream);
+  free(aux);
+*/
+
   int nnz = md->n_per_cell_solver_jac_elem * n_cells;
   size_t jac_size = nnz * sizeof(double);
+  double *J_solver = SM_DATA_S(md->J_solver);
   cudaMemcpyAsync(mGPU->J_solver, J_solver, jac_size, cudaMemcpyHostToDevice,stream);
   double *A = SM_DATA_S(sd->J);
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->dA, A, jac_size, cudaMemcpyHostToDevice, stream));

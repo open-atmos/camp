@@ -78,7 +78,7 @@ void constructor_cvode_gpu(SolverData *sd){
   HANDLE_ERROR(cudaMemcpy(jacgpu->num_elem, &jac->num_elem, 1 * sizeof(jacgpu->num_elem), cudaMemcpyHostToDevice));
   int num_elem = jac->num_elem * n_cells;
   HANDLE_ERROR(cudaMalloc((void **) &(jacgpu->production_partials), num_elem * sizeof(double)));
-  HANDLE_ERROR(cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(double)));
+  cudaMalloc((void **) &(jacgpu->loss_partials), num_elem * sizeof(double));
   double *aux=(double*)malloc(sizeof(double)*num_elem);
   for (int i = 0; i < num_elem; i++) {
     aux[i]=0.;
@@ -173,7 +173,7 @@ void constructor_cvode_gpu(SolverData *sd){
   cudaMemcpy(mGPU->cv_acor, aux, nrows * sizeof(double), cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->dftemp, aux, nrows * sizeof(double), cudaMemcpyHostToDevice);
   cudaMemcpy(mGPU->cv_last_yn, aux, nrows * sizeof(double), cudaMemcpyHostToDevice);
-  HANDLE_ERROR(cudaMemcpy(mGPU->dx, tempv, nrows * sizeof(double), cudaMemcpyHostToDevice));
+  HANDLE_ERROR(cudaMemcpy(mGPU->dx, aux2, nrows * sizeof(double), cudaMemcpyHostToDevice));
   free(aux);
   free(aux2);
   mCPU->mdvCPU.nstlj = 0;

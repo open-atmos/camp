@@ -564,9 +564,9 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
         double *yout, ModelDataGPU *md, ModelDataVariable *sc)
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-  md->J_tmp[i]=y[i]-md->J_state[i];
-  cudaDeviceSpmv_2(md->dy, md->J_tmp, md->J_solver, md->djA, md->diA);
-  md->J_tmp[i]=md->J_deriv[i]+md->dy[i];
+  md->dn0[i]=y[i]-md->J_state[i];
+  cudaDeviceSpmv_2(md->dy, md->dn0, md->J_solver, md->djA, md->diA);
+  md->dn0[i]=md->J_deriv[i]+md->dy[i];
   TimeDerivativeGPU deriv_data;
   __syncthreads();
   deriv_data.production_rates = md->production_rates;
@@ -610,7 +610,7 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
     if (md->use_deriv_est==1) {
       double scale_fact = 1.0 / (r_p[i] + r_l[i]) /
           (1.0 / (r_p[i] + r_l[i]) + MAX_PRECISION_LOSS / fabs(r_p[i]- r_l[i]));
-      yout[i] = scale_fact * (r_p[i] - r_l[i]) + (1.0 - scale_fact) * (md->J_tmp[i]);
+      yout[i] = scale_fact * (r_p[i] - r_l[i]) + (1.0 - scale_fact) * (md->dn0[i]);
     }else {
       yout[i] = r_p[i] - r_l[i];
     }
