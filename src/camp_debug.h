@@ -137,19 +137,6 @@ realtype camp_jac_elem(SUNMatrix J, unsigned int j, unsigned int i) {
 #define CAMP_DEBUG_JAC(J, x)
 #endif
 
-/** \brief Print some camp-chem data sizes
- *
- * \param md Pointer to the model data
- */
-static void print_data_sizes(ModelData *md) {
-  int *ptr = md->rxn_int_data;
-  int n_rxn = ptr[0];
-
-  printf("n_rxn: %d ", n_rxn);
-  printf("n_state_var: %d", md->n_per_cell_state_var * md->n_cells);
-  printf("n_dep_var: %d", md->n_per_cell_dep_var * md->n_cells);
-}
-
 /** \brief Evaluate the derivative and Jacobian near a given state
  *         for a specified species
  *

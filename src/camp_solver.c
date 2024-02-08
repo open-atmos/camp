@@ -56,6 +56,29 @@
 #define CAMP_SOLVER_SUCCESS 0
 #define CAMP_SOLVER_FAIL 1
 
+static int compare_doubles(double *x, double *y, int len, const char *s){
+  int flag=1;
+  double tol=1.0E-30;
+  double rel_error;
+  int n_fails=0;
+  for (int i=0; i<len; i++){
+    //printf("%le ",y[i]);
+    if(x[i]==0)
+      rel_error=abs((tol-y[i])/tol);
+    else
+      rel_error=abs((x[i]-y[i])/x[i]);
+    if(rel_error>tol){
+      printf("compare_doubles %s rel_error %le for tol %le at [%d]: %le vs %le\n",
+             s,rel_error,tol,i,x[i],y[i]);
+      flag=0;
+      n_fails++;
+      if(n_fails==4)
+        return flag;
+    }
+  }
+  return flag;
+}
+
 /** \brief Get a new solver object
  *
  * Return a pointer to a new SolverData object
@@ -601,6 +624,13 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 
   //Reset jac solving, otherwise values from previous iteration would be carried to current iteration
   N_VConst(0.0, md->J_state);
+  double *aux = NV_DATA_S(md->J_state);
+  double *J_deriv = NV_DATA_S(md->J_deriv);
+  double *J_tmp = NV_DATA_S(md->J_tmp);
+
+  compare_doubles(aux, J_deriv, SM_NP_S(md->J_solver), "J_deriv");
+  compare_doubles(aux, J_tmp, SM_NP_S(md->J_solver), "J_tmp");
+
   N_VConst(0.0, md->J_deriv);
   N_VConst(0.0, md->J_tmp);
   SM_NNZ_S(md->J_solver) = SM_NNZ_S(md->J_init);
