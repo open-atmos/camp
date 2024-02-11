@@ -56,22 +56,24 @@ int aero_rep_single_particle_get_used_jac_elem(ModelData *model_data,
                                                bool *jac_struct) {
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
-}
-/*
+
+
   int n_jac_elem = 0;
-  int i_part = aero_phase_idx / NUM_PHASE_;
+  int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
 
   // Each phase in a single particle has the same jac elements
   // (one for each species in each phase in the particle)
-  for (int i_phase = 0; i_phase < NUM_PHASE_; ++i_phase) {
-    PHASE_NUM_JAC_ELEM_(i_phase) = aero_phase_get_used_jac_elem(
-        model_data, PHASE_MODEL_DATA_ID_(i_phase),
-        i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_phase), jac_struct);
-    n_jac_elem += PHASE_NUM_JAC_ELEM_(i_phase);
+  for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
+    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
+      PHASE_NUM_JAC_ELEM_(i_layer,i_phase) = aero_phase_get_used_jac_elem(
+          model_data, PHASE_MODEL_DATA_ID_(i_layer,i_phase),
+          i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase), jac_struct);
+      n_jac_elem += PHASE_NUM_JAC_ELEM_(i_layer,i_phase);
+    }
   }
   return n_jac_elem;
 }
-/*
+
 /** \brief Flag elements on the state array used by this aerosol representation
  *
  * The single particle aerosol representation functions do not use state array
@@ -154,37 +156,39 @@ void aero_rep_single_particle_get_effective_radius__m(
     ModelData *model_data, int aero_phase_idx, double *radius,
     double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
     double *aero_rep_env_data) {
-}
-/*
+
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
-  int i_part = aero_phase_idx / NUM_PHASE_;
+  int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
   double *curr_partial = NULL;
 
   *radius = 0.0;
   if (partial_deriv) curr_partial = partial_deriv;
-  for (int i_phase = 0; i_phase < NUM_PHASE_; ++i_phase) {
-    double *state = (double *)(model_data->grid_cell_state);
-    state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_phase);
-    double volume;
-    aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_phase),
-                                 state, &(volume), curr_partial);
-    if (partial_deriv) curr_partial += PHASE_NUM_JAC_ELEM_(i_phase);
-    *radius += volume;
+  for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
+    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
+      double *state = (double *)(model_data->grid_cell_state);
+      state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase);
+      double volume;
+      aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_layer,i_phase),
+                                   state, &(volume), curr_partial);
+      if (partial_deriv) curr_partial += PHASE_NUM_JAC_ELEM_(i_layer,i_phase);
+      *radius += volume;
+    }
   }
-  // QUESTION: need to subtract sortption monolayer?
   *radius = pow(((*radius) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
   if (!partial_deriv) return;
-  for (int i_phase = 0; i_phase < NUM_PHASE_; ++i_phase) {
-    for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_phase); ++i_spec) {
-      *partial_deriv =
-          1.0 / 4.0 / 3.14159265359 * pow(*radius, -2.0) * (*partial_deriv);
-      ++partial_deriv;
+  for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
+    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
+      for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_layer,i_phase); ++i_spec) {
+        *partial_deriv =
+            1.0 / 4.0 / 3.14159265359 * pow(*radius, -2.0) * (*partial_deriv);
+        ++partial_deriv;
+      }
     }
   }
   return;
 }
-*/
+
 /** \brief Get the number of available sorption sites
  *
  * A limited number of available sorption sites is available on specified
@@ -271,7 +275,7 @@ void aero_rep_single_particle_get_aero_conc_type(int aero_phase_idx,
 
   return;
 }
-/*
+
 /** \brief Get the total mass in an aerosol phase \f$m\f$
  * (\f$\mbox{\si{\kilogram\per\cubic\metre}}\f$)
  *

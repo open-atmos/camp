@@ -30,7 +30,7 @@
 
 // number of Jacobian elements used for the test phase
 #define N_JAC_ELEM 8
-/*
+
 // Test concentrations (kg/m3)
 #define CONC_1A 1.0
 #define CONC_1B 2.0
@@ -61,13 +61,12 @@
 
 // Externally set properties
 #define PART_NUM_CONC 1.23e3
-*/
+
 /** \brief Test the effective radius function
  *
  * \param model_data Pointer to the model data
  * \param state Solver state
  */
-/*
 #ifdef CAMP_USE_SUNDIALS
 int test_effective_radius(ModelData * model_data, N_Vector state) {
 
@@ -117,7 +116,7 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
 
   return ret_val;
 }
-*/
+
 /** \brief Test the number concentration function
  *
  * \param model_data Pointer to the model data
@@ -234,8 +233,9 @@ int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
 
   return ret_val;
 }
-#endif
 */
+#endif
+
 /** \brief Run c function tests
  *
  * \param solver_data Pointer to the solver data
@@ -243,7 +243,7 @@ int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
  * \param env Pointer to the environmental state array
  * \return 0 if tests pass; otherwise number of test failures
  */
-/*
+
 int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, double *env) {
 
   int ret_val = 0;
@@ -276,6 +276,7 @@ int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, doubl
 
   ret_val += ASSERT_MSG(n_jac_elem==N_JAC_ELEM, "Bad number of Jac elements");
 
+
   // set concentrations of test particle species
   NV_DATA_S(solver_state)[(TEST_PARTICLE-1)*8+0] = state[(TEST_PARTICLE-1)*8+0] = CONC_1A; // phase one, species a
   NV_DATA_S(solver_state)[(TEST_PARTICLE-1)*8+1] = state[(TEST_PARTICLE-1)*8+1] = CONC_1B; // phase one, species b
@@ -295,13 +296,13 @@ int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, doubl
 
   // Run the property tests
   ret_val += test_effective_radius(model_data, solver_state);
-  ret_val += test_aero_phase_mass(model_data, solver_state);
-  ret_val += test_aero_phase_avg_MW(model_data, solver_state);
-  ret_val += test_number_concentration(model_data, solver_state);
+//  ret_val += test_aero_phase_mass(model_data, solver_state);
+//  ret_val += test_aero_phase_avg_MW(model_data, solver_state);
+//  ret_val += test_number_concentration(model_data, solver_state);
 
   N_VDestroy(solver_state);
 #endif
 
   return ret_val;
 }
-*/
+
