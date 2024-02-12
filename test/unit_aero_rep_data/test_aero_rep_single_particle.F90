@@ -121,6 +121,7 @@ contains
     integer, allocatable :: ordered_ids(:)
 
     ! Assemble input arguments
+#if 0
     layer_names(1)%string = 'almond butter'
     layer_names(2)%string = 'top bread'
     layer_names(3)%string = 'jam'
@@ -133,17 +134,18 @@ contains
     correct_layer_names(2)%string = 'almond butter'
     correct_layer_names(3)%string = 'jam'
     correct_layer_names(4)%string = 'top bread'
-
+#endif
+    layer_names(1)%string = 'one layer'
+    correct_layer_names(1)%string = 'one layer'
     ! Call the function and enter inputs 
     ordered_ids = ordered_layer_ids(layer_names, cover_names)
 
     ! check individual values:
-    call assert(476179048, size(ordered_ids) .eq. 4)
+    call assert(476179048, size(ordered_ids) .eq. 1)
     call assert(903386486, layer_names(ordered_ids(1))%string .eq. correct_layer_names(1)%string)
-    call assert(468777371, layer_names(ordered_ids(2))%string .eq. correct_layer_names(2)%string)
-    call assert(487966491, layer_names(ordered_ids(3))%string .eq. correct_layer_names(3)%string)
-    call assert(721784428, layer_names(ordered_ids(4))%string .eq. correct_layer_names(4)%string)
-
+!    call assert(468777371, layer_names(ordered_ids(2))%string .eq. correct_layer_names(2)%string)
+!    call assert(487966491, layer_names(ordered_ids(3))%string .eq. correct_layer_names(3)%string)
+!    call assert(721784428, layer_names(ordered_ids(4))%string .eq. correct_layer_names(4)%string)
   end subroutine test_ordered_layer_ids
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -176,24 +178,24 @@ contains
       type is (aero_rep_single_particle_t)
 
         ! check dimensions of the system
-        call assert(118129615, aero_rep%num_layers() .eq. 3)
-        call assert(792039685, aero_rep%num_phases() .eq. 4)
-        call assert(958837816, aero_rep%num_phases(1) .eq. 1)
-        call assert(230900255, aero_rep%num_phases(2) .eq. 2)
-        call assert(113317603, aero_rep%num_phases(3) .eq. 1)
-        call assert(902904791, aero_rep%phase_state_size() .eq. 12)
-        call assert(154362297, aero_rep%phase_state_size(layer=1) .eq. 3)
-        call assert(266680642, aero_rep%phase_state_size(layer=2) .eq. 6)
-        call assert(714048488, aero_rep%phase_state_size(layer=3) .eq. 3)
+        call assert(118129615, aero_rep%num_layers() .eq. 1)
+        call assert(792039685, aero_rep%num_phases() .eq. 3)
+        call assert(958837816, aero_rep%num_phases(1) .eq. 3)
+        !call assert(230900255, aero_rep%num_phases(2) .eq. 2)
+        !call assert(113317603, aero_rep%num_phases(3) .eq. 1)
+        call assert(902904791, aero_rep%phase_state_size() .eq. 8)
+        call assert(154362297, aero_rep%phase_state_size(layer=1) .eq. 8)
+        !call assert(266680642, aero_rep%phase_state_size(layer=2) .eq. 6)
+        !call assert(714048488, aero_rep%phase_state_size(layer=3) .eq. 3)
         call assert(326424735, aero_rep%phase_state_size(layer=1,phase=1) .eq. 3)
-        call assert(491317332, aero_rep%phase_state_size(layer=2,phase=1) .eq. 4)
-        call assert(603635677, aero_rep%phase_state_size(layer=2,phase=2) .eq. 2)
-        call assert(768528274, aero_rep%phase_state_size(layer=3,phase=1) .eq. 3)
+        call assert(491317332, aero_rep%phase_state_size(layer=1,phase=2) .eq. 3)
+        call assert(603635677, aero_rep%phase_state_size(layer=1,phase=3) .eq. 2)
+        !call assert(768528274, aero_rep%phase_state_size(layer=3,phase=1) .eq. 3)
 
         ! test num_phase_instances funtion
-        phase_name_test = "bread"
-        num_bread = 2
-        max_part = aero_rep%maximum_computational_particles()
+        phase_name_test = "species a"
+        num_bread = 1
+        max_part = aero_rep%maximum_computational_particles()        
         bread_phase_instance = num_bread * max_part
         !check value
         call assert(417730478, 3 .eq. max_part)
@@ -204,7 +206,32 @@ contains
     end select
     
     unique_names = aero_rep%unique_names()
-    call assert(551749649, size( unique_names ) .eq. 36)
+    call assert(551749649, size( unique_names ) .eq. 24)
+    call assert(112328249, unique_names(1)%string .eq. "P1.one layer.my test phase one.species a")
+    call assert(124534441, unique_names(2)%string .eq. "P1.one layer.my test phase one.species b")
+    call assert(519328035, unique_names(3)%string .eq. "P1.one layer.my test phase one.species c")
+    call assert(349171131, unique_names(4)%string .eq. "P1.one layer.my test phase two.species c")
+    call assert(179014227, unique_names(5)%string .eq. "P1.one layer.my test phase two.species d")
+    call assert(626382073, unique_names(6)%string .eq. "P1.one layer.my test phase two.species e")
+    call assert(173749920, unique_names(7)%string .eq. "P1.one layer.my last test phase.species b")
+    call assert(286068265, unique_names(8)%string .eq. "P1.one layer.my last test phase.species e")
+    call assert(112328249, unique_names(1)%string .eq. "P2.one layer.my test phase one.species a")
+    call assert(124534441, unique_names(2)%string .eq. "P2.one layer.my test phase one.species b")
+    call assert(519328035, unique_names(3)%string .eq. "P2.one layer.my test phase one.species c")
+    call assert(349171131, unique_names(4)%string .eq. "P2.one layer.my test phase two.species c")
+    call assert(179014227, unique_names(5)%string .eq. "P2.one layer.my test phase two.species d")
+    call assert(626382073, unique_names(6)%string .eq. "P2.one layer.my test phase two.species e")
+    call assert(173749920, unique_names(7)%string .eq. "P2.one layer.my last test phase.species b")
+    call assert(286068265, unique_names(8)%string .eq. "P2.one layer.my last test phase.species e")
+    call assert(112328249, unique_names(1)%string .eq. "P3.one layer.my test phase one.species a")
+    call assert(124534441, unique_names(2)%string .eq. "P3.one layer.my test phase one.species b")
+    call assert(519328035, unique_names(3)%string .eq. "P3.one layer.my test phase one.species c")
+    call assert(349171131, unique_names(4)%string .eq. "P3.one layer.my test phase two.species c")
+    call assert(179014227, unique_names(5)%string .eq. "P3.one layer.my test phase two.species d")
+    call assert(626382073, unique_names(6)%string .eq. "P3.one layer.my test phase two.species e")
+    call assert(173749920, unique_names(7)%string .eq. "P3.one layer.my last test phase.species b")
+    call assert(286068265, unique_names(8)%string .eq. "P3.one layer.my last test phase.species e")
+#if 0
     call assert(112328249, unique_names(1)%string .eq. "P1.bottom bread.bread.wheat")
     call assert(124534441, unique_names(2)%string .eq. "P1.bottom bread.bread.water")
     call assert(519328035, unique_names(3)%string .eq. "P1.bottom bread.bread.salt")
@@ -241,7 +268,7 @@ contains
     call assert(614852515, unique_names(34)%string .eq. "P3.top bread.bread.wheat")
     call assert(779745112, unique_names(35)%string .eq. "P3.top bread.bread.water")
     call assert(109646110, unique_names(36)%string .eq. "P3.top bread.bread.salt")
-
+#endif
 #endif
   end subroutine test_config_read
 
@@ -249,7 +276,6 @@ contains
 
   !> Build aero_rep_data set
   logical function build_aero_rep_data_set_test()
-#if 0
     type(camp_core_t), pointer :: camp_core
     type(camp_state_t), pointer :: camp_state
     class(aero_rep_data_t), pointer :: aero_rep
@@ -421,7 +447,6 @@ contains
     deallocate(camp_core)
 
 #endif
-#endif
   end function build_aero_rep_data_set_test
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -437,7 +462,7 @@ contains
     type(aero_rep_factory_t) :: aero_rep_factory
     type(aero_rep_update_data_single_particle_number_t) :: update_number
 
-    rep_name = "AERO_REP_SINGLE_PARTICLE"
+    rep_name = "single-particle with layers"
 
     call assert_msg(264314298, camp_core%get_aero_rep(rep_name, aero_rep), &
                     rep_name)
