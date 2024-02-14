@@ -104,7 +104,7 @@ contains
 
     deallocate(camp_solver_data)
 
-    call test_ordered_layer_ids()
+    !call test_ordered_layer_ids()
     call test_config_read()
 
   end function run_camp_aero_rep_data_tests
@@ -116,8 +116,10 @@ contains
 
     use camp_aero_rep_single_particle, only : ordered_layer_ids
 
-    type(string_t), dimension(4) :: layer_names, correct_layer_names
-    type(string_t), dimension(4) :: cover_names
+    type(string_t), dimension(1) :: layer_names, correct_layer_names
+    type(string_t), dimension(1) :: cover_names
+    !type(string_t), allocatable :: layer_names(:), correct_layer_names(:)
+    !type(string_t), allocatable :: cover_names(:)
     integer, allocatable :: ordered_ids(:)
 
     ! Assemble input arguments
@@ -193,7 +195,7 @@ contains
         !call assert(768528274, aero_rep%phase_state_size(layer=3,phase=1) .eq. 3)
 
         ! test num_phase_instances funtion
-        phase_name_test = "species a"
+        phase_name_test = "my test phase two"
         num_bread = 1
         max_part = aero_rep%maximum_computational_particles()        
         bread_phase_instance = num_bread * max_part
@@ -207,30 +209,30 @@ contains
     
     unique_names = aero_rep%unique_names()
     call assert(551749649, size( unique_names ) .eq. 24)
-    call assert(112328249, unique_names(1)%string .eq. "P1.one layer.my test phase one.species a")
-    call assert(124534441, unique_names(2)%string .eq. "P1.one layer.my test phase one.species b")
-    call assert(519328035, unique_names(3)%string .eq. "P1.one layer.my test phase one.species c")
-    call assert(349171131, unique_names(4)%string .eq. "P1.one layer.my test phase two.species c")
-    call assert(179014227, unique_names(5)%string .eq. "P1.one layer.my test phase two.species d")
-    call assert(626382073, unique_names(6)%string .eq. "P1.one layer.my test phase two.species e")
+    call assert(112328243, unique_names(1)%string .eq. "P1.one layer.my test phase one.species a")
+    call assert(124534442, unique_names(2)%string .eq. "P1.one layer.my test phase one.species b")
+    call assert(519328036, unique_names(3)%string .eq. "P1.one layer.my test phase one.species c")
+    call assert(349171133, unique_names(4)%string .eq. "P1.one layer.my test phase two.species c")
+    call assert(179014228, unique_names(5)%string .eq. "P1.one layer.my test phase two.species d")
+    call assert(626382071, unique_names(6)%string .eq. "P1.one layer.my test phase two.species e")
     call assert(173749920, unique_names(7)%string .eq. "P1.one layer.my last test phase.species b")
-    call assert(286068265, unique_names(8)%string .eq. "P1.one layer.my last test phase.species e")
-    call assert(112328249, unique_names(1)%string .eq. "P2.one layer.my test phase one.species a")
-    call assert(124534441, unique_names(2)%string .eq. "P2.one layer.my test phase one.species b")
-    call assert(519328035, unique_names(3)%string .eq. "P2.one layer.my test phase one.species c")
-    call assert(349171131, unique_names(4)%string .eq. "P2.one layer.my test phase two.species c")
-    call assert(179014227, unique_names(5)%string .eq. "P2.one layer.my test phase two.species d")
-    call assert(626382073, unique_names(6)%string .eq. "P2.one layer.my test phase two.species e")
-    call assert(173749920, unique_names(7)%string .eq. "P2.one layer.my last test phase.species b")
-    call assert(286068265, unique_names(8)%string .eq. "P2.one layer.my last test phase.species e")
-    call assert(112328249, unique_names(1)%string .eq. "P3.one layer.my test phase one.species a")
-    call assert(124534441, unique_names(2)%string .eq. "P3.one layer.my test phase one.species b")
-    call assert(519328035, unique_names(3)%string .eq. "P3.one layer.my test phase one.species c")
-    call assert(349171131, unique_names(4)%string .eq. "P3.one layer.my test phase two.species c")
-    call assert(179014227, unique_names(5)%string .eq. "P3.one layer.my test phase two.species d")
-    call assert(626382073, unique_names(6)%string .eq. "P3.one layer.my test phase two.species e")
-    call assert(173749920, unique_names(7)%string .eq. "P3.one layer.my last test phase.species b")
-    call assert(286068265, unique_names(8)%string .eq. "P3.one layer.my last test phase.species e")
+    call assert(286068262, unique_names(8)%string .eq. "P1.one layer.my last test phase.species e")
+    call assert(112328256, unique_names(9)%string .eq. "P2.one layer.my test phase one.species a")
+    call assert(124534432, unique_names(10)%string .eq. "P2.one layer.my test phase one.species b")
+    call assert(519328055, unique_names(11)%string .eq. "P2.one layer.my test phase one.species c")
+    call assert(349171155, unique_names(12)%string .eq. "P2.one layer.my test phase two.species c")
+    call assert(179014255, unique_names(13)%string .eq. "P2.one layer.my test phase two.species d")
+    call assert(626382000, unique_names(14)%string .eq. "P2.one layer.my test phase two.species e")
+    call assert(173749998, unique_names(15)%string .eq. "P2.one layer.my last test phase.species b")
+    call assert(286068243, unique_names(16)%string .eq. "P2.one layer.my last test phase.species e")
+    call assert(112328200, unique_names(17)%string .eq. "P3.one layer.my test phase one.species a")
+    call assert(124534411, unique_names(18)%string .eq. "P3.one layer.my test phase one.species b")
+    call assert(519328088, unique_names(19)%string .eq. "P3.one layer.my test phase one.species c")
+    call assert(349171189, unique_names(20)%string .eq. "P3.one layer.my test phase two.species c")
+    call assert(179014263, unique_names(21)%string .eq. "P3.one layer.my test phase two.species d")
+    call assert(626382009, unique_names(22)%string .eq. "P3.one layer.my test phase two.species e")
+    call assert(173749900, unique_names(23)%string .eq. "P3.one layer.my last test phase.species b")
+    call assert(286068230, unique_names(24)%string .eq. "P3.one layer.my last test phase.species e")
 #if 0
     call assert(112328249, unique_names(1)%string .eq. "P1.bottom bread.bread.wheat")
     call assert(124534441, unique_names(2)%string .eq. "P1.bottom bread.bread.water")

@@ -67,7 +67,9 @@
  * \param model_data Pointer to the model data
  * \param state Solver state
  */
+
 #ifdef CAMP_USE_SUNDIALS
+
 int test_effective_radius(ModelData * model_data, N_Vector state) {
 
   int ret_val = 0;
