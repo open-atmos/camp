@@ -485,6 +485,7 @@ contains
     call camp_state%env_states(1)%set_pressure_Pa( 101325.0d0 )
 
     ! Check the number of Jacobian elements for the test phase
+    print *, aero_rep%num_jac_elem(AERO_PHASE_IDX)
     call assert_msg(153137613, &
                     aero_rep%num_jac_elem(AERO_PHASE_IDX) .eq. NUM_JAC_ELEM, &
                     rep_name)

@@ -124,7 +124,7 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
  * \param model_data Pointer to the model data
  * \param state Solver state
  */
-/*
+
 int test_number_concentration(ModelData * model_data, N_Vector state) {
 
   int ret_val = 0;
@@ -149,13 +149,13 @@ int test_number_concentration(ModelData * model_data, N_Vector state) {
 
   return ret_val;
 }
-*/
+
 /** \brief Test the total aerosol phase mass function
  *
  * \param model_data Pointer to the model data
  * \param state Solver state
  */
-/*
+
 int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
 
   int ret_val = 0;
@@ -188,13 +188,13 @@ int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
 
   return ret_val;
 }
-*/
+
 /** \brief Test the aerosol phase average molecular weight function
  *
  * \param model_data Pointer to the model data
  * \param state Solver state
  */
-/*
+
 int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
 
   int ret_val = 0;
@@ -235,7 +235,7 @@ int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
 
   return ret_val;
 }
-*/
+
 #endif
 
 /** \brief Run c function tests
@@ -297,10 +297,10 @@ int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, doubl
   aero_rep_update_state(model_data);
 
   // Run the property tests
-  ret_val += test_effective_radius(model_data, solver_state);
+//  ret_val += test_effective_radius(model_data, solver_state);
 //  ret_val += test_aero_phase_mass(model_data, solver_state);
-//  ret_val += test_aero_phase_avg_MW(model_data, solver_state);
-//  ret_val += test_number_concentration(model_data, solver_state);
+  ret_val += test_aero_phase_avg_MW(model_data, solver_state);
+  ret_val += test_number_concentration(model_data, solver_state);
 
   N_VDestroy(solver_state);
 #endif

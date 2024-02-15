@@ -231,23 +231,25 @@ void aero_rep_single_particle_get_number_conc__n_m3(
     ModelData *model_data, int aero_phase_idx, double *number_conc,
     double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
     double *aero_rep_env_data) {
-}
-/*
+
+
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
-  int i_part = aero_phase_idx / NUM_PHASE_;
+  int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
 
   *number_conc = NUMBER_CONC_(i_part);
 
   if (partial_deriv) {
-    for (int i_phase = 0; i_phase < NUM_PHASE_; ++i_phase)
-      for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_phase); ++i_spec)
-        *(partial_deriv++) = ZERO;
+    for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
+      for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
+        for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_layer,i_phase); ++i_spec)
+          *(partial_deriv++) = ZERO;
+      }
+    }
   }
-
   return;
 }
-*/
+
 /** \brief Get the type of aerosol concentration used.
  *
  * Single particle concentrations are per-particle.
@@ -299,31 +301,30 @@ void aero_rep_single_particle_get_aero_phase_mass__kg_m3(
     ModelData *model_data, int aero_phase_idx, double *aero_phase_mass,
     double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
     double *aero_rep_env_data) {
-}
-/*
+
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
-  int i_part = aero_phase_idx / NUM_PHASE_;
-  aero_phase_idx -= i_part * NUM_PHASE_;
+  int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
+  aero_phase_idx -= i_part * TOTAL_NUM_PHASES_;
 
-// QUESTION: how to add layers here
-  for (int i_phase = 0; i_phase < NUM_PHASE_; ++i_phase) {
-    if (i_phase == aero_phase_idx) {
+  for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
+    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
+      if (i_phase+i_layer == aero_phase_idx) {
       double *state = (double *)(model_data->grid_cell_state);
-      state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_phase);
+      state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase);
       double mw;
       aero_phase_get_mass__kg_m3(model_data, aero_phase_idx, state,
-                                 aero_phase_mass, &mw, partial_deriv, NULL);
-      if (partial_deriv) partial_deriv += PHASE_NUM_JAC_ELEM_(i_phase);
+                                   aero_phase_mass, &mw, partial_deriv, NULL);
+      if (partial_deriv) partial_deriv += PHASE_NUM_JAC_ELEM_(i_layer,i_phase);
     } else if (partial_deriv) {
-      for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_phase); ++i_spec)
+      for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_layer,i_phase); ++i_spec)
         *(partial_deriv++) = ZERO;
+      }
     }
   }
-
   return;
 }
-*/
+
 /** \brief Get the average molecular weight in an aerosol phase
  **        \f$m\f$ (\f$\mbox{\si{\kilo\gram\per\mol}}\f$)
  *
@@ -347,30 +348,30 @@ void aero_rep_single_particle_get_aero_phase_avg_MW__kg_mol(
     ModelData *model_data, int aero_phase_idx, double *aero_phase_avg_MW,
     double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
     double *aero_rep_env_data) {
-}
-/*
+
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
-  int i_part = aero_phase_idx / NUM_PHASE_;
-  aero_phase_idx -= i_part * NUM_PHASE_;
+  int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
+  aero_phase_idx -= i_part * TOTAL_NUM_PHASES_;
 
-  for (int i_phase = 0; i_phase < NUM_PHASE_; ++i_phase) {
-    if (i_phase == aero_phase_idx) {
-      double *state = (double *)(model_data->grid_cell_state);
-      state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_phase);
-      double mass;
-      aero_phase_get_mass__kg_m3(model_data, aero_phase_idx, state, &mass,
-                                 aero_phase_avg_MW, NULL, partial_deriv);
-      if (partial_deriv) partial_deriv += PHASE_NUM_JAC_ELEM_(i_phase);
-    } else if (partial_deriv) {
-      for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_phase); ++i_spec)
-        *(partial_deriv++) = ZERO;
+  for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
+    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
+      if (i_phase+i_layer == aero_phase_idx) {
+        double *state = (double *)(model_data->grid_cell_state);
+        state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase);
+        double mass;
+        aero_phase_get_mass__kg_m3(model_data, aero_phase_idx, state, &mass,
+                                   aero_phase_avg_MW, NULL, partial_deriv);
+        if (partial_deriv) partial_deriv += PHASE_NUM_JAC_ELEM_(i_layer,i_phase);
+      } else if (partial_deriv) {
+        for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_layer,i_phase); ++i_spec)
+          *(partial_deriv++) = ZERO;
+      }
     }
   }
-
   return;
 }
-*/
+
 /** \brief Update aerosol representation data
  *
  * Single particle aerosol representation update data is structured as follows:
