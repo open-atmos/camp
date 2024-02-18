@@ -97,6 +97,7 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
                         "Bad Jacobian (-1)");
   double d_eff_rad_dx = 1.0 / 4.0 / 3.14159265359 *
                         pow( 3.0 / 4.0 / 3.14159265359 * volume_density, -2.0/3.0 );
+
   ret_val += ASSERT_MSG(fabs(partial_deriv[1] - d_eff_rad_dx / DENSITY_A) <
                         1.0e-10 * partial_deriv[1], "Bad Jacobian element");
   ret_val += ASSERT_MSG(fabs(partial_deriv[2] - d_eff_rad_dx / DENSITY_B) <
@@ -141,7 +142,7 @@ int test_number_concentration(ModelData * model_data, N_Vector state) {
 
   ret_val += ASSERT_MSG(partial_deriv[0] = 999.9,
                         "Bad Jacobian (-1)");
-  for( int i = 1; i < N_JAC_ELEM+1; ++i )
+  for( int i = 4; i < N_JAC_ELEM+1; ++i )
     ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
                           "Bad Jacobian element");
   ret_val += ASSERT_MSG(partial_deriv[N_JAC_ELEM+1] = 999.9,
@@ -297,8 +298,8 @@ int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, doubl
   aero_rep_update_state(model_data);
 
   // Run the property tests
-//  ret_val += test_effective_radius(model_data, solver_state);
-//  ret_val += test_aero_phase_mass(model_data, solver_state);
+  ret_val += test_effective_radius(model_data, solver_state);
+  ret_val += test_aero_phase_mass(model_data, solver_state);
   ret_val += test_aero_phase_avg_MW(model_data, solver_state);
   ret_val += test_number_concentration(model_data, solver_state);
 

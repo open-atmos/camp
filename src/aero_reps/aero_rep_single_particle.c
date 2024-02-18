@@ -57,7 +57,6 @@ int aero_rep_single_particle_get_used_jac_elem(ModelData *model_data,
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
 
-
   int n_jac_elem = 0;
   int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
 
@@ -173,9 +172,12 @@ void aero_rep_single_particle_get_effective_radius__m(
                                    state, &(volume), curr_partial);
       if (partial_deriv) curr_partial += PHASE_NUM_JAC_ELEM_(i_layer,i_phase);
       *radius += volume;
+      //printf("radius1 : %d\n", *radius );
     }
   }
+  printf("radius1 : %d\n", *radius );
   *radius = pow(((*radius) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
+  printf("radius2:   %d\n", *radius );
   if (!partial_deriv) return;
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
@@ -183,6 +185,8 @@ void aero_rep_single_particle_get_effective_radius__m(
         *partial_deriv =
             1.0 / 4.0 / 3.14159265359 * pow(*radius, -2.0) * (*partial_deriv);
         ++partial_deriv;
+        //printf("partial2:  %d\n", *partial_deriv );
+        printf("radius3:   %d\n", *radius );
       }
     }
   }
@@ -306,10 +310,10 @@ void aero_rep_single_particle_get_aero_phase_mass__kg_m3(
   double *float_data = aero_rep_float_data;
   int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
   aero_phase_idx -= i_part * TOTAL_NUM_PHASES_;
-
+ 
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
-      if (i_phase+i_layer == aero_phase_idx) {
+      if (( LAYER_PHASE_START_(i_layer) <= aero_phase_idx ) && ( aero_phase_idx < LAYER_PHASE_END_(i_layer) )) {
       double *state = (double *)(model_data->grid_cell_state);
       state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase);
       double mw;
@@ -356,7 +360,7 @@ void aero_rep_single_particle_get_aero_phase_avg_MW__kg_mol(
 
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
-      if (i_phase+i_layer == aero_phase_idx) {
+      if (( LAYER_PHASE_START_(i_layer) <= aero_phase_idx ) && ( aero_phase_idx < LAYER_PHASE_END_(i_layer) )) {
         double *state = (double *)(model_data->grid_cell_state);
         state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase);
         double mass;
@@ -429,23 +433,24 @@ void aero_rep_single_particle_print(int *aero_rep_int_data,
                                     double *aero_rep_float_data) {
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
-}
-/*
+
   printf("\n\nSingle particle aerosol representation\n");
   printf("\nNumber of phases: %d", TOTAL_NUM_PHASES_);
   printf("\nAerosol representation id: %d", AERO_REP_ID_);
   printf("\nMax computational particles: %d", MAX_PARTICLES_);
   printf("\nParticle state size: %d", PARTICLE_STATE_SIZE_);
   printf("\n\n   - Phases -");
-  for (int i_phase = 0; i_phase < NUM_PHASE_; ++i_phase) {
-    printf("\n  state id: %d model data id: %d num Jac elements: %d",
-           PHASE_STATE_ID_(i_phase), PHASE_MODEL_DATA_ID_(i_phase),
-           PHASE_NUM_JAC_ELEM_(i_phase));
-  }
+  for(int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer){
+    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
+      printf("\n  state id: %d model data id: %d num Jac elements: %d",
+             PHASE_STATE_ID_(i_layer,i_phase), PHASE_MODEL_DATA_ID_(i_layer,i_phase),
+             PHASE_NUM_JAC_ELEM_(i_layer,i_phase));
+    }
+  }  
   printf("\n\nEnd single particle aerosol representation\n");
   return;
 }
-*/
+
 
 /** \brief Create update data for new particle number
  *
