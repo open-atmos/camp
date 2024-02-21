@@ -26,7 +26,7 @@ void constructor_cvode_gpu(SolverData *sd){
   mGPU->n_per_cell_state_var = md->n_per_cell_state_var;
   int n_rxn = md->n_rxn;
   int nGPUs;
-  cudaGetDeviceCount(&nGPUs);
+  HANDLE_ERROR(cudaGetDeviceCount(&nGPUs));
   int rank, size;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -34,7 +34,6 @@ void constructor_cvode_gpu(SolverData *sd){
   cudaSetDevice(iDevice);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
-  printf("%d %d \n",n_state_var, n_cells);
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->state, n_state_var * n_cells * sizeof(double)));
   cudaMalloc((void **) &mGPU->env, CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double));
   cudaMalloc((void **) &mGPU->rxn_env_data, md->n_rxn_env_data * n_cells * sizeof(double));
