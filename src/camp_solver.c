@@ -95,7 +95,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
                  int n_sub_model_float_param, int n_sub_model_env_param,
-                 int use_cpu) {
+                 int use_cpu, int is_reset_jac) {
 
   // Create the SolverData object
   SolverData *sd = (SolverData *)malloc(sizeof(SolverData));
@@ -124,6 +124,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.n_per_cell_state_var = n_state_var;
 
   sd->use_cpu = use_cpu;
+  sd->is_reset_jac = is_reset_jac;
 #ifdef DEV_CPU_GPU
   sd->rate_cells_gpu=50;// Percentage [%]
   printf("Set cells to gpu to %lf %\n",sd->rate_cells_gpu);
@@ -599,17 +600,19 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     rxn_update_env_state(md);
   }
 
-  //Reset jac solving, otherwise values from previous iteration would be carried to current iteration
-  N_VConst(0.0, md->J_state);
-  N_VConst(0.0, md->J_deriv);
-  N_VConst(0.0, md->J_tmp);
-  SM_NNZ_S(md->J_solver) = SM_NNZ_S(md->J_init);
-  for (int i = 0; i <= SM_NP_S(md->J_solver); i++) {
-    (SM_INDEXPTRS_S(md->J_solver))[i] = (SM_INDEXPTRS_S(md->J_init))[i];
-  }
-  for (int i = 0; i < SM_NNZ_S(md->J_solver); i++) {
-    (SM_INDEXVALS_S(md->J_solver))[i] = (SM_INDEXVALS_S(md->J_init))[i];
-    (SM_DATA_S(md->J_solver))[i] = 0.0;
+  // Reset jac solving, otherwise values from previous iteration would be carried to current iteration
+  // Using or not this option accelerates solving depending on the case
+  // Enable reset when the inputs are very different between each other or
+  // to compare with the GPU version
+  // Avoid reset when the inputs are similar like when using CAMP from MONARCH
+  // The default value is 0, because is the most used case in our case
+  if(sd->is_reset_jac==1){
+    N_VConst(0.0, md->J_state);
+    N_VConst(0.0, md->J_deriv);
+    SM_NNZ_S(md->J_solver) = SM_NNZ_S(md->J_init);
+    for (int i = 0; i < SM_NNZ_S(md->J_solver); i++) {
+      (SM_DATA_S(md->J_solver))[i] = 0.0;
+    }
   }
 
   sd->Jac_eval_fails = 0;

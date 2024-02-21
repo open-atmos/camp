@@ -393,11 +393,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 #endif
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->rxn_env_data,md->rxn_env_data,md->n_rxn_env_data * mGPU->n_cells * sizeof(double),cudaMemcpyHostToDevice,stream));
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->env,md->total_env,CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double),cudaMemcpyHostToDevice,stream));
-  double *J_state = N_VGetArrayPointer(md->J_state);
-  cudaMemcpyAsync(mGPU->J_state,J_state,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice,stream);
-  double *J_deriv = N_VGetArrayPointer(md->J_deriv);
-  cudaMemcpyAsync(mGPU->J_deriv,J_deriv,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice,stream);
-
   /*
   double *aux=(double*)malloc(mGPU->nrows*sizeof(double));
   for (int i = 0; i < mGPU->nrows; i++) {
@@ -410,8 +405,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 
   int nnz = md->n_per_cell_solver_jac_elem * n_cells;
   size_t jac_size = nnz * sizeof(double);
-  double *J_solver = SM_DATA_S(md->J_solver);
-  cudaMemcpyAsync(mGPU->J_solver, J_solver, jac_size, cudaMemcpyHostToDevice,stream);
   double *A = SM_DATA_S(sd->J);
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->dA, A, jac_size, cudaMemcpyHostToDevice, stream));
   cv_mem = (CVodeMem) cvode_mem;
@@ -592,6 +585,14 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   double *cv_acor_init = N_VGetArrayPointer(cv_mem->cv_acor_init);
   double *youtArray = N_VGetArrayPointer(yout);
   double *cv_Vabstol = N_VGetArrayPointer(cv_mem->cv_Vabstol);
+
+  /*
+  double *J_deriv = N_VGetArrayPointer(md->J_deriv);
+  cudaMemcpyAsync(mGPU->J_deriv,J_deriv,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice,stream);
+  double *J_solver = SM_DATA_S(md->J_solver);
+  cudaMemcpyAsync(mGPU->J_solver, J_solver, jac_size, cudaMemcpyHostToDevice,stream);
+*/
+
   cudaMemcpyAsync(mGPU->state,md->total_state,md->n_per_cell_state_var*mGPU->n_cells*sizeof(double),cudaMemcpyHostToDevice,stream);
   cudaMemcpyAsync(mGPU->dewt, ewt, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
   cudaMemcpyAsync(mGPU->cv_acor, acor, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);

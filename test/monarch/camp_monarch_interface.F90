@@ -94,7 +94,7 @@ contains
     type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
     real(kind=dp) :: comp_start, comp_end
     character(len=128) :: i_str
-    integer :: local_comm,use_cpu
+    integer :: local_comm,use_cpu,is_reset_jac
 
     if (present(mpi_comm)) then
       local_comm = mpi_comm
@@ -231,7 +231,10 @@ contains
       use_cpu = 0
     end if
     close(32)
-    call this%camp_core%solver_initialize(use_cpu)
+    is_reset_jac=1 ! Set to 1 to compare correctly with the GPU, otherwise the error is too high, because GPU can not
+    ! use values from previous cell. By default is_reset_jac is set to 0 because it accelerates MONARCH case
+    ! (and probably more cases).
+    call this%camp_core%solver_initialize(use_cpu, is_reset_jac)
     this%camp_state => this%camp_core%new_state()
     if(this%output_file_title=="cb05_paperV2") then
       allocate(this%offset_photo_rates_cells(this%n_cells))

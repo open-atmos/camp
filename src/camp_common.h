@@ -281,6 +281,7 @@ typedef struct {
 */
 #endif
   int use_cpu;
+  int is_reset_jac;
 
   void *cvode_mem;       // CVodeMem object
   ModelData model_data;  // Model data (used during initialization and solving)

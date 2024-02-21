@@ -21,7 +21,6 @@ def check_NRMSE(species1, species2, nCells):
   for k in range(n_species):
     if max_y[k] - min_y[k] > 1.0e-30:
       NRMSEs_species[k] = (sqrt(NRMSEs_species[k] / nCells)) / (max_y[k] - min_y[k])
-
     if NRMSEs_species[k] > max_NRMSEs_species:
       max_NRMSEs_species = NRMSEs_species[k]
     NRMSEs_species[k] = 0.
@@ -32,6 +31,5 @@ def check_NRMSE(species1, species2, nCells):
   if NRMSE > tolerance:
     raise Exception("ERROR: NMRSE > tolerance; NMRSE:", NRMSE, "tolerance:", tolerance
                     ,"check debug utilities like debug.camp.diff.sh")
-  
   print("NRMSE:",NRMSE)
 

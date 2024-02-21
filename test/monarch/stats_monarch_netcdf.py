@@ -11,11 +11,15 @@ import matplotlib.pyplot as plt
 
 
 def calculate_speedup(file1_path, file2_path):
-    df1 = pd.read_csv(file1_path)
-    df2 = pd.read_csv(file2_path)
-    timecvStep_values1 = df1["timecvStep"].values
-    timecvStep_values2 = df2["timecvStep"].values
-    speedup = timecvStep_values1 / timecvStep_values2
+    try:
+        df1 = pd.read_csv(file1_path)
+        df2 = pd.read_csv(file2_path)
+        timecvStep_values1 = df1["timecvStep"].values
+        timecvStep_values2 = df2["timecvStep"].values
+        speedup = timecvStep_values1 / timecvStep_values2
+    except:
+        print("Fail calculate_speedup")
+        speedup=-1
     return speedup
 
 def calculate_nrmse(data1, data2):
@@ -54,10 +58,9 @@ def process_variable(dataset1, dataset2, var_name):
     quantile75, quantile95, max_error, relative_error
 
 
-file1_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/cpu_tstep6_O3_MonarchColumnONFastJMASTERnlayersColumnON/"
-file2_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/cpu_tstep6_O3_MonarchColumnONFastJMASTER/"
+file1_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/cpu_tstep6/"
+file2_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/cpu_tstep6_isResetJacOFF/"
 
-speedup = -1
 file1 = file1_path_header + "out/stats.csv"
 file2 = file2_path_header + "out/stats.csv"
 speedup = calculate_speedup(file1, file2)
