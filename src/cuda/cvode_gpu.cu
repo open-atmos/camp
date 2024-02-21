@@ -388,7 +388,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   ModelData *md = &(sd->model_data);
   cudaStream_t stream = 0;
 #ifdef DEV_CPU_GPU
-  if (n_cells==0) goto dev_cpu;
 #else
   int n_cells = md->n_cells;
 #endif
@@ -629,7 +628,14 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
                     cudaMemcpyHostToDevice, stream);
     cudaMemcpyAsync(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice, stream);
   }
-  cvodeRun(mGPU,stream);
+
+  cvodeRun(mGPU,stream); //Asynchronous
+#ifdef DEV_CPU_GPU
+  CVODE_CPU();
+  WaitForGPU();
+  Read_data_From_GPU();
+#endif
+
   cudaMemcpyAsync(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
   cudaMemcpyAsync(youtArray, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
   for (int i = 0; i <= cv_mem->cv_qmax; i++) {
@@ -660,10 +666,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     }
   }
 
-#ifdef DEV_CPU_GPU
-dev_cpu:
-  printf("n_cells=0\n");
-#endif
   return(istate);
 }
 

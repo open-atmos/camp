@@ -599,19 +599,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     rxn_update_env_state(md);
   }
 
-  //Reset jac solving, otherwise values from previous iteration would be carried to current iteration
-  N_VConst(0.0, md->J_state);
-  N_VConst(0.0, md->J_deriv);
-  N_VConst(0.0, md->J_tmp);
-  SM_NNZ_S(md->J_solver) = SM_NNZ_S(md->J_init);
-  for (int i = 0; i <= SM_NP_S(md->J_solver); i++) {
-    (SM_INDEXPTRS_S(md->J_solver))[i] = (SM_INDEXPTRS_S(md->J_init))[i];
-  }
-  for (int i = 0; i < SM_NNZ_S(md->J_solver); i++) {
-    (SM_INDEXVALS_S(md->J_solver))[i] = (SM_INDEXVALS_S(md->J_init))[i];
-    (SM_DATA_S(md->J_solver))[i] = 0.0;
-  }
-
   sd->Jac_eval_fails = 0;
   // Reset the flag indicating a current J_guess
   sd->curr_J_guess = false;
