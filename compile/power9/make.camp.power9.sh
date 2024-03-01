@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+recompile(){
+#./gcc.compile.cvode-3.4-alpha.power9.sh
+./gcc.make.cvode-3.4-alpha.power9.sh
+#./compile.camp.power9.sh
+}
+recompile
+
 export SUNDIALS_HOME=$(pwd)/../../../cvode-3.4-alpha/install
 export SUITE_SPARSE_HOME=$(pwd)/../../../SuiteSparse
 export JSON_FORTRAN_HOME=$(pwd)/../../../json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0
