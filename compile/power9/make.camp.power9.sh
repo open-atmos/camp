@@ -2,8 +2,10 @@
 
 recompile(){
 #./gcc.compile.cvode-3.4-alpha.power9.sh
-./gcc.make.cvode-3.4-alpha.power9.sh
+#./gcc.make.cvode-3.4-alpha.power9.sh
 #./compile.camp.power9.sh
+#./gcc.compile.camp.power9.sh
+pwd
 }
 recompile
 
