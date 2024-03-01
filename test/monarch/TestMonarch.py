@@ -442,6 +442,7 @@ def run_case(conf):
         else:  # counterBCG and other counters
             for i in range(len(data[y_key])):
                 data[y_key][i] = data[y_key][i] / nSystemsOfCells
+        print(y_key, data[y_key])
 
     if "(Comp.timeLS/counterBCG)" in conf.plotYKey and "GPU" in conf.case:
         for i in range(len(data["timeLS"])):
@@ -721,7 +722,7 @@ def plot_cases(conf):
     print(namex, ":", datax)
     print(namey, ":", datay)
 
-    plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
+    #plot_functions.plotsns(namex, namey, datax, datay, conf.stdColumns, conf.plotTitle, conf.legend)
 
 
 def all_timesteps():
@@ -733,7 +734,7 @@ def all_timesteps():
 
     conf.diffCellsL = []
     conf.diffCellsL.append("Realistic")
-    conf.diffCellsL.append("Ideal")
+    #conf.diffCellsL.append("Ideal")
 
     conf.profileCuda = False
     # conf.profileCuda = True
@@ -775,12 +776,12 @@ def all_timesteps():
    # conf.allocatedTasksPerNode = 320
     #conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    #conf.cells = [2]
-    conf.cells = [100,500,1000,5000,10000]
+    conf.cells = [1000]
+    #conf.cells = [100,500,1000,5000,10000]
     #conf.cells = [50000,100000,500000,1000000]
 
-    #conf.timeSteps = 6
-    conf.timeSteps = 720
+    conf.timeSteps = 1
+    #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
 
