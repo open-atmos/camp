@@ -2244,9 +2244,8 @@ contains
 
   end if
 
-#endif
-
   call camp_mpi_barrier(MPI_COMM_WORLD)
+#endif
 
   !if (this%counterSolve.eq.1) then
   !if (this%counterFail.eq.1) then

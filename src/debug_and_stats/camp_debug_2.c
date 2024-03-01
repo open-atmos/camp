@@ -170,6 +170,7 @@ void print_current_directory(){
 
 }
 
+#ifdef CAMP_USE_GPU
 void get_camp_config_variables(SolverData *sd){
 
   FILE *fp;
@@ -208,6 +209,7 @@ void get_camp_config_variables(SolverData *sd){
   //printf("get_camp_config_variables\n");
 
 }
+
 
 void export_counters_open(SolverData *sd)
 {
@@ -266,5 +268,5 @@ void export_counters_open(SolverData *sd)
 
 }
 
-
+#endif
 

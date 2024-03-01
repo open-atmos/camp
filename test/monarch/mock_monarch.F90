@@ -172,10 +172,11 @@ program mock_monarch_t
 
   ! MPI
 #ifdef CAMP_USE_MPI
+
+#endif
   character, allocatable :: buffer(:)
   integer(kind=i_kind) :: pos, pack_size, mpi_threads, ierr
   real, allocatable  :: species_conc_mpi(:,:,:,:,:)
-#endif
 
   character(len=500) :: arg
   integer :: status_code, i_time, i_spec, i_case, i, j, k, z,r,n_cells_plot,cell_to_print
@@ -1409,8 +1410,10 @@ contains
 
     end if
 
+#ifdef CAMP_USE_MPI
     ! broadcast the buffer size
     call camp_mpi_bcast_integer(pack_size, MPI_COMM_WORLD)
+
 
     if (mpi_rank.ne.0) then
       ! allocate the buffer to receive data
@@ -1436,7 +1439,7 @@ contains
     end if
 
     deallocate(buffer)
-
+#endif
     camp_spec_names=unique_names
     !print*,"monarch_species_names",size(camp_interface%monarch_species_names)
     !print*,"state_size_per_cell",state_size_per_cell

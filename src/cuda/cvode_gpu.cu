@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+#ifdef CAMP_USE_GPU
+
 #include "itsolver_gpu.h"
 
 extern "C" {
@@ -9601,3 +9603,6 @@ void printSolverCounters_gpu2(SolverData *sd)
 #endif
 
 }
+
+#endif
+//#ifdef CAMP_USE_GPU

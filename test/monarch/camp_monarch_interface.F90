@@ -405,12 +405,8 @@ contains
 
     call this%camp_core%solver_initialize()
 
-    !call camp_mpi_barrier(MPI_COMM_WORLD)
-
     ! Create a state variable on each node
     this%camp_state => this%camp_core%new_state()
-
-    !call camp_mpi_barrier(MPI_COMM_WORLD)
 
     if(this%ADD_EMISIONS.eq."monarch_binned" &
     .or. this%interface_input_file.eq."interface_monarch_cb05.json") then
@@ -438,8 +434,6 @@ contains
       deallocate(this%offset_photo_rates_cells)
 
     end if
-
-    call camp_mpi_barrier(MPI_COMM_WORLD)
 
     ! Set the aerosol mode dimensions
 
@@ -636,8 +630,6 @@ contains
 
       end if
 
-      call camp_mpi_barrier(MPI_COMM_WORLD)
-
       i_hour = int(curr_time/60)+1
       if(mod(int(curr_time),60).eq.0) then
         if (camp_mpi_rank().eq.0) then
@@ -711,15 +703,11 @@ contains
               !print*, "this%camp_core%solve start",this%camp_state%state_var(1), camp_mpi_rank()
             !end if
 
-            call camp_mpi_barrier(MPI_COMM_WORLD)
-
             ! Integrate the CAMP mechanism
             call cpu_time(comp_start)
             call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp),solver_stats=solver_stats)
             call cpu_time(comp_end)
             comp_time = comp_time + (comp_end-comp_start)
-
-            call camp_mpi_barrier(MPI_COMM_WORLD)
 
             !if (camp_mpi_rank().eq.0 .and. z==0) then
               !print*, "this%camp_core%solve end",this%camp_state%state_var(1),camp_mpi_rank()
@@ -825,16 +813,6 @@ contains
 if(this%ADD_EMISIONS.eq."monarch_binned") then
   deallocate(rate_emi)
 end if
-
-#ifdef CAMP_USE_MPI
-
-  !call camp_mpi_barrier(MPI_COMM_WORLD)
-
-if (camp_mpi_rank().eq.0) then
-  !call solver_stats%print( )
-end if
-
-#endif
 
   end subroutine integrate
 
@@ -1338,8 +1316,6 @@ end if
     !do r=2,size(this%map_monarch_id)
     !  print*, this%camp_state%state_var(this%map_camp_id(r)), camp_mpi_rank()
     !end do
-
-    call camp_mpi_barrier(MPI_COMM_WORLD)
 
     state_size_per_cell = this%camp_core%state_size_per_cell()
 
