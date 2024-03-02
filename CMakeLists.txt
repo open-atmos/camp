@@ -432,10 +432,7 @@ set(CAMP_C_SRC
         src/aero_rep_solver.c src/sub_model_solver.c
         src/debug_and_stats/camp_debug_2.c
         src/time_derivative.c
-        src/Jacobian.c src/debug_diff_check.c
-        src/openmp/openmp.c
-        src/openmp/itsolver_gpu.c
-        )
+        src/Jacobian.c src/debug_diff_check.c)
 
 set_source_files_properties(${CAMP_C_SRC} PROPERTIES COMPILE_FLAGS
         ${STD_C_FLAGS})
@@ -517,16 +514,6 @@ else()
 
 endif()
 
-find_package(OpenMP)
-if(OpenMP_C_FOUND)
-    target_link_libraries(camplib OpenMP::OpenMP_C)
-endif()
-# If OpenMP for Fortran is found, link it to the target
-if(OpenMP_Fortran_FOUND)
-    target_link_libraries(camplib OpenMP::OpenMP_Fortran)
-endif()
-
-
 set(MODULE_DIR "${CMAKE_BINARY_DIR}/include")
 
 set_target_properties(camplib PROPERTIES
@@ -588,7 +575,6 @@ add_executable(mock_monarch test/monarch/mock_monarch.F90
         ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
 target_link_libraries(mock_monarch camplib)
-target_link_libraries(camplib PUBLIC OpenMP::OpenMP_C)
 
 if (ENABLE_TESTS)
 
