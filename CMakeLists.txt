@@ -259,7 +259,9 @@ endmacro(do_unit_test)
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
 add_custom_target(copy_test ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/test ${CMAKE_BINARY_DIR}/test_run)
 add_custom_target(copy_mechanism ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/mechanisms ${CMAKE_BINARY_DIR}/mechanisms_run)
+if (ENABLE_TESTS)
 add_custom_target(copy_boot_camp ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc/camp_tutorial/boot_camp ${CMAKE_BINARY_DIR}/boot_camp_run)
+endif ()
 set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_run scenarios_run boot_camp_run)
 
 ######################################################################
@@ -430,7 +432,10 @@ set(CAMP_C_SRC
         src/aero_rep_solver.c src/sub_model_solver.c
         src/debug_and_stats/camp_debug_2.c
         src/time_derivative.c
-        src/Jacobian.c src/debug_diff_check.c)
+        src/Jacobian.c src/debug_diff_check.c
+        src/openmp/openmp.c
+        src/openmp/itsolver_gpu.c
+        )
 
 set_source_files_properties(${CAMP_C_SRC} PROPERTIES COMPILE_FLAGS
         ${STD_C_FLAGS})
@@ -498,23 +503,29 @@ set(CAMP_LIB_SRC
 
 #add_library(camplib SHARED ${CAMP_LIB_SRC}) #nvlink warning (issue 9 github)
 add_library(camplib ${CAMP_LIB_SRC}) #fine
-add_library(camplib-static STATIC ${CAMP_LIB_SRC})
 
 if (CUDA_FOUND)
 
   target_link_libraries(camplib  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
-  target_link_libraries(camplib-static  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB} ${CUDA_LIBRARIES})
 
   set_target_properties(camplib PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-  set_target_properties(camplib-static  PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 
 else()
   #target_link_libraries(camplib ${NETCDF_LIBS} ${SUNDIALS_LIBS}
    #  ${MOSAIC_LIB} ${GSL_LIBS} ${JSON_LIB})
   target_link_libraries(camplib  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
-  target_link_libraries(camplib-static  ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
 
 endif()
+
+find_package(OpenMP)
+if(OpenMP_C_FOUND)
+    target_link_libraries(camplib OpenMP::OpenMP_C)
+endif()
+# If OpenMP for Fortran is found, link it to the target
+if(OpenMP_Fortran_FOUND)
+    target_link_libraries(camplib OpenMP::OpenMP_Fortran)
+endif()
+
 
 set(MODULE_DIR "${CMAKE_BINARY_DIR}/include")
 
@@ -525,37 +536,6 @@ set_target_properties(camplib PROPERTIES
                          SOVERSION ${PACKAGE_VERSION}
                          LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
                          Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR})
-set_target_properties(camplib-static PROPERTIES
-                         OUTPUT_NAME camp
-                         PREFIX lib
-                         VERSION ${PACKAGE_VERSION}
-                         ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-                         Fortran_MODULE_DIRECTORY ${MODULE_DIR})
-
-######################################################################
-# Install options
-
-include(GNUInstallDirs)
-install(TARGETS camplib camplib-static
-        EXPORT camplib-targets
-        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-       )
-
-set(MOD_DIR_TO_INSTALL "${MODULE_DIR}")
-set(MOD_DESTINATION_DIR "${CMAKE_INSTALL_INCLUDEDIR}/camp")
-install(
-  CODE "file(GLOB_RECURSE MODULE_FILES \"${MOD_DIR_TO_INSTALL}/*.mod\")"
-  CODE "file(INSTALL \${MODULE_FILES} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${MOD_DESTINATION_DIR}\")"
-  )
-
-######################################################################
-# camp-chem box model
-
-add_executable(camp_box_model test/camp_box_model_data.F90
-                              test/camp_box_model.F90)
-
-target_link_libraries(camp_box_model camplib)
 
 ######################################################################
 # test_chemistry_cb05cl_ae5
@@ -608,8 +588,17 @@ add_executable(mock_monarch test/monarch/mock_monarch.F90
         ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
 target_link_libraries(mock_monarch camplib)
+target_link_libraries(camplib PUBLIC OpenMP::OpenMP_C)
 
 if (ENABLE_TESTS)
+
+######################################################################
+# camp-chem box model
+
+add_executable(camp_box_model test/camp_box_model_data.F90
+        test/camp_box_model.F90)
+
+target_link_libraries(camp_box_model camplib)
 
   ######################################################################
   # test_chemistry_cb05cl_ae5_big

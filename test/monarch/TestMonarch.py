@@ -375,7 +375,7 @@ def run(conf):
     # Onecell-Multicells itsolver
     write_itsolver_config_file(conf)
 
-    print("exec_str:", exec_str, conf.diffCells, conf.caseGpuCpu, conf.caseMulticellsOnecell,conf.nGPUs)
+    print("exec_str:", exec_str, conf.diffCells, conf.caseGpuCpu, conf.caseMulticellsOnecell,"nGPUs:",conf.nGPUs)
 
     conf_name = "TestMonarch.json"
     with open(conf_name, 'w', encoding='utf-8') as jsonFile:
@@ -776,7 +776,7 @@ def all_timesteps():
    # conf.allocatedTasksPerNode = 320
     #conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [10000]
+    conf.cells = [10]
     #conf.cells = [100,500,1000,5000,10000]
     #conf.cells = [50000,100000,500000,1000000]
 
@@ -785,9 +785,9 @@ def all_timesteps():
 
     conf.timeStepsDt = 2
 
-    conf.caseBase = "CPU One-cell"
+    #conf.caseBase = "CPU One-cell"
     # conf.caseBase = "CPU Multi-cells"
-    # conf.caseBase="GPU Multi-cells"
+    conf.caseBase="GPU Multi-cells"
     # conf.caseBase="GPU Block-cellsN"
     #conf.caseBase="GPU Block-cells1"
     # conf.caseBase = "GPU BDF"

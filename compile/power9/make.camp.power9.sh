@@ -10,10 +10,11 @@ pwd
 }
 recompile
 
+export OMP_NUM_THREADS=2
+
 export SUNDIALS_HOME=$(pwd)/../../../cvode-3.4-alpha/install
 export SUITE_SPARSE_HOME=$(pwd)/../../../SuiteSparse
 export JSON_FORTRAN_HOME=$(pwd)/../../../json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0
-#export GSL_HOME=${GSL_DIR}
 
 if [ "$1" == "1" ]; then
   is_sbatch="true"

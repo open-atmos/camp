@@ -31,6 +31,8 @@
 #include <mpi.h>
 #endif
 
+#include "cuda/openmp.h"
+
 // Default solver initial time step relative to total integration time
 #define DEFAULT_TIME_STEP 1.0
 // State advancement factor for Jacobian element evaluation
@@ -98,7 +100,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
     printf("\n\nERROR allocating space for SolverData\n\n");
     exit(EXIT_FAILURE);
   }
-
+    //openmp_bcg();
 #ifdef CAMP_USE_SUNDIALS
 #ifdef CAMP_DEBUG
   // Default to no debugging output

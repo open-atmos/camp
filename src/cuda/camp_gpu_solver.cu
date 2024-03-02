@@ -353,13 +353,6 @@ void init_jac_gpu(SolverData *sd, double *J_ptr){
     cudaMalloc((void **) &mGPU->J_rxn,sizeof(double) * SM_NNZ_S(md->J_rxn)*mGPU->n_cells);
     cudaMalloc((void **) &mGPU->n_mapped_values, 1 * sizeof(int));
 
-
-    printf("md->n_per_cell_dep_var %d sd->jac.num_spec %d md->n_per_cell_solver_jac_elem %d "
-           "md->n_mapped_values %d SM_NNZ_S(md->J_rxn) %d offset_nnz_J_solver %d  mGPU->nnz_J_solver %d mGPU->nrows_J_solver %d\n",
-           md->n_per_cell_dep_var,sd->jac.num_spec,md->n_per_cell_solver_jac_elem, md->n_mapped_values,
-           SM_NNZ_S(md->J_rxn), offset_nnz_J_solver,mGPU->nnz_J_solver, mGPU->nrows_J_solver);
-
-
     //Transfer sunindextype to int
     int *jJ_solver = (int *) malloc(sizeof(int) * mGPU->nnz_J_solver);
     int *iJ_solver = (int *) malloc(sizeof(int) * mGPU->nrows_J_solver + 1);
