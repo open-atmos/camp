@@ -28,8 +28,8 @@
 #define NUM_INT_PROP_ 4
 #define NUM_FLOAT_PROP_ 0
 #define NUM_ENV_PARAM_ MAX_PARTICLES_
-#define LAYER_PHASE_START_(l) (int_data[NUM_INT_PROP_+l])
-#define LAYER_PHASE_END_(l) (int_data[NUM_INT_PROP_+NUM_LAYERS_+l])
+#define LAYER_PHASE_START_(l) (int_data[NUM_INT_PROP_+l]-1)
+#define LAYER_PHASE_END_(l) (int_data[NUM_INT_PROP_+NUM_LAYERS_+l]-1)
 #define TOTAL_NUM_PHASES_ (LAYER_PHASE_END_(NUM_LAYERS_-1)-LAYER_PHASE_START_(0)+1)
 #define NUM_PHASES_(l) (LAYER_PHASE_END_(l)-LAYER_PHASE_START_(l)+1)
 #define PHASE_STATE_ID_(l,p) (int_data[NUM_INT_PROP_+2*NUM_LAYERS_+LAYER_PHASE_START_(l)+p]-1)
@@ -84,6 +84,7 @@ int aero_rep_single_particle_get_used_jac_elem(ModelData *model_data,
       PHASE_NUM_JAC_ELEM_(i_layer,i_phase) = aero_phase_get_used_jac_elem(
           model_data, PHASE_MODEL_DATA_ID_(i_layer,i_phase),
           i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase), jac_struct);
+          printf("number jac elem: %d\n", PHASE_NUM_JAC_ELEM_(i_layer,i_phase));
       n_jac_elem += PHASE_NUM_JAC_ELEM_(i_layer,i_phase);
       //printf("n_jac_elem: %d\n", n_jac_elem); 
     }
