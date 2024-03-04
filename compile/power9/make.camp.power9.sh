@@ -3,14 +3,11 @@
 recompile(){
 #./gcc.compile.cvode-3.4-alpha.power9.sh
 #./gcc.make.cvode-3.4-alpha.power9.sh
-#./compile.cvode-3.4-alpha.power9.sh
 #./compile.camp.power9.sh
 #./gcc.compile.camp.power9.sh
 pwd
 }
 recompile
-
-export OMP_NUM_THREADS=2
 
 export SUNDIALS_HOME=$(pwd)/../../../cvode-3.4-alpha/install
 export SUITE_SPARSE_HOME=$(pwd)/../../../SuiteSparse
