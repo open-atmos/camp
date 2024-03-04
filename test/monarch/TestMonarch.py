@@ -756,8 +756,8 @@ def all_timesteps():
     #conf.nGPUsCaseOptimList = [1]
     #conf.nGPUsCaseOptimList = [1,2,3,4]
 
-    #conf.mpi = "yes"
-    conf.mpi = "no"
+    conf.mpi = "yes"
+    #conf.mpi = "no"
 
     conf.mpiProcessesCaseBase = 1
     #conf.mpiProcessesCaseBase = 40
