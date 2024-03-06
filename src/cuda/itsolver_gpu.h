@@ -23,8 +23,8 @@ extern "C" {
 #define MULTICELLS 2
 #define  BLOCKCELLSN 3
 #define BLOCKCELLS1 4
-#define BLOCKCELLSNHALF 5
-#define BLOCKCELLS2 6
+#define BLOCKCELLS2 5
+#define BLOCKCELLS3 6
 
 void createLinearSolver(SolverData *sd);
 __device__

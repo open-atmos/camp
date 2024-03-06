@@ -98,7 +98,7 @@ def getCaseName(conf):
         case_multicells_onecell_name += "Block-cells (N)"
     elif conf.caseMulticellsOnecell == "Block-cells1":
         case_multicells_onecell_name += "Block-cells (1)"
-    elif conf.caseMulticellsOnecell == "Block-cellsNhalf":
+    elif conf.caseMulticellsOnecell == "Block-cells3":
         case_multicells_onecell_name += "Block-cells (3)"
     elif conf.caseMulticellsOnecell == "Block-cells2":
         case_multicells_onecell_name += "Block-cells (2)"
@@ -778,11 +778,11 @@ def all_timesteps():
    # conf.allocatedTasksPerNode = 320
     #conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [1000]
+    conf.cells = [10000]
     #conf.cells = [100,500,1000,5000,10000]
     #conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 5
+    conf.timeSteps = 1
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
@@ -809,7 +809,7 @@ def all_timesteps():
     #conf.casesOptim.append("GPU BDF")
     conf.casesOptim.append("GPU Block-cells1")
     conf.casesOptim.append("GPU Block-cells2")
-    conf.casesOptim.append("GPU Block-cellsNhalf")
+    conf.casesOptim.append("GPU Block-cells3")
     conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
