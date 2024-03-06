@@ -360,8 +360,8 @@ def run(conf):
     if conf.profileCuda and conf.caseGpuCpu == "GPU":
         pathNvprof = "nvprof/"
         Path(pathNvprof).mkdir(parents=True, exist_ok=True)
-        pathNvprof = "nvprof/" + conf.chemFile + \
-                     conf.caseMulticellsOnecell + str(conf.nCells) + ".nvprof "
+        pathNvprof = "nvprof/BCG" + \
+                     conf.caseMulticellsOnecell + str(conf.nCells) + conf.chemFile + ".nvprof "
         # now = datetime.datetime.now()
         # basename = now.strftime("%d-%m-%Y-%H.%M.%S") + conf.sbatch_job_id
         exec_str += "nvprof --analysis-metrics -f -o " + pathNvprof
@@ -737,8 +737,8 @@ def all_timesteps():
     conf.diffCellsL.append("Realistic")
     #conf.diffCellsL.append("Ideal")
 
-    conf.profileCuda = False
-    # conf.profileCuda = True
+    #conf.profileCuda = False
+    conf.profileCuda = True
 
     conf.is_export = get_is_sbatch()
     # conf.is_export = True
@@ -781,16 +781,18 @@ def all_timesteps():
     #conf.cells = [100,500,1000,5000,10000]
     #conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 5
+    conf.timeSteps = 1
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
 
     #conf.caseBase = "CPU One-cell"
     # conf.caseBase = "CPU Multi-cells"
-    # conf.caseBase="GPU Multi-cells"
-    conf.caseBase="GPU Block-cellsN"
+    conf.caseBase="GPU Multi-cells"
     #conf.caseBase="GPU Block-cells1"
+    #conf.caseBase="GPU Block-cells2"
+    #conf.caseBase="GPU Block-cells3"
+    #conf.caseBase="GPU Block-cellsN"
     # conf.caseBase = "GPU BDF"
     #conf.caseBase = "GPU maxrregcount-64"
     # conf.caseBase = "GPU maxrregcount-24" #Minimum
@@ -806,9 +808,9 @@ def all_timesteps():
     #conf.casesOptim.append("GPU maxrregcount-64")
     # conf.casesOptim.append("GPU maxrregcount-127")
     #conf.casesOptim.append("GPU BDF")
-    conf.casesOptim.append("GPU Block-cells1")
-    conf.casesOptim.append("GPU Block-cells2")
-    conf.casesOptim.append("GPU Block-cells3")
+    #conf.casesOptim.append("GPU Block-cells1")
+   # conf.casesOptim.append("GPU Block-cells2")
+    #conf.casesOptim.append("GPU Block-cells3")
     #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
