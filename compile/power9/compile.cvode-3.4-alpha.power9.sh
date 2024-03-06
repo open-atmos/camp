@@ -13,8 +13,6 @@ fi
 cd $library_path/cvode-3.4-alpha
 rm -r build
 mkdir build
-mkdir install
-mkdir install/examples
 cd build
 cmake -D CMAKE_BUILD_TYPE=debug \
 -D MPI_ENABLE:BOOL=TRUE \

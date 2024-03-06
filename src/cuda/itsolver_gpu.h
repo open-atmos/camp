@@ -24,6 +24,7 @@ extern "C" {
 #define  BLOCKCELLSN 3
 #define BLOCKCELLS1 4
 #define BLOCKCELLSNHALF 5
+#define BLOCKCELLS2 6
 
 void createLinearSolver(SolverData *sd);
 __device__

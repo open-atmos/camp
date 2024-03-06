@@ -22,7 +22,10 @@ void read_options(itsolver *bicg){
 
     fscanf(fp, "%s", buff);
 
-    if(strstr(buff,"CELLS_METHOD=Block-cellsNhalf")!=NULL){
+    if(strstr(buff,"CELLS_METHOD=Block-cells2")!=NULL){
+      bicg->cells_method=BLOCKCELLS2;
+    }
+    else if(strstr(buff,"CELLS_METHOD=Block-cellsNhalf")!=NULL){
       bicg->cells_method=BLOCKCELLSNHALF;
     }
    else if(strstr(buff,"CELLS_METHOD=Block-cells1")!=NULL){
@@ -37,7 +40,7 @@ void read_options(itsolver *bicg){
     else if(strstr(buff,"CELLS_METHOD=One-cell")!=NULL){
       bicg->cells_method=ONECELL;
     }else{
-      printf("ERROR: solveBCGBlocks unkonwn cells_method");
+      printf("ERROR: solveBCGBlocks unkonwn cells_method: %s",buff);
       exit(0);
     }
     fclose(fp);
@@ -836,12 +839,15 @@ void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
 #endif
 
   int len_cell = mGPU->nrows/mGPU->n_cells;
-  int max_threads_block=nextPowerOfTwo(len_cell);
+  int max_threads_block=nextPowerOfTwo(len_cell); //block size of 1 cell
   if(bicg->cells_method==BLOCKCELLSN) {
     max_threads_block = mGPU->threads;//1024;
   }else if(bicg->cells_method==BLOCKCELLSNHALF){
     max_threads_block = mGPU->threads/2;
+  }else if(bicg->cells_method==BLOCKCELLS2){
+    max_threads_block = max_threads_block*2; //block size of 2 cells
   }
+
 
   int n_cells_block =  max_threads_block/len_cell;
   int threads_block = n_cells_block*len_cell;
@@ -853,8 +859,9 @@ void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
 
   //Common kernel (Launch all blocks except the last)
   if(bicg->cells_method==BLOCKCELLSN ||
-  bicg->cells_method==BLOCKCELLSNHALF
-  ) {
+  bicg->cells_method==BLOCKCELLSNHALF  ||
+  bicg->cells_method==BLOCKCELLS2
+      ) {
 
     blocks=blocks-1;
 
