@@ -444,7 +444,6 @@ def run_case(conf):
         else:  # counterBCG and other counters
             for i in range(len(data[y_key])):
                 data[y_key][i] = data[y_key][i] / nSystemsOfCells
-        print(y_key, data[y_key])
 
     if "(Comp.timeLS/counterBCG)" in conf.plotYKey and "GPU" in conf.case:
         for i in range(len(data["timeLS"])):
@@ -457,8 +456,8 @@ def run_case(conf):
             data["timeLS"][j] = data["timeLS"][j] \
                                 / data["counterBCG"][j]
 
-    # if conf.plotYKey != "MAPE":
-    #    print("run_case", conf.case, y_key, ":", data[y_key])
+    if conf.plotYKey != "MAPE":
+        print(y_key, data[y_key])
 
     return data
 
@@ -782,15 +781,15 @@ def all_timesteps():
     #conf.cells = [100,500,1000,5000,10000]
     #conf.cells = [50000,100000,500000,1000000]
 
-    conf.timeSteps = 1
+    conf.timeSteps = 5
     #conf.timeSteps = 720
 
     conf.timeStepsDt = 2
 
-    conf.caseBase = "CPU One-cell"
+    #conf.caseBase = "CPU One-cell"
     # conf.caseBase = "CPU Multi-cells"
     # conf.caseBase="GPU Multi-cells"
-    # conf.caseBase="GPU Block-cellsN"
+    conf.caseBase="GPU Block-cellsN"
     #conf.caseBase="GPU Block-cells1"
     # conf.caseBase = "GPU BDF"
     #conf.caseBase = "GPU maxrregcount-64"
@@ -810,7 +809,7 @@ def all_timesteps():
     conf.casesOptim.append("GPU Block-cells1")
     conf.casesOptim.append("GPU Block-cells2")
     conf.casesOptim.append("GPU Block-cells3")
-    conf.casesOptim.append("GPU Block-cellsN")
+    #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU One-cell")
     # conf.casesOptim.append("CPU Multi-cells")
@@ -818,11 +817,11 @@ def all_timesteps():
 
     # conf.plotYKey = "Speedup timeCVode"
     # conf.plotYKey = "Speedup counterLS"
-    conf.plotYKey = "Speedup normalized timeLS"
+    #conf.plotYKey = "Speedup normalized timeLS"
     #conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
-    # conf.plotYKey = "Speedup total iterations - counterBCG"
+    conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
     #conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
