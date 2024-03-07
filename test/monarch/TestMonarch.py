@@ -779,7 +779,7 @@ def all_timesteps():
    # conf.allocatedTasksPerNode = 320
     #conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [1000]
+    conf.cells = [10000]
     #conf.cells = [100,500,1000,5000,10000]
     #conf.cells = [50000,100000,500000,1000000]
 
@@ -823,7 +823,7 @@ def all_timesteps():
 
     # conf.plotYKey = "Speedup timeCVode"
     #conf.plotYKey = "Speedup counterLS"
-    #conf.plotYKey = "Speedup normalized timeLS"
+    conf.plotYKey = "Speedup normalized timeLS"
     #conf.plotYKey = "Speedup normalized computational timeLS"
     #conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
@@ -834,7 +834,7 @@ def all_timesteps():
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    conf.plotYKey ="MAPE"
+    #conf.plotYKey ="MAPE"
     # conf.plotYKey ="SMAPE"
     # conf.plotYKey ="NRMSE"
     # conf.MAPETol = 1.0E-6
