@@ -790,9 +790,9 @@ def all_timesteps():
 
     #conf.caseBase = "CPU One-cell"
     #conf.caseBase = "CPU Multi-cells"
-    conf.caseBase="GPU Multi-cells"
+    #conf.caseBase="GPU Multi-cells"
     #conf.caseBase="GPU ReduceCPUMulti-cells"
-    #conf.caseBase="GPU Block-cells1"
+    conf.caseBase="GPU Block-cells1"
     #conf.caseBase="GPU Block-cells2"
     #conf.caseBase="GPU Block-cells3"
     #conf.caseBase="GPU Block-cellsN"
@@ -816,24 +816,25 @@ def all_timesteps():
     #conf.casesOptim.append("GPU Block-cells3")
     #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
-    conf.casesOptim.append("GPU ReduceCPUMulti-cells")
+    #conf.casesOptim.append("GPU ReduceCPUMulti-cells")
     #conf.casesOptim.append("GPU One-cell")
     # conf.casesOptim.append("CPU Multi-cells")
     #conf.casesOptim.append("CPU One-cell")
 
     # conf.plotYKey = "Speedup timeCVode"
     #conf.plotYKey = "Speedup counterLS"
-    conf.plotYKey = "Speedup normalized timeLS"
-    #conf.plotYKey = "Speedup normalized computational timeLS"
+    #conf.plotYKey = "Speedup normalized timeLS"
+    conf.plotYKey = "Speedup normalized computational timeLS"
     #conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
     #conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
+    conf.plotYKey = "Speedup timeBiconjGradMemcpy"
     #conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
-    # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
+    #conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
     #conf.plotYKey ="MAPE"
     # conf.plotYKey ="SMAPE"
     # conf.plotYKey ="NRMSE"
