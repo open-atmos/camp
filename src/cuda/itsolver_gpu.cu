@@ -36,8 +36,8 @@ void read_options(itsolver *bicg){
     else if(strstr(buff,"CELLS_METHOD=Multi-cells")!=NULL){
       bicg->cells_method=MULTICELLS;
     }
-    else if(strstr(buff,"CELLS_METHOD=Multi-cellsReduceCPU")!=NULL){
-      bicg->cells_method=MULTICELLSREDUCECPU;
+    else if(strstr(buff,"CELLS_METHOD=ReduceCPUMulti-cells")!=NULL){
+      bicg->cells_method=REDUCECPUMULTICELLS;
     }
     else if(strstr(buff,"CELLS_METHOD=One-cell")!=NULL){
       bicg->cells_method=ONECELL;
@@ -45,6 +45,7 @@ void read_options(itsolver *bicg){
       printf("ERROR: solveBCGBlocks unkonwn cells_method: %s",buff);
       exit(0);
     }
+    //printf("ERROR: solveBCGBlocks unkonwn cells_method: %s bicg->cells_method %d",buff,bicg->cells_method); exit(0);
     fclose(fp);
   }
 }
@@ -99,7 +100,7 @@ void createLinearSolver(SolverData *sd)
   cudaMalloc(dz,nrows*sizeof(double));
   cudaMalloc(ddiag,nrows*sizeof(double));
   cudaMalloc(daux,nrows*sizeof(double));
-  if(bicg->cells_method==MULTICELLSREDUCECPU){
+  if(bicg->cells_method==REDUCECPUMULTICELLS){
     mGPU->aux=(double*)malloc(nrows*sizeof(double));
   }else{
     mGPU->aux=(double*)malloc(blocks*sizeof(double));
@@ -968,7 +969,7 @@ void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
 
 }
 
-void solveBCGCPUReduce(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)
+void solveBCGReduceCPU(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv)
 {
   //Init variables ("public")
   itsolver *bicg = &(sd->bicg);
@@ -994,10 +995,8 @@ void solveBCGCPUReduce(SolverData *sd, double *dA, int *djA, int *diA, double *d
   double *aux = mGPU->aux;
   double *daux = mGPU->daux;
 
-#ifndef DEBUG_SOLVEBCGCUDA
-  if(bicg->counterBiConjGrad==0) {
-    printf("solveBCGCPUReduce\n");
-  }
+#ifdef DEBUG_SOLVEBCGCUDA
+    printf("solveBCGReduceCPU\n");
 #endif
 
   //Function private variables

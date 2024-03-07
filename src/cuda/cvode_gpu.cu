@@ -7912,8 +7912,8 @@ int linsolsolve_gpu2(SolverData *sd, CVodeMem cv_mem)
 
       if (bicg->cells_method == MULTICELLS) {//Sync with CPU
         solveBCG(sd, mGPU->dA, mGPU->djA, mGPU->diA, mGPU->dx, mGPU->dtempv);
-      } else  if (bicg->cells_method == MULTICELLSREDUCECPU) {
-        solveBCGCPUReduce(sd, mGPU->dA, mGPU->djA, mGPU->diA, mGPU->dx, mGPU->dtempv);
+      } else  if (bicg->cells_method == REDUCECPUMULTICELLS) {
+        solveBCGReduceCPU(sd, mGPU->dA, mGPU->djA, mGPU->diA, mGPU->dx, mGPU->dtempv);
       }
       else {
         solveBCGBlocks(sd, mGPU->dA, mGPU->djA, mGPU->diA, mGPU->dx, mGPU->dtempv);

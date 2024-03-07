@@ -335,10 +335,11 @@ extern "C++" double cpu_dotxy(double* vec1, double* vec2, double* h_temp, double
   dim3 dimGrid(blocks,1,1);
   dim3 dimBlock(threads,1,1);
   gpu_multxy(d_temp,vec1,vec2, nrows, blocks, threads);
-  cudaMemcpy(&h_temp, d_temp, nrows*sizeof(double), cudaMemcpyDeviceToHost);
+  cudaMemcpy(h_temp, d_temp, nrows*sizeof(double), cudaMemcpyDeviceToHost);
   double sum=0;
-  for (int i=0; i<nrows; i++)
-    sum+=h_temp[i];
+  for (int i=0; i<nrows; i++) {
+    sum += h_temp[i];
+  }
   return sum;
 }
 

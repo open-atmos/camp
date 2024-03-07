@@ -779,7 +779,7 @@ def all_timesteps():
    # conf.allocatedTasksPerNode = 320
     #conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [20]
+    conf.cells = [100]
     #conf.cells = [100,500,1000,5000,10000]
     #conf.cells = [50000,100000,500000,1000000]
 
@@ -791,8 +791,8 @@ def all_timesteps():
     #conf.caseBase = "CPU One-cell"
     # conf.caseBase = "CPU Multi-cells"
     #conf.caseBase="GPU Multi-cells"
-    conf.caseBase="GPU ReduceCPUMulti-cells"
-    #conf.caseBase="GPU Block-cells1"
+    #conf.caseBase="GPU ReduceCPUMulti-cells"
+    conf.caseBase="GPU Block-cells1"
     #conf.caseBase="GPU Block-cells2"
     #conf.caseBase="GPU Block-cells3"
     #conf.caseBase="GPU Block-cellsN"
