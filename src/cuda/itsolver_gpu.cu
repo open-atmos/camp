@@ -1020,24 +1020,24 @@ void solveBCGReduceCPU(SolverData *sd, double *dA, int *djA, int *diA, double *d
 
   int it=0;
   do {
-    rho1=cpu_dotxy(dr0, dr0h, aux, daux, nrows,(blocks + 1) / 2, threads);//rho1 =<r0,r0h>
+    rho1=cpu_dotxy(dr0, dr0h, aux, daux, nrows,blocks, threads);//rho1 =<r0,r0h>
     beta=(rho1/rho0)*(alpha/omega0);
     gpu_zaxpbypc(dp0,dr0,dn0,beta,-1.0*omega0*beta,nrows,blocks,threads);   //z = ax + by + c
     gpu_multxy(dy,ddiag,dp0,nrows,blocks,threads);  // precond y= p0*diag
     gpu_spmv(dn0,dy,nrows,dA,djA,diA,mattype,blocks,threads);  // n0= A*y
-    temp1=cpu_dotxy(dr0h, dn0, aux, daux, nrows,(blocks + 1) / 2, threads);
+    temp1=cpu_dotxy(dr0h, dn0, aux, daux, nrows,blocks, threads);
     alpha=rho1/temp1;
     gpu_zaxpby(1.0,dr0,-1.0*alpha,dn0,ds,nrows,blocks,threads);
     gpu_multxy(dz,ddiag,ds,nrows,blocks,threads); // precond z=diag*s
     gpu_spmv(dt,dz,nrows,dA,djA,diA,mattype,blocks,threads);
     gpu_multxy(dAx2,ddiag,dt,nrows,blocks,threads);
-    temp1=cpu_dotxy(dz, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
-    temp2=cpu_dotxy(dAx2, dAx2, aux, daux, nrows,(blocks + 1) / 2, threads);
+    temp1=cpu_dotxy(dz, dAx2, aux, daux, nrows,blocks, threads);
+    temp2=cpu_dotxy(dAx2, dAx2, aux, daux, nrows,blocks, threads);
     omega0= temp1/temp2;
     gpu_axpy(dx,dy,alpha,nrows,blocks,threads); // x=alpha*y +x
     gpu_axpy(dx,dz,omega0,nrows,blocks,threads);
     gpu_zaxpby(1.0,ds,-1.0*omega0,dt,dr0,nrows,blocks,threads);
-    temp1=cpu_dotxy(dr0, dr0, aux, daux, nrows,(blocks + 1) / 2, threads);
+    temp1=cpu_dotxy(dr0, dr0, aux, daux, nrows,blocks, threads);
     temp1=sqrt(temp1);
     rho0=rho1;
     it++;

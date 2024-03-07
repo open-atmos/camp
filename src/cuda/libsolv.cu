@@ -283,22 +283,20 @@ __global__ void cudadotxy(double *g_idata1, double *g_idata2, double *g_odata, u
   extern __shared__ double sdata[];
   unsigned int tid = threadIdx.x;
   unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;//*2 because init blocks is half
-  //unsigned int i = blockIdx.x*blockDim.x + threadIdx.x;//*2 because init blocks is half
 
   double mySum = (i < n) ? g_idata1[i]*g_idata2[i] : 0;
 
   if (i + blockDim.x < n)
     mySum += g_idata1[i+blockDim.x]*g_idata2[i+blockDim.x];
 
+  if(i==0)printf("mySum[0] %le",mySum);
   sdata[tid] = mySum;
   __syncthreads();
 
-  //for (unsigned int s=(blockDim.x+1)/2; s>0; s>>=1)
   for (unsigned int s=blockDim.x/2; s>0; s>>=1)
   {
     if (tid < s)
       sdata[tid] = mySum = mySum + sdata[tid + s];
-
     __syncthreads();
   }
 
@@ -325,7 +323,7 @@ extern "C++" double gpu_dotxy(double* vec1, double* vec2, double* h_temp, double
 
   cudareducey<<<dimGrid2,dimBlock2,redsize*sizeof(double)>>>(d_temp,blocks);
   cudaMemcpy(&sum, d_temp, sizeof(double), cudaMemcpyDeviceToHost);
-  printf("sum %lf",sum); exit(0);
+  printf("sum %le",sum); exit(0);
   return sum;
 }
 
@@ -336,11 +334,12 @@ extern "C++" double cpu_dotxy(double* vec1, double* vec2, double* h_temp, double
   dim3 dimBlock(threads,1,1);
   gpu_multxy(d_temp,vec1,vec2, nrows, blocks, threads);
   cudaMemcpy(h_temp, d_temp, nrows*sizeof(double), cudaMemcpyDeviceToHost);
-  double sum=0;
+  double sum=0.;
+  printf("h_temp[0] %le",h_temp[0]);
   for (int i=0; i<nrows; i++) {
     sum += h_temp[i];
   }
-  printf("sum %lf",sum); exit(0);
+  printf("sum %le",sum); exit(0);
   return sum;
 }
 
