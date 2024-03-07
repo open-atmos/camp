@@ -969,8 +969,7 @@ void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double
 
 #ifdef CAMP_DEBUG_GPU
   //cudaMemcpy(&mGPU->mdvo.counterBCGInternal, &it, sizeof(integer), cudaMemcpyHostToDevice);
-  mGPU->mdvCPU.counterBCGInternal+=it;
-  printf("counterBCG debug %d\n,",mGPU->mdvCPU.counterBCGInternal);
+  //mGPU->mdvCPU.counterBCGInternal+=it; printf("counterBCG debug %d\n,",mGPU->mdvCPU.counterBCGInternal);
 #endif
 
 }
@@ -1045,8 +1044,7 @@ void solveBCGReduceCPU(SolverData *sd, double *dA, int *djA, int *diA, double *d
 
 #ifdef CAMP_DEBUG_GPU
   //cudaMemcpy(&mGPU->mdvo.counterBCGInternal, &it, sizeof(integer), cudaMemcpyHostToDevice);
-  mGPU->mdvCPU.counterBCGInternal+=it;
-  printf("counterBCG debug %d\n,",mGPU->mdvCPU.counterBCGInternal);
+  //mGPU->mdvCPU.counterBCGInternal+=it; printf("counterBCG debug %d\n,",mGPU->mdvCPU.counterBCGInternal);
 #endif
 
 }

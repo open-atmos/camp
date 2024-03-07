@@ -104,15 +104,6 @@ extern "C++" void gpu_matScaleAddI(int nrows, double* dA, int* djA, int* diA, do
   cudamatScaleAddI<<<dimGrid,dimBlock>>>(nrows, dA, djA, diA, alpha);
 }
 
-__global__
-void check_input_gpud(double *x, int len, int var_id)
-{
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-
-  printf("%d[%d]=%-le\n",var_id,i,x[i]);
-
-}
-
 // Diagonal precond
 __global__ void cudadiagprecond(int nrows, double* dA, int* djA, int* diA, double* ddiag)
 {
@@ -131,7 +122,6 @@ __global__ void cudadiagprecond(int nrows, double* dA, int* djA, int* diA, doubl
         if(dA[j]!=0.0)
           ddiag[row]= 1.0/dA[j];
         else{
-          //printf("cudadiagprecond else\n");
           ddiag[row]= 1.0;
         }
       }
@@ -149,7 +139,6 @@ extern "C++" void gpu_diagprecond(int nrows, double* dA, int* djA, int* diA, dou
   dim3 dimBlock(threads,1,1);
 
   cudadiagprecond<<<dimGrid,dimBlock>>>(nrows, dA, djA, diA, ddiag);
-  //check_input_gpud<< < 1, 5>> >(ddiag,nrows,0);
 }
 
 // y = constant
@@ -289,7 +278,6 @@ __global__ void cudadotxy(double *g_idata1, double *g_idata2, double *g_odata, u
   if (i + blockDim.x < n)
     mySum += g_idata1[i+blockDim.x]*g_idata2[i+blockDim.x];
 
-  if(i==0)printf("mySum[0] %le",mySum);
   sdata[tid] = mySum;
   __syncthreads();
 
@@ -313,7 +301,6 @@ extern "C++" double gpu_dotxy(double* vec1, double* vec2, double* h_temp, double
   //threads*sizeof(double)
   cudadotxy<<<dimGrid,dimBlock,threads*sizeof(double)>>>(vec1,vec2,d_temp,nrows);
   cudaMemcpy(&sum, d_temp, sizeof(double), cudaMemcpyDeviceToHost);
-  //printf("rho1 %f", sum);
 
   int redsize= sqrt(blocks) +1;
   redsize=pow(2,redsize);
@@ -323,7 +310,6 @@ extern "C++" double gpu_dotxy(double* vec1, double* vec2, double* h_temp, double
 
   cudareducey<<<dimGrid2,dimBlock2,redsize*sizeof(double)>>>(d_temp,blocks);
   cudaMemcpy(&sum, d_temp, sizeof(double), cudaMemcpyDeviceToHost);
-  printf("sum %le",sum); exit(0);
   return sum;
 }
 
@@ -335,11 +321,9 @@ extern "C++" double cpu_dotxy(double* vec1, double* vec2, double* h_temp, double
   gpu_multxy(d_temp,vec1,vec2, nrows, blocks, threads);
   cudaMemcpy(h_temp, d_temp, nrows*sizeof(double), cudaMemcpyDeviceToHost);
   double sum=0.;
-  printf("h_temp[0] %le",h_temp[0]);
   for (int i=0; i<nrows; i++) {
     sum += h_temp[i];
   }
-  printf("sum %le",sum); exit(0);
   return sum;
 }
 
@@ -601,8 +585,6 @@ __device__ void cudaDeviceaddD(double *g_odata, double in, volatile double *sdat
 
   __syncthreads();
 
-  //if(blockIdx.x==0)printf("i %d in %le sdata[tid] %le\n",i,in,sdata[tid]);
-
   for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
   {
     if (tid < s){//&& sdata[tid + s]!=0.
@@ -770,8 +752,6 @@ __device__ void cudaDeviceaddI(int *g_odata, int in, volatile double *sdata, int
     sdata[tid+blockDim.x]=sdata[tid];
 
   __syncthreads(); //Not needed (should)
-
-  //if(blockIdx.x==0)printf("i %d in %le sdata[tid] %le\n",i,in,sdata[tid]);
 
   for (unsigned int s=(blockDim.x+n_shr_empty)/2; s>0; s>>=1)
   {

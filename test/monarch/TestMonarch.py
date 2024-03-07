@@ -779,7 +779,7 @@ def all_timesteps():
    # conf.allocatedTasksPerNode = 320
     #conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [10]
+    conf.cells = [1000]
     #conf.cells = [100,500,1000,5000,10000]
     #conf.cells = [50000,100000,500000,1000000]
 
@@ -790,8 +790,8 @@ def all_timesteps():
 
     #conf.caseBase = "CPU One-cell"
     #conf.caseBase = "CPU Multi-cells"
-    #conf.caseBase="GPU Multi-cells"
-    conf.caseBase="GPU ReduceCPUMulti-cells"
+    conf.caseBase="GPU Multi-cells"
+    #conf.caseBase="GPU ReduceCPUMulti-cells"
     #conf.caseBase="GPU Block-cells1"
     #conf.caseBase="GPU Block-cells2"
     #conf.caseBase="GPU Block-cells3"
@@ -822,7 +822,7 @@ def all_timesteps():
     #conf.casesOptim.append("CPU One-cell")
 
     # conf.plotYKey = "Speedup timeCVode"
-    conf.plotYKey = "Speedup counterLS"
+    #conf.plotYKey = "Speedup counterLS"
     #conf.plotYKey = "Speedup normalized timeLS"
     #conf.plotYKey = "Speedup normalized computational timeLS"
     #conf.plotYKey = "Speedup counterBCG"
@@ -834,7 +834,7 @@ def all_timesteps():
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    #conf.plotYKey ="MAPE"
+    conf.plotYKey ="MAPE"
     # conf.plotYKey ="SMAPE"
     # conf.plotYKey ="NRMSE"
     # conf.MAPETol = 1.0E-6
