@@ -325,7 +325,7 @@ extern "C++" double gpu_dotxy(double* vec1, double* vec2, double* h_temp, double
 
   cudareducey<<<dimGrid2,dimBlock2,redsize*sizeof(double)>>>(d_temp,blocks);
   cudaMemcpy(&sum, d_temp, sizeof(double), cudaMemcpyDeviceToHost);
-
+  printf("sum %lf",sum); exit(0);
   return sum;
 }
 
@@ -340,6 +340,7 @@ extern "C++" double cpu_dotxy(double* vec1, double* vec2, double* h_temp, double
   for (int i=0; i<nrows; i++) {
     sum += h_temp[i];
   }
+  printf("sum %lf",sum); exit(0);
   return sum;
 }
 

@@ -103,7 +103,7 @@ def getCaseName(conf):
     elif conf.caseMulticellsOnecell == "Block-cells3":
         case_multicells_onecell_name += "Block-cells (3)"
     elif conf.caseMulticellsOnecell == "ReduceCPUMulti-cells":
-        case_multicells_onecell_name += "Multi-cells Reduce on CPU"
+        case_multicells_onecell_name += "Multi-cellsR"
     elif conf.caseMulticellsOnecell.find("maxrregcount") != -1:
         case_multicells_onecell_name += ""
         print("WARNING: Changed name maxrregcount to",case_multicells_onecell_name)
@@ -779,7 +779,7 @@ def all_timesteps():
    # conf.allocatedTasksPerNode = 320
     #conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [100]
+    conf.cells = [10]
     #conf.cells = [100,500,1000,5000,10000]
     #conf.cells = [50000,100000,500000,1000000]
 
@@ -789,10 +789,10 @@ def all_timesteps():
     conf.timeStepsDt = 2
 
     #conf.caseBase = "CPU One-cell"
-    # conf.caseBase = "CPU Multi-cells"
+    #conf.caseBase = "CPU Multi-cells"
     #conf.caseBase="GPU Multi-cells"
-    #conf.caseBase="GPU ReduceCPUMulti-cells"
-    conf.caseBase="GPU Block-cells1"
+    conf.caseBase="GPU ReduceCPUMulti-cells"
+    #conf.caseBase="GPU Block-cells1"
     #conf.caseBase="GPU Block-cells2"
     #conf.caseBase="GPU Block-cells3"
     #conf.caseBase="GPU Block-cellsN"
@@ -812,7 +812,7 @@ def all_timesteps():
     # conf.casesOptim.append("GPU maxrregcount-127")
     #conf.casesOptim.append("GPU BDF")
     #conf.casesOptim.append("GPU Block-cells1")
-   # conf.casesOptim.append("GPU Block-cells2")
+    #conf.casesOptim.append("GPU Block-cells2")
     #conf.casesOptim.append("GPU Block-cells3")
     #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
@@ -822,10 +822,10 @@ def all_timesteps():
     #conf.casesOptim.append("CPU One-cell")
 
     # conf.plotYKey = "Speedup timeCVode"
-    # conf.plotYKey = "Speedup counterLS"
+    conf.plotYKey = "Speedup counterLS"
     #conf.plotYKey = "Speedup normalized timeLS"
     #conf.plotYKey = "Speedup normalized computational timeLS"
-    # conf.plotYKey = "Speedup counterBCG"
+    #conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
     #conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
@@ -834,7 +834,7 @@ def all_timesteps():
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    conf.plotYKey ="MAPE"
+    #conf.plotYKey ="MAPE"
     # conf.plotYKey ="SMAPE"
     # conf.plotYKey ="NRMSE"
     # conf.MAPETol = 1.0E-6
