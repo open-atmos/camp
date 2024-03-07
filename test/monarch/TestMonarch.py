@@ -98,10 +98,12 @@ def getCaseName(conf):
         case_multicells_onecell_name += "Block-cells (N)"
     elif conf.caseMulticellsOnecell == "Block-cells1":
         case_multicells_onecell_name += "Block-cells (1)"
-    elif conf.caseMulticellsOnecell == "Block-cells3":
-        case_multicells_onecell_name += "Block-cells (3)"
     elif conf.caseMulticellsOnecell == "Block-cells2":
         case_multicells_onecell_name += "Block-cells (2)"
+    elif conf.caseMulticellsOnecell == "Block-cells3":
+        case_multicells_onecell_name += "Block-cells (3)"
+    elif conf.caseMulticellsOnecell == "Multi-cellsCPUReduce":
+        case_multicells_onecell_name += "Multi-cells Reduce on CPU"
     elif conf.caseMulticellsOnecell.find("maxrregcount") != -1:
         case_multicells_onecell_name += ""
         print("WARNING: Changed name maxrregcount to",case_multicells_onecell_name)
@@ -737,8 +739,8 @@ def all_timesteps():
     conf.diffCellsL.append("Realistic")
     #conf.diffCellsL.append("Ideal")
 
-    #conf.profileCuda = False
-    conf.profileCuda = True
+    conf.profileCuda = False
+    #conf.profileCuda = True
 
     conf.is_export = get_is_sbatch()
     # conf.is_export = True
@@ -777,7 +779,7 @@ def all_timesteps():
    # conf.allocatedTasksPerNode = 320
     #conf.allocatedTasksPerNode = get_ntasksPerNode_sbatch() #todo
 
-    conf.cells = [10000]
+    conf.cells = [10]
     #conf.cells = [100,500,1000,5000,10000]
     #conf.cells = [50000,100000,500000,1000000]
 
@@ -788,8 +790,8 @@ def all_timesteps():
 
     #conf.caseBase = "CPU One-cell"
     # conf.caseBase = "CPU Multi-cells"
-    conf.caseBase="GPU Multi-cells"
-    #conf.caseBase="GPU Block-cells1"
+    #conf.caseBase="GPU Multi-cells"
+    conf.caseBase="GPU Block-cells1"
     #conf.caseBase="GPU Block-cells2"
     #conf.caseBase="GPU Block-cells3"
     #conf.caseBase="GPU Block-cellsN"
@@ -813,6 +815,7 @@ def all_timesteps():
     #conf.casesOptim.append("GPU Block-cells3")
     #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
+    conf.casesOptim.append("GPU Multi-cellsReduceCPU")
     #conf.casesOptim.append("GPU One-cell")
     # conf.casesOptim.append("CPU Multi-cells")
     #conf.casesOptim.append("CPU One-cell")
@@ -823,14 +826,14 @@ def all_timesteps():
     #conf.plotYKey = "Speedup normalized computational timeLS"
     # conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
-    conf.plotYKey = "Speedup total iterations - counterBCG"
+    #conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
     #conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
     # conf.plotYKey = "Speedup countercvStep"
     # conf.plotYKey = "Speedup device timecvStep"
     # conf.plotYKey = "Percentage data transfers CPU-GPU [%]"
-    #conf.plotYKey ="MAPE"
+    conf.plotYKey ="MAPE"
     # conf.plotYKey ="SMAPE"
     # conf.plotYKey ="NRMSE"
     # conf.MAPETol = 1.0E-6

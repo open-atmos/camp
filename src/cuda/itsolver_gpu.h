@@ -25,6 +25,7 @@ extern "C" {
 #define BLOCKCELLS1 4
 #define BLOCKCELLS2 5
 #define BLOCKCELLS3 6
+#define MULTICELLSREDUCECPU 7
 
 void createLinearSolver(SolverData *sd);
 __device__
@@ -36,6 +37,7 @@ void cudaGlobalswapCSC_CSR(int n_row, int n_col, int* Ap, int* Aj, double* Ax, i
 void swapCSC_CSR_BCG(SolverData *sd);
 void swapCSC_CSR_ODE(SolverData *sd);
 void solveBCG(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);
+void solveBCGCPUReduce(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);
 void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, double *dtempv);
 __device__ void solveBcgCudaDevice(
         double *dA, int *djA, int *diA, double *dx, double *dtempv //Input data

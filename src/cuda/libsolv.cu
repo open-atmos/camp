@@ -305,7 +305,7 @@ __global__ void cudadotxy(double *g_idata1, double *g_idata2, double *g_odata, u
   if (tid == 0) g_odata[blockIdx.x] = sdata[0];
 }
 
-//threads need to be pow of 2 //todo h_temp not needed
+//threads need to be pow of 2
 extern "C++" double gpu_dotxy(double* vec1, double* vec2, double* h_temp, double* d_temp, int nrows, int blocks,int threads)
 {
   double sum;
@@ -327,39 +327,20 @@ extern "C++" double gpu_dotxy(double* vec1, double* vec2, double* h_temp, double
   cudaMemcpy(&sum, d_temp, sizeof(double), cudaMemcpyDeviceToHost);
 
   return sum;
-
-/*
-  cudaMemcpy(h_temp, d_temp, blocks * sizeof(double), cudaMemcpyDeviceToHost);
-  double sum=0;
-  for(int i=0;i<blocks;i++)
-  {
-    sum+=h_temp[i];
-  }
-  return sum;
-*/
-  /*dim3 dimGrid2(1,1,1);
-  dim3 dimBlock2(blocks,1,1);
-
-  //Cuda only sum kernel call
-  //cudareducey<<<dimGrid2,dimBlock2,blocks*sizeof(double)>>>(d_temp,blocks); //Takes quasi WAY MORE than cpu calc
-
-  cudaMemcpy(h_temp, d_temp, sizeof(double), cudaMemcpyDeviceToHost);
-  return h_temp[0];*/
 }
 
-/*
-extern "C++" double gpu_dotxy(double *dy, double* dx, int nrows)
+//threads need to be pow of 2
+extern "C++" double cpu_dotxy(double* vec1, double* vec2, double* h_temp, double* d_temp, int nrows, int blocks,int threads)
 {
-   double dot=0.0;
-   cublasHandle_t hl;
-   cublasCreate(&hl);
-
-   cublasDdot(hl,nrows,dy,1,dx,1,&dot);
-
-   cublasDestroy(hl);
-   return dot;
+  dim3 dimGrid(blocks,1,1);
+  dim3 dimBlock(threads,1,1);
+  gpu_multxy(d_temp,vec1,vec2, nrows, blocks, threads);
+  cudaMemcpy(&h_temp, d_temp, nrows*sizeof(double), cudaMemcpyDeviceToHost);
+  double sum=0;
+  for (int i=0; i<nrows; i++)
+    sum+=h_temp[i];
+  return sum;
 }
-*/
 
 // z= a*z + x + b*y
 __global__ void cudazaxpbypc(double* dz, double* dx,double* dy, double a, double b, int nrows)

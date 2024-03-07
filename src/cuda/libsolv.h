@@ -33,6 +33,7 @@ extern "C++" void gpu_axpby(double* dy ,double* dx, double a, double b, int nrow
 extern "C++" void gpu_yequalsx(double *dy, double* dx, int nrows, int blocks, int threads);
 extern "C++" double gpu_VWRMS_Norm(int n, double* vec1,double* vec2,double* h_temp,double* d_temp, int blocks,int threads);
 extern "C++" double gpu_dotxy(double* vec1, double* vec2, double* h_temp, double* d_temp, int nrows, int blocks,int threads);
+extern "C++" double cpu_dotxy(double* vec1, double* vec2, double* h_temp, double* d_temp, int nrows, int blocks,int threads);
 extern "C++" void gpu_zaxpbypc(double* dz, double* dx ,double* dy, double a, double b, int nrows, int blocks, int threads);
 extern "C++" void gpu_multxy(double* dz, double* dx ,double* dy, int nrows, int blocks, int threads);
 extern "C++" void gpu_zaxpby(double a, double* dx ,double b, double* dy, double* dz, int nrows, int blocks, int threads);
