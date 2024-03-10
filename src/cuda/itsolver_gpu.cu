@@ -800,11 +800,6 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
   if(bicg->counterBiConjGrad==0) {
     printf("solveGPU_block_thr n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
            mGPU->n_cells,len_cell,mGPU->nrows,mGPU->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
-
-    //print_double(mGPU->A,nnz,"A");
-    //print_int(mGPU->jA,nnz,"jA");
-    //print_int(mGPU->iA,nrows+1,"iA");
-
   }
 #endif
 
@@ -846,9 +841,9 @@ void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
   if(bicg->cells_method==BLOCKCELLSN) {
     max_threads_block = mGPU->threads;//1024;
   }else if(bicg->cells_method==BLOCKCELLS2){
-    max_threads_block = max_threads_block*2; //block size of 2 cells
+    max_threads_block = len_cell*2; //block size of 2 cells
   }else if(bicg->cells_method==BLOCKCELLS3){
-    max_threads_block = max_threads_block*3;
+    max_threads_block = len_cell*3;
   }
 
   int n_cells_block =  max_threads_block/len_cell;

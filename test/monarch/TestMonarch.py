@@ -363,7 +363,7 @@ def run(conf):
         pathNvprof = "nvprof/"
         Path(pathNvprof).mkdir(parents=True, exist_ok=True)
         pathNvprof = "nvprof/BCG" + \
-                     conf.caseMulticellsOnecell + str(conf.nCells) + conf.chemFile + ".nvprof "
+                     conf.caseMulticellsOnecell + str(conf.nCells) + conf.diffCells + conf.chemFile + ".nvprof "
         # now = datetime.datetime.now()
         # basename = now.strftime("%d-%m-%Y-%H.%M.%S") + conf.sbatch_job_id
         exec_str += "nvprof --analysis-metrics -f -o " + pathNvprof
@@ -792,10 +792,10 @@ def all_timesteps():
     #conf.caseBase = "CPU Multi-cells"
     #conf.caseBase="GPU Multi-cells"
     #conf.caseBase="GPU ReduceCPUMulti-cells"
-    conf.caseBase="GPU Block-cells1"
+    #conf.caseBase="GPU Block-cells1"
     #conf.caseBase="GPU Block-cells2"
     #conf.caseBase="GPU Block-cells3"
-    #conf.caseBase="GPU Block-cellsN"
+    conf.caseBase="GPU Block-cellsN"
     # conf.caseBase = "GPU BDF"
     #conf.caseBase = "GPU maxrregcount-64"
     # conf.caseBase = "GPU maxrregcount-24" #Minimum
@@ -812,8 +812,8 @@ def all_timesteps():
     # conf.casesOptim.append("GPU maxrregcount-127")
     #conf.casesOptim.append("GPU BDF")
     #conf.casesOptim.append("GPU Block-cells1")
-    #conf.casesOptim.append("GPU Block-cells2")
-    #conf.casesOptim.append("GPU Block-cells3")
+    conf.casesOptim.append("GPU Block-cells2")
+    conf.casesOptim.append("GPU Block-cells3")
     #conf.casesOptim.append("GPU Block-cellsN")
     #conf.casesOptim.append("GPU Multi-cells")
     #conf.casesOptim.append("GPU ReduceCPUMulti-cells")
@@ -823,13 +823,13 @@ def all_timesteps():
 
     # conf.plotYKey = "Speedup timeCVode"
     #conf.plotYKey = "Speedup counterLS"
-    #conf.plotYKey = "Speedup normalized timeLS"
-    conf.plotYKey = "Speedup normalized computational timeLS"
+    conf.plotYKey = "Speedup normalized timeLS"
+    #conf.plotYKey = "Speedup normalized computational timeLS"
     #conf.plotYKey = "Speedup counterBCG"
     # conf.plotYKey = "Speedup normalized counterBCG"
     #conf.plotYKey = "Speedup total iterations - counterBCG"
     # conf.plotYKey = "Speedup BCG iteration (Comp.timeLS/counterBCG)"
-    conf.plotYKey = "Speedup timeBiconjGradMemcpy"
+    #conf.plotYKey = "Speedup timeBiconjGradMemcpy"
     #conf.plotYKey = "Speedup timecvStep"
     # conf.plotYKey = "Speedup timecvStep normalized by countercvStep"
     # conf.plotYKey = "Speedup countercvStep"
