@@ -30,6 +30,9 @@ void read_options(itsolver *bicg){
     else if(strstr(buff,"CELLS_METHOD=Block-cells3")!=NULL){
       bicg->cells_method=BLOCKCELLS3;
     }
+    else if(strstr(buff,"CELLS_METHOD=Block-cells4")!=NULL){
+      bicg->cells_method=BLOCKCELLS4;
+    }
     else if(strstr(buff,"CELLS_METHOD=Block-cellsN")!=NULL){
       bicg->cells_method=BLOCKCELLSN;
     }
@@ -796,7 +799,7 @@ void solveGPU_block_thr(int blocks, int threads_block, int n_shr_memory, int n_s
   exportConfBCG(sd,"confBCG.txt");
 #endif
 
-#ifdef DEBUG_SOLVEBCGCUDA
+#ifndef DEBUG_SOLVEBCGCUDA
   if(bicg->counterBiConjGrad==0) {
     printf("solveGPU_block_thr n_cells %d len_cell %d nrows %d nnz %d max_threads_block %d blocks %d threads_block %d n_shr_empty %d offset_cells %d\n",
            mGPU->n_cells,len_cell,mGPU->nrows,mGPU->nnz,n_shr_memory,blocks,threads_block,n_shr_empty,offset_cells);
@@ -837,33 +840,35 @@ void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
 #endif
 
   int len_cell = mGPU->nrows/mGPU->n_cells;
-  int max_threads_block=nextPowerOfTwo(len_cell); //block size of 1 cell
+  int threads_block=len_cell; //block size of 1 cell
   if(bicg->cells_method==BLOCKCELLSN) {
-    max_threads_block = mGPU->threads;//1024;
+    threads_block = (mGPU->threads/len_cell)*len_cell;//1024;
   }else if(bicg->cells_method==BLOCKCELLS2){
-    max_threads_block = len_cell*2; //block size of 2 cells
+    threads_block = len_cell*2; //block size of 2 cells
   }else if(bicg->cells_method==BLOCKCELLS3){
-    max_threads_block = len_cell*3;
+    threads_block = len_cell*3;
+  }else if(bicg->cells_method==BLOCKCELLS4){
+    threads_block = len_cell*4;
   }
 
-  int n_cells_block =  max_threads_block/len_cell;
-  int threads_block = n_cells_block*len_cell;
-  int n_shr_empty = max_threads_block-threads_block;
+  int n_shr_memory = nextPowerOfTwo(threads_block);
+  int n_shr_empty = n_shr_memory-threads_block;
   int blocks = (mGPU->nrows+threads_block-1)/threads_block;
 
   int offset_cells=0;
   int last_blockN=0;
 
   //Common kernel (Launch all blocks except the last)
-  if(bicg->cells_method==BLOCKCELLSN ||
-  bicg->cells_method==BLOCKCELLS2  ||
-  bicg->cells_method==BLOCKCELLS3
+  if(bicg->cells_method==BLOCKCELLSN
+      || bicg->cells_method==BLOCKCELLS2
+       ||bicg->cells_method==BLOCKCELLS3
+       ||bicg->cells_method==BLOCKCELLS4
       ) {
 
     blocks=blocks-1;
 
     if(blocks!=0){
-      solveGPU_block_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
+      solveGPU_block_thr(blocks, threads_block, n_shr_memory, n_shr_empty, offset_cells,
                        sd, last_blockN);
       last_blockN = 1;
     }
@@ -874,18 +879,17 @@ void solveBCGBlocks(SolverData *sd, double *dA, int *djA, int *diA, double *dx, 
       }
     }
 #endif
-
     //Update vars to launch last kernel
+    int n_cells_block = threads_block/len_cell;
     offset_cells=n_cells_block*blocks;
     int n_cells_last_block=mGPU->n_cells-offset_cells;
     threads_block=n_cells_last_block*len_cell;
-    max_threads_block=nextPowerOfTwo(threads_block);
-    n_shr_empty = max_threads_block-threads_block;
+    n_shr_memory=nextPowerOfTwo(threads_block);
+    n_shr_empty = n_shr_memory-threads_block;
     blocks=1;
-
   }
 
-  solveGPU_block_thr(blocks, threads_block, max_threads_block, n_shr_empty, offset_cells,
+  solveGPU_block_thr(blocks, threads_block, n_shr_memory, n_shr_empty, offset_cells,
            sd, last_blockN);
 
 }
