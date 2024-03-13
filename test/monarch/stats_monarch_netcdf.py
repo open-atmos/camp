@@ -36,7 +36,7 @@ def process_variable(dataset1, dataset2, var_name):
 
     abs_diff = np.abs(array1 - array2)
     max_array = np.maximum(np.abs(array1), np.abs(array2))
-    relative_error = np.where(max_array == 0, 0, abs_diff / max_array)
+    relative_error = np.where(max_array == 0, 0, abs_diff*100 / max_array)
 
     mean = np.mean(relative_error)
     print(mean)
@@ -58,8 +58,8 @@ def process_variable(dataset1, dataset2, var_name):
     quantile75, quantile95, max_error, relative_error
 
 
-file1_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/cpu_tstep6/"
-file2_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/cpu_tstep6_isResetJacOFF/"
+file1_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/cpu_tstep6_rand/"
+file2_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/gpu_tstep6/"
 
 file1 = file1_path_header + "out/stats.csv"
 file2 = file2_path_header + "out/stats.csv"
@@ -94,13 +94,14 @@ summary_table = pd.DataFrame(summary_data, columns=[
 
 worst_variables = summary_table.nlargest(6, 'NRMSE[%]')
 plt.figure()
-data = [row['Relative Error'].reshape(-1) * 100 for _, row in worst_variables.iterrows()]
+data = [row['Relative Error'].reshape(-1) for _, row in worst_variables.iterrows()]
 variable_names = [row['Variable'] for _, row in worst_variables.iterrows()]
 worst_variables = worst_variables.drop('Relative Error', axis=1)
 highest_nrmse_row = worst_variables.iloc[0]
 highest_nrmse_variable = highest_nrmse_row['Variable']
 highest_nrmse = highest_nrmse_row['NRMSE[%]']
-print("worst_variables",worst_variables)
+print("worst_variables:")
+print(worst_variables)
 print(f"Highest NRMSE[%]: {highest_nrmse:.2f} for variable: {highest_nrmse_variable}")
 print("Speedup:", speedup)
 sns.boxplot(data=data, orient='v', showfliers=False)

@@ -243,7 +243,6 @@ void constructor_cvode_gpu(SolverData *sd){
     Bp[col] = last;
     last    = temp;
   }
-  ModelData *md = &(sd->model_data);
   nnz=md->n_mapped_values;
   int *aux_solver_id= (int *)malloc(nnz * sizeof(int));
   for (int i = 0; i < nnz; i++){
