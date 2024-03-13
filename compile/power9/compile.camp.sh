@@ -52,9 +52,9 @@ cd build
 
 cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D CMAKE_BUILD_TYPE=debug \
--D CMAKE_C_FLAGS_DEBUG="-g -O3" \
--D CMAKE_Fortran_FLAGS_DEBUG="-g -O3" \
--D CMAKE_C_FLAGS_RELEASE="-std=c99" \
+-D CMAKE_C_FLAGS_DEBUG="-std=c99 -g -O3" \
+-D CMAKE_Fortran_FLAGS_DEBUG="-std=c99 -g -O3" \
+-D CMAKE_C_FLAGS_RELEASE="-std=c99 -O3" \
 -D CMAKE_Fortran_FLAGS_RELEASE="" \
 -D CMAKE_Fortran_COMPILER=$mpifort \
 -D DISABLE_TESTS=ON \
