@@ -1300,7 +1300,8 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
 
     // Scale incomplete jumps
     if (i_fast >= 0 && h_n > ZERO)
-      h_j *= 0.95;
+        h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
+      //h_j *= 0.95;
     h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
 
     // Only make small changes to adjustment vectors used in Newton iteration

@@ -8,11 +8,11 @@ def check_NRMSE(species1, species2, nCells):
   max_y = [0.] * n_species
   min_y = [float("inf")] * n_species
   max_NRMSEs_species = 0.
-  for j2 in range(nCells):
+  for j2 in range(1):
     for k in range(n_species):
       k2 = k + j2 * n_species
       y1 = species1[k2]
-      y2 = species2[k2]
+      y2 = species1[k2+n_species] #check if cell 1 is equal to cell 2
       NRMSEs_species[k] += (y1 - y2) ** 2
       if y1 > max_y[k]:
         max_y[k] = y1
