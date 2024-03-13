@@ -826,8 +826,6 @@ contains
     do i_layer = 1, size(layer_names_unordered)
       do j_layer = 1, size(layer_names_unordered)
         if (i_layer .eq. j_layer) cycle
-        print *, layer_names_unordered(i_layer)%string
-        print *, layer_names_unordered(j_layer)%string
         call assert_msg(781626922, layer_names_unordered(i_layer)%string .ne. &
                                    layer_names_unordered(j_layer)%string, &
                         "Duplicate layer name in single particle "// &
@@ -849,8 +847,8 @@ contains
     do i_cover = 2, size(ordered_layer_ids)
       do i_layer = 1, size(layer_names_unordered)
         if (layer_names_unordered(ordered_layer_ids(i_cover-1))%string &
-            .eq. cover_names_unordered(i_layer)%string) then
-          ordered_layer_ids(i_cover) = i_layer
+            .eq. cover_names_unordered(i_layer)%string) then 
+             ordered_layer_ids(i_cover) = i_layer
           exit
         end if
       end do

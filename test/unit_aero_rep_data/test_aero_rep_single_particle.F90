@@ -459,7 +459,6 @@ contains
   logical function eval_c_func(camp_core) result(passed)
     !> CAMP-core
     type(camp_core_t), intent(inout) :: camp_core
-#if 0
     class(aero_rep_data_t), pointer :: aero_rep
     type(camp_state_t), pointer :: camp_state
     integer(kind=i_kind), allocatable :: phase_ids(:)
@@ -507,7 +506,7 @@ contains
                  ) .eq. 0
 
     deallocate(camp_state)
-#endif
+
   end function eval_c_func
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
