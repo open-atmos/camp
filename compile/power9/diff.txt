@@ -1,0 +1,42 @@
+1,25d0
+< #WARNING: THIS LOG IS FROM MAIN BRANCH TEST CB05 TIME-STEPS 10
+< # make sure that the current directory is the one where this script is
+< cd ${0%/*}
+< # make the output directory if it doesn't exist
+< mkdir -p out
+< 
+< ((counter = 1))
+< while [ true ]
+< do
+<   echo Attempt $counter
+< 
+< if ! ../../../test_chemistry_cb05cl_ae5; then 
+< 	  echo Failure "$counter"
+< 	  if [ "$counter" -gt 1 ]
+< 	  then
+< 		  echo FAIL
+< 		  exit 1
+< 	  fi
+< 	  echo retrying...
+<   else
+< 	  echo PASS
+< 	  exit 0
+<   fi
+<   ((counter++))
+< done
+27,29c2,4
+<  EBI initialization time:    9.9999999999961231E-006  s
+<  KPP initialization time:    9.0000000000090008E-006  s
+<  CAMP-chem initialization time:    4.2373000000000008E-002  s
+---
+>  EBI initialization time:    8.0000000000080007E-006  s
+>  KPP initialization time:    8.0000000000080007E-006  s
+>  CAMP-chem initialization time:    4.2361999999999997E-002  s
+31,33c6,8
+<  EBI calculation time:    1.7072000000001086E-002  s
+<  KPP calculation time:    8.6962999999999180E-002  s
+<  CAMP-chem calculation time:   0.60270699999999977       s
+---
+>  EBI calculation time:    1.6771000000001202E-002  s
+>  KPP calculation time:    8.5346999999999118E-002  s
+>  CAMP-chem calculation time:   0.59103799999999962       s
