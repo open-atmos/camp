@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-./diff_main.sh
-
-#cd ../../test/monarch
-#./run.sh
+cd ../../test/monarch
+./run.sh
 
 #cd ../../build
 #make -j 4
