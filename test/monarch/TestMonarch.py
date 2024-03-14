@@ -12,8 +12,8 @@ def all_timesteps():
   conf.chemFile = "cb05_paperV2"
   # conf.chemFile = "monarch_cb05"
   conf.diffCellsL = []
-  conf.diffCellsL.append("Realistic")
-  # conf.diffCellsL.append("Ideal")
+  #conf.diffCellsL.append("Realistic")
+  conf.diffCellsL.append("Ideal")
   conf.profileCuda = ""
   # conf.profileCuda = "nvprof"
   # conf.profileCuda = "nsight"
@@ -31,6 +31,7 @@ def all_timesteps():
   conf.plotYKey = "Speedup timecvStep"
 
   run_main(conf)
+  print("DEBUGGING: Comparing cell 1 vs 2")
 
 
 if __name__ == "__main__":

@@ -58,7 +58,7 @@ def process_variable(dataset1, dataset2, var_name):
     quantile75, quantile95, max_error, relative_error
 
 
-file1_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/cpu_tstep6_rand/"
+file1_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/cpu_tstep6_branchGPURandResetJac/"
 file2_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/gpu_tstep6/"
 
 file1 = file1_path_header + "out/stats.csv"
