@@ -21,7 +21,7 @@ def all_timesteps():
   #conf.is_import_base = True
   conf.mpiProcessesCaseBase = 1
   conf.mpiProcessesCaseOptimList = [1]
-  conf.cells = [2]
+  conf.cells = [100]
   conf.timeSteps = 1
   conf.caseBase = "CPU One-cell"
   #conf.caseBase = "GPU BDF"
@@ -31,7 +31,6 @@ def all_timesteps():
   conf.plotYKey = "Speedup timecvStep"
 
   run_main(conf)
-  print("DEBUGGING: Comparing cell 1 vs 2")
 
 
 if __name__ == "__main__":
