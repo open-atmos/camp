@@ -352,11 +352,6 @@ contains
       call camp_mpi_barrier(MPI_COMM_WORLD)
     end if
     i_hour = int(curr_time/60)+1
-    if(mod(int(curr_time),60)==0) then
-      if (camp_mpi_rank()==0) then
-        write(*,*) "i_hour", i_hour,"i_time", i_time
-      end if
-    end if
     if(.not.this%solve_multiple_cells) then
       do i=I_W, I_E
         do j=I_S, I_N

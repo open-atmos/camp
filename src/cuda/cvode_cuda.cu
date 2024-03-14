@@ -699,7 +699,9 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
     cudaDevicemin(&min, t_star, sdata, md->n_shr_empty);
     if(min<h_j){
       h_j = min;
-        h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
+      h_j = 0.95;
+      //h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER; //[0.04074489534832537s]
+      //h_j *= 0.95 + 0.1 * curand() / (double)RAND_MAX;
     }
 #endif
     h_j = sc->cv_tn < t_0 + t_j + h_j ? sc->cv_tn - (t_0 + t_j) : h_j;
