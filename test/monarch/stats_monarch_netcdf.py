@@ -59,7 +59,7 @@ def process_variable(dataset1, dataset2, var_name):
 
 
 file1_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/cpu_tstep6_branchGPURandResetJac/"
-file2_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/gpu_tstep6/"
+file2_path_header = "/gpfs/scratch/bsc32/bsc32815/monarch_out/cpu_tstep6_hj095/"
 
 file1 = file1_path_header + "out/stats.csv"
 file2 = file2_path_header + "out/stats.csv"
@@ -108,4 +108,4 @@ sns.boxplot(data=data, orient='v', showfliers=False)
 plt.ylabel("Relative Error [%]")
 plt.xticks(range(len(variable_names)), variable_names, rotation=90)
 plt.title("Species with highest NRMSE for MONARCH-CAMP") #4 GPUs 480 time-steps
-plt.show()
+#plt.show()
