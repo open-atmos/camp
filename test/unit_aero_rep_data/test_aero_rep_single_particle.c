@@ -83,12 +83,12 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
   aero_rep_get_effective_radius__m(model_data, AERO_REP_IDX,
                                 AERO_PHASE_IDX, &eff_rad, &(partial_deriv[1]));
 
-  double volume_density = ( CONC_wheat / DENSITY_wheat +
-                            CONC_water / DENSITY_water +
-                            CONC_salt / DENSITY_salt +
+  double volume_density = ( 2 * (CONC_wheat / DENSITY_wheat) +
+                            2 * (CONC_water / DENSITY_water) +
+                            2 * (CONC_salt / DENSITY_salt) +
                             CONC_rasberry / DENSITY_rasberry +
                             CONC_honey / DENSITY_honey +
-                            CONC_sugar / DENSITY_sugar +
+                            2 * (CONC_sugar / DENSITY_sugar) +
                             CONC_lemon / DENSITY_lemon +
                             CONC_almonds / DENSITY_almonds ); // volume density (m3/m3)
   double eff_rad_expected = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density ), 1.0/3.0 );

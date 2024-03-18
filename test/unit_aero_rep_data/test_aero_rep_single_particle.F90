@@ -40,7 +40,7 @@ program camp_test_aero_rep_data
   integer(kind=i_kind), parameter :: AERO_PHASE_IDX = ((TEST_PARTICLE-1)*NUM_AERO_PHASE+2)
 
   ! Number of expected Jacobian elements for the test phase
-  integer(kind=i_kind), parameter :: NUM_JAC_ELEM = 8
+  integer(kind=i_kind), parameter :: NUM_JAC_ELEM = 12
 
   ! Externally set properties
   real(kind=dp), parameter :: PART_NUM_CONC = 1.23e3
@@ -140,7 +140,6 @@ contains
     !correct_layer_names(1)%string = 'one layer'
     ! Call the function and enter inputs 
     ordered_ids = ordered_layer_ids(layer_names, cover_names)
-    print *, size(ordered_ids)
     ! check individual values:
     call assert(476179048, size(ordered_ids) .eq. 4)
     call assert(903386486, layer_names(ordered_ids(1))%string .eq. correct_layer_names(1)%string)
@@ -270,6 +269,7 @@ contains
     call assert(614852515, unique_names(34)%string .eq. "P3.top bread.bread.wheat")
     call assert(779745112, unique_names(35)%string .eq. "P3.top bread.bread.water")
     call assert(109646110, unique_names(36)%string .eq. "P3.top bread.bread.salt")
+
 #endif
   end subroutine test_config_read
 
@@ -280,7 +280,7 @@ contains
     type(camp_core_t), pointer :: camp_core
     type(camp_state_t), pointer :: camp_state
     class(aero_rep_data_t), pointer :: aero_rep
-#if 0
+
 #ifdef CAMP_USE_JSON
 
     integer(kind=i_kind) :: i_spec, j_spec, i_rep, i_phase
@@ -323,7 +323,7 @@ contains
         class default
           call die_msg(519535557, rep_name)
       end select
-
+#if 0
       ! Check the unique name functions
       unique_names = aero_rep%unique_names()
       call assert_msg(885541843, allocated(unique_names), rep_name)
@@ -392,7 +392,7 @@ contains
       i_spec = aero_rep%spec_state_id(unique_names(1)%string)
       call assert_msg(291101806, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 8.5
-
+#endif
     end do
 
     rep_name = "AERO_REP_BAD_NAME"
@@ -443,14 +443,13 @@ contains
     deallocate(aero_rep_passed_data_set)
 
 #endif
-
     ! Evaluate the aerosol representation c functions
-    !build_aero_rep_data_set_test = eval_c_func(camp_core)
-
+    build_aero_rep_data_set_test = eval_c_func(camp_core)
+    print *, 'building'
     deallocate(camp_state)
     deallocate(camp_core)
 #endif
-#endif
+
   end function build_aero_rep_data_set_test
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
