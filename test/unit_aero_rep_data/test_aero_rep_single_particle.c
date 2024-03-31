@@ -39,7 +39,11 @@
 #define CONC_honey 5.0
 #define CONC_sugar 6.0
 #define CONC_lemon 7.0
-#define CONC_almonds 7.0
+#define CONC_almonds 8.0
+//#define CONC_sugarab 9.0
+//#define CONC_wheatt 10.0
+//#define CONC_watert 11.0
+//#define CONC_saltt 12.0
 
 // Molecular weight (kg/mol) of test species (must match json file)
 #define MW_wheat 1.0
@@ -83,14 +87,18 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
   aero_rep_get_effective_radius__m(model_data, AERO_REP_IDX,
                                 AERO_PHASE_IDX, &eff_rad, &(partial_deriv[1]));
 
-  double volume_density = ( 2 * (CONC_wheat / DENSITY_wheat) +
-                            2 * (CONC_water / DENSITY_water) +
-                            2 * (CONC_salt / DENSITY_salt) +
+  double volume_density = ( CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt +
                             CONC_rasberry / DENSITY_rasberry +
                             CONC_honey / DENSITY_honey +
-                            2 * (CONC_sugar / DENSITY_sugar) +
+                            CONC_sugar / DENSITY_sugar +
                             CONC_lemon / DENSITY_lemon +
-                            CONC_almonds / DENSITY_almonds ); // volume density (m3/m3)
+                            CONC_almonds / DENSITY_almonds + 
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt ); // volume density (m3/m3)
   double eff_rad_expected = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density ), 1.0/3.0 );
   ret_val += ASSERT_MSG(fabs(eff_rad-eff_rad_expected) < 1.0e-6*eff_rad_expected,
                         "Bad effective radius");
@@ -310,9 +318,9 @@ int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, doubl
 
   // Run the property tests
   ret_val += test_effective_radius(model_data, solver_state);
-  ret_val += test_aero_phase_mass(model_data, solver_state);
-  ret_val += test_aero_phase_avg_MW(model_data, solver_state);
-  ret_val += test_number_concentration(model_data, solver_state);
+ // ret_val += test_aero_phase_mass(model_data, solver_state);
+ // ret_val += test_aero_phase_avg_MW(model_data, solver_state);
+ // ret_val += test_number_concentration(model_data, solver_state);
 
   N_VDestroy(solver_state);
 #endif

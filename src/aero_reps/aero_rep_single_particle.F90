@@ -346,6 +346,8 @@ contains
     allocate(this%condensed_data_real(num_float_param))
     this%condensed_data_int(:) = int(0, kind=i_kind)
     this%condensed_data_real(:) = real(0.0, kind=dp)
+    print *, num_int_param
+    print *, num_float_param
 
     ! Save space for the environment-dependent parameters
     this%num_env_params = NUM_ENV_PARAM_PER_PARTICLE_ * num_particles
