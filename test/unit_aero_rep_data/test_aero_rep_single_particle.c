@@ -41,9 +41,9 @@
 #define CONC_lemon 7.0
 #define CONC_almonds 8.0
 #define CONC_sugarB 9.0
-#define CONC_wheatB 1.0
-#define CONC_waterB 2.0
-#define CONC_saltB 3.0
+#define CONC_wheatB 10.0
+#define CONC_waterB 11.0
+#define CONC_saltB 12.0
 
 // Molecular weight (kg/mol) of test species (must match json file)
 #define MW_wheat 1.0
@@ -190,7 +190,8 @@ int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
                                &phase_mass, &(partial_deriv[1]));
 
   double mass = CONC_rasberry + CONC_honey + CONC_sugar + CONC_lemon;
-
+  printf("\nmass %f: ",mass); 
+  printf("\nphase mass %f: ",phase_mass);
   ret_val += ASSERT_MSG(fabs(phase_mass-mass) < 1.0e-10*mass,
                         "Bad aerosol phase mass");
 
@@ -199,8 +200,11 @@ int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
   for( int i = 1; i < 4; ++i )
     ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
                           "Bad Jacobian element");
-  for( int i = 4; i < 10; ++i )
+  for( int i = 4; i < 8; ++i )
     ret_val += ASSERT_MSG(partial_deriv[i] == ONE,
+                          "Bad Jacobian element");
+  for( int i = 8; i < 10; ++i )
+    ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
                           "Bad Jacobian element");
   for( int i = 10; i < N_JAC_ELEM+1; ++i )
     ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
@@ -229,8 +233,8 @@ int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
   aero_rep_get_aero_phase_avg_MW__kg_mol(model_data, AERO_REP_IDX, AERO_PHASE_IDX,
                                  &avg_mw, &(partial_deriv[1]));
 
-  double mass = CONC_rasberry + CONC_honey + CONC_sugar;
-  double moles = CONC_rasberry / MW_rasberry + CONC_honey / MW_honey + CONC_sugar / MW_sugar;
+  double mass = CONC_rasberry + CONC_honey + CONC_sugar + CONC_lemon;
+  double moles = CONC_rasberry / MW_rasberry + CONC_honey / MW_honey + CONC_sugar / MW_sugar + CONC_lemon / MW_lemon;
   double avg_mw_real = mass / moles;
   double dMW_dC = ONE / moles - mass / (moles * moles * MW_salt);
   double dMW_dD = ONE / moles - mass / (moles * moles * MW_rasberry);
@@ -325,9 +329,9 @@ int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, doubl
 
   // Run the property tests
   ret_val += test_effective_radius(model_data, solver_state);
- // ret_val += test_aero_phase_mass(model_data, solver_state);
+  // ret_val += test_aero_phase_mass(model_data, solver_state);
  // ret_val += test_aero_phase_avg_MW(model_data, solver_state);
- // ret_val += test_number_concentration(model_data, solver_state);
+  ret_val += test_number_concentration(model_data, solver_state);
 
   N_VDestroy(solver_state);
 #endif

@@ -200,7 +200,10 @@ contains
         !check value
         call assert(417730478, 3 .eq. max_part)
         call assert(734138496, bread_phase_instance .eq. aero_rep%num_phase_instances(phase_name_test))
-        
+        print *, aero_rep%num_phase_instances(phase_name_test)
+        print *, aero_rep%num_phase_instances("almond butter")
+        print *, aero_rep%num_phase_instances("jam")
+ 
       class default
         call die_msg(519535557, rep_name)
     end select
