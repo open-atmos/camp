@@ -160,28 +160,6 @@ void aero_rep_single_particle_get_effective_radius__m(
   double *float_data = aero_rep_float_data;
   int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
   double *curr_partial = NULL;
-  printf("\nint data: %d", int_data[0]);
-  printf("\nint data: %d", int_data[1]);
-  printf("\nint data: %d", int_data[2]);
-  printf("\nint data: %d", int_data[3]);
-  printf("\nint data: %d", int_data[4]);
-  printf("\nint data: %d", int_data[5]);
-  printf("\nint data: %d", int_data[6]);
-  printf("\nint data: %d", int_data[7]);
-  printf("\nint data: %d", int_data[8]);
-  printf("\nint data: %d", int_data[9]);
-  printf("\nint data: %d", int_data[10]);
-  printf("\nint data: %d", int_data[11]);
-  printf("\nint data: %d", int_data[12]);
-  printf("\nint data: %d", int_data[13]);
-  printf("\nint data: %d", int_data[14]);
-  printf("\nint data: %d", int_data[15]);
-  printf("\nint data: %d", int_data[16]);
-  printf("\nint data: %d", int_data[17]);
-  printf("\nint data: %d", int_data[18]);
-  printf("\nint data: %d", int_data[19]);
-  printf("\nint data: %d", int_data[20]);
-  printf("\nint data: %d", int_data[21]);
 
   *radius = 0.0;
   if (partial_deriv) curr_partial = partial_deriv;

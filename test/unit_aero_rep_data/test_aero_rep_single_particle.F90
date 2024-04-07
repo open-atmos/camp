@@ -34,7 +34,7 @@ program camp_test_aero_rep_data
   integer(kind=i_kind), parameter :: NUM_COMP_PARTICLES = 3
 
   ! Number of aerosol phases per particle
-  integer(kind=i_kind), parameter :: NUM_AERO_PHASE = 3
+  integer(kind=i_kind), parameter :: NUM_AERO_PHASE = 4
 
   ! Index for the test phase (test-particle phase 2)
   integer(kind=i_kind), parameter :: AERO_PHASE_IDX = ((TEST_PARTICLE-1)*NUM_AERO_PHASE+2)

@@ -74,7 +74,7 @@
                         "name": "salt",
                         "type": "CHEM_SPEC",
                         "phase": "AEROSOL",
-                        "density [kg m-3]": 2160,
+                        "density [kg m-3]": 2160.0,
                         "molecular weight [kg mol-1]": 0.058
                 },
                 {
