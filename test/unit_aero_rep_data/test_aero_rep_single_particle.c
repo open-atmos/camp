@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: MIT
  */
 /** \file
- * \brief c function tests for the single particle aerosol representation
+ * \brief c function tests for the single particle aerosol representation with layers
  */
 #include <math.h>
 #include <stdio.h>
@@ -99,12 +99,10 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
                             CONC_wheatB / DENSITY_wheat +
                             CONC_waterB / DENSITY_water +
                             CONC_saltB / DENSITY_salt ); // volume density (m3/m3)
-  printf("\nvolume density %f: ",volume_density);
+  
   double eff_rad_expected = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density ), 1.0/3.0 );
   ret_val += ASSERT_MSG(fabs(eff_rad-eff_rad_expected) < 1.0e-6*eff_rad_expected,
                         "Bad effective radius");
-  printf("\neff_rad %f: ",eff_rad);
-  printf("\neff_rad_expected %f: ", eff_rad_expected);
 
   ret_val += ASSERT_MSG(partial_deriv[0] = 999.9,
                         "Bad Jacobian (-1)");
@@ -152,7 +150,7 @@ int test_number_concentration(ModelData * model_data, N_Vector state) {
   int ret_val = 0;
   double partial_deriv[N_JAC_ELEM+2];
   double num_conc = -999.9;
-
+  
   for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv[i] = 999.9;
 
   aero_rep_get_number_conc__n_m3(model_data, AERO_REP_IDX,
@@ -190,8 +188,7 @@ int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
                                &phase_mass, &(partial_deriv[1]));
 
   double mass = CONC_rasberry + CONC_honey + CONC_sugar + CONC_lemon;
-  printf("\nmass %f: ",mass); 
-  printf("\nphase mass %f: ",phase_mass);
+
   ret_val += ASSERT_MSG(fabs(phase_mass-mass) < 1.0e-10*mass,
                         "Bad aerosol phase mass");
 
@@ -236,9 +233,10 @@ int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
   double mass = CONC_rasberry + CONC_honey + CONC_sugar + CONC_lemon;
   double moles = CONC_rasberry / MW_rasberry + CONC_honey / MW_honey + CONC_sugar / MW_sugar + CONC_lemon / MW_lemon;
   double avg_mw_real = mass / moles;
-  double dMW_dC = ONE / moles - mass / (moles * moles * MW_salt);
-  double dMW_dD = ONE / moles - mass / (moles * moles * MW_rasberry);
-  double dMW_dE = ONE / moles - mass / (moles * moles * MW_honey);
+  double dMW_drasberry = ONE / moles - mass / (moles * moles * MW_rasberry);
+  double dMW_dhoney = ONE / moles - mass / (moles * moles * MW_honey);
+  double dMW_dsugar = ONE / moles - mass / (moles * moles * MW_sugar);
+  double dMW_dlemon = ONE / moles - mass / (moles * moles * MW_lemon);
 
   ret_val += ASSERT_MSG(fabs(avg_mw-avg_mw_real) < 1.0e-10*avg_mw_real,
                         "Bad average MW");
@@ -248,13 +246,15 @@ int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
   for( int i = 1; i < 4; ++i )
     ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
                           "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[4]-dMW_dC) < 1.0e-10*fabs(dMW_dC),
+  ret_val += ASSERT_MSG(fabs(partial_deriv[4]-dMW_drasberry) < 1.0e-10*fabs(dMW_drasberry),
                         "Bad Jacobian (-1)");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[5]-dMW_dD) < 1.0e-10*fabs(dMW_dD),
+  ret_val += ASSERT_MSG(fabs(partial_deriv[5]-dMW_dhoney) < 1.0e-10*fabs(dMW_dhoney),
                         "Bad Jacobian (-1)");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[6]-dMW_dE) < 1.0e-10*fabs(dMW_dE),
+  ret_val += ASSERT_MSG(fabs(partial_deriv[6]-dMW_dsugar) < 1.0e-10*fabs(dMW_dsugar),
                         "Bad Jacobian (-1)");
-  for( int i = 7; i < N_JAC_ELEM+1; ++i )
+  ret_val += ASSERT_MSG(fabs(partial_deriv[7]-dMW_dlemon) < 1.0e-10*fabs(dMW_dlemon),
+                        "Bad Jacobian (-1)");
+  for( int i = 8; i < N_JAC_ELEM+1; ++i )
     ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
                           "Bad Jacobian element");
   ret_val += ASSERT_MSG(partial_deriv[N_JAC_ELEM+1] = 999.9,
@@ -329,8 +329,8 @@ int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, doubl
 
   // Run the property tests
   ret_val += test_effective_radius(model_data, solver_state);
-  // ret_val += test_aero_phase_mass(model_data, solver_state);
- // ret_val += test_aero_phase_avg_MW(model_data, solver_state);
+  ret_val += test_aero_phase_mass(model_data, solver_state);
+  ret_val += test_aero_phase_avg_MW(model_data, solver_state);
   ret_val += test_number_concentration(model_data, solver_state);
 
   N_VDestroy(solver_state);

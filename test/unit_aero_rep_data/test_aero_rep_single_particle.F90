@@ -200,9 +200,6 @@ contains
         !check value
         call assert(417730478, 3 .eq. max_part)
         call assert(734138496, bread_phase_instance .eq. aero_rep%num_phase_instances(phase_name_test))
-        print *, aero_rep%num_phase_instances(phase_name_test)
-        print *, aero_rep%num_phase_instances("almond butter")
-        print *, aero_rep%num_phase_instances("jam")
  
       class default
         call die_msg(519535557, rep_name)
@@ -210,32 +207,6 @@ contains
     
     unique_names = aero_rep%unique_names()
     call assert(551749649, size( unique_names ) .eq. 36)
-#if 0
-    call assert(112328243, unique_names(1)%string .eq. "P1.one layer.my test phase one.species a")
-    call assert(124534442, unique_names(2)%string .eq. "P1.one layer.my test phase one.species b")
-    call assert(519328036, unique_names(3)%string .eq. "P1.one layer.my test phase one.species c")
-    call assert(349171133, unique_names(4)%string .eq. "P1.one layer.my test phase two.species c")
-    call assert(179014228, unique_names(5)%string .eq. "P1.one layer.my test phase two.species d")
-    call assert(626382071, unique_names(6)%string .eq. "P1.one layer.my test phase two.species e")
-    call assert(173749920, unique_names(7)%string .eq. "P1.one layer.my last test phase.species b")
-    call assert(286068262, unique_names(8)%string .eq. "P1.one layer.my last test phase.species e")
-    call assert(112328256, unique_names(9)%string .eq. "P2.one layer.my test phase one.species a")
-    call assert(124534432, unique_names(10)%string .eq. "P2.one layer.my test phase one.species b")
-    call assert(519328055, unique_names(11)%string .eq. "P2.one layer.my test phase one.species c")
-    call assert(349171155, unique_names(12)%string .eq. "P2.one layer.my test phase two.species c")
-    call assert(179014255, unique_names(13)%string .eq. "P2.one layer.my test phase two.species d")
-    call assert(626382000, unique_names(14)%string .eq. "P2.one layer.my test phase two.species e")
-    call assert(173749998, unique_names(15)%string .eq. "P2.one layer.my last test phase.species b")
-    call assert(286068243, unique_names(16)%string .eq. "P2.one layer.my last test phase.species e")
-    call assert(112328200, unique_names(17)%string .eq. "P3.one layer.my test phase one.species a")
-    call assert(124534411, unique_names(18)%string .eq. "P3.one layer.my test phase one.species b")
-    call assert(519328088, unique_names(19)%string .eq. "P3.one layer.my test phase one.species c")
-    call assert(349171189, unique_names(20)%string .eq. "P3.one layer.my test phase two.species c")
-    call assert(179014263, unique_names(21)%string .eq. "P3.one layer.my test phase two.species d")
-    call assert(626382009, unique_names(22)%string .eq. "P3.one layer.my test phase two.species e")
-    call assert(173749900, unique_names(23)%string .eq. "P3.one layer.my last test phase.species b")
-    call assert(286068230, unique_names(24)%string .eq. "P3.one layer.my last test phase.species e")
-#endif
     call assert(112328249, unique_names(1)%string .eq. "P1.bottom bread.bread.wheat")
     call assert(124534441, unique_names(2)%string .eq. "P1.bottom bread.bread.water")
     call assert(519328035, unique_names(3)%string .eq. "P1.bottom bread.bread.salt")
@@ -326,12 +297,12 @@ contains
         class default
           call die_msg(519535557, rep_name)
       end select
-#if 0
+
       ! Check the unique name functions
       unique_names = aero_rep%unique_names()
       call assert_msg(885541843, allocated(unique_names), rep_name)
-      !call assert_msg(206819761, size(unique_names).eq.NUM_COMP_PARTICLES*8, &
-      !                rep_name)
+      call assert_msg(206819761, size(unique_names).eq.NUM_COMP_PARTICLES*12, &
+                      rep_name)
       do i_spec = 1, size(unique_names)
         call assert_msg(142263656, aero_rep%spec_state_id(&
                 unique_names(i_spec)%string).gt.0, rep_name)
@@ -344,58 +315,60 @@ contains
       end do
 
       ! Set the species concentrations
-      phase_name = "my test phase one"
-      spec_name = "species a"
-      unique_names = aero_rep%unique_names(phase_name = phase_name, &
-              spec_name = spec_name)
+      phase_name = "top bread"
+      spec_name = "wheat"
+      unique_names = aero_rep%unique_names()
       i_spec = aero_rep%spec_state_id(unique_names(1)%string)
       call assert_msg(258227897, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 1.5
-      spec_name = "species b"
-      unique_names = aero_rep%unique_names(phase_name = phase_name, &
-              spec_name = spec_name)
-      i_spec = aero_rep%spec_state_id(unique_names(1)%string)
+      spec_name = "water"
+      i_spec = aero_rep%spec_state_id(unique_names(2)%string)
       call assert_msg(418308482, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 2.5
-      spec_name = "species c"
-      unique_names = aero_rep%unique_names(phase_name = phase_name, &
-              spec_name = spec_name)
-      i_spec = aero_rep%spec_state_id(unique_names(1)%string)
+      spec_name = "salt"
+      i_spec = aero_rep%spec_state_id(unique_names(3)%string)
       call assert_msg(420214016, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 3.5
-      phase_name = "my test phase two"
-      spec_name = "species c"
-      unique_names = aero_rep%unique_names(phase_name = phase_name, &
-              spec_name = spec_name)
-      i_spec = aero_rep%spec_state_id(unique_names(1)%string)
+      phase_name = "jam"
+      spec_name = "rasberry"
+      i_spec = aero_rep%spec_state_id(unique_names(4)%string)
       call assert_msg(416855243, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 4.5
-      spec_name = "species d"
-      unique_names = aero_rep%unique_names(phase_name = phase_name, &
-              spec_name = spec_name)
-      i_spec = aero_rep%spec_state_id(unique_names(1)%string)
+      spec_name = "honey"
+      i_spec = aero_rep%spec_state_id(unique_names(5)%string)
       call assert_msg(578389067, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 5.5
-      spec_name = "species e"
-      unique_names = aero_rep%unique_names(phase_name = phase_name, &
-              spec_name = spec_name)
-      i_spec = aero_rep%spec_state_id(unique_names(1)%string)
+      spec_name = "sugar"
+      i_spec = aero_rep%spec_state_id(unique_names(6)%string)
       call assert_msg(147314014, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 6.5
-      phase_name = "my last test phase"
-      spec_name = "species b"
-      unique_names = aero_rep%unique_names(phase_name = phase_name, &
-              spec_name = spec_name)
-      i_spec = aero_rep%spec_state_id(unique_names(1)%string)
-      call assert_msg(401514617, i_spec.gt.0, rep_name)
+      spec_name = "lemon"
+      i_spec = aero_rep%spec_state_id(unique_names(7)%string)
+      call assert_msg(307593804, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 7.5
-      spec_name = "species e"
-      unique_names = aero_rep%unique_names(phase_name = phase_name, &
-              spec_name = spec_name)
-      i_spec = aero_rep%spec_state_id(unique_names(1)%string)
-      call assert_msg(291101806, i_spec.gt.0, rep_name)
+      phase_name = "almond butter"
+      spec_name = "almonds"
+      i_spec = aero_rep%spec_state_id(unique_names(8)%string)
+      call assert_msg(401514617, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 8.5
-#endif
+      spec_name = "sugar"
+      i_spec = aero_rep%spec_state_id(unique_names(9)%string)
+      call assert_msg(291101806, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 9.5
+      phase_name = "bottom bread"
+      spec_name = "wheat"
+      i_spec = aero_rep%spec_state_id(unique_names(10)%string)
+      call assert_msg(362839472, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 10.5
+      spec_name = "water"
+      i_spec = aero_rep%spec_state_id(unique_names(11)%string)
+      call assert_msg(980708489, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 11.5
+      spec_name = "salt"
+      i_spec = aero_rep%spec_state_id(unique_names(12)%string)
+      call assert_msg(149863598, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 12.5
+
     end do
 
     rep_name = "AERO_REP_BAD_NAME"

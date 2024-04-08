@@ -67,7 +67,6 @@ int aero_rep_single_particle_get_used_jac_elem(ModelData *model_data,
           model_data, PHASE_MODEL_DATA_ID_(i_layer,i_phase),
           i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase), jac_struct);
       n_jac_elem += PHASE_NUM_JAC_ELEM_(i_layer,i_phase);
-      printf("\nPHASE_NUM_JAC_ELEM_(i_layer,i_phase) %d", PHASE_NUM_JAC_ELEM_(i_layer,i_phase));
      }
   }
   return n_jac_elem;
@@ -305,10 +304,11 @@ void aero_rep_single_particle_get_aero_phase_mass__kg_m3(
   double *float_data = aero_rep_float_data;
   int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
   aero_phase_idx -= i_part * TOTAL_NUM_PHASES_;
- 
+
+  int i_total_phase = 0; 
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {  
-      if ( i_phase == aero_phase_idx ) {
+      if ( i_total_phase == aero_phase_idx ) {
         double *state = (double *)(model_data->grid_cell_state);
         state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase);
         double mw;
@@ -319,6 +319,7 @@ void aero_rep_single_particle_get_aero_phase_mass__kg_m3(
         for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_layer,i_phase); ++i_spec)
           *(partial_deriv++) = ZERO;
       }
+      ++i_total_phase;
     }
   }
   return;
@@ -352,10 +353,11 @@ void aero_rep_single_particle_get_aero_phase_avg_MW__kg_mol(
   double *float_data = aero_rep_float_data;
   int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
   aero_phase_idx -= i_part * TOTAL_NUM_PHASES_;
-
+  
+  int i_total_phase = 0;
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
-      if ( i_phase == aero_phase_idx ) {
+      if ( i_total_phase == aero_phase_idx ) {
         double *state = (double *)(model_data->grid_cell_state);
         state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase);
         double mass;
@@ -366,6 +368,7 @@ void aero_rep_single_particle_get_aero_phase_avg_MW__kg_mol(
         for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_layer,i_phase); ++i_spec)
           *(partial_deriv++) = ZERO;
       }
+      ++i_total_phase;
     }
   }
   return;
