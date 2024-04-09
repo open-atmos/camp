@@ -1,28 +1,23 @@
 {
-  "camp-data": [
-    {
-      "type": "RELATIVE_TOLERANCE",
-      "value": 1.0e-30
-    },
+  "version": "XXX",
+  "open-atmos-data": [
     {
       "name": "A",
       "type": "CHEM_SPEC",
-      "absolute tolerance": 1.0e-30
+      "__absolute tolerance": 1.0e-30
     },
     {
       "name": "B",
-      "type": "CHEM_SPEC",
-      "absolute tolerance": 1.0e-30
+      "type": "CHEM_SPEC"
     },
     {
       "name": "C",
-      "type": "CHEM_SPEC",
-      "absolute tolerance": 1.0e-30
+      "type": "CHEM_SPEC"
     },
     {
       "name": "H2O2",
       "type": "CHEM_SPEC",
-      "HLC(298K) [M Pa-1]": 1.011596348,
+      "HLC(298K) [mol m-3 Pa-1]": 1.011596348,
       "HLC exp factor [K]": 6340,
       "diffusion coeff [m2 s-1]": 1.46E-05,
       "N star": 1.74,
@@ -41,7 +36,6 @@
     {
       "name": "ethanol_aq",
       "type": "CHEM_SPEC",
-      "phase": "AEROSOL",
       "molecular weight [kg mol-1]": 0.04607,
       "density [kg m-3]": 1000.0,
       "absolute tolerance": 1.0e-20
@@ -49,7 +43,6 @@
     {
       "name": "H2O2_aq",
       "type": "CHEM_SPEC",
-      "phase": "AEROSOL",
       "molecular weight [kg mol-1]": 0.0340147,
       "density [kg m-3]": 1000.0,
       "absolute tolerance": 1.0e-10
@@ -57,7 +50,6 @@
     {
       "name": "H2O_aq",
       "type": "CHEM_SPEC",
-      "phase": "AEROSOL",
       "density [kg m-3]": 1000.0,
       "molecular weight [kg mol-1]": 0.01801
     },
@@ -126,7 +118,6 @@
           "k2_A": 4e-20,
           "k2_B": 1.5,
           "k2_C": -2,
-          "time unit": "MIN",
           "rxn id": "my cmaq2"
         },
         {
@@ -152,7 +143,6 @@
           "k3_A": 4e-20,
           "k3_B": 1.5,
           "k3_C": -2,
-          "time unit": "MIN",
           "rxn id": "my cmaq1"
         },
         {
@@ -247,13 +237,19 @@
         },
         {
           "type": "EMISSION",
-          "species": "B",
+          "reactants": "B",
           "rxn id": "my emission",
           "scaling factor": 12.3
         },
         {
           "type": "FIRST_ORDER_LOSS",
-          "species": "B",
+          "products": [
+
+            {
+              "speices name": "B",
+              "coeff": 1
+            }
+          ],
           "rxn id": "my first order loss",
           "scaling factor": 12.3
         },
@@ -309,7 +305,6 @@
           "kinf_C": 24,
           "Fc": 0.9,
           "N": 0.8,
-          "time unit": "MIN",
           "rxn id": "my ternary"
         },
         {
@@ -334,7 +329,6 @@
           "kinf_C": 24,
           "Fc": 0.9,
           "N": 0.8,
-          "time unit": "MIN",
           "rxn id": "my troe"
         },
         {
@@ -361,7 +355,6 @@
           "Y": 167,
           "a0": 0.15,
           "n": 9,
-          "time unit": "MIN",
           "rxn id": "my wennberg"
         },
         {
