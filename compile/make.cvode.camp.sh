@@ -3,7 +3,7 @@ set -e
 source make.camp.sh
 compile_cvode(){
   curr_path=$(pwd)
-  library_path="../../../"
+  library_path="../../"
   if [ -z "$SUITE_SPARSE_CAMP_ROOT" ]; then
     SUITE_SPARSE_CAMP_ROOT=$(pwd)/$library_path/SuiteSparse
   fi

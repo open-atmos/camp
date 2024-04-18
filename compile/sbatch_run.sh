@@ -8,5 +8,5 @@
 #SBATCH --gres=gpu:4
 #SBATCH --exclusive
 
-cd ../../test/monarch
+cd ../test/monarch
 ./run.sh

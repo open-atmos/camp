@@ -62,7 +62,7 @@ def run(conf):
       conf.mpiProcesses) + " " #for queue (slow plogin)
   if (conf.profileCuda == "nvprof" and conf.caseGpuCpu ==
       "GPU"):
-    pathNvprof = ("../../compile/power9/" +
+    pathNvprof = ("../../compile/" +
                   conf.caseMulticellsOnecell
                   + str(conf.cells) + "Cells" + ".nvprof ")
     exec_str += ("nvprof --analysis-metrics -f -o " +
@@ -73,7 +73,7 @@ def run(conf):
   elif (conf.profileCuda == "nsight" and conf.caseGpuCpu
         == "GPU"):
     exec_str += ("/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu ")
-    pathNvprof = ("../../compile/power9/" +
+    pathNvprof = ("../../compile/" +
                   conf.caseMulticellsOnecell
                   + str(conf.nCells) + "Cells ")
     exec_str += " --target-processes=application-only --set full -f -o " + pathNvprof + ""

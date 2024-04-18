@@ -1,11 +1,19 @@
 #!/usr/bin/env bash
+set -e
 
-library_path="../../../"
+if [ $BSC_MACHINE == "mn5" ]; then
+module load gcc
+module load openmpi/4.1.5-gcc
+module load cmake
+#module load intel
+fi
+
+library_path="../../"
 curr_path=$(pwd)
 cd $library_path/json-fortran-6.1.0
-rm -r build
+rm -rf build
 mkdir build
-mkdir install
+mkdir install || true
 cd build
 cmake -D SKIP_DOC_GEN:BOOL=TRUE -D CMAKE_INSTALL_PREFIX=$(pwd)/../install ..
 make install

@@ -20,7 +20,7 @@ do
 
     cp tmp.json ../../../mechanisms/cb05cl_ae5/cb05cl_ae5_mechanism_big.json
 
-    #../../../build/test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5_big.sh
+    #../../build/test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5_big.sh
     cd ../../../../
     ./compile.camp.marenostrum4.sh
     cd camp/test/chemistry/cb05cl_ae5_scalability

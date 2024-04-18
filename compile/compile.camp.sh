@@ -1,10 +1,27 @@
 #!/usr/bin/env bash
 
-relative_path="../../../"
+#Run script from anywhere
+SOURCE=${BASH_SOURCE[0]}
+while [ -L "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+  SOURCE=$(readlink "$SOURCE")
+  [[ $SOURCE != /* ]] && SOURCE=$DIR/$SOURCE # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+cd $DIR
+
+relative_path="../../"
 curr_path=$(pwd)
 
-LOCAL_MACHINE=CGUZMAN
-if [ $BSC_MACHINE == "power" ]; then
+if [ $BSC_MACHINE == "mn5" ]; then
+  module load cmake
+  module load gcc
+  module load openmpi/4.1.5-gcc
+  module load mkl
+  module load hdf5/1.14.1-2-gcc-ompi
+  module load python/3.12.1-gcc
+  module load netcdf/c-4.9.2_fortran-4.6.1_cxx4-4.3.1-gcc-ompi
+elif [ $BSC_MACHINE == "power" ]; then
   module load GCC/7.3.0-2.30
   module load OpenMPI/3.1.0-GCC-7.3.0-2.30
   module load JasPer/1.900.1-foss-2018b
@@ -31,16 +48,12 @@ elif [ $BSC_MACHINE == "mn4" ]; then
   module load netcdf/4.4.1.1
   module load hdf5/1.8.19
   module load libpng/1.5.13
-elif [ LOCAL_MACHINE==CGUZMAN ]; then
+else
   mpifort=$(which mpifort)
   if ! command -v mpicc &> /dev/null; then
       echo "MPI is not installed. Installing..."
       sudo apt update
       sudo apt install -y mpi-default-dev
-  fi
-else
-  echo "Unknown architecture"
-  exit
 fi
 export SUNDIALS_HOME=$(pwd)/$relative_path/cvode-3.4-alpha/install
 export SUITE_SPARSE_HOME=$(pwd)/$relative_path/SuiteSparse

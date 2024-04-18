@@ -1,5 +1,5 @@
 set -e
-cd ../../build
+cd ../build
 make -j 4
 ctest --output-on-failure
 #./unit_test_aero_rep_single_particle
