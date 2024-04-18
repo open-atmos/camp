@@ -675,17 +675,13 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
     double h_j = sc->cv_tn - (t_0 + t_j);
 #ifdef IS_DEBUG_MODE_CudaDeviceguess_helper
     if(threadIdx.x==0){
-      int i_fast = -1;
       for (int j = 0; j < blockDim.x; j++) {
         double t_star = -atmp1[j+blockIdx.x*blockDim.x] / acorr[j+blockIdx.x*blockDim.x];
         if ((t_star > 0. || (t_star == 0. && acorr[j+blockIdx.x*blockDim.x] < 0.)) &&
             t_star < h_j) {
           h_j = t_star;
-          i_fast = 1;
         }
       }
-      if (i_fast >= 0 && h_n > 0.)
-        h_j *= 0.95;
       sdata[0] = h_j;
     }
     __syncthreads();
@@ -699,7 +695,6 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
     cudaDevicemin(&min, t_star, sdata, md->n_shr_empty);
     if(min<h_j){
       h_j = min;
-      h_j *= 0.95;
     }
 #endif
     h_j = sc->cv_tn < t_0 + t_j + h_j ? sc->cv_tn - (t_0 + t_j) : h_j;
