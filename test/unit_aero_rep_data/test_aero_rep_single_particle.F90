@@ -284,6 +284,7 @@ contains
 
     deallocate(camp_state)
     deallocate(camp_core)
+
 #endif
 
   end function build_aero_rep_data_set_test
@@ -316,7 +317,9 @@ contains
     end select
 
     call camp_core%solver_initialize()
+
     camp_state => camp_core%new_state()
+
     camp_state%state_var(:) = 0.0
     call camp_state%env_states(1)%set_temperature_K(  298.0d0 )
     call camp_state%env_states(1)%set_pressure_Pa( 101325.0d0 )

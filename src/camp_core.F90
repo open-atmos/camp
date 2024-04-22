@@ -1197,7 +1197,7 @@ contains
                 GAS_RXN,         & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                use_cpu1, is_reset_jac &
+                use_cpu1, is_reset_jac1 &
       )
       call this%solver_data_aero%initialize( &
                 this%var_type,   & ! State array variable types
@@ -1209,7 +1209,7 @@ contains
                 AERO_RXN,        & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                use_cpu1, is_reset_jac &
+                use_cpu1, is_reset_jac1 &
               )
     else
 
@@ -1232,7 +1232,7 @@ contains
                 GAS_AERO_RXN,    & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                use_cpu1, is_reset_jac &
+                use_cpu1, is_reset_jac1 &
                 )
     end if
 

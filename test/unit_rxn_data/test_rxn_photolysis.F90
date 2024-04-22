@@ -329,7 +329,6 @@ contains
         results = 1
       end if
     end if
-
     ! Send the results back to the primary process
     call camp_mpi_transfer_integer(results, results, 1, 0)
 
@@ -341,7 +340,6 @@ contains
         run_photolysis_test = .false.
       end if
     end if
-
     deallocate(buffer)
 #endif
 

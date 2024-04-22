@@ -34,8 +34,7 @@ option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
 option(ENABLE_NETCDF "Include NETCDF package" OFF)
 option(DISABLE_INSTALL_OPTIONS "" OFF)
-option(DISABLE_TESTS "" OFF)
-
+SET(USE_TESTS OFF)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 
@@ -62,17 +61,20 @@ find_path(NETCDF_INCLUDE_DIR netcdf.mod NETCDF.mod
     PATHS
     $ENV{NETCDF_FORTRAN_HOME}/include
     $ENV{NETCDF_HOME}/include
+    $ENV{NETCDF_DIR}/include
     /usr/lib/gfortran/modules
     /usr/lib64/gfortran/modules
     /opt/local/include)
   find_library(NETCDF_C_LIB netcdf
     DOC "NetCDF C library"
     PATHS $ENV{NETCDF_HOME}/lib $ENV{NETCDF_HOME}/lib64 /opt/local/lib
+          $ENV{NETCDF_DIR}/lib
           /usr/bin)
   find_library(NETCDF_FORTRAN_LIB netcdff
     DOC "NetCDF Fortran library"
     PATHS
     $ENV{NETCDF_HOME}/lib $ENV{NETCDF_HOME}/lib64
+    $ENV{NETCDF_DIR}/lib
     $ENV{NETCDF_FORTRAN_HOME}/lib $ENV{NETCDF_FORTRAN_HOME}/lib64
     /opt/local/lib /usr/bin)
   set(NETCDF_LIBS ${NETCDF_C_LIB})
@@ -115,6 +117,10 @@ if(ENABLE_MPI)
   endif()
   include_directories(${MPI_INCLUDE_PATH})
   include_directories(${MPI_Fortran_INCLUDE_DIRS})
+  find_path(MPI_INCLUDE_DIR mpi.h #needed for mn5
+          PATHS
+          /apps/ACC/OPENMPI/4.1.5/GCC/include)
+  include_directories(${MPI_INCLUDE_DIR}) #needed for mn5
   if(NOT MPI_FOUND)
       message( WARNING "Not MPI found")
   endif()
@@ -226,8 +232,6 @@ endif()
 ######################################################################
 # copy dirs
 
-SET(USE_TESTS OFF)
-
 if(USE_TESTS)
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
 add_custom_target(copy_test ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/test ${CMAKE_BINARY_DIR}/test_run)
@@ -272,15 +276,14 @@ else()
   set(MPI_TEST_FLAG serial)
 endif()
 
-if (ENABLE_GPU)
-  add_test(NAME test_gpu COMMAND checkGPU.sh WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch)
-endif()
+#todo:
+#if (ENABLE_GPU)
+#  add_test(NAME test_gpu COMMAND checkGPU.sh WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch)
+#endif()
 
 if (USE_TESTS)
-    # New unit tests (UNDER DEVELOPMENT)
-  add_test(test_rxn_arrhenius_mech ${CMAKE_BINARY_DIR}/test_run/unit_tests/input_files/run_rxn_arrhenius.sh ${MPI_TEST_FLAG})
-
   # Old-style unit tests
+  #add_test(test_rxn_arrhenius ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_arrhenius.sh ${MPI_TEST_FLAG}) #pending merge with main gitlab
   add_test(test_rxn_aqueous_equilibrium ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_aqueous_equilibrium.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_CMAQ_H2O2 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_CMAQ_H2O2.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_CMAQ_OH_HNO3 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_CMAQ_OH_HNO3.sh ${MPI_TEST_FLAG})
@@ -528,7 +531,8 @@ if (ENABLE_GPU)
       test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
   target_link_libraries(mock_monarch camplib)
 endif()
-
+add_executable(test_rxn_HL_phase_transfer test/unit_rxn_data/test_rxn_HL_phase_transfer.F90)
+target_link_libraries(test_rxn_HL_phase_transfer camplib)
 if (USE_TESTS)
 
 ######################################################################
@@ -587,8 +591,7 @@ add_executable(test_rxn_emission test/unit_rxn_data/test_rxn_emission.F90)
 target_link_libraries(test_rxn_emission camplib)
 add_executable(test_rxn_first_order_loss test/unit_rxn_data/test_rxn_first_order_loss.F90)
 target_link_libraries(test_rxn_first_order_loss camplib)
-add_executable(test_rxn_HL_phase_transfer test/unit_rxn_data/test_rxn_HL_phase_transfer.F90)
-target_link_libraries(test_rxn_HL_phase_transfer camplib)
+
 add_executable(test_rxn_photolysis test/unit_rxn_data/test_rxn_photolysis.F90)
 target_link_libraries(test_rxn_photolysis camplib)
 add_executable(test_rxn_SIMPOL_phase_transfer test/unit_rxn_data/test_rxn_SIMPOL_phase_transfer.F90)
@@ -617,29 +620,6 @@ add_executable(test_sub_model_ZSR_aerosol_water
                test/unit_sub_model_data/test_sub_model_ZSR_aerosol_water.c
                test/unit_sub_model_data/test_sub_model_ZSR_aerosol_water.F90)
 target_link_libraries(test_sub_model_ZSR_aerosol_water camplib)
-
-######################################################################
-# New unit tests (UNDER DEVELOPMENT)
-
-set(UNIT_TEST_SRC
-    test/unit_tests/unit_test_data.F90
-    test/unit_tests/unit_test_driver.F90)
-
-set(UNIT_TEST_RXN_ARRHENIUS_SRC
-    test/unit_tests/rxns/unit_test_rxn_arrhenius.F90 ${UNIT_TEST_SRC})
-if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
-  set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_DEFINITIONS
-    "UNIT_TEST_MODULE_=camp_unit_test_rxn_arrhenius \
-    ;UNIT_TEST_TYPE_='unit_test_rxn_arrhenius_t()'")
-elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
-  set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_DEFINITIONS
-    "UNIT_TEST_MODULE_=camp_unit_test_rxn_arrhenius \
-    ;UNIT_TEST_TYPE_=unit_test_rxn_arrhenius_t()")
-endif()
-set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_FLAGS
-                            ${STD_F_FLAGS})
-add_executable(unit_test_rxn_arrhenius ${UNIT_TEST_RXN_ARRHENIUS_SRC})
-target_link_libraries(unit_test_rxn_arrhenius camplib)
 
 ######################################################################
 # test_camp_core

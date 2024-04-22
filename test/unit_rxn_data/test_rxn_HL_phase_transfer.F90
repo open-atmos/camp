@@ -599,6 +599,7 @@ contains
           end do
         end do
       endif
+    print*,"b1",camp_mpi_rank(),"s"
       deallocate(camp_state)
 
 #ifdef CAMP_USE_MPI
@@ -609,10 +610,10 @@ contains
         results = 1
       end if
     end if
-
+    print*,"a",camp_mpi_rank()
     ! Send the results back to the primary process
     call camp_mpi_transfer_integer(results, results, 1, 0)
-
+  !print*,"a"
     ! convert the results back to a logical value
     if (camp_mpi_rank().eq.0) then
       if (results.eq.0) then
@@ -621,12 +622,14 @@ contains
         run_HL_phase_transfer_test = .false.
       end if
     end if
-
+  !print*,"a"
     deallocate(buffer)
 #endif
-
+    !print*,"a"
     deallocate(camp_core)
+    !print*,"a"
     deallocate(model_conc)
+    !print*,"a"
     deallocate(true_conc)
 
   end function run_HL_phase_transfer_test

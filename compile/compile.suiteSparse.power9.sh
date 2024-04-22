@@ -15,7 +15,7 @@ cd $curr_path
 
 cd $library_path/SuiteSparse
 make purge
-if [ $BSC_MACHINE == "mn5" ] || [$BSC_MACHINE == "power"] ; then
+if [ $BSC_MACHINE == "mn5" ]; then
   module load cmake
   module load gcc
   module load openmpi/4.1.5-gcc
@@ -28,5 +28,4 @@ elif [ $BSC_MACHINE == "mn4" ]; then
 else
   make BLAS="-L/usr/lib/x86_64-linux-gnu -lopenblas" LAPACK=""
 fi
-export SUITE_SPARSE_CAMP_ROOT=$(pwd)/$library_path/
 cd $curr_path

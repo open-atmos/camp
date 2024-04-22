@@ -1,0 +1,38 @@
+{
+  "note": "Test mechanism for arrhenius reactions",
+  "camp-data": [
+    {
+      "type": "RELATIVE_TOLERANCE",
+      "value": 1.0e-8
+    },
+    {
+      "name": "A",
+      "type": "CHEM_SPEC"
+    },
+    {
+      "name": "B",
+      "type": "CHEM_SPEC"
+    },
+    {
+      "name": "C",
+      "type": "CHEM_SPEC"
+    },
+    {
+      "name": "toy mechanism",
+      "type": "MECHANISM",
+      "reactions": [
+        {
+          "type": "ARRHENIUS",
+          "reactants": {
+            "A": {},
+            "B": {}
+          },
+          "products": {
+            "C": {}
+          },
+          "A": 1.312e-18
+        }
+      ]
+    }
+  ]
+}

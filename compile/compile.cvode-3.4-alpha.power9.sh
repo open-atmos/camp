@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
+set -e
 
 library_path="../../"
 curr_path=$(pwd)
 
 if [ $BSC_MACHINE == "mn5" ]; then
-module load cmake
-module load gcc
-module load Ppenmpi
+  module load cmake
+  module load gcc
+  module load openmpi/4.1.5-gcc
+elif [ $BSC_MACHINE == "power" ]; then
   module load GCC/7.3.0-2.30
   module load OpenMPI/3.1.0-GCC-7.3.0-2.30
   module load JasPer/1.900.1-foss-2018b
@@ -25,11 +27,10 @@ if [ -z "$SUITE_SPARSE_CAMP_ROOT" ]; then
 fi
 
 cd $library_path/cvode-3.4-alpha
-rm -r build
+rm -rf build
 mkdir build
-rm -rf install
-mkdir install
-mkdir install/examples
+mkdir install || true
+mkdir install/examples || true
 cd build
 cmake -D CMAKE_BUILD_TYPE=debug \
 -D CMAKE_C_FLAGS_DEBUG="-O3" \
@@ -43,10 +44,5 @@ cmake -D CMAKE_BUILD_TYPE=debug \
 -D CMAKE_INSTALL_PREFIX=$(pwd)/../install \
 -D EXAMPLES_ENABLE_C=OFF \
 ..
-#-D EXAMPLES_INSTALL_PATH=$(pwd)/../install/examples .. \
-#-D CMAKE_CXX_FLAGS="-O3 -lcudart -lcublas" \
-#-D CMAKE_C_FLAGS ="-O3 -lcudart -lcublas" \
-#-D CMAKE_CUDA_FLAGS="-Xcompiler="-fpermissive" -lcudart -lcublas" \
-#-D EXAMPLES_ENABLE_C=OFF \
 make install
 cd $curr_path

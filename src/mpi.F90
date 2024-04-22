@@ -1438,10 +1438,10 @@ contains
     integer, intent(in) :: to_proc
 
 #ifdef CAMP_USE_MPI
-    integer :: rank, ierr, status(MPI_STATUS_SIZE)
+    integer :: rank, size, ierr, status(MPI_STATUS_SIZE)
 
     rank = camp_mpi_rank()
-    if (from_proc == to_proc) then
+    if (from_proc == to_proc .or. camp_mpi_size() == 1) then
        if (rank == from_proc) then
           to_val = from_val
        end if
