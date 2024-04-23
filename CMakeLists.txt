@@ -521,11 +521,9 @@ if (ENABLE_GPU)
   target_link_libraries(mock_monarch camplib)
 endif()
 
-add_executable(test_rxn_CMAQ_H2O2 test/unit_rxn_data/test_rxn_CMAQ_H2O2.F90)
-target_link_libraries(test_rxn_CMAQ_H2O2 camplib)
-if (USE_TESTS)
 add_executable(test_rxn_HL_phase_transfer test/unit_rxn_data/test_rxn_HL_phase_transfer.F90)
 target_link_libraries(test_rxn_HL_phase_transfer camplib)
+if (USE_TESTS)
 
 ######################################################################
 # camp-chem box model
@@ -571,6 +569,8 @@ target_link_libraries(unit_test_chem_spec_data camplib)
 
 add_executable(test_rxn_aqueous_equilibrium test/unit_rxn_data/test_rxn_aqueous_equilibrium.F90)
 target_link_libraries(test_rxn_aqueous_equilibrium camplib)
+add_executable(test_rxn_CMAQ_H2O2 test/unit_rxn_data/test_rxn_CMAQ_H2O2.F90)
+target_link_libraries(test_rxn_CMAQ_H2O2 camplib)
 add_executable(test_rxn_CMAQ_OH_HNO3 test/unit_rxn_data/test_rxn_CMAQ_OH_HNO3.F90)
 target_link_libraries(test_rxn_CMAQ_OH_HNO3 camplib)
 add_executable(test_rxn_condensed_phase_arrhenius test/unit_rxn_data/test_rxn_condensed_phase_arrhenius.F90)

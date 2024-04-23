@@ -57,8 +57,8 @@ contains
     camp_solver_data => camp_solver_data_t()
 
     if (camp_solver_data%is_solver_available()) then
-      passed = run_condensed_phase_arrhenius_test(1)
-      passed = passed .and. run_condensed_phase_arrhenius_test(2)
+      passed = run_test(1)
+      passed = passed .and. run_test(2)
     else
       call warn_msg(187891224, "No solver available")
       passed = .true.
@@ -83,7 +83,7 @@ contains
   !! One of two scenarios is tested, depending on the passed integer:
   !! (1) single-particle aerosol representation and fixed water concentration
   !! (2) modal aerosol representation and ZSR-calculated water concentration
-  logical function run_condensed_phase_arrhenius_test(scenario)
+  logical function run_test(scenario)
 
     use camp_constants
 
@@ -105,7 +105,7 @@ contains
             MW_D, k1_aq, k2_aq, k1_org, k2_org, temp, pressure
 #ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
-    integer(kind=i_kind) :: pack_size, pos, i_elem, results
+    integer(kind=i_kind) :: pack_size, pos, i_elem, results, rank_solve
 #endif
 
     type(solver_stats_t), target :: solver_stats
@@ -118,7 +118,7 @@ contains
     call assert_msg(619416982, scenario.ge.1 .and. scenario.le.2, &
                     "Invalid scenario specified: "//to_string( scenario ))
 
-    run_condensed_phase_arrhenius_test = .true.
+    run_test = .true.
 
     ! Allocate space for the results
     if (scenario.eq.1) then
@@ -432,36 +432,9 @@ contains
           end do
         end do
       end if
-
-      deallocate(camp_state)
-
+    !if assert_msg does not exit, then the run is valid
 #ifdef CAMP_USE_MPI
-      ! convert the results to an integer
-      if (run_condensed_phase_arrhenius_test) then
-        results = 0
-      else
-        results = 1
-      end if
     end if
-    ! Send the results back to the primary process
-    call camp_mpi_transfer_integer(results, results, 1, 0)
-
-    ! convert the results back to a logical value
-    if (camp_mpi_rank().eq.0) then
-      if (results.eq.0) then
-        run_condensed_phase_arrhenius_test = .true.
-      else
-        run_condensed_phase_arrhenius_test = .false.
-      end if
-    end if
-
-    deallocate(buffer)
 #endif
-
-    deallocate(camp_core)
-
-  end function run_condensed_phase_arrhenius_test
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-end program camp_test_condensed_phase_arrhenius
+  end function
+end program

@@ -109,7 +109,7 @@ contains
     real(kind=dp), target :: radius, number_conc
 #ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
-    integer(kind=i_kind) :: pack_size, pos, i_elem, results
+    integer(kind=i_kind) :: pack_size, pos, i_elem, results, rank_solve
 #endif
 
     real(kind=dp), parameter :: MW_O3 =   0.048     ! [kg mol-1]
@@ -310,7 +310,12 @@ contains
     ! broadcast the data
     call camp_mpi_bcast_packed(buffer)
 
-    if (camp_mpi_rank().eq.1) then
+    rank_solve=1
+    if(camp_mpi_size() == 1 ) then
+      rank_solve=0
+    end if
+
+    if (camp_mpi_rank().eq.rank_solve) then
       ! unpack the data
       camp_core => camp_core_t()
       pos = 0
@@ -599,41 +604,10 @@ contains
           end do
         end do
       endif
-    print*,"b1",camp_mpi_rank(),"s"
-      deallocate(camp_state)
-
+    !if assert_msg does not exit, then the run is valid
 #ifdef CAMP_USE_MPI
-      ! convert the results to an integer
-      if (run_HL_phase_transfer_test) then
-        results = 0
-      else
-        results = 1
-      end if
     end if
-    print*,"a",camp_mpi_rank()
-    ! Send the results back to the primary process
-    call camp_mpi_transfer_integer(results, results, 1, 0)
-  !print*,"a"
-    ! convert the results back to a logical value
-    if (camp_mpi_rank().eq.0) then
-      if (results.eq.0) then
-        run_HL_phase_transfer_test = .true.
-      else
-        run_HL_phase_transfer_test = .false.
-      end if
-    end if
-  !print*,"a"
-    deallocate(buffer)
 #endif
-    !print*,"a"
-    deallocate(camp_core)
-    !print*,"a"
-    deallocate(model_conc)
-    !print*,"a"
-    deallocate(true_conc)
-
-  end function run_HL_phase_transfer_test
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-end program camp_test_HL_phase_transfer
+    print*,"a"
+  end function
+end program

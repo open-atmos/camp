@@ -112,7 +112,7 @@ contains
             NaCl_conc, CaCl2_conc, water_NaCl, water_CaCl2, temp, pressure
 #ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
-    integer(kind=i_kind) :: pack_size, pos, i_elem, results
+    integer(kind=i_kind) :: pack_size, pos, i_elem, results, rank_solve
 #endif
 
     type(solver_stats_t), target :: solver_stats
@@ -195,7 +195,12 @@ contains
     ! broadcast the data
     call camp_mpi_bcast_packed(buffer)
 
-    if (camp_mpi_rank().eq.1) then
+    rank_solve=1
+    if(camp_mpi_size() == 1 ) then
+      rank_solve=0
+    end if
+
+    if (camp_mpi_rank().eq.rank_solve) then
       ! unpack the data
       camp_core => camp_core_t()
       pos = 0
@@ -327,41 +332,16 @@ contains
             trim(to_string(true_conc(i_RH, i_spec))))
         end do
       end do
-
-      deallocate(camp_state)
-
+    deallocate(camp_state)
+    !if assert_msg does not exit, then the run is valid
 #ifdef CAMP_USE_MPI
-      ! convert the results to an integer
-      if (run_ZSR_aerosol_water_test) then
-        results = 0
-      else
-        results = 1
-      end if
-    end if
-
-    ! Send the results back to the primary process
-    call camp_mpi_transfer_integer(results, results, 1, 0)
-
-    ! convert the results back to a logical value
-    if (camp_mpi_rank().eq.0) then
-      if (results.eq.0) then
-        run_ZSR_aerosol_water_test = .true.
-      else
-        run_ZSR_aerosol_water_test = .false.
-      end if
-    end if
-
     deallocate(buffer)
+    end if
 #endif
-
     deallocate(camp_core)
-
     ! Evaluate the sub model c functions
-    run_ZSR_aerosol_water_test = &
-      run_ZSR_aerosol_water_test .and. &
-      eval_c_func()
-
-  end function run_ZSR_aerosol_water_test
+    run_ZSR_aerosol_water_test = eval_c_func()
+  end function
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -404,8 +384,5 @@ contains
    deallocate(camp_state)
    deallocate(camp_core)
 
-  end function eval_c_func
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-end program camp_test_ZSR_aerosol_water
+  end function
+end program

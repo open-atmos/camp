@@ -92,7 +92,7 @@ contains
     real(kind=dp) :: time_step
 #ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
-    integer(kind=i_kind) :: pack_size, pos, i_elem, results
+    integer(kind=i_kind) :: pack_size, pos, i_elem, results, rank_solve
 #endif
 
     type(solver_stats_t), target :: solver_stats
@@ -172,7 +172,12 @@ contains
     ! broadcast the data
     call camp_mpi_bcast_packed(buffer)
 
-    if (camp_mpi_rank().eq.1) then
+    rank_solve=1
+    if(camp_mpi_size() == 1 ) then
+      rank_solve=0
+    end if
+
+    if (camp_mpi_rank().eq.rank_solve) then
       ! unpack the data
       camp_core => camp_core_t()
       pos = 0
@@ -265,37 +270,9 @@ contains
             trim(to_string(true_conc(i_time, i_spec))))
         end do
       end do
-
-      deallocate(camp_state)
-
+    !if assert_msg does not exit, then the run is valid
 #ifdef CAMP_USE_MPI
-      ! convert the results to an integer
-      if (run_consecutive_mech_test) then
-        results = 0
-      else
-        results = 1
-      end if
     end if
-
-    ! Send the results back to the primary process
-    call camp_mpi_transfer_integer(results, results, 1, 0)
-
-    ! convert the results back to a logical value
-    if (camp_mpi_rank().eq.0) then
-      if (results.eq.0) then
-        run_consecutive_mech_test = .true.
-      else
-        run_consecutive_mech_test = .false.
-      end if
-    end if
-
-    deallocate(buffer)
 #endif
-
-    deallocate(camp_core)
-
-  end function run_consecutive_mech_test
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-end program camp_test_chem_mech_solver
+  end function
+end program

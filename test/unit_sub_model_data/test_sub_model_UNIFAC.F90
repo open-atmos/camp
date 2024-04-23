@@ -89,7 +89,7 @@ contains
     real(kind=dp) :: mass_frac_step, mole_frac, mass_frac
 #ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
-    integer(kind=i_kind) :: pack_size, pos, i_elem, results
+    integer(kind=i_kind) :: pack_size, pos, i_elem, results, rank_solve
 #endif
 
     ! Parameters for calculating true concentrations
@@ -294,7 +294,12 @@ contains
     ! broadcast the data
     call camp_mpi_bcast_packed(buffer)
 
-    if (camp_mpi_rank().eq.1) then
+    rank_solve=1
+    if(camp_mpi_size() == 1 ) then
+      rank_solve=0
+    end if
+
+    if (camp_mpi_rank().eq.rank_solve) then
       ! unpack the data
       camp_core => camp_core_t()
       pos = 0
@@ -494,38 +499,11 @@ contains
             "; calc: "//trim(to_string(calc_activity(i_mass_frac, idx_butanol))))
         end if
       end do
-
-      deallocate(camp_state)
-
+    !if assert_msg does not exit, then the run is valid
 #ifdef CAMP_USE_MPI
-      ! convert the results to an integer
-      if (run_UNIFAC_test) then
-        results = 0
-      else
-        results = 1
-      end if
     end if
-
-    ! Send the results back to the primary process
-    call camp_mpi_transfer_integer(results, results, 1, 0)
-
-    ! convert the results back to a logical value
-    if (camp_mpi_rank().eq.0) then
-      if (results.eq.0) then
-        run_UNIFAC_test = .true.
-      else
-        run_UNIFAC_test = .false.
-      end if
-    end if
-
-    deallocate(buffer)
 #endif
-
-    deallocate(camp_core)
-
-    run_UNIFAC_test = .true.
-
-  end function run_UNIFAC_test
+  end function
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -565,8 +543,8 @@ contains
 
     water_activity = a_w(i_a_w)
 
-  end function get_water_activity_fig3a
+  end function
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end program camp_test_sub_module_UNIFAC
+end program
