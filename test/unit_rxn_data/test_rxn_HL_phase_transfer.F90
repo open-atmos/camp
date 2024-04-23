@@ -608,6 +608,6 @@ contains
 #ifdef CAMP_USE_MPI
     end if
 #endif
-    print*,"a"
+   !print*,"HL end, rank:",camp_mpi_rank()
   end function
 end program

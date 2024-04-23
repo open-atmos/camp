@@ -95,7 +95,7 @@ void rxn_HL_phase_transfer_get_used_jac_elem(ModelData *model_data,
     jacobian_register_element(jac, AERO_SPEC_(i_aero_phase),
                               AERO_WATER_(i_aero_phase));
 
-    for (int i_elem = 0; i_elem < model_data->n_per_cell_state_var; i_elem++)
+    for (int i_elem = 0; i_elem < model_data->n_per_cell_state_var; ++i_elem)
       aero_jac_elem[i_elem] = false;
 
     int n_jac_elem =
@@ -109,13 +109,13 @@ void rxn_HL_phase_transfer_get_used_jac_elem(ModelData *model_data,
       exit(1);
     }
     int i_used_elem = 0;
-    for (int i_elem = 0; i_elem < model_data->n_per_cell_state_var; i_elem++) {
+    for (int i_elem = 0; i_elem < model_data->n_per_cell_state_var; ++i_elem) {
       if (aero_jac_elem[i_elem] == true) {
         jacobian_register_element(jac, GAS_SPEC_, i_elem);
         jacobian_register_element(jac, AERO_SPEC_(i_aero_phase), i_elem);
         PHASE_JAC_ID_(i_aero_phase, JAC_GAS, i_used_elem) = i_elem;
         PHASE_JAC_ID_(i_aero_phase, JAC_AERO, i_used_elem) = i_elem;
-        i_used_elem++;
+        ++i_used_elem;
       }
     }
     for (; i_used_elem < NUM_AERO_PHASE_JAC_ELEM_(i_aero_phase);
@@ -134,7 +134,6 @@ void rxn_HL_phase_transfer_get_used_jac_elem(ModelData *model_data,
   }
 
   free(aero_jac_elem);
-
   return;
 }
 
@@ -172,7 +171,7 @@ void rxn_HL_phase_transfer_update_ids(ModelData *model_data, int *deriv_ids,
     JAC_ID_(i_jac++) = jacobian_get_element_id(jac, AERO_SPEC_(i_aero_phase),
                                                AERO_WATER_(i_aero_phase));
     for (int i_elem = 0; i_elem < NUM_AERO_PHASE_JAC_ELEM_(i_aero_phase);
-         i_elem++) {
+         ++i_elem) {
       if (PHASE_JAC_ID_(i_aero_phase, JAC_GAS, i_elem) > 0) {
         PHASE_JAC_ID_(i_aero_phase, JAC_GAS, i_elem) = jacobian_get_element_id(
             jac, GAS_SPEC_, PHASE_JAC_ID_(i_aero_phase, JAC_GAS, i_elem));
@@ -222,12 +221,6 @@ void rxn_HL_phase_transfer_update_env_state(ModelData *model_data,
     ALPHA_ = exp(-del_G / (UNIV_GAS_CONST_ * TEMPERATURE_K_));
     ALPHA_ = ALPHA_ / (1.0 + ALPHA_);
   }
-
-  // replaced by transition-regime rate equation
-#if 0
-  // Save c_rms * mass_acc for use in mass transfer rate calc
-  MFP_M_ = PRE_C_AVG_ * sqrt(TEMPERATURE_K_) * mass_acc;
-#endif
 
   // save the mean free path [m] for calculating condensation rates
   MFP_M_ = mean_free_path__m(DIFF_COEFF_, TEMPERATURE_K_, MW_);
@@ -300,13 +293,6 @@ void rxn_HL_phase_transfer_calc_deriv_contrib(
                                     // (#/m3)
           NULL);                    // partial derivative
     }
-
-    // this was replaced with transition-regime rate equation
-#if 0
-    double cond_rate =
-        ((double)1.0) / (radius * radius / (3.0 * DIFF_COEFF_) +
-                              4.0 * radius / (3.0 * MFP_M_));
-#endif
 
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (1/s)
@@ -395,12 +381,6 @@ void rxn_HL_phase_transfer_calc_jac_contrib(ModelData *model_data, Jacobian jac,
         NUM_CONC_JAC_ELEM_(i_phase, i_elem) = ZERO;
     }
 
-    // this was replaced with transition-regime rate equation
-#if 0
-    double cond_rate = 1.0 / (radius * radius / (3.0 * DIFF_COEFF_) +
-                                   4.0 * radius / (3.0 * MFP_M_));
-#endif
-
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (1/s)
     double cond_rate =
@@ -432,6 +412,8 @@ void rxn_HL_phase_transfer_calc_jac_contrib(ModelData *model_data, Jacobian jac,
       jacobian_add_value(
           jac, (unsigned int)JAC_ID_(1 + i_phase * 5 + 2), JACOBIAN_LOSS,
           evap_rate / state[AERO_WATER_(i_phase)] / KGM3_TO_PPM_);
+        if(KGM3_TO_PPM_==0.)
+
     if (JAC_ID_(1 + i_phase * 5 + 4) >= 0)
       jacobian_add_value(
           jac, (unsigned int)JAC_ID_(1 + i_phase * 5 + 4), JACOBIAN_LOSS,
@@ -446,11 +428,6 @@ void rxn_HL_phase_transfer_calc_jac_contrib(ModelData *model_data, Jacobian jac,
 
     // Calculate d_rate/d_effecive_radius and d_rate/d_number_concentration
     // ( This was replaced with transition-regime rate equation. )
-#if 0
-    double d_rate_d_radius =
-        -rate * cond_rate *
-        (2.0 * radius / (3.0 * DIFF_COEFF_) + 4.0 / (3.0 * MFP_M_));
-#endif
     double d_cond_d_radius =
         d_gas_aerosol_transition_rxn_rate_constant_d_radius(
             DIFF_COEFF_, MFP_M_, radius, ALPHA_) * state[GAS_SPEC_];
