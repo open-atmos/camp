@@ -9,11 +9,6 @@ cd ${0%/*}
 # make the output directory if it doesn't exist
 mkdir -p out
 
-((counter = 1))
-while [ true ]
-do
-  echo Attempt $counter
-
 if [[ $1 = "MPI" ]]; then
   exec_str="mpirun -v -np 2 ../../test_rxn_ternary_chemical_activation"
 else
@@ -21,16 +16,10 @@ else
 fi
 
 if ! $exec_str; then
-	  echo Failure "$counter"
-	  if [ "$counter" -gt 10 ]
-	  then
-		  echo FAIL
-		  exit 1
-	  fi
-	  echo retrying...
-  else
-	  echo PASS
-	  exit 0
-  fi
-  ((counter++))
+  echo FAIL
+  exit 1
+else
+  echo PASS
+  exit 0
+fi
 done

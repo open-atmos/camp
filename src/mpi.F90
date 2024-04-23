@@ -1437,6 +1437,7 @@ contains
     !> Process to send to.
     integer, intent(in) :: to_proc
 
+  !todo probably dont need this function
 #ifdef CAMP_USE_MPI
     integer :: rank, size, ierr, status(MPI_STATUS_SIZE)
 
@@ -1447,12 +1448,14 @@ contains
        end if
     else
        if (rank == from_proc) then
+       print*,from_proc,from_val
           call mpi_send(from_val, 1, MPI_INTEGER, to_proc, &
                208020430, MPI_COMM_WORLD, ierr)
           call camp_mpi_check_ierr(ierr)
        elseif (rank == to_proc) then
           call mpi_recv(to_val, 1, MPI_INTEGER, from_proc, &
                208020430, MPI_COMM_WORLD, status, ierr)
+          print*,to_proc,from_val
           call camp_mpi_check_ierr(ierr)
        end if
     end if
@@ -1460,7 +1463,7 @@ contains
     to_val = from_val
 #endif
 
-  end subroutine camp_mpi_transfer_integer
+  end subroutine
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

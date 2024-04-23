@@ -5,7 +5,6 @@ if [ $BSC_MACHINE == "mn5" ]; then
 module load gcc
 module load openmpi/4.1.5-gcc
 module load cmake
-#module load intel
 fi
 
 library_path="../../"

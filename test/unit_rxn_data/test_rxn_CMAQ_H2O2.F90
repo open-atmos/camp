@@ -86,9 +86,10 @@ contains
     character(len=:), allocatable :: key
     integer(kind=i_kind) :: i_time, i_spec
     real(kind=dp) :: time_step, time
+    logical :: run_CMAQ_H2O2_test2
 #ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
-    integer(kind=i_kind) :: pack_size, pos, i_elem, results
+    integer :: pack_size, pos, i_elem, results
 #endif
 
     type(solver_stats_t), target :: solver_stats
@@ -262,18 +263,22 @@ contains
             trim(to_string(true_conc(i_time, i_spec))))
         end do
       end do
-
-      deallocate(camp_state)
+    deallocate(camp_state)
 
 #ifdef CAMP_USE_MPI
-      ! convert the results to an integer
-      if (run_CMAQ_H2O2_test) then
-        results = 0
-      else
-        results = 1
-      end if
+    end if
+    ! convert the results to an integer
+    !results = 0
+    print*,"a"
+    if (run_CMAQ_H2O2_test) then
+      print*,"run_CMAQ_H2O2_test a"
+      results = 0
+    else
+      print*,"run_CMAQ_H2O2_test b"
+      results = 1
     end if
     ! Send the results back to the primary process
+    !print*,"results",results !if uncommented, works fine
     call camp_mpi_transfer_integer(results, results, 1, 0)
 
     ! convert the results back to a logical value

@@ -1,8 +1,4 @@
 cmake_minimum_required(VERSION 3.10)
-# Require 2.6.4 due to -I/usr/include behavior:
-# http://www.cmake.org/Bug/view.php?id=8598
-# http://gcc.gnu.org/bugzilla/show_bug.cgi?id=35707
-# http://www.cmake.org/Bug/view.php?id=8408
 project(CAMP Fortran C)
 
 set(PACKAGE_BUGREPORT "mattldawson@gmail.com")
@@ -38,11 +34,6 @@ SET(USE_TESTS OFF)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 
-#Missing CMake version >=3.14 in Github Docker to use CREATE_LINK
-#file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/out ${CMAKE_BINARY_DIR}/out  SYMBOLIC)
-#file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/settings ${CMAKE_BINARY_DIR}/settings SYMBOLIC)
-
-
 ######################################################################
 # CPack
 
@@ -60,6 +51,7 @@ find_path(NETCDF_INCLUDE_DIR netcdf.mod NETCDF.mod
     DOC "NetCDF include directory (must contain netcdf.mod)"
     PATHS
     $ENV{NETCDF_FORTRAN_HOME}/include
+    $ENV{NETCDFF_HOME}/include
     $ENV{NETCDF_HOME}/include
     $ENV{NETCDF_DIR}/include
     /usr/lib/gfortran/modules
@@ -74,8 +66,9 @@ find_path(NETCDF_INCLUDE_DIR netcdf.mod NETCDF.mod
     DOC "NetCDF Fortran library"
     PATHS
     $ENV{NETCDF_HOME}/lib $ENV{NETCDF_HOME}/lib64
-    $ENV{NETCDF_DIR}/lib
-    $ENV{NETCDF_FORTRAN_HOME}/lib $ENV{NETCDF_FORTRAN_HOME}/lib64
+    $ENV{NETCDFF_HOME}/lib $ENV{NETCDFF_HOME}/lib64
+  	$ENV{NETCDF_DIR}/lib
+  	$ENV{NETCDF_FORTRAN_HOME}/lib $ENV{NETCDF_FORTRAN_HOME}/lib64
     /opt/local/lib /usr/bin)
   set(NETCDF_LIBS ${NETCDF_C_LIB})
   if(NETCDF_FORTRAN_LIB)
@@ -117,10 +110,6 @@ if(ENABLE_MPI)
   endif()
   include_directories(${MPI_INCLUDE_PATH})
   include_directories(${MPI_Fortran_INCLUDE_DIRS})
-  find_path(MPI_INCLUDE_DIR mpi.h #needed for mn5
-          PATHS
-          /apps/ACC/OPENMPI/4.1.5/GCC/include)
-  include_directories(${MPI_INCLUDE_DIR}) #needed for mn5
   if(NOT MPI_FOUND)
       message( WARNING "Not MPI found")
   endif()
@@ -531,9 +520,12 @@ if (ENABLE_GPU)
       test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
   target_link_libraries(mock_monarch camplib)
 endif()
+
+add_executable(test_rxn_CMAQ_H2O2 test/unit_rxn_data/test_rxn_CMAQ_H2O2.F90)
+target_link_libraries(test_rxn_CMAQ_H2O2 camplib)
+if (USE_TESTS)
 add_executable(test_rxn_HL_phase_transfer test/unit_rxn_data/test_rxn_HL_phase_transfer.F90)
 target_link_libraries(test_rxn_HL_phase_transfer camplib)
-if (USE_TESTS)
 
 ######################################################################
 # camp-chem box model
@@ -579,8 +571,6 @@ target_link_libraries(unit_test_chem_spec_data camplib)
 
 add_executable(test_rxn_aqueous_equilibrium test/unit_rxn_data/test_rxn_aqueous_equilibrium.F90)
 target_link_libraries(test_rxn_aqueous_equilibrium camplib)
-add_executable(test_rxn_CMAQ_H2O2 test/unit_rxn_data/test_rxn_CMAQ_H2O2.F90)
-target_link_libraries(test_rxn_CMAQ_H2O2 camplib)
 add_executable(test_rxn_CMAQ_OH_HNO3 test/unit_rxn_data/test_rxn_CMAQ_OH_HNO3.F90)
 target_link_libraries(test_rxn_CMAQ_OH_HNO3 camplib)
 add_executable(test_rxn_condensed_phase_arrhenius test/unit_rxn_data/test_rxn_condensed_phase_arrhenius.F90)
