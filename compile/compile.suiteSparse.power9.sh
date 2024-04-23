@@ -7,22 +7,11 @@ if [ $BSC_MACHINE == "mn5" ] ; then
   module load cmake
   module load gcc
   module load openmpi/4.1.5-gcc
+  module load openblas
   if module list 2>&1 | grep -q "\<cuda\>"; then
     module unload cuda
   fi
 fi
-cd /gpfs/projects/bsc32/bsc032815/gpupartmc/OpenBLAS
-path_Blas_install=/gpfs/projects/bsc32/bsc032815/gpupartmc/OpenBLAS/install
-compile_BLAS(){
-make
-mkdir install
-make install PREFIX=$path_Blas_install
-}
-if [ ! -d /gpfs/projects/bsc32/bsc032815/gpupartmc/OpenBLAS/install ]; then
-  echo "Directory OpenBLAS/install does not exists, installing OpenBlas."
-  compile_BLAS
-fi
-cd $curr_path
 cd $library_path/SuiteSparse
 make purge
 if [ $BSC_MACHINE == "mn5" ] || [$BSC_MACHINE == "power"] ; then

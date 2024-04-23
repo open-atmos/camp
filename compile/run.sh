@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-if ! module list 2>&1 | grep -q "\<netcdf/c-4.9.2_fortran-4.6.1_cxx4-4.3.1-gcc-ompi\>"; then #mod not load
+if [ $BSC_MACHINE == "mn5" ]; then
+  if ! module list 2>&1 | grep -q "\<netcdf/c-4.9.2_fortran-4.6.1_cxx4-4.3.1-gcc-ompi\>"; then #mod not load
     module load cmake
     module load gcc/11.4.0
     module load openmpi/4.1.5-gcc
@@ -11,6 +12,7 @@ if ! module list 2>&1 | grep -q "\<netcdf/c-4.9.2_fortran-4.6.1_cxx4-4.3.1-gcc-o
     module load cuda
     module load pnetcdf/1.12.3-gcc-ompi
     module load netcdf/c-4.9.2_fortran-4.6.1_cxx4-4.3.1-gcc-ompi
+  fi
 fi
 
 cd ../test/monarch

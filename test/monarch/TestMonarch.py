@@ -21,13 +21,13 @@ def all_timesteps():
   #conf.is_import_base = True
   conf.mpiProcessesCaseBase = 1
   conf.mpiProcessesCaseOptimList = [1]
-  conf.cells = [1000]
+  conf.cells = [1]
   conf.timeSteps = 1
-  conf.caseBase = "CPU One-cell"
-  #conf.caseBase = "GPU BDF"
+  #conf.caseBase = "CPU One-cell"
+  conf.caseBase = "GPU BDF"
   conf.casesOptim = []
   # conf.casesOptim.append("CPU One-cell")
-  conf.casesOptim.append("GPU BDF")
+  #conf.casesOptim.append("GPU BDF")
   conf.plotYKey = "Speedup timecvStep"
 
   run_main(conf)
