@@ -30,7 +30,7 @@ option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
 option(ENABLE_NETCDF "Include NETCDF package" OFF)
 option(DISABLE_INSTALL_OPTIONS "" OFF)
-SET(USE_TESTS ON)
+SET(USE_TESTS OFF)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 
@@ -308,6 +308,7 @@ endif()
 # camp library
 
 set(STD_C_FLAGS "-std=c99")
+#even trying -O0 still bug in mn5
 set(STD_CUDA_FLAGS "-g -O3 -arch=compute_70 -code=sm_70") #-G for assembly code nsight
 
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
@@ -532,7 +533,6 @@ add_executable(camp_box_model test/camp_box_model_data.F90
     test/camp_box_model.F90)
 
 target_link_libraries(camp_box_model camplib)
-
 
 ######################################################################
 # test_chemistry_cb05cl_ae5

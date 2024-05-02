@@ -48,7 +48,7 @@ def run(conf):
   exec_str = ""
   try:
     ddt_pid = subprocess.check_output(
-      'pidof -x $(ps cax | grep ddt)', shell=True)
+      'pidof -x $(ps cax | grep forge)', shell=True)
     if ddt_pid:
       exec_str += 'ddt --connect '
   except Exception:
