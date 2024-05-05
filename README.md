@@ -56,10 +56,14 @@ Optional dependencies:
    * GSL for Jacobian evaluation and random number generators -
      <http://www.gnu.org/software/gsl/>
 
-Installation (Marenostrum 5)
+Installation on Marenostrum 5
 ============
 
+Run: `install.sh`
 
+You can validate installation running: ".compile/check.sh"
+
+Any problem, contact administrators of the CAMP repository of the Barcelona Supercomputing Center.
 
 Installation
 ============
