@@ -52,7 +52,7 @@ load_alias
 power_esarchive="yes" #monarch integration
 #power_esarchive="no" #gpupartmc clion tests camp solo run
 
-if [ $BSC_MACHINE == "power" ]; then
+if [ "${BSC_MACHINE}" == "power" ]; then
 
 #gpupartmc
 #a591c

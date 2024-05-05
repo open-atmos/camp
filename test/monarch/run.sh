@@ -1,4 +1,7 @@
+#!/usr/bin/env bash
 set -e
+scriptdir="$(dirname "$0")"
+cd "$scriptdir"
 make_and_check() {
   curr_path=$(pwd)
   cd ../../build

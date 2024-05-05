@@ -2,9 +2,10 @@
 set -e
 
 if [ $BSC_MACHINE == "mn5" ]; then
-module load gcc
-module load openmpi/4.1.5-gcc
-module load cmake
+  module purge
+  module load gcc
+  module load openmpi/4.1.5-gcc
+  module load cmake
 fi
 
 library_path="../../"
