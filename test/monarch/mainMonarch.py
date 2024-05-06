@@ -14,6 +14,7 @@ class TestMonarch:
   def __init__(self):
     # Case configuration
     self.chemFile = "cb05_paperV2"
+    #self.chemFile = "monarch_cb05"
     self.diffCells = ""
     self.timeSteps = 1
     self.timeStepsDt = 2
@@ -23,16 +24,20 @@ class TestMonarch:
     self.caseMulticellsOnecell = ""
     self.mpiProcesses = 1
     # Cases configuration
-    self.diffCellsL = ""
+    self.diffCellsL = ["Realistic"]
+    #self.diffCellsL.append("Ideal")
     self.mpiProcessesCaseBase = 1
     self.mpiProcessesCaseOptimList = []
     self.cells = [100]
-    self.caseBase = ""
+    self.profileCuda = ""
+    #self.profileCuda = "nvprof"
+    #self.profileCuda = "nsight"
+    self.caseBase = "CPU One-cell"
+    self.plotYKey = "Speedup timecvStep"
+    #self.plotYKey = "Speedup timeCVode"    self.casesOptim = [""]
     self.casesOptim = [""]
-    self.plotYKey = ""
     self.is_import = False
     self.is_import_base = False
-    self.profileCuda = ""
     self.is_out = True
     # Auxiliary
     self.sbatch_job_id = ""
