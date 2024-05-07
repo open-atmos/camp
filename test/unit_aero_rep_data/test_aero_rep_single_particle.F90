@@ -195,7 +195,7 @@ contains
         ! test num_phase_instances funtion
         phase_name_test = "bread"
         num_bread = 2
-        max_part = aero_rep%maximum_computational_particles()        
+        max_part = aero_rep%maximum_computational_particles()
         bread_phase_instance = num_bread * max_part
         !check value
         call assert(417730478, 3 .eq. max_part)
