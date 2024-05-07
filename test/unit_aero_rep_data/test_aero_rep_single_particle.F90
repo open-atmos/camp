@@ -34,13 +34,13 @@ program camp_test_aero_rep_data
   integer(kind=i_kind), parameter :: NUM_COMP_PARTICLES = 3
 
   ! Number of aerosol phases per particle
-  integer(kind=i_kind), parameter :: NUM_AERO_PHASE = 3
+  integer(kind=i_kind), parameter :: NUM_AERO_PHASE = 4
 
   ! Index for the test phase (test-particle phase 2)
   integer(kind=i_kind), parameter :: AERO_PHASE_IDX = ((TEST_PARTICLE-1)*NUM_AERO_PHASE+2)
 
   ! Number of expected Jacobian elements for the test phase
-  integer(kind=i_kind), parameter :: NUM_JAC_ELEM = 8
+  integer(kind=i_kind), parameter :: NUM_JAC_ELEM = 12
 
   ! Externally set properties
   real(kind=dp), parameter :: PART_NUM_CONC = 1.23e3
@@ -118,6 +118,8 @@ contains
 
     type(string_t), dimension(4) :: layer_names, correct_layer_names
     type(string_t), dimension(4) :: cover_names
+    !type(string_t), allocatable :: layer_names(:), correct_layer_names(:)
+    !type(string_t), allocatable :: cover_names(:)
     integer, allocatable :: ordered_ids(:)
 
     ! Assemble input arguments
@@ -134,16 +136,16 @@ contains
     correct_layer_names(3)%string = 'jam'
     correct_layer_names(4)%string = 'top bread'
 
+    !layer_names(1)%string = 'one layer'
+    !correct_layer_names(1)%string = 'one layer'
     ! Call the function and enter inputs 
     ordered_ids = ordered_layer_ids(layer_names, cover_names)
-
     ! check individual values:
     call assert(476179048, size(ordered_ids) .eq. 4)
     call assert(903386486, layer_names(ordered_ids(1))%string .eq. correct_layer_names(1)%string)
     call assert(468777371, layer_names(ordered_ids(2))%string .eq. correct_layer_names(2)%string)
     call assert(487966491, layer_names(ordered_ids(3))%string .eq. correct_layer_names(3)%string)
     call assert(721784428, layer_names(ordered_ids(4))%string .eq. correct_layer_names(4)%string)
-
   end subroutine test_ordered_layer_ids
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -198,7 +200,7 @@ contains
         !check value
         call assert(417730478, 3 .eq. max_part)
         call assert(734138496, bread_phase_instance .eq. aero_rep%num_phase_instances(phase_name_test))
-        
+ 
       class default
         call die_msg(519535557, rep_name)
     end select
@@ -249,10 +251,10 @@ contains
 
   !> Build aero_rep_data set
   logical function build_aero_rep_data_set_test()
-#if 0
     type(camp_core_t), pointer :: camp_core
     type(camp_state_t), pointer :: camp_state
     class(aero_rep_data_t), pointer :: aero_rep
+
 #ifdef CAMP_USE_JSON
 
     integer(kind=i_kind) :: i_spec, j_spec, i_rep, i_phase
@@ -265,6 +267,7 @@ contains
     character, allocatable :: buffer(:)
     integer(kind=i_kind) :: pos, pack_size, i_prop
 #endif
+
     build_aero_rep_data_set_test = .false.
 
 
@@ -298,7 +301,7 @@ contains
       ! Check the unique name functions
       unique_names = aero_rep%unique_names()
       call assert_msg(885541843, allocated(unique_names), rep_name)
-      call assert_msg(206819761, size(unique_names).eq.NUM_COMP_PARTICLES*8, &
+      call assert_msg(206819761, size(unique_names).eq.NUM_COMP_PARTICLES*12, &
                       rep_name)
       do i_spec = 1, size(unique_names)
         call assert_msg(142263656, aero_rep%spec_state_id(&
@@ -312,57 +315,59 @@ contains
       end do
 
       ! Set the species concentrations
-      phase_name = "my test phase one"
-      spec_name = "species a"
-      unique_names = aero_rep%unique_names(phase_name = phase_name, &
-              spec_name = spec_name)
+      phase_name = "top bread"
+      spec_name = "wheat"
+      unique_names = aero_rep%unique_names()
       i_spec = aero_rep%spec_state_id(unique_names(1)%string)
       call assert_msg(258227897, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 1.5
-      spec_name = "species b"
-      unique_names = aero_rep%unique_names(phase_name = phase_name, &
-              spec_name = spec_name)
-      i_spec = aero_rep%spec_state_id(unique_names(1)%string)
+      spec_name = "water"
+      i_spec = aero_rep%spec_state_id(unique_names(2)%string)
       call assert_msg(418308482, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 2.5
-      spec_name = "species c"
-      unique_names = aero_rep%unique_names(phase_name = phase_name, &
-              spec_name = spec_name)
-      i_spec = aero_rep%spec_state_id(unique_names(1)%string)
+      spec_name = "salt"
+      i_spec = aero_rep%spec_state_id(unique_names(3)%string)
       call assert_msg(420214016, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 3.5
-      phase_name = "my test phase two"
-      spec_name = "species c"
-      unique_names = aero_rep%unique_names(phase_name = phase_name, &
-              spec_name = spec_name)
-      i_spec = aero_rep%spec_state_id(unique_names(1)%string)
+      phase_name = "jam"
+      spec_name = "rasberry"
+      i_spec = aero_rep%spec_state_id(unique_names(4)%string)
       call assert_msg(416855243, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 4.5
-      spec_name = "species d"
-      unique_names = aero_rep%unique_names(phase_name = phase_name, &
-              spec_name = spec_name)
-      i_spec = aero_rep%spec_state_id(unique_names(1)%string)
+      spec_name = "honey"
+      i_spec = aero_rep%spec_state_id(unique_names(5)%string)
       call assert_msg(578389067, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 5.5
-      spec_name = "species e"
-      unique_names = aero_rep%unique_names(phase_name = phase_name, &
-              spec_name = spec_name)
-      i_spec = aero_rep%spec_state_id(unique_names(1)%string)
+      spec_name = "sugar"
+      i_spec = aero_rep%spec_state_id(unique_names(6)%string)
       call assert_msg(147314014, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 6.5
-      phase_name = "my last test phase"
-      spec_name = "species b"
-      unique_names = aero_rep%unique_names(phase_name = phase_name, &
-              spec_name = spec_name)
-      i_spec = aero_rep%spec_state_id(unique_names(1)%string)
-      call assert_msg(401514617, i_spec.gt.0, rep_name)
+      spec_name = "lemon"
+      i_spec = aero_rep%spec_state_id(unique_names(7)%string)
+      call assert_msg(307593804, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 7.5
-      spec_name = "species e"
-      unique_names = aero_rep%unique_names(phase_name = phase_name, &
-              spec_name = spec_name)
-      i_spec = aero_rep%spec_state_id(unique_names(1)%string)
-      call assert_msg(291101806, i_spec.gt.0, rep_name)
+      phase_name = "almond butter"
+      spec_name = "almonds"
+      i_spec = aero_rep%spec_state_id(unique_names(8)%string)
+      call assert_msg(401514617, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 8.5
+      spec_name = "sugar"
+      i_spec = aero_rep%spec_state_id(unique_names(9)%string)
+      call assert_msg(291101806, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 9.5
+      phase_name = "bottom bread"
+      spec_name = "wheat"
+      i_spec = aero_rep%spec_state_id(unique_names(10)%string)
+      call assert_msg(362839472, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 10.5
+      spec_name = "water"
+      i_spec = aero_rep%spec_state_id(unique_names(11)%string)
+      call assert_msg(980708489, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 11.5
+      spec_name = "salt"
+      i_spec = aero_rep%spec_state_id(unique_names(12)%string)
+      call assert_msg(149863598, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 12.5
 
     end do
 
@@ -412,16 +417,14 @@ contains
 
     deallocate(buffer)
     deallocate(aero_rep_passed_data_set)
-#endif
 
+#endif
     ! Evaluate the aerosol representation c functions
     build_aero_rep_data_set_test = eval_c_func(camp_core)
-
     deallocate(camp_state)
     deallocate(camp_core)
+#endif
 
-#endif
-#endif
   end function build_aero_rep_data_set_test
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -430,7 +433,6 @@ contains
   logical function eval_c_func(camp_core) result(passed)
     !> CAMP-core
     type(camp_core_t), intent(inout) :: camp_core
-#if 0
     class(aero_rep_data_t), pointer :: aero_rep
     type(camp_state_t), pointer :: camp_state
     integer(kind=i_kind), allocatable :: phase_ids(:)
@@ -438,7 +440,7 @@ contains
     type(aero_rep_factory_t) :: aero_rep_factory
     type(aero_rep_update_data_single_particle_number_t) :: update_number
 
-    rep_name = "AERO_REP_SINGLE_PARTICLE"
+    rep_name = "single-particle with layers"
 
     call assert_msg(264314298, camp_core%get_aero_rep(rep_name, aero_rep), &
                     rep_name)
@@ -478,7 +480,7 @@ contains
                  ) .eq. 0
 
     deallocate(camp_state)
-#endif
+
   end function eval_c_func
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
