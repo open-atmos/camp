@@ -5,9 +5,14 @@ library_path="../../"
 curr_path=$(pwd)
 
 if [ "${BSC_MACHINE}" == "mn5" ]; then
-  module load cmake
-  module load gcc
-  module load openmpi/4.1.5-gcc
+    module load cmake
+  if module list 2>&1 | grep -q "\<intel\>"; then
+    module load oneapi
+  else
+    echo
+    module load gcc
+    module load openmpi/4.1.5-gcc
+  fi
 fi
 
 if [ -z "$SUITE_SPARSE_CAMP_ROOT" ]; then

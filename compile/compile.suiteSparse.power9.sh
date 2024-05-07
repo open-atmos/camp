@@ -4,14 +4,13 @@ library_path="../.."
 curr_path=$(pwd)
 
 if [ "${BSC_MACHINE}" == "mn5" ] ; then
+  module load cmake
+  module load openblas
   if module list 2>&1 | grep -q "\<intel\>"; then
-    module load cmake
-    module load openblas
+    module load oneapi
   else
-    module load cmake
     module load gcc
     module load openmpi/4.1.5-gcc
-    module load openblas
   fi
   if module list 2>&1 | grep -q "\<cuda\>"; then
     module unload cuda

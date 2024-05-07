@@ -21,7 +21,9 @@ Where x is the desired number of MPI cores,
 
 `conf.cells = [x]`
 
-Where x represents the number of grid-cells to compute.
+Where x represents the number of grid-cells to compute
+for each time-step.
+
 A cell is the minimal region obtained after the domain
 decomposition of an Earth Science Model, such as
 the atmosphere. It can be also referred as the _dx_ component

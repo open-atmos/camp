@@ -15,7 +15,11 @@ mkdir build
 cd build
 
 if [ "${BSC_MACHINE}" == "mn5" ]; then
-  mpifort=$(which mpifort)
+  if module list 2>&1 | grep -q "\<intel\>"; then
+    mpifort=$(which mpiifort)
+  else
+    mpifort=$(which mpifort)
+  fi
 fi
 cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D CMAKE_BUILD_TYPE=debug \
@@ -35,5 +39,5 @@ cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 
 ln -sf ../test/monarch/settings
 ln -sf ../test/monarch/out
-make -j 4 VERBOSE=1
+make VERBOSE=1
 cd $curr_path
