@@ -847,7 +847,7 @@ contains
     do i_cover = 2, size(ordered_layer_ids)
       do i_layer = 1, size(layer_names_unordered)
         if (layer_names_unordered(ordered_layer_ids(i_cover-1))%string &
-            .eq. cover_names_unordered(i_layer)%string) then 
+            .eq. cover_names_unordered(i_layer)%string) then
              ordered_layer_ids(i_cover) = i_layer
           exit
         end if
