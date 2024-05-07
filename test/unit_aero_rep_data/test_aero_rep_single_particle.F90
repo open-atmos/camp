@@ -421,7 +421,6 @@ contains
 #endif
     ! Evaluate the aerosol representation c functions
     build_aero_rep_data_set_test = eval_c_func(camp_core)
-    print *, 'building'
     deallocate(camp_state)
     deallocate(camp_core)
 #endif
