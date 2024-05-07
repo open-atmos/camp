@@ -14,6 +14,9 @@ rm -rf build
 mkdir build
 cd build
 
+if [ "${BSC_MACHINE}" == "mn5" ]; then
+  mpifort=$(which mpifort)
+fi
 cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D CMAKE_BUILD_TYPE=debug \
 -D CMAKE_C_FLAGS_DEBUG="-std=c99 -O3 -g" \

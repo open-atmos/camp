@@ -3,6 +3,7 @@
 if [ "${BSC_MACHINE}" == "mn5" ]; then
   if ! module list 2>&1 | grep -q "\<python/3.12.1-gcc\>"; then #mod not load
     module purge
+    module load bsc
     module load cmake
     module load gcc
     module load openmpi/4.1.5-gcc
@@ -19,12 +20,4 @@ if [ "${BSC_MACHINE}" == "mn5" ]; then
     fi
     module load python/3.12.1-gcc
   fi
-  mpifort=$(which mpifort)
-else
-  if ! command -v mpicc &> /dev/null; then
-      echo "MPI is not installed. Installing..."
-      sudo apt update
-      sudo apt install -y mpi-default-dev
-  fi
-  mpifort=$(which mpiifort) #intel fortran
 fi
