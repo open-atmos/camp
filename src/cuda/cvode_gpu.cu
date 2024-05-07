@@ -539,7 +539,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     }
   }
    //Looping point for internal steps
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
   cudaEventRecord(sd->startcvStep);
 #endif
   for (int i = 0; i < mGPU->n_cells; i++)
@@ -646,7 +646,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   cudaMemcpyAsync(sd->flagCells, mGPU->flagCells, mGPU->n_cells * sizeof(int), cudaMemcpyDeviceToHost, stream);
   mGPU = sd->mGPU;
   cudaDeviceSynchronize();
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
     cudaEventRecord(sd->stopcvStep);
     cudaEventSynchronize(sd->stopcvStep);
     float mscvStep = 0.0;

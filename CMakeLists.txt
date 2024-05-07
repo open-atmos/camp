@@ -28,6 +28,7 @@ option(ENABLE_MPI "Enable MPI parallel support" OFF)
 option(ENABLE_DEBUG "Compile debugging functions" OFF)
 option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
+option(ENABLE_CAMP_PROFILE_SOLVING "" OFF)
 option(ENABLE_NETCDF "Include NETCDF package" OFF)
 option(DISABLE_INSTALL_OPTIONS "" OFF)
 SET(USE_TESTS OFF)
@@ -114,6 +115,9 @@ if(ENABLE_MPI)
       message( WARNING "Not MPI found")
   endif()
   add_definitions(-DCAMP_USE_MPI)
+  if(ENABLE_CAMP_PROFILE_SOLVING)
+    add_definitions(-DCAMP_PROFILE_SOLVING)
+  endif()
 endif()
 
 ######################################################################
@@ -200,12 +204,6 @@ if (ENABLE_GPU)
   find_package(CUDA)
   enable_language(CUDA)
   add_definitions(-DCAMP_USE_GPU)
-  if(ENABLE_MPI)
-    add_definitions(-DCAMP_DEBUG_GPU)
-  else()
-    #ENABLE_DEBUG_GPU uses MPI timers
-    message( ERROR "ENABLE_DEBUG_GPU NEEDS ENABLE_MPI")
-  endif()
 endif()
 
 ######################################################################
@@ -516,13 +514,11 @@ endif()
 set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 	${CB5_EBI_FLAGS})
 
-if (ENABLE_GPU)
-  add_executable(mock_monarch test/monarch/mock_monarch.F90
-      test/monarch/camp_monarch_interface.F90
-      ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-      test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-  target_link_libraries(mock_monarch camplib)
-endif()
+add_executable(mock_monarch test/monarch/mock_monarch.F90
+    test/monarch/camp_monarch_interface.F90
+    ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+    test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+target_link_libraries(mock_monarch camplib)
 
 if (USE_TESTS)
 

@@ -10,7 +10,7 @@ from mainMonarch import *
 def all_timesteps():
   conf = TestMonarch()
   conf.mpiProcessesCaseBase = 1
-  conf.cells = [100000]
+  conf.cells = [10000]
   conf.timeSteps = 1
   conf.profileCuda = "nsight"
   #conf.profileCuda = "nvprof"

@@ -215,14 +215,6 @@ typedef struct {
   int n_rxn_int_param;
   int n_rxn_float_param;
 
-#ifdef CAMP_USE_GPU
-#ifdef CAMP_DEBUG_GPU
-  double timeDerivKernel;
-  cudaEvent_t startDerivKernel;
-  cudaEvent_t stopDerivKernel;
-#endif
-#endif
-
 } ModelData;
 
 /* Solver data structure */
@@ -257,10 +249,12 @@ typedef struct {
   double t_initial;
   double t_final;
 
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
   double timeCVode;
+#ifdef CAMP_USE_GPU
   cudaEvent_t startcvStep;
   cudaEvent_t stopcvStep;
+#endif
 #endif
 #endif
 

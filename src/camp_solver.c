@@ -31,7 +31,7 @@
 #endif
 #include "camp_debug.h"
 
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
 #ifdef CAMP_USE_MPI
 #include <mpi.h>
 #endif
@@ -375,7 +375,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.sub_model_float_indices[0] = 0;
   sd->model_data.sub_model_env_idx[0] = 0;
 
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
   sd->timeCVode = 0.;
 #endif
 
@@ -645,7 +645,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   realtype t_rt = (realtype)t_initial;
 
   if (!sd->no_solve) {
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
   double starttimeCvode = MPI_Wtime();
 #endif
 #ifdef CAMP_USE_GPU
@@ -659,7 +659,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 #else
     flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
 #endif
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
     sd->timeCVode += (MPI_Wtime() - starttimeCvode);
 #endif
     sd->solver_flag = flag;

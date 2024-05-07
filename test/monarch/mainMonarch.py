@@ -1,6 +1,3 @@
-import matplotlib as mpl
-
-mpl.use('TkAgg')
 #import plot_functions  # comment to save ~2s execution time
 import math_functions
 import os
@@ -27,15 +24,15 @@ class TestMonarch:
     self.diffCellsL = ["Realistic"]
     #self.diffCellsL.append("Ideal")
     self.mpiProcessesCaseBase = 1
-    self.mpiProcessesCaseOptimList = []
+    self.mpiProcessesCaseOptimList = [1]
     self.cells = [100]
     self.profileCuda = ""
     #self.profileCuda = "nvprof"
     #self.profileCuda = "nsight"
     self.caseBase = "CPU One-cell"
     self.plotYKey = "Speedup timecvStep"
-    #self.plotYKey = "Speedup timeCVode"    self.casesOptim = [""]
-    self.casesOptim = [""]
+    #self.plotYKey = "Speedup timeCVode"
+    self.casesOptim = []
     self.is_import = False
     self.is_import_base = False
     self.is_out = True
@@ -122,7 +119,7 @@ def run(conf):
     y_key_words = conf.plotYKey.split()
     y_key = y_key_words[-1]
     data = data[y_key]
-    print("data stats",data)
+    print(y_key+":",data)
     if data:
       is_import = True
     if conf.is_out:
@@ -141,7 +138,7 @@ def run(conf):
     y_key_words = conf.plotYKey.split()
     y_key = y_key_words[-1]
     data = data[y_key]
-    print("data stats",data)
+    print(y_key+":",data)
   if conf.is_out:
     if os.path.exists(data_path2):
       df = pd_read_csv(data_path2, header=None,
@@ -329,11 +326,11 @@ def plot_cases(conf, datay):
 
 
 def run_main(conf):
-  if conf.is_out:
+  if conf.is_out and conf.casesOptim:
     if (len(
         conf.mpiProcessesCaseOptimList) > 1 or
-        conf.mpiProcessesCaseBase !=
-        conf.mpiProcessesCaseOptimList[0]):
+            conf.mpiProcessesCaseBase !=
+            conf.mpiProcessesCaseOptimList[0]):
       print(
         "Disabled out error check because number of "
         "processes should be the same for calculate "
@@ -350,4 +347,4 @@ def run_main(conf):
         conf.mpiProcessesCaseOptimList[i] = cellsProcesses
 
   datay = run_diffCells(conf)
-  plot_cases(conf, datay)
+  return datay

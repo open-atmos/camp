@@ -49,6 +49,21 @@ daylight and night, where the chemical reactions change.
 Where x may be `CPU One-cell` for CPU execution and
 `GPU BDF` for GPU execution.
 
+## Using a profiling tool
+
+You can add a profiling tool in a similar way than
+it is implemented for the GPU profiling.
+
+You can check file "mainMonarch.py" the code related
+to the variables "nsight" and "nvprof", like:
+
+`if (conf.profileCuda == "nvprof" and conf.caseGpuCpu ==
+"GPU"):`
+
+You should see that the command line that calls the
+GPU profilers "nvprofs" and "nsight" is added to
+the rest of the command line to run the program.
+
 # Profiling GPU
 
 Run `python profilingGPU.py` for an example of profiling

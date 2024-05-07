@@ -20,8 +20,8 @@ def all_timesteps():
   #conf.casesOptim = ["GPU BDF"]
   #conf.is_import = True
   #conf.is_import_base = True
-
   run_main(conf)
+  #plot_cases(conf, run_main(conf))
 
 
 if __name__ == "__main__":

@@ -184,7 +184,7 @@ void constructor_cvode_gpu(SolverData *sd){
   free(aux);
   free(aux2);
   mCPU->mdvCPU.nstlj = 0;
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
   cudaEventCreate(&sd->startcvStep);
   cudaEventCreate(&sd->stopcvStep);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS

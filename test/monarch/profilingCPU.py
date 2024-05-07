@@ -10,8 +10,8 @@ from mainMonarch import *
 def all_timesteps():
   conf = TestMonarch()
   conf.mpiProcessesCaseBase = 2
-  conf.cells = [100000]
-  conf.timeSteps = 720
+  conf.cells = [10000]
+  conf.timeSteps = 1
   run_main(conf)
 
 

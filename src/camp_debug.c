@@ -8,14 +8,14 @@
 
 #include "camp_solver.h"
 
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
 #ifdef CAMP_USE_MPI
 #include <mpi.h>
 #endif
 #endif
 
 void get_export_state_name(char filename[]){
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   char s_mpirank[64];
@@ -27,7 +27,7 @@ void get_export_state_name(char filename[]){
 }
 
 void init_export_state(){
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
   char filename[64];
   get_export_state_name(filename);
   int rank;
@@ -41,7 +41,7 @@ void init_export_state(){
 }
 
 void export_state(SolverData *sd){
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
   ModelData *md = &(sd->model_data);
   char filename[64];
   get_export_state_name(filename);
@@ -59,7 +59,7 @@ void export_state(SolverData *sd){
 }
 
 void join_export_state(){
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
   int size;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   if(size==1){
@@ -91,7 +91,7 @@ void join_export_state(){
 }
 
 void export_stats(SolverData *sd){
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if (rank == 0) {
