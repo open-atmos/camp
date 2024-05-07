@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 set -e
 
+source load.modules.camp.sh
 if [ $BSC_MACHINE == "mn5" ]; then
-  module purge
-  module load gcc
-  module load openmpi/4.1.5-gcc
-  module load cmake
+  if module list 2>&1 | grep -q "\<intel\>"; then
+    module load openmpi
+    module load cmake
+  else
+    module load gcc
+    module load openmpi/4.1.5-gcc
+    module load cmake
+  fi
 fi
 
 library_path="../../"

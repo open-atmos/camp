@@ -5,7 +5,6 @@ library_path="../../"
 curr_path=$(pwd)
 
 if [ "${BSC_MACHINE}" == "mn5" ]; then
-  module purge
   module load cmake
   module load gcc
   module load openmpi/4.1.5-gcc
