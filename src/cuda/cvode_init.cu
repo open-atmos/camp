@@ -7,9 +7,8 @@
 extern "C" {
 #include "cvode_gpu.h"
 }
-
 #ifdef CAMP_USE_MPI
-//#include <mpi.h>
+#include <mpi.h>
 #endif
 
 void constructor_cvode_gpu(SolverData *sd){
@@ -31,9 +30,9 @@ void constructor_cvode_gpu(SolverData *sd){
   int nGPUs;
   HANDLE_ERROR(cudaGetDeviceCount(&nGPUs));
   int rank, size;
-  //MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  //MPI_Comm_size(MPI_COMM_WORLD, &size);
-  int iDevice = 0;//rank % nGPUs; //todo fix compilation mn5 intel
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  int iDevice = rank % nGPUs;
   cudaSetDevice(iDevice);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
