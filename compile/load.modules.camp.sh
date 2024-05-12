@@ -5,16 +5,13 @@ if [ "${BSC_MACHINE}" == "mn5" ]; then
     module load bsc
     module load cmake
     if module list 2>&1 | grep -q "\<intel\>"; then
-      module load intel/2023.2.0
-      module load impi/2021.10.0
-      module load mkl/2023.2.0
-      module load hdf5/1.14.1-2
-      module load pnetcdf/1.12.3
+      module load mkl
+      module load impi
+      module load hdf5
+      module load pnetcdf
     if [[ "${HOSTNAME}" == *"alogin"* ]]; then
       module load cuda
       module load netcdf
-    else
-      module load netcdf/2023-06-14
     fi
     module load python
     else

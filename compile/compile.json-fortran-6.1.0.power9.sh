@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-source load.modules.camp.sh
 if [ $BSC_MACHINE == "mn5" ]; then
     module load cmake
-  if module list 2>&1 | grep -q "\<intel\>"; then
-    module load intel/2023.2.0
-    module load impi/2021.10.0
-  else
+  if ! module list 2>&1 | grep -q "\<intel\>"; then
     module load gcc
     module load openmpi/4.1.5-gcc
   fi

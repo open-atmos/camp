@@ -8,11 +8,6 @@ extern "C" {
 #include "cvode_gpu.h"
 }
 
-#ifdef CAMP_USE_MPI
-#include <mpi.h>
-#endif
-
-
 static int cvHandleFailure_gpu(CVodeMem cv_mem, int flag){
   switch (flag) {
     case CV_ERR_FAILURE:
@@ -661,8 +656,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     if (sd->flagCells[i] != CV_SUCCESS) {
       istate = sd->flagCells[i];
       int rank;
-      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-      printf("cudaCVode2 kflag %d cell %d rank %d\n",istate,i,rank);
+      printf("cudaCVode2 kflag %d cell %d\n",istate,i);
       istate = cvHandleFailure_gpu(cv_mem, istate);
     }
   }
