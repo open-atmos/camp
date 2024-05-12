@@ -151,8 +151,6 @@ module camp_rxn_data
   contains
     !> Dereference the pointer
     procedure :: dereference
-    !> Finalize the pointer
-    final :: ptr_finalize
   end type rxn_data_ptr
 
   !> Update cookie
@@ -517,18 +515,6 @@ contains
     this%val => null()
 
   end subroutine dereference
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Finalize a pointer to a reaction
-  elemental subroutine ptr_finalize(this)
-
-    !> Pointer to a reaction
-    type(rxn_data_ptr), intent(inout) :: this
-
-    if (associated(this%val)) deallocate(this%val)
-
-  end subroutine ptr_finalize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

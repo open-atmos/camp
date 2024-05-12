@@ -57,7 +57,7 @@ def run(conf):
     pass
   maxCoresPerNode = 40 #CTE-POWER Architecture
   if conf.mpiProcesses <= maxCoresPerNode:
-    exec_str += "mpirun -v -np " + str(
+    exec_str += "mpirun -np " + str(
       conf.mpiProcesses) + " --bind-to core " #for plogin (fails squeue)
   else:
     exec_str += "srun --cpu-bind=core -n " + str(

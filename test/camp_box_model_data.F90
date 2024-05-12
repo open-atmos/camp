@@ -63,8 +63,6 @@ module camp_camp_box_model_data
   contains
     !> Update the reaction rate
     procedure :: update_rxn
-    !> Finalize the reaction profile
-    final :: rxn_profile_finalize
   end type rxn_profile_t
 
 #ifdef CAMP_USE_JSON
@@ -85,8 +83,6 @@ module camp_camp_box_model_data
   contains
     !> Update the aerosol representation property of interest
     procedure :: update_aero_rep
-    !> Finalize the profile
-    final :: aero_rep_profile_finalize
   end type aero_rep_profile_t
 
 #ifdef CAMP_USE_JSON
@@ -789,18 +785,6 @@ contains
   end subroutine update_rxn
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Finalize the reaction profile
-  elemental subroutine rxn_profile_finalize( this )
-
-    !> Reaction profile
-    type(rxn_profile_t), intent(inout) :: this
-
-    if( associated( this%update_data ) ) deallocate( this%update_data )
-
-  end subroutine rxn_profile_finalize
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #ifdef CAMP_USE_JSON
   !> Constructor for aero_rep_profile_t
   function aero_rep_profile_constructor( camp_core, json, j_obj ) &
@@ -924,18 +908,6 @@ contains
     call camp_core%update_data( this%update_data )
 
   end subroutine update_aero_rep
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Finalize the aerosol representation profile
-  elemental subroutine aero_rep_profile_finalize( this )
-
-    !> Aerosol representation profile
-    type(aero_rep_profile_t), intent(inout) :: this
-
-    if( associated( this%update_data ) ) deallocate( this%update_data )
-
-  end subroutine aero_rep_profile_finalize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

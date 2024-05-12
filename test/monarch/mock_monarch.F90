@@ -11,42 +11,6 @@ program mock_monarch_t
   use camp_mpi
   use json_module
 
-#ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
-  ! EBI Solver
-  use module_bsc_chem_data
-  use EXT_HRDATA
-  use EXT_RXCM,                               only : NRXNS, RXLABEL
-  ! KPP Solver
-  use cb05cl_ae5_Initialize,                  only : KPP_Initialize => Initialize
-  use cb05cl_ae5_Model,                       only : KPP_NSPEC => NSPEC, &
-          KPP_STEPMIN => STEPMIN, &
-          KPP_STEPMAX => STEPMAX, &
-          KPP_RTOL => RTOL, &
-          KPP_ATOL => ATOL, &
-          KPP_TIME => TIME, &
-          KPP_C => C, &
-          KPP_RCONST => RCONST, &
-          KPP_Update_RCONST => Update_RCONST, &
-          KPP_INTEGRATE => INTEGRATE, &
-          KPP_SPC_NAMES => SPC_NAMES, &
-          KPP_PHOTO_RATES => PHOTO_RATES, &
-          KPP_TEMP => TEMP, &
-          KPP_PRESS => PRESS, &
-          KPP_SUN => SUN, &
-          KPP_M => M, &
-          KPP_N2 => N2, &
-          KPP_O2 => O2, &
-          KPP_H2 => H2, &
-          KPP_H2O => H2O, &
-          KPP_N2O => N2O, &
-          KPP_CH4 => CH4, &
-          KPP_NVAR => NVAR, &
-          KPP_NREACT => NREACT, &
-          KPP_DT => DT
-  use cb05cl_ae5_Parameters,                  only : KPP_IND_O2 => IND_O2
-  use cb05cl_ae5_Initialize, ONLY: Initialize
-#endif
-
   implicit none
 
   integer(kind=i_kind), parameter :: NUM_EBI_SPEC = 72
@@ -150,12 +114,6 @@ program mock_monarch_t
   end if
 
   call set_env(camp_interface,output_path)
-
-#ifdef SOLVE_EBI_IMPORT_CAMP_INPUT
-  if(caseMulticellsOnecell.eq."EBI") then
-    call solve_ebi(camp_interface)
-  end if
-#endif
 
   if(TIME_STEP*NUM_TIME_STEP>(60*24)) then !24h limit time-step
     print*,"ERROR TIME_STEP*NUM_TIME_STEP.gt.(60*24): Reduce number of time-step or time-step size"

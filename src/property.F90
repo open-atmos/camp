@@ -110,8 +110,6 @@ module camp_property
     procedure :: value_property_t
     !> Print the contents of a property key-value pair
     procedure :: print => link_do_print
-    !> Finalize
-    final :: link_finalize
   end type property_link_t
 
   ! Constructor for link
@@ -930,18 +928,6 @@ contains
     end select
 
   end subroutine link_do_print
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Finalize the property_link_t variable
-  elemental subroutine link_finalize(this)
-
-    !> Property key-value pair
-    type(property_link_t), intent(inout) :: this
-
-    if (associated(this%val)) deallocate(this%val)
-
-  end subroutine link_finalize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
