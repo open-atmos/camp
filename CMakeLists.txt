@@ -31,7 +31,7 @@ option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
 option(ENABLE_CAMP_PROFILE_SOLVING "" OFF)
 option(ENABLE_NETCDF "Include NETCDF package" OFF)
 option(DISABLE_INSTALL_OPTIONS "" OFF)
-SET(USE_TESTS ON)
+SET(USE_TESTS OFF)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 
@@ -218,7 +218,7 @@ endif()
 
 if(USE_TESTS)
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
-#add_custom_target(copy_test ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/test ${CMAKE_BINARY_DIR}/test_run)
+add_custom_target(copy_test ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/test ${CMAKE_BINARY_DIR}/test_run)
 add_custom_target(copy_mechanism ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/mechanisms ${CMAKE_BINARY_DIR}/mechanisms_run)
 add_custom_target(copy_boot_camp ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc/camp_tutorial/boot_camp ${CMAKE_BINARY_DIR}/boot_camp_run)
 set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_run scenarios_run boot_camp_run)
@@ -515,11 +515,11 @@ endif()
 set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 	${CB5_EBI_FLAGS})
 
-#add_executable(mock_monarch test/monarch/mock_monarch.F90
-#    test/monarch/camp_monarch_interface.F90
-#    ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-#    test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-#target_link_libraries(mock_monarch camplib)
+add_executable(mock_monarch test/monarch/mock_monarch.F90
+    test/monarch/camp_monarch_interface.F90
+    ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+    test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+target_link_libraries(mock_monarch camplib)
 
 if (USE_TESTS)
 

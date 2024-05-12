@@ -19,6 +19,9 @@ if [ ! -d "${src_path}" ]; then
    exit 1
 fi
 
-cp -rf $src_path/json-fortran-6.1.0 $dst_path
-cp -rf $src_path/cvode-3.4-alpha $dst_path
-cp -rf $src_path/SuiteSparse $dst_path
+dst_path_cvode=${dst_path}/cvode-3.4-alpha
+if [ ! -d "${dst_path_cvode}" ]; then
+  cp -rf $src_path/json-fortran-6.1.0 $dst_path
+  cp -rf $src_path/cvode-3.4-alpha $dst_path
+  cp -rf $src_path/SuiteSparse $dst_path
+fi

@@ -7,6 +7,7 @@
  */
 
 #include "camp_solver.h"
+#include <string.h>
 
 #ifdef CAMP_PROFILE_SOLVING
 #ifdef CAMP_USE_MPI
