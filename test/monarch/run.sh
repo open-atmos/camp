@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 set -e
-
 scriptdir="$(dirname "$0")"
 cd "$scriptdir"
-source ../../compile/load.modules.camp.sh
 make_and_check() {
   curr_path=$(pwd)
   cd ../../build

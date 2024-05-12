@@ -7,7 +7,8 @@ curr_path=$(pwd)
 if [ "${BSC_MACHINE}" == "mn5" ]; then
     module load cmake
   if module list 2>&1 | grep -q "\<intel\>"; then
-    module load oneapi
+    module load intel/2023.2.0
+    module load impi/2021.10.0
   else
     echo
     module load gcc

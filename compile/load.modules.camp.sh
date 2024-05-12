@@ -4,16 +4,16 @@ if [ "${BSC_MACHINE}" == "mn5" ]; then
   if ! module list 2>&1 | grep -q "\<python\>"; then #mod not load
     module load bsc
     module load cmake
-    module load oneapi
-    todo usar modulos de monarch
-    https://earth.bsc.es/gitlab/es/auto-monarch/-/blob/571-porting-to-marenostrum-5/platforms/marenostrum5/remoteconfig.marenostrum5.sh
     if module list 2>&1 | grep -q "\<intel\>"; then
-      module load hdf5
-      module load pnetcdf
-      module load netcdf
-      if [[ "${HOSTNAME}" == *"alogin"* ]]; then
-        module load cuda
-      fi
+      module load intel/2023.2.0
+      module load impi/2021.10.0
+      module load mkl/2023.2.0
+      module load hdf5/1.14.1-2
+      module load pnetcdf/1.12.3
+      module load netcdf/2023-06-14
+    if [[ "${HOSTNAME}" == *"alogin"* ]]; then
+      module load cuda
+    fi
     module load python
     else
       module load cmake
