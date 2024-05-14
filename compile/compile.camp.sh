@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
-library_path="../../"
-curr_path=$(pwd)
-
 source load.modules.camp.sh
+# get directory of CAMP suite (and force it to be an absolute path)
+case "$#" in
+    0) library_path=../../ ;;
+    1) library_path=$1     ;;
+esac
+curr_path=$(pwd)
 export JSON_FORTRAN_HOME=$(pwd)/$library_path/json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0
 export SUNDIALS_HOME=$(pwd)/$library_path/cvode-3.4-alpha/install
 export SUITE_SPARSE_HOME=$(pwd)/$library_path/SuiteSparse
@@ -31,7 +34,7 @@ cmake -D CMAKE_C_COMPILER=$(which mpicc) \
 -D ENABLE_DEBUG=OFF \
 -D FAILURE_DETAIL=OFF \
 -D ENABLE_MPI=ON \
--D ENABLE_GPU=ON \
+-D ENABLE_GPU=OFF \
 -D ENABLE_CAMP_PROFILE_SOLVING=ON \
 -D ENABLE_GSL:BOOL=FALSE \
 -D ENABLE_NETCDF=ON \

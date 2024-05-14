@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-library_path="../../"
-curr_path=$(pwd)
-
 if [ "${BSC_MACHINE}" == "mn5" ]; then
     module load cmake
   if module list 2>&1 | grep -q "\<intel\>"; then
@@ -19,6 +16,12 @@ if [ -z "$SUITE_SPARSE_CAMP_ROOT" ]; then
 	SUITE_SPARSE_CAMP_ROOT=$(pwd)/$library_path/SuiteSparse
 fi
 
+# get directory of CAMP suite (and force it to be an absolute path)
+case "$#" in
+    0) library_path=../../ ;;
+    1) library_path=$1     ;;
+esac
+curr_path=$(pwd)
 cd $library_path/cvode-3.4-alpha
 rm -rf build
 mkdir build

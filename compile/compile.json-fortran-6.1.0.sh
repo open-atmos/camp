@@ -11,8 +11,10 @@ if [ $BSC_MACHINE == "mn5" ]; then
     module load openmpi/4.1.5-gcc
   fi
 fi
-
-library_path="../../"
+case "$#" in
+    0) camp_suite_dir=../../ ;;
+    1) camp_suite_dir=$1     ;;
+esac
 curr_path=$(pwd)
 cd $library_path/json-fortran-6.1.0
 rm -rf build
