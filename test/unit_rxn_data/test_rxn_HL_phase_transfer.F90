@@ -29,7 +29,7 @@ program camp_test_HL_phase_transfer
   implicit none
 
   ! Number of timesteps to output in mechanisms
-  integer(kind=i_kind) :: NUM_TIME_STEP = 100
+  integer(kind=i_kind) :: NUM_TIME_STEP = 200 !200 time-steps fails on intel/2023 version on marenostrum 5
 
   ! initialize mpi
   call camp_mpi_init()

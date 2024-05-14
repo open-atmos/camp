@@ -15,10 +15,14 @@ while [ true ]
 do
   echo Attempt $counter
 
-if [ -z ${SLURM_TASK_PID+x} ]; then
-  exec_str="../../../camp_v1_paper_modal config_monarch_modal.json interface_monarch_modal.json out/monarch_cb05_soa"
+if [[ $1 = "MPI" ]]; then
+  exec_str="mpirun -v -np 1 ../../../camp_v1_paper_modal config_monarch_modal.json interface_monarch_modal.json out/monarch_cb05_soa"
 else
-  exec_str="mpirun -v -np 1 --bind-to none  ../../../camp_v1_paper_modal config_monarch_modal.json interface_monarch_modal.json out/monarch_cb05_soa"
+  if [ -z ${SLURM_TASK_PID+x} ]; then
+    exec_str="../../../camp_v1_paper_modal config_monarch_modal.json interface_monarch_modal.json out/monarch_cb05_soa"
+  else
+    exec_str="mpirun -v -np 1 --bind-to none  ../../../camp_v1_paper_modal config_monarch_modal.json interface_monarch_modal.json out/monarch_cb05_soa"
+  fi
 fi
 
   if ! $exec_str; then

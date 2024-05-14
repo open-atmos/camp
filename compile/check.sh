@@ -5,10 +5,11 @@ cd "$scriptdir"
 cd ../build
 make -j 4
 ctest --output-on-failure
+#Run individual tests:
 #./test_run/unit_rxn_data/test_HL_phase_transfer.sh MPI
-#./test_run/unit_rxn_data/test_SIMPOL_phase_transfer.sh
+#./test_run/unit_rxn_data/test_SIMPOL_phase_transfer.sh MPI
 #cd test_run/chemistry/cb05cl_ae5
-#./test_chemistry_cb05cl_ae5.sh
+#./test_chemistry_cb05cl_ae5.sh MPI
 #cd test_run/unit_rxn_data
 #./test_run/unit_rxn_data/test_HL_phase_transfer.sh
 #./test_run/unit_rxn_data/test_arrhenius.sh
