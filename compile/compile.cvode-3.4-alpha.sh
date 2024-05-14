@@ -12,13 +12,9 @@ if [ "${BSC_MACHINE}" == "mn5" ]; then
   fi
 fi
 
-if [ -z "$SUITE_SPARSE_CAMP_ROOT" ]; then
-	SUITE_SPARSE_CAMP_ROOT=$(pwd)/$library_path/SuiteSparse
-fi
-
 # get directory of CAMP suite (and force it to be an absolute path)
 case "$#" in
-    0) library_path=../../ ;;
+    0) library_path="../../" ;;
     1) library_path=$1     ;;
 esac
 curr_path=$(pwd)
@@ -35,8 +31,8 @@ cmake -D CMAKE_BUILD_TYPE=debug \
 -D CUDA_ENABLE:BOOL=FALSE \
 -D CMAKE_C_COMPILER=$(which mpicc) \
 -D EXAMPLES_ENABLE_CUDA=OFF \
--D KLU_LIBRARY_DIR=$SUITE_SPARSE_CAMP_ROOT/lib \
--D KLU_INCLUDE_DIR=$SUITE_SPARSE_CAMP_ROOT/include \
+-D KLU_LIBRARY_DIR=${library_path}/SuiteSparse/lib \
+-D KLU_INCLUDE_DIR=${library_path}/SuiteSparse/include \
 -D CMAKE_INSTALL_PREFIX=$(pwd)/../install \
 -D EXAMPLES_ENABLE_C=OFF \
 ..

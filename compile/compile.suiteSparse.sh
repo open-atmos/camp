@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
-library_path="../.."
+case "$#" in
+    0) library_path="../../" ;;
+    1) library_path=$1     ;;
+esac
 curr_path=$(pwd)
 
 if [ "${BSC_MACHINE}" == "mn5" ] ; then

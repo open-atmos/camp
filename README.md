@@ -59,7 +59,9 @@ Optional dependencies:
 Installation on Marenostrum 5
 ============
 
-Run: `install.sh`
+Run: `install.sh a`
+
+For more options like install individual dependencies, run: `install.sh` or run scripts from `compile/` folder.
 
 You can validate installation running: ".compile/check.sh"
 

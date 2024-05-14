@@ -62,13 +62,13 @@ camp_suite_dir=`cd ${camp_suite_dir} ; pwd`
 
 
 
-# Indicat the source directory from where to copy the CAMP component(s),
+# Indicate the source directory from where to copy the CAMP component(s),
 # not the CAMP directory itself but its parent directory
 # (useful only if flag "1" activated)
-source_dir=
+source_dir=/gpfs/projects/bsc32/bsc032815/gpupartmc
 
 # select if you want to print the compilation outputs, and if not, if you want to clean the log files
-verbose=0
+verbose=1
 clean=0
 
 ############# STARTING FROM HERE, BASIC USERS SHOULD NOT NEED TO MODIFY ANYTHING #############
@@ -86,7 +86,7 @@ echo -e "$RED|       INSTALL THE CAMP SUITE$NC"
 echo -e "$RED|==========================================$NC"
 if [ "$#" -eq 0 ] ; then
     echo -e "$RED| For install all, you can write: ./install.sh a$NC"
-    echo -e "$RED| More options:$NC"
+    echo -e "$RED| More options in compile/ folder and here:$NC"
     echo -e "$RED| Usage:  ./install.sh <lib>:<flag(s)> [...]$NC"
     echo -e "$RED|        with <lib> the CAMP component library(ies) among json-fortran, SuiteSparse, cvode, camp, boxmodel$NC"
     echo -e "$RED|             <flag=0> for copying the directory from another one,$NC"
@@ -128,9 +128,7 @@ function install_jsonfortran()
 {
     # prepare directories
     if [[ $flags == *0* ]] ; then
-	# copy
-	rm -rf ${camp_suite_dir}/json-fortran-6.1.0
-	cp -rf ${source_dir}/json-fortran-6.1.0 ${camp_suite_dir}
+	    cp -rf ${source_dir}/json-fortran-6.1.0 ${camp_suite_dir}
     elif [[ $flags == *1* ]] ; then
 	# git-clone
 	rm -rf ${camp_suite_dir}/json-fortran-6.1.0
@@ -157,7 +155,6 @@ function install_suitesparse()
     # prepare directories
     if [[ $flags == *0* ]] ; then
 	# copy
-	rm -rf ${camp_suite_dir}/SuiteSparse
 	cp -rf ${source_dir}/SuiteSparse ${camp_suite_dir}
     fi
     if [[ $flags == *1* ]] ; then
@@ -202,18 +199,14 @@ function install_cvode()
 {
     # prepare directories
     if [[ $flags == *0* ]] ; then
-	# copy
-	rm -rf ${camp_suite_dir}/cvode-3.4-alpha
-        cp -rf ${source_dir}/cvode-3.4-alpha ${camp_suite_dir}
+      cp -rf ${source_dir}/cvode-3.4-alpha ${camp_suite_dir}
     fi
     if [[ $flags == *1* ]] ; then
-	# git-clone
-	rm -rf ${camp_suite_dir}/cvode-3.4-alpha
-	cd ${camp_suite_dir}
-	git clone https://github.com/mattldawson/cvode.git cvode-3.4-alpha
+      # git-clone
+      rm -rf ${camp_suite_dir}/cvode-3.4-alpha
+      cd ${camp_suite_dir}
+      git clone https://github.com/mattldawson/cvode.git cvode-3.4-alpha
     fi
-
-
     if [[ $flags == *2* ]] ; then
 	# load modules and compile
         ${camp_suite_dir}/camp/compile/compile.cvode-3.4-alpha.sh ${camp_suite_dir}
@@ -221,30 +214,20 @@ function install_cvode()
     cd $initial_dir
 }
 
-
-
 #########################################################
 #  install camp
 #########################################################
 function install_camp()
 {
-    # prepare directories
-    if [[ $flags == *0* ]] ; then
-	# copy
-	rm -rf ${camp_suite_dir}/camp
-        cp -rf ${source_dir}/camp ${camp_suite_dir}
-    fi
     if [[ $flags == *1* ]] ; then
-	# git-clone
-	rm -rf ${camp_suite_dir}/camp
-        cd ${camp_suite_dir}
-	git clone https://earth.bsc.es/gitlab/ac/camp.git
+	    # git-clone
+      rm -rf ${camp_suite_dir}/camp
+            cd ${camp_suite_dir}
+      git clone https://earth.bsc.es/gitlab/ac/camp.git
     fi
-
-
     if [[ $flags == *2* ]] ; then
-	# load modules and compile
-        ${camp_suite_dir}/camp/compile/compile.camp.sh ${camp_suite_dir}
+	    # load modules and compile
+      ${camp_suite_dir}/camp/compile/compile.camp.sh ${camp_suite_dir}
     fi
     cd $initial_dir
 }
@@ -282,21 +265,6 @@ for componentflags in "$@"; do
     if [[ $flags == *0* ]] && [[ $flags == *1* ]] ; then
 	echo -e "$RED| ERROR: Wrong flag specification ($flags). Please choose either 1 (copying) or 2 (cloning). Exiting...$NC"
 	exit 0
-    fi
-
-    # check if the HPC machine name appears in the load.module.XXX.sh script (if compilation is requested)
-    if [[ $flags == *2* ]] ; then
-	case $component in
-            'json-fortran') ok=`grep '"'${BSC_MACHINE}'-loadmodules"' compile/compile.json-fortran-6.1.0.sh | wc -l` ;;
-	    'SuiteSparse')  ok=`grep '"'${BSC_MACHINE}'-loadmodules"' compile/compile.suiteSparse.sh | wc -l` ;;
-            'cvode')        ok=`grep '"'${BSC_MACHINE}'-loadmodules"' compile/compile.cvode-3.4-alpha.sh | wc -l` ;;
-            'camp')         ok=`grep '"'${BSC_MACHINE}'-loadmodules"' compile/compile.camp.sh | wc -l` ;;
-	    'boxmodel')     ok=`grep '"'${BSC_MACHINE}'-loadmodules"' compile/compile.boxmodel.sh | wc -l` ;;
-	esac
-	if [ $ok -ne 1 ] ; then
-	    echo -e "$RED| ERROR: Module load instructions missing for this HPC machine (${BSC_MACHINE}). Exiting...$NC"
-	    exit 0
-	fi
     fi
 
 done

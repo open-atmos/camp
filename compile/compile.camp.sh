@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+scriptdir="$(dirname "$0")"
+cd "$scriptdir"
 source load.modules.camp.sh
 # get directory of CAMP suite (and force it to be an absolute path)
 case "$#" in
