@@ -63,6 +63,9 @@ Run: `install.sh a`
 
 For more options like install individual dependencies, run: `install.sh` or run scripts from `compile/` folder.
 
+Load modules by running "compile/load.modules.camp.sh". We recommend to include that command into
+your bashrc to avoid running the command manually each time you start a bash session.
+
 You can validate installation running: ".compile/check.sh"
 
 Any problem, contact administrators of the CAMP repository of the Barcelona Supercomputing Center.

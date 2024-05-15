@@ -216,9 +216,9 @@ endif()
 ######################################################################
 # copy dirs
 
-add_custom_target(copy_test ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/test ${CMAKE_BINARY_DIR}/test_run)
 if(USE_TESTS)
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
+add_custom_target(copy_test ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/test ${CMAKE_BINARY_DIR}/test_run)
 add_custom_target(copy_mechanism ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/mechanisms ${CMAKE_BINARY_DIR}/mechanisms_run)
 add_custom_target(copy_boot_camp ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc/camp_tutorial/boot_camp ${CMAKE_BINARY_DIR}/boot_camp_run)
 set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_run scenarios_run boot_camp_run)
@@ -515,33 +515,30 @@ endif()
 set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 	${CB5_EBI_FLAGS})
 
-######################################################################
-# test_chemistry_cb05cl_ae5
-
-add_executable(test_chemistry_cb05cl_ae5
-    test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
+add_executable(mock_monarch test/monarch/mock_monarch.F90
+    test/monarch/camp_monarch_interface.F90
     ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
     test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(test_chemistry_cb05cl_ae5 camplib)
-
-add_executable(test_rxn_CMAQ_H2O2 test/unit_rxn_data/test_rxn_CMAQ_H2O2.F90)
-target_link_libraries(test_rxn_CMAQ_H2O2 camplib)
+target_link_libraries(mock_monarch camplib)
 
 if (USE_TESTS)
 
-  add_executable(mock_monarch test/monarch/mock_monarch.F90
-      test/monarch/camp_monarch_interface.F90
-      ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-      test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-  target_link_libraries(mock_monarch camplib)
-
-  ######################################################################
+######################################################################
 # camp-chem box model
 
 add_executable(camp_box_model test/camp_box_model_data.F90
     test/camp_box_model.F90)
 
 target_link_libraries(camp_box_model camplib)
+
+######################################################################
+# test_chemistry_cb05cl_ae5
+
+add_executable(test_chemistry_cb05cl_ae5
+        test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
+        ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
+        test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
+target_link_libraries(test_chemistry_cb05cl_ae5 camplib)
 
 ######################################################################
 # test_property
@@ -569,6 +566,8 @@ target_link_libraries(unit_test_chem_spec_data camplib)
 
 add_executable(test_rxn_aqueous_equilibrium test/unit_rxn_data/test_rxn_aqueous_equilibrium.F90)
 target_link_libraries(test_rxn_aqueous_equilibrium camplib)
+add_executable(test_rxn_CMAQ_H2O2 test/unit_rxn_data/test_rxn_CMAQ_H2O2.F90)
+target_link_libraries(test_rxn_CMAQ_H2O2 camplib)
 add_executable(test_rxn_CMAQ_OH_HNO3 test/unit_rxn_data/test_rxn_CMAQ_OH_HNO3.F90)
 target_link_libraries(test_rxn_CMAQ_OH_HNO3 camplib)
 add_executable(test_rxn_condensed_phase_arrhenius test/unit_rxn_data/test_rxn_condensed_phase_arrhenius.F90)

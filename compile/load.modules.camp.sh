@@ -11,6 +11,8 @@ if [ "${BSC_MACHINE}" == "mn5" ]; then
       module load hdf5/1.14.1-2
       module load pnetcdf/1.12.3
     if [[ "${HOSTNAME}" == *"alogin"* ]]; then
+     # module load netcdf
+      #module load intel/2023.2.0-sycl_cuda
       module load cuda
       module load netcdf
     else

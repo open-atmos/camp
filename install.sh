@@ -68,7 +68,7 @@ camp_suite_dir=`cd ${camp_suite_dir} ; pwd`
 source_dir=/gpfs/projects/bsc32/bsc032815/gpupartmc
 
 # select if you want to print the compilation outputs, and if not, if you want to clean the log files
-verbose=1
+verbose=0
 clean=0
 
 ############# STARTING FROM HERE, BASIC USERS SHOULD NOT NEED TO MODIFY ANYTHING #############
