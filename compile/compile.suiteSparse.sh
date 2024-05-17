@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 set -e
 case "$#" in
-    0) library_path="../../" ;;
-    1) library_path=$1     ;;
+    0) camp_suite_dir="../../" ;;
+    1) camp_suite_dir=$1     ;;
 esac
-curr_path=$(pwd)
+camp_suite_dir=`cd ${camp_suite_dir} ; pwd`
+initial_dir=$(pwd)
 
-if [ "${BSC_MACHINE}" == "mn5" ] ; then
-  module load cmake
+case "${BSC_MACHINE}-loadmodules" in
+    "mn5-loadmodules")  module load cmake
   module load openblas
   if module list 2>&1 | grep -q "\<intel\>"; then
     module load intel/2023.2.0
@@ -19,13 +20,13 @@ if [ "${BSC_MACHINE}" == "mn5" ] ; then
   if module list 2>&1 | grep -q "\<cuda\>"; then
     module unload cuda
   fi
-fi
-cd $library_path/SuiteSparse
+  ;;
+esac
+cd $camp_suite_dir/SuiteSparse
 make purge
 if [ "${BSC_MACHINE}" == "mn5" ]; then
   make BLAS="-L/usr/lib/x86_64-linux-gnu -I$path_Blas_install/include/ -L$path_Blas_install/lib -Wl,-rpath,$path_Blas_install/OpenBLAS/lib -lopenblas" LAPACK=""
 else
   make BLAS="-L/usr/lib/x86_64-linux-gnu -lopenblas" LAPACK=""
 fi
-export SUITE_SPARSE_CAMP_ROOT=$(pwd)/$library_path/
-cd $curr_path
+cd $initial_dir

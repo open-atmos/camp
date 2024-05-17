@@ -12,10 +12,10 @@
 
 set -e
 make_run(){
-  curr_path=$(pwd)
+  initial_dir=$(pwd)
   cd ../../build
   make -j 4
-  cd $curr_path
+  cd $initial_dir
   python TestMonarch.py
 }
 time make_run

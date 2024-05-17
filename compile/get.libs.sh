@@ -8,9 +8,9 @@ if [ "${BSC_MACHINE}" != "mn5" ]; then
   exit 0
 fi
 
-library_path="../../"
-curr_path=$(pwd)
-dst_path=$curr_path/$library_path
+camp_suite_dir="../../"
+initial_dir=$(pwd)
+dst_path=$initial_dir/$camp_suite_dir
 src_path=/gpfs/projects/bsc32/bsc032815/gpupartmc
 if [ ! -d "${src_path}" ]; then
   echo "ERROR: $src_path does not exist, contact the administrator

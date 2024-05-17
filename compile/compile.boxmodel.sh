@@ -10,7 +10,7 @@ camp_suite_dir=`cd ${camp_suite_dir} ; pwd`
 # current directory
 initial_dir=`pwd`
 
-# load modules for json-fortran-6.1.0 for different HPC machines ("-loadmodules" suffix used in install.sh)
+# load modules for boxmodel for different HPC machines ("-loadmodules" suffix used in install.sh)
 case "${BSC_MACHINE}-loadmodules" in
     "mn5-loadmodules")
 	module purge

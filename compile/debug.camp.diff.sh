@@ -3,10 +3,10 @@
 #todo: enable "USE_BCG"
 #todo: enable "CAMP_DEBUG_NVECTOR"
 make_camp(){
-  curr_path=$(pwd)
+  initial_dir=$(pwd)
   cd  ../build
   make || exit 1
-  cd $curr_path
+  cd $initial_dir
 }
 make_camp
 FILE=diff_TestMonarch.py

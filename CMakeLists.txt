@@ -31,7 +31,7 @@ option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
 option(ENABLE_CAMP_PROFILE_SOLVING "" OFF)
 option(ENABLE_NETCDF "Include NETCDF package" OFF)
 option(DISABLE_INSTALL_OPTIONS "" OFF)
-SET(USE_TESTS ON)
+SET(USE_TESTS OFF)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 

@@ -10,12 +10,12 @@ compile(){
      exit
    fi
 
-   curr_path=$(pwd)
+   initial_dir=$(pwd)
    cd  ../build
    if ! make -j ${NUMPROC}; then
      exit
    fi
-   cd $curr_path
+   cd $initial_dir
 }
 time compile
 cd ../build

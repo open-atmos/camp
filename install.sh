@@ -27,16 +27,7 @@
 #
 ####################################################
 
-if [ "$1" == "a" ] ; then
-  scriptdir="$(dirname "$0")"
-  cd "$scriptdir"
-  if [ ! -d build ]; then
-    ./compile/compile.libs.camp.sh
-  else
-    echo "ERROR: CAMP build/ folder already exists. It is already installed? If want to install again, remove build/ folder"
-  fi
-  exit 0
-fi
+
 
 # indicate the library path where all CAMP suite components
 # (json-fortran, SuiteSparse, cvode, camp and boxmodel
@@ -85,25 +76,39 @@ echo -e "$RED|==========================================$NC"
 echo -e "$RED|       INSTALL THE CAMP SUITE$NC"
 echo -e "$RED|==========================================$NC"
 if [ "$#" -eq 0 ] ; then
-    echo -e "$RED| For install all, you can write: ./install.sh a$NC"
-    echo -e "$RED| More options in compile/ folder and here:$NC"
-    echo -e "$RED| Usage:  ./install.sh <lib>:<flag(s)> [...]$NC"
-    echo -e "$RED|        with <lib> the CAMP component library(ies) among json-fortran, SuiteSparse, cvode, camp, boxmodel$NC"
+    echo -e "$RED| Quick installation from scratch:$NC  ./install.sh start"
+    echo -e "$RED| (this will git-clone the different CAMP components, except CAMP itself that is already there, $NC"
+    echo -e "$RED|  and compile everything; i.e. jsonfortran:12 suitesparse:12 cvode:12 camp:2 boxmodel:2)$NC"
+    echo -e "$RED| $NC"
+    echo -e "$RED| For more options:$NC ./install.sh <lib>:<flag(s)> [...]"
+    echo -e "$RED|        with <lib> the CAMP component library(ies) among jsonfortran, suitesparse, cvode, camp, boxmodel$NC"
     echo -e "$RED|             <flag=0> for copying the directory from another one,$NC"
     echo -e "$RED|             <flag=1> for git-cloning from the web,$NC"
     echo -e "$RED|             <flag=2> for compiling the library$NC"
     echo -e "$RED| Examples:$NC"
-    echo -e "$RED#(copy/compile json-fortran and clone/compile SuiteSparse)$NC"
-    echo "./install.sh json-fortran:02 SuiteSparse:12"
-    echo -e "$RED#(clone/compile all components, and compile boxmodel)$NC"
-    echo "./install.sh json-fortran:12 SuiteSparse:12 cvode:12 camp:12 boxmodel:2"
-    echo -e "$RED#(clone/compile json-fortran, SuiteSparse and cvode, and compile camp and boxmodel)$NC"
-    echo "./install.sh json-fortran:12 SuiteSparse:12 cvode:12 camp:2 boxmodel:2"
+    echo -e "$RED#(copy/compile jsonfortran and clone/compile suitesparse)$NC"
+    echo "./install.sh jsonfortran:02 suitesparse:12"
+    echo -e "$RED#(git-clone/compile all components, and compile boxmodel)$NC"
+    echo "./install.sh jsonfortran:12 suitesparse:12 cvode:12 camp:12 boxmodel:2"
+    echo -e "$RED#(git-clone/compile jsonfortran, suitesparse and cvode, and compile camp and boxmodel)$NC"
+    echo "./install.sh jsonfortran:12 suitesparse:12 cvode:12 camp:2 boxmodel:2"
     exit 0
 fi
+
+
+# get arguments
+if [ "$1" == "start" ] ; then
+    # get input arguments for quick start
+    arguments="jsonfortran:12 suitesparse:12 cvode:12 camp:2 boxmodel:2"
+else
+    # get input arguments prescribed by the user
+    arguments=$@
+fi
+
+# print information
 echo -e "$RED| Inputs:$NC"
-echo -e "$RED|    components: $@$NC"
-echo -e "$RED|    camp_suite_dir: $camp_suite_dir$NC"
+echo -e "$RED|    components: $NC $arguments"
+echo -e "$RED|    camp_suite_dir:$NC $camp_suite_dir"
 
 
 # indicate if this script is working on the current HPC machine, exit if not
@@ -126,17 +131,22 @@ mkdir -p ${camp_suite_dir}
 #########################################################
 function install_jsonfortran()
 {
-    # prepare directories
-    if [[ $flags == *0* ]] ; then
-	    cp -rf ${source_dir}/json-fortran-6.1.0 ${camp_suite_dir}
-    elif [[ $flags == *1* ]] ; then
-	# git-clone
-	rm -rf ${camp_suite_dir}/json-fortran-6.1.0
-	cd ${camp_suite_dir}
-        git clone https://github.com/jacobwilliams/json-fortran.git json-fortran-6.1.0
-        cd ${camp_suite_dir}/json-fortran-6.1.0
-	git checkout tags/6.1.0
+  # prepare directories
+  if [[ $flags == *0* ]] ; then
+    #rm -rf ${camp_suite_dir}/json-fortran-6.1.0
+    cp -rf ${source_dir}/json-fortran-6.1.0 ${camp_suite_dir}
+  elif [[ $flags == *1* ]] ; then
+    # git-clone
+    rm -rf ${camp_suite_dir}/json-fortran-6.1.0
+    cd ${camp_suite_dir}
+    if timeout 2s wget -q --spider http://google.com; then
+      git clone https://github.com/jacobwilliams/json-fortran.git json-fortran-6.1.0
+      cd ${camp_suite_dir}/json-fortran-6.1.0
+      git checkout tags/6.1.0
+    else
+      cp -rf ${source_dir}/json-fortran-6.1.0 ${camp_suite_dir}
     fi
+  fi
 
     if [[ $flags == *2* ]] ; then
 	# load modules and compile
@@ -153,41 +163,44 @@ function install_jsonfortran()
 function install_suitesparse()
 {
     # prepare directories
-    if [[ $flags == *0* ]] ; then
-	# copy
-	cp -rf ${source_dir}/SuiteSparse ${camp_suite_dir}
-    fi
-    if [[ $flags == *1* ]] ; then
+  if [[ $flags == *0* ]] ; then
+    rm -rf ${camp_suite_dir}/SuiteSparse
+    cp -rf ${source_dir}/SuiteSparse ${camp_suite_dir}
+  fi
+  if [[ $flags == *1* ]] ; then
 	# git-clone
-	rm -rf ${camp_suite_dir}/SuiteSparse
-	cd ${camp_suite_dir}
-	git clone https://github.com/DrTimothyAldenDavis/SuiteSparse.git
-	cd SuiteSparse
-	git checkout v5.1.0
-	suitesparse_patch=./suitesparse_patch.patch
-	echo 'diff --git a/SuiteSparse_config/SuiteSparse_config.mk b/SuiteSparse_config/SuiteSparse_config.mk' > ${suitesparse_patch}
-	echo 'index bb26ac3a3..a3e63d66f 100644' >> ${suitesparse_patch}
-	echo '--- a/SuiteSparse_config/SuiteSparse_config.mk' >> ${suitesparse_patch}
-	echo '+++ b/SuiteSparse_config/SuiteSparse_config.mk' >> ${suitesparse_patch}
-	echo '@@ -115,7 +115,7 @@ SUITESPARSE_VERSION = 5.1.0' >> ${suitesparse_patch}
-	echo '             CC = icc -D_GNU_SOURCE' >> ${suitesparse_patch}
-	echo '             CXX = $(CC)' >> ${suitesparse_patch}
-	echo '             CFOPENMP = -qopenmp -I$(MKLROOT)/include' >> ${suitesparse_patch}
-	echo '-	    LDFLAGS += -openmp' >> ${suitesparse_patch}
-	echo '+	    LDFLAGS += -qopenmp' >> ${suitesparse_patch}
-	echo '             LDLIBS += -lm -lirc' >> ${suitesparse_patch}
-	echo '         endif' >> ${suitesparse_patch}
-	echo '         ifneq ($(shell which ifort 2>/dev/null),)' >> ${suitesparse_patch}
-	echo '' >> ${suitesparse_patch}
-	git apply suitesparse_patch.patch
+    rm -rf ${camp_suite_dir}/SuiteSparse
+    if timeout 2s wget -q --spider http://google.com; then
+      cd ${camp_suite_dir}
+      git clone https://github.com/DrTimothyAldenDavis/SuiteSparse.git
+      cd SuiteSparse
+      git checkout v5.1.0
+      suitesparse_patch=./suitesparse_patch.patch
+      echo 'diff --git a/SuiteSparse_config/SuiteSparse_config.mk b/SuiteSparse_config/SuiteSparse_config.mk' > ${suitesparse_patch}
+      echo 'index bb26ac3a3..a3e63d66f 100644' >> ${suitesparse_patch}
+      echo '--- a/SuiteSparse_config/SuiteSparse_config.mk' >> ${suitesparse_patch}
+      echo '+++ b/SuiteSparse_config/SuiteSparse_config.mk' >> ${suitesparse_patch}
+      echo '@@ -115,7 +115,7 @@ SUITESPARSE_VERSION = 5.1.0' >> ${suitesparse_patch}
+      echo '             CC = icc -D_GNU_SOURCE' >> ${suitesparse_patch}
+      echo '             CXX = $(CC)' >> ${suitesparse_patch}
+      echo '             CFOPENMP = -qopenmp -I$(MKLROOT)/include' >> ${suitesparse_patch}
+      echo '-	    LDFLAGS += -openmp' >> ${suitesparse_patch}
+      echo '+	    LDFLAGS += -qopenmp' >> ${suitesparse_patch}
+      echo '             LDLIBS += -lm -lirc' >> ${suitesparse_patch}
+      echo '         endif' >> ${suitesparse_patch}
+      echo '         ifneq ($(shell which ifort 2>/dev/null),)' >> ${suitesparse_patch}
+      echo '' >> ${suitesparse_patch}
+      git apply suitesparse_patch.patch
+    else
+      cp -rf ${source_dir}/SuiteSparse ${camp_suite_dir}
     fi
+  fi
 
-
-    if [[ $flags == *2* ]] ; then
+  if [[ $flags == *2* ]] ; then
 	# load modules and compile
-	${camp_suite_dir}/camp/compile/compile.suiteSparse.sh ${camp_suite_dir}
-    fi
-    cd $initial_dir
+	  ${camp_suite_dir}/camp/compile/compile.suiteSparse.sh ${camp_suite_dir}
+  fi
+  cd $initial_dir
 }
 
 
@@ -197,22 +210,29 @@ function install_suitesparse()
 #########################################################
 function install_cvode()
 {
-    # prepare directories
-    if [[ $flags == *0* ]] ; then
-      cp -rf ${source_dir}/cvode-3.4-alpha ${camp_suite_dir}
-    fi
-    if [[ $flags == *1* ]] ; then
-      # git-clone
-      rm -rf ${camp_suite_dir}/cvode-3.4-alpha
+  # prepare directories
+  if [[ $flags == *0* ]] ; then
+    rm -rf ${camp_suite_dir}/cvode-3.4-alpha
+    cp -rf ${source_dir}/cvode-3.4-alpha ${camp_suite_dir}
+  fi
+  if [[ $flags == *1* ]] ; then
+    # git-clone
+    rm -rf ${camp_suite_dir}/cvode-3.4-alpha
+    if timeout 2s wget -q --spider http://google.com; then
       cd ${camp_suite_dir}
       git clone https://github.com/mattldawson/cvode.git cvode-3.4-alpha
+    else
+      cp -rf ${source_dir}/cvode-3.4-alpha ${camp_suite_dir}
     fi
-    if [[ $flags == *2* ]] ; then
-	# load modules and compile
-        ${camp_suite_dir}/camp/compile/compile.cvode-3.4-alpha.sh ${camp_suite_dir}
-    fi
-    cd $initial_dir
+  fi
+  if [[ $flags == *2* ]] ; then
+    # load modules and compile
+    ${camp_suite_dir}/camp/compile/compile.cvode-3.4-alpha.sh ${camp_suite_dir}
+  fi
+  cd $initial_dir
 }
+
+
 
 #########################################################
 #  install camp
@@ -221,10 +241,15 @@ function install_camp()
 {
     if [[ $flags == *1* ]] ; then
 	    # git-clone
-      rm -rf ${camp_suite_dir}/camp
-            cd ${camp_suite_dir}
-      git clone https://earth.bsc.es/gitlab/ac/camp.git
+      if timeout 2s wget -q --spider http://google.com; then
+        git clone https://earth.bsc.es/gitlab/ac/camp.git
+        rm -rf ${camp_suite_dir}/camp
+        cd ${camp_suite_dir}
+      else
+        echo "No internet connection detected"
+      fi
     fi
+
     if [[ $flags == *2* ]] ; then
 	    # load modules and compile
       ${camp_suite_dir}/camp/compile/compile.camp.sh ${camp_suite_dir}
@@ -254,7 +279,7 @@ function install_boxmodel()
 
 # check if correct flags combination are requted, and
 # check if the modules to be load are specified for the current HPC machine
-for componentflags in "$@"; do
+for componentflags in $arguments ; do
 
     # get component and flags
     component=$(echo "$componentflags" | awk -F':' '{print $1}')
@@ -267,6 +292,21 @@ for componentflags in "$@"; do
 	exit 0
     fi
 
+  # check if the HPC machine name appears in the load.module.XXX.sh script (if compilation is requested)
+  if [[ $flags == *2* ]] ; then
+    case $component in
+              'jsonfortran') ok=`grep '"'${BSC_MACHINE}'-loadmodules"' compile/compile.json-fortran-6.1.0.sh | wc -l` ;;
+        'suitesparse') ok=`grep '"'${BSC_MACHINE}'-loadmodules"' compile/compile.suiteSparse.sh | wc -l` ;;
+              'cvode')       ok=`grep '"'${BSC_MACHINE}'-loadmodules"' compile/compile.cvode-3.4-alpha.sh | wc -l` ;;
+              'camp')        ok=`grep '"'${BSC_MACHINE}'-loadmodules"' compile/compile.camp.sh | wc -l` ;;
+        'boxmodel')    ok=`grep '"'${BSC_MACHINE}'-loadmodules"' compile/compile.boxmodel.sh | wc -l` ;;
+    esac
+    if [ $ok -ne 1 ] ; then
+        echo -e "$RED| ERROR: Module load instructions missing for this HPC machine (${BSC_MACHINE}). Exiting...$NC"
+        exit 0
+    fi
+  fi
+
 done
 
 
@@ -274,31 +314,44 @@ done
 
 # loop on the CAMP suite components to prepare and compile
 echo -e "$RED| Start loop on CAMP suite components$NC"
-for componentflags in "$@"; do
+for componentflags in $arguments ; do
 
     # get component and flags
     component=$(echo "$componentflags" | awk -F':' '{print $1}')
     flags=$(echo "$componentflags" | awk -F':' '{print $2}')
 
     echo -e "$RED| Prepare and compile $component with flag(s) $flags$NC"
+    echo -e "$RED|   (check compilation log files: ${camp_suite_dir}/log_$component)$Nc"
+
 
     # loop on components
     start_time=$(date +%s)
     if [ $verbose -eq 0 ] ; then
 	case $component in
-	    'json-fortran') install_jsonfortran > ${camp_suite_dir}/log_jsonfortran 2>&1 ;;
-    	    'SuiteSparse')  install_suitesparse > ${camp_suite_dir}/log_suitesparse 2>&1 ;;
-    	    'cvode')        install_cvode       > ${camp_suite_dir}/log_cvode       2>&1 ;;
-    	    'camp')         install_camp        > ${camp_suite_dir}/log_camp        2>&1 ;;
-	    'boxmodel')     install_boxmodel    > ${camp_suite_dir}/log_boxmodel    2>&1 ;;
+	    'jsonfortran') install_jsonfortran > ${camp_suite_dir}/log_$component 2>&1 ;;
+    	    'suitesparse') install_suitesparse > ${camp_suite_dir}/log_$component 2>&1 ;;
+    	    'cvode')       install_cvode       > ${camp_suite_dir}/log_$component 2>&1 ;;
+    	    'camp')        install_camp        > ${camp_suite_dir}/log_$component 2>&1 ;;
+	    'boxmodel')    install_boxmodel    > ${camp_suite_dir}/log_$component 2>&1 ;;
         esac
+
+	# check errors in compilation (not completed yet, need to handle non-important errors)
+	#nerrors=`grep Error ${camp_suite_dir}/log_$component | wc -l`
+	#if [ "$nerrors" -gt 0 ] ; then
+	#    tail -f 100 ${camp_suite_dir}/log_$component
+	#    echo -e "$RED| ERROR: during compilation of $component. Check log file:$NC"
+	#    echo ${camp_suite_dir}/log_$component
+	#    echo -e "$RED| Exiting.$NC"
+	#    exit 0
+	#fi
+
     else
 	case $component in
-	    'json-fortran') install_jsonfortran ;;
-	    'SuiteSparse')  install_suitesparse ;;
-	    'cvode')        install_cvode       ;;
-	    'camp')         install_camp        ;;
-	    'boxmodel')     install_boxmodel    ;;
+	    'jsonfortran') install_jsonfortran ;;
+	    'suitesparse') install_suitesparse ;;
+	    'cvode')       install_cvode       ;;
+	    'camp')        install_camp        ;;
+	    'boxmodel')    install_boxmodel    ;;
 	esac
     fi
 
