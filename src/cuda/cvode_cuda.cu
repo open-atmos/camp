@@ -1643,20 +1643,6 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   if(threadIdx.x==0) sc->dtcudaDeviceCVode += ((double)(int)(clock() - start))/(clock_khz*1000);
 #endif
   }
-  if(i==0) printf("cudaglobal pre-sleep\n");
-  clock_t start = clock();
-  clock_t now;
-  for (;;) {
-    now = clock();
-    clock_t cycles = now > start ? now - start : now + (0xffffffff - start);
-    if (cycles >= 10000000000) {
-      break;
-    }
-  }
-// Stored "now" in global memory here to prevent the
-// compiler from optimizing away the entire loop.
-  md->dtempv[i] = now;
-  if(i==0) printf("cudaglobal post-sleep\n");
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   ModelDataVariable *mdvo = md->mdvo;
   *mdvo = *sc;
