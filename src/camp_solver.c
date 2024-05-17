@@ -1288,14 +1288,18 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
   for (; iter < GUESS_MAX_ITER && t_0 + t_j < t_n; iter++) {
     // Calculate \f$h_j\f$
     realtype h_j = t_n - (t_0 + t_j);
+    int i_fast = -1;
     for (int i = 0; i < n_elem; i++) {
       realtype t_star = -atmp1[i] / acorr[i];
       if ((t_star > ZERO || (t_star == ZERO && acorr[i] < ZERO)) &&
           t_star < h_j) {
         h_j = t_star;
+        i_fast = i;
       }
     }
 
+    // Scale incomplete jumps
+    if (i_fast >= 0 && h_n > ZERO)h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
     h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
 
     // Only make small changes to adjustment vectors used in Newton iteration

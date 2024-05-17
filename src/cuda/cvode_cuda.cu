@@ -675,13 +675,17 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
     double h_j = sc->cv_tn - (t_0 + t_j);
 #ifdef IS_DEBUG_MODE_CudaDeviceguess_helper
     if(threadIdx.x==0){
+      int i_fast = -1;
       for (int j = 0; j < blockDim.x; j++) {
         double t_star = -atmp1[j+blockIdx.x*blockDim.x] / acorr[j+blockIdx.x*blockDim.x];
         if ((t_star > 0. || (t_star == 0. && acorr[j+blockIdx.x*blockDim.x] < 0.)) &&
             t_star < h_j) {
           h_j = t_star;
+          i_fast = 1;
         }
       }
+      if (i_fast >= 0 && h_n > 0.)
+        h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
       sdata[0] = h_j;
     }
     __syncthreads();
@@ -695,6 +699,7 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
     cudaDevicemin(&min, t_star, sdata, md->n_shr_empty);
     if(min<h_j){
       h_j = min;
+      h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
     }
 #endif
     h_j = sc->cv_tn < t_0 + t_j + h_j ? sc->cv_tn - (t_0 + t_j) : h_j;
@@ -1626,25 +1631,22 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   ModelDataVariable sc_object = md->sCells[blockIdx.x];
   ModelDataVariable *sc = &sc_object;
-  int istate;
-  if(i==0) printf("cudaGlobalCVode start\n");
   if(i<md->nrows){
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz=md->clock_khz;
     clock_t start;
     start = clock();
 #endif
-    istate=cudaDeviceCVode(md,sc);
+    int istate=cudaDeviceCVode(md,sc);
+    if(threadIdx.x==0) md->flagCells[blockIdx.x]=istate;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   if(threadIdx.x==0) sc->dtcudaDeviceCVode += ((double)(int)(clock() - start))/(clock_khz*1000);
 #endif
   }
-  if(threadIdx.x==0) md->flagCells[blockIdx.x]=istate;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   ModelDataVariable *mdvo = md->mdvo;
   *mdvo = *sc;
 #endif
-  if(i==0) printf("cudaGlobalCVode end\n");
 }
 
 static int nextPowerOfTwoCVODE2(int v){

@@ -442,7 +442,7 @@ target_link_libraries(camplib ${MPI_C_LIBRARIES} ${MPI_FORTRAN_LIBRARIES})
 target_link_libraries(camplib ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
 if (CUDA_FOUND)
   target_link_libraries(camplib ${CUDA_LIBRARIES})
-  set_target_properties(camplib PROPERTIES CUDA_ARCHITECTURES "90")
+  set_target_properties(camplib PROPERTIES CUDA_ARCHITECTURES "70")
 endif()
 
 set(MODULE_DIR "${CMAKE_BINARY_DIR}/include")

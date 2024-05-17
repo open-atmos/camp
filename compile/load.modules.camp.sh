@@ -32,6 +32,6 @@ if [ "${BSC_MACHINE}" == "mn5" ]; then
       fi
       module load python
     fi
+    module load cmake
   fi
-  module load cmake
 fi
