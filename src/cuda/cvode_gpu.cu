@@ -655,7 +655,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   for (int i = 0; i < mGPU->n_cells; i++) {
     if (sd->flagCells[i] != CV_SUCCESS) {
       istate = sd->flagCells[i];
-      int rank;
       printf("cudaCVode2 kflag %d cell %d\n",istate,i);
       istate = cvHandleFailure_gpu(cv_mem, istate);
     }

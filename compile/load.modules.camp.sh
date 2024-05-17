@@ -3,7 +3,6 @@
 if [ "${BSC_MACHINE}" == "mn5" ]; then
   if ! module list 2>&1 | grep -q "\<python\>"; then #mod not load
     module load bsc
-    module load cmake
     if module list 2>&1 | grep -q "\<gcc\>"; then
       module load gcc
       module load openmpi/4.1.5-gcc
@@ -26,14 +25,13 @@ if [ "${BSC_MACHINE}" == "mn5" ]; then
       module load hdf5/1.14.1-2
       module load pnetcdf/1.12.3
       if [[ "${HOSTNAME}" == *"alogin"* ]]; then
-        #module load netcdf
-        #module load intel/2023.2.0-sycl_cuda
-        module load cuda
         module load netcdf
+        module load cuda
       else
         module load netcdf/2023-06-14
       fi
       module load python
     fi
   fi
+  module load cmake
 fi

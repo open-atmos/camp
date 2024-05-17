@@ -304,7 +304,7 @@ endif()
 
 set(STD_C_FLAGS "-std=c99")
 #even trying -O0 still bug in mn5
-set(STD_CUDA_FLAGS "-g -O3 -arch=compute_70 -code=sm_70") #-G for assembly code nsight
+set(STD_CUDA_FLAGS "-g -O3") #-G for assembly code nsight
 
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
   if(${CMAKE_Fortran_COMPILER_VERSION} GREATER_EQUAL 2021.10.0)
@@ -412,12 +412,10 @@ if (ENABLE_GPU)
           src/cuda/cvode_gpu.cu
           src/cuda/cvode_init.cu
           )
-
   set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES COMPILE_FLAGS
         ${STD_CUDA_FLAGS})
   set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES LANGUAGE CUDA)
   set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES CUDA_SOURCE_PROPERTY_FORMAT OBJ)
-
 else()
   set(CAMP_CUDA_SRC "")
 endif()
@@ -444,6 +442,7 @@ target_link_libraries(camplib ${MPI_C_LIBRARIES} ${MPI_FORTRAN_LIBRARIES})
 target_link_libraries(camplib ${NETCDF_LIBS} ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
 if (CUDA_FOUND)
   target_link_libraries(camplib ${CUDA_LIBRARIES})
+  set_target_properties(camplib PROPERTIES CUDA_ARCHITECTURES "90")
 endif()
 
 set(MODULE_DIR "${CMAKE_BINARY_DIR}/include")

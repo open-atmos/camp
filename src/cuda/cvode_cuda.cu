@@ -1627,6 +1627,7 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   ModelDataVariable sc_object = md->sCells[blockIdx.x];
   ModelDataVariable *sc = &sc_object;
   int istate;
+  if(i==0) printf("cudaGlobalCVode start\n");
   if(i<md->nrows){
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz=md->clock_khz;
@@ -1643,6 +1644,7 @@ void cudaGlobalCVode(ModelDataGPU md_object) {
   ModelDataVariable *mdvo = md->mdvo;
   *mdvo = *sc;
 #endif
+  if(i==0) printf("cudaGlobalCVode end\n");
 }
 
 static int nextPowerOfTwoCVODE2(int v){
