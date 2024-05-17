@@ -11,12 +11,12 @@ initial_dir=$(pwd)
 case "${BSC_MACHINE}-loadmodules" in
   "mn5-loadmodules")
   module load cmake
-  if module list 2>&1 | grep -q "\<intel\>"; then
-    module load intel/2023.2.0
-    module load impi/2021.10.0
-  else
+  if module list 2>&1 | grep -q "\<gcc\>"; then
     module load gcc
     module load openmpi/4.1.5-gcc
+  else
+    module load intel/2023.2.0
+    module load impi/2021.10.0
   fi
   ;;
 esac
