@@ -148,10 +148,10 @@ function install_jsonfortran()
     fi
   fi
 
-    if [[ $flags == *2* ]] ; then
-	# load modules and compile
-	${camp_suite_dir}/camp/compile/compile.json-fortran-6.1.0.sh ${camp_suite_dir}
-    fi
+  if [[ $flags == *2* ]] ; then
+	  # load modules and compile
+	  ${camp_suite_dir}/camp/compile/compile.json-fortran-6.1.0.sh ${camp_suite_dir}
+  fi
     cd $initial_dir
 }
 
