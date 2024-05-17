@@ -381,7 +381,8 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   ModelDataCPU *mCPU = &(sd->mCPU);
   ModelDataGPU *mGPU = sd->mGPU;
   ModelData *md = &(sd->model_data);
-  cudaStream_t stream = 0;
+  cudaStream_t stream;
+  cudaStreamCreate(&stream);
 #ifdef DEV_CPU_GPU
 #else
   int n_cells = md->n_cells;

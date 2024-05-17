@@ -34,6 +34,8 @@ void constructor_cvode_gpu(SolverData *sd){
   MPI_Comm_size(MPI_COMM_WORLD, &size);
   int iDevice = rank % nGPUs;
   cudaSetDevice(iDevice);
+  cudaStream_t stream;
+  cudaStreamCreate(&stream);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->state, n_state_var * n_cells * sizeof(double)));
@@ -71,9 +73,9 @@ void constructor_cvode_gpu(SolverData *sd){
   cudaMalloc((void **) &mGPU->J_deriv, deriv_size);
 
   double *J_deriv = N_VGetArrayPointer(md->J_deriv);
-  cudaMemcpyAsync(mGPU->J_deriv,J_deriv,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice,0);
+  cudaMemcpyAsync(mGPU->J_deriv,J_deriv,mGPU->nrows*sizeof(double),cudaMemcpyHostToDevice,stream);
   double *J_solver = SM_DATA_S(md->J_solver);
-  cudaMemcpyAsync(mGPU->J_solver, J_solver, jac_size, cudaMemcpyHostToDevice,0);
+  cudaMemcpyAsync(mGPU->J_solver, J_solver, jac_size, cudaMemcpyHostToDevice,stream);
 
 
   cudaMalloc((void **) &mGPU->J_tmp, deriv_size);
@@ -206,7 +208,7 @@ void constructor_cvode_gpu(SolverData *sd){
 #endif
 #endif
   for (int i = 0; i < n_cells; i++){
-    cudaMemcpyAsync(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice,0);
+    cudaMemcpyAsync(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice,stream);
   }
 #ifdef IS_DEBUG_MODE_CSR_ODE_GPU
   int n_row=nrows/n_cells;

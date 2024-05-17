@@ -2,6 +2,7 @@
 set -e
 scriptdir="$(dirname "$0")"
 cd "$scriptdir"
+unset I_MPI_PMI_LIBRARY
 make_and_check() {
   initial_dir=$(pwd)
   cd ../../build

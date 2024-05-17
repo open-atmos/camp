@@ -66,7 +66,7 @@ def run(conf):
       "GPU"):
     pathNvprof = ("../../compile/" +
                   conf.caseMulticellsOnecell
-                  + str(conf.cells) + "Cells" + ".nvprof ")
+                  + str(conf.nCells) + "Cells" + ".nvprof ")
     exec_str += ("nvprof --analysis-metrics -f -o " +
                  pathNvprof)
     print("Saving profiling file in ",
@@ -74,7 +74,7 @@ def run(conf):
           + "/" + pathNvprof + ".nvprof")
   elif (conf.profileCuda == "nsight" and conf.caseGpuCpu
         == "GPU"):
-    exec_str += ("/apps/NVIDIA-HPC-SDK/20.9/Linux_ppc64le/2020/profilers/Nsight_Compute/ncu ")
+    exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/24.3/Linux_x86_64/2024/profilers/Nsight_Compute/ncu ")
     pathNvprof = ("../../compile/" +
                   conf.caseMulticellsOnecell
                   + str(conf.nCells) + "Cells ")
