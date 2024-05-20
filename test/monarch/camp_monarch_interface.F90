@@ -72,14 +72,13 @@ contains
 
 
   function constructor(camp_config_file, output_file_title, &
-   starting_id, ending_id, n_cells, mpi_comm) result (this)
+   starting_id, ending_id, n_cells) result (this)
     type(camp_monarch_interface_t), pointer :: this
     character(len=:), allocatable, optional :: camp_config_file
     character(len=*), intent(in):: output_file_title
-    integer, optional :: starting_id
-    integer, optional :: ending_id
-    integer, intent(in), optional :: mpi_comm
-    integer, optional :: n_cells
+    integer :: starting_id
+    integer :: ending_id
+    integer :: n_cells
     type(camp_solver_data_t), pointer :: camp_solver_data
     character, allocatable :: buffer(:)
     integer(kind=i_kind) :: pos, pack_size, size
@@ -94,16 +93,11 @@ contains
     type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
     real(kind=dp) :: comp_start, comp_end
     character(len=128) :: i_str
-    integer :: local_comm,use_cpu,is_reset_jac
+    integer :: use_cpu,is_reset_jac
 
-    if (present(mpi_comm)) then
-      local_comm = mpi_comm
-    else
-      local_comm = MPI_COMM_WORLD
-    endif
     MONARCH_PROCESS = camp_mpi_rank()
     allocate(this)
-    if (.not.present(n_cells).or.n_cells==1) then
+    if (n_cells==1) then
       this%solve_multiple_cells = .false.
     else
       this%solve_multiple_cells = .true.
@@ -165,7 +159,7 @@ contains
               camp_mpi_pack_size_integer(i_sect_opm)
       pack_size = pack_size + camp_mpi_pack_size_integer(this%n_photo_rxn)
       do i = 1, this%n_photo_rxn
-        pack_size = pack_size + this%photo_rxns(i)%pack_size( local_comm )
+        pack_size = pack_size + this%photo_rxns(i)%pack_size( MPI_COMM_WORLD )
       end do
       pack_size = pack_size + camp_mpi_pack_size_real_array(this%base_rates)
       pack_size = pack_size + camp_mpi_pack_size_integer_array(this%specs_emi_id)
@@ -186,17 +180,17 @@ contains
       call camp_mpi_pack_integer(buffer, pos, i_sect_opm)
       call camp_mpi_pack_integer(buffer, pos, this%n_photo_rxn)
       do i = 1, this%n_photo_rxn
-        call this%photo_rxns(i)%bin_pack( buffer, pos, local_comm )
+        call this%photo_rxns(i)%bin_pack( buffer, pos, MPI_COMM_WORLD )
       end do
       call camp_mpi_pack_real_array(buffer, pos, this%base_rates)
       call camp_mpi_pack_integer_array(buffer, pos, this%specs_emi_id)
       call camp_mpi_pack_real_array(buffer, pos, this%specs_emi)
     endif
-    call camp_mpi_bcast_integer(pack_size, local_comm)
+    call camp_mpi_bcast_integer(pack_size, MPI_COMM_WORLD)
     if (MONARCH_PROCESS/=0) then
       allocate(buffer(pack_size))
     end if
-    call camp_mpi_bcast_packed(buffer, local_comm)
+    call camp_mpi_bcast_packed(buffer, MPI_COMM_WORLD)
     if (MONARCH_PROCESS/=0) then
       this%camp_core => camp_core_t(n_cells=this%n_cells)
       pos = 0
@@ -217,7 +211,7 @@ contains
       allocate(this%photo_rxns(this%n_photo_rxn))
       allocate(this%base_rates(this%n_photo_rxn))
       do i = 1, this%n_photo_rxn
-        call this%photo_rxns(i)%bin_unpack( buffer, pos, local_comm )
+        call this%photo_rxns(i)%bin_unpack( buffer, pos, MPI_COMM_WORLD )
       end do
       call camp_mpi_unpack_real_array(buffer, pos, this%base_rates)
       call camp_mpi_unpack_integer_array(buffer, pos, this%specs_emi_id)
@@ -443,10 +437,7 @@ contains
         end do
       end do
     end if
-
-  if(this%output_file_title=="cb05_paperV2") then
-    deallocate(rate_emi)
-  end if
+  !print*,"f out:",this%camp_state%state_var(2), this%camp_state%state_var(1) !debug
   end subroutine integrate
 
   subroutine load(this, config_file)

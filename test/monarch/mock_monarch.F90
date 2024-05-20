@@ -53,7 +53,7 @@ program mock_monarch_t
   type(json_core) :: json
   character(len=:), allocatable :: export_path
   character(len=128) :: i_str
-  integer :: id
+  integer :: id, n_cells_monarch
 
   call camp_mpi_init()
   I_W=1
@@ -71,10 +71,11 @@ program mock_monarch_t
   call jfile%get('nCells',NUM_VERT_CELLS)
   call jfile%get('caseMulticellsOnecell',caseMulticellsOnecell)
   output_path = output_path//"_"//caseMulticellsOnecell
+  n_cells_monarch = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
   if(caseMulticellsOnecell=="One-cell") then
     n_cells = 1
   else
-    n_cells = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+    n_cells = n_cells_monarch
   end if
   call jfile%get('timeSteps',NUM_TIME_STEP)
   call jfile%get('timeStepsDt',TIME_STEP)
@@ -160,9 +161,10 @@ contains
     type(camp_monarch_interface_t), intent(inout) :: camp_interface
     character(len=:), allocatable, intent(in) :: file_prefix
     character(len=:), allocatable :: file_name
-    integer :: z,o,i,j,k,r,i_cell,i_spec,mpi_size,ncells,tid,ncells_mpi
+    integer :: z,o,i,j,k,r,t,i_cell,i_spec,mpi_size,ncells,tid,ncells_mpi
     integer :: n_cells_print
-    real :: temp_init,press,press_init,press_end,press_range,press_slide
+    real :: rate_emi,temp_init,press,press_init,&
+      press_end,press_range,press_slide
 
     temp_init = 290.016
     press_init = 100000. !Should be equal to camp_monarch_interface
