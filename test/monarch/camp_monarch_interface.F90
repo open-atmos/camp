@@ -44,6 +44,7 @@ module camp_monarch_interface
     type(property_t), pointer :: init_conc_data
     type(property_t), pointer :: property_set
     type(rxn_update_data_photolysis_t), allocatable :: photo_rxns(:)
+    real, allocatable :: rate_emi(:,:)
     real(kind=dp), allocatable :: base_rates(:),specs_emi(:),offset_photo_rates_cells(:)
     integer :: n_photo_rxn
     integer :: nrates_cells
@@ -437,7 +438,10 @@ contains
         end do
       end do
     end if
-  !print*,"f out:",this%camp_state%state_var(2), this%camp_state%state_var(1) !debug
+
+  if(this%output_file_title=="cb05_paperV2") then
+    deallocate(rate_emi)
+  end if
   end subroutine integrate
 
   subroutine load(this, config_file)

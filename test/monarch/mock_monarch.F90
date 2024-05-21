@@ -161,13 +161,15 @@ contains
     type(camp_monarch_interface_t), intent(inout) :: camp_interface
     character(len=:), allocatable, intent(in) :: file_prefix
     character(len=:), allocatable :: file_name
-    integer :: z,o,i,j,k,r,t,i_cell,i_spec,mpi_size,ncells,tid,ncells_mpi
+    integer :: z,z1,o,i,j,k,r,t,i_cell,i_spec,mpi_size,ncells,tid,ncells_mpi
     integer :: n_cells_print
     real :: rate_emi,temp_init,press,press_init,&
       press_end,press_range,press_slide
 
     temp_init = 290.016
-    press_init = 100000. !Should be equal to camp_monarch_interface
+    press_init = 100000.
+    allocate(camp_interface%rate_emi(24,n_cells_monarch))
+    camp_interface%rate_emi(:,:)=0.0
     if(DIFF_CELLS=="ON") then
       ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
       mpi_size=camp_mpi_size()
@@ -184,10 +186,14 @@ contains
         do j=I_S,I_N
           do k=1,NUM_VERT_CELLS
             o = (j-1)*(I_E) + (i-1)
-            z = (k-1)*(I_E*I_N) + o
-            z = tid*ncells+z
+            z1 = (k-1)*(I_E*I_N) + o
+            z = tid*ncells+z1
             pressure(i,j,k)=press_init+press_slide*z
             temperature(i,j,k)=temp_init*((pressure(i,j,k)/press_init)**(287./1004.)) !dry_adiabatic formula
+            rate_emi=abs((press_end-pressure(i,j,k))/press_range)
+            do t=1,12 !12 first hours
+              camp_interface%rate_emi(t,z1+1)=rate_emi
+            end do
           end do
         end do
       end do
@@ -196,6 +202,9 @@ contains
         temperature(:,:,:) = temp_init
         pressure(:,:,:) = press_init
       end if
+      do t=1,12 !12 first hours
+        camp_interface%rate_emi(t,:)=1.0
+      end do
     end if
     if(output_file_title=="cb05_paperV2") then
       air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &

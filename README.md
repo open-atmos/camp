@@ -64,7 +64,7 @@ Run: `install.sh a`
 For more options like install individual dependencies, run: `install.sh` or run scripts from `compile/` folder.
 
 Load modules by running: `source compile/load.modules.camp.sh`. We recommend to include that command into
-your bashrc to avoid running the command manually each time you start a bash session.
+your bashrc to avoid running the command manually each time you start a bash session. By default, it loads intel modules.
 
 You can validate installation running: `.compile/check.sh`
 
