@@ -255,6 +255,7 @@ contains
 
       ! Get the number of Jacobian elements for calculations of mass, volume,
       ! number, etc. for this partitioning into this phase
+      !!! Add layers here !!!
       phase_ids = aero_rep(i_aero_rep)%val%phase_ids(phase_name)
       do i_phase = 1, size(phase_ids)
         n_aero_jac_elem = n_aero_jac_elem + &
