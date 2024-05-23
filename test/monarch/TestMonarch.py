@@ -14,6 +14,7 @@ def all_timesteps():
   conf.mpiProcessesCaseOptimList = [10]
   conf.cells = [100]
   conf.timeSteps = 10
+  conf.gpu_percentage = 100
   conf.caseBase = "CPU One-cell"
   #conf.caseBase = "GPU BDF"
   #conf.casesOptim = ["CPU One-cell"]

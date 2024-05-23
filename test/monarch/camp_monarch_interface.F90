@@ -94,7 +94,7 @@ contains
     type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
     real(kind=dp) :: comp_start, comp_end
     character(len=128) :: i_str
-    integer :: use_cpu,is_reset_jac
+    integer :: gpu_percentage,is_reset_jac
 
     MONARCH_PROCESS = camp_mpi_rank()
     allocate(this)
@@ -219,17 +219,17 @@ contains
       call camp_mpi_unpack_real_array(buffer, pos, this%specs_emi)
     end if
     deallocate(buffer)
-    use_cpu=1
-    open(unit=32, file='settings/config_variables_c_solver.txt', status='old')
-    read(32,'(A)') i_str
-    if(trim(i_str) == "USE_CPU=OFF") then
-      use_cpu = 0
+    gpu_percentage=0
+    if(this%solve_multiple_cells) then
+      open(unit=32, file='settings/config_variables_c_solver.txt', status='old')
+      read(32, *) gpu_percentage
+      close(32)
     end if
-    close(32)
     is_reset_jac=1 ! Set to 1 to compare correctly with the GPU, otherwise the error is too high, because GPU can not
-    ! use values from previous cell. By default is_reset_jac is set to 0 because it accelerates MONARCH case
+    ! use values from previous cell.
+    !By default is_reset_jac is set to 0 because it accelerates MONARCH case
     ! (and probably more cases).
-    call this%camp_core%solver_initialize(use_cpu, is_reset_jac)
+    call this%camp_core%solver_initialize(gpu_percentage, is_reset_jac)
     this%camp_state => this%camp_core%new_state()
     if(this%output_file_title=="cb05_paperV2") then
       allocate(this%offset_photo_rates_cells(this%n_cells))

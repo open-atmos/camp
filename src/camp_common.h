@@ -272,7 +272,7 @@ typedef struct {
 #endif
 */
 #endif
-  int use_cpu;
+  int gpu_percentage;
   int is_reset_jac;
 
   void *cvode_mem;       // CVodeMem object

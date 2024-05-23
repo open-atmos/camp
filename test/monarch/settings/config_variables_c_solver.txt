@@ -1,1 +1,1 @@
-USE_CPU=ON
+gpu_percentage=ON

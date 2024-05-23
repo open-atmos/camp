@@ -73,10 +73,10 @@ def run(conf):
   exec_str += path_exec
   try:
     file1 = open(conf.campConf, "w")
-    if conf.caseGpuCpu == "CPU":
-      file1.write("USE_CPU=ON\n")
+    if conf.caseGpuCpu == "GPU":
+      file1.write(str(conf.gpu_percentage)+"\n")
     else:
-      file1.write("USE_CPU=OFF\n")
+      file1.write("0\n")
     file1.close()
   except Exception as e:
     print("write_camp_config_file fails", e)

@@ -95,7 +95,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
                  int n_sub_model_float_param, int n_sub_model_env_param,
-                 int use_cpu, int is_reset_jac) {
+                 int gpu_percentage, int is_reset_jac) {
 
   // Create the SolverData object
   SolverData *sd = (SolverData *)malloc(sizeof(SolverData));
@@ -123,7 +123,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   // Save the number of state variables per grid cell
   sd->model_data.n_per_cell_state_var = n_state_var;
 
-  sd->use_cpu = use_cpu;
+  sd->gpu_percentage = gpu_percentage;
   sd->is_reset_jac = is_reset_jac;
   sd->model_data.n_cells_gpu = n_cells;
   sd->model_data.n_cells = n_cells;
@@ -488,7 +488,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
 #endif
 
 #ifdef CAMP_USE_GPU
-  if(sd->use_cpu==0){
+  if(sd->gpu_percentage!=0){
     constructor_cvode_gpu(sd);
   }
 #endif
@@ -638,7 +638,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   double starttimeCvode = MPI_Wtime();
 #endif
 #ifdef CAMP_USE_GPU
-    if(sd->use_cpu==1){
+    if(sd->gpu_percentage==0){
       flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
     }
     else{
@@ -731,7 +731,7 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
   int flag;
 
 #ifdef CAMP_USE_GPU
-  if(sd->use_cpu==1){
+  if(sd->gpu_percentage==0){
 #endif
     *solver_flag = sd->solver_flag;
     flag = CVodeGetNumSteps(sd->cvode_mem, &nst);
@@ -1743,7 +1743,7 @@ void solver_free(void *solver_data) {
 #endif
 
 #ifdef CAMP_USE_GPU
-  if(sd->use_cpu==0){
+  if(sd->gpu_percentage!=0){
       free_gpu_cu(sd);
   }
 #endif
