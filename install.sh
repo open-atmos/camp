@@ -139,12 +139,9 @@ function install_jsonfortran()
     # git-clone
     rm -rf ${camp_suite_dir}/json-fortran-6.1.0
     cd ${camp_suite_dir}
-    if timeout 2s wget -q --spider http://google.com; then
-      git clone https://github.com/jacobwilliams/json-fortran.git json-fortran-6.1.0
-      cd ${camp_suite_dir}/json-fortran-6.1.0
-      git checkout tags/6.1.0
-    else
-      cp -rf ${source_dir}/json-fortran-6.1.0 ${camp_suite_dir}
+    git clone https://github.com/jacobwilliams/json-fortran.git json-fortran-6.1.0
+    cd ${camp_suite_dir}/json-fortran-6.1.0
+    git checkout tags/6.1.0
     fi
   fi
 
@@ -170,29 +167,26 @@ function install_suitesparse()
   if [[ $flags == *1* ]] ; then
 	# git-clone
     rm -rf ${camp_suite_dir}/SuiteSparse
-    if timeout 2s wget -q --spider http://google.com; then
-      cd ${camp_suite_dir}
-      git clone https://github.com/DrTimothyAldenDavis/SuiteSparse.git
-      cd SuiteSparse
-      git checkout v5.1.0
-      suitesparse_patch=./suitesparse_patch.patch
-      echo 'diff --git a/SuiteSparse_config/SuiteSparse_config.mk b/SuiteSparse_config/SuiteSparse_config.mk' > ${suitesparse_patch}
-      echo 'index bb26ac3a3..a3e63d66f 100644' >> ${suitesparse_patch}
-      echo '--- a/SuiteSparse_config/SuiteSparse_config.mk' >> ${suitesparse_patch}
-      echo '+++ b/SuiteSparse_config/SuiteSparse_config.mk' >> ${suitesparse_patch}
-      echo '@@ -115,7 +115,7 @@ SUITESPARSE_VERSION = 5.1.0' >> ${suitesparse_patch}
-      echo '             CC = icc -D_GNU_SOURCE' >> ${suitesparse_patch}
-      echo '             CXX = $(CC)' >> ${suitesparse_patch}
-      echo '             CFOPENMP = -qopenmp -I$(MKLROOT)/include' >> ${suitesparse_patch}
-      echo '-	    LDFLAGS += -openmp' >> ${suitesparse_patch}
-      echo '+	    LDFLAGS += -qopenmp' >> ${suitesparse_patch}
-      echo '             LDLIBS += -lm -lirc' >> ${suitesparse_patch}
-      echo '         endif' >> ${suitesparse_patch}
-      echo '         ifneq ($(shell which ifort 2>/dev/null),)' >> ${suitesparse_patch}
-      echo '' >> ${suitesparse_patch}
-      git apply suitesparse_patch.patch
-    else
-      cp -rf ${source_dir}/SuiteSparse ${camp_suite_dir}
+    cd ${camp_suite_dir}
+    git clone https://github.com/DrTimothyAldenDavis/SuiteSparse.git
+    cd SuiteSparse
+    git checkout v5.1.0
+    suitesparse_patch=./suitesparse_patch.patch
+    echo 'diff --git a/SuiteSparse_config/SuiteSparse_config.mk b/SuiteSparse_config/SuiteSparse_config.mk' > ${suitesparse_patch}
+    echo 'index bb26ac3a3..a3e63d66f 100644' >> ${suitesparse_patch}
+    echo '--- a/SuiteSparse_config/SuiteSparse_config.mk' >> ${suitesparse_patch}
+    echo '+++ b/SuiteSparse_config/SuiteSparse_config.mk' >> ${suitesparse_patch}
+    echo '@@ -115,7 +115,7 @@ SUITESPARSE_VERSION = 5.1.0' >> ${suitesparse_patch}
+    echo '             CC = icc -D_GNU_SOURCE' >> ${suitesparse_patch}
+    echo '             CXX = $(CC)' >> ${suitesparse_patch}
+    echo '             CFOPENMP = -qopenmp -I$(MKLROOT)/include' >> ${suitesparse_patch}
+    echo '-	    LDFLAGS += -openmp' >> ${suitesparse_patch}
+    echo '+	    LDFLAGS += -qopenmp' >> ${suitesparse_patch}
+    echo '             LDLIBS += -lm -lirc' >> ${suitesparse_patch}
+    echo '         endif' >> ${suitesparse_patch}
+    echo '         ifneq ($(shell which ifort 2>/dev/null),)' >> ${suitesparse_patch}
+    echo '' >> ${suitesparse_patch}
+    git apply suitesparse_patch.patch
     fi
   fi
 
@@ -218,11 +212,8 @@ function install_cvode()
   if [[ $flags == *1* ]] ; then
     # git-clone
     rm -rf ${camp_suite_dir}/cvode-3.4-alpha
-    if timeout 2s wget -q --spider http://google.com; then
-      cd ${camp_suite_dir}
-      git clone https://github.com/mattldawson/cvode.git cvode-3.4-alpha
-    else
-      cp -rf ${source_dir}/cvode-3.4-alpha ${camp_suite_dir}
+    cd ${camp_suite_dir}
+    git clone https://github.com/mattldawson/cvode.git cvode-3.4-alpha
     fi
   fi
   if [[ $flags == *2* ]] ; then
@@ -241,12 +232,9 @@ function install_camp()
 {
     if [[ $flags == *1* ]] ; then
 	    # git-clone
-      if timeout 2s wget -q --spider http://google.com; then
-        git clone https://earth.bsc.es/gitlab/ac/camp.git
-        rm -rf ${camp_suite_dir}/camp
-        cd ${camp_suite_dir}
-      else
-        echo "No internet connection detected"
+      git clone https://earth.bsc.es/gitlab/ac/camp.git
+      rm -rf ${camp_suite_dir}/camp
+      cd ${camp_suite_dir}
       fi
     fi
 
