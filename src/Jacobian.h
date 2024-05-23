@@ -50,18 +50,6 @@ typedef struct {
  */
 int jacobian_initialize_empty(Jacobian *jac, unsigned int num_spec);
 
-/** \brief Initialize the Jacobian
- *
- * \param jac Pointer to the Jacobian object
- * \param num_spec Number of species
- * \param jac_struct Dense matrix of flags indicating whether an element is
- *                   (1) potentially non-zero or (0) not.
- * \return Flag indicating whether the derivative was successfully initialized
- *         (0 = false; 1 = true)
- */
-int jacobian_initialize(Jacobian *jac, unsigned int num_spec,
-                        unsigned int **jac_struct);
-
 /** \brief Adds an element to the sparse matrix
  *
  * \param jac Jacobian object

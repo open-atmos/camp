@@ -125,17 +125,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
   sd->use_cpu = use_cpu;
   sd->is_reset_jac = is_reset_jac;
-#ifdef DEV_CPU_GPU
-  sd->rate_cells_gpu=50;// Percentage [%]
-  printf("Set cells to gpu to %lf %\n",sd->rate_cells_gpu);
-  sd->rate_cells_gpu = sd->rate_cells_gpu/100;
-  sd->model_data.n_cells_gpu = n_cells * sd->rate_cells_gpu;
-  sd->model_data.n_cells_cpu = n_cells-sd->model_data.n_cells_gpu;
-  n_cells=1;
-#else
   sd->model_data.n_cells_gpu = n_cells;
-  sd->model_data.n_cells_cpu = n_cells;
-#endif
   sd->model_data.n_cells = n_cells;
 
   // Add the variable types to the solver data
@@ -586,7 +576,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
                 : TINY;
       }
     }
-    md->grid_cell_id = i_cell;
     md->grid_cell_state = &(md->total_state[i_cell * md->n_per_cell_state_var]);
     md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
     md->grid_cell_rxn_env_data = &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
@@ -901,7 +890,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Loop through the grid cells and update the derivative array
   for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
     // Set the grid cell state pointers
-    md->grid_cell_id = i_cell;
     md->grid_cell_state = &(md->total_state[i_cell * n_state_var]);
     md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
     md->grid_cell_rxn_env_data =
@@ -1002,7 +990,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   // Loop over the grid cells to calculate sub-model and rxn Jacobians
   for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
     // Set the grid cell state pointers
-    md->grid_cell_id = i_cell;
     md->grid_cell_state = &(md->total_state[i_cell * n_state_var]);
     md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
     md->grid_cell_rxn_env_data =

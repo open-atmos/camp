@@ -298,7 +298,6 @@ int run_aero_rep_modal_c_tests(void *solver_data, double *state, double *env) {
   int n_solver_var = NV_LENGTH_S(sd->y);
   N_Vector solver_state = N_VNew_Serial(n_solver_var);
 
-  model_data->grid_cell_id    = 0;
   model_data->total_state     = state;
   model_data->grid_cell_state = model_data->total_state;
   model_data->total_env       = env;

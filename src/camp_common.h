@@ -104,7 +104,6 @@ typedef struct {
   int n_per_cell_solver_jac_elem;  // number of potentially non-zero
                                    // solver Jacobian elements
   int n_cells;                     // number of cells to compute simultaneously
-  int n_cells_cpu;
   int n_cells_gpu;
   double *abs_tol;  // pointer to array of state variable absolute
                     // integration tolerances
@@ -133,7 +132,6 @@ typedef struct {
   int n_mapped_values;     // Number of Jacobian map elements
   int n_mapped_params;     // Number of Jacobian map elements for sub models
 
-  int grid_cell_id;         // Index of the current grid cell
   double *grid_cell_state;  // Pointer to the current grid cell being solved
                             // on the total_state array
   double *total_state;      // Total (multi-cell) state array

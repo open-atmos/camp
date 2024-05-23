@@ -173,7 +173,6 @@ int run_sub_model_zsr_c_tests(void *solver_data, double *state, double *env)
   ret_val += ASSERT_MSG(n_solver_var==N_STATE_VAR-3,
                         "Bad number of state variables");
 
-  md->grid_cell_id    = 0;
   md->total_state     = state;
   md->grid_cell_state = md->total_state;
   md->total_env       = env;
