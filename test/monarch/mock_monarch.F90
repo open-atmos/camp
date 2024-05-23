@@ -137,7 +137,7 @@ program mock_monarch_t
        conv,              &
        i_hour,&
        NUM_TIME_STEP,&
-       DIFF_CELLS,i_time)
+       i_time)
   curr_time = curr_time + TIME_STEP
   end do
   call camp_mpi_barrier()

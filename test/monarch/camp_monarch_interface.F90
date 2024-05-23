@@ -274,7 +274,7 @@ contains
   subroutine integrate(this, curr_time, time_step, I_W, I_E, I_S, &
                   I_N, temperature, MONARCH_conc, water_conc, &
                   water_vapor_index, air_density, pressure, conv, i_hour,&
-          NUM_TIME_STEP, DIFF_CELLS, i_time)
+          NUM_TIME_STEP, i_time)
     class(camp_monarch_interface_t) :: this
     real, intent(in) :: curr_time
     real(kind=dp), intent(in) :: time_step
@@ -291,18 +291,16 @@ contains
     real, intent(in) :: conv(:,:,:)
     integer, intent(inout) :: i_hour
     integer, intent(in) :: NUM_TIME_STEP
-    character(len=*),intent(in) :: DIFF_CELLS
     integer, intent(in) :: i_time
     type(chem_spec_data_t), pointer :: chem_spec_data
     integer, parameter :: emi_len=1
-    real, allocatable :: rate_emi(:,:)
     character, allocatable :: buffer(:)
     integer(kind=i_kind) :: pos, pack_size
     integer :: rank, ierr, n_ranks
     real(kind=dp), allocatable :: mpi_conc(:)
     character(len=:), allocatable :: file_name
     integer :: i, j, k, i_spec, z, o, t, r, i_cell, i_photo_rxn
-    integer :: NUM_VERT_CELLS, i_hour_max
+    integer :: NUM_VERT_CELLS
     real :: press_init, press_end, press_range,&
             emi_slide, press_norm
     integer :: n_cells
@@ -315,37 +313,6 @@ contains
       state_size_per_cell = this%camp_core%size_state_per_cell
     end if
     NUM_VERT_CELLS = size(MONARCH_conc,3)
-    if(this%output_file_title=="cb05_paperV2") then
-      call assert_msg(731700229, &
-              this%camp_core%get_chem_spec_data(chem_spec_data), &
-              "No chemical species data in camp_core.")
-      n_cells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
-      i_hour_max=24
-      allocate(rate_emi(i_hour_max,n_cells))
-      rate_emi(:,:)=0.0
-      if(DIFF_CELLS=="ON") then
-        press_init = 100000.!Should be equal to mock_monarch
-        press_end = 10000.
-        press_range = press_end-press_init
-        do i=I_W, I_E
-          do j=I_S, I_N
-            do k=1, NUM_VERT_CELLS
-              o = (j-1)*(I_E) + (i-1)
-              z = (k-1)*(I_E*I_N) + o
-              press_norm=(press_end-pressure(i,j,k))/(press_range)
-              do t=1,12 !12 first hours
-                rate_emi(t,z+1)=press_norm
-              end do
-            end do
-          end do
-        end do
-      else
-        do t=1,12
-          rate_emi(t,:)=1.0
-        end do
-      end if
-      call camp_mpi_barrier(MPI_COMM_WORLD)
-    end if
     i_hour = int(curr_time/60)+1
     if(.not.this%solve_multiple_cells) then
       do i=I_W, I_E
@@ -373,8 +340,8 @@ contains
             if(this%output_file_title=="cb05_paperV2") then
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r))=&
-                        this%camp_state%state_var(this%specs_emi_id(r))&
-                                +this%specs_emi(r)*rate_emi(i_hour,z+1)*conv(i,j,k)
+                  this%camp_state%state_var(this%specs_emi_id(r))&
+                    +this%specs_emi(r)*this%rate_emi(i_hour,z+1)*conv(i,j,k)
               end do
             end if
             call cpu_time(comp_start)
@@ -412,8 +379,8 @@ contains
             if(this%output_file_title=="cb05_paperV2") then
               do r=1,size(this%specs_emi_id)
                 this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)=&
-                        this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)&
-                                +this%specs_emi(r)*rate_emi(i_hour,z+1)*conv(i,j,k)
+                  this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)&
+                  +this%specs_emi(r)*this%rate_emi(i_hour,z+1)*conv(i,j,k)
               end do
             endif
           end do
@@ -438,10 +405,7 @@ contains
         end do
       end do
     end if
-
-  if(this%output_file_title=="cb05_paperV2") then
-    deallocate(rate_emi)
-  end if
+  !print*,"f out:",this%camp_state%state_var(2), this%camp_state%state_var(1) !debug
   end subroutine integrate
 
   subroutine load(this, config_file)
