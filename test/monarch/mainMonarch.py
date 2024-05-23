@@ -61,13 +61,11 @@ def run(conf):
   else:
     exec_str += "srun --cpu-bind=core -n " + str(
       conf.mpiProcesses) + " " #for queue (slow plogin)
-  if (conf.profileCuda == "nsight" and conf.caseGpuCpu
-        == "GPU"):
+  if conf.profileCuda == "nsight" and conf.caseGpuCpu == "GPU":
+    #gui: /apps/ACC/NVIDIA-HPC-SDK/24.3/Linux_x86_64/2024/profilers/Nsight_Compute/ncu-ui
     exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/24.3/Linux_x86_64/2024/profilers/Nsight_Compute/ncu ")
-    pathNsight = ("../../compile/" +
-                  conf.caseMulticellsOnecell
-                  + str(conf.nCells) + "Cells ")
-    exec_str += " --target-processes=application-only --set full -f -o " + pathNsight + ""
+    pathNsight = ("../../compile/profile")
+    exec_str += " --target-processes=application-only --set full -f -o " + pathNsight + " "
     print("Saving nsight file in ",
           os.path.abspath(os.getcwd())
           + "/" + pathNsight + ".ncu-rep")

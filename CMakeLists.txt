@@ -506,7 +506,11 @@ set(CB5_KPP_SOLVER
 	)
 
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
-	set(CB5_EBI_FLAGS "-fixed -extend_source -warn truncated_source")
+  if(${CMAKE_Fortran_COMPILER_VERSION} GREATER_EQUAL 2021.10.0)
+    set(CB5_EBI_FLAGS "-fixed -extend-source -warn truncated_source")
+  else ()
+    set(CB5_EBI_FLAGS "-fixed -extend_source -warn truncated_source")
+  endif ()
 elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
 	set(CB5_EBI_FLAGS "-ffixed-form -ffixed-line-length-none")
 endif()
