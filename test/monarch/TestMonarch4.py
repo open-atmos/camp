@@ -15,7 +15,6 @@ def all_timesteps():
   conf.diffCellsL.append("Realistic")
   # conf.diffCellsL.append("Ideal")
   conf.profileCuda = ""
-  # conf.profileCuda = "nvprof"
   # conf.profileCuda = "nsight"
   conf.is_import = True
   conf.mpiProcessesCaseBase = 40

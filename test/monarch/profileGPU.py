@@ -13,7 +13,6 @@ def all_timesteps():
   conf.cells = [10000]
   conf.timeSteps = 1
   conf.profileCuda = "nsight"
-  #conf.profileCuda = "nvprof"
   conf.caseBase = "GPU BDF"
   run_main(conf)
 

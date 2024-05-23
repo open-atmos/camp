@@ -27,7 +27,6 @@ class TestMonarch:
     self.mpiProcessesCaseOptimList = [1]
     self.cells = [100]
     self.profileCuda = ""
-    #self.profileCuda = "nvprof"
     #self.profileCuda = "nsight"
     self.caseBase = "CPU One-cell"
     self.plotYKey = "Speedup timecvStep"
@@ -62,26 +61,16 @@ def run(conf):
   else:
     exec_str += "srun --cpu-bind=core -n " + str(
       conf.mpiProcesses) + " " #for queue (slow plogin)
-  if (conf.profileCuda == "nvprof" and conf.caseGpuCpu ==
-      "GPU"):
-    pathNvprof = ("../../compile/" +
-                  conf.caseMulticellsOnecell
-                  + str(conf.nCells) + "Cells" + ".nvprof ")
-    exec_str += ("nvprof --analysis-metrics -f -o " +
-                 pathNvprof)
-    print("Saving profiling file in ",
-          os.path.abspath(os.getcwd())
-          + "/" + pathNvprof + ".nvprof")
-  elif (conf.profileCuda == "nsight" and conf.caseGpuCpu
+  if (conf.profileCuda == "nsight" and conf.caseGpuCpu
         == "GPU"):
     exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/24.3/Linux_x86_64/2024/profilers/Nsight_Compute/ncu ")
-    pathNvprof = ("../../compile/" +
+    pathNsight = ("../../compile/" +
                   conf.caseMulticellsOnecell
                   + str(conf.nCells) + "Cells ")
-    exec_str += " --target-processes=application-only --set full -f -o " + pathNvprof + ""
+    exec_str += " --target-processes=application-only --set full -f -o " + pathNsight + ""
     print("Saving nsight file in ",
           os.path.abspath(os.getcwd())
-          + "/" + pathNvprof + ".ncu-rep")
+          + "/" + pathNsight + ".ncu-rep")
   path_exec = "../../build/mock_monarch"
   exec_str += path_exec
   try:

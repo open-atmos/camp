@@ -55,13 +55,12 @@ You can add a profiling tool in a similar way than
 it is implemented for the GPU profiling.
 
 You can check file "mainMonarch.py" the code related
-to the variables "nsight" and "nvprof", like:
+to the variable "nsight", like:
 
-`if (conf.profileCuda == "nvprof" and conf.caseGpuCpu ==
-"GPU"):`
+`if conf.profileCuda == "nsight":`
 
 You should see that the command line that calls the
-GPU profilers "nvprofs" and "nsight" is added to
+GPU profiler "nsight" is added to
 the rest of the command line to run the program.
 
 # Profiling GPU
@@ -92,8 +91,7 @@ profiling.
 
 `conf.profileCuda = "x"`
 
-Where x is "nsight" for using Nsight, and "nvprof" 
-for the "nvprof" profiler, both from Nvidia.
+Where x is "nsight" for using Nvidia Nsight profiler.
 
 `conf.caseBase = "x"`
 
