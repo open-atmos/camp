@@ -31,7 +31,6 @@ void constructor_cvode_gpu(SolverData *sd){
   mGPU->nrows = nrows;
   int n_state_var = md->n_per_cell_state_var;
   mGPU->n_per_cell_state_var = md->n_per_cell_state_var;
-  int n_rxn = md->n_rxn;
   int nGPUs;
   HANDLE_ERROR(cudaGetDeviceCount(&nGPUs));
   int rank, size;
@@ -100,15 +99,14 @@ void constructor_cvode_gpu(SolverData *sd){
   free(aux);
   cudaMalloc((void **) &mGPU->rxn_int, (md->n_rxn_int_param + md->n_rxn)*sizeof(int));
   cudaMalloc((void **) &mGPU->rxn_double, md->n_rxn_float_param*sizeof(double));
+  cudaMalloc((void **) &mGPU->rxn_env_idx, (md->n_rxn+1) * sizeof(int));
   cudaMalloc((void **) &mGPU->rxn_int_indices, (md->n_rxn+1)*sizeof(int));
   cudaMalloc((void **) &mGPU->rxn_float_indices, (md->n_rxn+1)*sizeof(int));
-  HANDLE_ERROR(cudaMemcpy(mGPU->rxn_int, md->rxn_int_data,(md->n_rxn_int_param + md->n_rxn)*sizeof(int), cudaMemcpyHostToDevice));
-  HANDLE_ERROR(cudaMemcpy(mGPU->rxn_double, md->rxn_float_data, md->n_rxn_float_param*sizeof(double), cudaMemcpyHostToDevice));
-  size_t rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
-  cudaMalloc((void **) &mGPU->rxn_env_idx, rxn_env_data_idx_size);
-  HANDLE_ERROR(cudaMemcpy(mGPU->rxn_env_idx, md->rxn_env_idx, rxn_env_data_idx_size, cudaMemcpyHostToDevice));
-  HANDLE_ERROR(cudaMemcpy(mGPU->rxn_int_indices, md->rxn_int_indices,(md->n_rxn+1)*sizeof(int), cudaMemcpyHostToDevice));
-  HANDLE_ERROR(cudaMemcpy(mGPU->rxn_float_indices, md->rxn_float_indices,(md->n_rxn+1)*sizeof(int), cudaMemcpyHostToDevice));
+  cudaMemcpy(mGPU->rxn_int, md->rxn_int_data,(md->n_rxn_int_param + md->n_rxn)*sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->rxn_double, md->rxn_float_data, md->n_rxn_float_param*sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->rxn_env_idx, md->rxn_env_idx, (md->n_rxn+1) * sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->rxn_int_indices, md->rxn_int_indices,(md->n_rxn+1)*sizeof(int), cudaMemcpyHostToDevice);
+  cudaMemcpy(mGPU->rxn_float_indices, md->rxn_float_indices,(md->n_rxn+1)*sizeof(int), cudaMemcpyHostToDevice);
   double ** dr0 = &mGPU->dr0;
   double ** dr0h = &mGPU->dr0h;
   double ** dn0 = &mGPU->dn0;
@@ -124,7 +122,7 @@ void constructor_cvode_gpu(SolverData *sd){
   cudaMalloc(dt,nrows*sizeof(double));
   cudaMalloc(ds,nrows*sizeof(double));
   cudaMalloc(dy,nrows*sizeof(double));
-  HANDLE_ERROR(cudaMalloc(ddiag,nrows*sizeof(double)));
+  cudaMalloc(ddiag,nrows*sizeof(double));
   SUNMatrix J = cvdls_mem->A;
   double *A = ((double *) SM_DATA_S(J));
   cudaMalloc((void **) &mGPU->dsavedJ, nnz * sizeof(double));
@@ -170,7 +168,7 @@ void constructor_cvode_gpu(SolverData *sd){
   cudaMalloc((void **) &mGPU->cv_tau, (L_MAX + 1) * n_cells * sizeof(double));
   cudaMalloc((void **) &mGPU->cv_tq, (NUM_TESTS + 1) * n_cells * sizeof(double));
   cudaMalloc((void **) &mGPU->cv_Vabstol, nrows * sizeof(double));
-  HANDLE_ERROR(cudaMemset(mGPU->flagCells, CV_SUCCESS, n_cells * sizeof(int)));
+  cudaMemset(mGPU->flagCells, CV_SUCCESS, n_cells * sizeof(int));
   aux=(double*)malloc(nrows*sizeof(double));
   double *aux2=(double*)malloc(nrows*sizeof(double));
   for (int i = 0; i < n_cells; i++) {

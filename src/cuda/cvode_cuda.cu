@@ -455,7 +455,7 @@ __device__ void cudaDeviceVWRMS_Norm_2(double *g_idata1, double *g_idata2, doubl
   sdata[tid] = g_idata1[i]*g_idata2[i];
   sdata[tid] = sdata[tid]*sdata[tid];
   __syncthreads();
-#ifdef DEBUG_cudaDevicedotxy_2
+#ifdef IS_DEBUG_MODE_cudaDevicedotxy_2
   //used for compare with cpu
   if(tid==0){
     double sum=0.;
@@ -561,21 +561,20 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
   deriv_data.loss_rates = &( md->loss_rates[blockDim.x*blockIdx.x]);
   sc->grid_cell_state = &( md->state[md->n_per_cell_state_var*blockIdx.x]);
   __syncthreads();
-  int n_rxn = md->n_rxn;
 #ifdef IS_DEBUG_MODE_removeAtomic
   if(threadIdx.x==0){
-    for (int j = 0; j < n_rxn; j++){
+    for (int j = 0; j < md->n_rxn; j++){
       solveRXN(j,deriv_data, time_step, md, sc);
     }
   }
 #else
-  if( threadIdx.x < n_rxn) {
-    int n_iters = n_rxn / blockDim.x;
+  if( threadIdx.x < md->n_rxn) {
+    int n_iters = md->n_rxn / blockDim.x;
     for (int j = 0; j < n_iters; j++) {
       int i_rxn = threadIdx.x + j*blockDim.x;
       solveRXN(i_rxn,deriv_data, time_step, md, sc);
     }
-    int residual=n_rxn%blockDim.x;
+    int residual=md->n_rxn%blockDim.x;
     if(threadIdx.x < residual){
       int i_rxn = threadIdx.x + blockDim.x*n_iters;
       solveRXN(i_rxn, deriv_data, time_step, md, sc);
@@ -629,7 +628,7 @@ int cudaDevicef(double time_step, double *y,
 }
 
 __device__
-int CudaDeviceguess_helper(double h_n, double* y_n,
+int CudaDeviceguess_helper(double t_n, double h_n, double* y_n,
    double* y_n1, double* hf, double* atmp1,
    double* acorr, ModelDataGPU *md, ModelDataVariable *sc
 ) {
@@ -651,10 +650,10 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
   } else {
     acorr[i]=hf[i];
   }
-  double t_0 = h_n > 0. ? sc->cv_tn - h_n : sc->cv_tn - 1.;
+  double t_0 = h_n > 0. ? t_n - h_n : t_n - 1.;
   double t_j = 0.;
-  for (int iter = 0; iter < GUESS_MAX_ITER && t_0 + t_j < sc->cv_tn; iter++) {
-    double h_j = sc->cv_tn - (t_0 + t_j);
+  for (int iter = 0; iter < GUESS_MAX_ITER && t_0 + t_j < t_n; iter++) {
+    double h_j = t_n - (t_0 + t_j);
 #ifdef IS_DEBUG_MODE_CudaDeviceguess_helper
     if(threadIdx.x==0){
       int i_fast = -1;
@@ -684,8 +683,8 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
       h_j *= 0.95 + 0.1 * iter / (double)GUESS_MAX_ITER;
     }
 #endif
-    h_j = sc->cv_tn < t_0 + t_j + h_j ? sc->cv_tn - (t_0 + t_j) : h_j;
-    if (h_n == 0. && sc->cv_tn - (h_j + t_j + t_0) > md->cv_reltol) {
+    h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
+    if (h_n == 0. && t_n - (h_j + t_j + t_0) > md->cv_reltol) {
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) sc->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
 #endif
@@ -701,7 +700,7 @@ int CudaDeviceguess_helper(double h_n, double* y_n,
 #endif
      return -1;
     }
-    if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < sc->cv_tn) {
+    if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < t_n) {
       if (h_n == 0.){
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) sc->timeguess_helper += ((double)(clock() - start))/(clock_khz*1000);
@@ -951,8 +950,8 @@ int cudaDevicecvNewtonIteration(ModelDataGPU *md, ModelDataVariable *sc){
     md->dtempv[i] = md->dx[i];
     cudaDeviceVWRMS_Norm_2(md->dx, md->dewt, &del, md->n_shr_empty);
     md->dftemp[i]=md->dcv_y[i]+md->dtempv[i];
-    int guessflag=CudaDeviceguess_helper(0., md->dftemp,
-       md->dcv_y, md->dtempv, md->dtempv1,md->dtempv2, md, sc);
+    int guessflag=CudaDeviceguess_helper(sc->cv_tn, 0., md->dftemp,
+       md->dcv_y, md->dtempv, md->dtempv1,md->dp0, md, sc);
     if (guessflag < 0) {
       if (!(sc->cv_jcur)) {
         return TRY_AGAIN;
@@ -1027,7 +1026,7 @@ int cudaDevicecvNlsNewton(int nflag,
                   (dgamrat > DGMAX);
   md->dftemp[i]=md->dzn[i]-md->cv_last_yn[i];
   md->cv_acor_init[i]=0.;
-  int guessflag=CudaDeviceguess_helper(sc->cv_h, md->dzn,
+  int guessflag=CudaDeviceguess_helper(sc->cv_tn, sc->cv_h, md->dzn,
        md->cv_last_yn, md->dftemp, md->dtempv1,
        md->cv_acor_init, md, sc
   );
