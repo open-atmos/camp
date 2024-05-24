@@ -95,5 +95,9 @@ void cvodeRun(double t_initial, ModelDataGPU *mGPU, int blocks, int threads_bloc
 #define CAMP_SOLVER_FAIL 1
 #define MAX_PRECISION_LOSS 1.0e-14
 #define GUESS_MAX_ITER 5
+#define CV_NLSCOEF 0.1
+#define CAMP_SOLVER_DEFAULT_MAX_STEPS 10000
+#define CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS 1000
+#define BDF_Q_MAX 5
 
 #endif

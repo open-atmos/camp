@@ -39,7 +39,6 @@ typedef struct {
     double cv_etaqp1;      /* ratio of new to old h for order q+1             */
     double cv_saved_tq5;       /* saved value of tq[5]                        */
     double cv_tolsf;           /* tolerance scale factor                      */
-    int cv_indx_acor;            /* index of the zn vector with saved acor      */
     double cv_hu;
     int cv_jcur;
     int cv_nstlp;
@@ -85,7 +84,7 @@ typedef struct{
   ModelDataVariable mdvCPU; // WARNING: Moving this to struct "sd" cause errors when running gpu version
 } ModelDataCPU;
 
-typedef struct {
+typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     int *map_state_deriv;
     double *J_solver;
     double *J_state;
@@ -152,11 +151,9 @@ typedef struct {
     double cv_hmax_inv;
     double cv_reltol;
     int cv_maxcor;
-    int cv_qmax;
     int cv_maxnef;
     double cv_tstop;
     int cv_tstopset; //Used as bool
-    double cv_nlscoef;
     int use_deriv_est; //Used as bool
 //ODE stats
 #ifdef CAMP_PROFILE_SOLVING

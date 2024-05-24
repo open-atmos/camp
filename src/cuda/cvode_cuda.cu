@@ -1160,7 +1160,7 @@ void cudaDevicecvSetTqBDFt(ModelDataGPU *md, ModelDataVariable *sc,
     Cppinv = (1. - A6 + A5) / A2;
     md->cv_tq[3+blockIdx.x*(NUM_TESTS + 1)] = fabs(Cppinv / (xi_inv * (sc->cv_q+2) * A5));
   }
-  md->cv_tq[4+blockIdx.x*(NUM_TESTS + 1)] = md->cv_nlscoef / md->cv_tq[2+blockIdx.x*(NUM_TESTS + 1)];
+  md->cv_tq[4+blockIdx.x*(NUM_TESTS + 1)] = CV_NLSCOEF / md->cv_tq[2+blockIdx.x*(NUM_TESTS + 1)];
 }
 
 __device__
@@ -1225,7 +1225,7 @@ void cudaDevicecvDecreaseBDF(ModelDataGPU *md, ModelDataVariable *sc) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   double hsum, xi;
   int z, j;
-  for (z=0; z <= md->cv_qmax; z++) md->cv_l[z+blockIdx.x*L_MAX] = 0.;
+  for (z=0; z <= BDF_Q_MAX; z++) md->cv_l[z+blockIdx.x*L_MAX] = 0.;
   md->cv_l[2+blockIdx.x*L_MAX] = 1.;
   hsum = 0.;
   for (j=1; j <= sc->cv_q-2; j++) {
@@ -1308,10 +1308,9 @@ void cudaDevicecvCompleteStep(ModelDataGPU *md, ModelDataVariable *sc) {
     md->dzn[i+md->nrows*j]+=md->cv_l[j+blockIdx.x*L_MAX]*md->cv_acor[i];
   }
   sc->cv_qwait--;
-  if ((sc->cv_qwait == 1) && (sc->cv_q != md->cv_qmax)) {
-    md->dzn[i+md->nrows*md->cv_qmax]=md->cv_acor[i];
+  if ((sc->cv_qwait == 1) && (sc->cv_q != BDF_Q_MAX)) {
+    md->dzn[i+md->nrows*BDF_Q_MAX]=md->cv_acor[i];
     sc->cv_saved_tq5 = md->cv_tq[5+blockIdx.x*(NUM_TESTS + 1)];
-    sc->cv_indx_acor = md->cv_qmax;
   }
 }
 
@@ -1334,7 +1333,7 @@ void cudaDevicecvChooseEta(ModelDataGPU *md, ModelDataVariable *sc) {
   } else {
     sc->cv_eta = sc->cv_etaqp1;
     sc->cv_qprime = sc->cv_q + 1;
-    md->dzn[i+md->nrows*md->cv_qmax]=md->cv_acor[i];
+    md->dzn[i+md->nrows*BDF_Q_MAX]=md->cv_acor[i];
   }
 }
 
@@ -1379,10 +1378,10 @@ int cudaDevicecvPrepareNextStep(ModelDataGPU *md, ModelDataVariable *sc, double 
   }
   double dup, cquot;
   sc->cv_etaqp1 = 0.;
-  if (sc->cv_q != md->cv_qmax && sc->cv_saved_tq5 != 0.) {
+  if (sc->cv_q != BDF_Q_MAX && sc->cv_saved_tq5 != 0.) {
     cquot = (md->cv_tq[5+blockIdx.x*(NUM_TESTS + 1)] / sc->cv_saved_tq5) *
             dSUNRpowerI(sc->cv_h/md->cv_tau[2+blockIdx.x*(L_MAX + 1)],(double)sc->cv_L);
-    md->dtempv[i]=md->cv_acor[i]-cquot*md->dzn[i+md->nrows*md->cv_qmax];
+    md->dtempv[i]=md->cv_acor[i]-cquot*md->dzn[i+md->nrows*BDF_Q_MAX];
     cudaDeviceVWRMS_Norm_2(md->dtempv, md->dewt, &dup, md->n_shr_empty);
     dup *= md->cv_tq[3+blockIdx.x*(NUM_TESTS + 1)];
     sc->cv_etaqp1 = 1. / (dSUNRpowerR(BIAS3*dup, 1./(sc->cv_L+1)) + ADDON);
@@ -1397,7 +1396,7 @@ void cudaDevicecvIncreaseBDF(ModelDataGPU *md, ModelDataVariable *sc) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   double alpha0, alpha1, prod, xi, xiold, hsum, A1;
   int z, j;
-  for (z=0; z <= md->cv_qmax; z++) md->cv_l[z+blockIdx.x*L_MAX] = 0.;
+  for (z=0; z <= BDF_Q_MAX; z++) md->cv_l[z+blockIdx.x*L_MAX] = 0.;
   md->cv_l[2+blockIdx.x*L_MAX] = alpha1 = prod = xiold = 1.;
   alpha0 = -1.;
   hsum = sc->cv_hscale;
@@ -1414,7 +1413,7 @@ void cudaDevicecvIncreaseBDF(ModelDataGPU *md, ModelDataVariable *sc) {
     }
   }
   A1 = (-alpha0 - alpha1) / prod;
-  md->dzn[i+md->nrows*sc->cv_L]=A1*md->dzn[i+md->nrows*sc->cv_indx_acor];
+  md->dzn[i+md->nrows*sc->cv_L]=A1*md->dzn[i+md->nrows*BDF_Q_MAX];
   for (j=2; j <= sc->cv_q; j++){
     md->dzn[i+md->nrows*j]+=md->cv_l[j+blockIdx.x*L_MAX]*md->dzn[i+md->nrows*(sc->cv_L)];
   }

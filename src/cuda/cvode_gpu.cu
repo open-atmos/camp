@@ -544,7 +544,6 @@ int cudaCVode(void *cvode_mem, realtype t_final, N_Vector yout,
   mCPU->mdvCPU.cv_etaqp1 = cv_mem->cv_etaqp1;
   mCPU->mdvCPU.cv_saved_tq5 = cv_mem->cv_saved_tq5;
   mCPU->mdvCPU.cv_tolsf = cv_mem->cv_tolsf;
-  mCPU->mdvCPU.cv_indx_acor = cv_mem->cv_indx_acor;
   mCPU->mdvCPU.cv_hu = cv_mem->cv_hu;
   mCPU->mdvCPU.cv_jcur = cv_mem->cv_jcur;
   mCPU->mdvCPU.cv_nstlp = cv_mem->cv_nstlp;
@@ -601,13 +600,11 @@ int cudaCVode(void *cvode_mem, realtype t_final, N_Vector yout,
   mGPU->cv_tstop = cv_mem->cv_tstop;
   mGPU->cv_tstopset = cv_mem->cv_tstopset;
   mGPU->use_deriv_est = sd->use_deriv_est;
-  mGPU->cv_nlscoef = cv_mem->cv_nlscoef;
   mGPU->cv_mxstep = cv_mem->cv_mxstep;
   mGPU->cv_uround = cv_mem->cv_uround;
   mGPU->cv_hmax_inv = cv_mem->cv_hmax_inv;
   mGPU->cv_reltol = cv_mem->cv_reltol;
   mGPU->cv_maxcor = cv_mem->cv_maxcor;
-  mGPU->cv_qmax = cv_mem->cv_qmax;
   mGPU->cv_maxnef = cv_mem->cv_maxnef;
   mGPU->init_time_step = sd->init_time_step;
   mGPU->tout = t_final;
