@@ -20,7 +20,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   CVodeMem cv_mem = (CVodeMem) cvode_mem;
   ModelDataGPU *mGPU = sd->mGPU;
   ModelData *md = &(sd->model_data);
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
   cudaEventRecord(sd->startcvStep);
 #endif
   cudaStream_t stream;
@@ -93,7 +93,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   nvtxRangePop();
 #endif
   cudaDeviceSynchronize();
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
     cudaEventRecord(sd->stopcvStep);
     cudaEventSynchronize(sd->stopcvStep);
     float mscvStep = 0.0;

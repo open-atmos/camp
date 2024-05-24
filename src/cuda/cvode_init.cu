@@ -166,7 +166,7 @@ void constructor_cvode_gpu(SolverData *sd){
   cudaMalloc((void **) &mGPU->cv_Vabstol, n_dep_var * sizeof(double));
   double *cv_Vabstol = N_VGetArrayPointer(cv_mem->cv_Vabstol);
   cudaMemcpy(mGPU->cv_Vabstol, cv_Vabstol, n_dep_var * sizeof(double), cudaMemcpyHostToDevice);
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
   cudaEventCreate(&sd->startcvStep);
   cudaEventCreate(&sd->stopcvStep);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS

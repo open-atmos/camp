@@ -129,7 +129,7 @@ typedef struct {
     double tout;
     double cv_reltol;
 //ODE stats
-#ifdef CAMP_DEBUG_GPU
+#ifdef CAMP_PROFILE_SOLVING
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz;
     ModelDataVariable *mdvo; //out device

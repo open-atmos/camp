@@ -29,8 +29,7 @@ class TestMonarch:
     self.profileCuda = ""
     #self.profileCuda = "nsight"
     self.caseBase = "CPU One-cell"
-    self.plotYKey = "Speedup timecvStep"
-    #self.plotYKey = "Speedup timeCVode"
+    self.plotYKey = "Speedup timeCVode"
     self.casesOptim = []
     self.is_import = False
     self.is_import_base = False
