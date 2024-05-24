@@ -13,7 +13,9 @@ initial_dir=$(pwd)
 
 case "${BSC_MACHINE}-loadmodules" in
     "mn5-loadmodules")
-  source load.modules.camp.sh
+  if ! module list 2>&1 | grep -q "\<python\>"; then
+    source load.modules.camp.sh
+  fi
   ;;
 esac
 cd ${camp_suite_dir}/camp

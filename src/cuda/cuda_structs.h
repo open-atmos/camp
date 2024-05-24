@@ -144,7 +144,6 @@ typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     double* dewt;
     double* dsavedJ;    //Auxiliar variables
     ModelDataVariable *mdv; //device
-    ModelDataVariable *mdvo; //out device
     ModelDataVariable *sCells;
     double init_time_step;     //Constant during solving
     int cv_mxstep;
@@ -163,6 +162,7 @@ typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
 #ifdef CAMP_PROFILE_SOLVING
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz;
+    ModelDataVariable *mdvo; //out device
 #endif
 #endif
 } ModelDataGPU; //CPU and GPU structs

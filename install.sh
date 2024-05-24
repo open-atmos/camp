@@ -240,6 +240,7 @@ function install_camp()
 
     if [[ $flags == *2* ]] ; then
 	    # load modules and compile
+	    source ${camp_suite_dir}/camp/compile/load.modules.camp.sh
       ${camp_suite_dir}/camp/compile/compile.camp.sh ${camp_suite_dir}
     fi
     cd $initial_dir

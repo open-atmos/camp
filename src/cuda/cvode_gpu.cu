@@ -664,5 +664,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 void solver_get_statistics_gpu(SolverData *sd){
   ModelDataGPU *mGPU = sd->mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   cudaMemcpy(&mCPU->mdvCPU,mGPU->mdvo,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
+#endif
 }

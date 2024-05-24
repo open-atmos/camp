@@ -391,26 +391,6 @@ __device__ void cudaDeviceSpmv_CSR(double* dx, double* db, double* dA, int* djA,
   dx[row]=sum;
 }
 
-__device__ void cudaDeviceSpmv_2CSC_block(double* dx, double* db, double* dA, int* djA, int* diA){
-  int row = threadIdx.x + blockDim.x*blockIdx.x;
-  dx[row]=0.0;
-  int nnz=diA[blockDim.x];
-  __syncthreads();
-  for(int j=diA[threadIdx.x]; j<diA[threadIdx.x+1]; j++){
-    double mult = db[row]*dA[j+nnz*blockIdx.x];
-    atomicAdd_block(&(dx[djA[j]+blockDim.x*blockIdx.x]),mult);
-  }
-  __syncthreads();
-}
-
-__device__ void cudaDeviceSpmv_2(double* dx, double* db, double* dA, int* djA, int* diA){
-#ifndef IS_DEBUG_MODE_CSR_ODE_GPU
-  cudaDeviceSpmv_CSR(dx,db,dA,djA,diA);
-#else
-  cudaDeviceSpmv_2CSC_block(dx,db,dA,djA,diA);
-#endif
-}
-
 __device__ void warpReduce_2(volatile double *sdata, unsigned int tid) {
   unsigned int blockSize = blockDim.x;
   if (blockSize >= 64) sdata[tid] += sdata[tid + 32];
@@ -567,7 +547,7 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y,
 {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   md->dn0[i]=y[i]-md->J_state[i];
-  cudaDeviceSpmv_2(md->dy, md->dn0, md->J_solver, md->djA, md->diA);
+  cudaDeviceSpmv_CSR(md->dy, md->dn0, md->J_solver, md->djA, md->diA);
   md->dn0[i]=md->J_deriv[i]+md->dy[i];
   TimeDerivativeGPU deriv_data;
   __syncthreads();
@@ -912,7 +892,7 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *sc)
   alpha=rho0=omega0=beta=rho1=temp1=temp2=1.0;
   md->dn0[i]=0.0;
   md->dp0[i]=0.0;
-  cudaDeviceSpmv_2(md->dr0,md->dx,md->dA,md->djA,md->diA);
+  cudaDeviceSpmv_CSR(md->dr0,md->dx,md->dA,md->djA,md->diA);
   md->dr0[i]=md->dtempv[i]-md->dr0[i];
   md->dr0h[i]=md->dr0[i];
   int it=0;
@@ -921,13 +901,13 @@ void solveBcgCudaDeviceCVODE(ModelDataGPU *md, ModelDataVariable *sc)
     beta = (rho1 / rho0) * (alpha / omega0);
     md->dp0[i]=beta*md->dp0[i]+md->dr0[i]-md->dn0[i]*omega0*beta;
     md->dy[i]=md->ddiag[i]*md->dp0[i];
-    cudaDeviceSpmv_2(md->dn0, md->dy, md->dA, md->djA, md->diA);
+    cudaDeviceSpmv_CSR(md->dn0, md->dy, md->dA, md->djA, md->diA);
     cudaDevicedotxy_2(md->dr0h, md->dn0, &temp1, md->n_shr_empty);
     alpha = rho1 / temp1;
     md->ds[i]=md->dr0[i]-alpha*md->dn0[i];
     md->dx[i]+=alpha*md->dy[i];
     md->dy[i]=md->ddiag[i]*md->ds[i];
-    cudaDeviceSpmv_2(md->dt, md->dy, md->dA, md->djA, md->diA);
+    cudaDeviceSpmv_CSR(md->dt, md->dy, md->dA, md->djA, md->diA);
     md->dr0[i]=md->ddiag[i]*md->dt[i];
     cudaDevicedotxy_2(md->dy, md->dr0, &temp1, md->n_shr_empty);
     cudaDevicedotxy_2(md->dr0, md->dr0, &temp2, md->n_shr_empty);

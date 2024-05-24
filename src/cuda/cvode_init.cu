@@ -210,7 +210,6 @@ void constructor_cvode_gpu(SolverData *sd){
   for (int i = 0; i < n_cells; i++){
     cudaMemcpyAsync(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice,stream);
   }
-#ifndef IS_DEBUG_MODE_CSR_ODE_GPU
   int n_row=nrows/n_cells;
   int* Ap=iA;
   int* Aj=jA;
@@ -266,7 +265,6 @@ void constructor_cvode_gpu(SolverData *sd){
   free(Bx);
   free(jac_solver_id);
   free(aux_solver_id);
-#endif
 }
 
 void free_gpu_cu(SolverData *sd) {
@@ -323,5 +321,7 @@ void free_gpu_cu(SolverData *sd) {
   cudaFree(mGPU->dewt);
   cudaFree(mGPU->dsavedJ);
   cudaFree(mGPU->mdv);
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   cudaFree(mGPU->mdvo);
+#endif
 }

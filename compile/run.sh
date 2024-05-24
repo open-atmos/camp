@@ -14,6 +14,8 @@ cd "$scriptdir"
 if [ ! -d ../build ]; then
   ./compile.libs.camp.sh
 fi
-source load.modules.camp.sh
+if ! module list 2>&1 | grep -q "\<python\>"; then
+  source load.modules.camp.sh
+fi
 cd ../test/monarch
 ./run.sh
