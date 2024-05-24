@@ -17,8 +17,8 @@ def all_timesteps():
   conf.gpu_percentage = 100
   conf.caseBase = "CPU One-cell"
   #conf.caseBase = "GPU BDF"
-  conf.casesOptim = ["CPU One-cell"]
-  #conf.casesOptim = ["GPU BDF"]
+  #conf.casesOptim = ["CPU One-cell"]
+  conf.casesOptim = ["GPU BDF"]
   #conf.is_import = True
   conf.is_import_base = True
   #conf.profileCuda = "nsight"

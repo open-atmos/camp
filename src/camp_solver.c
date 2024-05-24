@@ -573,34 +573,8 @@ int solver_run_gpu(SolverData *sd, double *state, double *env, double t_initial,
     md->grid_cell_sub_model_env_data =
         &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
     // Update the model for the current environmental state
-    aero_rep_update_env_state(md);
-    sub_model_update_env_state(md);
     rxn_update_env_state(md);
   }
-
-  // Reset jac solving, otherwise values from previous iteration would be carried to current iteration
-  // Using or not this option accelerates solving depending on the case
-  // Enable reset when the inputs are very different between each other or
-  // to compare with the GPU version
-  // Avoid reset when the inputs are similar like when using CAMP from MONARCH
-  // The default value is 0, because is the most used case in our case
-  if(sd->is_reset_jac==1){
-    N_VConst(0.0, md->J_state);
-    N_VConst(0.0, md->J_deriv);
-    SM_NNZ_S(md->J_solver) = SM_NNZ_S(md->J_init);
-    for (int i = 0; i < SM_NNZ_S(md->J_solver); i++) {
-      (SM_DATA_S(md->J_solver))[i] = 0.0;
-    }
-  }
-
-#ifdef CAMP_DEBUG
-  sd->Jac_eval_fails = 0;
-#endif
-
-  sd->t_initial = t_initial;
-  sd->t_final = t_final;
-  // Set the initial time step
-  sd->init_time_step = (t_final - t_initial) * DEFAULT_TIME_STEP;
 
   // Check whether there is anything to solve (filters empty air masses with no
   // emissions)
@@ -625,36 +599,13 @@ int solver_run_gpu(SolverData *sd, double *state, double *env, double t_initial,
 #ifdef CAMP_PROFILE_SOLVING
   double starttimeCvode = MPI_Wtime();
 #endif
-#ifdef CAMP_USE_GPU
-  if(sd->gpu_percentage==0){
-    flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
-  }
-  else{
-    flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
-      &t_rt, sd);
-  }
-#else
-  flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
-#endif
+  flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
+    &t_rt, sd);
 #ifdef CAMP_PROFILE_SOLVING
   sd->timeCVode += (MPI_Wtime() - starttimeCvode);
 #endif
   sd->solver_flag = flag;
-#ifdef FAILURE_DETAIL
-  if (check_flag(&flag, "CVode", 1) != CAMP_SOLVER_SUCCESS) {
-    if (flag == -6) {
-      long int lsflag;
-      int lastflag = CVDlsGetLastFlag(sd->cvode_mem, &lsflag);
-      printf("\nLinear Solver Setup Fail: %d %ld", lastflag, lsflag);
-    }
-    N_Vector deriv = N_VClone(sd->y);
-    flag = f(t_initial, sd->y, deriv, sd);
-    if (flag != 0)
-      printf("\nCall to f() at failed state failed with flag %d \n",flag);
-    solver_print_stats(sd->cvode_mem);
-#else
   if (flag < 0) {
-#endif
     return CAMP_SOLVER_FAIL;
   }
   // Update the species concentrations on the state array
@@ -670,11 +621,6 @@ int solver_run_gpu(SolverData *sd, double *state, double *env, double t_initial,
       }
     }
   }
-
-  // Re-run the pre-derivative calculations to update equilibrium species
-  // and apply adjustments to final state
-  sub_model_calculate(md);
-
   return CAMP_SOLVER_SUCCESS;
 }
 #endif
@@ -805,9 +751,9 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     }
   }
 
+  // Set the initial time step
   sd->t_initial = t_initial;
   sd->t_final = t_final;
-  // Set the initial time step
   sd->init_time_step = (t_final - t_initial) * DEFAULT_TIME_STEP;
 
 #ifdef CAMP_USE_GPU
