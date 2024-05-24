@@ -540,9 +540,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 #endif
   for (int i = 0; i < mGPU->n_cells; i++)
     sd->flagCells[i] = 99;
-#ifdef ODE_WARNING
-  mCPU->mdvCPU.cv_nhnil = cv_mem->cv_nhnil;
-#endif
   mCPU->mdvCPU.tret = *tret;
   mCPU->mdvCPU.cv_tretlast = cv_mem->cv_tretlast;
   mCPU->mdvCPU.cv_etaqm1 = cv_mem->cv_etaqm1;

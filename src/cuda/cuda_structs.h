@@ -65,9 +65,6 @@ typedef struct {
     double *grid_cell_state;
     int nstlj;
     int cv_nst;
-#ifdef ODE_WARNING
-    int cv_nhnil;            /* number of messages issued to the user that t + h == t for the next iternal step            */
-#endif
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int countercvStep;
     int counterBCGInternal;

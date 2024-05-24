@@ -209,8 +209,11 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.rxn_float_indices[0] = 0;
   sd->model_data.rxn_env_idx[0] = 0;
 
-  // If there are no reactions, flag the solver not to run
-  sd->no_solve = (n_rxn == 0);
+  if (n_rxn == 0) {
+    printf(
+        "\n\nERROR There are no reactions\n\n");
+    exit(EXIT_FAILURE);
+  }
 
   // Allocate space for the aerosol phase data and st the number
   // of aerosol phases (including one int for the number of
@@ -604,9 +607,9 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
     }
   }
 
+#ifdef CAMP_DEBUG
   sd->Jac_eval_fails = 0;
-  // Reset the flag indicating a current J_guess
-  sd->curr_J_guess = false;
+#endif
 
   sd->t_initial = t_initial;
   sd->t_final = t_final;
@@ -633,42 +636,40 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   // Run the solver
   realtype t_rt = (realtype)t_initial;
 
-  if (!sd->no_solve) {
 #ifdef CAMP_PROFILE_SOLVING
   double starttimeCvode = MPI_Wtime();
 #endif
 #ifdef CAMP_USE_GPU
-    if(sd->gpu_percentage==0){
-      flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
-    }
-    else{
-      flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
-        &t_rt, sd);
-    }
-#else
+  if(sd->gpu_percentage==0){
     flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
+  }
+  else{
+    flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
+      &t_rt, sd);
+  }
+#else
+  flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
 #endif
 #ifdef CAMP_PROFILE_SOLVING
-    sd->timeCVode += (MPI_Wtime() - starttimeCvode);
+  sd->timeCVode += (MPI_Wtime() - starttimeCvode);
 #endif
-    sd->solver_flag = flag;
+  sd->solver_flag = flag;
 #ifdef FAILURE_DETAIL
-    if (check_flag(&flag, "CVode", 1) != CAMP_SOLVER_SUCCESS) {
-      if (flag == -6) {
-        long int lsflag;
-        int lastflag = CVDlsGetLastFlag(sd->cvode_mem, &lsflag);
-        printf("\nLinear Solver Setup Fail: %d %ld", lastflag, lsflag);
-      }
-      N_Vector deriv = N_VClone(sd->y);
-      flag = f(t_initial, sd->y, deriv, sd);
-      if (flag != 0)
-        printf("\nCall to f() at failed state failed with flag %d \n",flag);
-      solver_print_stats(sd->cvode_mem);
-#else
-    if (flag < 0) {
-#endif
-      return CAMP_SOLVER_FAIL;
+  if (check_flag(&flag, "CVode", 1) != CAMP_SOLVER_SUCCESS) {
+    if (flag == -6) {
+      long int lsflag;
+      int lastflag = CVDlsGetLastFlag(sd->cvode_mem, &lsflag);
+      printf("\nLinear Solver Setup Fail: %d %ld", lastflag, lsflag);
     }
+    N_Vector deriv = N_VClone(sd->y);
+    flag = f(t_initial, sd->y, deriv, sd);
+    if (flag != 0)
+      printf("\nCall to f() at failed state failed with flag %d \n",flag);
+    solver_print_stats(sd->cvode_mem);
+#else
+  if (flag < 0) {
+#endif
+    return CAMP_SOLVER_FAIL;
   }
   // Update the species concentrations on the state array
   i_dep_var = 0;
@@ -769,7 +770,11 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
     flag = CVodeGetCurrentStep(sd->cvode_mem, &curr_h);
     if (check_flag(&flag, "CVodeGetCurrentStep", 1) == CAMP_SOLVER_FAIL) return;
     *next_time_step__s = (double)curr_h;
+#ifdef CAMP_DEBUG
     *Jac_eval_fails = sd->Jac_eval_fails;
+#else
+    *Jac_eval_fails = 0;
+#endif
 #ifdef CAMP_USE_GPU
   }
 #endif

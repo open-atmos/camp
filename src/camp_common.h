@@ -229,15 +229,13 @@ typedef struct {
   SUNMatrix J;         // Jacobian matrix
   SUNMatrix J_guess;   // Jacobian matrix for improving guesses sent to linear
                        // solver
-  bool curr_J_guess;   // Flag indicating the Jacobian used by the guess helper
-                       // is current
   realtype J_guess_t;  // Last time (t) for which J_guess was calculated
-  int Jac_eval_fails;  // Number of Jacobian evaluation failures
   int solver_flag;     // Last flag returned by a call to CVode()
   int output_precision;  // Flag indicating whether to output precision loss
   int use_deriv_est;     // Flag indicating whether to use an estimated
                          // derivative in the f() calculations
 #ifdef CAMP_DEBUG
+  int Jac_eval_fails;  // Number of Jacobian evaluation failures
   booleantype debug_out;  // Output debugging information during solving
   booleantype eval_Jac;   // Evalute Jacobian data during solving
   double
@@ -259,26 +257,13 @@ typedef struct {
 #ifdef CAMP_USE_GPU
   ModelDataCPU mCPU;
   ModelDataGPU *mGPU;
-
   int *flagCells;
-  float rate_cells_gpu;
-/*
-#ifdef DEV_CPU_GPU
-  //CPU+GPU
-    void *cvode_mem2;
-    N_Vector y2;
-    N_Vector deriv2;
-    N_Vector abs_tol_nv2;
-#endif
-*/
 #endif
   int gpu_percentage;
   int is_reset_jac;
 
   void *cvode_mem;       // CVodeMem object
   ModelData model_data;  // Model data (used during initialization and solving)
-  bool no_solve;  // Flag to indicate whether to run the solver needs to be
-                  // run. Set to true when no reactions are present.
   double init_time_step;  // Initial time step (s)
   char **spec_names;      // Species names
 } SolverData;

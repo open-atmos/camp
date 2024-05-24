@@ -40,15 +40,43 @@ void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int sp
   }
 }
 
+__device__
+void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
+                            int prod_or_loss,
+                            double jac_contribution) {
+  if (prod_or_loss == JACOBIAN_PRODUCTION) {
+    jac.production_partials[elem_id] += jac_contribution;
+  }
+  else{ //(prod_or_loss == JACOBIAN_LOSS){
+    jac.loss_partials[elem_id] += jac_contribution;
+  }
+}
+
 #else
 
 __device__
 void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv, unsigned int spec_id,
                                double rate_contribution) {
+  //WARNING: Atomicadd is not desirable,
+  //because it leads to small deviations in the results,
+  //even when scaling the number of data computed in the GPU
+  //It would be desirable to remove it
   if (rate_contribution > 0.0) {
     atomicAdd_block(&(time_deriv.production_rates[spec_id]),rate_contribution);
   } else {
     atomicAdd_block(&(time_deriv.loss_rates[spec_id]),-rate_contribution);
+  }
+}
+
+__device__
+void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
+                            int prod_or_loss,
+                            double jac_contribution) {
+  if (prod_or_loss == JACOBIAN_PRODUCTION) {
+    atomicAdd_block(&(jac.production_partials[elem_id]), jac_contribution);
+  }
+  else{ //(prod_or_loss == JACOBIAN_LOSS){
+    atomicAdd_block(&(jac.loss_partials[elem_id]),jac_contribution);
   }
 }
 
@@ -175,32 +203,6 @@ void rxn_gpu_photolysis_calc_deriv_contrib(ModelDataVariable *sc, TimeDerivative
     }
   }
 }
-
-#ifdef IS_DEBUG_MODE_removeAtomic
-__device__
-void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
-                            int prod_or_loss,
-                            double jac_contribution) {
-  if (prod_or_loss == JACOBIAN_PRODUCTION) {
-    jac.production_partials[elem_id] += jac_contribution;
-  }
-  else{ //(prod_or_loss == JACOBIAN_LOSS){
-    jac.loss_partials[elem_id] += jac_contribution;
-  }
-}
-#else
-__device__
-void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
-                                   int prod_or_loss,
-                                   double jac_contribution) {
-  if (prod_or_loss == JACOBIAN_PRODUCTION) {
-    atomicAdd_block(&(jac.production_partials[elem_id]), jac_contribution);
-  }
-  else{ //(prod_or_loss == JACOBIAN_LOSS){
-    atomicAdd_block(&(jac.loss_partials[elem_id]),jac_contribution);
-  }
-}
-#endif
 
 __device__
 void rxn_gpu_first_order_loss_calc_jac_contrib(ModelDataVariable *sc, JacobianGPU jac, int *rxn_int_data,
@@ -377,7 +379,7 @@ __device__ void cudaDeviceBCGprecond_2(double* dA, int* djA, int* diA, double* d
   }
 }
 
-__device__ void cudaDeviceSpmv_2CSR(double* dx, double* db, double* dA, int* djA, int* diA){
+__device__ void cudaDeviceSpmv_CSR(double* dx, double* db, double* dA, int* djA, int* diA){
   __syncthreads();
   int row= threadIdx.x + blockDim.x*blockIdx.x;
   double sum = 0.0;
@@ -403,7 +405,7 @@ __device__ void cudaDeviceSpmv_2CSC_block(double* dx, double* db, double* dA, in
 
 __device__ void cudaDeviceSpmv_2(double* dx, double* db, double* dA, int* djA, int* diA){
 #ifndef IS_DEBUG_MODE_CSR_ODE_GPU
-  cudaDeviceSpmv_2CSR(dx,db,dA,djA,diA);
+  cudaDeviceSpmv_CSR(dx,db,dA,djA,diA);
 #else
   cudaDeviceSpmv_2CSC_block(dx,db,dA,djA,diA);
 #endif
@@ -1585,14 +1587,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
     } else {
       sc->cv_tolsf = 1.;
     }
-#ifdef ODE_WARNING
-    if (sc->cv_tn + sc->cv_h == sc->cv_tn) {
-      if(threadIdx.x==0) sc->cv_nhnil++;
-      if ((sc->cv_nhnil <= sc->cv_mxhnil) ||
-              (sc->cv_nhnil == sc->cv_mxhnil))
-        if(i==0)printf("WARNING: h below roundoff level in tn");
-    }
-#endif
     kflag2 = cudaDevicecvStep(md, sc);
     if (kflag2 != CV_SUCCESS) {
       sc->cv_tretlast = sc->tret = sc->cv_tn;

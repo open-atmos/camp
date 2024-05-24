@@ -7,7 +7,7 @@ if [ "${BSC_MACHINE}" == "mn5" ]; then
       module load gcc
       module load openmpi/4.1.5-gcc
       module load mkl
-      if [[ "${HOSTNAME}" == *"alogin"* ]]; then
+      if module --raw --redirect show cuda | grep -q cuda ; then
         module load cuda
         module load hdf5/1.14.1-2-gcc-ompi
         module load pnetcdf/1.12.3-gcc-ompi
@@ -24,7 +24,7 @@ if [ "${BSC_MACHINE}" == "mn5" ]; then
       module load mkl/2023.2.0
       module load hdf5/1.14.1-2
       module load pnetcdf/1.12.3
-      if [[ "${HOSTNAME}" == *"alogin"* ]]; then
+      if module --raw --redirect show cuda | grep -q cuda ; then
         module load netcdf
         module load cuda
       else
