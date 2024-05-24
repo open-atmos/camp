@@ -109,8 +109,7 @@ module camp_camp_solver_data
     end subroutine solver_set_spec_name
 
     !> Solver initialization
-    subroutine solver_initialize(solver_data, abs_tol, rel_tol, max_steps, &
-                    max_conv_fails) bind (c)
+    subroutine solver_initialize(solver_data, abs_tol, rel_tol) bind (c)
       use iso_c_binding
       !> Pointer to a SolverData object
       type(c_ptr), value :: solver_data
@@ -118,10 +117,6 @@ module camp_camp_solver_data
       type(c_ptr), value :: abs_tol
       !> Relative integration tolerance
       real(kind=c_double), value :: rel_tol
-      !> Maximum number of internal integration steps
-      integer(kind=c_int), value :: max_steps
-      !> Maximum number of convergence failures
-      integer(kind=c_int), value :: max_conv_fails
     end subroutine solver_initialize
 
 #ifdef CAMP_DEBUG
@@ -803,9 +798,7 @@ contains
     call solver_initialize( &
             this%solver_c_ptr,                  & ! Pointer to solver data
             c_loc(abs_tol_c),                   & ! Absolute tolerances
-            real(this%rel_tol, kind=c_double),  & ! Relative tolerance
-            int(this%max_steps, kind=c_int),    & ! Max # of integration steps
-            int(this%max_conv_fails, kind=c_int)& ! Max # of convergence fails
+            real(this%rel_tol, kind=c_double)  & ! Relative tolerance
             )
 
     ! Flag the solver as initialized

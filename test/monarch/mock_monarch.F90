@@ -148,12 +148,6 @@ program mock_monarch_t
   if (camp_mpi_rank()==0) then
     write(*,*) "Model run time: ", comp_time, " s"
   end if
-  deallocate(camp_input_file)
-  deallocate(output_path)
-  deallocate(output_file_title)
-  call camp_interface%finalize()
-  deallocate(camp_interface)
-  call camp_mpi_finalize()
 
 contains
 

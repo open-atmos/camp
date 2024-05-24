@@ -24,8 +24,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int gpu_percentage, int is_reset_jac);
 void solver_set_spec_name(void *solver_data, char *spec_name,
                           int size_spec_name, int i);
-void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
-                       int max_steps, int max_conv_fails);
+void solver_initialize(void *solver_data, double *abs_tol, double rel_tol);
 #ifdef CAMP_DEBUG
 int solver_set_debug_out(void *solver_data, bool do_output);
 int solver_set_eval_jac(void *solver_data, bool eval_Jac);

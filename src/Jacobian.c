@@ -43,53 +43,6 @@ int jacobian_initialize_empty(Jacobian *jac, unsigned int num_spec) {
   return 1;
 }
 
-int jacobian_initialize(Jacobian *jac, unsigned int num_spec,
-                        unsigned int **jac_struct) {
-  unsigned int num_elem = 0;
-  for (unsigned int i_col = 0; i_col < num_spec; ++i_col)
-    for (unsigned int i_row = 0; i_row < num_spec; ++i_row)
-      if (jac_struct[i_col][i_row] == 1) ++num_elem;
-
-  jac->num_spec = num_spec;
-  jac->num_elem = num_elem;
-  jac->col_ptrs = (unsigned int *)malloc((num_spec + 1) * sizeof(unsigned int));
-  if (!jac->col_ptrs) return 0;
-  jac->row_ids = (unsigned int *)malloc(num_elem * sizeof(unsigned int));
-  if (!jac->row_ids) {
-    free(jac->col_ptrs);
-    return 0;
-  }
-  jac->production_partials =
-      (double *)malloc(num_elem * sizeof(double));
-  if (!jac->production_partials) {
-    free(jac->col_ptrs);
-    free(jac->row_ids);
-    return 0;
-  }
-  jac->loss_partials = (double *)malloc(num_elem * sizeof(double));
-  if (!jac->loss_partials) {
-    free(jac->col_ptrs);
-    free(jac->row_ids);
-    free(jac->production_partials);
-    return 0;
-  }
-
-  unsigned int i_elem = 0;
-  unsigned int i_col = 0;
-  for (; i_col < num_spec; ++i_col) {
-    jac->col_ptrs[i_col] = i_elem;
-    for (unsigned int i_row = 0; i_row < num_spec; ++i_row) {
-      if (jac_struct[i_row][i_col] == 1){
-        jac->row_ids[i_elem] = i_row;
-        i_elem++;
-      }
-    }
-  }
-  jac->col_ptrs[i_col] = i_elem;
-  jac->elements = NULL;
-  return 1;
-}
-
 // Add buffer space for Jacobian column elements (returns 1 on success, 0
 // otherwise)
 int jacobian_column_elements_add_space(JacobianColumnElements *column) {

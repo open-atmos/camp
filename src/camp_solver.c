@@ -56,6 +56,9 @@
 #define CAMP_SOLVER_SUCCESS 0
 #define CAMP_SOLVER_FAIL 1
 
+#define CAMP_SOLVER_DEFAULT_MAX_STEPS 10000 //Maximum number of internal integration steps
+#define CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS 1000 //Maximum number of convergence failures
+
 /** \brief Get a new solver object
  *
  * Return a pointer to a new SolverData object
@@ -383,12 +386,9 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
  * \param solver_data Pointer to a SolverData object
  * \param abs_tol Pointer to array of absolute tolerances
  * \param rel_tol Relative integration tolerance
- * \param max_steps Maximum number of internal integration steps
- * \param max_conv_fails Maximum number of convergence failures
  * \return Pointer to an initialized SolverData object
  */
-void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
-                       int max_steps, int max_conv_fails) {
+void solver_initialize(void *solver_data, double *abs_tol, double rel_tol) {
 #ifdef CAMP_USE_SUNDIALS
   SolverData *sd;   // SolverData object
   int flag;         // return code from SUNDIALS functions
@@ -447,15 +447,15 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
   sd->model_data.abs_tol = abs_tol;
 
   // Set the maximum number of iterations
-  flag = CVodeSetMaxNumSteps(sd->cvode_mem, max_steps);
+  flag = CVodeSetMaxNumSteps(sd->cvode_mem, CAMP_SOLVER_DEFAULT_MAX_STEPS);
   check_flag_fail(&flag, "CVodeSetMaxNumSteps", 1);
 
   // Set the maximum number of convergence failures
-  flag = CVodeSetMaxConvFails(sd->cvode_mem, max_conv_fails);
+  flag = CVodeSetMaxConvFails(sd->cvode_mem, CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS);
   check_flag_fail(&flag, "CVodeSetMaxConvFails", 1);
 
   // Set the maximum number of error test failures
-  flag = CVodeSetMaxErrTestFails(sd->cvode_mem, max_conv_fails);
+  flag = CVodeSetMaxErrTestFails(sd->cvode_mem, CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS);
   check_flag_fail(&flag, "CVodeSetMaxErrTestFails", 1);
 
   // Set the maximum number of warnings about a too-small time step
