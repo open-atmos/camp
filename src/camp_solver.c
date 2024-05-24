@@ -600,7 +600,7 @@ int solver_run_gpu(SolverData *sd, double *state, double *env, double t_initial,
   double starttimeCvode = MPI_Wtime();
 #endif
   flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
-    &t_rt, sd);
+    &t_rt, sd, t_initial);
 #ifdef CAMP_PROFILE_SOLVING
   sd->timeCVode += (MPI_Wtime() - starttimeCvode);
 #endif
@@ -752,8 +752,6 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   }
 
   // Set the initial time step
-  sd->t_initial = t_initial;
-  sd->t_final = t_final;
   sd->init_time_step = (t_final - t_initial) * DEFAULT_TIME_STEP;
 
 #ifdef CAMP_USE_GPU

@@ -85,7 +85,7 @@ typedef struct{
   ModelDataVariable mdvCPU; // WARNING: Moving this to struct "sd" cause errors when running gpu version
 } ModelDataCPU;
 
-typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
+typedef struct {
     int *map_state_deriv;
     double *J_solver;
     double *J_state;
@@ -98,7 +98,7 @@ typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     double *state;
     double *env;
     double *rxn_env_data;
-    int *rxn_env_data_idx;
+    int *rxn_env_idx;
     double *production_rates;
     double *loss_rates;
     int *rxn_int_indices;
@@ -113,10 +113,10 @@ typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     double *cv_Vabstol;
     double *cv_l;
     double *cv_tau;
-    double *cv_tq;//NUM_TESTS+1
-    double *cv_last_yn;//CVODE variables only GPU
+    double *cv_tq;
+    double *cv_last_yn;
     double *cv_acor_init;
-    double *dA;//LS (BCG)
+    double *dA;
     int *djA;
     int *diA;
     double *dx;

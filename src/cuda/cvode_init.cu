@@ -104,8 +104,8 @@ void constructor_cvode_gpu(SolverData *sd){
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_int, md->rxn_int_data,(md->n_rxn_int_param + md->n_rxn)*sizeof(int), cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_double, md->rxn_float_data, md->n_rxn_float_param*sizeof(double), cudaMemcpyHostToDevice));
   size_t rxn_env_data_idx_size = (n_rxn+1) * sizeof(int);
-  cudaMalloc((void **) &mGPU->rxn_env_data_idx, rxn_env_data_idx_size);
-  HANDLE_ERROR(cudaMemcpy(mGPU->rxn_env_data_idx, md->rxn_env_idx, rxn_env_data_idx_size, cudaMemcpyHostToDevice));
+  cudaMalloc((void **) &mGPU->rxn_env_idx, rxn_env_data_idx_size);
+  HANDLE_ERROR(cudaMemcpy(mGPU->rxn_env_idx, md->rxn_env_idx, rxn_env_data_idx_size, cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_int_indices, md->rxn_int_indices,(md->n_rxn+1)*sizeof(int), cudaMemcpyHostToDevice));
   HANDLE_ERROR(cudaMemcpy(mGPU->rxn_float_indices, md->rxn_float_indices,(md->n_rxn+1)*sizeof(int), cudaMemcpyHostToDevice));
   double ** dr0 = &mGPU->dr0;
@@ -283,7 +283,7 @@ void free_gpu_cu(SolverData *sd) {
   cudaFree(mGPU->state);
   cudaFree(mGPU->env);
   cudaFree(mGPU->rxn_env_data);
-  cudaFree(mGPU->rxn_env_data_idx);
+  cudaFree(mGPU->rxn_env_idx);
   cudaFree(mGPU->production_rates);
   cudaFree(mGPU->loss_rates);
   cudaFree(mGPU->rxn_int_indices);

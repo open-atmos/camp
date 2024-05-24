@@ -513,7 +513,7 @@ __device__ void solveRXN(
   int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[i_rxn]]);
   int *rxn_int_data = (int *) &(int_data[1]);
   double *rxn_env_data = &(md->rxn_env_data
-  [md->n_rxn_env_data*blockIdx.x+md->rxn_env_data_idx[i_rxn]]);
+  [md->n_rxn_env_data*blockIdx.x+md->rxn_env_idx[i_rxn]]);
   switch (int_data[0]) {
     case RXN_ARRHENIUS :
       rxn_gpu_arrhenius_calc_deriv_contrib(sc, deriv_data, rxn_int_data,
@@ -727,7 +727,7 @@ __device__ void solveRXNJac(
   int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[i_rxn]]);
   int *rxn_int_data = (int *) &(int_data[1]);
   double *rxn_env_data = &(md->rxn_env_data
-  [md->n_rxn_env_data*blockIdx.x+md->rxn_env_data_idx[i_rxn]]);
+  [md->n_rxn_env_data*blockIdx.x+md->rxn_env_idx[i_rxn]]);
   switch (int_data[0]) {
     case RXN_ARRHENIUS :
       rxn_gpu_arrhenius_calc_jac_contrib(sc, jac, rxn_int_data,
@@ -1599,7 +1599,7 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
 }
 
 __global__
-void cudaGlobalCVode(ModelDataGPU md_object) {
+void cudaGlobalCVode(double t_initial, ModelDataGPU md_object) {
   ModelDataGPU *md = &md_object;
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -1634,11 +1634,9 @@ static int nextPowerOfTwoCVODE2(int v){
   return v;
 }
 
-void cvodeRun(ModelDataGPU *mGPU, cudaStream_t stream){
-  int len_cell = mGPU->nrows / mGPU->n_cells;
-  int threads_block = len_cell;
-  int blocks = mGPU->n_cells;
-  int n_shr_memory = nextPowerOfTwoCVODE2(len_cell);
+void cvodeRun(double t_initial, ModelDataGPU *mGPU, int blocks, int threads_block, cudaStream_t stream){
+  int n_shr_memory = nextPowerOfTwoCVODE2(threads_block);
   mGPU->n_shr_empty = n_shr_memory - threads_block;
-  cudaGlobalCVode <<<blocks, threads_block, n_shr_memory * sizeof(double), stream>>>(*mGPU);
+  cudaGlobalCVode <<<blocks, threads_block, n_shr_memory * sizeof(double), stream>>>
+    (t_initial, *mGPU);
 }

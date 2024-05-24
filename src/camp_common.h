@@ -242,9 +242,6 @@ typedef struct {
       max_loss_precision;  // Maximum loss of precision during last call to f()
 #endif
 
-  double t_initial;
-  double t_final;
-
 #ifdef CAMP_PROFILE_SOLVING
   double timeCVode;
 #ifdef CAMP_USE_GPU

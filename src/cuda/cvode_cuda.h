@@ -14,7 +14,7 @@ extern "C" {
 #include "../camp_solver.h"
 }
 
-void cvodeRun(ModelDataGPU *mGPU, cudaStream_t stream);
+void cvodeRun(double t_initial, ModelDataGPU *mGPU, int blocks, int threads_block, cudaStream_t stream);
 
 #define CV_SUCCESS               0
 #define DO_ERROR_TEST    +2
