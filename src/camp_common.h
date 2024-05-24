@@ -242,6 +242,9 @@ typedef struct {
       max_loss_precision;  // Maximum loss of precision during last call to f()
 #endif
 
+  double t_initial;
+  double t_final;
+
 #ifdef CAMP_PROFILE_SOLVING
   double timeCVode;
 #ifdef CAMP_USE_GPU
@@ -254,7 +257,7 @@ typedef struct {
 #ifdef CAMP_USE_GPU
   ModelDataCPU mCPU;
   ModelDataGPU *mGPU;
-  int *flagCells;
+  double **dzn;
 #endif
   int gpu_percentage;
   int is_reset_jac;

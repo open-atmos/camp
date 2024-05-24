@@ -7,7 +7,6 @@
 #define CAMPGPU_CUDA_STRUCTS_H
 
 typedef struct {
-    unsigned int num_spec;          // Number of species in the derivative
     double *production_rates;  // Production rates for all species
     double *loss_rates;        // Loss rates for all species
 #ifdef CAMP_DEBUG
@@ -31,14 +30,7 @@ typedef struct {
 } JacobianGPU;
 
 typedef struct {
-    int nstloc;
-    double tret;
-    double cv_tretlast;
-    double cv_etaqm1;      /* ratio of new to old h for order q-1             */
-    double cv_etaq;        /* ratio of new to old h for order q               */
-    double cv_etaqp1;      /* ratio of new to old h for order q+1             */
-    double cv_saved_tq5;       /* saved value of tq[5]                        */
-    double cv_tolsf;           /* tolerance scale factor                      */
+    double cv_saved_tq5;
     double cv_hu;
     int cv_jcur;
     int cv_nstlp;
@@ -60,7 +52,6 @@ typedef struct {
     double cv_hmin;
     double cv_tn;
     double cv_etamax;
-    int cv_maxncf;
     double *grid_cell_state;
     int nstlj;
     int cv_nst;
@@ -84,18 +75,14 @@ typedef struct{
   ModelDataVariable mdvCPU; // WARNING: Moving this to struct "sd" cause errors when running gpu version
 } ModelDataCPU;
 
-typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
+typedef struct {
     int *map_state_deriv;
     double *J_solver;
     double *J_state;
     double *J_deriv;
-    double *J_tmp;
-    int *indexvals;
-    int *indexptrs;
     int *rxn_int;
     double *rxn_double;
     double *state;
-    double *env;
     double *rxn_env_data;
     int *rxn_env_idx;
     double *production_rates;
@@ -120,9 +107,7 @@ typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     int *diA;
     double *dx;
     double* dtempv;
-    int nrows;
     int n_shr_empty;
-    int n_cells;
     double *ddiag;
     double *dr0;
     double *dr0h;
@@ -131,39 +116,25 @@ typedef struct { //Allocated from CPU (used during CPU / need some cudamemcpy)
     double *dt;
     double *ds;
     double *dy;
-    double *dz;
-    double* dftemp;     //Guess_helper
+    double* dftemp;
     double* dcv_y;
     double* dtempv1;
-    double* dtempv2;
-    int *flagCells;
     int n_per_cell_state_var;
-    double* cv_acor;     //cudacvNewtonIteration
-    double* dzn;
+    double* cv_acor;
+    double** dzn;
     double* dewt;
-    double* dsavedJ;    //Auxiliar variables
-    ModelDataVariable *mdv; //device
+    double* dsavedJ;
     ModelDataVariable *sCells;
-    double init_time_step;     //Constant during solving
-    int cv_mxstep;
+    double init_time_step;
     double tout;
-    double cv_uround;
-    double cv_hmax_inv;
     double cv_reltol;
-    int cv_maxcor;
-    int cv_maxnef;
-    double cv_tstop;
-    int cv_tstopset; //Used as bool
-    int use_deriv_est; //Used as bool
 //ODE stats
-#ifdef CAMP_PROFILE_SOLVING
+#ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz;
     ModelDataVariable *mdvo; //out device
 #endif
 #endif
-} ModelDataGPU; //CPU and GPU structs
+} ModelDataGPU;
 
 #endif //CAMPGPU_CUDA_STRUCTS_H
-
-

@@ -31,7 +31,7 @@
 #endif
 #include "camp_debug.h"
 
-#ifdef CAMP_PROFILE_SOLVING
+#ifdef CAMP_DEBUG_GPU
 #ifdef CAMP_USE_MPI
 #include <mpi.h>
 #endif
@@ -128,7 +128,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
   sd->gpu_percentage = gpu_percentage;
   sd->is_reset_jac = is_reset_jac;
-  sd->model_data.n_cells_gpu = n_cells;
   sd->model_data.n_cells = n_cells;
 
   // Add the variable types to the solver data
@@ -156,8 +155,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   }
 
   // Set up the solver variable array and helper derivative array
-  sd->y = N_VNew_Serial(n_dep_var * n_cells);
-  sd->deriv = N_VNew_Serial(n_dep_var * n_cells);
+  sd->y = N_VNew_Serial(n_dep_var);
+  sd->deriv = N_VNew_Serial(n_dep_var);
 #endif
 
   // Allocate space for the reaction data and set the number
@@ -371,7 +370,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.sub_model_float_indices[0] = 0;
   sd->model_data.sub_model_env_idx[0] = 0;
 
-#ifdef CAMP_PROFILE_SOLVING
+#ifdef CAMP_DEBUG_GPU
   sd->timeCVode = 0.;
 #endif
 
@@ -396,7 +395,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol) {
   int i_dep_var;    // index of dependent variables in loops
   int n_state_var;  // number of variables on the state array per
                     // grid cell
-  int n_cells;      // number of cells to solve simultaneously
   int *var_type;    // state variable types
 
   // Seed the random number generator
@@ -420,7 +418,6 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol) {
   n_state_var = sd->model_data.n_per_cell_state_var;
   n_dep_var = sd->model_data.n_per_cell_dep_var;
   var_type = sd->model_data.var_type;
-  n_cells = sd->model_data.n_cells;
 
   // Set the solver data
   flag = CVodeSetUserData(sd->cvode_mem, sd);
@@ -433,12 +430,11 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol) {
   check_flag_fail(&flag, "CVodeInit", 1);
 
   // Set the relative and absolute tolerances
-  sd->abs_tol_nv = N_VNew_Serial(n_dep_var * n_cells);
+  sd->abs_tol_nv = N_VNew_Serial(n_dep_var);
   i_dep_var = 0;
-  for (int i_cell = 0; i_cell < n_cells; ++i_cell)
-    for (int i_spec = 0; i_spec < n_state_var; ++i_spec)
-      if (var_type[i_spec] == CHEM_SPEC_VARIABLE)
-        NV_Ith_S(sd->abs_tol_nv, i_dep_var++) = (realtype)abs_tol[i_spec];
+  for (int i_spec = 0; i_spec < n_state_var; ++i_spec)
+    if (var_type[i_spec] == CHEM_SPEC_VARIABLE)
+      NV_Ith_S(sd->abs_tol_nv, i_dep_var++) = (realtype)abs_tol[i_spec];
   flag = CVodeSVtolerances(sd->cvode_mem, (realtype)rel_tol, sd->abs_tol_nv);
   check_flag_fail(&flag, "CVodeSVtolerances", 1);
 
@@ -549,20 +545,14 @@ int solver_run_gpu(SolverData *sd, double *state, double *env, double t_initial,
   int n_cells = md->n_cells;
   int flag;
 
-  // Update the dependent variables
-  int i_dep_var = 0;
+    // Update the dependent variables
   for (int i_cell = 0; i_cell < n_cells; i_cell++){
     for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
-      if (sd->model_data.var_type[i_spec] == CHEM_SPEC_VARIABLE) {
-        NV_Ith_S(sd->y, i_dep_var++) =
-            state[i_spec + i_cell * n_state_var] > TINY
-                ? (realtype)state[i_spec + i_cell * n_state_var]
-                : TINY;
-      } else if (md->var_type[i_spec] == CHEM_SPEC_CONSTANT) {
+       if (md->var_type[i_spec] == CHEM_SPEC_CONSTANT) {
         state[i_spec + i_cell * n_state_var] =
             state[i_spec + i_cell * n_state_var] > TINY
-                ? state[i_spec + i_cell * n_state_var]
-                : TINY;
+            ? state[i_spec + i_cell * n_state_var]
+            : TINY;
       }
     }
     md->grid_cell_state = &(md->total_state[i_cell * md->n_per_cell_state_var]);
@@ -576,51 +566,13 @@ int solver_run_gpu(SolverData *sd, double *state, double *env, double t_initial,
     rxn_update_env_state(md);
   }
 
-  // Check whether there is anything to solve (filters empty air masses with no
-  // emissions)
-  if (is_anything_going_on_here(sd, t_initial, t_final) == false)
-    return CAMP_SOLVER_SUCCESS;
-
-  // Reinitialize the solver
-  flag = CVodeReInit(sd->cvode_mem, t_initial, sd->y);
-  check_flag_fail(&flag, "CVodeReInit", 1);
-
-  // Reinitialize the linear solver
-  flag = SUNKLUReInit(sd->ls, sd->J, SM_NNZ_S(sd->J), SUNKLU_REINIT_PARTIAL);
-  check_flag_fail(&flag, "SUNKLUReInit", 1);
-
-  // Set the inital time step
-  flag = CVodeSetInitStep(sd->cvode_mem, sd->init_time_step);
-  check_flag_fail(&flag, "CVodeSetInitStep", 1);
-
-  // Run the solver
-  realtype t_rt = (realtype)t_initial;
-
-#ifdef CAMP_PROFILE_SOLVING
+#ifdef CAMP_DEBUG_GPU
   double starttimeCvode = MPI_Wtime();
 #endif
-  flag = cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y,
-    &t_rt, sd, t_initial);
-#ifdef CAMP_PROFILE_SOLVING
+  cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y, sd, t_initial);
+#ifdef CAMP_DEBUG_GPU
   sd->timeCVode += (MPI_Wtime() - starttimeCvode);
 #endif
-  sd->solver_flag = flag;
-  if (flag < 0) {
-    return CAMP_SOLVER_FAIL;
-  }
-  // Update the species concentrations on the state array
-  i_dep_var = 0;
-  for (int i_cell = 0; i_cell < n_cells; i_cell++) {
-    for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
-      if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
-        state[i_spec + i_cell * n_state_var] =
-            (double)(NV_Ith_S(sd->y, i_dep_var) > 0.0
-                         ? NV_Ith_S(sd->y, i_dep_var)
-                         : 0.0);
-        i_dep_var++;
-      }
-    }
-  }
   return CAMP_SOLVER_SUCCESS;
 }
 #endif
@@ -671,7 +623,7 @@ int solver_run_cpu(SolverData *sd, double *state, double *env, double t_initial,
   // Run the solver
   realtype t_rt = (realtype)t_initial;
 
-#ifdef CAMP_PROFILE_SOLVING
+#ifdef CAMP_DEBUG_GPU
   double starttimeCvode = MPI_Wtime();
 #endif
   flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
@@ -856,7 +808,6 @@ void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
 #else
   *max_loss_precision = 0.0;
 #endif
-
 }
 
 void init_export_solver_state(){
@@ -896,28 +847,25 @@ int camp_solver_update_model_state(N_Vector solver_state, SolverData *sd) {
   ModelData *model_data = &(sd->model_data);
   int n_state_var = model_data->n_per_cell_state_var;
   int n_dep_var = model_data->n_per_cell_dep_var;
-  int n_cells = model_data->n_cells;
   double replacement_value = TINY;
   double threshhold = -SMALL;
 
   int i_dep_var = 0;
-  for (int i_cell = 0; i_cell < n_cells; i_cell++) {
-    for (int i_spec = 0; i_spec < n_state_var; ++i_spec) {
-      if (model_data->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
-        if (NV_DATA_S(solver_state)[i_dep_var] < -SMALL) {
+  for (int i_spec = 0; i_spec < n_state_var; ++i_spec) {
+    if (model_data->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
+      if (NV_DATA_S(solver_state)[i_dep_var] < -SMALL) {
 #ifdef FAILURE_DETAIL
-          printf("Failed model state update: [spec %d] = %le\n", i_spec,
-                 NV_DATA_S(solver_state)[i_dep_var]);
+        printf("Failed model state update: [spec %d] = %le\n", i_spec,
+               NV_DATA_S(solver_state)[i_dep_var]);
 #endif
-          return CAMP_SOLVER_FAIL;
-        }
-        // Assign model state to solver_state
-        model_data->total_state[i_spec + i_cell * n_state_var] =
-            NV_DATA_S(solver_state)[i_dep_var] > threshhold
-                ? NV_DATA_S(solver_state)[i_dep_var]
-                : replacement_value;
-        i_dep_var++;
+        return CAMP_SOLVER_FAIL;
       }
+      // Assign model state to solver_state
+      model_data->total_state[i_spec] =
+          NV_DATA_S(solver_state)[i_dep_var] > threshhold
+              ? NV_DATA_S(solver_state)[i_dep_var]
+              : replacement_value;
+      i_dep_var++;
     }
   }
   return CAMP_SOLVER_SUCCESS;
@@ -935,7 +883,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
   realtype time_step;
-
   // Get a pointer to the derivative data
   double *deriv_data = N_VGetArrayPointer(deriv);
 
@@ -943,7 +890,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   double *jac_deriv_data = N_VGetArrayPointer(md->J_tmp);
 
   // Get the grid cell dimensions
-  int n_cells = md->n_cells;
   int n_state_var = md->n_per_cell_state_var;
   int n_dep_var = md->n_per_cell_dep_var;
 
@@ -965,47 +911,36 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   SUNMatMatvec(md->J_solver, md->J_tmp, md->J_tmp2);
   N_VLinearSum(1.0, md->J_deriv, 1.0, md->J_tmp2, md->J_tmp);
 
-  // Loop through the grid cells and update the derivative array
-  for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
-    // Set the grid cell state pointers
-    md->grid_cell_state = &(md->total_state[i_cell * n_state_var]);
-    md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
-    md->grid_cell_rxn_env_data =
-        &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
-    md->grid_cell_aero_rep_env_data =
-        &(md->aero_rep_env_data[i_cell * md->n_aero_rep_env_data]);
-    md->grid_cell_sub_model_env_data =
-        &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
+  // Set the grid cell state pointers
+  md->grid_cell_state = md->total_state;
+  md->grid_cell_env = md->total_env;
+  md->grid_cell_rxn_env_data = md->rxn_env_data;
+  md->grid_cell_aero_rep_env_data = md->aero_rep_env_data;
+  md->grid_cell_sub_model_env_data = md->sub_model_env_data;
 
-    // Update the aerosol representations
-    aero_rep_update_state(md);
+  // Update the aerosol representations
+  aero_rep_update_state(md);
 
-    // Run the sub models
-    sub_model_calculate(md);
+  // Run the sub models
+  sub_model_calculate(md);
 
-    // Reset the TimeDerivative
-    time_derivative_reset(sd->time_deriv);
+  // Reset the TimeDerivative
+  time_derivative_reset(sd->time_deriv);
 
-    // Calculate the time derivative f(t,y)
-    rxn_calc_deriv(md, sd->time_deriv, (double)time_step);
+  // Calculate the time derivative f(t,y)
+  rxn_calc_deriv(md, sd->time_deriv, (double)time_step);
 
-    // Update the deriv array
-    if (sd->use_deriv_est == 1) {
-      time_derivative_output(sd->time_deriv, deriv_data, jac_deriv_data,
-                             sd->output_precision);
-    } else {
-      time_derivative_output(sd->time_deriv, deriv_data, NULL,
-                             sd->output_precision);
-    }
-#ifdef CAMP_DEBUG
-    sd->max_loss_precision = time_derivative_max_loss_precision(sd->time_deriv);
-#endif
-
-    // Advance the derivative for the next cell
-    deriv_data += n_dep_var;
-    jac_deriv_data += n_dep_var;
+  // Update the deriv array
+  if (sd->use_deriv_est == 1) {
+    time_derivative_output(sd->time_deriv, deriv_data, jac_deriv_data,
+                           sd->output_precision);
+  } else {
+    time_derivative_output(sd->time_deriv, deriv_data, NULL,
+                           sd->output_precision);
   }
-
+#ifdef CAMP_DEBUG
+  sd->max_loss_precision = time_derivative_max_loss_precision(sd->time_deriv);
+#endif
   // Return 0 if success
   return (0);
 }
@@ -1030,7 +965,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
 
   // Get the grid cell dimensions
   int n_state_var = md->n_per_cell_state_var;
-  int n_cells = md->n_cells;
 
   // Get pointers to the rxn and parameter Jacobian arrays
   double *J_param_data = SM_DATA_S(md->J_params);
@@ -1065,48 +999,41 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
     (SM_DATA_S(J))[i] = (realtype)0.0;
   }
 
-  // Loop over the grid cells to calculate sub-model and rxn Jacobians
-  for (int i_cell = 0; i_cell < n_cells; ++i_cell) {
-    // Set the grid cell state pointers
-    md->grid_cell_state = &(md->total_state[i_cell * n_state_var]);
-    md->grid_cell_env = &(md->total_env[i_cell * CAMP_NUM_ENV_PARAM_]);
-    md->grid_cell_rxn_env_data =
-        &(md->rxn_env_data[i_cell * md->n_rxn_env_data]);
-    md->grid_cell_aero_rep_env_data =
-        &(md->aero_rep_env_data[i_cell * md->n_aero_rep_env_data]);
-    md->grid_cell_sub_model_env_data =
-        &(md->sub_model_env_data[i_cell * md->n_sub_model_env_data]);
+  // Set the grid cell state pointers
+  md->grid_cell_state = md->total_state;
+  md->grid_cell_env = md->total_env;
+  md->grid_cell_rxn_env_data = md->rxn_env_data;
+  md->grid_cell_aero_rep_env_data = md->aero_rep_env_data;
+  md->grid_cell_sub_model_env_data = md->sub_model_env_data;
 
-    // Reset the sub-model and reaction Jacobians
-    for (int i = 0; i < SM_NNZ_S(md->J_params); ++i)
-      SM_DATA_S(md->J_params)[i] = 0.0;
-    jacobian_reset(sd->jac);
+  // Reset the sub-model and reaction Jacobians
+  for (int i = 0; i < SM_NNZ_S(md->J_params); ++i)
+    SM_DATA_S(md->J_params)[i] = 0.0;
+  jacobian_reset(sd->jac);
 
-    // Update the aerosol representations
-    aero_rep_update_state(md);
+  // Update the aerosol representations
+  aero_rep_update_state(md);
 
-    // Run the sub models and get the sub-model Jacobian
-    sub_model_calculate(md);
-    sub_model_get_jac_contrib(md, J_param_data, time_step);
-    CAMP_DEBUG_JAC(md->J_params, "sub-model Jacobian");
+  // Run the sub models and get the sub-model Jacobian
+  sub_model_calculate(md);
+  sub_model_get_jac_contrib(md, J_param_data, time_step);
+  CAMP_DEBUG_JAC(md->J_params, "sub-model Jacobian");
 
-    // Calculate the reaction Jacobian
-    rxn_calc_jac(md, sd->jac, time_step);
+  // Calculate the reaction Jacobian
+  rxn_calc_jac(md, sd->jac, time_step);
 
-    // Set the solver Jacobian using the reaction and sub-model Jacobians
-    JacMap *jac_map = md->jac_map;
-    SM_DATA_S(md->J_params)[0] = 1.0;  // dummy value for non-sub model calcs
-    for (int i_map = 0; i_map < md->n_mapped_values; ++i_map){
-      double drf_dy = sd->jac.production_partials[jac_map[i_map].rxn_id];
-      double drr_dy = sd->jac.loss_partials[jac_map[i_map].rxn_id];
+  // Set the solver Jacobian using the reaction and sub-model Jacobians
+  JacMap *jac_map = md->jac_map;
+  SM_DATA_S(md->J_params)[0] = 1.0;  // dummy value for non-sub model calcs
+  for (int i_map = 0; i_map < md->n_mapped_values; ++i_map){
+    double drf_dy = sd->jac.production_partials[jac_map[i_map].rxn_id];
+    double drr_dy = sd->jac.loss_partials[jac_map[i_map].rxn_id];
 
-      SM_DATA_S(J)
-      [i_cell * md->n_per_cell_solver_jac_elem + jac_map[i_map].solver_id] +=
-          (drf_dy - drr_dy) *
-          SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
-    }
-    CAMP_DEBUG_JAC(J, "solver Jacobian");
+    SM_DATA_S(J)[jac_map[i_map].solver_id] +=
+        (drf_dy - drr_dy) *
+        SM_DATA_S(md->J_params)[jac_map[i_map].param_id];
   }
+  CAMP_DEBUG_JAC(J, "solver Jacobian");
 
   // Save the Jacobian for use with derivative calculations
   for (int i_elem = 0; i_elem < SM_NNZ_S(J); ++i_elem)
@@ -1242,11 +1169,9 @@ bool check_Jac(realtype t, N_Vector y, SUNMatrix J, N_Vector deriv,
                d_state[i_ind]);
         printf(" scaling %le", scaling);
         ModelData *md = &(((SolverData *)solver_data)->model_data);
-        for (int i_cell = 0; i_cell < md->n_cells; ++i_cell)
           for (int i_spec = 0; i_spec < md->n_per_cell_state_var; ++i_spec)
-            printf("\n cell: %d species %d state_id %d conc: %le", i_cell,
-                   i_spec, i_cell * md->n_per_cell_state_var + i_spec,
-                   md->total_state[i_cell * md->n_per_cell_state_var + i_spec]);
+            printf("\n species %d state_id %d conc: %le",
+                   i_spec, i_spec, md->total_state[i_spec]);
         retval = false;
         output_deriv_local_state(t, y, deriv, solver_data, &f, i_dep, i_ind,
                                  SM_DATA_S(J)[i_elem], h / 10.0);
@@ -1323,11 +1248,8 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
                  N_Vector y_n1, N_Vector hf, void *solver_data, N_Vector tmp1,
                  N_Vector corr) {
   SolverData *sd = (SolverData *)solver_data;
-  realtype *ay_n = NV_DATA_S(y_n);
-  realtype *ay_n1 = NV_DATA_S(y_n1);
   realtype *atmp1 = NV_DATA_S(tmp1);
   realtype *acorr = NV_DATA_S(corr);
-  realtype *ahf = NV_DATA_S(hf);
   int n_elem = NV_LENGTH_S(y_n);
 
   // Only try improvements when negative concentrations are predicted
@@ -1421,24 +1343,15 @@ SUNMatrix get_jac_init(SolverData *sd) {
                                      elements in the reaction matrix*/
   sunindextype n_jac_elem_solver; /* number of potentially non-zero Jacobian
                                      elements in the reaction matrix*/
-  // Number of grid cells
-  int n_cells = sd->model_data.n_cells;
-
   int mattype = CSC_MAT;
 
   // Number of variables on the state array per grid cell
   // (these are the ids the reactions are initialized with)
   int n_state_var = sd->model_data.n_per_cell_state_var;
 
-  // Number of total state variables
-  int n_state_var_total = n_state_var * n_cells;
-
   // Number of solver variables per grid cell (excludes constants, parameters,
   // etc.)
   int n_dep_var = sd->model_data.n_per_cell_dep_var;
-
-  // Number of total solver variables
-  int n_dep_var_total = n_dep_var * n_cells;
 
   // Initialize the Jacobian for reactions
   if (jacobian_initialize_empty(&(sd->jac),
@@ -1581,35 +1494,31 @@ SUNMatrix get_jac_init(SolverData *sd) {
   sd->model_data.n_per_cell_solver_jac_elem = (int)n_jac_elem_solver;
 
   // Initialize the sparse matrix (for solver state array including all cells)
-  SUNMatrix M = SUNSparseMatrix(n_dep_var_total, n_dep_var_total,
-                                n_jac_elem_solver * n_cells, mattype);
+  SUNMatrix M = SUNSparseMatrix(n_dep_var, n_dep_var,
+                                n_jac_elem_solver, mattype);
   sd->model_data.J_solver = SUNSparseMatrix(
-          n_dep_var_total, n_dep_var_total, n_jac_elem_solver * n_cells, mattype);
+          n_dep_var, n_dep_var, n_jac_elem_solver, mattype);
 
   // Set the column and row indices
-  for (unsigned int i_cell = 0; i_cell < n_cells; ++i_cell) {
-    for (unsigned int cell_col = 0; cell_col < n_state_var; ++cell_col) {
-      if (deriv_ids[cell_col] == -1) continue;
-      unsigned int i_col = deriv_ids[cell_col] + i_cell * n_dep_var;
-      (SM_INDEXPTRS_S(M))[i_col] =
-      (SM_INDEXPTRS_S(sd->model_data.J_solver))[i_col] =
-              solver_jac.col_ptrs[cell_col] +
-              i_cell * n_jac_elem_solver;
-    }
-    for (unsigned int cell_elem = 0; cell_elem < n_jac_elem_solver;
-         ++cell_elem) {
-      unsigned int i_elem = cell_elem + i_cell * n_jac_elem_solver;
-      (SM_DATA_S(M))[i_elem] =
-      (SM_DATA_S(sd->model_data.J_solver))[i_elem] = (realtype)0.0;
-      (SM_INDEXVALS_S(M))[i_elem] =
-          (SM_INDEXVALS_S(sd->model_data.J_solver))[i_elem] =
-              deriv_ids[jacobian_row_index(solver_jac, cell_elem)] +
-              i_cell * n_dep_var;
-    }
+  for (unsigned int cell_col = 0; cell_col < n_state_var; ++cell_col) {
+    if (deriv_ids[cell_col] == -1) continue;
+    unsigned int i_col = deriv_ids[cell_col];
+    (SM_INDEXPTRS_S(M))[i_col] =
+    (SM_INDEXPTRS_S(sd->model_data.J_solver))[i_col] =
+            solver_jac.col_ptrs[cell_col];
   }
-  (SM_INDEXPTRS_S(M))[n_cells * n_dep_var] =
-  (SM_INDEXPTRS_S(sd->model_data.J_solver))[n_cells * n_dep_var] =
-          n_cells * n_jac_elem_solver;
+  for (unsigned int cell_elem = 0; cell_elem < n_jac_elem_solver;
+       ++cell_elem) {
+    unsigned int i_elem = cell_elem;
+    (SM_DATA_S(M))[i_elem] =
+    (SM_DATA_S(sd->model_data.J_solver))[i_elem] = (realtype)0.0;
+    (SM_INDEXVALS_S(M))[i_elem] =
+        (SM_INDEXVALS_S(sd->model_data.J_solver))[i_elem] =
+            deriv_ids[jacobian_row_index(solver_jac, cell_elem)];
+  }
+  (SM_INDEXPTRS_S(M))[n_dep_var] =
+  (SM_INDEXPTRS_S(sd->model_data.J_solver))[n_dep_var] =
+          n_jac_elem_solver;
 
   // Allocate space for the map
   sd->model_data.n_mapped_values = n_mapped_values;
@@ -1792,7 +1701,6 @@ static void solver_print_stats(void *cvode_mem) {
 void solver_free(void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
-
 #ifdef CAMP_USE_SUNDIALS
   // free the SUNDIALS solver
   CVodeFree(&(sd->cvode_mem));
@@ -1844,17 +1752,17 @@ bool is_anything_going_on_here(SolverData *sd, realtype t_initial,
   ModelData *md = &(sd->model_data);
   if (f(t_initial, sd->y, sd->deriv, sd)) {
     int i_dep_var = 0;
-    for (int i_cell = 0; i_cell < md->n_cells; ++i_cell) {
-      for (int i_spec = 0; i_spec < md->n_per_cell_state_var; ++i_spec) {
-        if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
-          if (NV_Ith_S(sd->y, i_dep_var) >
-              NV_Ith_S(sd->abs_tol_nv, i_dep_var) * 1.0e-10)
-            return true;
-          if (NV_Ith_S(sd->deriv, i_dep_var) * (t_final - t_initial) >
-              NV_Ith_S(sd->abs_tol_nv, i_dep_var) * 1.0e-10)
-            return true;
-          i_dep_var++;
-        }
+    int i_dep_var_one_cell=0;
+    for (int i_spec = 0; i_spec < md->n_per_cell_state_var; ++i_spec) {
+      if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
+        if (NV_Ith_S(sd->y, i_dep_var) >
+            NV_Ith_S(sd->abs_tol_nv, i_dep_var_one_cell) * 1.0e-10)
+          return true;
+        if (NV_Ith_S(sd->deriv, i_dep_var) * (t_final - t_initial) >
+            NV_Ith_S(sd->abs_tol_nv, i_dep_var_one_cell) * 1.0e-10)
+          return true;
+        i_dep_var++;
+        i_dep_var_one_cell++;
       }
     }
 #ifdef CAMP_DEBUG
