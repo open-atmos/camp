@@ -541,27 +541,13 @@ int solver_set_eval_jac(void *solver_data, bool eval_Jac) {
 }
 #endif
 
-/** \brief Solve for a given timestep
- *
- * \param solver_data A pointer to the initialized solver data
- * \param state A pointer to the full state array (all grid cells)
- * \param env A pointer to the full array of environmental conditions
- *            (all grid cells)
- * \param t_initial Initial time (s)
- * \param t_final (s)
- * \return Flag indicating CAMP_SOLVER_SUCCESS or CAMP_SOLVER_FAIL
- */
-int solver_run(void *solver_data, double *state, double *env, double t_initial,
-               double t_final) {
-  SolverData *sd = (SolverData *)solver_data;
+#ifdef CAMP_USE_GPU
+int solver_run_gpu(SolverData *sd, double *state, double *env, double t_initial,
+               double t_final){
   ModelData *md = &(sd->model_data);
   int n_state_var = md->n_per_cell_state_var;
   int n_cells = md->n_cells;
   int flag;
-
-  // Update model data pointers
-  sd->model_data.total_state = state;
-  sd->model_data.total_env = env;
 
   // Update the dependent variables
   int i_dep_var = 0;
@@ -691,7 +677,150 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
 
   return CAMP_SOLVER_SUCCESS;
 }
+#endif
 
+int solver_run_cpu(SolverData *sd, double *state, double *env, double t_initial,
+               double t_final) {
+  ModelData *md = &(sd->model_data);
+  int n_state_var = md->n_per_cell_state_var;
+  int flag;
+
+  int i_dep_var = 0;
+  for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
+    if (sd->model_data.var_type[i_spec] == CHEM_SPEC_VARIABLE) {
+      NV_Ith_S(sd->y, i_dep_var++) = state[i_spec] > TINY
+          ? (realtype)state[i_spec] : TINY;
+    } else if (md->var_type[i_spec] == CHEM_SPEC_CONSTANT) {
+      state[i_spec] =state[i_spec] > TINY
+          ? state[i_spec] : TINY;
+    }
+  }
+  md->grid_cell_state = md->total_state;
+  md->grid_cell_env = md->total_env;
+  md->grid_cell_rxn_env_data = md->rxn_env_data;
+  md->grid_cell_aero_rep_env_data = md->aero_rep_env_data;
+  md->grid_cell_sub_model_env_data = md->sub_model_env_data;
+  // Update the model for the current environmental state
+  aero_rep_update_env_state(md);
+  sub_model_update_env_state(md);
+  rxn_update_env_state(md);
+
+  // Check whether there is anything to solve (filters empty air masses with no
+  // emissions)
+  if (is_anything_going_on_here(sd, t_initial, t_final) == false)
+    return CAMP_SOLVER_SUCCESS;
+
+  // Reinitialize the solver
+  flag = CVodeReInit(sd->cvode_mem, t_initial, sd->y);
+  check_flag_fail(&flag, "CVodeReInit", 1);
+
+  // Reinitialize the linear solver
+  flag = SUNKLUReInit(sd->ls, sd->J, SM_NNZ_S(sd->J), SUNKLU_REINIT_PARTIAL);
+  check_flag_fail(&flag, "SUNKLUReInit", 1);
+
+  // Set the inital time step
+  flag = CVodeSetInitStep(sd->cvode_mem, sd->init_time_step);
+  check_flag_fail(&flag, "CVodeSetInitStep", 1);
+
+  // Run the solver
+  realtype t_rt = (realtype)t_initial;
+
+#ifdef CAMP_PROFILE_SOLVING
+  double starttimeCvode = MPI_Wtime();
+#endif
+  flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
+#ifdef CAMP_DEBUG_GPU
+  sd->timeCVode += (MPI_Wtime() - starttimeCvode);
+#endif
+  sd->solver_flag = flag;
+#ifdef FAILURE_DETAIL
+  if (check_flag(&flag, "CVode", 1) != CAMP_SOLVER_SUCCESS) {
+    if (flag == -6) {
+      long int lsflag;
+      int lastflag = CVDlsGetLastFlag(sd->cvode_mem, &lsflag);
+      printf("\nLinear Solver Setup Fail: %d %ld", lastflag, lsflag);
+    }
+    N_Vector deriv = N_VClone(sd->y);
+    flag = f(t_initial, sd->y, deriv, sd);
+    if (flag != 0)
+      printf("\nCall to f() at failed state failed with flag %d \n",flag);
+    solver_print_stats(sd->cvode_mem);
+#else
+  if (flag < 0) {
+#endif
+    return CAMP_SOLVER_FAIL;
+  }
+  // Update the species concentrations on the state array
+  i_dep_var = 0;
+  for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
+    if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
+      state[i_spec] =
+          (double)(NV_Ith_S(sd->y, i_dep_var) > 0.0
+                       ? NV_Ith_S(sd->y, i_dep_var)
+                       : 0.0);
+      i_dep_var++;
+    }
+  }
+  // Re-run the pre-derivative calculations to update equilibrium species
+  // and apply adjustments to final state
+  sub_model_calculate(md);
+
+  return CAMP_SOLVER_SUCCESS;
+}
+
+/** \brief Solve for a given timestep
+*
+* \param solver_data A pointer to the initialized solver data
+* \param state A pointer to the full state array (all grid cells)
+* \param env A pointer to the full array of environmental conditions
+*            (all grid cells)
+* \param t_initial Initial time (s)
+* \param t_final (s)
+* \return Flag indicating CAMP_SOLVER_SUCCESS or CAMP_SOLVER_FAIL
+*/
+int solver_run(void *solver_data, double *state, double *env, double t_initial,
+                 double t_final) {
+  SolverData *sd = (SolverData *)solver_data;
+  ModelData *md = &(sd->model_data);
+  int n_state_var = md->n_per_cell_state_var;
+#ifdef CAMP_DEBUG
+  sd->Jac_eval_fails = 0;
+#endif
+  // Update model data pointers
+  sd->model_data.total_state = state;
+  sd->model_data.total_env = env;
+
+  // Reset jac solving, otherwise values from previous iteration would be carried to current iteration
+  // Using or not this option accelerates solving depending on the case
+  // Enable reset when the inputs are very different between each other or
+  // to compare with the GPU version
+  // Avoid reset when the inputs are similar like when using CAMP from MONARCH
+  // The default value is 0, because is the most used case in our case
+  if(sd->is_reset_jac==1){
+    N_VConst(0.0, md->J_state);
+    N_VConst(0.0, md->J_deriv);
+    SM_NNZ_S(md->J_solver) = SM_NNZ_S(md->J_init);
+    for (int i = 0; i < SM_NNZ_S(md->J_solver); i++) {
+      (SM_DATA_S(md->J_solver))[i] = 0.0;
+    }
+  }
+
+  sd->t_initial = t_initial;
+  sd->t_final = t_final;
+  // Set the initial time step
+  sd->init_time_step = (t_final - t_initial) * DEFAULT_TIME_STEP;
+
+#ifdef CAMP_USE_GPU
+  if(sd->gpu_percentage==0) {
+    return solver_run_cpu(sd, state, env, t_initial, t_final);
+  }else{
+    return solver_run_gpu(sd, state, env, t_initial, t_final);
+  }
+#else
+  return solver_run_cpu(sd, state, env, t_initial, t_final);
+#endif
+
+}
 /** \brief Get solver statistics after an integration attempt
  *
  * \param solver_data           Pointer to the solver data
