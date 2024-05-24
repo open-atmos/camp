@@ -12,16 +12,21 @@ extern "C" {
 #endif
 
 void constructor_cvode_gpu(SolverData *sd){
+  ModelData *md = &(sd->model_data);
+  int n_dep_var = md->n_per_cell_dep_var;
+  if(n_dep_var<32) {
+    printf("CAMP ERROR: TOO FEW SPECIES FOR GPU (Species < 32),"
+           " use CPU case instead\n");
+    exit(0);
+  }
   CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
   ModelDataCPU *mCPU = &(sd->mCPU);
-  ModelData *md = &(sd->model_data);
   CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
   sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
   ModelDataGPU *mGPU = sd->mGPU;
   int n_cells = md->n_cells_gpu;
   mGPU->n_cells= n_cells;
   sd->flagCells = (int *) malloc((n_cells) * sizeof(int));
-  int n_dep_var = md->n_per_cell_dep_var;
   int nrows = n_dep_var * n_cells;
   mGPU->nrows = nrows;
   int n_state_var = md->n_per_cell_state_var;
@@ -38,6 +43,7 @@ void constructor_cvode_gpu(SolverData *sd){
   cudaStreamCreate(&stream);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
+  mGPU->cv_reltol = cv_mem->cv_reltol;
   HANDLE_ERROR(cudaMalloc((void **) &mGPU->state, n_state_var * n_cells * sizeof(double)));
   cudaMalloc((void **) &mGPU->env, CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double));
   cudaMalloc((void **) &mGPU->rxn_env_data, md->n_rxn_env_data * n_cells * sizeof(double));
@@ -59,11 +65,6 @@ void constructor_cvode_gpu(SolverData *sd){
   HANDLE_ERROR(cudaMemcpy(mGPU->map_state_deriv, map_state_derivCPU,
                           map_state_deriv_size, cudaMemcpyHostToDevice));
   free(map_state_derivCPU);
-  if(n_dep_var<32) {
-    printf("CAMP ERROR: TOO FEW SPECIES FOR GPU (Species < 32),"
-           " use CPU case instead\n");
-    exit(0);
-  }
   size_t deriv_size = n_dep_var * n_cells * sizeof(double);
   int nnz = md->n_per_cell_solver_jac_elem * n_cells;
   size_t jac_size = nnz * sizeof(double);

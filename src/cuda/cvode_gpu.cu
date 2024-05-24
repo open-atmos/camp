@@ -603,7 +603,6 @@ int cudaCVode(void *cvode_mem, realtype t_final, N_Vector yout,
   mGPU->cv_mxstep = cv_mem->cv_mxstep;
   mGPU->cv_uround = cv_mem->cv_uround;
   mGPU->cv_hmax_inv = cv_mem->cv_hmax_inv;
-  mGPU->cv_reltol = cv_mem->cv_reltol;
   mGPU->cv_maxcor = cv_mem->cv_maxcor;
   mGPU->cv_maxnef = cv_mem->cv_maxnef;
   mGPU->init_time_step = sd->init_time_step;
