@@ -24,10 +24,9 @@ void constructor_cvode_gpu(SolverData *sd){
   CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
   sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
   ModelDataGPU *mGPU = sd->mGPU;
-  printf("Cells to GPU: %.d %\n",sd->gpu_percentage);
+
   float rate_cells_gpu = sd->gpu_percentage/100.;
   md->n_cells_gpu = md->n_cells * rate_cells_gpu;
-  printf("n_cells_gpu: %d\n", md->n_cells_gpu);
   int n_cells = md->n_cells_gpu;
   int nrows = n_dep_var * n_cells;
   int n_state_var = md->n_per_cell_state_var;
@@ -37,6 +36,11 @@ void constructor_cvode_gpu(SolverData *sd){
   int rank, size;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
+  if(rank==0){
+    printf("Cells to GPU: %.d %\n",sd->gpu_percentage);
+    printf("n_cells_gpu: %d\n", md->n_cells_gpu);
+    printf("n_cells_cpu: %d\n", n_cells-md->n_cells_gpu);
+  }
   int iDevice = rank % nGPUs;
   cudaSetDevice(iDevice);
   mGPU->n_rxn=md->n_rxn;

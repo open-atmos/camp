@@ -54,7 +54,7 @@ def run(conf):
       exec_str += 'ddt --connect '
   except Exception:
     pass
-  maxCoresPerNode = 40 #CTE-POWER Architecture
+  maxCoresPerNode = 80 #Marenostrum 5 architecture
   if conf.mpiProcesses <= maxCoresPerNode:
     exec_str += "mpirun -np " + str(
       conf.mpiProcesses) + " --bind-to core " #for plogin (fails squeue)
@@ -137,11 +137,9 @@ def run(conf):
 # @profile
 def run_cases(conf):
   # Base case
-  save_is_import=conf.is_import
+  save_is_import = conf.is_import
   if conf.is_import_base:
-    conf.is_import=True
-  else:
-    conf.is_import=False
+    conf.is_import = True
   conf.mpiProcesses = conf.mpiProcessesCaseBase
   if conf.nCellsProcesses % conf.mpiProcesses != 0:
     print(
