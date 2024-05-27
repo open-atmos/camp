@@ -27,7 +27,8 @@ class TestMonarch:
     self.mpiProcessesCaseOptimList = [1]
     self.cells = [100]
     self.profileCuda = ""
-    #self.profileCuda = "nsight"
+    #self.profileCuda = "ncu"
+    #self.profileCuda = "nsys"
     self.caseBase = "CPU One-cell"
     self.plotYKey = "Speedup timeCVode"
     self.casesOptim = []
@@ -60,14 +61,22 @@ def run(conf):
   else:
     exec_str += "srun --cpu-bind=core -n " + str(
       conf.mpiProcesses) + " " #for queue (slow plogin)
-  if conf.profileCuda == "nsight" and conf.caseGpuCpu == "GPU":
-    #gui: /apps/ACC/NVIDIA-HPC-SDK/24.3/Linux_x86_64/2024/profilers/Nsight_Compute/ncu-ui
-    exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/24.3/Linux_x86_64/2024/profilers/Nsight_Compute/ncu ")
-    pathNsight = ("../../compile/profile")
-    exec_str += " --target-processes=application-only --set full -f -o " + pathNsight + " "
-    print("Saving nsight file in ",
-          os.path.abspath(os.getcwd())
-          + "/" + pathNsight + ".ncu-rep")
+  if conf.caseGpuCpu == "GPU":
+    if conf.profileCuda == "ncu":
+      #gui: /apps/ACC/NVIDIA-HPC-SDK/24.3/Linux_x86_64/2024/profilers/Nsight_Compute/ncu-ui
+      exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/24.3/Linux_x86_64/2024/profilers/Nsight_Compute/ncu ")
+      pathNsight = ("../../compile/profile")
+      exec_str += " --target-processes=application-only --set full -f -o " + pathNsight + " "
+      print("Saving nsight file in ",
+            os.path.abspath(os.getcwd())
+            + "/" + pathNsight + ".ncu-rep")
+    elif conf.profileCuda == "nsys":
+      exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/23.11/Linux_x86_64/2023/profilers/Nsight_Systems/bin/nsys ")
+      pathNsight = ("../../compile/profile ") #nsys.qdrep
+      exec_str += "profile -f true --trace=mpi -o " + pathNsight
+      print("Saving nsight file in ",
+            os.path.abspath(os.getcwd())
+            + "/" + pathNsight)
   path_exec = "../../build/mock_monarch"
   exec_str += path_exec
   try:
@@ -267,6 +276,8 @@ def plot_cases(conf, datay):
           conf.mpiProcessesCaseOptimList[0] > 1:
         plotTitle += str(
           int(nGPUsOptim[0])) + " GPUs "
+        plotTitle += "and " + str(
+          conf.mpiProcessesCaseBase) + "Cores "
       else:
         plotTitle += conf.caseGpuCpu + " "
   if plotXKey == "GPUs":
@@ -300,7 +311,8 @@ def plot_cases(conf, datay):
     datax = list(range(1, conf.timeSteps + 1, 1))
     plot_x_key = "Timesteps"
   namex = plot_x_key
-  print(namex, ":", datax[0],"to",datax[-1])
+  print("Cells to GPU:", str(conf.gpu_percentage) + "%")
+  print(namex + ":", datax[0], "to", datax[-1])
   if legend:
     print("plotTitle: ", plotTitle, " legend:", legend)
   else:
