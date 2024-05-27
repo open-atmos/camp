@@ -277,7 +277,7 @@ def plot_cases(conf, datay):
         plotTitle += str(
           int(nGPUsOptim[0])) + " GPUs "
         plotTitle += "and " + str(
-          conf.mpiProcessesCaseBase) + "Cores "
+          mpiProcessesCaseOptim) + " Cores "
       else:
         plotTitle += conf.caseGpuCpu + " "
   if plotXKey == "GPUs":
@@ -309,7 +309,7 @@ def plot_cases(conf, datay):
   else:
     plotTitle += ", Cells: " + str(conf.cells[0])
     datax = list(range(1, conf.timeSteps + 1, 1))
-    plot_x_key = "Timesteps"
+    plot_x_key = "Time-steps"
   namex = plot_x_key
   print("Cells to GPU:", str(conf.gpu_percentage) + "%")
   print(namex + ":", datax[0], "to", datax[-1])
