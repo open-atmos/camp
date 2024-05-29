@@ -437,8 +437,9 @@ void aero_rep_single_particle_print(int *aero_rep_int_data,
   printf("\nAerosol representation id: %d", AERO_REP_ID_);
   printf("\nMax computational particles: %d", MAX_PARTICLES_);
   printf("\nParticle state size: %d", PARTICLE_STATE_SIZE_);
-  printf("\n\n   - Phases -");
   for(int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer){
+    printf("\nLayer: %d", i_layer);
+    printf("\n\n   - Phases -");
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
       printf("\n  state id: %d model data id: %d num Jac elements: %d",
              PHASE_STATE_ID_(i_layer,i_phase), PHASE_MODEL_DATA_ID_(i_layer,i_phase),
