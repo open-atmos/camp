@@ -64,8 +64,13 @@ def run(conf):
             os.path.abspath(os.getcwd())
             + "/" + pathNsight + ".ncu-rep")
     elif conf.profileCuda == "nsys":
+      # todo check use gcc or raise error, since nsys only worked on gcc because of openmpi, since -mpi-impl only had openmpi and mpich
+      result = subprocess.run(['module list'], shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+      output = result.stdout + result.stderr
+      if 'gcc' not in output:
+        raise Exception("ERROR: missing gcc module for nsys option. To run nsys you need to use GCC for compile and run dependencies")
       exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/23.11/Linux_x86_64/2023/profilers/Nsight_Systems/bin/nsys ")
-      pathNsight = ("../../compile/profile ") #nsys.qdrep
+      pathNsight = ("../../compile/profile ")
       exec_str += "profile -f true --trace=mpi,cuda --mpi-impl=openmpi -o " + pathNsight
       print("Saving nsight file in ",
             os.path.abspath(os.getcwd())

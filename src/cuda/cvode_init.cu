@@ -41,7 +41,7 @@ void constructor_cvode_gpu(SolverData *sd){
     printf("n_cells_gpu: %d\n", md->n_cells_gpu);
     printf("n_cells_cpu: %d\n", n_cells-md->n_cells_gpu);
   }
-  int iDevice = 0;
+  int iDevice = rank % nGPUs;
   cudaSetDevice(iDevice);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
@@ -166,7 +166,7 @@ void constructor_cvode_gpu(SolverData *sd){
   cudaMalloc((void **) &mGPU->cv_Vabstol, n_dep_var * sizeof(double));
   double *cv_Vabstol = N_VGetArrayPointer(cv_mem->cv_Vabstol);
   cudaMemcpy(mGPU->cv_Vabstol, cv_Vabstol, n_dep_var * sizeof(double), cudaMemcpyHostToDevice);
-#ifdef CAMP_PROFILE_SOLVING
+#ifdef PROFILE_SOLVING
   cudaEventCreate(&sd->startcvStep);
   cudaEventCreate(&sd->stopcvStep);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS

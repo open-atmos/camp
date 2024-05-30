@@ -245,7 +245,7 @@ typedef struct {
   double t_initial;
   double t_final;
 
-#ifdef CAMP_PROFILE_SOLVING
+#ifdef PROFILE_SOLVING
   double timeCVode;
 #ifdef CAMP_USE_GPU
   cudaEvent_t startcvStep;

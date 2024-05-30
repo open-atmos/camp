@@ -49,9 +49,9 @@ cmake -D CMAKE_C_COMPILER=$(which mpicc) \
   -D FAILURE_DETAIL=OFF \
   -D ENABLE_MPI=ON \
   -D ENABLE_GPU=ON \
-  -D ENABLE_CAMP_PROFILE_SOLVING=ON \
+  -D ENABLE_PROFILE_SOLVING=ON \
   -D ENABLE_GSL:BOOL=FALSE \
-  -D ENABLE_NETCDF=OFF \
+  -D ENABLE_NETCDF=ON \
   ..
 
 ln -sf ${camp_suite_dir}/camp/test/monarch/settings
