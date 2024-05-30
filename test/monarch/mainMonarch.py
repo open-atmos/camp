@@ -54,27 +54,21 @@ def run(conf):
       exec_str += 'ddt --connect '
   except Exception:
     pass
-  if conf.caseGpuCpu == "GPU":
-    if conf.profileCuda == "ncu":
-      #gui: /apps/ACC/NVIDIA-HPC-SDK/24.3/Linux_x86_64/2024/profilers/Nsight_Compute/ncu-ui
-      exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/24.3/Linux_x86_64/2024/profilers/Nsight_Compute/ncu ")
-      pathNsight = ("../../compile/profile")
-      exec_str += " --target-processes=application-only --set full -f -o " + pathNsight + " "
-      print("Saving nsight file in ",
-            os.path.abspath(os.getcwd())
-            + "/" + pathNsight + ".ncu-rep")
-    elif conf.profileCuda == "nsys":
-      # todo check use gcc or raise error, since nsys only worked on gcc because of openmpi, since -mpi-impl only had openmpi and mpich
-      result = subprocess.run(['module list'], shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
-      output = result.stdout + result.stderr
-      if 'gcc' not in output:
-        raise Exception("ERROR: missing gcc module for nsys option. To run nsys you need to use GCC for compile and run dependencies")
-      exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/23.11/Linux_x86_64/2023/profilers/Nsight_Systems/bin/nsys ")
-      pathNsight = ("../../compile/profile ")
-      exec_str += "profile -f true --trace=mpi,cuda --mpi-impl=openmpi -o " + pathNsight
-      print("Saving nsight file in ",
-            os.path.abspath(os.getcwd())
-            + "/" + pathNsight)
+  if conf.profileCuda == "nsys" and conf.caseGpuCpu == "GPU":
+    if os.environ["SLURM_JOB_NUM_NODES"] != "1":
+      raise Exception("ERROR: nsys option is for slurm salloc session."
+                      " It could work on multiple nodes but it needs to be implemented")
+    result = subprocess.run(['module list'], shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+    output = result.stdout + result.stderr
+    if 'gcc' not in output:
+      raise Exception("ERROR: missing gcc module for nsys option. To run nsys you need to use GCC for compile and run dependencies")
+    exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/23.11/Linux_x86_64/2023/profilers/Nsight_Systems/bin/nsys ")
+    pathNsight = ("../../compile/profile ")
+    exec_str += "profile -f true --trace=mpi,cuda --mpi-impl=openmpi -o " + pathNsight
+    print("Saving nsight file in ",
+          os.path.abspath(os.getcwd())
+          + "/" + pathNsight)
+  #SLURM_JOB_NUM_NODES
   maxCoresPerNode = 80 #Marenostrum 5 architecture
   #todo use a slurm variable like number of nodes to detect if using more than one node
   if conf.mpiProcesses <= maxCoresPerNode:
@@ -84,6 +78,15 @@ def run(conf):
   else:
     exec_str += "srun --cpu-bind=core -n " + str(
       conf.mpiProcesses) + " "
+  if conf.profileCuda == "ncu" and conf.caseGpuCpu == "GPU":
+    #todo check intel for ncu and 2 mpi cores
+    #gui: /apps/ACC/NVIDIA-HPC-SDK/24.3/Linux_x86_64/2024/profilers/Nsight_Compute/ncu-ui
+    exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/24.3/Linux_x86_64/2024/profilers/Nsight_Compute/ncu ")
+    pathNsight = ("../../compile/profile")
+    exec_str += "--target-processes=application-only --set full -f -o " + pathNsight + " "
+    print("Saving nsight file in ",
+          os.path.abspath(os.getcwd())
+          + "/" + pathNsight + ".ncu-rep")
   path_exec = "../../build/mock_monarch"
   exec_str += path_exec
   try:

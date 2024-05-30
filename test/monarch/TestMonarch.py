@@ -12,7 +12,7 @@ def all_timesteps():
   conf.casesOptim = []
   conf.timeSteps = 1
   conf.gpu_percentage = 100
-  conf.cells = [100000]
+  conf.cells = [10000]
   conf.mpiProcessesCaseBase = 2
   #conf.caseBase = "CPU One-cell"
   conf.caseBase = "GPU BDF"
@@ -21,8 +21,8 @@ def all_timesteps():
   #conf.casesOptim = ["GPU BDF"]
   #conf.is_import = True
   #conf.is_import_base = True
-  #conf.profileCuda = "ncu"
-  conf.profileCuda = "nsys"
+  conf.profileCuda = "ncu"
+  #conf.profileCuda = "nsys"
   datay = run_main(conf)
   plot_cases(conf, datay)
 
