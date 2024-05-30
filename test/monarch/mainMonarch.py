@@ -54,13 +54,6 @@ def run(conf):
       exec_str += 'ddt --connect '
   except Exception:
     pass
-  maxCoresPerNode = 80 #Marenostrum 5 architecture
-  if conf.mpiProcesses <= maxCoresPerNode:
-    exec_str += "mpirun -np " + str(
-      conf.mpiProcesses) + " --bind-to core " #for plogin (fails squeue)
-  else:
-    exec_str += "srun --cpu-bind=core -n " + str(
-      conf.mpiProcesses) + " " #for queue (slow plogin)
   if conf.caseGpuCpu == "GPU":
     if conf.profileCuda == "ncu":
       #gui: /apps/ACC/NVIDIA-HPC-SDK/24.3/Linux_x86_64/2024/profilers/Nsight_Compute/ncu-ui
@@ -73,10 +66,19 @@ def run(conf):
     elif conf.profileCuda == "nsys":
       exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/23.11/Linux_x86_64/2023/profilers/Nsight_Systems/bin/nsys ")
       pathNsight = ("../../compile/profile ") #nsys.qdrep
-      exec_str += "profile -f true --trace=mpi -o " + pathNsight
+      exec_str += "profile -f true --trace=mpi,cuda --mpi-impl=openmpi -o " + pathNsight
       print("Saving nsight file in ",
             os.path.abspath(os.getcwd())
             + "/" + pathNsight)
+  maxCoresPerNode = 80 #Marenostrum 5 architecture
+  #todo use a slurm variable like number of nodes to detect if using more than one node
+  if conf.mpiProcesses <= maxCoresPerNode:
+    #NSYS_SYSTEM_ID=A
+    exec_str += "mpirun -np " + str(
+      conf.mpiProcesses) + " --bind-to core "
+  else:
+    exec_str += "srun --cpu-bind=core -n " + str(
+      conf.mpiProcesses) + " "
   path_exec = "../../build/mock_monarch"
   exec_str += path_exec
   try:
@@ -88,7 +90,8 @@ def run(conf):
     file1.close()
   except Exception as e:
     print("write_camp_config_file fails", e)
-  print("exec_str:", exec_str, conf.diffCells,
+  print("exec_str:", exec_str)
+  print(conf.diffCells,
         conf.caseGpuCpu,
         conf.caseMulticellsOnecell, "ncellsPerMPIProcess:",
         conf.nCells)
@@ -311,8 +314,8 @@ def plot_cases(conf, datay):
     datax = list(range(1, conf.timeSteps + 1, 1))
     plot_x_key = "Time-steps"
   namex = plot_x_key
-  print("Cells to GPU:", str(conf.gpu_percentage) + "%")
   print(namex + ":", datax[0], "to", datax[-1])
+  print("Cells to GPU:", str(conf.gpu_percentage) + "%")
   if legend:
     print("plotTitle: ", plotTitle, " legend:", legend)
   else:

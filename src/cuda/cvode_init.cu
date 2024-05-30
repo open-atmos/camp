@@ -41,7 +41,7 @@ void constructor_cvode_gpu(SolverData *sd){
     printf("n_cells_gpu: %d\n", md->n_cells_gpu);
     printf("n_cells_cpu: %d\n", n_cells-md->n_cells_gpu);
   }
-  int iDevice = rank % nGPUs;
+  int iDevice = 0;
   cudaSetDevice(iDevice);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;

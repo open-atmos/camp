@@ -767,28 +767,7 @@ contains
 
   subroutine finalize(this)
     class(camp_monarch_interface_t) :: this
-    if (associated(this%camp_core)) &
-            deallocate(this%camp_core)
-    if (associated(this%camp_state)) &
-            deallocate(this%camp_state)
-    if (allocated(this%monarch_species_names)) &
-            deallocate(this%monarch_species_names)
-    if (allocated(this%map_monarch_id)) &
-            deallocate(this%map_monarch_id)
-    if (allocated(this%map_camp_id)) &
-            deallocate(this%map_camp_id)
-    if (allocated(this%init_conc_camp_id)) &
-            deallocate(this%init_conc_camp_id)
-    if (allocated(this%init_conc)) &
-            deallocate(this%init_conc)
-    if(camp_mpi_rank()==0) then
-      if (associated(this%init_conc_data)) &
-              deallocate(this%init_conc_data)
-      if (associated(this%species_map_data)) &
-              deallocate(this%species_map_data)
-      if (associated(this%property_set)) &
-              deallocate(this%property_set)
-    end if
+
   end subroutine
 
 end module

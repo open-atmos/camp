@@ -144,13 +144,11 @@ program mock_monarch_t
   call camp_interface%camp_core%join_solver_state()
   call camp_interface%camp_core%export_solver_stats()
   call camp_mpi_barrier()
-
   if (camp_mpi_rank()==0) then
     write(*,*) "Model run time: ", comp_time, " s"
   end if
-
+  call camp_mpi_finalize()
 contains
-
   subroutine set_env(camp_interface,file_prefix)
     type(camp_monarch_interface_t), intent(inout) :: camp_interface
     character(len=:), allocatable, intent(in) :: file_prefix
