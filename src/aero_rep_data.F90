@@ -489,7 +489,7 @@ contains
 
   !> Get a set of ids for all instances of a phase in this aerosol
   !! representation for use during solving
-  function phase_ids(this, phase_name)
+  function phase_ids(this, phase_name, is_at_surface)
 
     !> List of phase ids
     integer(kind=i_kind), allocatable :: phase_ids(:)
@@ -497,6 +497,8 @@ contains
     class(aero_rep_data_t), intent(in) :: this
     !> Aerosol phase name
     character(len=*), intent(in) :: phase_name
+    !> Indicates if aerosol phase is at the surface of particle
+    logical, intent(in), optional :: is_at_surface
 
     integer(kind=i_kind) :: num_instances, i_instance, i_phase
 
