@@ -113,6 +113,8 @@ module camp_aero_rep_data
     procedure(spec_name), deferred :: spec_name
     !> Get the number of instances of an aerosol phase
     procedure(num_phase_instances), deferred :: num_phase_instances
+    !> Get the boolean array indicating if phase is at surface
+    procedure(aero_is_at_surface), deferred :: aero_is_at_surface
     !> Get the number of Jacobian elements for calculations of mass, volume,
     !! number, etc for a particular phase
     procedure(num_jac_elem), deferred :: num_jac_elem
@@ -353,6 +355,20 @@ interface
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+  !> Get the array of booleans indicating if phase is at surface
+  function aero_is_at_surface(this)
+    use camp_util,                                       only : i_kind
+    import :: aero_rep_data_t
+
+    !> Boolean array at surface
+    logical :: aero_is_at_surface
+    !> Aerosol representation data
+    class(aero_rep_data_t), intent(in) :: this
+
+  end function aero_is_at_surface
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
   !> Get the number of Jacobian elements used in calculations of aerosol mass,
   !! volume, number, etc. for a particular phase
   function num_jac_elem(this, phase_id)
@@ -498,19 +514,38 @@ contains
     !> Aerosol phase name
     character(len=*), intent(in) :: phase_name
     !> Indicates if aerosol phase is at the surface of particle
-    logical, intent(in), optional :: is_at_surface
+    logical, intent(in) :: is_at_surface
+    logical, allocatable :: aero_is_at_surf(:)
 
     integer(kind=i_kind) :: num_instances, i_instance, i_phase
 
     num_instances = this%num_phase_instances(phase_name)
+    aero_is_at_surf = this%aero_is_at_surface()
     allocate(phase_ids(num_instances))
-    i_instance = 1
-    do i_phase = 1, size(this%aero_phase)
-      if (this%aero_phase(i_phase)%val%name().eq.phase_name) then
-        phase_ids(i_instance) = i_phase
-        i_instance = i_instance + 1
-      end if
-    end do
+    if (is_at_surface .eqv. .true.) then
+      i_instance = 1
+      do i_phase = 1, size(this%aero_phase)
+        if (this%aero_phase(i_phase)%val%name().eq. phase_name) then
+          if (aero_is_at_surf(i_phase) .eqv. .true.) then
+            phase_ids(i_instance) = i_phase
+            i_instance = i_instance + 1
+          else if (aero_is_at_surf(i_phase) .eqv. .false.) then
+            call assert_msg(753906733,aero_is_at_surf(i_phase) .eqv. .false. , &
+              "Aerosol phase not at surface.")
+          end if
+        end if
+      end do
+    end if
+    if (is_at_surface .eqv. .false.) then
+      i_instance = 1
+      do i_phase = 1, size(this%aero_phase)
+        if (this%aero_phase(i_phase)%val%name().eq.phase_name) then
+          phase_ids(i_instance) = i_phase
+          i_instance = i_instance + 1
+        end if
+      end do
+    end if
+   
 
   end function phase_ids
 

@@ -80,7 +80,7 @@ module camp_aero_rep_single_particle
     !> Layer names, ordered inner-most to outer-most
     type(string_t), allocatable, private :: layer_names_(:)
     !> Boolean array, true for phases that exist in the surface layer
-    logical, allocatable :: aero_is_at_surface_(:)
+    logical, allocatable, private :: aero_is_at_surface_(:)
     !> First state id for the representation (only used during initialization)
     integer(kind=i_kind) :: state_id_start = -99999
   contains
@@ -140,6 +140,8 @@ module camp_aero_rep_single_particle
     procedure :: num_jac_elem
     !> Returns the number of layers
     procedure :: num_layers
+    !> Returns array of booleans indicating is phase is at surface
+    procedure :: aero_is_at_surface
     !> Returns the number of phases in a layer or overall
     procedure :: num_phases
     !> Returns the number of state variables for a layer and phase
@@ -703,6 +705,18 @@ contains
       num_layers = NUM_LAYERS_
 
     end function num_layers
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    !> Returns array of booleans indicating if phase is at surface
+    function aero_is_at_surface(this) 
+
+      !> Aerosol representation data
+      class(aero_rep_single_particle_t), intent(in) :: this
+
+      aero_is_at_surface = aero_is_at_surface_
+
+    end function aero_is_at_surface
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
