@@ -74,6 +74,10 @@ module camp_aero_rep_data
     !! functions of the aerosol representation that cannot be obtained
     !! from the camp_camp_state::camp_state_t object. (integer)
     integer(kind=i_kind), allocatable, public ::  condensed_data_int(:)
+    !> Array of booleans indicating if phase exists at the surface of a
+    !! particle. Used in SIMPOL and HL reactions for single particle 
+    !! representation. 
+    logical, allocatable, public :: aero_is_at_surface(:)
     !> Number of environment-dependent parameters
     !! These are parameters that need updated when environmental conditions
     !! change
@@ -113,8 +117,6 @@ module camp_aero_rep_data
     procedure(spec_name), deferred :: spec_name
     !> Get the number of instances of an aerosol phase
     procedure(num_phase_instances), deferred :: num_phase_instances
-    !> Get the boolean array indicating if phase is at surface
-    procedure(aero_is_at_surface), deferred :: aero_is_at_surface
     !> Get the number of Jacobian elements for calculations of mass, volume,
     !! number, etc for a particular phase
     procedure(num_jac_elem), deferred :: num_jac_elem
@@ -355,20 +357,6 @@ interface
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Get the array of booleans indicating if phase is at surface
-  function aero_is_at_surface(this)
-    use camp_util,                                       only : i_kind
-    import :: aero_rep_data_t
-
-    !> Boolean array at surface
-    logical :: aero_is_at_surface
-    !> Aerosol representation data
-    class(aero_rep_data_t), intent(in) :: this
-
-  end function aero_is_at_surface
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   !> Get the number of Jacobian elements used in calculations of aerosol mass,
   !! volume, number, etc. for a particular phase
   function num_jac_elem(this, phase_id)
@@ -520,7 +508,7 @@ contains
     integer(kind=i_kind) :: num_instances, i_instance, i_phase
 
     num_instances = this%num_phase_instances(phase_name)
-    aero_is_at_surf = this%aero_is_at_surface()
+    aero_is_at_surf = this%aero_is_at_surface
     allocate(phase_ids(num_instances))
     if (is_at_surface .eqv. .true.) then
       i_instance = 1

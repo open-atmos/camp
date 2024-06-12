@@ -144,8 +144,6 @@ module camp_aero_rep_modal_binned_mass
     type(string_t), allocatable :: section_name(:)
     !> Phase state id (only used during initialization)
     integer(kind=i_kind), allocatable :: phase_state_id(:)
-    !> Boolean array, true for phases that exist in the surface layer
-    logical, allocatable :: aero_is_at_surface_(:)
   contains
     !> Initialize the aerosol representation data, validating component data and
     !! loading any required information from the \c
@@ -198,8 +196,6 @@ module camp_aero_rep_modal_binned_mass
     procedure :: spec_name
     !> Get the number of instances of an aerosol phase in this representation
     procedure :: num_phase_instances
-    !> Returns array of booleans indicating is phase is at surface
-    procedure :: aero_is_at_surface 
     !> Get the number of Jacobian elements used in calculations of aerosol mass,
     !! volume, number, etc. for a particular phase
     procedure :: num_jac_elem
@@ -481,7 +477,7 @@ contains
 
     ! Allocate space for the aerosol phases and species state ids
     allocate(this%aero_phase(num_phase))
-    allocate(this%aero_is_at_surface_(num_phase))
+    allocate(this%aero_is_at_surface(num_phase))
     allocate(this%phase_state_id(size(this%aero_phase)))
 
     ! Allocate condensed data arrays
@@ -623,7 +619,7 @@ contains
               this%aero_phase(i_phase) = aero_phase_set(k_phase)
           
               ! No species exist at surface 
-              this%aero_is_at_surface_(i_phase) = .false.
+              this%aero_is_at_surface(i_phase) = .false.
 
               ! Save the starting id for this phase on the state array
               this%phase_state_id(i_phase) = curr_spec_state_id
@@ -964,19 +960,6 @@ contains
     end do
 
   end function num_phase_instances
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Returns array of booleans indicating if phase is at surface
-  function aero_is_at_surface(this)
-
-    logical, allocatable :: aero_is_at_surface(:)
-    !> Aerosol respresentation data
-    class(aero_rep_modal_binned_mass_t), intent(in) :: this
-
-    aero_is_at_surface = aero_is_at_surface_
-
-  end function aero_is_at_surface
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

@@ -79,8 +79,6 @@ module camp_aero_rep_single_particle
     type(string_t), allocatable, private :: unique_names_(:)
     !> Layer names, ordered inner-most to outer-most
     type(string_t), allocatable, private :: layer_names_(:)
-    !> Boolean array, true for phases that exist in the surface layer
-    logical, allocatable, private :: aero_is_at_surface_(:)
     !> First state id for the representation (only used during initialization)
     integer(kind=i_kind) :: state_id_start = -99999
   contains
@@ -140,8 +138,6 @@ module camp_aero_rep_single_particle
     procedure :: num_jac_elem
     !> Returns the number of layers
     procedure :: num_layers
-    !> Returns array of booleans indicating is phase is at surface
-    procedure :: aero_is_at_surface
     !> Returns the number of phases in a layer or overall
     procedure :: num_phases
     !> Returns the number of state variables for a layer and phase
@@ -362,7 +358,7 @@ contains
     ! each layer in each particle, and set PHASE_STATE_ID and
     ! PHASE_MODEL_DATA_ID for each phase
     allocate(this%aero_phase(num_phases * num_particles))
-    allocate(this%aero_is_at_surface_(num_phases * num_particles))
+    allocate(this%aero_is_at_surface(num_phases * num_particles))
     curr_phase = 1
     do i_layer = 1, size(ordered_layer_id)
       j_layer = ordered_layer_id(i_layer)
@@ -401,10 +397,10 @@ contains
               this%aero_phase(i_particle*num_phases + curr_phase) = &
                 aero_phase_set(j_phase)
               if (i_layer .eq. NUM_LAYERS_) then
-                this%aero_is_at_surface_(i_particle*num_phases + curr_phase) = &
+                this%aero_is_at_surface(i_particle*num_phases + curr_phase) = &
                   .true.
                 else
-                  this%aero_is_at_surface_(i_particle*num_phases + curr_phase) = &
+                  this%aero_is_at_surface(i_particle*num_phases + curr_phase) = &
                     .false.
               end if
             end do
@@ -705,18 +701,6 @@ contains
       num_layers = NUM_LAYERS_
 
     end function num_layers
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    !> Returns array of booleans indicating if phase is at surface
-    function aero_is_at_surface(this) 
-
-      !> Aerosol representation data
-      class(aero_rep_single_particle_t), intent(in) :: this
-
-      aero_is_at_surface = aero_is_at_surface_
-
-    end function aero_is_at_surface
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
