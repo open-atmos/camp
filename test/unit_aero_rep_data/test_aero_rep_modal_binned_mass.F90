@@ -341,7 +341,7 @@ contains
 
     ! Tests will use bin 4 phase one
     phase_name = "my test phase one"
-    phase_ids = aero_rep%phase_ids(phase_name, is_at_surface=.false.)
+    phase_ids = aero_rep%phase_ids(phase_name)
 
     ! Check the number of Jacobian elements for the test phases
     call assert_msg(344638868, &

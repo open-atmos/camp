@@ -619,7 +619,7 @@ contains
               this%aero_phase(i_phase) = aero_phase_set(k_phase)
           
               ! No species exist at surface 
-              this%aero_is_at_surface(i_phase) = .false.
+              this%aero_is_at_surface(i_phase) = .true.
 
               ! Save the starting id for this phase on the state array
               this%phase_state_id(i_phase) = curr_spec_state_id

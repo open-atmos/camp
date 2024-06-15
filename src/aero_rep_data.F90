@@ -502,7 +502,7 @@ contains
     !> Aerosol phase name
     character(len=*), intent(in) :: phase_name
     !> Indicates if aerosol phase is at the surface of particle
-    logical, intent(in) :: is_at_surface
+    logical, intent(in), optional :: is_at_surface
     logical, allocatable :: aero_is_at_surf(:)
 
     integer(kind=i_kind) :: num_instances, i_instance, i_phase
@@ -510,21 +510,34 @@ contains
     num_instances = this%num_phase_instances(phase_name)
     aero_is_at_surf = this%aero_is_at_surface
     allocate(phase_ids(num_instances))
-    if (is_at_surface .eqv. .true.) then
-      i_instance = 1
-      do i_phase = 1, size(this%aero_phase)
-        if (this%aero_phase(i_phase)%val%name().eq. phase_name) then
-          if (aero_is_at_surf(i_phase) .eqv. .true.) then
+    if (present(is_at_surface)) then
+      if (is_at_surface .eqv. .true.) then
+        i_instance = 1
+        do i_phase = 1, size(this%aero_phase)
+          if (this%aero_phase(i_phase)%val%name().eq. phase_name .and. &
+              aero_is_at_surf(i_phase) .eqv. .true.) then
             phase_ids(i_instance) = i_phase
             i_instance = i_instance + 1
-          else if (aero_is_at_surf(i_phase) .eqv. .false.) then
-            call assert_msg(753906733,aero_is_at_surf(i_phase) .eqv. .false. , &
-              "Aerosol phase not at surface.")
+          else if (this%aero_phase(i_phase)%val%name().eq. phase_name .and. &
+              aero_is_at_surf(i_phase) .eqv. .false.) then
+             continue
           end if
-        end if
-      end do
-    end if
-    if (is_at_surface .eqv. .false.) then
+        end do
+      end if
+      if (is_at_surface .eqv. .false.) then
+        i_instance = 1
+        do i_phase = 1, size(this%aero_phase)
+          if (this%aero_phase(i_phase)%val%name().eq. phase_name .and. &
+              aero_is_at_surf(i_phase) .eqv. .false.) then
+            phase_ids(i_instance) = i_phase
+            i_instance = i_instance + 1
+          else if (this%aero_phase(i_phase)%val%name().eq. phase_name .and. &
+              aero_is_at_surf(i_phase) .eqv. .true.) then
+             continue
+          end if
+        end do
+      end if
+    else
       i_instance = 1
       do i_phase = 1, size(this%aero_phase)
         if (this%aero_phase(i_phase)%val%name().eq.phase_name) then
@@ -533,7 +546,6 @@ contains
         end if
       end do
     end if
-   
 
   end function phase_ids
 
