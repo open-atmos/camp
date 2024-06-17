@@ -511,29 +511,23 @@ contains
     aero_is_at_surf = this%aero_is_at_surface
     allocate(phase_ids(num_instances))
     if (present(is_at_surface)) then
-      if (is_at_surface .eqv. .true.) then
+      if (is_at_surface) then
         i_instance = 1
         do i_phase = 1, size(this%aero_phase)
           if (this%aero_phase(i_phase)%val%name().eq. phase_name .and. &
               aero_is_at_surf(i_phase) .eqv. .true.) then
             phase_ids(i_instance) = i_phase
             i_instance = i_instance + 1
-          else if (this%aero_phase(i_phase)%val%name().eq. phase_name .and. &
-              aero_is_at_surf(i_phase) .eqv. .false.) then
-             continue
           end if
         end do
       end if
-      if (is_at_surface .eqv. .false.) then
+      if (.not. is_at_surface) then
         i_instance = 1
         do i_phase = 1, size(this%aero_phase)
           if (this%aero_phase(i_phase)%val%name().eq. phase_name .and. &
               aero_is_at_surf(i_phase) .eqv. .false.) then
             phase_ids(i_instance) = i_phase
             i_instance = i_instance + 1
-          else if (this%aero_phase(i_phase)%val%name().eq. phase_name .and. &
-              aero_is_at_surf(i_phase) .eqv. .true.) then
-             continue
           end if
         end do
       end if
