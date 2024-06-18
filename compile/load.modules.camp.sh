@@ -6,7 +6,7 @@ if [ "${BSC_MACHINE}" == "mn5" ]; then
     module load gcc
     module load openmpi/4.1.5-gcc
     module load mkl
-    if module --raw --redirect show cuda | grep -q cuda ; then
+    if module --raw --redirect show cuda 2>/dev/null | grep -q cuda ; then
       module load hdf5/1.14.1-2-gcc-ompi
       module load pnetcdf/1.12.3-gcc-ompi
       module load netcdf/c-4.9.2_fortran-4.6.1_cxx4-4.3.1-gcc-ompi
@@ -18,7 +18,7 @@ if [ "${BSC_MACHINE}" == "mn5" ]; then
     fi
     module load python/3.12.1-gcc
   else
-    if module --raw --redirect show cuda | grep -q cuda ; then
+    if module --raw --redirect show cuda 2>/dev/null | grep -q cuda ; then
       #module load nvidia-hpc-sdk
       #module load intel
       #module load impi

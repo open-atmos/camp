@@ -21,7 +21,7 @@ make_and_check() {
 make_run() {
   initial_dir=$(pwd)
   cd ../../build
-  #make -j 4
+  make -j 4
   cd $initial_dir
   python TestMonarch.py
   #python checkGPU.py

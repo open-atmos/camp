@@ -22,7 +22,6 @@ cd ${camp_suite_dir}/camp
 if [ "${BSC_MACHINE}" == "mn5" ]; then
   if module list 2>&1 | grep -q "\<intel\>"; then
     if module list 2>&1 | grep -q "\<nvidia-hpc-sdk\>"; then
-      #failing maybe because it misses the same on CMakeLists
       mpifort=$(which mpifort)
     else
       mpifort=$(which mpiifort)
