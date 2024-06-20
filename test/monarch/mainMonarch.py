@@ -62,7 +62,7 @@ def run(conf):
     output = result.stdout + result.stderr
     if 'gcc' not in output:
       raise Exception("Missing gcc module for nsys option. To run nsys you need to use GCC for compile and run dependencies")
-    exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/23.11/Linux_x86_64/2023/profilers/Nsight_Systems/bin/nsys ")
+    exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/23.9/Linux_x86_64/23.9/profilers/Nsight_Systems/bin/nsys ")
     pathNsight = ("../../compile/profile ")
     exec_str += "profile -f true --trace=mpi,cuda --mpi-impl=openmpi -o " + pathNsight
     print("Saving nsight file in ",
@@ -76,10 +76,10 @@ def run(conf):
       conf.mpiProcesses) + " --bind-to core "
   if conf.profileCuda == "ncu" and conf.caseGpuCpu == "GPU":
     if os.environ.get("SLURM_JOB_NUM_NODES", 0) != "1":
-      raise Exception("nsys option is for slurm salloc session."
+      raise Exception("ncu option is for slurm salloc session."
                   " It could work on multiple nodes but it needs to be implemented")
     #gui: /apps/ACC/NVIDIA-HPC-SDK/24.3/Linux_x86_64/2024/profilers/Nsight_Compute/ncu-ui
-    exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/24.3/Linux_x86_64/2024/profilers/Nsight_Compute/ncu ")
+    exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/23.9/Linux_x86_64/23.9/profilers/Nsight_Compute/ncu ")
     pathNsight = ("../../compile/profile")
     exec_str += "--target-processes=application-only --set full -f -o " + pathNsight + " "
     print("Saving nsight file in ",
