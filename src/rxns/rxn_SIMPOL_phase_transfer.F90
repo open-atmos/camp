@@ -373,7 +373,6 @@ contains
 
     ! Save the index of the gas-phase species in the state variable array
     GAS_SPEC_ = chem_spec_data%gas_state_id(gas_spec_name)
-    print *, GAS_SPEC_
 
     ! Make sure the species exists
     call assert_msg(551477581, GAS_SPEC_.gt.0, &

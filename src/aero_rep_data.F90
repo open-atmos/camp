@@ -515,7 +515,7 @@ contains
         i_instance = 1
         do i_phase = 1, size(this%aero_phase)
           if (this%aero_phase(i_phase)%val%name().eq. phase_name .and. &
-              aero_is_at_surf(i_phase) .eqv. .true.) then
+              aero_is_at_surf(i_phase)) then
             phase_ids(i_instance) = i_phase
             i_instance = i_instance + 1
           end if
@@ -525,7 +525,7 @@ contains
         i_instance = 1
         do i_phase = 1, size(this%aero_phase)
           if (this%aero_phase(i_phase)%val%name().eq. phase_name .and. &
-              aero_is_at_surf(i_phase) .eqv. .false.) then
+              .not. aero_is_at_surf(i_phase)) then
             phase_ids(i_instance) = i_phase
             i_instance = i_instance + 1
           end if
