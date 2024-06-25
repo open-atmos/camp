@@ -477,7 +477,7 @@ contains
 
     ! Allocate space for the aerosol phases and species state ids
     allocate(this%aero_phase(num_phase))
-    allocate(this%aero_is_at_surface(num_phase))
+    allocate(this%aero_phase_is_at_surface(num_phase))
     allocate(this%phase_state_id(size(this%aero_phase)))
 
     ! Allocate condensed data arrays
@@ -619,7 +619,7 @@ contains
               this%aero_phase(i_phase) = aero_phase_set(k_phase)
           
               ! No species exist at surface 
-              this%aero_is_at_surface(i_phase) = .true.
+              this%aero_phase_is_at_surface(i_phase) = .true.
 
               ! Save the starting id for this phase on the state array
               this%phase_state_id(i_phase) = curr_spec_state_id

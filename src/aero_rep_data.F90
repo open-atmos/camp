@@ -77,7 +77,7 @@ module camp_aero_rep_data
     !> Array of booleans indicating if phase exists at the surface of a
     !! particle. Used in SIMPOL and HL reactions for single particle 
     !! representation. 
-    logical, allocatable, public :: aero_is_at_surface(:)
+    logical, allocatable, public :: aero_phase_is_at_surface(:)
     !> Number of environment-dependent parameters
     !! These are parameters that need updated when environmental conditions
     !! change
@@ -503,29 +503,26 @@ contains
     character(len=*), intent(in) :: phase_name
     !> Indicates if aerosol phase is at the surface of particle
     logical, intent(in), optional :: is_at_surface
-    logical, allocatable :: aero_is_at_surf(:)
 
     integer(kind=i_kind) :: num_instances, i_instance, i_phase
 
     num_instances = this%num_phase_instances(phase_name)
-    aero_is_at_surf = this%aero_is_at_surface
     allocate(phase_ids(num_instances))
     if (present(is_at_surface)) then
       if (is_at_surface) then
         i_instance = 1
         do i_phase = 1, size(this%aero_phase)
           if (this%aero_phase(i_phase)%val%name().eq. phase_name .and. &
-              aero_is_at_surf(i_phase)) then
+              this%aero_phase_is_at_surface(i_phase)) then
             phase_ids(i_instance) = i_phase
             i_instance = i_instance + 1
           end if
         end do
-      end if
-      if (.not. is_at_surface) then
+      else
         i_instance = 1
         do i_phase = 1, size(this%aero_phase)
           if (this%aero_phase(i_phase)%val%name().eq. phase_name .and. &
-              .not. aero_is_at_surf(i_phase)) then
+              .not. this%aero_phase_is_at_surface(i_phase)) then
             phase_ids(i_instance) = i_phase
             i_instance = i_instance + 1
           end if
