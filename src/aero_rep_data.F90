@@ -74,6 +74,10 @@ module camp_aero_rep_data
     !! functions of the aerosol representation that cannot be obtained
     !! from the camp_camp_state::camp_state_t object. (integer)
     integer(kind=i_kind), allocatable, public ::  condensed_data_int(:)
+    !> Array of booleans indicating if phase exists at the surface of a
+    !! particle. Used in SIMPOL and HL reactions for single particle 
+    !! representation. 
+    logical, allocatable, public :: aero_phase_is_at_surface(:)
     !> Number of environment-dependent parameters
     !! These are parameters that need updated when environmental conditions
     !! change
@@ -489,7 +493,7 @@ contains
 
   !> Get a set of ids for all instances of a phase in this aerosol
   !! representation for use during solving
-  function phase_ids(this, phase_name)
+  function phase_ids(this, phase_name, is_at_surface)
 
     !> List of phase ids
     integer(kind=i_kind), allocatable :: phase_ids(:)
@@ -497,18 +501,42 @@ contains
     class(aero_rep_data_t), intent(in) :: this
     !> Aerosol phase name
     character(len=*), intent(in) :: phase_name
+    !> Indicates if aerosol phase is at the surface of particle
+    logical, intent(in), optional :: is_at_surface
 
     integer(kind=i_kind) :: num_instances, i_instance, i_phase
 
     num_instances = this%num_phase_instances(phase_name)
     allocate(phase_ids(num_instances))
-    i_instance = 1
-    do i_phase = 1, size(this%aero_phase)
-      if (this%aero_phase(i_phase)%val%name().eq.phase_name) then
-        phase_ids(i_instance) = i_phase
-        i_instance = i_instance + 1
+    if (present(is_at_surface)) then
+      if (is_at_surface) then
+        i_instance = 1
+        do i_phase = 1, size(this%aero_phase)
+          if (this%aero_phase(i_phase)%val%name().eq. phase_name .and. &
+              this%aero_phase_is_at_surface(i_phase)) then
+            phase_ids(i_instance) = i_phase
+            i_instance = i_instance + 1
+          end if
+        end do
+      else
+        i_instance = 1
+        do i_phase = 1, size(this%aero_phase)
+          if (this%aero_phase(i_phase)%val%name().eq. phase_name .and. &
+              .not. this%aero_phase_is_at_surface(i_phase)) then
+            phase_ids(i_instance) = i_phase
+            i_instance = i_instance + 1
+          end if
+        end do
       end if
-    end do
+    else
+      i_instance = 1
+      do i_phase = 1, size(this%aero_phase)
+        if (this%aero_phase(i_phase)%val%name().eq.phase_name) then
+          phase_ids(i_instance) = i_phase
+          i_instance = i_instance + 1
+        end if
+      end do
+    end if
 
   end function phase_ids
 

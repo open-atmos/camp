@@ -192,6 +192,21 @@ contains
         call assert(603635677, aero_rep%phase_state_size(layer=2,phase=2) .eq. 2)
         call assert(768528274, aero_rep%phase_state_size(layer=3,phase=1) .eq. 3)
 
+        ! check boolean surface array 
+        call assert(438901931, aero_rep%aero_phase_is_at_surface(1) .eqv. .false.)
+        call assert(545268641, aero_rep%aero_phase_is_at_surface(2) .eqv. .false.)
+        call assert(450505920, aero_rep%aero_phase_is_at_surface(3) .eqv. .false.)
+        call assert(160921440, aero_rep%aero_phase_is_at_surface(4) .eqv. .true.)
+        call assert(013254644, aero_rep%aero_phase_is_at_surface(5) .eqv. .false.)
+        call assert(691645657, aero_rep%aero_phase_is_at_surface(6) .eqv. .false.)
+        call assert(916896739, aero_rep%aero_phase_is_at_surface(7) .eqv. .false.)
+        call assert(668436322, aero_rep%aero_phase_is_at_surface(8) .eqv. .true.)
+        call assert(952270724, aero_rep%aero_phase_is_at_surface(9) .eqv. .false.)
+        call assert(410924438, aero_rep%aero_phase_is_at_surface(10) .eqv. .false.)
+        call assert(266324037, aero_rep%aero_phase_is_at_surface(11) .eqv. .false.)
+        call assert(008760891, aero_rep%aero_phase_is_at_surface(12) .eqv. .true.)
+
+        call assert(768528274, aero_rep%phase_state_size(layer=3,phase=1) .eq. 3)
         ! test num_phase_instances funtion
         phase_name_test = "bread"
         num_bread = 2

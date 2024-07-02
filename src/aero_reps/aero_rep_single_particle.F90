@@ -358,6 +358,7 @@ contains
     ! each layer in each particle, and set PHASE_STATE_ID and
     ! PHASE_MODEL_DATA_ID for each phase
     allocate(this%aero_phase(num_phases * num_particles))
+    allocate(this%aero_phase_is_at_surface(num_phases * num_particles))
     curr_phase = 1
     do i_layer = 1, size(ordered_layer_id)
       j_layer = ordered_layer_id(i_layer)
@@ -395,6 +396,13 @@ contains
             do i_particle = 0, num_particles-1
               this%aero_phase(i_particle*num_phases + curr_phase) = &
                 aero_phase_set(j_phase)
+              if (i_layer .eq. NUM_LAYERS_) then
+                this%aero_phase_is_at_surface(i_particle*num_phases + curr_phase) = &
+                  .true.
+                else
+                  this%aero_phase_is_at_surface(i_particle*num_phases + curr_phase) = &
+                    .false.
+              end if
             end do
             PHASE_STATE_ID_(i_layer,i_phase) = curr_id
             PHASE_MODEL_DATA_ID_(i_layer,i_phase) = j_phase
