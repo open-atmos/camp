@@ -187,22 +187,6 @@ void aero_rep_single_particle_get_effective_radius__m(
   return;
 }
 
-/** \brief Get the number of available sorption sites
- *
- * A limited number of available sorption sites is available on specified
- * particles.  The number of available sites is dependent upon the radius 
- * and the cross sectional area of the adsorbing species.
- * 
- * 1. calculate circumference/volume of sorption layer
- * 2. call cross sectional area of sorption molecule
- * 3. calculate number of sorption molecules that can fit on surface using 
- *    cross-sectional area of molecule
- * QUESTION: competitive co-adsorption?
- *
- */
-
-
-
 /** \brief Get the particle number concentration \f$n\f$
  * (\f$\mbox{\si{\#\per\cubic\metre}}\f$)
  *

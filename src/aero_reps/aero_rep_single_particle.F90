@@ -492,8 +492,6 @@ contains
     type(string_t), allocatable :: unique_names(:)
     !> Aerosol representation data
     class(aero_rep_single_particle_t), intent(in) :: this
-    !> Aerosol layer name
-    !character(len=*), optional, intent(in) :: layer_name
     !> Aerosol phase name
     character(len=*), optional, intent(in) :: phase_name
     !> Aerosol-phase species tracer type
