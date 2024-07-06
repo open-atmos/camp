@@ -1,0 +1,22 @@
+{
+    "other":"settings",
+    "cmake.configureArgs": [
+        "-D CMAKE_BUILD_TYPE=debug",
+        "-D CMAKE_C_FLAGS_DEBUG='-O3 -g'",
+        "-D ENABLE_GPU=ON",
+        "-D ENABLE_MPI=ON",
+        "-D ENABLE_PROFILE_SOLVING=ON",
+        "-D ENABLE_NETCDF=ON"
+       ],
+    "cmake.debugConfig": {
+		"name": "Debug CMake project",
+		"type": "gdb", // https://github.com/vadimcn/vscode-lldb
+		"request": "launch",
+		"program": "${command:cmake.launchTargetPath}",
+		"args": [
+			"arg1",
+			"arg2",
+			"arg3",
+		]
+    }
+   }
