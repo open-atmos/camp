@@ -248,8 +248,9 @@ typedef struct {
 #ifdef PROFILE_SOLVING
   double timeCVode;
 #ifdef CAMP_USE_GPU
-  cudaEvent_t startcvStep;
-  cudaEvent_t stopcvStep;
+  cudaEvent_t startGPU;
+  cudaEvent_t stopGPU;
+  double timeSync;
 #endif
 #endif
 #endif

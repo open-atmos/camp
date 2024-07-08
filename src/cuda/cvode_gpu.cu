@@ -17,12 +17,8 @@ extern "C" {
 
 int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
                SolverData *sd, double t_initial){
-  CVodeMem cv_mem = (CVodeMem) cvode_mem;
   ModelDataGPU *mGPU = sd->mGPU;
   ModelData *md = &(sd->model_data);
-#ifdef PROFILE_SOLVING
-  cudaEventRecord(sd->startcvStep);
-#endif
   cudaStream_t stream;
   cudaStreamCreate(&stream);
   int n_cells=md->n_cells_gpu;
@@ -30,6 +26,10 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   cudaMemcpyAsync(mGPU->state,md->total_state,md->n_per_cell_state_var*n_cells*sizeof(double),cudaMemcpyHostToDevice,stream);
   mGPU->init_time_step = sd->init_time_step;
   mGPU->tout = t_final;
+#ifdef PROFILE_SOLVING
+  cudaEventRecord(sd->startGPU);
+  double startTime = MPI_Wtime();
+#endif
   cvodeRun(t_initial, mGPU, n_cells, md->n_per_cell_dep_var, stream); //Asynchronous
   //CPU
 #ifdef TRACE_CPUGPU
@@ -92,15 +92,22 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
 #ifdef TRACE_CPUGPU
   nvtxRangePop();
 #endif
+#ifdef PROFILE_SOLVING
+  double timeCPU = (MPI_Wtime() - startTime);
+#endif
   cudaDeviceSynchronize();
 #ifdef PROFILE_SOLVING
-    cudaEventRecord(sd->stopcvStep);
-    cudaEventSynchronize(sd->stopcvStep);
-    float mscvStep = 0.0;
-    cudaEventElapsedTime(&mscvStep, sd->startcvStep, sd->stopcvStep);
-    cv_mem->timecvStep+= mscvStep/1000;
+  cudaEventRecord(sd->stopGPU);
+  cudaEventSynchronize(sd->stopGPU);
+  float msDevice = 0.0;
+  cudaEventElapsedTime(&msDevice, sd->startGPU, sd->stopGPU);
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  //sync time should take into account if gpu finish first
+  sd->timeSync+= msDevice/1000 - timeCPU;
+  if(rank==0)printf("Sync time: %f\n",sd->timeSync);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    cudaMemcpy(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
+  cudaMemcpy(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
 #endif
 #endif
   cudaStreamDestroy(stream);

@@ -99,8 +99,9 @@ def run(conf):
   print("exec_str:", exec_str)
   print(conf.diffCells,
         conf.caseGpuCpu,
-        conf.caseMulticellsOnecell, "ncellsPerMPIProcess:",
-        conf.nCells)
+        conf.caseMulticellsOnecell, 
+        "ncellsPerMPIProcess:", conf.nCells,
+        "Cells to GPU:",str(conf.gpu_percentage) + "%")
   conf_name = "settings/TestMonarch.json"
   with open(conf_name, 'w', encoding='utf-8') as jsonFile:
     json.dump(conf.__dict__, jsonFile, indent=4,
@@ -204,33 +205,29 @@ def run_cases(conf):
       datay = timeBase / timeOptim
       print("Speedup", datay)
       datacases.append(datay)
-
   return datacases
 
 
 def run_cells(conf):
-  datacells = []
-  for i in range(len(conf.cells)):
-    conf.nCellsProcesses = conf.cells[i]
-    datacases = run_cases(conf)
-    datacells.append(datacases)
-  if len(conf.cells) > 1:
-    datacellsTranspose = np.transpose(datacells)
-    datacells = datacellsTranspose.tolist()
-  return datacells
+  data = []
+  for i, item in enumerate(conf.cells):
+    conf.nCellsProcesses = item
+    data += run_cases(conf)
+  return data
 
 
 def run_gpu_percentages(conf):
   data = []
-  for i, gpu_percentage in enumerate(conf.gpu_percentages):
-    conf.gpu_percentage = gpu_percentage
+  for i, item in enumerate(conf.gpu_percentages):
+    conf.gpu_percentage = item
     data += run_cells(conf)
   return data
 
+
 def run_diffCells(conf):
   data = []
-  for i, diff_cells in enumerate(conf.diffCellsL):
-    conf.diffCells = diff_cells
+  for i, item in enumerate(conf.diffCellsL):
+    conf.diffCells = item
     data += run_gpu_percentages(conf)
   return data
 
@@ -282,11 +279,8 @@ def plot_cases(conf, datay):
   nGPUsOptim = [i if i < 5 else 4 for i in conf.mpiProcessesCaseOptimList]
   if not is_same_diff_cells and len(conf.diffCellsL) == 1:
     plotTitle += conf.diffCells + " test: "
-  plotXKey = ""
-  if len(nGPUsOptim) > 1:
-    plotXKey = "GPUs"
   if is_same_arch_optim:
-    if plotXKey == "GPUs":
+    if len(nGPUsOptim) > 1:
       plotTitle += ""
     else:
       if conf.caseGpuCpu == "GPU" and len(
@@ -298,7 +292,7 @@ def plot_cases(conf, datay):
           mpiProcessesCaseOptim) + " Cores "
       else:
         plotTitle += conf.caseGpuCpu + " "
-  if plotXKey == "GPUs":
+  if len(nGPUsOptim) > 1:
     plotTitle += "GPU "
   if len(legend) == 1 or not legend or len(
       conf.diffCellsL) > 1:
@@ -314,27 +308,28 @@ def plot_cases(conf, datay):
     conf.mpiProcessesCaseBase) + " Cores CPU"
   namey = "Speedup"
   if len(conf.cells) > 1:
-    plotTitle += ""
+    namex = "Cells"
     datax = conf.cells
-    plot_x_key = "Cells"
-  elif plotXKey == "GPUs":
+    plotTitle += ""
+  elif len(nGPUsOptim) > 1:
+    namex = "GPUs"
     datax = nGPUsOptim
     if len(conf.cells) > 1:
       plotTitle += ", Cells: " + str(conf.cells[0])
-      plot_x_key = plotXKey
-    else:
-      plot_x_key = "GPUs"
+  elif len(conf.gpu_percentages) > 1:
+    namex = "Percentage of cells to GPU"
+    datax = conf.gpu_percentages
+    plotTitle += "," + str(conf.cells[0]) + " Cells"
   else:
     plotTitle += ", Cells: " + str(conf.cells[0])
     datax = list(range(1, conf.timeSteps + 1, 1))
-    plot_x_key = "Time-steps"
-  namex = plot_x_key
+    namex = "Time-steps"
   print(namex + ":", datax[0], "to", datax[-1])
-  print("Cells to GPU:", str(conf.gpu_percentage) + "%")
   if legend:
     print("plotTitle: ", plotTitle, " legend:", legend)
   else:
     print("plotTitle: ", plotTitle)
+  print(namex, ":", datax)
   print(namey, ":", datay)
   #plot_functions.plotsns(namex, namey, datax, datay, plotTitle, legend)
 

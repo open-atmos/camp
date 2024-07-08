@@ -24,7 +24,6 @@ void constructor_cvode_gpu(SolverData *sd){
   CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
   sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
   ModelDataGPU *mGPU = sd->mGPU;
-
   float rate_cells_gpu = sd->gpu_percentage/100.;
   md->n_cells_gpu = md->n_cells * rate_cells_gpu;
   int n_cells = md->n_cells_gpu;
@@ -39,7 +38,7 @@ void constructor_cvode_gpu(SolverData *sd){
   if(rank==0){
     printf("Cells to GPU: %.d %\n",sd->gpu_percentage);
     printf("n_cells_gpu: %d\n", md->n_cells_gpu);
-    printf("n_cells_cpu: %d\n", n_cells-md->n_cells_gpu);
+    printf("n_cells_cpu: %d\n", md->n_cells-md->n_cells_gpu);
   }
   int iDevice = rank % nGPUs;
   cudaSetDevice(iDevice);
@@ -167,8 +166,9 @@ void constructor_cvode_gpu(SolverData *sd){
   double *cv_Vabstol = N_VGetArrayPointer(cv_mem->cv_Vabstol);
   cudaMemcpy(mGPU->cv_Vabstol, cv_Vabstol, n_dep_var * sizeof(double), cudaMemcpyHostToDevice);
 #ifdef PROFILE_SOLVING
-  cudaEventCreate(&sd->startcvStep);
-  cudaEventCreate(&sd->stopcvStep);
+  cudaEventCreate(&sd->startGPU);
+  cudaEventCreate(&sd->stopGPU);
+  sd->timeSync=0;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   cudaMalloc((void **) &mGPU->mdvo, sizeof(ModelDataVariable));
   cudaDeviceGetAttribute(&mGPU->clock_khz, cudaDevAttrClockRate, 0);

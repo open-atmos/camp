@@ -11,9 +11,9 @@
 #SBATCH --exclusive
 #SBATCH -A bsc32
 
-
-
-pwd
+set -e
+scriptdir="$(dirname "$0")"
+cd "$scriptdir"
 if [ ! -d ../build ]; then
   ./compile.libs.camp.sh
 fi

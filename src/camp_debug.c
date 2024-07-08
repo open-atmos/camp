@@ -98,9 +98,8 @@ void export_stats(SolverData *sd){
   if (rank == 0) {
     FILE *fptr;
     if ((fptr = fopen("out/stats.csv", "w")) != NULL) {
-      fprintf(fptr, "timecvStep,timeCVode\n");
-      CVodeMem cv_mem = (CVodeMem) sd->cvode_mem;
-      fprintf(fptr, "%.17le,",cv_mem->timecvStep);
+      fprintf(fptr, "timeSync,timeCVode\n");
+      fprintf(fptr, "%.17le,",sd->timeSync);
       fprintf(fptr, "%.17le",sd->timeCVode);
       fprintf(fptr, "\n");
       fclose(fptr);

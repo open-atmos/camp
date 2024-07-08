@@ -22,6 +22,6 @@ def plotsns(namex, namey, datax, datay, plot_title, legend):
               ncol=len(legend), labels=legend, frameon=True, shadow=False, borderaxespad=0.)
   else:
     ax.set_title(plot_title)
-    sns.lineplot(x=datax,y=datay[0], palette="tab10", linewidth=2.5, legend=False)
+    sns.lineplot(x=datax,y=datay, palette="tab10", linewidth=2.5, legend=False)
     ax.set_xticks(datax)
     plt.show()

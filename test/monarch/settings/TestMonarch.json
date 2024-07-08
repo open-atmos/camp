@@ -4,19 +4,19 @@
     "timeSteps": 1,
     "timeStepsDt": 2,
     "case": "GPU BDF",
-    "nCells": 1000,
+    "nCells": 125,
     "caseGpuCpu": "GPU",
     "caseMulticellsOnecell": "BDF",
-    "mpiProcesses": 1,
+    "mpiProcesses": 80,
     "diffCellsL": [
         "Realistic"
     ],
-    "mpiProcessesCaseBase": 1,
+    "mpiProcessesCaseBase": 80,
     "mpiProcessesCaseOptimList": [
-        1
+        80
     ],
     "cells": [
-        1000
+        10000
     ],
     "profileCuda": "",
     "caseBase": "CPU One-cell",
@@ -24,17 +24,18 @@
     "casesOptim": [
         "GPU BDF"
     ],
-    "is_import": true,
-    "is_import_base": false,
+    "is_import": false,
+    "is_import_base": true,
     "is_out": true,
     "sbatch_job_id": "",
     "exportPath": "exports",
     "results_file": "_solver_stats.csv",
-    "nCellsProcesses": 1000,
+    "nCellsProcesses": 10000,
     "campConf": "settings/config_variables_c_solver.txt",
     "gpu_percentages": [
         90,
-        95
+        95,
+        98
     ],
-    "gpu_percentage": 95
+    "gpu_percentage": 98
 }
