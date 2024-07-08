@@ -4,33 +4,31 @@
     "timeSteps": 1,
     "timeStepsDt": 2,
     "case": "GPU BDF",
-    "nCells": 250,
+    "nCells": 10000,
     "caseGpuCpu": "GPU",
     "caseMulticellsOnecell": "BDF",
-    "mpiProcesses": 80,
+    "mpiProcesses": 1,
     "diffCellsL": [
         "Realistic"
     ],
-    "mpiProcessesCaseBase": 80,
+    "mpiProcessesCaseBase": 1,
     "mpiProcessesCaseOptimList": [
-        80
+        1
     ],
     "cells": [
-        20000
+        10000
     ],
     "profileCuda": "",
-    "caseBase": "CPU One-cell",
+    "caseBase": "GPU BDF",
     "plotYKey": "Speedup timeCVode",
-    "casesOptim": [
-        "GPU BDF"
-    ],
-    "is_import": true,
+    "casesOptim": [],
+    "is_import": false,
     "is_import_base": false,
     "is_out": true,
     "sbatch_job_id": "",
     "exportPath": "exports",
     "results_file": "_solver_stats.csv",
-    "nCellsProcesses": 20000,
+    "nCellsProcesses": 10000,
     "campConf": "settings/config_variables_c_solver.txt",
     "gpu_percentages": [
         100

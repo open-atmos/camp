@@ -7,7 +7,7 @@
 extern "C" {
 #include "cvode_gpu.h"
 }
-#ifdef TRACE_CPUGPU
+#ifndef TRACE_CPUGPU
 #include "nvToolsExt.h"
 #endif
 
@@ -28,12 +28,14 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   mGPU->tout = t_final;
 #ifdef PROFILE_SOLVING
   cudaEventRecord(sd->startGPU);
-  double startTime = MPI_Wtime();
 #endif
   cvodeRun(t_initial, mGPU, n_cells, md->n_per_cell_dep_var, stream); //Asynchronous
   //CPU
-#ifdef TRACE_CPUGPU
+#ifndef TRACE_CPUGPU
   nvtxRangePushA("CPU Code");
+#endif
+#ifdef PROFILE_SOLVING
+  double startTime = MPI_Wtime();
 #endif
   n_cells=md->n_cells;
   int flag=CV_SUCCESS;
@@ -88,24 +90,40 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   md->total_state  = state;
   md->total_env = env;
   md->rxn_env_data = rxn_env_data;
-  cudaMemcpyAsync(md->total_state, mGPU->state, md->n_per_cell_state_var*md->n_cells_gpu * sizeof(double), cudaMemcpyDeviceToHost, stream);
-#ifdef TRACE_CPUGPU
+#ifdef PROFILE_SOLVING
+  //MPI_Barrier(MPI_COMM_WORLD);
+  double timeCPU = (MPI_Wtime() - startTime);
+  double startTime2 = MPI_Wtime();
+#endif
+#ifndef TRACE_CPUGPU
   nvtxRangePop();
 #endif
-#ifdef PROFILE_SOLVING
-  double timeCPU = (MPI_Wtime() - startTime);
-#endif
-  cudaDeviceSynchronize();
+  cudaMemcpyAsync(md->total_state, mGPU->state, md->n_per_cell_state_var*md->n_cells_gpu * sizeof(double), cudaMemcpyDeviceToHost, stream);
+  cudaStreamSynchronize(stream);
 #ifdef PROFILE_SOLVING
   cudaEventRecord(sd->stopGPU);
   cudaEventSynchronize(sd->stopGPU);
+  double timeSync = (MPI_Wtime() - startTime2);
   float msDevice = 0.0;
   cudaEventElapsedTime(&msDevice, sd->startGPU, sd->stopGPU);
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  //sync time should take into account if gpu finish first
-  sd->timeSync+= msDevice/1000 - timeCPU;
+  double timeGPU=msDevice/1000;
+  double sync_eff=100;
+  //New
+  sync_eff=100*(1-timeSync/timeCPU);
+  if(rank==0)printf("CPU time: %f\n",timeCPU);
+  if(rank==0)printf("Sync time: %f\n",timeSync);
+  if(rank==0)printf("Sync efficiency (CPU-GPU): %.2f%\n",sync_eff);
+  //Old
+  sd->timeSync+= timeGPU - timeCPU;
+  if(rank==0)printf("GPU time: %f\n",timeGPU);
   if(rank==0)printf("Sync time: %f\n",sd->timeSync);
+  double min=fmin(timeGPU,timeCPU);
+  double max=fmax(timeGPU,timeCPU);
+  if(min!=max) sync_eff=100*min/max;
+  if(timeCPU>timeGPU) sync_eff*=-1;
+  if(rank==0)printf("Sync efficiency (CPU-GPU): %.2f%\n",sync_eff);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   cudaMemcpy(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
 #endif

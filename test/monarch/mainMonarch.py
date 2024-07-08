@@ -64,7 +64,7 @@ def run(conf):
       raise Exception("Missing gcc module for nsys option. To run nsys you need to use GCC for compile and run dependencies")
     exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/23.9/Linux_x86_64/23.9/profilers/Nsight_Systems/bin/nsys ")
     pathNsight = ("../../compile/profile ")
-    exec_str += "profile -f true --trace=mpi,cuda --mpi-impl=openmpi -o " + pathNsight
+    exec_str += "profile -f true --trace=mpi,cuda,nvtx --mpi-impl=openmpi -o " + pathNsight
     print("Saving nsight file in ",
           os.path.abspath(os.getcwd())
           + "/" + pathNsight)
