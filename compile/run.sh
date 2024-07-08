@@ -1,16 +1,19 @@
 #!/usr/bin/env bash
-##SBATCH --qos=debug
+#SBATCH --qos=acc_debug
+##SBATCH --qos=acc_bsces
 #SBATCH --job-name=camp_test_monarch
 #SBATCH --output=out_sbatch.txt
 #SBATCH --error=err_sbatch.txt
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=160
-#SBATCH --gres=gpu:4
+#SBATCH --ntasks=20
+##SBATCH --nodes=1
+##SBATCH --ntasks-per-node=160
+##SBATCH --gres=gpu:4
 #SBATCH --exclusive
-set -e
+#SBATCH -A bsc32
 
-scriptdir="$(dirname "$0")"
-cd "$scriptdir"
+
+
+pwd
 if [ ! -d ../build ]; then
   ./compile.libs.camp.sh
 fi

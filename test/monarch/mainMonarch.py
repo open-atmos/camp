@@ -111,8 +111,10 @@ def run(conf):
   caseGpuCpuName=conf.caseGpuCpu+str(conf.mpiProcesses) + "cores"
   out = 0
   is_import = False
-  data_path = ("out/stats" + caseGpuCpuName + nCellsStr +
-               "cells" + str(conf.timeSteps) + "tsteps.csv")
+  data_path = ("out/stats" + str(conf.gpu_percentage) + 
+               caseGpuCpuName + nCellsStr +
+               "cells" + str(conf.timeSteps) + 
+               "tsteps.csv")
   print("data_path", data_path)
   data_path2 = ("out/state" + caseGpuCpuName + nCellsStr +
                 "cells" + str(conf.timeSteps) + "tsteps.csv")
@@ -200,6 +202,7 @@ def run_cases(conf):
                                    valuesOptim,
                                    conf.nCellsProcesses)
       datay = timeBase / timeOptim
+      print("Speedup", datay)
       datacases.append(datay)
 
   return datacases
@@ -217,13 +220,19 @@ def run_cells(conf):
   return datacells
 
 
+def run_gpu_percentages(conf):
+  data = []
+  for i, gpu_percentage in enumerate(conf.gpu_percentages):
+    conf.gpu_percentage = gpu_percentage
+    data += run_cells(conf)
+  return data
+
 def run_diffCells(conf):
-  datacolumns = []
+  data = []
   for i, diff_cells in enumerate(conf.diffCellsL):
     conf.diffCells = diff_cells
-    datacells = run_cells(conf)
-    datacolumns += datacells
-  return datacolumns
+    data += run_gpu_percentages(conf)
+  return data
 
 
 def plot_cases(conf, datay):
