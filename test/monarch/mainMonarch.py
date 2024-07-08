@@ -341,7 +341,7 @@ def run_main(conf):
             conf.mpiProcessesCaseBase !=
             conf.mpiProcessesCaseOptimList[0]):
       print(
-        "Disabled out error check because number of "
+        "WARNING: Disabled out error check because number of "
         "processes should be the same for calculate "
         "accuracy, only speedup can use different number")
       conf.is_out = False
