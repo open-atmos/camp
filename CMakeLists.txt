@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6.4)
+cmake_minimum_required(VERSION 3.0)
 # Require 2.6.4 due to -I/usr/include behavior:
 # http://www.cmake.org/Bug/view.php?id=8598
 # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=35707
@@ -7,9 +7,9 @@ project(CAMP Fortran C)
 
 set(PACKAGE_BUGREPORT "mattldawson@gmail.com")
 set(PACKAGE_NAME "CAMP")
-set(PACKAGE_STRING "CAMP 1.0.0")
+set(PACKAGE_STRING "CAMP 1.1.0")
 set(PACKAGE_TARNAME "camp")
-set(PACKAGE_VERSION "1.0.0")
+set(PACKAGE_VERSION "1.1.0")
 
 if ( "${CMAKE_SYSTEM_NAME}" MATCHES "Darwin" )
   set ( ENABLE_DYLIBS_USE_RPATH TRUE CACHE BOOL
@@ -211,11 +211,13 @@ add_test(test_rxn_aqueous_equilibrium ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data
 add_test(test_rxn_CMAQ_H2O2 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_CMAQ_H2O2.sh ${MPI_TEST_FLAG})
 add_test(test_rxn_CMAQ_OH_HNO3 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_CMAQ_OH_HNO3.sh ${MPI_TEST_FLAG})
 add_test(test_rxn_condensed_phase_arrhenius ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_condensed_phase_arrhenius.sh ${MPI_TEST_FLAG})
+add_test(test_rxn_condensed_phase_photolysis ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_condensed_phase_photolysis.sh ${MPI_TEST_FLAG})
 add_test(test_rxn_emission ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_emission.sh ${MPI_TEST_FLAG})
 add_test(test_rxn_first_order_loss ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_first_order_loss.sh ${MPI_TEST_FLAG})
 add_test(test_rxn_HL_phase_transfer ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_HL_phase_transfer.sh ${MPI_TEST_FLAG})
 add_test(test_rxn_photolysis ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_photolysis.sh ${MPI_TEST_FLAG})
 add_test(test_rxn_SIMPOL_phase_transfer ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_SIMPOL_phase_transfer.sh ${MPI_TEST_FLAG})
+add_test(test_rxn_surface ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_surface.sh ${MPI_TEST_FLAG})
 add_test(test_rxn_ternary_chemical_activation ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_ternary_chemical_activation.sh ${MPI_TEST_FLAG})
 add_test(test_rxn_troe ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_troe.sh ${MPI_TEST_FLAG})
 add_test(test_rxn_wennberg_no_ro2 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wennberg_no_ro2.sh ${MPI_TEST_FLAG})
@@ -238,7 +240,7 @@ add_test(camp_v1_paper_modal ${CMAKE_BINARY_DIR}/data_run/CAMP_v1_paper/modal/te
 ######################################################################
 # camp library
 
-set(STD_C_FLAGS "-std=c99")
+set(STD_C_FLAGS "-std=c99 -Werror=format")
 set(STD_CUDA_FLAGS "-dc -arch=compute_70 -code=sm_70")
 
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
@@ -253,11 +255,13 @@ set(REACTIONS_F_SRC
 	src/rxns/rxn_CMAQ_H2O2.F90
 	src/rxns/rxn_CMAQ_OH_HNO3.F90
 	src/rxns/rxn_condensed_phase_arrhenius.F90
+	src/rxns/rxn_condensed_phase_photolysis.F90
 	src/rxns/rxn_emission.F90
 	src/rxns/rxn_first_order_loss.F90
 	src/rxns/rxn_HL_phase_transfer.F90
 	src/rxns/rxn_photolysis.F90
   src/rxns/rxn_SIMPOL_phase_transfer.F90
+  src/rxns/rxn_surface.F90
   src/rxns/rxn_ternary_chemical_activation.F90
   src/rxns/rxn_troe.F90
   src/rxns/rxn_wennberg_no_ro2.F90
@@ -270,11 +274,13 @@ set(REACTIONS_C_SRC
 	src/rxns/rxn_CMAQ_H2O2.c
 	src/rxns/rxn_CMAQ_OH_HNO3.c
 	src/rxns/rxn_condensed_phase_arrhenius.c
+	src/rxns/rxn_condensed_phase_photolysis.c
 	src/rxns/rxn_emission.c
 	src/rxns/rxn_first_order_loss.c
 	src/rxns/rxn_HL_phase_transfer.c
 	src/rxns/rxn_photolysis.c
   src/rxns/rxn_SIMPOL_phase_transfer.c
+  src/rxns/rxn_surface.c
   src/rxns/rxn_ternary_chemical_activation.c
 	src/rxns/rxn_troe.c
   src/rxns/rxn_wennberg_no_ro2.c
@@ -525,6 +531,8 @@ add_executable(test_rxn_CMAQ_OH_HNO3 test/unit_rxn_data/test_rxn_CMAQ_OH_HNO3.F9
 target_link_libraries(test_rxn_CMAQ_OH_HNO3 camplib)
 add_executable(test_rxn_condensed_phase_arrhenius test/unit_rxn_data/test_rxn_condensed_phase_arrhenius.F90)
 target_link_libraries(test_rxn_condensed_phase_arrhenius camplib)
+add_executable(test_rxn_condensed_phase_photolysis test/unit_rxn_data/test_rxn_condensed_phase_photolysis.F90)
+target_link_libraries(test_rxn_condensed_phase_photolysis camplib)
 add_executable(test_rxn_emission test/unit_rxn_data/test_rxn_emission.F90)
 target_link_libraries(test_rxn_emission camplib)
 add_executable(test_rxn_first_order_loss test/unit_rxn_data/test_rxn_first_order_loss.F90)
@@ -535,6 +543,8 @@ add_executable(test_rxn_photolysis test/unit_rxn_data/test_rxn_photolysis.F90)
 target_link_libraries(test_rxn_photolysis camplib)
 add_executable(test_rxn_SIMPOL_phase_transfer test/unit_rxn_data/test_rxn_SIMPOL_phase_transfer.F90)
 target_link_libraries(test_rxn_SIMPOL_phase_transfer camplib)
+add_executable(test_rxn_surface test/unit_rxn_data/test_rxn_surface.F90)
+target_link_libraries(test_rxn_surface camplib)
 add_executable(test_rxn_ternary_chemical_activation test/unit_rxn_data/test_rxn_ternary_chemical_activation.F90)
 target_link_libraries(test_rxn_ternary_chemical_activation camplib)
 add_executable(test_rxn_troe test/unit_rxn_data/test_rxn_troe.F90)
