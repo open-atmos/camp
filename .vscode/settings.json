@@ -21,6 +21,12 @@
     },
     "files.associations": {
       "cmath": "cpp",
-      "type_traits": "cpp"
+      "type_traits": "cpp",
+      "chrono": "cpp",
+      "random": "cpp",
+      "limits": "cpp",
+      "algorithm": "cpp",
+      "ratio": "cpp",
+      "semaphore": "cpp"
     }
    }

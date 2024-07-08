@@ -31,7 +31,7 @@
     "nCellsProcesses": 10000,
     "campConf": "settings/config_variables_c_solver.txt",
     "gpu_percentages": [
-        100
+        80
     ],
-    "gpu_percentage": 100
+    "gpu_percentage": 80
 }
