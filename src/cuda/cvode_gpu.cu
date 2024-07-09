@@ -22,6 +22,13 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   cudaStream_t stream;
   cudaStreamCreate(&stream);
   int n_cells=md->n_cells_gpu;
+  /*
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  int iDevice=0;
+  cudaGetDevice(&iDevice);
+  printf("n_cells_gpu %d n_cells_cpu %d rank %d iDevice %d\n",n_cells,md->n_cells-n_cells,rank,iDevice);
+  */
   cudaMemcpyAsync(mGPU->rxn_env_data,md->rxn_env_data,md->n_rxn_env_data * n_cells * sizeof(double),cudaMemcpyHostToDevice,stream);
   cudaMemcpyAsync(mGPU->state,md->total_state,md->n_per_cell_state_var*n_cells*sizeof(double),cudaMemcpyHostToDevice,stream);
   mGPU->init_time_step = sd->init_time_step;
