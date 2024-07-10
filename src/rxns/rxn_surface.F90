@@ -190,7 +190,7 @@ contains
     n_aero_jac_elem = 0
     n_aero_phase = 0
     do i_aero_rep = 1, size(aero_rep)
-      phase_ids = aero_rep(i_aero_rep)%val%phase_ids(phase_name)
+      phase_ids = aero_rep(i_aero_rep)%val%phase_ids(phase_name, is_at_surface=.true.)
       n_aero_phase = n_aero_phase + size(phase_ids)
       do i_phase = 1, size(phase_ids)
         n_aero_jac_elem = n_aero_jac_elem + &
@@ -256,7 +256,7 @@ contains
                                 2 * NUM_AERO_PHASE_ + 1
     PHASE_REAL_LOC_(i_aero_id) = NUM_REAL_PROP_ + NUM_PROD_ + 1
     do i_aero_rep = 1, size(aero_rep)
-      phase_ids = aero_rep(i_aero_rep)%val%phase_ids(phase_name)
+      phase_ids = aero_rep(i_aero_rep)%val%phase_ids(phase_name, is_at_surface=.true.)
       do i_phase = 1, size(phase_ids)
         NUM_AERO_PHASE_JAC_ELEM_(i_aero_id) = &
             aero_rep(i_aero_rep)%val%num_jac_elem(phase_ids(i_phase))

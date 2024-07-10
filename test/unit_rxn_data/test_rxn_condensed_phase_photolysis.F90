@@ -196,13 +196,13 @@ contains
 
       ! Get species indices
       idx_prefix = "P2."
-      key = idx_prefix//"aqueous aerosol.A"
+      key = idx_prefix//"one layer.aqueous aerosol.A"
       idx_A = aero_rep_ptr%spec_state_id(key);
-      key = idx_prefix//"aqueous aerosol.B"
+      key = idx_prefix//"one layer.aqueous aerosol.B"
       idx_B = aero_rep_ptr%spec_state_id(key);
-      key = idx_prefix//"aqueous aerosol.C"
+      key = idx_prefix//"one layer.aqueous aerosol.C"
       idx_C = aero_rep_ptr%spec_state_id(key);
-      key = idx_prefix//"aqueous aerosol.H2O_aq"
+      key = idx_prefix//"one layer.aqueous aerosol.H2O_aq"
       idx_H2O = aero_rep_ptr%spec_state_id(key);
 
       ! Make sure the expected species are in the model
