@@ -1,22 +1,22 @@
 {
     "chemFile": "cb05_paperV2",
     "diffCells": "Realistic",
-    "timeSteps": 1,
+    "timeSteps": 5,
     "timeStepsDt": 2,
     "case": "GPU BDF",
-    "nCells": 2500,
+    "nCells": 1250,
     "caseGpuCpu": "GPU",
     "caseMulticellsOnecell": "BDF",
-    "mpiProcesses": 4,
+    "mpiProcesses": 80,
     "diffCellsL": [
         "Realistic"
     ],
-    "mpiProcessesCaseBase": 4,
+    "mpiProcessesCaseBase": 80,
     "mpiProcessesCaseOptimList": [
-        4
+        80
     ],
     "cells": [
-        10000
+        100000
     ],
     "profileCuda": "",
     "caseBase": "CPU One-cell",
@@ -30,10 +30,11 @@
     "sbatch_job_id": "",
     "exportPath": "exports",
     "results_file": "_solver_stats.csv",
-    "nCellsProcesses": 10000,
+    "nCellsProcesses": 100000,
     "campConf": "settings/config_variables_c_solver.txt",
     "gpu_percentages": [
-        95
+        98,
+        99
     ],
-    "gpu_percentage": 95
+    "gpu_percentage": 99
 }

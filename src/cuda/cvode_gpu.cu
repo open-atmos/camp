@@ -21,22 +21,17 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   ModelData *md = &(sd->model_data);
   cudaStream_t stream;
   cudaStreamCreate(&stream);
+#ifdef PROFILE_SOLVING
+  cudaEventRecord(sd->startGPU,stream);
+  double starttimeCvode = MPI_Wtime();
+#endif
   int n_cells=md->n_cells_gpu;
-  /*
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  int iDevice=0;
-  cudaGetDevice(&iDevice);
-  printf("n_cells_gpu %d n_cells_cpu %d rank %d iDevice %d\n",n_cells,md->n_cells-n_cells,rank,iDevice);
-  */
   cudaMemcpyAsync(mGPU->rxn_env_data,md->rxn_env_data,md->n_rxn_env_data * n_cells * sizeof(double),cudaMemcpyHostToDevice,stream);
   cudaMemcpyAsync(mGPU->state,md->total_state,md->n_per_cell_state_var*n_cells*sizeof(double),cudaMemcpyHostToDevice,stream);
   mGPU->init_time_step = sd->init_time_step;
   mGPU->tout = t_final;
-#ifdef PROFILE_SOLVING
-  cudaEventRecord(sd->startGPU,stream);
-#endif
   cvodeRun(t_initial, mGPU, n_cells, md->n_per_cell_dep_var, stream); //Asynchronous
+  cudaMemcpyAsync(md->total_state, mGPU->state, md->n_per_cell_state_var*md->n_cells_gpu * sizeof(double), cudaMemcpyDeviceToHost, stream);
 #ifdef PROFILE_SOLVING
   cudaEventRecord(sd->stopGPU,stream);
 #endif
@@ -46,7 +41,6 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
 #endif
 #ifdef PROFILE_SOLVING
   double startTime = MPI_Wtime();
-  double startTime2 = MPI_Wtime();
 #endif
   n_cells=md->n_cells;
   int flag=CV_SUCCESS;
@@ -102,33 +96,43 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   md->total_env = env;
   md->rxn_env_data = rxn_env_data;
 #ifdef PROFILE_SOLVING
-  //MPI_Barrier(MPI_COMM_WORLD);
-  double timeCPU = (MPI_Wtime() - startTime2);
+  double timeCPU = (MPI_Wtime() - startTime);
 #endif
 #ifndef TRACE_CPUGPU
   nvtxRangePop();
 #endif
-  cudaMemcpyAsync(md->total_state, mGPU->state, md->n_per_cell_state_var*md->n_cells_gpu * sizeof(double), cudaMemcpyDeviceToHost, stream);
-  cudaStreamSynchronize(stream);
-  cudaDeviceSynchronize();
 #ifdef PROFILE_SOLVING
+  cudaEventRecord(sd->startGPUSync,stream);
+#endif
+  cudaStreamSynchronize(stream);
+  cudaDeviceSynchronize(); //Required
+#ifdef PROFILE_SOLVING
+#endif
+#ifdef PROFILE_SOLVING
+  cudaEventRecord(sd->stopGPUSync,stream);
+  cudaEventSynchronize(sd->stopGPUSync);
   cudaEventSynchronize(sd->stopGPU);
-  double timeCPUGPU = (MPI_Wtime() - startTime);
   float msDevice = 0.0;
   cudaEventElapsedTime(&msDevice, sd->startGPU, sd->stopGPU);
+  double timeGPU=msDevice/1000;
+  cudaEventElapsedTime(&msDevice, sd->startGPUSync, sd->stopGPUSync);
+  timeGPU+=msDevice/1000;
+  sd->timeCVode += (MPI_Wtime() - starttimeCvode);
+  MPI_Barrier(MPI_COMM_WORLD);
+#ifdef PROFILE_CPUGPU
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  double timeGPU=msDevice/1000;
-  double wait_eff=100;
-  if(rank==0)printf("CPU time: %f\n",timeCPU);
-  if(rank==0)printf("GPU time: %f\n",timeGPU);
+  double occupancyCPUGPU=100;
   double min=fmin(timeGPU,timeCPU);
   double max=fmax(timeGPU,timeCPU);
-  if(min!=max) wait_eff=100*min/max;
-  if(timeCPU>timeGPU) wait_eff*=-1;
-  if(rank==0)printf("Occupancy (CPU:+,GPU:-): %.2f%\n",wait_eff);
+  if(min!=max) occupancyCPUGPU=100*min/max;
+  if(timeCPU>timeGPU) occupancyCPUGPU*=-1;
+  if(rank==0)printf("Occupancy CPU-GPU (CPU:+,GPU:-): %.2f%\n",occupancyCPUGPU);
+  //sd->occupancyCPUGPU+=occupancyCPUGPU;
+#endif
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-  cudaMemcpy(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost);
+  printf("DEBUG: CAMP_PROFILE_DEVICE_FUNCTIONS\n");
+  cudaMemcpyAsync(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost, stream);
 #endif
 #endif
   cudaStreamDestroy(stream);

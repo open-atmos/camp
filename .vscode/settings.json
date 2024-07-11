@@ -27,6 +27,8 @@
       "limits": "cpp",
       "algorithm": "cpp",
       "ratio": "cpp",
-      "semaphore": "cpp"
+      "semaphore": "cpp",
+      "locale": "cpp",
+      "string": "cpp"
     }
    }

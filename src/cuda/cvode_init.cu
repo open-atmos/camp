@@ -38,9 +38,9 @@ void constructor_cvode_gpu(SolverData *sd){
     printf("Cells to GPU: %.d %\n",sd->gpu_percentage);
   }
   int iDevice = rank % nGPUs;
-  double startTime3 = MPI_Wtime();
+  double startTime = MPI_Wtime();
   cudaSetDevice(iDevice);
-  if(rank==0) printf("Time INIT: %f\n", MPI_Wtime() - startTime3);
+  if(rank==0) printf("Time INIT: %f\n", MPI_Wtime() - startTime);
   mGPU->n_rxn=md->n_rxn;
   mGPU->n_rxn_env_data=md->n_rxn_env_data;
   mGPU->cv_reltol = cv_mem->cv_reltol;
@@ -61,7 +61,9 @@ void constructor_cvode_gpu(SolverData *sd){
 #ifdef PROFILE_SOLVING
   cudaEventCreate(&sd->startGPU);
   cudaEventCreate(&sd->stopGPU);
-  sd->timeSync=0;
+  cudaEventCreate(&sd->startGPUSync);
+  cudaEventCreate(&sd->stopGPUSync);
+  sd->occupancyCPUGPU=0;
 #endif
   cudaStream_t stream;
   cudaStreamCreate(&stream);

@@ -10,13 +10,13 @@ from mainMonarch import *
 def all_timesteps():
   conf = TestMonarch()
   conf.casesOptim = []
-  conf.timeSteps = 1
-  conf.gpu_percentages = [95]
-  conf.cells = [10000]
-  conf.mpiProcessesCaseBase = 4
+  conf.timeSteps = 5
+  conf.gpu_percentages = [98,99]
+  conf.cells = [100000]
+  conf.mpiProcessesCaseBase = 80
   conf.caseBase = "CPU One-cell"
   #conf.caseBase = "GPU BDF"
-  conf.mpiProcessesCaseOptimList = [4]
+  conf.mpiProcessesCaseOptimList = [80]
   conf.casesOptim = ["GPU BDF"]
   #conf.is_import = True
   conf.is_import_base = True

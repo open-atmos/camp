@@ -250,7 +250,9 @@ typedef struct {
 #ifdef CAMP_USE_GPU
   cudaEvent_t startGPU;
   cudaEvent_t stopGPU;
-  double timeSync;
+  cudaEvent_t startGPUSync;
+  cudaEvent_t stopGPUSync;
+  double occupancyCPUGPU;
 #endif
 #endif
 #endif

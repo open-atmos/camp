@@ -99,7 +99,7 @@ void export_stats(SolverData *sd){
     FILE *fptr;
     if ((fptr = fopen("out/stats.csv", "w")) != NULL) {
       fprintf(fptr, "timeSync,timeCVode\n");
-      fprintf(fptr, "%.17le,",sd->timeSync);
+      fprintf(fptr, "%.2lf,",sd->occupancyCPUGPU);
       fprintf(fptr, "%.17le",sd->timeCVode);
       fprintf(fptr, "\n");
       fclose(fptr);
