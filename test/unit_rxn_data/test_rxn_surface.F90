@@ -207,19 +207,24 @@ contains
       ! Get species indices
       if (scenario.eq.1) then
         idx_prefix = "P1."
+        key = idx_prefix//"surface layer.surface reacting phase.aerosol stuff"
+        idx_stuff = aero_rep_ptr%spec_state_id(key)
+        key = idx_prefix//"surface layer.surface reacting phase.more aerosol stuff"
+        idx_more_stuff = aero_rep_ptr%spec_state_id(key)
       else if (scenario.eq.2) then
         idx_prefix = "the mode."
+        key = idx_prefix//"surface reacting phase.aerosol stuff"
+        idx_stuff = aero_rep_ptr%spec_state_id(key)
+        key = idx_prefix//"surface reacting phase.more aerosol stuff"
+        idx_more_stuff = aero_rep_ptr%spec_state_id(key)
       end if
+
       key = "foo"
       idx_foo = chem_spec_data%gas_state_id(key)
       key = "bar"
       idx_bar = chem_spec_data%gas_state_id(key)
       key = "baz"
       idx_baz = chem_spec_data%gas_state_id(key)
-      key = idx_prefix//"surface reacting phase.aerosol stuff"
-      idx_stuff = aero_rep_ptr%spec_state_id(key)
-      key = idx_prefix//"surface reacting phase.more aerosol stuff"
-      idx_more_stuff = aero_rep_ptr%spec_state_id(key)
 
       ! Make sure the expected species are in the model
       call assert(989817309, idx_foo.gt.0)

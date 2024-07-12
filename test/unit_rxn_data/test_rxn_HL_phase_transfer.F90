@@ -210,10 +210,11 @@ contains
 
       ! Get species indices
       if (scenario.eq.1) then
-        idx_prefix = "P1."
+        idx_prefix = "P1.one layer."
       else if (scenario.eq.2) then
         idx_prefix = "the mode."
       end if
+
       key = "O3"
       idx_O3 = chem_spec_data%gas_state_id(key);
       key = idx_prefix//"aqueous aerosol.O3_aq"

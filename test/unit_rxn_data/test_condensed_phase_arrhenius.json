@@ -68,17 +68,47 @@
     {
       "type": "AERO_REP_SINGLE_PARTICLE",
       "name": "my aero rep 1",
-      "maximum computational particles": 3
+      "maximum computational particles": 3,
+      "layers": [
+            {
+                    "name": "one layer",
+                    "phases": [
+                               "aqueous aerosol",
+                               "organic aerosol"
+                    ],
+                    "covers": "none"
+            }
+       ]
     },
     {
       "type": "AERO_REP_SINGLE_PARTICLE",
       "name": "my aero rep 2",
-      "maximum computational particles": 4
+      "maximum computational particles": 4,
+      "layers": [
+            {
+                    "name": "one layer",
+                    "phases": [
+                               "aqueous aerosol",
+                               "organic aerosol"
+                    ],
+                    "covers": "none"
+            }
+       ]
     },
     {
       "type": "AERO_REP_SINGLE_PARTICLE",
       "name": "my aero rep 3",
-      "maximum computational particles": 2
+      "maximum computational particles": 2,
+      "layers": [
+            {
+                    "name": "one layer",
+                    "phases": [
+                               "aqueous aerosol",
+                               "organic aerosol"
+                    ],
+                    "covers": "none"
+            }
+       ]
     },
     {
       "name": "condensed phase Arrhenius",

@@ -257,7 +257,7 @@ contains
 
       ! Get the number of Jacobian elements for calculations of mass, volume,
       ! number, etc. for this partitioning into this phase
-      phase_ids = aero_rep(i_aero_rep)%val%phase_ids(phase_name)
+      phase_ids = aero_rep(i_aero_rep)%val%phase_ids(phase_name, is_at_surface=.true.)
       do i_phase = 1, size(phase_ids)
         n_aero_jac_elem = n_aero_jac_elem + &
                 aero_rep(i_aero_rep)%val%num_jac_elem(phase_ids(i_phase))
@@ -316,7 +316,7 @@ contains
               phase_name = phase_name, spec_name = water_name)
 
       ! Get the phase ids for this aerosol phase
-      phase_ids = aero_rep(i_aero_rep)%val%phase_ids(phase_name)
+      phase_ids = aero_rep(i_aero_rep)%val%phase_ids(phase_name, is_at_surface=.true.)
 
       ! Add the species concentration and activity coefficient ids to
       ! the condensed data, and set the number of jacobian elements for

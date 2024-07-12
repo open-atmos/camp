@@ -48,17 +48,65 @@
     {
       "type" : "AERO_REP_SINGLE_PARTICLE",
       "name" : "my aero rep 1",
-      "maximum computational particles" : 1
+      "maximum computational particles" : 1,
+      "layers": [
+            {
+                    "name": "surface layer",
+                    "phases": [
+                               "surface reacting phase"
+                    ],
+                    "covers": "not surface layer"
+            },
+            {
+                    "name": "not surface layer",
+                    "phases": [
+                               "not surface reacting phase"
+                    ],
+                    "covers": "none"
+            }
+       ]
     },
     {
       "type" : "AERO_REP_SINGLE_PARTICLE",
       "name" : "my aero rep 2",
-      "maximum computational particles" : 1
+      "maximum computational particles" : 1,
+      "layers": [
+            {
+                    "name": "surface layer",
+                    "phases": [
+                               "surface reacting phase"
+                    ],
+                    "covers": "not surface layer"
+            },
+            {
+                    "name": "not surface layer",
+                    "phases": [
+                               "not surface reacting phase"
+                    ],
+                    "covers": "none"
+            }
+       ]
     },
     {
       "type" : "AERO_REP_SINGLE_PARTICLE",
       "name" : "my aero rep 3",
-      "maximum computational particles" : 1
+      "maximum computational particles" : 1,
+      "layers": [
+            {
+                    "name": "surface layer",
+                    "phases": [
+                               "surface reacting phase"
+                    ],
+                    "covers": "not surface layer"
+            },
+            {
+                    "name": "not surface layer",
+                    "phases": [
+                               "not surface reacting phase"
+                    ],
+                    "covers": "none"
+            }
+       ]
     },
     {
       "name" : "surface mechanism",

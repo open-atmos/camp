@@ -1,76 +1,116 @@
 {
-	"camp-data" : [
-{
-	"type" : "AERO_REP_SINGLE_PARTICLE",
-	"name" : "AERO_REP_SINGLE_PARTICLE",
-  "maximum computational particles" : 3
-},
-{
-	"name" : "my test phase one",
-	"type" : "AERO_PHASE",
-	"species" : ["species a", "species b", "species c"],
-	"some property" : 12.2
-},
-{
-	"name" : "my test phase two",
-	"type" : "AERO_PHASE",
-	"species" : ["species c", "species d", "species e"],
-	"some other property" : false
-},
-{
-	"name" : "my last test phase",
-	"type" : "AERO_PHASE",
-	"species" : ["species b", "species e"],
-	"some property" : 13.75
-},
-{
-	"name" : "species a",
-	"type" : "CHEM_SPEC",
-	"phase" : "AEROSOL",
-	"density [kg m-3]" : 1.0,
-        "molecular weight [kg mol-1]" : 1.0
-},
-{
-	"name" : "species b",
-	"type" : "CHEM_SPEC",
-	"phase" : "AEROSOL",
-	"density [kg m-3]" : 2.0,
-        "molecular weight [kg mol-1]" : 11.0
-},
-{
-	"name" : "species c",
-	"type" : "CHEM_SPEC",
-	"phase" : "AEROSOL",
-	"density [kg m-3]" : 3.0,
-        "molecular weight [kg mol-1]" : 36.2
-},
-{
-	"name" : "species d",
-	"type" : "CHEM_SPEC",
-	"phase" : "AEROSOL",
-	"density [kg m-3]" : 4.0,
-        "molecular weight [kg mol-1]" : 42.1
-},
-{
-	"name" : "species e",
-	"type" : "CHEM_SPEC",
-	"phase" : "AEROSOL",
-	"density [kg m-3]" : 5.0,
-        "molecular weight [kg mol-1]" : 52.3
-},
-{
-	"name" : "species f",
-	"type" : "CHEM_SPEC",
-	"phase" : "AEROSOL",
-	"density [kg m-3]" : 6.0,
-        "molecular weight [kg mol-1]" : 623.2
-},
-{
-	"name" : "species g",
-	"type" : "CHEM_SPEC",
-	"phase" : "AEROSOL",
-	"density [kg m-3]" : 7.0,
-        "molecular weight [kg mol-1]" : 72.3
-}
-	]
+        "camp-data": [
+                {
+                        "type": "AERO_REP_SINGLE_PARTICLE",
+                        "name": "single-particle with layers",
+                        "maximum computational particles": 3,
+                        "layers": [
+                                {
+                                        "name": "top bread",
+                                        "phases": [
+                                                "bread"
+                                        ],
+                                        "covers": "filling"
+                                },
+                                {
+                                        "name": "bottom bread",
+                                        "phases": [
+                                                "bread"
+                                        ],
+                                        "covers": "none"
+                                },
+                                {
+                                        "name": "filling",
+                                        "phases": [
+                                                "jam",
+                                                "almond butter"
+                                        ],
+                                        "covers": "bottom bread"
+                                }
+                        ]
+                },
+                {
+                        "name": "bread",
+                        "type": "AERO_PHASE",
+                        "species": [
+                                "wheat",
+                                "water",
+                                "salt"
+                        ]
+                },
+                {
+                        "name": "jam",
+                        "type": "AERO_PHASE",
+                        "species": [
+                                "rasberry",
+                                "honey",
+                                "sugar",
+                                "lemon"
+                        ]
+                },
+                {
+                        "name": "almond butter",
+                        "type": "AERO_PHASE",
+                        "species": [
+                                "almonds",
+                                "sugar"
+                        ]
+                },
+                {
+                        "name": "wheat",
+                        "type": "CHEM_SPEC",
+                        "phase": "AEROSOL",
+                        "density [kg m-3]": 1.0,
+                        "molecular weight [kg mol-1]": 1.0
+                },
+                {
+                        "name": "water",
+                        "type": "CHEM_SPEC",
+                        "phase": "AEROSOL",
+                        "density [kg m-3]": 1000.0,
+                        "molecular weight [kg mol-1]": 0.018
+                },
+                {
+                        "name": "salt",
+                        "type": "CHEM_SPEC",
+                        "phase": "AEROSOL",
+                        "density [kg m-3]": 2160.0,
+                        "molecular weight [kg mol-1]": 0.058
+                },
+                {
+                        "name": "rasberry",
+                        "type": "CHEM_SPEC",
+                        "phase": "AEROSOL",
+                        "density [kg m-3]": 4.0,
+                        "molecular weight [kg mol-1]": 42.1
+                },
+                {
+                        "name": "honey",
+                        "type": "CHEM_SPEC",
+                        "phase": "AEROSOL",
+                        "density [kg m-3]": 5.0,
+                        "molecular weight [kg mol-1]": 52.3
+                },
+                {
+                        "name": "sugar",
+                        "type": "CHEM_SPEC",
+                        "phase": "AEROSOL",
+                        "density [kg m-3]": 6.0,
+                        "molecular weight [kg mol-1]": 623.2
+                },
+                {
+                        "name": "lemon",
+                        "type": "CHEM_SPEC",
+                        "phase": "AEROSOL",
+                        "density [kg m-3]": 7.0,
+                        "molecular weight [kg mol-1]": 72.3
+                },
+                {
+                        "name": "almonds",
+                        "type": "CHEM_SPEC",
+                        "phase": "AEROSOL",
+                        "density [kg m-3]": 7.0,
+                        "molecular weight [kg mol-1]": 72.3
+                }
+        ]
 }

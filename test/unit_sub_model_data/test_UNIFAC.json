@@ -66,17 +66,47 @@
   {
     "name" : "my aero rep",
     "type" : "AERO_REP_SINGLE_PARTICLE",
-    "maximum computational particles" : 1
+    "maximum computational particles" : 1,
+    "layers": [
+            {
+                    "name": "one layer",
+                    "phases": [
+                               "some other phase",
+                               "n-butanol/water mixture"
+                    ],
+                    "covers": "none"
+            }
+       ]
   },
   {
     "name" : "my second aero rep",
     "type" : "AERO_REP_SINGLE_PARTICLE",
-    "maximum computational particles" : 1
+    "maximum computational particles" : 1,
+    "layers": [
+            {
+                    "name": "one layer",
+                    "phases": [
+                               "some other phase",
+                               "n-butanol/water mixture"
+                    ],
+                    "covers": "none"
+            }
+       ]
   },
   {
     "name" : "my last aero rep",
     "type" : "AERO_REP_SINGLE_PARTICLE",
-    "maximum computational particles" : 1
+    "maximum computational particles" : 1,
+    "layers": [
+            {
+                    "name": "one layer",
+                    "phases": [
+                               "some other phase",
+                               "n-butanol/water mixture"
+                    ],
+                    "covers": "none"
+            }
+       ]
   },
   {
     "name" : "n-butanol/water activity",
