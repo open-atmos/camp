@@ -1,7 +1,14 @@
 <map id="camp_util::open_file_read" name="camp_util::open_file_read">
-<area shape="rect" id="node1" title="Open a file for reading with an automatically assigned unit and test that it succeeds...." alt="" coords="5,80,172,105"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="580,80,732,105"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="780,98,903,138"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#a43662260b71cb7e4b72fe49ccb8cee94" title="Returns an available unit number. This should be freed by free_unit()." alt="" coords="220,29,351,55"/>
-<area shape="rect" id="node5" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="399,29,532,55"/>
+<area shape="rect" id="Node000001" title="Open a file for reading with an automatically assigned unit and test that it succeeds...." alt="" coords="5,80,172,106"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="577,80,729,106"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="172,90,561,90,561,96,172,96"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="777,98,899,139"/>
+<area shape="poly" id="edge7_Node000001_Node000003" title=" " alt="" coords="172,96,358,107,577,116,762,117,761,122,577,121,357,112,172,101"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#a43662260b71cb7e4b72fe49ccb8cee94" title="Returns an available unit number. This should be freed by free_unit()." alt="" coords="220,29,349,55"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="140,77,217,57,218,62,142,82"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="729,101,762,105,761,110,729,106"/>
+<area shape="poly" id="edge6_Node000004_Node000004" title=" " alt="" coords="254,30,248,21,252,11,264,5,284,3,306,5,317,12,315,16,304,10,284,8,266,10,256,15,254,20,259,28"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="397,29,529,55"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="349,40,381,40,381,45,349,45"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="515,53,589,73,587,78,513,58"/>
 </map>

@@ -1,21 +1,21 @@
-\hypertarget{sub__model___p_d_fi_t_e_8_f90}{}\doxysection{sub\+\_\+model\+\_\+\+PDFi\+TE.\+F90 File Reference}
-\label{sub__model___p_d_fi_t_e_8_f90}\index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
+\doxysection{sub\+\_\+model\+\_\+\+PDFi\+TE.\+F90 File Reference}
+\hypertarget{sub__model___p_d_fi_t_e_8_f90}{}\label{sub__model___p_d_fi_t_e_8_f90}\index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 
 
 The camp\+\_\+sub\+\_\+model\+\_\+\+PDFi\+TE module.  
 
 
-\doxysubsection*{Data Types}
+\doxysubsubsection*{Data Types}
 \begin{DoxyCompactItemize}
 \item 
 interface \mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{camp\+\_\+sub\+\_\+model\+\_\+pdfite\+::sub\+\_\+model\+\_\+pdfite\+\_\+t}}
 \begin{DoxyCompactList}\small\item\em Generic test reaction data type. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Modules}
+\doxysubsubsection*{Modules}
 \begin{DoxyCompactItemize}
 \item 
 module \mbox{\hyperlink{namespacecamp__sub__model__pdfite}{camp\+\_\+sub\+\_\+model\+\_\+pdfite}}
 \begin{DoxyCompactList}\small\item\em The sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+t type and associated functions. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Macros}
+\doxysubsubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}}~this\%condensed\+\_\+data\+\_\+int(1)
@@ -54,15 +54,15 @@ module \mbox{\hyperlink{namespacecamp__sub__model__pdfite}{camp\+\_\+sub\+\_\+mo
 \item 
 \#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_af1e6ab11ed64bb87c61797efead6017a}{JAC\+\_\+\+WATER\+\_\+\+ID\+\_\+}}(p,  x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+p)
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_afe801e26fe0d88c30f8a592ff0c24cfd}{JAC\+\_\+\+CATION\+\_\+\+ID\+\_\+}}(p,  x,  y)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+(p-\/1)$\ast$\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}}+y)
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_afe801e26fe0d88c30f8a592ff0c24cfd}{JAC\+\_\+\+CATION\+\_\+\+ID\+\_\+}}(p,  x,  y)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+(p-\/1)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}}+y)
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_adfad50e5953c49bc824f6b610f673dcd}{JAC\+\_\+\+ANION\+\_\+\+ID\+\_\+}}(p,  x,  y)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+(1+\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}})$\ast$\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+(p-\/1)$\ast$\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}}+y)
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_adfad50e5953c49bc824f6b610f673dcd}{JAC\+\_\+\+ANION\+\_\+\+ID\+\_\+}}(p,  x,  y)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+(1+\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}})\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+(p-\/1)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}}+y)
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_abfeb83833b166b21cd1e7037af63059b}{NUM\+\_\+\+B\+\_\+}}(x,  y)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+(1+2$\ast$\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}})$\ast$\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+y)
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_abfeb83833b166b21cd1e7037af63059b}{NUM\+\_\+\+B\+\_\+}}(x,  y)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+(1+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}})\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+y)
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_a02a474af8927829d7fd9151748b5ac6d}{INTER\+\_\+\+SPEC\+\_\+\+ID\+\_\+}}(x,  y)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+(1+2$\ast$\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}})$\ast$\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_af4d34c316b8f0219e9d8c106176efe52}{NUM\+\_\+\+INTER\+\_\+}}(x)+y)
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_a02a474af8927829d7fd9151748b5ac6d}{INTER\+\_\+\+SPEC\+\_\+\+ID\+\_\+}}(x,  y)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+(1+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}})\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_af4d34c316b8f0219e9d8c106176efe52}{NUM\+\_\+\+INTER\+\_\+}}(x)+y)
 \item 
-\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x,  y)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+(1+2$\ast$\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}})$\ast$\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+2$\ast$(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_af4d34c316b8f0219e9d8c106176efe52}{NUM\+\_\+\+INTER\+\_\+}}(x))+y)
+\#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x,  y)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+(1+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}})\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+2\texorpdfstring{$\ast$}{*}(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_af4d34c316b8f0219e9d8c106176efe52}{NUM\+\_\+\+INTER\+\_\+}}(x))+y)
 \item 
 \#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_af30992074351d1fc62267e7a0d234b79}{CATION\+\_\+\+MW\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x))
 \item 
@@ -78,10 +78,10 @@ module \mbox{\hyperlink{namespacecamp__sub__model__pdfite}{camp\+\_\+sub\+\_\+mo
 \item 
 \#define \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_a808e07e512299609f2225ad16af879cb}{B\+\_\+\+Z\+\_\+}}(x,  y,  z)~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x,y)+1+z)
 \end{DoxyCompactItemize}
-\doxysubsection*{Functions/\+Subroutines}
+\doxysubsubsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
 \item 
-type(sub\+\_\+model\+\_\+pdfite\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__sub__model__pdfite_a7d51abd9910f2312bf03376020e5d3c8}{camp\+\_\+sub\+\_\+model\+\_\+pdfite\+::constructor}} ()
+type(\mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\+\_\+model\+\_\+pdfite\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__sub__model__pdfite_a7d51abd9910f2312bf03376020e5d3c8}{camp\+\_\+sub\+\_\+model\+\_\+pdfite\+::constructor}} ()
 \begin{DoxyCompactList}\small\item\em Constructor for activity reaction. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__sub__model__pdfite_a615c6e49b354cccfda87b7551b466f1f}{camp\+\_\+sub\+\_\+model\+\_\+pdfite\+::initialize}} (this, aero\+\_\+rep\+\_\+set, aero\+\_\+phase\+\_\+set, chem\+\_\+spec\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
@@ -101,181 +101,181 @@ Definition in file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source}{sub\+\
 
 
 \doxysubsection{Macro Definition Documentation}
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a908d4e051ac9bb3450f9201194f086bf}\label{sub__model___p_d_fi_t_e_8_f90_a908d4e051ac9bb3450f9201194f086bf}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a908d4e051ac9bb3450f9201194f086bf}\label{sub__model___p_d_fi_t_e_8_f90_a908d4e051ac9bb3450f9201194f086bf} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!ANION\_ID\_@{ANION\_ID\_}}
 \index{ANION\_ID\_@{ANION\_ID\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{ANION\_ID\_}{ANION\_ID\_}}
 {\footnotesize\ttfamily \#define ANION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+4)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_ab651fcbff092007a94f147602f065e01}\label{sub__model___p_d_fi_t_e_8_f90_ab651fcbff092007a94f147602f065e01}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_ab651fcbff092007a94f147602f065e01}\label{sub__model___p_d_fi_t_e_8_f90_ab651fcbff092007a94f147602f065e01} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!ANION\_MW\_@{ANION\_MW\_}}
 \index{ANION\_MW\_@{ANION\_MW\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{ANION\_MW\_}{ANION\_MW\_}}
 {\footnotesize\ttfamily \#define ANION\+\_\+\+MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+1)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_aabe6c6c9920f5749027caab37713fd56}\label{sub__model___p_d_fi_t_e_8_f90_aabe6c6c9920f5749027caab37713fd56}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_aabe6c6c9920f5749027caab37713fd56}\label{sub__model___p_d_fi_t_e_8_f90_aabe6c6c9920f5749027caab37713fd56} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!ANION\_N\_@{ANION\_N\_}}
 \index{ANION\_N\_@{ANION\_N\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{ANION\_N\_}{ANION\_N\_}}
 {\footnotesize\ttfamily \#define ANION\+\_\+\+N\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+3)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a808e07e512299609f2225ad16af879cb}\label{sub__model___p_d_fi_t_e_8_f90_a808e07e512299609f2225ad16af879cb}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a808e07e512299609f2225ad16af879cb}\label{sub__model___p_d_fi_t_e_8_f90_a808e07e512299609f2225ad16af879cb} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!B\_Z\_@{B\_Z\_}}
 \index{B\_Z\_@{B\_Z\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{B\_Z\_}{B\_Z\_}}
 {\footnotesize\ttfamily \#define B\+\_\+\+Z\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y,  }\item[{}]{z }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x,y)+1+z)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_ac16e157f1f96e0ef91e6f08036b12c7a}\label{sub__model___p_d_fi_t_e_8_f90_ac16e157f1f96e0ef91e6f08036b12c7a}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_ac16e157f1f96e0ef91e6f08036b12c7a}\label{sub__model___p_d_fi_t_e_8_f90_ac16e157f1f96e0ef91e6f08036b12c7a} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!CATION\_ID\_@{CATION\_ID\_}}
 \index{CATION\_ID\_@{CATION\_ID\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{CATION\_ID\_}{CATION\_ID\_}}
 {\footnotesize\ttfamily \#define CATION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+3)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_af30992074351d1fc62267e7a0d234b79}\label{sub__model___p_d_fi_t_e_8_f90_af30992074351d1fc62267e7a0d234b79}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_af30992074351d1fc62267e7a0d234b79}\label{sub__model___p_d_fi_t_e_8_f90_af30992074351d1fc62267e7a0d234b79} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!CATION\_MW\_@{CATION\_MW\_}}
 \index{CATION\_MW\_@{CATION\_MW\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{CATION\_MW\_}{CATION\_MW\_}}
 {\footnotesize\ttfamily \#define CATION\+\_\+\+MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x))}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a52fdc833ce625c5207869764adeb6e33}\label{sub__model___p_d_fi_t_e_8_f90_a52fdc833ce625c5207869764adeb6e33}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a52fdc833ce625c5207869764adeb6e33}\label{sub__model___p_d_fi_t_e_8_f90_a52fdc833ce625c5207869764adeb6e33} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!CATION\_N\_@{CATION\_N\_}}
 \index{CATION\_N\_@{CATION\_N\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{CATION\_N\_}{CATION\_N\_}}
 {\footnotesize\ttfamily \#define CATION\+\_\+\+N\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2c3304509ffdd8f8e2bd59c37a76af69}{PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+2)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a75ac531220686f1130f21aca98adf72f}\label{sub__model___p_d_fi_t_e_8_f90_a75ac531220686f1130f21aca98adf72f}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a75ac531220686f1130f21aca98adf72f}\label{sub__model___p_d_fi_t_e_8_f90_a75ac531220686f1130f21aca98adf72f} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!GAS\_WATER\_ID\_@{GAS\_WATER\_ID\_}}
 \index{GAS\_WATER\_ID\_@{GAS\_WATER\_ID\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{GAS\_WATER\_ID\_}{GAS\_WATER\_ID\_}}
 {\footnotesize\ttfamily \#define GAS\+\_\+\+WATER\+\_\+\+ID\+\_\+~this\%condensed\+\_\+data\+\_\+int(2)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a02a474af8927829d7fd9151748b5ac6d}\label{sub__model___p_d_fi_t_e_8_f90_a02a474af8927829d7fd9151748b5ac6d}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a02a474af8927829d7fd9151748b5ac6d}\label{sub__model___p_d_fi_t_e_8_f90_a02a474af8927829d7fd9151748b5ac6d} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!INTER\_SPEC\_ID\_@{INTER\_SPEC\_ID\_}}
 \index{INTER\_SPEC\_ID\_@{INTER\_SPEC\_ID\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{INTER\_SPEC\_ID\_}{INTER\_SPEC\_ID\_}}
-{\footnotesize\ttfamily \#define INTER\+\_\+\+SPEC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+(1+2$\ast$\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}})$\ast$\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_af4d34c316b8f0219e9d8c106176efe52}{NUM\+\_\+\+INTER\+\_\+}}(x)+y)}
+{\footnotesize\ttfamily \#define INTER\+\_\+\+SPEC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+(1+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}})\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_af4d34c316b8f0219e9d8c106176efe52}{NUM\+\_\+\+INTER\+\_\+}}(x)+y)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a4b9df621f386bc252902863d5b4f1d61}\label{sub__model___p_d_fi_t_e_8_f90_a4b9df621f386bc252902863d5b4f1d61}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a4b9df621f386bc252902863d5b4f1d61}\label{sub__model___p_d_fi_t_e_8_f90_a4b9df621f386bc252902863d5b4f1d61} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!INTER\_SPEC\_LOC\_@{INTER\_SPEC\_LOC\_}}
 \index{INTER\_SPEC\_LOC\_@{INTER\_SPEC\_LOC\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{INTER\_SPEC\_LOC\_}{INTER\_SPEC\_LOC\_}}
-{\footnotesize\ttfamily \#define INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+(1+2$\ast$\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}})$\ast$\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+2$\ast$(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_af4d34c316b8f0219e9d8c106176efe52}{NUM\+\_\+\+INTER\+\_\+}}(x))+y)}
+{\footnotesize\ttfamily \#define INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+(1+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}})\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+2\texorpdfstring{$\ast$}{*}(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_af4d34c316b8f0219e9d8c106176efe52}{NUM\+\_\+\+INTER\+\_\+}}(x))+y)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a38a422887b1248140b51d6beff1930c5}\label{sub__model___p_d_fi_t_e_8_f90_a38a422887b1248140b51d6beff1930c5}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a38a422887b1248140b51d6beff1930c5}\label{sub__model___p_d_fi_t_e_8_f90_a38a422887b1248140b51d6beff1930c5} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!ION\_PAIR\_ACT\_ID\_@{ION\_PAIR\_ACT\_ID\_}}
 \index{ION\_PAIR\_ACT\_ID\_@{ION\_PAIR\_ACT\_ID\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{ION\_PAIR\_ACT\_ID\_}{ION\_PAIR\_ACT\_ID\_}}
 {\footnotesize\ttfamily \#define ION\+\_\+\+PAIR\+\_\+\+ACT\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x))}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_adfad50e5953c49bc824f6b610f673dcd}\label{sub__model___p_d_fi_t_e_8_f90_adfad50e5953c49bc824f6b610f673dcd}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_adfad50e5953c49bc824f6b610f673dcd}\label{sub__model___p_d_fi_t_e_8_f90_adfad50e5953c49bc824f6b610f673dcd} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!JAC\_ANION\_ID\_@{JAC\_ANION\_ID\_}}
 \index{JAC\_ANION\_ID\_@{JAC\_ANION\_ID\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{JAC\_ANION\_ID\_}{JAC\_ANION\_ID\_}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+ANION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+(1+\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}})$\ast$\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+(p-\/1)$\ast$\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}}+y)}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ANION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+(1+\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}})\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+(p-\/1)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}}+y)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_afe801e26fe0d88c30f8a592ff0c24cfd}\label{sub__model___p_d_fi_t_e_8_f90_afe801e26fe0d88c30f8a592ff0c24cfd}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_afe801e26fe0d88c30f8a592ff0c24cfd}\label{sub__model___p_d_fi_t_e_8_f90_afe801e26fe0d88c30f8a592ff0c24cfd} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!JAC\_CATION\_ID\_@{JAC\_CATION\_ID\_}}
 \index{JAC\_CATION\_ID\_@{JAC\_CATION\_ID\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{JAC\_CATION\_ID\_}{JAC\_CATION\_ID\_}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+CATION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+(p-\/1)$\ast$\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}}+y)}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+CATION\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+(p-\/1)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}}+y)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_af1e6ab11ed64bb87c61797efead6017a}\label{sub__model___p_d_fi_t_e_8_f90_af1e6ab11ed64bb87c61797efead6017a}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_af1e6ab11ed64bb87c61797efead6017a}\label{sub__model___p_d_fi_t_e_8_f90_af1e6ab11ed64bb87c61797efead6017a} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!JAC\_WATER\_ID\_@{JAC\_WATER\_ID\_}}
 \index{JAC\_WATER\_ID\_@{JAC\_WATER\_ID\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{JAC\_WATER\_ID\_}{JAC\_WATER\_ID\_}}
 {\footnotesize\ttfamily \#define JAC\+\_\+\+WATER\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+p)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a998afd242a326331e35792946f9b8e72}\label{sub__model___p_d_fi_t_e_8_f90_a998afd242a326331e35792946f9b8e72}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a998afd242a326331e35792946f9b8e72}\label{sub__model___p_d_fi_t_e_8_f90_a998afd242a326331e35792946f9b8e72} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!MAX\_RH\_@{MAX\_RH\_}}
 \index{MAX\_RH\_@{MAX\_RH\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{MAX\_RH\_}{MAX\_RH\_}}
 {\footnotesize\ttfamily \#define MAX\+\_\+\+RH\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x,y)+1)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a1756e6d53076042962889be52e07d522}\label{sub__model___p_d_fi_t_e_8_f90_a1756e6d53076042962889be52e07d522}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a1756e6d53076042962889be52e07d522}\label{sub__model___p_d_fi_t_e_8_f90_a1756e6d53076042962889be52e07d522} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!MIN\_RH\_@{MIN\_RH\_}}
 \index{MIN\_RH\_@{MIN\_RH\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{MIN\_RH\_}{MIN\_RH\_}}
 {\footnotesize\ttfamily \#define MIN\+\_\+\+RH\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4b9df621f386bc252902863d5b4f1d61}{INTER\+\_\+\+SPEC\+\_\+\+LOC\+\_\+}}(x,y))}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a3e0d89d3515492d7377285a57644d72e}\label{sub__model___p_d_fi_t_e_8_f90_a3e0d89d3515492d7377285a57644d72e}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a3e0d89d3515492d7377285a57644d72e}\label{sub__model___p_d_fi_t_e_8_f90_a3e0d89d3515492d7377285a57644d72e} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!NUM\_ANION\_@{NUM\_ANION\_}}
 \index{NUM\_ANION\_@{NUM\_ANION\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_ANION\_}{NUM\_ANION\_}}
 {\footnotesize\ttfamily \#define NUM\+\_\+\+ANION\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+2)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_abfeb83833b166b21cd1e7037af63059b}\label{sub__model___p_d_fi_t_e_8_f90_abfeb83833b166b21cd1e7037af63059b}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_abfeb83833b166b21cd1e7037af63059b}\label{sub__model___p_d_fi_t_e_8_f90_abfeb83833b166b21cd1e7037af63059b} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!NUM\_B\_@{NUM\_B\_}}
 \index{NUM\_B\_@{NUM\_B\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_B\_}{NUM\_B\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+B\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+(1+2$\ast$\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}})$\ast$\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+y)}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+B\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5+(1+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}})\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+y)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_aca730dbac706a2b1066bb0e1a561cf70}\label{sub__model___p_d_fi_t_e_8_f90_aca730dbac706a2b1066bb0e1a561cf70}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_aca730dbac706a2b1066bb0e1a561cf70}\label{sub__model___p_d_fi_t_e_8_f90_aca730dbac706a2b1066bb0e1a561cf70} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!NUM\_CATION\_@{NUM\_CATION\_}}
 \index{NUM\_CATION\_@{NUM\_CATION\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_CATION\_}{NUM\_CATION\_}}
 {\footnotesize\ttfamily \#define NUM\+\_\+\+CATION\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+1)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{sub__model___p_d_fi_t_e_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{sub__model___p_d_fi_t_e_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
 \index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
 {\footnotesize\ttfamily \#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~1}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{sub__model___p_d_fi_t_e_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{sub__model___p_d_fi_t_e_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
 \index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
 {\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~5}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_af4d34c316b8f0219e9d8c106176efe52}\label{sub__model___p_d_fi_t_e_8_f90_af4d34c316b8f0219e9d8c106176efe52}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_af4d34c316b8f0219e9d8c106176efe52}\label{sub__model___p_d_fi_t_e_8_f90_af4d34c316b8f0219e9d8c106176efe52} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!NUM\_INTER\_@{NUM\_INTER\_}}
 \index{NUM\_INTER\_@{NUM\_INTER\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_INTER\_}{NUM\_INTER\_}}
 {\footnotesize\ttfamily \#define NUM\+\_\+\+INTER\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a75013494646b87ae6218ce67f18b4eb1}{PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+}}(x)+5)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a4008250ee798e933af3839ff7df66da6}\label{sub__model___p_d_fi_t_e_8_f90_a4008250ee798e933af3839ff7df66da6}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a4008250ee798e933af3839ff7df66da6}\label{sub__model___p_d_fi_t_e_8_f90_a4008250ee798e933af3839ff7df66da6} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!NUM\_ION\_PAIRS\_@{NUM\_ION\_PAIRS\_}}
 \index{NUM\_ION\_PAIRS\_@{NUM\_ION\_PAIRS\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_ION\_PAIRS\_}{NUM\_ION\_PAIRS\_}}
 {\footnotesize\ttfamily \#define NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+~this\%condensed\+\_\+data\+\_\+int(3)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_aff1191174604af4c86c622f98cd18c17}\label{sub__model___p_d_fi_t_e_8_f90_aff1191174604af4c86c622f98cd18c17}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_aff1191174604af4c86c622f98cd18c17}\label{sub__model___p_d_fi_t_e_8_f90_aff1191174604af4c86c622f98cd18c17} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!NUM\_PHASE\_@{NUM\_PHASE\_}}
 \index{NUM\_PHASE\_@{NUM\_PHASE\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_PHASE\_}{NUM\_PHASE\_}}
 {\footnotesize\ttfamily \#define NUM\+\_\+\+PHASE\+\_\+~this\%condensed\+\_\+data\+\_\+int(1)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}\label{sub__model___p_d_fi_t_e_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}\label{sub__model___p_d_fi_t_e_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}}
 \index{NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_REAL\_PROP\_}{NUM\_REAL\_PROP\_}}
 {\footnotesize\ttfamily \#define NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+~0}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a2c3304509ffdd8f8e2bd59c37a76af69}\label{sub__model___p_d_fi_t_e_8_f90_a2c3304509ffdd8f8e2bd59c37a76af69}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a2c3304509ffdd8f8e2bd59c37a76af69}\label{sub__model___p_d_fi_t_e_8_f90_a2c3304509ffdd8f8e2bd59c37a76af69} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!PAIR\_FLOAT\_PARAM\_LOC\_@{PAIR\_FLOAT\_PARAM\_LOC\_}}
 \index{PAIR\_FLOAT\_PARAM\_LOC\_@{PAIR\_FLOAT\_PARAM\_LOC\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{PAIR\_FLOAT\_PARAM\_LOC\_}{PAIR\_FLOAT\_PARAM\_LOC\_}}
 {\footnotesize\ttfamily \#define PAIR\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+\mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a4008250ee798e933af3839ff7df66da6}{NUM\+\_\+\+ION\+\_\+\+PAIRS\+\_\+}}+x)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a75013494646b87ae6218ce67f18b4eb1}\label{sub__model___p_d_fi_t_e_8_f90_a75013494646b87ae6218ce67f18b4eb1}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a75013494646b87ae6218ce67f18b4eb1}\label{sub__model___p_d_fi_t_e_8_f90_a75013494646b87ae6218ce67f18b4eb1} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!PAIR\_INT\_PARAM\_LOC\_@{PAIR\_INT\_PARAM\_LOC\_}}
 \index{PAIR\_INT\_PARAM\_LOC\_@{PAIR\_INT\_PARAM\_LOC\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{PAIR\_INT\_PARAM\_LOC\_}{PAIR\_INT\_PARAM\_LOC\_}}
 {\footnotesize\ttfamily \#define PAIR\+\_\+\+INT\+\_\+\+PARAM\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}+x)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a6516861a7e3bae5147d70f6411e11117}\label{sub__model___p_d_fi_t_e_8_f90_a6516861a7e3bae5147d70f6411e11117}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a6516861a7e3bae5147d70f6411e11117}\label{sub__model___p_d_fi_t_e_8_f90_a6516861a7e3bae5147d70f6411e11117} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!PHASE\_ID\_@{PHASE\_ID\_}}
 \index{PHASE\_ID\_@{PHASE\_ID\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{PHASE\_ID\_}{PHASE\_ID\_}}
 {\footnotesize\ttfamily \#define PHASE\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+x)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a24f5ee86f4be2c018eaf0c50b416f3d1}\label{sub__model___p_d_fi_t_e_8_f90_a24f5ee86f4be2c018eaf0c50b416f3d1}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a24f5ee86f4be2c018eaf0c50b416f3d1}\label{sub__model___p_d_fi_t_e_8_f90_a24f5ee86f4be2c018eaf0c50b416f3d1} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!TOTAL\_FLOAT\_PARAM\_@{TOTAL\_FLOAT\_PARAM\_}}
 \index{TOTAL\_FLOAT\_PARAM\_@{TOTAL\_FLOAT\_PARAM\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{TOTAL\_FLOAT\_PARAM\_}{TOTAL\_FLOAT\_PARAM\_}}
 {\footnotesize\ttfamily \#define TOTAL\+\_\+\+FLOAT\+\_\+\+PARAM\+\_\+~this\%condensed\+\_\+data\+\_\+int(5)}
 
-\mbox{\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a842fc46fcd502869675f2325bb09c31f}\label{sub__model___p_d_fi_t_e_8_f90_a842fc46fcd502869675f2325bb09c31f}} 
+\Hypertarget{sub__model___p_d_fi_t_e_8_f90_a842fc46fcd502869675f2325bb09c31f}\label{sub__model___p_d_fi_t_e_8_f90_a842fc46fcd502869675f2325bb09c31f} 
 \index{sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}!TOTAL\_INT\_PARAM\_@{TOTAL\_INT\_PARAM\_}}
 \index{TOTAL\_INT\_PARAM\_@{TOTAL\_INT\_PARAM\_}!sub\_model\_PDFiTE.F90@{sub\_model\_PDFiTE.F90}}
 \doxysubsubsection{\texorpdfstring{TOTAL\_INT\_PARAM\_}{TOTAL\_INT\_PARAM\_}}

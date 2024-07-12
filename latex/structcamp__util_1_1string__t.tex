@@ -1,93 +1,251 @@
-\hypertarget{structcamp__util_1_1string__t}{}\doxysection{camp\+\_\+util\+::string\+\_\+t Interface Reference}
-\label{structcamp__util_1_1string__t}\index{camp\_util::string\_t@{camp\_util::string\_t}}
+\doxysection{camp\+\_\+util\+::string\+\_\+t Interface Reference}
+\hypertarget{structcamp__util_1_1string__t}{}\label{structcamp__util_1_1string__t}\index{camp\_util::string\_t@{camp\_util::string\_t}}
 
 
 String type for building arrays of string of various size.  
 
 
-\doxysubsection*{Public Member Functions}
+\doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-final \mbox{\hyperlink{structcamp__util_1_1string__t_a64da18bf3ad0df6f852c1d57fa73092e}{string\+\_\+t\+\_\+finalize}}
+final \mbox{\hyperlink{structcamp__util_1_1string__t_aedff23f28339f2bdca7f78de2eab6a89}{string\+\_\+t\+\_\+finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the string. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Public Attributes}
+\doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
 character(len=\+:), allocatable \mbox{\hyperlink{structcamp__util_1_1string__t_ae1b2223308f77a0700519692920f465f}{string}}
 \begin{DoxyCompactList}\small\item\em String value. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Splits a string on a sub-\/string}
+\doxysubsubsection*{Splits a string on a sub-\/string}
 \begin{DoxyCompactItemize}
 \item 
-procedure, private \mbox{\hyperlink{structcamp__util_1_1string__t_a4d6302238270f1b781b21d1f42da91fd}{split\+\_\+char}}
-\item 
-procedure, private \mbox{\hyperlink{structcamp__util_1_1string__t_a2d8a8eaf8cf63448811aaf0eeb43792d}{split\+\_\+string}}
-\item 
-generic \mbox{\hyperlink{structcamp__util_1_1string__t_af2e8e8519761739c035e8257a6fd30fd}{split}} =$>$ \mbox{\hyperlink{structcamp__util_1_1string__t_a4d6302238270f1b781b21d1f42da91fd}{split\+\_\+char}}, \mbox{\hyperlink{structcamp__util_1_1string__t_a2d8a8eaf8cf63448811aaf0eeb43792d}{split\+\_\+string}}
-\end{DoxyCompactItemize}
+procedure, private \mbox{\hyperlink{structcamp__util_1_1string__t_afb515d7149d10051cc6fbb58841b30e5}{split\+\_\+char}} (this, splitter, compress)
+\begin{DoxyCompactList}\small\item\em Splits a string on a substring. \end{DoxyCompactList}\item 
+procedure, private \mbox{\hyperlink{structcamp__util_1_1string__t_a3add4afa83d01de41864463cc6d09370}{split\+\_\+string}} (this, splitter, compress)
+\begin{DoxyCompactList}\small\item\em Splits a string on a substring. \end{DoxyCompactList}\item 
+generic \mbox{\hyperlink{structcamp__util_1_1string__t_acf924ca1ec986e42feadc6a6c5f0260f}{split}} (this, splitter, compress)
+\begin{DoxyCompactList}\small\item\em Splits a string on a substring. \end{DoxyCompactList}\item 
+generic \mbox{\hyperlink{structcamp__util_1_1string__t_acf924ca1ec986e42feadc6a6c5f0260f}{split}} (this, splitter, compress)
+\begin{DoxyCompactList}\small\item\em Splits a string on a substring. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
 String type for building arrays of string of various size. 
 
-Constructor for \mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}. 
+Constructor for \doxylink{structcamp__util_1_1string__t}{string\+\_\+t}. 
 
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00038}{38}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 
 
-\doxysubsection{Member Function/\+Subroutine Documentation}
-\mbox{\Hypertarget{structcamp__util_1_1string__t_af2e8e8519761739c035e8257a6fd30fd}\label{structcamp__util_1_1string__t_af2e8e8519761739c035e8257a6fd30fd}} 
-\index{camp\_util::string\_t@{camp\_util::string\_t}!split@{split}}
-\index{split@{split}!camp\_util::string\_t@{camp\_util::string\_t}}
-\doxysubsubsection{\texorpdfstring{split()}{split()}}
-{\footnotesize\ttfamily generic camp\+\_\+util\+::string\+\_\+t\+::split}
-
-
-
-Definition at line \mbox{\hyperlink{util_8_f90_source_l00046}{46}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
-
-Here is the call graph for this function\+:
-% FIG 0
-\mbox{\Hypertarget{structcamp__util_1_1string__t_a4d6302238270f1b781b21d1f42da91fd}\label{structcamp__util_1_1string__t_a4d6302238270f1b781b21d1f42da91fd}} 
-\index{camp\_util::string\_t@{camp\_util::string\_t}!split\_char@{split\_char}}
-\index{split\_char@{split\_char}!camp\_util::string\_t@{camp\_util::string\_t}}
-\doxysubsubsection{\texorpdfstring{split\_char()}{split\_char()}}
-{\footnotesize\ttfamily procedure, private camp\+\_\+util\+::string\+\_\+t\+::split\+\_\+char\hspace{0.3cm}{\ttfamily [private]}}
-
-
-
-Definition at line \mbox{\hyperlink{util_8_f90_source_l00044}{44}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
-
-\mbox{\Hypertarget{structcamp__util_1_1string__t_a2d8a8eaf8cf63448811aaf0eeb43792d}\label{structcamp__util_1_1string__t_a2d8a8eaf8cf63448811aaf0eeb43792d}} 
-\index{camp\_util::string\_t@{camp\_util::string\_t}!split\_string@{split\_string}}
-\index{split\_string@{split\_string}!camp\_util::string\_t@{camp\_util::string\_t}}
-\doxysubsubsection{\texorpdfstring{split\_string()}{split\_string()}}
-{\footnotesize\ttfamily procedure, private camp\+\_\+util\+::string\+\_\+t\+::split\+\_\+string\hspace{0.3cm}{\ttfamily [private]}}
-
-
-
-Definition at line \mbox{\hyperlink{util_8_f90_source_l00045}{45}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
-
-\mbox{\Hypertarget{structcamp__util_1_1string__t_a64da18bf3ad0df6f852c1d57fa73092e}\label{structcamp__util_1_1string__t_a64da18bf3ad0df6f852c1d57fa73092e}} 
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structcamp__util_1_1string__t_aedff23f28339f2bdca7f78de2eab6a89}\label{structcamp__util_1_1string__t_aedff23f28339f2bdca7f78de2eab6a89} 
 \index{camp\_util::string\_t@{camp\_util::string\_t}!string\_t\_finalize@{string\_t\_finalize}}
 \index{string\_t\_finalize@{string\_t\_finalize}!camp\_util::string\_t@{camp\_util::string\_t}}
 \doxysubsubsection{\texorpdfstring{string\_t\_finalize()}{string\_t\_finalize()}}
-{\footnotesize\ttfamily final camp\+\_\+util\+::string\+\_\+t\+::string\+\_\+t\+\_\+finalize\hspace{0.3cm}{\ttfamily [final]}}
+{\footnotesize\ttfamily final camp\+\_\+util\+::string\+\_\+t\+::string\+\_\+t\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [final]}}
 
 
 
 Finalize the string. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & String to finalize \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{util_8_f90_source_l00049}{49}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 1
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=306pt]{structcamp__util_1_1string__t_aedff23f28339f2bdca7f78de2eab6a89_cgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\Hypertarget{structcamp__util_1_1string__t_acf924ca1ec986e42feadc6a6c5f0260f}\label{structcamp__util_1_1string__t_acf924ca1ec986e42feadc6a6c5f0260f} 
+\index{camp\_util::string\_t@{camp\_util::string\_t}!split@{split}}
+\index{split@{split}!camp\_util::string\_t@{camp\_util::string\_t}}
+\doxysubsubsection{\texorpdfstring{split()}{split()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily generic camp\+\_\+util\+::string\+\_\+t\+::split (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{splitter,  }\item[{logical, intent(in), optional}]{compress }\end{DoxyParamCaption})}
+
+
+
+Splits a string on a substring. 
+
+Example\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{type}(string\_t)\ ::\ my\_string}
+\DoxyCodeLine{\textcolor{keywordtype}{type}(string\_t),\ \textcolor{keywordtype}{allocatable}\ ::\ sub\_strings(:)}
+\DoxyCodeLine{\textcolor{keywordtype}{integer}\ ::\ i}
+\DoxyCodeLine{my\_string\ =\ \textcolor{stringliteral}{"{}my\ original\ \ \ \ string"{}}}
+\DoxyCodeLine{sub\_strings\ =\ my\_string\%split(\ \textcolor{stringliteral}{'\ '}\ )}
+\DoxyCodeLine{\textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(\ sub\_strings\ )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{write}(*,*)\ i,\ sub\_strings(\ i\ )}
+\DoxyCodeLine{\textcolor{keywordflow}{end\ do}}
+\DoxyCodeLine{sub\_strings\ =\ my\_string\%split(\ \textcolor{stringliteral}{'\ '},\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.\ )}
+\DoxyCodeLine{\textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(\ sub\_strings\ )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{write}(*,*)\ i,\ sub\_strings(\ i\ )}
+\DoxyCodeLine{\textcolor{keyword}{end\ }do}
+
+\end{DoxyCode}
+
+
+Output\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1\ \ my}
+\DoxyCodeLine{2\ \ original}
+\DoxyCodeLine{3}
+\DoxyCodeLine{4}
+\DoxyCodeLine{5}
+\DoxyCodeLine{6\ \ string}
+\DoxyCodeLine{1\ \ my}
+\DoxyCodeLine{2\ \ original}
+\DoxyCodeLine{3\ \ string}
+
+\end{DoxyCode}
+ \begin{DoxyReturn}{Returns}
+Split string 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Full string \\
+\hline
+\mbox{\texttt{ in}}  & {\em splitter} & String to split on \\
+\hline
+\mbox{\texttt{ in}}  & {\em compress} & Compress (default = false)\\
+\hline
+\end{DoxyParams}
+No 0-\/length substrings will be returned (adjacent tokens will be merged; tokens at the beginning and end of the original string will be ignored) 
+
+Definition at line \mbox{\hyperlink{util_8_f90_source_l00046}{46}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=321pt]{structcamp__util_1_1string__t_acf924ca1ec986e42feadc6a6c5f0260f_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{structcamp__util_1_1string__t_acf924ca1ec986e42feadc6a6c5f0260f}\label{structcamp__util_1_1string__t_acf924ca1ec986e42feadc6a6c5f0260f} 
+\index{camp\_util::string\_t@{camp\_util::string\_t}!split@{split}}
+\index{split@{split}!camp\_util::string\_t@{camp\_util::string\_t}}
+\doxysubsubsection{\texorpdfstring{split()}{split()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily generic camp\+\_\+util\+::string\+\_\+t\+::split (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), intent(in)}]{this,  }\item[{type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), intent(in)}]{splitter,  }\item[{logical, intent(in), optional}]{compress }\end{DoxyParamCaption})}
+
+
+
+Splits a string on a substring. 
+
+See {\ttfamily string\+\_\+split\+\_\+char} for description and example \begin{DoxyReturn}{Returns}
+Split string 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Full string \\
+\hline
+\mbox{\texttt{ in}}  & {\em splitter} & String to split on \\
+\hline
+\mbox{\texttt{ in}}  & {\em compress} & Compress (default = false)\\
+\hline
+\end{DoxyParams}
+No 0-\/length substrings will be returned (adjacent tokens will be merged; tokens at the beginning and end of the original string will be ignored) 
+
+Definition at line \mbox{\hyperlink{util_8_f90_source_l00046}{46}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
+
+\Hypertarget{structcamp__util_1_1string__t_afb515d7149d10051cc6fbb58841b30e5}\label{structcamp__util_1_1string__t_afb515d7149d10051cc6fbb58841b30e5} 
+\index{camp\_util::string\_t@{camp\_util::string\_t}!split\_char@{split\_char}}
+\index{split\_char@{split\_char}!camp\_util::string\_t@{camp\_util::string\_t}}
+\doxysubsubsection{\texorpdfstring{split\_char()}{split\_char()}}
+{\footnotesize\ttfamily procedure, private camp\+\_\+util\+::string\+\_\+t\+::split\+\_\+char (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{splitter,  }\item[{logical, intent(in), optional}]{compress }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Splits a string on a substring. 
+
+Example\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{type}(string\_t)\ ::\ my\_string}
+\DoxyCodeLine{\textcolor{keywordtype}{type}(string\_t),\ \textcolor{keywordtype}{allocatable}\ ::\ sub\_strings(:)}
+\DoxyCodeLine{\textcolor{keywordtype}{integer}\ ::\ i}
+\DoxyCodeLine{my\_string\ =\ \textcolor{stringliteral}{"{}my\ original\ \ \ \ string"{}}}
+\DoxyCodeLine{sub\_strings\ =\ my\_string\%split(\ \textcolor{stringliteral}{'\ '}\ )}
+\DoxyCodeLine{\textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(\ sub\_strings\ )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{write}(*,*)\ i,\ sub\_strings(\ i\ )}
+\DoxyCodeLine{\textcolor{keywordflow}{end\ do}}
+\DoxyCodeLine{sub\_strings\ =\ my\_string\%split(\ \textcolor{stringliteral}{'\ '},\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.\ )}
+\DoxyCodeLine{\textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(\ sub\_strings\ )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{write}(*,*)\ i,\ sub\_strings(\ i\ )}
+\DoxyCodeLine{\textcolor{keyword}{end\ }do}
+
+\end{DoxyCode}
+
+
+Output\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1\ \ my}
+\DoxyCodeLine{2\ \ original}
+\DoxyCodeLine{3}
+\DoxyCodeLine{4}
+\DoxyCodeLine{5}
+\DoxyCodeLine{6\ \ string}
+\DoxyCodeLine{1\ \ my}
+\DoxyCodeLine{2\ \ original}
+\DoxyCodeLine{3\ \ string}
+
+\end{DoxyCode}
+ \begin{DoxyReturn}{Returns}
+Split string 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Full string \\
+\hline
+\mbox{\texttt{ in}}  & {\em splitter} & String to split on \\
+\hline
+\mbox{\texttt{ in}}  & {\em compress} & Compress (default = false)\\
+\hline
+\end{DoxyParams}
+No 0-\/length substrings will be returned (adjacent tokens will be merged; tokens at the beginning and end of the original string will be ignored) 
+
+Definition at line \mbox{\hyperlink{util_8_f90_source_l00044}{44}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
+
+\Hypertarget{structcamp__util_1_1string__t_a3add4afa83d01de41864463cc6d09370}\label{structcamp__util_1_1string__t_a3add4afa83d01de41864463cc6d09370} 
+\index{camp\_util::string\_t@{camp\_util::string\_t}!split\_string@{split\_string}}
+\index{split\_string@{split\_string}!camp\_util::string\_t@{camp\_util::string\_t}}
+\doxysubsubsection{\texorpdfstring{split\_string()}{split\_string()}}
+{\footnotesize\ttfamily procedure, private camp\+\_\+util\+::string\+\_\+t\+::split\+\_\+string (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), intent(in)}]{this,  }\item[{type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), intent(in)}]{splitter,  }\item[{logical, intent(in), optional}]{compress }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Splits a string on a substring. 
+
+See {\ttfamily string\+\_\+split\+\_\+char} for description and example \begin{DoxyReturn}{Returns}
+Split string 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Full string \\
+\hline
+\mbox{\texttt{ in}}  & {\em splitter} & String to split on \\
+\hline
+\mbox{\texttt{ in}}  & {\em compress} & Compress (default = false)\\
+\hline
+\end{DoxyParams}
+No 0-\/length substrings will be returned (adjacent tokens will be merged; tokens at the beginning and end of the original string will be ignored) 
+
+Definition at line \mbox{\hyperlink{util_8_f90_source_l00045}{45}} of file \mbox{\hyperlink{util_8_f90_source}{util.\+F90}}.
+
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{structcamp__util_1_1string__t_ae1b2223308f77a0700519692920f465f}\label{structcamp__util_1_1string__t_ae1b2223308f77a0700519692920f465f}} 
+\Hypertarget{structcamp__util_1_1string__t_ae1b2223308f77a0700519692920f465f}\label{structcamp__util_1_1string__t_ae1b2223308f77a0700519692920f465f} 
 \index{camp\_util::string\_t@{camp\_util::string\_t}!string@{string}}
 \index{string@{string}!camp\_util::string\_t@{camp\_util::string\_t}}
 \doxysubsubsection{\texorpdfstring{string}{string}}

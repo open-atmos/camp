@@ -1,6 +1,9 @@
 <map id="camp_rxn_factory::create" name="camp_rxn_factory::create">
-<area shape="rect" id="node1" title="Create a new chemical reaction by type name." alt="" coords="5,13,172,38"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="220,13,353,38"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="401,13,553,38"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="601,5,724,45"/>
+<area shape="rect" id="Node000001" title="Create a new chemical reaction by type name." alt="" coords="5,13,171,39"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="219,13,351,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,23,203,23,203,28,171,28"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="399,13,550,39"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="352,23,384,23,384,28,352,28"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="598,5,721,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="551,23,583,23,583,28,551,28"/>
 </map>

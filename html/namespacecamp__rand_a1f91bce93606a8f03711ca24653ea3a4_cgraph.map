@@ -1,11 +1,24 @@
 <map id="camp_rand::sample_cts_pdf" name="camp_rand::sample_cts_pdf">
-<area shape="rect" id="node1" title="Sample the given continuous probability density function." alt="" coords="5,92,189,117"/>
-<area shape="rect" id="node2" href="$namespacecamp__rand.html#a6e5ae3dc848f4f5cf5a1e4bf674ed0ce" title="Returns a random integer between 1 and n." alt="" coords="237,92,415,117"/>
-<area shape="rect" id="node7" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="463,165,637,191"/>
-<area shape="rect" id="node9" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="259,5,393,31"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="490,43,610,68"/>
-<area shape="rect" id="node6" href="$rand__gsl_8c.html#a0ebca9079073ff12ca49babd5f49edb9" title="Generate a uniform random integer in ." alt="" coords="485,92,615,117"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="685,17,837,43"/>
-<area shape="rect" id="node5" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="885,10,1008,50"/>
-<area shape="rect" id="node8" href="$rand__gsl_8c.html#abd204acb91a0adebb638deae62396379" title="Generate a uniform random number in ." alt="" coords="706,165,817,191"/>
+<area shape="rect" id="Node000001" title="Sample the given continuous probability density function." alt="" coords="5,92,189,118"/>
+<area shape="poly" id="edge13_Node000001_Node000001" title=" " alt="" coords="59,93,52,83,56,74,72,67,97,65,125,68,139,75,137,80,123,73,97,71,73,73,60,77,57,83,63,90"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__rand.html#a6e5ae3dc848f4f5cf5a1e4bf674ed0ce" title="Returns a random integer between 1 and n." alt="" coords="237,92,413,118"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,102,221,102,221,108,189,108"/>
+<area shape="rect" id="Node000007" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="461,165,634,191"/>
+<area shape="poly" id="edge10_Node000001_Node000007" title=" " alt="" coords="170,116,237,128,446,161,445,166,236,133,169,121"/>
+<area shape="rect" id="Node000009" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="259,5,391,31"/>
+<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="132,89,274,35,275,40,134,94"/>
+<area shape="poly" id="edge5_Node000002_Node000002" title=" " alt="" coords="288,93,281,83,285,74,300,67,325,65,352,68,366,75,364,80,351,73,325,71,301,73,289,77,286,83,292,90"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="488,43,607,68"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="386,89,472,69,473,75,387,94"/>
+<area shape="rect" id="Node000006" href="$rand__gsl_8c.html#a0ebca9079073ff12ca49babd5f49edb9" title="Generate a uniform random integer in ." alt="" coords="483,92,613,118"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="413,102,467,102,467,108,413,108"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="367,116,492,157,491,162,366,121"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="682,17,834,43"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="608,46,667,38,667,44,608,51"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="882,10,1004,51"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="834,28,866,28,866,33,834,33"/>
+<area shape="poly" id="edge9_Node000007_Node000007" title=" " alt="" coords="513,167,506,157,510,147,524,141,548,139,573,141,587,148,584,153,572,146,548,144,525,146,514,151,511,156,517,163"/>
+<area shape="rect" id="Node000008" href="$rand__gsl_8c.html#abd204acb91a0adebb638deae62396379" title="Generate a uniform random number in ." alt="" coords="703,165,813,191"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="635,176,688,176,688,181,635,181"/>
+<area shape="poly" id="edge12_Node000009_Node000004" title=" " alt="" coords="392,17,667,25,667,30,391,23"/>
 </map>

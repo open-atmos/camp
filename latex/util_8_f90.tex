@@ -1,27 +1,27 @@
-\hypertarget{util_8_f90}{}\doxysection{util.\+F90 File Reference}
-\label{util_8_f90}\index{util.F90@{util.F90}}
+\doxysection{util.\+F90 File Reference}
+\hypertarget{util_8_f90}{}\label{util_8_f90}\index{util.F90@{util.F90}}
 
 
-The \mbox{\hyperlink{namespacecamp__util}{camp\+\_\+util}} module.  
+The \doxylink{namespacecamp__util}{camp\+\_\+util} module.  
 
 
-\doxysubsection*{Data Types}
+\doxysubsubsection*{Data Types}
 \begin{DoxyCompactItemize}
 \item 
 interface \mbox{\hyperlink{interfacecamp__util_1_1to__string}{camp\+\_\+util\+::to\+\_\+string}}
-\begin{DoxyCompactList}\small\item\em Interface for \mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\+\_\+string}} functions. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Interface for \doxylink{interfacecamp__util_1_1to__string}{to\+\_\+string} functions. \end{DoxyCompactList}\item 
 interface \mbox{\hyperlink{structcamp__util_1_1string__t}{camp\+\_\+util\+::string\+\_\+t}}
 \begin{DoxyCompactList}\small\item\em String type for building arrays of string of various size. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Modules}
+\doxysubsubsection*{Modules}
 \begin{DoxyCompactItemize}
 \item 
 module \mbox{\hyperlink{namespacecamp__util}{camp\+\_\+util}}
 \begin{DoxyCompactList}\small\item\em Common utility subroutines. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Functions/\+Subroutines}
+\doxysubsubsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
 \item 
-type(string\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__util_aaa15c5e966de0304a6c206af311c417a}{camp\+\_\+util\+::string\+\_\+t\+\_\+constructor}} (val)
-\begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__util_aaa15c5e966de0304a6c206af311c417a}{camp\+\_\+util\+::string\+\_\+t\+\_\+constructor}} (val)
+\begin{DoxyCompactList}\small\item\em Constructor for \doxylink{structcamp__util_1_1string__t}{string\+\_\+t}. \end{DoxyCompactList}\item 
 elemental subroutine \mbox{\hyperlink{namespacecamp__util_a072209b5179993259db1183af5d15a80}{camp\+\_\+util\+::string\+\_\+t\+\_\+finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize a string. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__util_ab72bff2627c9468e4c352118b8dc7046}{camp\+\_\+util\+::warn\+\_\+msg}} (code, warning\+\_\+msg, already\+\_\+warned)
@@ -37,24 +37,24 @@ subroutine \mbox{\hyperlink{namespacecamp__util_aa942add404bf8b611e5b4b8c777ca7f
 subroutine \mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{camp\+\_\+util\+::die\+\_\+msg}} (code, error\+\_\+msg)
 \begin{DoxyCompactList}\small\item\em Error immediately. \end{DoxyCompactList}\item 
 integer function \mbox{\hyperlink{namespacecamp__util_a43662260b71cb7e4b72fe49ccb8cee94}{camp\+\_\+util\+::get\+\_\+unit}} ()
-\begin{DoxyCompactList}\small\item\em Returns an available unit number. This should be freed by \mbox{\hyperlink{namespacecamp__util_a3a68d4a7d1b28dd132909a12c83d3c21}{free\+\_\+unit()}}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Returns an available unit number. This should be freed by \doxylink{namespacecamp__util_a3a68d4a7d1b28dd132909a12c83d3c21}{free\+\_\+unit()}. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__util_a3a68d4a7d1b28dd132909a12c83d3c21}{camp\+\_\+util\+::free\+\_\+unit}} (unit)
-\begin{DoxyCompactList}\small\item\em Frees a unit number returned by \mbox{\hyperlink{namespacecamp__util_a43662260b71cb7e4b72fe49ccb8cee94}{get\+\_\+unit()}}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Frees a unit number returned by \doxylink{namespacecamp__util_a43662260b71cb7e4b72fe49ccb8cee94}{get\+\_\+unit()}. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__util_aa871934a2e528c6b844a9ba1a761a317}{camp\+\_\+util\+::open\+\_\+file\+\_\+read}} (filename, unit)
-\begin{DoxyCompactList}\small\item\em Open a file for reading with an automatically assigned unit and test that it succeeds. The file should be closed with \mbox{\hyperlink{namespacecamp__util_a404c3cd8244ade45a4e57b2347d0f9a2}{close\+\_\+file()}}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Open a file for reading with an automatically assigned unit and test that it succeeds. The file should be closed with \doxylink{namespacecamp__util_a404c3cd8244ade45a4e57b2347d0f9a2}{close\+\_\+file()}. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__util_a2d260aa74996f977a1b83ad54ceaa763}{camp\+\_\+util\+::open\+\_\+file\+\_\+write}} (filename, unit)
-\begin{DoxyCompactList}\small\item\em Open a file for writing with an automatically assigned unit and test that it succeeds. The file should be closed with \mbox{\hyperlink{namespacecamp__util_a404c3cd8244ade45a4e57b2347d0f9a2}{close\+\_\+file()}}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Open a file for writing with an automatically assigned unit and test that it succeeds. The file should be closed with \doxylink{namespacecamp__util_a404c3cd8244ade45a4e57b2347d0f9a2}{close\+\_\+file()}. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__util_a404c3cd8244ade45a4e57b2347d0f9a2}{camp\+\_\+util\+::close\+\_\+file}} (unit)
 \begin{DoxyCompactList}\small\item\em Close a file and de-\/assign the unit. \end{DoxyCompactList}\item 
-real(kind=dp) elemental function \mbox{\hyperlink{namespacecamp__util_afd67b304a8ed1eea58c4995d573997ac}{camp\+\_\+util\+::sphere\+\_\+vol2rad}} (v)
-\begin{DoxyCompactList}\small\item\em Convert mass-\/equivalent volume $V$ (m$^\wedge$3) to geometric radius $R_{\rm geo}$ (m) for spherical particles. \end{DoxyCompactList}\item 
-real(kind=dp) elemental function \mbox{\hyperlink{namespacecamp__util_af13fde08a7e0d39f75913dcc94fb2411}{camp\+\_\+util\+::rad2diam}} (r)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) elemental function \mbox{\hyperlink{namespacecamp__util_afd67b304a8ed1eea58c4995d573997ac}{camp\+\_\+util\+::sphere\+\_\+vol2rad}} (v)
+\begin{DoxyCompactList}\small\item\em Convert mass-\/equivalent volume $V$ (m\texorpdfstring{$^\wedge$}{\string^}3) to geometric radius $R_{\rm geo}$ (m) for spherical particles. \end{DoxyCompactList}\item 
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) elemental function \mbox{\hyperlink{namespacecamp__util_af13fde08a7e0d39f75913dcc94fb2411}{camp\+\_\+util\+::rad2diam}} (r)
 \begin{DoxyCompactList}\small\item\em Convert radius (m) to diameter (m). \end{DoxyCompactList}\item 
-real(kind=dp) elemental function \mbox{\hyperlink{namespacecamp__util_a5ac75c73cd92487d519e38c204dcd4d1}{camp\+\_\+util\+::sphere\+\_\+rad2vol}} (r)
-\begin{DoxyCompactList}\small\item\em Convert geometric radius $R_{\rm geo}$ (m) to mass-\/equivalent volume $V$ (m$^\wedge$3) for spherical particles. \end{DoxyCompactList}\item 
-real(kind=dp) elemental function \mbox{\hyperlink{namespacecamp__util_a30421895e7a73048b023ec24324f6df9}{camp\+\_\+util\+::diam2rad}} (d)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) elemental function \mbox{\hyperlink{namespacecamp__util_a5ac75c73cd92487d519e38c204dcd4d1}{camp\+\_\+util\+::sphere\+\_\+rad2vol}} (r)
+\begin{DoxyCompactList}\small\item\em Convert geometric radius $R_{\rm geo}$ (m) to mass-\/equivalent volume $V$ (m\texorpdfstring{$^\wedge$}{\string^}3) for spherical particles. \end{DoxyCompactList}\item 
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) elemental function \mbox{\hyperlink{namespacecamp__util_a30421895e7a73048b023ec24324f6df9}{camp\+\_\+util\+::diam2rad}} (d)
 \begin{DoxyCompactList}\small\item\em Convert diameter (m) to radius (m). \end{DoxyCompactList}\item 
-real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_a4d5dedcec09fafbdf7e0d9ba541c1442}{camp\+\_\+util\+::air\+\_\+mean\+\_\+free\+\_\+path}} (temp, pressure)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_a4d5dedcec09fafbdf7e0d9ba541c1442}{camp\+\_\+util\+::air\+\_\+mean\+\_\+free\+\_\+path}} (temp, pressure)
 \begin{DoxyCompactList}\small\item\em Calculate air molecular mean free path $l$ (m). \end{DoxyCompactList}\item 
 logical function \mbox{\hyperlink{namespacecamp__util_a1edccf652ba0788ede6a9fb6117e2a16}{camp\+\_\+util\+::almost\+\_\+equal}} (d1, d2, rel\+\_\+tol, abs\+\_\+tol)
 \begin{DoxyCompactList}\small\item\em Tests whether two real numbers are almost equal using only a relative tolerance. \end{DoxyCompactList}\item 
@@ -64,9 +64,9 @@ subroutine \mbox{\hyperlink{namespacecamp__util_ad06843c31cfbcc9c7fe2eba8023ff09
 \begin{DoxyCompactList}\small\item\em Check that the first time interval is close to an integer multiple of the second, and warn if it is not. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__util_a1598bdd5da982cc7cc6bbb3c126fa019}{camp\+\_\+util\+::check\+\_\+event}} (time, timestep, interval, last\+\_\+time, do\+\_\+event)
 \begin{DoxyCompactList}\small\item\em Computes whether an event is scheduled to take place. \end{DoxyCompactList}\item 
-real(kind=dp) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__util_ae45b50c8c137ff5255cffcceef05b385}{camp\+\_\+util\+::linspace}} (min\+\_\+x, max\+\_\+x, n)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__util_ae45b50c8c137ff5255cffcceef05b385}{camp\+\_\+util\+::linspace}} (min\+\_\+x, max\+\_\+x, n)
 \begin{DoxyCompactList}\small\item\em Makes a linearly spaced array from min to max. \end{DoxyCompactList}\item 
-real(kind=dp) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__util_a975cc8fef2da18c43de0c15022c92498}{camp\+\_\+util\+::logspace}} (min\+\_\+x, max\+\_\+x, n)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__util_a975cc8fef2da18c43de0c15022c92498}{camp\+\_\+util\+::logspace}} (min\+\_\+x, max\+\_\+x, n)
 \begin{DoxyCompactList}\small\item\em Makes a logarithmically spaced array of length n from min to max. \end{DoxyCompactList}\item 
 integer function \mbox{\hyperlink{namespacecamp__util_a47fee3e15eb877acff702cb7af2e0bc8}{camp\+\_\+util\+::linspace\+\_\+find}} (min\+\_\+x, max\+\_\+x, n, x)
 \begin{DoxyCompactList}\small\item\em Find the position of a real number in a 1D linear array. \end{DoxyCompactList}\item 
@@ -74,35 +74,35 @@ integer function \mbox{\hyperlink{namespacecamp__util_a93a495ba49b1eb41fa119ebdf
 \begin{DoxyCompactList}\small\item\em Find the position of a real number in a 1D logarithmic array. \end{DoxyCompactList}\item 
 integer function \mbox{\hyperlink{namespacecamp__util_a5f0d2175aaae4112637d13f1a1c123fe}{camp\+\_\+util\+::find\+\_\+1d}} (n, x\+\_\+vals, x)
 \begin{DoxyCompactList}\small\item\em Find the position of a real number in an arbitrary 1D array. \end{DoxyCompactList}\item 
-real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_a489620eee18a7ea836aa645fbf6569a0}{camp\+\_\+util\+::interp\+\_\+1d}} (x\+\_\+vals, y\+\_\+vals, x)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_a489620eee18a7ea836aa645fbf6569a0}{camp\+\_\+util\+::interp\+\_\+1d}} (x\+\_\+vals, y\+\_\+vals, x)
 \begin{DoxyCompactList}\small\item\em 1D linear interpolation. \end{DoxyCompactList}\item 
-real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_a9d16033d179b151c30c3982c4da56def}{camp\+\_\+util\+::interp\+\_\+linear\+\_\+disc}} (x\+\_\+1, x\+\_\+n, n, i)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_a9d16033d179b151c30c3982c4da56def}{camp\+\_\+util\+::interp\+\_\+linear\+\_\+disc}} (x\+\_\+1, x\+\_\+n, n, i)
 \begin{DoxyCompactList}\small\item\em Linear interpolation over discrete indices. \end{DoxyCompactList}\item 
 integer function \mbox{\hyperlink{namespacecamp__util_a80c772f0c9f8d6ebedc00719c319c88e}{camp\+\_\+util\+::string\+\_\+to\+\_\+integer}} (string)
 \begin{DoxyCompactList}\small\item\em Convert a string to an integer. \end{DoxyCompactList}\item 
-real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_a016ae1fd8b1d0e89d2d9f228e58c00f2}{camp\+\_\+util\+::string\+\_\+to\+\_\+real}} (string)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_a016ae1fd8b1d0e89d2d9f228e58c00f2}{camp\+\_\+util\+::string\+\_\+to\+\_\+real}} (string)
 \begin{DoxyCompactList}\small\item\em Convert a string to a real. \end{DoxyCompactList}\item 
 logical function \mbox{\hyperlink{namespacecamp__util_abc2afd0472a33bd2c397ebc139b0bb61}{camp\+\_\+util\+::string\+\_\+to\+\_\+logical}} (string)
 \begin{DoxyCompactList}\small\item\em Convert a string to a logical. \end{DoxyCompactList}\item 
-character(len=camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len) function \mbox{\hyperlink{namespacecamp__util_acd72e4626dcfefffaa08c42cfa7949bc}{camp\+\_\+util\+::integer\+\_\+to\+\_\+string}} (val)
+character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function \mbox{\hyperlink{namespacecamp__util_acd72e4626dcfefffaa08c42cfa7949bc}{camp\+\_\+util\+::integer\+\_\+to\+\_\+string}} (val)
 \begin{DoxyCompactList}\small\item\em Convert an integer to a string format. \end{DoxyCompactList}\item 
-character(len=camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len) function \mbox{\hyperlink{namespacecamp__util_a0271943f212c32e76561b36ea2412dd7}{camp\+\_\+util\+::real\+\_\+dp\+\_\+to\+\_\+string}} (val)
+character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function \mbox{\hyperlink{namespacecamp__util_a0271943f212c32e76561b36ea2412dd7}{camp\+\_\+util\+::real\+\_\+dp\+\_\+to\+\_\+string}} (val)
 \begin{DoxyCompactList}\small\item\em Convert a double precision real to a string format. \end{DoxyCompactList}\item 
-character(len=camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len) function \mbox{\hyperlink{namespacecamp__util_a2b801462e46ce4e248f7e1fc830147d7}{camp\+\_\+util\+::real\+\_\+sp\+\_\+to\+\_\+string}} (val)
+character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function \mbox{\hyperlink{namespacecamp__util_a2b801462e46ce4e248f7e1fc830147d7}{camp\+\_\+util\+::real\+\_\+sp\+\_\+to\+\_\+string}} (val)
 \begin{DoxyCompactList}\small\item\em Convert a single precision real to a string format. \end{DoxyCompactList}\item 
-character(len=camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len) function \mbox{\hyperlink{namespacecamp__util_a8e18cede79f49d055c0254ba41d60a2c}{camp\+\_\+util\+::logical\+\_\+to\+\_\+string}} (val)
+character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function \mbox{\hyperlink{namespacecamp__util_a8e18cede79f49d055c0254ba41d60a2c}{camp\+\_\+util\+::logical\+\_\+to\+\_\+string}} (val)
 \begin{DoxyCompactList}\small\item\em Convert a logical to a string format. \end{DoxyCompactList}\item 
-character(len=camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len) function \mbox{\hyperlink{namespacecamp__util_ac4a720005853ad9a6aee2131cbb7a846}{camp\+\_\+util\+::complex\+\_\+to\+\_\+string}} (val)
+character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function \mbox{\hyperlink{namespacecamp__util_ac4a720005853ad9a6aee2131cbb7a846}{camp\+\_\+util\+::complex\+\_\+to\+\_\+string}} (val)
 \begin{DoxyCompactList}\small\item\em Convert a complex to a string format. \end{DoxyCompactList}\item 
-character(len=camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len) function \mbox{\hyperlink{namespacecamp__util_af2eef6df9d8087453ddd88b19093cd4d}{camp\+\_\+util\+::integer\+\_\+to\+\_\+string\+\_\+max\+\_\+len}} (val, max\+\_\+len)
+character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function \mbox{\hyperlink{namespacecamp__util_af2eef6df9d8087453ddd88b19093cd4d}{camp\+\_\+util\+::integer\+\_\+to\+\_\+string\+\_\+max\+\_\+len}} (val, max\+\_\+len)
 \begin{DoxyCompactList}\small\item\em Convert an integer to a string format of maximum length. \end{DoxyCompactList}\item 
-character(len=camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len) function \mbox{\hyperlink{namespacecamp__util_a8e3fd8f1e59a4b7203d8fc1b18ca88a1}{camp\+\_\+util\+::real\+\_\+to\+\_\+string\+\_\+max\+\_\+len}} (val, max\+\_\+len)
+character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function \mbox{\hyperlink{namespacecamp__util_a8e3fd8f1e59a4b7203d8fc1b18ca88a1}{camp\+\_\+util\+::real\+\_\+to\+\_\+string\+\_\+max\+\_\+len}} (val, max\+\_\+len)
 \begin{DoxyCompactList}\small\item\em Convert a real to a string format of maximum length. \end{DoxyCompactList}\item 
-character(len=camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len) function \mbox{\hyperlink{namespacecamp__util_a5a70a8f92ccf14743e768e1a7c0fa7ae}{camp\+\_\+util\+::time\+\_\+to\+\_\+string\+\_\+max\+\_\+len}} (time, max\+\_\+len)
+character(len=\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}}) function \mbox{\hyperlink{namespacecamp__util_a5a70a8f92ccf14743e768e1a7c0fa7ae}{camp\+\_\+util\+::time\+\_\+to\+\_\+string\+\_\+max\+\_\+len}} (time, max\+\_\+len)
 \begin{DoxyCompactList}\small\item\em Convert a time to a string format of maximum length. \end{DoxyCompactList}\item 
-type(string\+\_\+t) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__util_aaa1aa26338c97d2b558f14bf9ff7a8ee}{camp\+\_\+util\+::split\+\_\+char}} (this, splitter, compress)
+type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__util_aaa1aa26338c97d2b558f14bf9ff7a8ee}{camp\+\_\+util\+::split\+\_\+char}} (this, splitter, compress)
 \begin{DoxyCompactList}\small\item\em Splits a string on a substring. \end{DoxyCompactList}\item 
-type(string\+\_\+t) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__util_a272f407b29999a31d70a55b517a4e179}{camp\+\_\+util\+::split\+\_\+string}} (this, splitter, compress)
+type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__util_a272f407b29999a31d70a55b517a4e179}{camp\+\_\+util\+::split\+\_\+string}} (this, splitter, compress)
 \begin{DoxyCompactList}\small\item\em Splits a string on a substring. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__util_a7ce8fdfc7ade6434dc60fea1f7abe818}{camp\+\_\+util\+::vec\+\_\+cts\+\_\+to\+\_\+disc}} (n, vec\+\_\+cts, n\+\_\+samp, vec\+\_\+disc)
 \begin{DoxyCompactList}\small\item\em Convert a real-\/valued vector into an integer-\/valued vector. \end{DoxyCompactList}\item 
@@ -126,9 +126,9 @@ subroutine \mbox{\hyperlink{namespacecamp__util_a18d8bb060a4817c16f434b4239329b1
 \begin{DoxyCompactList}\small\item\em Strip the extension to find the basename. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__util_a2af9b1aad56cfc26cf362d47d65ce81f}{camp\+\_\+util\+::iso8601\+\_\+date\+\_\+and\+\_\+time}} (date\+\_\+time)
 \begin{DoxyCompactList}\small\item\em Current date and time in ISO 8601 format. \end{DoxyCompactList}\item 
-real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_a1d64246a8b630c0b196be309f09b4382}{camp\+\_\+util\+::deg2rad}} (deg)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_a1d64246a8b630c0b196be309f09b4382}{camp\+\_\+util\+::deg2rad}} (deg)
 \begin{DoxyCompactList}\small\item\em Convert degrees to radians. \end{DoxyCompactList}\item 
-real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_a35a48fddc2fb3c1645f57f66b4aa76f6}{camp\+\_\+util\+::rad2deg}} (rad)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_a35a48fddc2fb3c1645f57f66b4aa76f6}{camp\+\_\+util\+::rad2deg}} (rad)
 \begin{DoxyCompactList}\small\item\em Convert radians to degrees. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__util_a24a16c8e84a4948acba40ee229229428}{camp\+\_\+util\+::integer\+\_\+sort}} (data, perm)
 \begin{DoxyCompactList}\small\item\em Sort the given data array and return the permutation defining the sort. \end{DoxyCompactList}\item 
@@ -146,22 +146,22 @@ subroutine \mbox{\hyperlink{namespacecamp__util_ac20f84d4e2c6c3f2beafb7c31df79c7
 \begin{DoxyCompactList}\small\item\em Read a white-\/space delimited word from a file, signaling if we have EOL or EOF. If EOL or EOF are true then the word will still be meaningful data. If there was no data to be read then len(word) will be 0. \end{DoxyCompactList}\item 
 logical function \mbox{\hyperlink{namespacecamp__util_a1f9b38953a4476e513e34cb8e8a50688}{camp\+\_\+util\+::starts\+\_\+with}} (string, start\+\_\+string)
 \begin{DoxyCompactList}\small\item\em Checks whether a string starts with a given other string. \end{DoxyCompactList}\item 
-elemental real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_a74be1a109abfe8cc1e2bf3f911eb8082}{camp\+\_\+util\+::harmonic\+\_\+mean}} (x1, x2)
+elemental real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_a74be1a109abfe8cc1e2bf3f911eb8082}{camp\+\_\+util\+::harmonic\+\_\+mean}} (x1, x2)
 \begin{DoxyCompactList}\small\item\em Compute the harmonic mean of two numbers. \end{DoxyCompactList}\item 
-elemental real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_ae006a4a997ed6d6872b9e318409b784e}{camp\+\_\+util\+::nplogp}} (p)
+elemental real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_ae006a4a997ed6d6872b9e318409b784e}{camp\+\_\+util\+::nplogp}} (p)
 \begin{DoxyCompactList}\small\item\em Compute $ - p \ln p$ for computing entropy. \end{DoxyCompactList}\item 
-real(kind=dp) function \mbox{\hyperlink{namespacecamp__util_ade73e84dfafa24044b9df56faa85069f}{camp\+\_\+util\+::entropy}} (p)
+real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__util_ade73e84dfafa24044b9df56faa85069f}{camp\+\_\+util\+::entropy}} (p)
 \begin{DoxyCompactList}\small\item\em Compute the entropy of a probability mass function (non necessarily normalized). \end{DoxyCompactList}\item 
 integer function \mbox{\hyperlink{namespacecamp__util_a9969887aa2f11ca1731c81384bf0580f}{camp\+\_\+util\+::pow2\+\_\+above}} (n)
 \begin{DoxyCompactList}\small\item\em Return the least power-\/of-\/2 that is at least equal to n. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Variables}
+\doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 integer, parameter \mbox{\hyperlink{namespacecamp__util_a6515dd3d6435f00e9e12a740524cffb2}{camp\+\_\+util\+::max\+\_\+units}} = 200
 \begin{DoxyCompactList}\small\item\em Maximum number of IO units usable simultaneously. \end{DoxyCompactList}\item 
 integer, parameter \mbox{\hyperlink{namespacecamp__util_a4f7f7ae3bfdb8c1429e119e372b4db39}{camp\+\_\+util\+::unit\+\_\+offset}} = 10
 \begin{DoxyCompactList}\small\item\em Minimum unit number to allocate. \end{DoxyCompactList}\item 
-logical, dimension(max\+\_\+units), save \mbox{\hyperlink{namespacecamp__util_ab38103b342e907ecd4a0e56245e19807}{camp\+\_\+util\+::unit\+\_\+used}} = .false.
+logical, dimension(\mbox{\hyperlink{namespacecamp__util_a6515dd3d6435f00e9e12a740524cffb2}{max\+\_\+units}}), save \mbox{\hyperlink{namespacecamp__util_ab38103b342e907ecd4a0e56245e19807}{camp\+\_\+util\+::unit\+\_\+used}} = .false.
 \begin{DoxyCompactList}\small\item\em Table of unit numbers storing allocation status. \end{DoxyCompactList}\item 
 integer, parameter \mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\+\_\+util\+::camp\+\_\+util\+\_\+convert\+\_\+string\+\_\+len}} = 100
 \begin{DoxyCompactList}\small\item\em Length of string for converting numbers. \end{DoxyCompactList}\item 
@@ -170,7 +170,7 @@ integer, parameter \mbox{\hyperlink{namespacecamp__util_a287d04ccbc3fd6ada7a98e2
 
 
 \doxysubsection{Detailed Description}
-The \mbox{\hyperlink{namespacecamp__util}{camp\+\_\+util}} module. 
+The \doxylink{namespacecamp__util}{camp\+\_\+util} module. 
 
 
 

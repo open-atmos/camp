@@ -1,63 +1,75 @@
-\hypertarget{_jacobian_8h}{}\doxysection{Jacobian.\+h File Reference}
-\label{_jacobian_8h}\index{Jacobian.h@{Jacobian.h}}
+\doxysection{Jacobian.\+h File Reference}
+\hypertarget{_jacobian_8h}{}\label{_jacobian_8h}\index{Jacobian.h@{Jacobian.h}}
 
 
-Header for the \mbox{\hyperlink{struct_jacobian}{Jacobian}} structure and related functions.  
+Header for the \doxylink{struct_jacobian}{Jacobian} structure and related functions.  
 
 
 Include dependency graph for Jacobian.\+h\+:
-% FIG 0
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=190pt]{_jacobian_8h__incl}
+\end{center}
+\end{figure}
 This graph shows which files directly or indirectly include this file\+:
-% FIG 1
-\doxysubsection*{Classes}
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_jacobian_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
 struct \mbox{\hyperlink{struct_jacobian_column_elements}{Jacobian\+Column\+Elements}}
 \item 
 struct \mbox{\hyperlink{struct_jacobian}{Jacobian}}
 \end{DoxyCompactItemize}
-\doxysubsection*{Macros}
+\doxysubsubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \mbox{\hyperlink{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}{JACOBIAN\+\_\+\+PRODUCTION}}~0
 \item 
 \#define \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\+\_\+\+LOSS}}~1
 \end{DoxyCompactItemize}
-\doxysubsection*{Functions}
+\doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-int \mbox{\hyperlink{_jacobian_8h_a3ea16d25b8523ab15b3f505fe00e2ed2}{jacobian\+\_\+initialize\+\_\+empty}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac, unsigned int num\+\_\+spec)
-\begin{DoxyCompactList}\small\item\em Initialize the \mbox{\hyperlink{struct_jacobian}{Jacobian}}. \end{DoxyCompactList}\item 
-int \mbox{\hyperlink{_jacobian_8h_a6c379e74bb2572ce65119dbbe0206e65}{jacobian\+\_\+initialize}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac, unsigned int num\+\_\+spec, unsigned int $\ast$$\ast$jac\+\_\+struct)
-\begin{DoxyCompactList}\small\item\em Initialize the \mbox{\hyperlink{struct_jacobian}{Jacobian}}. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{_jacobian_8h_aac51ac6b1cf239a84899308dab229441}{jacobian\+\_\+register\+\_\+element}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac, unsigned int dep\+\_\+id, unsigned int ind\+\_\+id)
+int \mbox{\hyperlink{_jacobian_8h_a3ea16d25b8523ab15b3f505fe00e2ed2}{jacobian\+\_\+initialize\+\_\+empty}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac, unsigned int num\+\_\+spec)
+\begin{DoxyCompactList}\small\item\em Initialize the \doxylink{struct_jacobian}{Jacobian}. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{_jacobian_8h_a6c379e74bb2572ce65119dbbe0206e65}{jacobian\+\_\+initialize}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac, unsigned int num\+\_\+spec, unsigned int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}jac\+\_\+struct)
+\begin{DoxyCompactList}\small\item\em Initialize the \doxylink{struct_jacobian}{Jacobian}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{_jacobian_8h_aac51ac6b1cf239a84899308dab229441}{jacobian\+\_\+register\+\_\+element}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac, unsigned int dep\+\_\+id, unsigned int ind\+\_\+id)
 \begin{DoxyCompactList}\small\item\em Adds an element to the sparse matrix. \end{DoxyCompactList}\item 
-unsigned int \mbox{\hyperlink{_jacobian_8h_a2e954524b21f4e097996b2dc0d3cf999}{jacobian\+\_\+build\+\_\+matrix}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
+unsigned int \mbox{\hyperlink{_jacobian_8h_a2e954524b21f4e097996b2dc0d3cf999}{jacobian\+\_\+build\+\_\+matrix}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
 \begin{DoxyCompactList}\small\item\em Builds the sparse matrix with the registered elements. \end{DoxyCompactList}\item 
 unsigned int \mbox{\hyperlink{_jacobian_8h_a797c57a02151acb880fba00b8afc57a3}{jacobian\+\_\+number\+\_\+of\+\_\+elements}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
-\begin{DoxyCompactList}\small\item\em Returns the number of elements in the \mbox{\hyperlink{struct_jacobian}{Jacobian}}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Returns the number of elements in the \doxylink{struct_jacobian}{Jacobian}. \end{DoxyCompactList}\item 
 unsigned int \mbox{\hyperlink{_jacobian_8h_a0a9b073f122e923fe6bad96d0611a4ac}{jacobian\+\_\+column\+\_\+pointer\+\_\+value}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, unsigned int col\+\_\+id)
 \begin{DoxyCompactList}\small\item\em Returns the value of a column pointer. \end{DoxyCompactList}\item 
 unsigned int \mbox{\hyperlink{_jacobian_8h_ae72fb841b0dd527b9e463e7ce208d856}{jacobian\+\_\+row\+\_\+index}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, unsigned int elem\+\_\+id)
-\begin{DoxyCompactList}\small\item\em Returns the row for a given \mbox{\hyperlink{struct_jacobian}{Jacobian}} element. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Returns the row for a given \doxylink{struct_jacobian}{Jacobian} element. \end{DoxyCompactList}\item 
 unsigned int \mbox{\hyperlink{_jacobian_8h_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\+\_\+get\+\_\+element\+\_\+id}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, unsigned int dep\+\_\+id, unsigned int ind\+\_\+id)
-\begin{DoxyCompactList}\small\item\em Get an element id in the \mbox{\hyperlink{struct_jacobian}{Jacobian}} data arrays. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Get an element id in the \doxylink{struct_jacobian}{Jacobian} data arrays. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{_jacobian_8h_a9b50b1fb83f669391bf76726b9c81ead}{jacobian\+\_\+reset}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
-\begin{DoxyCompactList}\small\item\em Reset the \mbox{\hyperlink{struct_jacobian}{Jacobian}}. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{_jacobian_8h_adcc6d47123aab80bc7b90bdcbb68c90d}{jacobian\+\_\+output}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, double $\ast$dest\+\_\+array)
-\begin{DoxyCompactList}\small\item\em Output the \mbox{\hyperlink{struct_jacobian}{Jacobian}}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Reset the \doxylink{struct_jacobian}{Jacobian}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{_jacobian_8h_adcc6d47123aab80bc7b90bdcbb68c90d}{jacobian\+\_\+output}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, double \texorpdfstring{$\ast$}{*}dest\+\_\+array)
+\begin{DoxyCompactList}\small\item\em Output the \doxylink{struct_jacobian}{Jacobian}. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{_jacobian_8h_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\+\_\+add\+\_\+value}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, unsigned int elem\+\_\+id, unsigned int prod\+\_\+or\+\_\+loss, long double jac\+\_\+contribution)
-\begin{DoxyCompactList}\small\item\em Add a contribution to the \mbox{\hyperlink{struct_jacobian}{Jacobian}}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Add a contribution to the \doxylink{struct_jacobian}{Jacobian}. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{_jacobian_8h_adad0a11d68ed833045d81177b6b95baa}{jacobian\+\_\+print}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
-\begin{DoxyCompactList}\small\item\em Prints the \mbox{\hyperlink{struct_jacobian}{Jacobian}} structure. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{_jacobian_8h_a7bc2fe67ae132c04bf45e69934e6be1f}{jacobian\+\_\+column\+\_\+elements\+\_\+free}} (\mbox{\hyperlink{struct_jacobian_column_elements}{Jacobian\+Column\+Elements}} $\ast$column)
-\begin{DoxyCompactList}\small\item\em Free memory associated with a \mbox{\hyperlink{struct_jacobian_column_elements}{Jacobian\+Column\+Elements}}. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{_jacobian_8h_a0c0108de18ada97dc46782f7223ceef8}{jacobian\+\_\+free}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
-\begin{DoxyCompactList}\small\item\em Free memory associated with a \mbox{\hyperlink{struct_jacobian}{Jacobian}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Prints the \doxylink{struct_jacobian}{Jacobian} structure. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{_jacobian_8h_a7bc2fe67ae132c04bf45e69934e6be1f}{jacobian\+\_\+column\+\_\+elements\+\_\+free}} (\mbox{\hyperlink{struct_jacobian_column_elements}{Jacobian\+Column\+Elements}} \texorpdfstring{$\ast$}{*}column)
+\begin{DoxyCompactList}\small\item\em Free memory associated with a \doxylink{struct_jacobian_column_elements}{Jacobian\+Column\+Elements}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{_jacobian_8h_a0c0108de18ada97dc46782f7223ceef8}{jacobian\+\_\+free}} (\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Free memory associated with a \doxylink{struct_jacobian}{Jacobian}. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
-Header for the \mbox{\hyperlink{struct_jacobian}{Jacobian}} structure and related functions. 
+Header for the \doxylink{struct_jacobian}{Jacobian} structure and related functions. 
 
 
 
@@ -66,7 +78,7 @@ Definition in file \mbox{\hyperlink{_jacobian_8h_source}{Jacobian.\+h}}.
 
 
 \doxysubsection{Macro Definition Documentation}
-\mbox{\Hypertarget{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}\label{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}} 
+\Hypertarget{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}\label{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06} 
 \index{Jacobian.h@{Jacobian.h}!JACOBIAN\_LOSS@{JACOBIAN\_LOSS}}
 \index{JACOBIAN\_LOSS@{JACOBIAN\_LOSS}!Jacobian.h@{Jacobian.h}}
 \doxysubsubsection{\texorpdfstring{JACOBIAN\_LOSS}{JACOBIAN\_LOSS}}
@@ -76,7 +88,7 @@ Definition in file \mbox{\hyperlink{_jacobian_8h_source}{Jacobian.\+h}}.
 
 Definition at line \mbox{\hyperlink{_jacobian_8h_source_l00019}{19}} of file \mbox{\hyperlink{_jacobian_8h_source}{Jacobian.\+h}}.
 
-\mbox{\Hypertarget{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}\label{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}} 
+\Hypertarget{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}\label{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f} 
 \index{Jacobian.h@{Jacobian.h}!JACOBIAN\_PRODUCTION@{JACOBIAN\_PRODUCTION}}
 \index{JACOBIAN\_PRODUCTION@{JACOBIAN\_PRODUCTION}!Jacobian.h@{Jacobian.h}}
 \doxysubsubsection{\texorpdfstring{JACOBIAN\_PRODUCTION}{JACOBIAN\_PRODUCTION}}
@@ -89,7 +101,7 @@ Definition at line \mbox{\hyperlink{_jacobian_8h_source_l00018}{18}} of file \mb
 
 
 \doxysubsection{Function Documentation}
-\mbox{\Hypertarget{_jacobian_8h_a844d8b2784c48a794ada38d053b1d1b3}\label{_jacobian_8h_a844d8b2784c48a794ada38d053b1d1b3}} 
+\Hypertarget{_jacobian_8h_a844d8b2784c48a794ada38d053b1d1b3}\label{_jacobian_8h_a844d8b2784c48a794ada38d053b1d1b3} 
 \index{Jacobian.h@{Jacobian.h}!jacobian\_add\_value@{jacobian\_add\_value}}
 \index{jacobian\_add\_value@{jacobian\_add\_value}!Jacobian.h@{Jacobian.h}}
 \doxysubsubsection{\texorpdfstring{jacobian\_add\_value()}{jacobian\_add\_value()}}
@@ -97,17 +109,17 @@ Definition at line \mbox{\hyperlink{_jacobian_8h_source_l00018}{18}} of file \mb
 
 
 
-Add a contribution to the \mbox{\hyperlink{struct_jacobian}{Jacobian}}. 
+Add a contribution to the \doxylink{struct_jacobian}{Jacobian}. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} object \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} object \\
 \hline
 {\em elem\+\_\+id} & Index of the element to update in the data array \\
 \hline
 {\em prod\+\_\+or\+\_\+loss} & Flag indicating whether to update the (0) production or (1) loss elements \\
 \hline
-{\em jac\+\_\+contribution} & Value to add to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} element (contributions to loss elements should be positive if the contribution increases the loss) \\
+{\em jac\+\_\+contribution} & Value to add to the \doxylink{struct_jacobian}{Jacobian} element (contributions to loss elements should be positive if the contribution increases the loss) \\
 \hline
 \end{DoxyParams}
 
@@ -115,12 +127,18 @@ Add a contribution to the \mbox{\hyperlink{struct_jacobian}{Jacobian}}.
 Definition at line \mbox{\hyperlink{_jacobian_8c_source_l00234}{234}} of file \mbox{\hyperlink{_jacobian_8c_source}{Jacobian.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 2
-\mbox{\Hypertarget{_jacobian_8h_a2e954524b21f4e097996b2dc0d3cf999}\label{_jacobian_8h_a2e954524b21f4e097996b2dc0d3cf999}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_jacobian_8h_a844d8b2784c48a794ada38d053b1d1b3_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_jacobian_8h_a2e954524b21f4e097996b2dc0d3cf999}\label{_jacobian_8h_a2e954524b21f4e097996b2dc0d3cf999} 
 \index{Jacobian.h@{Jacobian.h}!jacobian\_build\_matrix@{jacobian\_build\_matrix}}
 \index{jacobian\_build\_matrix@{jacobian\_build\_matrix}!Jacobian.h@{Jacobian.h}}
 \doxysubsubsection{\texorpdfstring{jacobian\_build\_matrix()}{jacobian\_build\_matrix()}}
-{\footnotesize\ttfamily unsigned int jacobian\+\_\+build\+\_\+matrix (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily unsigned int jacobian\+\_\+build\+\_\+matrix (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac }\end{DoxyParamCaption})}
 
 
 
@@ -134,22 +152,34 @@ Builds the sparse matrix with the registered elements.
 Definition at line \mbox{\hyperlink{_jacobian_8c_source_l00129}{129}} of file \mbox{\hyperlink{_jacobian_8c_source}{Jacobian.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 3
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_jacobian_8h_a2e954524b21f4e097996b2dc0d3cf999_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 4
-\mbox{\Hypertarget{_jacobian_8h_a7bc2fe67ae132c04bf45e69934e6be1f}\label{_jacobian_8h_a7bc2fe67ae132c04bf45e69934e6be1f}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_jacobian_8h_a2e954524b21f4e097996b2dc0d3cf999_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_jacobian_8h_a7bc2fe67ae132c04bf45e69934e6be1f}\label{_jacobian_8h_a7bc2fe67ae132c04bf45e69934e6be1f} 
 \index{Jacobian.h@{Jacobian.h}!jacobian\_column\_elements\_free@{jacobian\_column\_elements\_free}}
 \index{jacobian\_column\_elements\_free@{jacobian\_column\_elements\_free}!Jacobian.h@{Jacobian.h}}
 \doxysubsubsection{\texorpdfstring{jacobian\_column\_elements\_free()}{jacobian\_column\_elements\_free()}}
-{\footnotesize\ttfamily void jacobian\+\_\+column\+\_\+elements\+\_\+free (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_jacobian_column_elements}{Jacobian\+Column\+Elements}} $\ast$}]{column }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void jacobian\+\_\+column\+\_\+elements\+\_\+free (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_jacobian_column_elements}{Jacobian\+Column\+Elements}} \texorpdfstring{$\ast$}{*}}]{column }\end{DoxyParamCaption})}
 
 
 
-Free memory associated with a \mbox{\hyperlink{struct_jacobian_column_elements}{Jacobian\+Column\+Elements}}. 
+Free memory associated with a \doxylink{struct_jacobian_column_elements}{Jacobian\+Column\+Elements}. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em column} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} column elements \\
+{\em column} & \doxylink{struct_jacobian}{Jacobian} column elements \\
 \hline
 \end{DoxyParams}
 
@@ -157,8 +187,14 @@ Free memory associated with a \mbox{\hyperlink{struct_jacobian_column_elements}{
 Definition at line \mbox{\hyperlink{_jacobian_8c_source_l00274}{274}} of file \mbox{\hyperlink{_jacobian_8c_source}{Jacobian.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 5
-\mbox{\Hypertarget{_jacobian_8h_a0a9b073f122e923fe6bad96d0611a4ac}\label{_jacobian_8h_a0a9b073f122e923fe6bad96d0611a4ac}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_jacobian_8h_a7bc2fe67ae132c04bf45e69934e6be1f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_jacobian_8h_a0a9b073f122e923fe6bad96d0611a4ac}\label{_jacobian_8h_a0a9b073f122e923fe6bad96d0611a4ac} 
 \index{Jacobian.h@{Jacobian.h}!jacobian\_column\_pointer\_value@{jacobian\_column\_pointer\_value}}
 \index{jacobian\_column\_pointer\_value@{jacobian\_column\_pointer\_value}!Jacobian.h@{Jacobian.h}}
 \doxysubsubsection{\texorpdfstring{jacobian\_column\_pointer\_value()}{jacobian\_column\_pointer\_value()}}
@@ -170,7 +206,7 @@ Returns the value of a column pointer.
 
 
 \begin{DoxyParams}{Parameters}
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} object \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} object \\
 \hline
 {\em col\+\_\+id} & Column index (0...number of columns) \\
 \hline
@@ -183,20 +219,26 @@ Column pointer value
 Definition at line \mbox{\hyperlink{_jacobian_8c_source_l00192}{192}} of file \mbox{\hyperlink{_jacobian_8c_source}{Jacobian.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 6
-\mbox{\Hypertarget{_jacobian_8h_a0c0108de18ada97dc46782f7223ceef8}\label{_jacobian_8h_a0c0108de18ada97dc46782f7223ceef8}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_jacobian_8h_a0a9b073f122e923fe6bad96d0611a4ac_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_jacobian_8h_a0c0108de18ada97dc46782f7223ceef8}\label{_jacobian_8h_a0c0108de18ada97dc46782f7223ceef8} 
 \index{Jacobian.h@{Jacobian.h}!jacobian\_free@{jacobian\_free}}
 \index{jacobian\_free@{jacobian\_free}!Jacobian.h@{Jacobian.h}}
 \doxysubsubsection{\texorpdfstring{jacobian\_free()}{jacobian\_free()}}
-{\footnotesize\ttfamily void jacobian\+\_\+free (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void jacobian\+\_\+free (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac }\end{DoxyParamCaption})}
 
 
 
-Free memory associated with a \mbox{\hyperlink{struct_jacobian}{Jacobian}}. 
+Free memory associated with a \doxylink{struct_jacobian}{Jacobian}. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} object \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} object \\
 \hline
 \end{DoxyParams}
 
@@ -204,10 +246,22 @@ Free memory associated with a \mbox{\hyperlink{struct_jacobian}{Jacobian}}.
 Definition at line \mbox{\hyperlink{_jacobian_8c_source_l00281}{281}} of file \mbox{\hyperlink{_jacobian_8c_source}{Jacobian.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 7
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=345pt]{_jacobian_8h_a0c0108de18ada97dc46782f7223ceef8_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 8
-\mbox{\Hypertarget{_jacobian_8h_a7b43d5884ec62826389d6d739b7f25eb}\label{_jacobian_8h_a7b43d5884ec62826389d6d739b7f25eb}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_jacobian_8h_a0c0108de18ada97dc46782f7223ceef8_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_jacobian_8h_a7b43d5884ec62826389d6d739b7f25eb}\label{_jacobian_8h_a7b43d5884ec62826389d6d739b7f25eb} 
 \index{Jacobian.h@{Jacobian.h}!jacobian\_get\_element\_id@{jacobian\_get\_element\_id}}
 \index{jacobian\_get\_element\_id@{jacobian\_get\_element\_id}!Jacobian.h@{Jacobian.h}}
 \doxysubsubsection{\texorpdfstring{jacobian\_get\_element\_id()}{jacobian\_get\_element\_id()}}
@@ -215,13 +269,13 @@ Here is the caller graph for this function\+:
 
 
 
-Get an element id in the \mbox{\hyperlink{struct_jacobian}{Jacobian}} data arrays. 
+Get an element id in the \doxylink{struct_jacobian}{Jacobian} data arrays. 
 
 If the element is not included in the sparse matrix, -\/1 is returned.
 
 
 \begin{DoxyParams}{Parameters}
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} object \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} object \\
 \hline
 {\em dep\+\_\+id} & Dependent species index \\
 \hline
@@ -229,27 +283,33 @@ If the element is not included in the sparse matrix, -\/1 is returned.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Index of \mbox{\hyperlink{struct_jacobian}{Jacobian}} element in the data array 
+Index of \doxylink{struct_jacobian}{Jacobian} element in the data array 
 \end{DoxyReturn}
 
 
 Definition at line \mbox{\hyperlink{_jacobian_8c_source_l00200}{200}} of file \mbox{\hyperlink{_jacobian_8c_source}{Jacobian.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 9
-\mbox{\Hypertarget{_jacobian_8h_a6c379e74bb2572ce65119dbbe0206e65}\label{_jacobian_8h_a6c379e74bb2572ce65119dbbe0206e65}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_jacobian_8h_a7b43d5884ec62826389d6d739b7f25eb_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_jacobian_8h_a6c379e74bb2572ce65119dbbe0206e65}\label{_jacobian_8h_a6c379e74bb2572ce65119dbbe0206e65} 
 \index{Jacobian.h@{Jacobian.h}!jacobian\_initialize@{jacobian\_initialize}}
 \index{jacobian\_initialize@{jacobian\_initialize}!Jacobian.h@{Jacobian.h}}
 \doxysubsubsection{\texorpdfstring{jacobian\_initialize()}{jacobian\_initialize()}}
-{\footnotesize\ttfamily int jacobian\+\_\+initialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac,  }\item[{unsigned int}]{num\+\_\+spec,  }\item[{unsigned int $\ast$$\ast$}]{jac\+\_\+struct }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int jacobian\+\_\+initialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac,  }\item[{unsigned int}]{num\+\_\+spec,  }\item[{unsigned int \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}}]{jac\+\_\+struct }\end{DoxyParamCaption})}
 
 
 
-Initialize the \mbox{\hyperlink{struct_jacobian}{Jacobian}}. 
+Initialize the \doxylink{struct_jacobian}{Jacobian}. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em jac} & Pointer to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} object \\
+{\em jac} & Pointer to the \doxylink{struct_jacobian}{Jacobian} object \\
 \hline
 {\em num\+\_\+spec} & Number of species \\
 \hline
@@ -263,37 +323,49 @@ Flag indicating whether the derivative was successfully initialized (0 = false; 
 
 Definition at line \mbox{\hyperlink{_jacobian_8c_source_l00046}{46}} of file \mbox{\hyperlink{_jacobian_8c_source}{Jacobian.\+c}}.
 
-\mbox{\Hypertarget{_jacobian_8h_a3ea16d25b8523ab15b3f505fe00e2ed2}\label{_jacobian_8h_a3ea16d25b8523ab15b3f505fe00e2ed2}} 
+\Hypertarget{_jacobian_8h_a3ea16d25b8523ab15b3f505fe00e2ed2}\label{_jacobian_8h_a3ea16d25b8523ab15b3f505fe00e2ed2} 
 \index{Jacobian.h@{Jacobian.h}!jacobian\_initialize\_empty@{jacobian\_initialize\_empty}}
 \index{jacobian\_initialize\_empty@{jacobian\_initialize\_empty}!Jacobian.h@{Jacobian.h}}
 \doxysubsubsection{\texorpdfstring{jacobian\_initialize\_empty()}{jacobian\_initialize\_empty()}}
-{\footnotesize\ttfamily int jacobian\+\_\+initialize\+\_\+empty (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac,  }\item[{unsigned int}]{num\+\_\+spec }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int jacobian\+\_\+initialize\+\_\+empty (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac,  }\item[{unsigned int}]{num\+\_\+spec }\end{DoxyParamCaption})}
 
 
 
-Initialize the \mbox{\hyperlink{struct_jacobian}{Jacobian}}. 
+Initialize the \doxylink{struct_jacobian}{Jacobian}. 
 
 Sets up a sparse matrix (num\+\_\+spec x num\+\_\+spec) containing zero elements. Elements can be added using the {\ttfamily jacobian\+\_\+register\+\_\+element} function.
 
 
 \begin{DoxyParams}{Parameters}
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} object \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} object \\
 \hline
 {\em num\+\_\+spec} & Number of species \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Flag indicating whether the \mbox{\hyperlink{struct_jacobian}{Jacobian}} was successfully initialized (0 = false; 1 = true) 
+Flag indicating whether the \doxylink{struct_jacobian}{Jacobian} was successfully initialized (0 = false; 1 = true) 
 \end{DoxyReturn}
 
 
 Definition at line \mbox{\hyperlink{_jacobian_8c_source_l00020}{20}} of file \mbox{\hyperlink{_jacobian_8c_source}{Jacobian.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 10
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_jacobian_8h_a3ea16d25b8523ab15b3f505fe00e2ed2_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 11
-\mbox{\Hypertarget{_jacobian_8h_a797c57a02151acb880fba00b8afc57a3}\label{_jacobian_8h_a797c57a02151acb880fba00b8afc57a3}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_jacobian_8h_a3ea16d25b8523ab15b3f505fe00e2ed2_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_jacobian_8h_a797c57a02151acb880fba00b8afc57a3}\label{_jacobian_8h_a797c57a02151acb880fba00b8afc57a3} 
 \index{Jacobian.h@{Jacobian.h}!jacobian\_number\_of\_elements@{jacobian\_number\_of\_elements}}
 \index{jacobian\_number\_of\_elements@{jacobian\_number\_of\_elements}!Jacobian.h@{Jacobian.h}}
 \doxysubsubsection{\texorpdfstring{jacobian\_number\_of\_elements()}{jacobian\_number\_of\_elements()}}
@@ -301,37 +373,43 @@ Here is the caller graph for this function\+:
 
 
 
-Returns the number of elements in the \mbox{\hyperlink{struct_jacobian}{Jacobian}}. 
+Returns the number of elements in the \doxylink{struct_jacobian}{Jacobian}. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} object \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} object \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements 
+Number of \doxylink{struct_jacobian}{Jacobian} elements 
 \end{DoxyReturn}
 
 
 Definition at line \mbox{\hyperlink{_jacobian_8c_source_l00190}{190}} of file \mbox{\hyperlink{_jacobian_8c_source}{Jacobian.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 12
-\mbox{\Hypertarget{_jacobian_8h_adcc6d47123aab80bc7b90bdcbb68c90d}\label{_jacobian_8h_adcc6d47123aab80bc7b90bdcbb68c90d}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_jacobian_8h_a797c57a02151acb880fba00b8afc57a3_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_jacobian_8h_adcc6d47123aab80bc7b90bdcbb68c90d}\label{_jacobian_8h_adcc6d47123aab80bc7b90bdcbb68c90d} 
 \index{Jacobian.h@{Jacobian.h}!jacobian\_output@{jacobian\_output}}
 \index{jacobian\_output@{jacobian\_output}!Jacobian.h@{Jacobian.h}}
 \doxysubsubsection{\texorpdfstring{jacobian\_output()}{jacobian\_output()}}
-{\footnotesize\ttfamily void jacobian\+\_\+output (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{double $\ast$}]{dest\+\_\+array }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void jacobian\+\_\+output (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{double \texorpdfstring{$\ast$}{*}}]{dest\+\_\+array }\end{DoxyParamCaption})}
 
 
 
-Output the \mbox{\hyperlink{struct_jacobian}{Jacobian}}. 
+Output the \doxylink{struct_jacobian}{Jacobian}. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} object \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} object \\
 \hline
-{\em dest\+\_\+array} & Pointer to the array to save \mbox{\hyperlink{struct_jacobian}{Jacobian}} data to \\
+{\em dest\+\_\+array} & Pointer to the array to save \doxylink{struct_jacobian}{Jacobian} data to \\
 \hline
 \end{DoxyParams}
 
@@ -339,8 +417,14 @@ Output the \mbox{\hyperlink{struct_jacobian}{Jacobian}}.
 Definition at line \mbox{\hyperlink{_jacobian_8c_source_l00223}{223}} of file \mbox{\hyperlink{_jacobian_8c_source}{Jacobian.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 13
-\mbox{\Hypertarget{_jacobian_8h_adad0a11d68ed833045d81177b6b95baa}\label{_jacobian_8h_adad0a11d68ed833045d81177b6b95baa}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_jacobian_8h_adcc6d47123aab80bc7b90bdcbb68c90d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_jacobian_8h_adad0a11d68ed833045d81177b6b95baa}\label{_jacobian_8h_adad0a11d68ed833045d81177b6b95baa} 
 \index{Jacobian.h@{Jacobian.h}!jacobian\_print@{jacobian\_print}}
 \index{jacobian\_print@{jacobian\_print}!Jacobian.h@{Jacobian.h}}
 \doxysubsubsection{\texorpdfstring{jacobian\_print()}{jacobian\_print()}}
@@ -348,22 +432,22 @@ Here is the caller graph for this function\+:
 
 
 
-Prints the \mbox{\hyperlink{struct_jacobian}{Jacobian}} structure. 
+Prints the \doxylink{struct_jacobian}{Jacobian} structure. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} object \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} object \\
 \hline
 \end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{_jacobian_8c_source_l00243}{243}} of file \mbox{\hyperlink{_jacobian_8c_source}{Jacobian.\+c}}.
 
-\mbox{\Hypertarget{_jacobian_8h_aac51ac6b1cf239a84899308dab229441}\label{_jacobian_8h_aac51ac6b1cf239a84899308dab229441}} 
+\Hypertarget{_jacobian_8h_aac51ac6b1cf239a84899308dab229441}\label{_jacobian_8h_aac51ac6b1cf239a84899308dab229441} 
 \index{Jacobian.h@{Jacobian.h}!jacobian\_register\_element@{jacobian\_register\_element}}
 \index{jacobian\_register\_element@{jacobian\_register\_element}!Jacobian.h@{Jacobian.h}}
 \doxysubsubsection{\texorpdfstring{jacobian\_register\_element()}{jacobian\_register\_element()}}
-{\footnotesize\ttfamily void jacobian\+\_\+register\+\_\+element (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac,  }\item[{unsigned int}]{dep\+\_\+id,  }\item[{unsigned int}]{ind\+\_\+id }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void jacobian\+\_\+register\+\_\+element (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac,  }\item[{unsigned int}]{dep\+\_\+id,  }\item[{unsigned int}]{ind\+\_\+id }\end{DoxyParamCaption})}
 
 
 
@@ -371,7 +455,7 @@ Adds an element to the sparse matrix.
 
 
 \begin{DoxyParams}{Parameters}
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} object \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} object \\
 \hline
 {\em dep\+\_\+id} & Dependent species index \\
 \hline
@@ -383,10 +467,22 @@ Adds an element to the sparse matrix.
 Definition at line \mbox{\hyperlink{_jacobian_8c_source_l00105}{105}} of file \mbox{\hyperlink{_jacobian_8c_source}{Jacobian.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 14
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_jacobian_8h_aac51ac6b1cf239a84899308dab229441_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 15
-\mbox{\Hypertarget{_jacobian_8h_a9b50b1fb83f669391bf76726b9c81ead}\label{_jacobian_8h_a9b50b1fb83f669391bf76726b9c81ead}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_jacobian_8h_aac51ac6b1cf239a84899308dab229441_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_jacobian_8h_a9b50b1fb83f669391bf76726b9c81ead}\label{_jacobian_8h_a9b50b1fb83f669391bf76726b9c81ead} 
 \index{Jacobian.h@{Jacobian.h}!jacobian\_reset@{jacobian\_reset}}
 \index{jacobian\_reset@{jacobian\_reset}!Jacobian.h@{Jacobian.h}}
 \doxysubsubsection{\texorpdfstring{jacobian\_reset()}{jacobian\_reset()}}
@@ -394,11 +490,11 @@ Here is the caller graph for this function\+:
 
 
 
-Reset the \mbox{\hyperlink{struct_jacobian}{Jacobian}}. 
+Reset the \doxylink{struct_jacobian}{Jacobian}. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} matrix \\
 \hline
 \end{DoxyParams}
 
@@ -406,8 +502,14 @@ Reset the \mbox{\hyperlink{struct_jacobian}{Jacobian}}.
 Definition at line \mbox{\hyperlink{_jacobian_8c_source_l00216}{216}} of file \mbox{\hyperlink{_jacobian_8c_source}{Jacobian.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 16
-\mbox{\Hypertarget{_jacobian_8h_ae72fb841b0dd527b9e463e7ce208d856}\label{_jacobian_8h_ae72fb841b0dd527b9e463e7ce208d856}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_jacobian_8h_a9b50b1fb83f669391bf76726b9c81ead_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{_jacobian_8h_ae72fb841b0dd527b9e463e7ce208d856}\label{_jacobian_8h_ae72fb841b0dd527b9e463e7ce208d856} 
 \index{Jacobian.h@{Jacobian.h}!jacobian\_row\_index@{jacobian\_row\_index}}
 \index{jacobian\_row\_index@{jacobian\_row\_index}!Jacobian.h@{Jacobian.h}}
 \doxysubsubsection{\texorpdfstring{jacobian\_row\_index()}{jacobian\_row\_index()}}
@@ -415,13 +517,13 @@ Here is the caller graph for this function\+:
 
 
 
-Returns the row for a given \mbox{\hyperlink{struct_jacobian}{Jacobian}} element. 
+Returns the row for a given \doxylink{struct_jacobian}{Jacobian} element. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} object \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} object \\
 \hline
-{\em elem\+\_\+id} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} element index (0...number of elements-\/1) \\
+{\em elem\+\_\+id} & \doxylink{struct_jacobian}{Jacobian} element index (0...number of elements-\/1) \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
@@ -432,4 +534,10 @@ Row index for given element
 Definition at line \mbox{\hyperlink{_jacobian_8c_source_l00196}{196}} of file \mbox{\hyperlink{_jacobian_8c_source}{Jacobian.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 17
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{_jacobian_8h_ae72fb841b0dd527b9e463e7ce208d856_icgraph}
+\end{center}
+\end{figure}

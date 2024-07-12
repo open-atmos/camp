@@ -1,4 +1,5 @@
 <map id="camp_aero_rep_single_particle::aero_rep_single_particle_t" name="camp_aero_rep_single_particle::aero_rep_single_particle_t">
-<area shape="rect" id="node1" title="Single particle aerosol representation." alt="" coords="5,93,173,148"/>
-<area shape="rect" id="node2" href="$structcamp__aero__rep__data_1_1aero__rep__data__t.html" title="Abstract aerosol representation data type." alt="" coords="18,5,161,45"/>
+<area shape="rect" id="Node000001" title="Single particle aerosol representation." alt="" coords="5,94,173,150"/>
+<area shape="rect" id="Node000002" href="$structcamp__aero__rep__data_1_1aero__rep__data__t.html" title="Abstract aerosol representation data type." alt="" coords="18,5,160,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,61,92,93,86,93,86,61"/>
 </map>

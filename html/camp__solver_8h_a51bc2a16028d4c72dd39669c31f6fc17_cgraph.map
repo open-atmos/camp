@@ -1,56 +1,133 @@
 <map id="is_anything_going_on_here" name="is_anything_going_on_here">
-<area shape="rect" id="node1" title="Determine if there is anything to solve." alt="" coords="5,1141,184,1166"/>
-<area shape="rect" id="node2" href="$camp__solver_8c.html#ac55302bc18db0d68d78f543aad6a16c4" title="Compute the time derivative f(t,y)" alt="" coords="232,1141,271,1166"/>
-<area shape="rect" id="node3" href="$aero__rep__solver_8c.html#a42041b486fc391bc9abeee5d1ad666b2" title="Update the aerosol representations for a new state." alt="" coords="792,1345,947,1370"/>
-<area shape="rect" id="node8" href="$camp__solver_8c.html#a21373e1f8bad206f6437deeea571f51c" title="Update the model state from the current solver state." alt="" coords="325,1012,468,1052"/>
-<area shape="rect" id="node9" href="$rxn__solver_8c.html#af014568140c63dfab9ea1c92b056e3b8" title="Calculate the time derivative ." alt="" coords="344,603,449,629"/>
-<area shape="rect" id="node48" href="$rxn__solver_8c.html#a066fddd15835cba3a8b519fb734bd552" title="Calculate the time derivative &#160;for only some specific types." alt="" coords="319,1076,475,1116"/>
-<area shape="rect" id="node49" href="$sub__model__solver_8c.html#a7f9027610b25bafcc5b6c5af1344dd65" title="Perform the sub model calculations for the current model state." alt="" coords="325,1191,469,1217"/>
-<area shape="rect" id="node53" href="$time__derivative_8c.html#ae2c31a72134750c12f2f5d8e32c3a99d" title="Output the current derivative array." alt="" coords="320,1241,473,1266"/>
-<area shape="rect" id="node54" href="$time__derivative_8c.html#a72dd19ea5bc2be11ace50e82bbd7857f" title="Reset the derivative." alt="" coords="323,1290,470,1315"/>
-<area shape="rect" id="node4" href="$aero__rep__modal__binned__mass_8c.html#a567e448c1ea25085add6257c6b8930c6" title="Update aerosol representation data for a new state." alt="" coords="1044,1337,1203,1377"/>
-<area shape="rect" id="node7" href="$aero__rep__single__particle_8c.html#afc5e4c6a81bf52bf0c8ee88037a4954d" title="Update aerosol representation data for a new state." alt="" coords="1042,1401,1205,1441"/>
-<area shape="rect" id="node5" href="$aero__phase__solver_8c.html#a965e0b9fc79db694be201edd05377dd1" title="Get the mass and average MW in an aerosol phase." alt="" coords="1285,1337,1438,1377"/>
-<area shape="rect" id="node6" href="$aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="1280,823,1443,863"/>
-<area shape="rect" id="node10" href="$rxns_8h.html#a8e696264a0e9f8f72c2cb00b5605cbeb" title=" " alt="" coords="541,820,705,860"/>
-<area shape="rect" id="node11" href="$rxns_8h.html#a760b30a313fd1608941b8ac584a128df" title=" " alt="" coords="558,884,689,924"/>
-<area shape="rect" id="node12" href="$rxns_8h.html#a3eb8ba0e04dfdffa6171688dd493d171" title=" " alt="" coords="545,948,702,988"/>
-<area shape="rect" id="node13" href="$rxns_8h.html#a2a4e9aea8e3d4a8779ec943d9ccaaad8" title=" " alt="" coords="530,69,717,109"/>
-<area shape="rect" id="node14" href="$rxns_8h.html#a838b8326dbcfa12692ecf289685897a2" title=" " alt="" coords="548,134,699,189"/>
-<area shape="rect" id="node15" href="$rxns_8h.html#aa66217f07fe9eae01f2d6d376e421141" title=" " alt="" coords="547,213,700,267"/>
-<area shape="rect" id="node16" href="$rxn__emission_8c.html#a0fc4250b628dae19ab3c2081a283e2b8" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="541,564,705,604"/>
-<area shape="rect" id="node18" href="$rxn__first__order__loss_8c.html#ac1d2c5d3bf68d6adcdc4183ba340175d" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="556,5,691,45"/>
-<area shape="rect" id="node19" href="$rxn___h_l__phase__transfer_8c.html#aa82a07e921e3d22fda1d52073b16219d" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="545,1012,702,1052"/>
-<area shape="rect" id="node33" href="$rxn__photolysis_8c.html#a821ebabf2abba0aa6b465747178f33d6" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="556,292,691,332"/>
-<area shape="rect" id="node34" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html#a8387f10a0a5aa0b38cc545859542f3c4" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="528,1076,719,1116"/>
-<area shape="rect" id="node41" href="$rxn__surface_8c.html#a5bb30760087399bd04a9f9e16f0fab1f" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="546,628,701,668"/>
-<area shape="rect" id="node43" href="$rxn__ternary__chemical__activation_8c.html#aab9c65ccd4b8614889c1462e2500e6b9" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="548,357,699,411"/>
-<area shape="rect" id="node44" href="$rxn__troe_8c.html#ae2174a745239e629f1c5480a52c3f6f2" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="556,436,691,476"/>
-<area shape="rect" id="node45" href="$rxns_8h.html#affb30a43f6e32c34d3c4fba241d57b3e" title=" " alt="" coords="549,692,697,732"/>
-<area shape="rect" id="node46" href="$rxns_8h.html#aaf3a4bd00b50344e978728d2bf6af6d0" title=" " alt="" coords="543,756,704,796"/>
-<area shape="rect" id="node47" href="$rxn__wet__deposition_8c.html#a6aec5e3d4cbb3a9e0d993a1780c42ecd" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="556,500,691,540"/>
-<area shape="rect" id="node17" href="$time__derivative_8c.html#af4c9ab5040b544a8ec4b63a1c75922e2" title="Add a contribution to the time derivative." alt="" coords="800,500,939,540"/>
-<area shape="rect" id="node20" href="$aero__rep__solver_8c.html#a00aee7bec2d9284a74c0eb26d346dc81" title="Check whether aerosol concentrations are per&#45;particle or total for each phase." alt="" coords="772,1081,967,1106"/>
-<area shape="rect" id="node23" href="$aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="793,887,946,927"/>
-<area shape="rect" id="node26" href="$aero__rep__solver_8c.html#aa56870eb4fe20532461b1634d7688210" title="Get the particle number concentration &#160;( )" alt="" coords="796,759,943,799"/>
-<area shape="rect" id="node29" href="$util_8h.html#adfe7ce1a7c219664c7a382f24068b1a1" title=" " alt="" coords="793,1011,945,1051"/>
-<area shape="rect" id="node21" href="$aero__rep__modal__binned__mass_8c.html#a5806fae1fe7d70369bfb7a0d9c54d12f" title="Get the type of aerosol concentration used." alt="" coords="1031,1129,1215,1169"/>
-<area shape="rect" id="node22" href="$aero__rep__single__particle_8c.html#a59114de73dd305d5825a8547155b8946" title="Get the type of aerosol concentration used." alt="" coords="1042,1065,1205,1105"/>
-<area shape="rect" id="node24" href="$aero__rep__modal__binned__mass_8c.html#a8d5bf734337581d90c2280ab858ccf96" title="Get the effective particle radius &#160;(m)" alt="" coords="1019,887,1228,927"/>
-<area shape="rect" id="node25" href="$aero__rep__single__particle_8c.html#a48b11d345d89071d34e67b5063b1b891" title="Get the effective particle radius &#160;(m)" alt="" coords="1038,823,1209,863"/>
-<area shape="rect" id="node27" href="$aero__rep__modal__binned__mass_8c.html#a2e585253c19aa48dec8c55b963999e9d" title="Get the particle number concentration &#160;( )" alt="" coords="1015,695,1232,735"/>
-<area shape="rect" id="node28" href="$aero__rep__single__particle_8c.html#afa7d35b774d0ab4d7cad7fb30d75e897" title="Get the particle number concentration &#160;( )" alt="" coords="1034,759,1213,799"/>
-<area shape="rect" id="node30" href="$util_8h.html#ae1c969544a10c17746622cf73186835c" title=" " alt="" coords="1291,958,1431,983"/>
-<area shape="rect" id="node32" href="$util_8h.html#a0ade6cf865e738fbd0629ca08500679d" title=" " alt="" coords="1031,951,1216,991"/>
-<area shape="rect" id="node31" href="$util_8h.html#a77fbb355dc943308c5632fe698e81363" title=" " alt="" coords="1491,830,1625,855"/>
-<area shape="rect" id="node35" href="$aero__rep__solver_8c.html#a513044e29b338d17d02b5bc472a8046f" title="Get the average molecular weight of an aerosol phase in this representation &#160;( )" alt="" coords="784,1473,955,1513"/>
-<area shape="rect" id="node38" href="$aero__rep__solver_8c.html#a0d5fc5c14f5fc182d80811b27c644e86" title="Get the total mass of an aerosol phase in this representation &#160;( )" alt="" coords="784,1201,955,1241"/>
-<area shape="rect" id="node36" href="$aero__rep__modal__binned__mass_8c.html#a2c1fd8badaa6ebffd2b45ab5314c1279" title="Get the average molecular weight in an aerosol phase &#160;( )" alt="" coords="1043,1466,1203,1521"/>
-<area shape="rect" id="node37" href="$aero__rep__single__particle_8c.html#a203b6931fd5a504b7cc1750eb582b60c" title="Get the average molecular weight in an aerosol phase &#160;( )" alt="" coords="1034,1545,1213,1599"/>
-<area shape="rect" id="node39" href="$aero__rep__modal__binned__mass_8c.html#aa84e95ce69656ab640edfdb32cc71d4c" title="Get the total mass in an aerosol phase &#160;( )" alt="" coords="1043,1194,1203,1249"/>
-<area shape="rect" id="node40" href="$aero__rep__single__particle_8c.html#ad49c89b34b57e5b644d6506ead9dea34" title="Get the total mass in an aerosol phase &#160;( )" alt="" coords="1017,1273,1230,1313"/>
-<area shape="rect" id="node42" href="$util_8h.html#afde219af97ef99e021d59c7ca18b9277" title=" " alt="" coords="1282,695,1441,735"/>
-<area shape="rect" id="node50" href="$sub__model___p_d_fi_t_e_8c.html#a2f46f791a4a74c77e283b5afb91911aa" title="Perform the sub&#45;model calculations for the current model state." alt="" coords="525,1191,721,1217"/>
-<area shape="rect" id="node51" href="$sub__model___u_n_i_f_a_c_8c.html#a91d55564c556bf61d6bf0ccac7b43e4b" title="Perform the sub&#45;model calculations for the current model state." alt="" coords="523,1241,724,1266"/>
-<area shape="rect" id="node52" href="$sub__model___z_s_r__aerosol__water_8c.html#a6639a32646d84e02917b64167f36ea89" title="Do pre&#45;derivative calculations." alt="" coords="540,1291,707,1331"/>
+<area shape="rect" id="Node000001" title="Determine if there is anything to solve." alt="" coords="5,1157,183,1183"/>
+<area shape="rect" id="Node000002" href="$camp__solver_8c.html#ac55302bc18db0d68d78f543aad6a16c4" title="Compute the time derivative f(t,y)" alt="" coords="231,1157,269,1183"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,1167,215,1167,215,1172,183,1172"/>
+<area shape="rect" id="Node000003" href="$aero__rep__solver_8c.html#a42041b486fc391bc9abeee5d1ad666b2" title="Update the aerosol representations for a new state." alt="" coords="789,1362,943,1388"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="270,1166,362,1162,495,1160,628,1168,683,1178,722,1193,741,1209,751,1227,758,1246,771,1268,843,1349,839,1353,767,1271,753,1249,746,1229,737,1212,719,1197,681,1183,628,1174,495,1166,362,1167,270,1171"/>
+<area shape="rect" id="Node000008" href="$camp__solver_8c.html#a21373e1f8bad206f6437deeea571f51c" title="Update the model state from the current solver state." alt="" coords="324,1027,465,1067"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="256,1155,279,1118,296,1097,315,1078,322,1074,325,1078,319,1082,300,1100,283,1121,260,1158"/>
+<area shape="rect" id="Node000009" href="$rxn__solver_8c.html#af014568140c63dfab9ea1c92b056e3b8" title="Calculate the time derivative ." alt="" coords="343,610,447,636"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="252,1156,384,650,389,652,257,1157"/>
+<area shape="rect" id="Node000048" href="$rxn__solver_8c.html#a066fddd15835cba3a8b519fb734bd552" title="Calculate the time derivative &#160;for only some specific types." alt="" coords="317,1092,472,1133"/>
+<area shape="poly" id="edge69_Node000002_Node000048" title=" " alt="" coords="268,1160,327,1136,329,1141,270,1165"/>
+<area shape="rect" id="Node000049" href="$sub__model__solver_8c.html#a7f9027610b25bafcc5b6c5af1344dd65" title="Perform the sub model calculations for the current model state." alt="" coords="323,1208,466,1233"/>
+<area shape="poly" id="edge72_Node000002_Node000049" title=" " alt="" coords="270,1174,342,1199,341,1204,268,1179"/>
+<area shape="rect" id="Node000053" href="$time__derivative_8c.html#ae2c31a72134750c12f2f5d8e32c3a99d" title="Output the current derivative array." alt="" coords="319,1257,471,1283"/>
+<area shape="poly" id="edge76_Node000002_Node000053" title=" " alt="" coords="261,1181,285,1213,319,1244,326,1248,323,1252,315,1248,281,1216,257,1185"/>
+<area shape="rect" id="Node000054" href="$time__derivative_8c.html#a72dd19ea5bc2be11ace50e82bbd7857f" title="Reset the derivative." alt="" coords="322,1306,467,1332"/>
+<area shape="poly" id="edge77_Node000002_Node000054" title=" " alt="" coords="257,1182,277,1236,295,1267,319,1293,323,1296,319,1300,315,1297,291,1270,272,1238,252,1184"/>
+<area shape="rect" id="Node000004" href="$aero__rep__modal__binned__mass_8c.html#a567e448c1ea25085add6257c6b8930c6" title="Update aerosol representation data for a new state." alt="" coords="1040,1355,1198,1395"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="943,1372,1025,1372,1025,1378,943,1378"/>
+<area shape="rect" id="Node000007" href="$aero__rep__single__particle_8c.html#afc5e4c6a81bf52bf0c8ee88037a4954d" title="Update aerosol representation data for a new state." alt="" coords="1039,1420,1200,1461"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="919,1386,1024,1413,1023,1418,918,1391"/>
+<area shape="rect" id="Node000005" href="$aero__phase__solver_8c.html#a965e0b9fc79db694be201edd05377dd1" title="Get the mass and average MW in an aerosol phase." alt="" coords="1280,1355,1433,1395"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1199,1372,1265,1372,1265,1378,1199,1378"/>
+<area shape="rect" id="Node000006" href="$aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="1275,835,1438,875"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="1198,1360,1213,1351,1225,1340,1256,1293,1269,1249,1271,1205,1266,1162,1258,1116,1253,1068,1257,1016,1273,959,1295,919,1322,885,1326,889,1300,922,1278,961,1262,1017,1259,1068,1263,1116,1271,1161,1276,1205,1275,1250,1261,1295,1229,1343,1216,1356,1200,1365"/>
+<area shape="rect" id="Node000010" href="$rxns_8h.html#a8e696264a0e9f8f72c2cb00b5605cbeb" title=" " alt="" coords="539,831,702,871"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="403,635,418,671,443,719,478,771,499,795,522,816,529,821,526,825,519,820,495,798,474,774,439,722,413,673,398,637"/>
+<area shape="rect" id="Node000011" href="$rxns_8h.html#a760b30a313fd1608941b8ac584a128df" title=" " alt="" coords="556,896,685,937"/>
+<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="401,635,413,682,435,748,471,819,495,852,522,881,544,895,541,900,519,885,490,855,466,822,430,750,407,683,396,637"/>
+<area shape="rect" id="Node000012" href="$rxns_8h.html#a3eb8ba0e04dfdffa6171688dd493d171" title=" " alt="" coords="542,961,699,1002"/>
+<area shape="poly" id="edge11_Node000009_Node000012" title=" " alt="" coords="400,636,408,692,428,776,443,821,464,867,490,909,522,946,531,954,528,958,519,950,486,912,459,869,438,823,422,777,402,693,395,637"/>
+<area shape="rect" id="Node000013" href="$rxns_8h.html#a2a4e9aea8e3d4a8779ec943d9ccaaad8" title=" " alt="" coords="527,71,714,111"/>
+<area shape="poly" id="edge12_Node000009_Node000013" title=" " alt="" coords="395,609,408,513,434,367,451,290,471,220,493,161,518,121,520,120,524,123,522,125,498,164,476,221,456,291,439,368,413,514,400,610"/>
+<area shape="rect" id="Node000014" href="$rxns_8h.html#a838b8326dbcfa12692ecf289685897a2" title=" " alt="" coords="545,135,696,191"/>
+<area shape="poly" id="edge13_Node000009_Node000014" title=" " alt="" coords="393,610,397,540,413,432,429,371,451,310,480,253,518,201,530,190,534,194,522,205,485,256,456,313,434,373,418,433,402,540,399,610"/>
+<area shape="rect" id="Node000015" href="$rxns_8h.html#aa66217f07fe9eae01f2d6d376e421141" title=" " alt="" coords="544,215,697,271"/>
+<area shape="poly" id="edge14_Node000009_Node000015" title=" " alt="" coords="395,609,402,551,422,464,438,416,459,367,486,322,518,281,530,271,533,275,522,285,490,325,464,370,443,418,427,465,408,552,400,610"/>
+<area shape="rect" id="Node000016" href="$rxn__emission_8c.html#a0fc4250b628dae19ab3c2081a283e2b8" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="539,569,702,610"/>
+<area shape="poly" id="edge15_Node000009_Node000016" title=" " alt="" coords="447,613,523,601,524,607,448,618"/>
+<area shape="rect" id="Node000018" href="$rxn__first__order__loss_8c.html#ac1d2c5d3bf68d6adcdc4183ba340175d" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="554,5,687,46"/>
+<area shape="poly" id="edge17_Node000009_Node000018" title=" " alt="" coords="395,610,406,503,430,338,447,250,467,170,491,103,504,77,518,57,538,42,542,46,522,61,509,80,496,105,472,171,452,252,435,338,411,504,400,610"/>
+<area shape="rect" id="Node000019" href="$rxn___h_l__phase__transfer_8c.html#aa82a07e921e3d22fda1d52073b16219d" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="542,1027,699,1067"/>
+<area shape="poly" id="edge19_Node000009_Node000019" title=" " alt="" coords="399,636,403,702,420,803,435,858,457,914,486,966,522,1012,531,1019,527,1023,518,1016,481,969,452,916,430,860,415,804,398,703,394,636"/>
+<area shape="rect" id="Node000033" href="$rxn__photolysis_8c.html#a821ebabf2abba0aa6b465747178f33d6" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="553,295,688,335"/>
+<area shape="poly" id="edge37_Node000009_Node000033" title=" " alt="" coords="396,609,406,560,428,489,444,451,465,412,489,376,519,345,538,332,541,336,522,349,493,380,469,415,449,453,433,491,411,561,401,610"/>
+<area shape="rect" id="Node000034" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html#a8387f10a0a5aa0b38cc545859542f3c4" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="526,1092,715,1133"/>
+<area shape="poly" id="edge39_Node000009_Node000034" title=" " alt="" coords="398,636,399,712,404,767,413,830,428,895,450,961,481,1023,522,1077,526,1081,522,1084,518,1081,476,1025,445,963,422,897,407,831,398,768,394,712,393,636"/>
+<area shape="rect" id="Node000041" href="$rxn__surface_8c.html#a5bb30760087399bd04a9f9e16f0fab1f" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="543,635,698,675"/>
+<area shape="poly" id="edge55_Node000009_Node000041" title=" " alt="" coords="448,628,528,639,527,645,447,633"/>
+<area shape="rect" id="Node000043" href="$rxn__ternary__chemical__activation_8c.html#aab9c65ccd4b8614889c1462e2500e6b9" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="545,359,696,415"/>
+<area shape="poly" id="edge61_Node000009_Node000043" title=" " alt="" coords="399,609,414,573,440,524,475,471,519,425,530,416,533,421,522,429,479,475,444,526,419,575,404,611"/>
+<area shape="rect" id="Node000044" href="$rxn__troe_8c.html#ae2174a745239e629f1c5480a52c3f6f2" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="554,439,687,479"/>
+<area shape="poly" id="edge63_Node000009_Node000044" title=" " alt="" coords="403,608,448,552,482,519,519,490,538,480,541,484,522,495,485,523,452,555,407,612"/>
+<area shape="rect" id="Node000045" href="$rxns_8h.html#affb30a43f6e32c34d3c4fba241d57b3e" title=" " alt="" coords="547,700,694,741"/>
+<area shape="poly" id="edge65_Node000009_Node000045" title=" " alt="" coords="421,634,521,685,539,692,537,697,519,689,418,639"/>
+<area shape="rect" id="Node000046" href="$rxns_8h.html#aaf3a4bd00b50344e978728d2bf6af6d0" title=" " alt="" coords="540,765,701,806"/>
+<area shape="poly" id="edge66_Node000009_Node000046" title=" " alt="" coords="407,635,453,690,485,722,522,750,532,756,530,761,519,755,482,726,449,694,403,638"/>
+<area shape="rect" id="Node000047" href="$rxn__wet__deposition_8c.html#a6aec5e3d4cbb3a9e0d993a1780c42ecd" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="554,504,687,545"/>
+<area shape="poly" id="edge67_Node000009_Node000047" title=" " alt="" coords="418,607,464,582,519,555,538,548,540,553,521,560,466,587,420,612"/>
+<area shape="rect" id="Node000017" href="$time__derivative_8c.html#af4c9ab5040b544a8ec4b63a1c75922e2" title="Add a contribution to the time derivative." alt="" coords="797,504,935,545"/>
+<area shape="poly" id="edge16_Node000016_Node000017" title=" " alt="" coords="699,566,781,544,783,549,700,571"/>
+<area shape="poly" id="edge18_Node000018_Node000017" title=" " alt="" coords="689,36,707,45,723,57,763,108,796,165,820,225,839,287,851,347,860,402,867,488,861,489,854,403,846,348,833,288,815,227,791,167,759,111,719,61,704,49,686,40"/>
+<area shape="poly" id="edge36_Node000019_Node000017" title=" " alt="" coords="698,1028,719,1012,741,981,753,952,758,923,758,895,755,832,758,797,766,757,806,647,845,558,850,560,811,649,771,758,763,797,761,832,764,894,763,924,758,953,746,983,723,1016,701,1032"/>
+<area shape="rect" id="Node000020" href="$aero__rep__solver_8c.html#a00aee7bec2d9284a74c0eb26d346dc81" title="Check whether aerosol concentrations are per&#45;particle or total for each phase." alt="" coords="769,1096,963,1121"/>
+<area shape="poly" id="edge20_Node000019_Node000020" title=" " alt="" coords="700,1064,797,1089,796,1094,699,1069"/>
+<area shape="rect" id="Node000023" href="$aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="790,900,942,941"/>
+<area shape="poly" id="edge23_Node000019_Node000023" title=" " alt="" coords="690,1024,720,1011,775,980,823,948,826,952,777,985,722,1016,692,1028"/>
+<area shape="rect" id="Node000026" href="$aero__rep__solver_8c.html#aa56870eb4fe20532461b1634d7688210" title="Get the particle number concentration &#160;( )" alt="" coords="793,769,939,810"/>
+<area shape="poly" id="edge27_Node000019_Node000026" title=" " alt="" coords="698,1026,719,1012,732,997,739,983,746,954,751,923,766,887,795,850,826,819,830,822,799,853,771,890,756,924,751,955,744,985,736,1000,723,1016,701,1031"/>
+<area shape="rect" id="Node000029" href="$util_8h.html#adfe7ce1a7c219664c7a382f24068b1a1" title=" " alt="" coords="790,1025,942,1066"/>
+<area shape="poly" id="edge31_Node000019_Node000029" title=" " alt="" coords="699,1044,775,1043,775,1049,699,1049"/>
+<area shape="rect" id="Node000021" href="$aero__rep__modal__binned__mass_8c.html#a5806fae1fe7d70369bfb7a0d9c54d12f" title="Get the type of aerosol concentration used." alt="" coords="1028,1145,1211,1186"/>
+<area shape="poly" id="edge21_Node000020_Node000021" title=" " alt="" coords="927,1119,1013,1139,1012,1144,925,1124"/>
+<area shape="rect" id="Node000022" href="$aero__rep__single__particle_8c.html#a59114de73dd305d5825a8547155b8946" title="Get the type of aerosol concentration used." alt="" coords="1039,1080,1200,1121"/>
+<area shape="poly" id="edge22_Node000020_Node000022" title=" " alt="" coords="963,1103,1023,1101,1024,1106,964,1108"/>
+<area shape="rect" id="Node000024" href="$aero__rep__modal__binned__mass_8c.html#a8d5bf734337581d90c2280ab858ccf96" title="Get the effective particle radius &#160;(m)" alt="" coords="1015,900,1223,941"/>
+<area shape="poly" id="edge24_Node000023_Node000024" title=" " alt="" coords="942,918,1000,918,1000,923,942,923"/>
+<area shape="rect" id="Node000025" href="$aero__rep__single__particle_8c.html#a48b11d345d89071d34e67b5063b1b891" title="Get the effective particle radius &#160;(m)" alt="" coords="1035,835,1204,875"/>
+<area shape="poly" id="edge25_Node000023_Node000025" title=" " alt="" coords="942,898,1022,877,1024,882,943,903"/>
+<area shape="poly" id="edge26_Node000025_Node000006" title=" " alt="" coords="1204,852,1260,852,1260,858,1204,858"/>
+<area shape="rect" id="Node000027" href="$aero__rep__modal__binned__mass_8c.html#a2e585253c19aa48dec8c55b963999e9d" title="Get the particle number concentration &#160;( )" alt="" coords="1011,704,1227,745"/>
+<area shape="poly" id="edge28_Node000026_Node000027" title=" " alt="" coords="939,768,1022,747,1023,752,940,773"/>
+<area shape="rect" id="Node000028" href="$aero__rep__single__particle_8c.html#afa7d35b774d0ab4d7cad7fb30d75e897" title="Get the particle number concentration &#160;( )" alt="" coords="1031,769,1208,810"/>
+<area shape="poly" id="edge30_Node000026_Node000028" title=" " alt="" coords="939,787,1015,787,1015,792,939,792"/>
+<area shape="poly" id="edge29_Node000027_Node000006" title=" " alt="" coords="1200,743,1229,755,1280,787,1323,822,1320,826,1277,792,1226,760,1198,748"/>
+<area shape="rect" id="Node000030" href="$util_8h.html#ae1c969544a10c17746622cf73186835c" title=" " alt="" coords="1287,973,1426,999"/>
+<area shape="poly" id="edge32_Node000029_Node000030" title=" " alt="" coords="942,1041,1075,1033,1227,1015,1294,1000,1295,1006,1228,1020,1076,1038,942,1046"/>
+<area shape="rect" id="Node000032" href="$util_8h.html#a0ade6cf865e738fbd0629ca08500679d" title=" " alt="" coords="1027,965,1211,1006"/>
+<area shape="poly" id="edge34_Node000029_Node000032" title=" " alt="" coords="941,1025,1015,1008,1016,1013,943,1030"/>
+<area shape="rect" id="Node000031" href="$util_8h.html#a77fbb355dc943308c5632fe698e81363" title=" " alt="" coords="1486,842,1620,868"/>
+<area shape="poly" id="edge33_Node000030_Node000031" title=" " alt="" coords="1376,970,1518,874,1521,879,1379,974"/>
+<area shape="poly" id="edge35_Node000032_Node000030" title=" " alt="" coords="1212,983,1271,983,1271,988,1212,988"/>
+<area shape="poly" id="edge38_Node000033_Node000017" title=" " alt="" coords="689,328,722,345,762,378,797,416,848,489,843,492,793,420,758,382,719,349,687,333"/>
+<area shape="poly" id="edge54_Node000034_Node000017" title=" " alt="" coords="705,1090,719,1077,745,1038,759,1001,764,965,762,929,755,851,757,807,766,757,805,646,845,558,850,560,810,648,771,758,762,807,761,851,768,929,769,965,765,1002,750,1040,723,1081,708,1094"/>
+<area shape="poly" id="edge40_Node000034_Node000020" title=" " alt="" coords="716,1108,753,1108,753,1113,716,1113"/>
+<area shape="poly" id="edge51_Node000034_Node000023" title=" " alt="" coords="698,1089,719,1077,735,1062,744,1047,753,1031,767,1012,828,950,832,953,771,1015,758,1034,749,1050,739,1065,722,1081,701,1094"/>
+<area shape="poly" id="edge52_Node000034_Node000026" title=" " alt="" coords="704,1089,719,1077,736,1054,745,1032,748,1010,748,988,749,941,754,915,766,887,794,849,825,818,828,822,798,853,771,890,759,917,754,942,754,988,753,1011,750,1034,740,1057,723,1081,707,1093"/>
+<area shape="poly" id="edge53_Node000034_Node000029" title=" " alt="" coords="697,1089,775,1068,776,1073,699,1094"/>
+<area shape="rect" id="Node000035" href="$aero__rep__solver_8c.html#a513044e29b338d17d02b5bc472a8046f" title="Get the average molecular weight of an aerosol phase in this representation &#160;( )" alt="" coords="781,1492,951,1533"/>
+<area shape="poly" id="edge41_Node000034_Node000035" title=" " alt="" coords="658,1131,693,1158,723,1194,738,1222,746,1248,750,1296,753,1344,759,1370,771,1399,800,1443,832,1479,828,1483,795,1446,766,1402,754,1372,748,1345,745,1296,740,1250,733,1224,719,1196,689,1162,655,1135"/>
+<area shape="rect" id="Node000038" href="$aero__rep__solver_8c.html#a0d5fc5c14f5fc182d80811b27c644e86" title="Get the total mass of an aerosol phase in this representation &#160;( )" alt="" coords="781,1217,951,1258"/>
+<area shape="poly" id="edge46_Node000034_Node000038" title=" " alt="" coords="681,1131,722,1149,822,1206,820,1211,720,1153,679,1136"/>
+<area shape="rect" id="Node000036" href="$aero__rep__modal__binned__mass_8c.html#a2c1fd8badaa6ebffd2b45ab5314c1279" title="Get the average molecular weight in an aerosol phase &#160;( )" alt="" coords="1040,1485,1199,1540"/>
+<area shape="poly" id="edge42_Node000035_Node000036" title=" " alt="" coords="951,1510,1024,1510,1024,1515,951,1515"/>
+<area shape="rect" id="Node000037" href="$aero__rep__single__particle_8c.html#a203b6931fd5a504b7cc1750eb582b60c" title="Get the average molecular weight in an aerosol phase &#160;( )" alt="" coords="1030,1565,1208,1620"/>
+<area shape="poly" id="edge44_Node000035_Node000037" title=" " alt="" coords="933,1531,1016,1557,1014,1562,932,1536"/>
+<area shape="poly" id="edge43_Node000036_Node000005" title=" " alt="" coords="1198,1483,1226,1470,1276,1438,1319,1404,1322,1408,1279,1442,1229,1475,1201,1488"/>
+<area shape="poly" id="edge45_Node000037_Node000005" title=" " alt="" coords="1207,1562,1226,1550,1261,1517,1292,1479,1336,1407,1341,1410,1297,1482,1265,1521,1229,1554,1210,1567"/>
+<area shape="rect" id="Node000039" href="$aero__rep__modal__binned__mass_8c.html#aa84e95ce69656ab640edfdb32cc71d4c" title="Get the total mass in an aerosol phase &#160;( )" alt="" coords="1040,1210,1199,1266"/>
+<area shape="poly" id="edge47_Node000038_Node000039" title=" " alt="" coords="951,1235,1024,1235,1024,1240,951,1240"/>
+<area shape="rect" id="Node000040" href="$aero__rep__single__particle_8c.html#ad49c89b34b57e5b644d6506ead9dea34" title="Get the total mass in an aerosol phase &#160;( )" alt="" coords="1013,1289,1225,1330"/>
+<area shape="poly" id="edge49_Node000038_Node000040" title=" " alt="" coords="941,1256,1031,1282,1030,1287,939,1261"/>
+<area shape="poly" id="edge48_Node000039_Node000005" title=" " alt="" coords="1201,1262,1229,1275,1279,1308,1322,1342,1319,1346,1276,1312,1226,1280,1198,1267"/>
+<area shape="poly" id="edge50_Node000040_Node000005" title=" " alt="" coords="1196,1328,1266,1347,1265,1353,1195,1333"/>
+<area shape="poly" id="edge60_Node000041_Node000017" title=" " alt="" coords="690,632,720,619,776,587,825,552,828,557,779,591,722,624,692,637"/>
+<area shape="poly" id="edge56_Node000041_Node000023" title=" " alt="" coords="700,671,723,686,737,703,745,719,752,751,756,784,771,820,799,857,830,888,826,892,795,860,766,823,751,785,746,752,740,721,732,706,719,690,697,675"/>
+<area shape="poly" id="edge57_Node000041_Node000026" title=" " alt="" coords="693,673,722,686,780,721,830,757,826,762,777,725,720,691,691,678"/>
+<area shape="rect" id="Node000042" href="$util_8h.html#afde219af97ef99e021d59c7ca18b9277" title=" " alt="" coords="1277,704,1436,745"/>
+<area shape="poly" id="edge58_Node000041_Node000042" title=" " alt="" coords="698,653,936,661,1082,672,1228,690,1267,697,1266,703,1227,695,1081,677,935,666,698,658"/>
+<area shape="poly" id="edge59_Node000042_Node000031" title=" " alt="" coords="1391,743,1521,831,1518,835,1388,748"/>
+<area shape="poly" id="edge62_Node000043_Node000017" title=" " alt="" coords="697,413,722,425,778,458,827,492,824,497,775,463,719,429,695,417"/>
+<area shape="poly" id="edge64_Node000044_Node000017" title=" " alt="" coords="688,474,783,500,781,505,687,479"/>
+<area shape="poly" id="edge68_Node000047_Node000017" title=" " alt="" coords="688,522,782,522,782,527,688,527"/>
+<area shape="poly" id="edge70_Node000048_Node000019" title=" " alt="" coords="467,1089,533,1070,534,1075,468,1094"/>
+<area shape="poly" id="edge71_Node000048_Node000034" title=" " alt="" coords="473,1110,510,1110,510,1115,473,1115"/>
+<area shape="rect" id="Node000050" href="$sub__model___p_d_fi_t_e_8c.html#a2f46f791a4a74c77e283b5afb91911aa" title="Perform the sub&#45;model calculations for the current model state." alt="" coords="523,1208,718,1233"/>
+<area shape="poly" id="edge73_Node000049_Node000050" title=" " alt="" coords="467,1218,508,1218,508,1223,467,1223"/>
+<area shape="rect" id="Node000051" href="$sub__model___u_n_i_f_a_c_8c.html#a91d55564c556bf61d6bf0ccac7b43e4b" title="Perform the sub&#45;model calculations for the current model state." alt="" coords="520,1257,721,1283"/>
+<area shape="poly" id="edge74_Node000049_Node000051" title=" " alt="" coords="458,1231,544,1250,543,1256,456,1236"/>
+<area shape="rect" id="Node000052" href="$sub__model___z_s_r__aerosol__water_8c.html#a6639a32646d84e02917b64167f36ea89" title="Do pre&#45;derivative calculations." alt="" coords="537,1307,704,1347"/>
+<area shape="poly" id="edge75_Node000049_Node000052" title=" " alt="" coords="452,1231,474,1242,489,1255,499,1268,507,1281,522,1293,530,1297,527,1302,519,1297,504,1284,494,1271,485,1259,471,1247,449,1236"/>
 </map>

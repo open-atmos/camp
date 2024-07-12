@@ -1,5 +1,9 @@
 <map id="camp_util::string_to_integer" name="camp_util::string_to_integer">
-<area shape="rect" id="node1" title="Convert a string to an integer." alt="" coords="5,29,140,69"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="188,11,340,37"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="388,29,511,69"/>
+<area shape="rect" id="Node000001" title="Convert a string to an integer." alt="" coords="5,29,139,70"/>
+<area shape="poly" id="edge4_Node000001_Node000001" title=" " alt="" coords="36,29,34,19,40,10,53,5,72,3,93,5,105,11,103,16,91,10,72,8,54,10,43,15,39,20,41,28"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="187,12,338,37"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,38,171,34,171,39,139,43"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="386,29,508,70"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="139,47,370,47,370,52,139,52"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="339,32,371,37,370,42,338,37"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="rxn_wennberg_no_ro2_update_env_state" name="rxn_wennberg_no_ro2_update_env_state">
-<area shape="rect" id="node1" title="Update reaction data for new environmental conditions." alt="" coords="5,5,153,45"/>
-<area shape="rect" id="node2" href="$rxn__wennberg__no__ro2_8c.html#a030d97a6aca1f035049ca6e8bb86afe3" title="Calculates the Troe&#45;like parameter A(T, [M], n)" alt="" coords="201,13,292,38"/>
+<area shape="rect" id="Node000001" title="Update reaction data for new environmental conditions." alt="" coords="5,5,153,46"/>
+<area shape="rect" id="Node000002" href="$rxn__wennberg__no__ro2_8c.html#a030d97a6aca1f035049ca6e8bb86afe3" title="Calculates the Troe&#45;like parameter A(T, [M], n)" alt="" coords="201,13,290,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,23,185,23,185,28,153,28"/>
 </map>

@@ -1,0 +1,23 @@
+\doxysubsection{CAMP\+: Emission}
+\hypertarget{camp_rxn_emission}{}\label{camp_rxn_emission}\index{CAMP: Emission@{CAMP: Emission}}
+Emission reactions take the form\+:
+
+\[
+   \rightarrow \mbox{X}
+ \]
+
+where $\ce{X}$ is the species being emitted.
+
+Emission rates can be constant or set from an external module using the {\ttfamily \doxylink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t}} object. External modules can use the {\ttfamily \doxylink{structcamp__rxn__emission_1_1rxn__emission__t_a344bfc227df51ae961d0bcac3e2586ad}{camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+emission\+\_\+t\+::get\+\_\+property\+\_\+set()}} function during initilialization to access any needed reaction parameters to identify certain emission reactions. An {\ttfamily camp\+\_\+rxn\+\_\+emission\+::update\+\_\+data\+\_\+emission\+\_\+t} object should be initialized for each emissions reaction. These objects can then be used during solving to update the emission rate from an external module.
+
+Input data for emission reactions have the following format \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}EMISSION"{},}
+\DoxyCodeLine{\ \ "{}species"{}\ :\ "{}species\_name"{},}
+\DoxyCodeLine{\ \ "{}scaling\ factor"{}\ :\ 1.2,}
+\DoxyCodeLine{\ \ ...}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ The key-\/value pair {\bfseries{species}} is required and its value must be the name of the species being emitted. The {\bfseries{scaling}} {\bfseries{factor}} is optional, and can be used to set a constant scaling factor for the rate. When a {\bfseries{scaling}} {\bfseries{factor}} is not provided, it is assumed to be 1.\+0. All other data is optional and will be available to external modules during initialization. Rates are in units of $\mbox{concentration units} \quad s^{-1}$, and must be set using a {\ttfamily rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t} object. 

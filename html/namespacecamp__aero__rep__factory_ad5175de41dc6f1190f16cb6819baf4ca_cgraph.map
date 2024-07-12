@@ -1,6 +1,10 @@
 <map id="camp_aero_rep_factory::load" name="camp_aero_rep_factory::load">
-<area shape="rect" id="node1" title="Load an aerosol represenation based on its type." alt="" coords="5,23,163,63"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="211,5,363,31"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#ab72bff2627c9468e4c352118b8dc7046" title="Prints a warning message." alt="" coords="215,55,359,80"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="411,23,533,63"/>
+<area shape="rect" id="Node000001" title="Load an aerosol represenation based on its type." alt="" coords="5,23,162,64"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="210,5,361,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,31,194,27,194,32,162,36"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#ab72bff2627c9468e4c352118b8dc7046" title="Prints a warning message." alt="" coords="214,55,357,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="162,50,198,54,198,60,162,55"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="409,23,531,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="362,26,394,30,393,36,361,31"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="357,56,393,51,394,56,358,61"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="print_data_sizes" name="print_data_sizes">
-<area shape="rect" id="node1" title="Print some camp&#45;chem data sizes." alt="" coords="141,5,257,31"/>
-<area shape="rect" id="node2" href="$camp__solver_8c.html#a68b93bb3ad0a17bb25dba4061bbf52d8" title="Get a new solver object." alt="" coords="5,5,93,31"/>
+<area shape="rect" id="Node000001" title="Print some camp&#45;chem data sizes." alt="" coords="141,5,256,31"/>
+<area shape="rect" id="Node000002" href="$camp__solver_8c.html#a68b93bb3ad0a17bb25dba4061bbf52d8" title="Get a new solver object." alt="" coords="5,5,93,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,21,93,21,93,16,125,16"/>
 </map>

@@ -1,286 +1,286 @@
-\hypertarget{sub__model__factory_8_f90_source}{}\doxysection{sub\+\_\+model\+\_\+factory.\+F90}
-\label{sub__model__factory_8_f90_source}\index{sub\_model\_factory.F90@{sub\_model\_factory.F90}}
+\doxysection{sub\+\_\+model\+\_\+factory.\+F90}
+\hypertarget{sub__model__factory_8_f90_source}{}\label{sub__model__factory_8_f90_source}\index{sub\_model\_factory.F90@{sub\_model\_factory.F90}}
 \mbox{\hyperlink{sub__model__factory_8_f90}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2021 Barcelona Supercomputing Center and University of}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00002}00002 \textcolor{comment}{! Illinois at Urbana-\/Champaign}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00003}00003 \textcolor{comment}{! SPDX-\/License-\/Identifier: MIT}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00004}00004 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00005}00005 \textcolor{comment}{!> \(\backslash\)file}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00006}00006 \textcolor{comment}{!> The camp\_sub\_model\_factory module.}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00007}00007 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00008}00008 \textcolor{comment}{!> \(\backslash\)page camp\_sub\_model\_add CAMP: Adding a Sub Model}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00009}00009 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00010}00010 \textcolor{comment}{!! TODO write instructions}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00011}00011 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00012}00012 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00013}00013 \textcolor{comment}{!> The sub\_model\_factory\_t type and associated subroutines}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00014}\mbox{\hyperlink{namespacecamp__sub__model__factory}{00014}} \textcolor{keyword}{module} \mbox{\hyperlink{namespacecamp__sub__model__factory}{camp\_sub\_model\_factory}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00015}00015 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00016}00016 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_JSON}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00017}00017 \textcolor{preprocessor}{}  \textcolor{keywordtype}{use }json\_module}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00018}00018 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00019}00019 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00020}00020 \textcolor{preprocessor}{}  \textcolor{keywordtype}{use }mpi}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00021}00021 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00022}00022 \textcolor{preprocessor}{}  \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}},                    \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}, \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00023}00023   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__mpi}{camp\_mpi}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00024}00024   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__sub__model__data}{camp\_sub\_model\_data}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00025}00025   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__util}{camp\_util}},                         \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}, \mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}}, \mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}, \&}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00026}00026                                                \mbox{\hyperlink{namespacecamp__util_ab72bff2627c9468e4c352118b8dc7046}{warn\_msg}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00027}00027 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00028}00028   \textcolor{comment}{! Use all sub-\/models}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00029}00029   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__sub__model__pdfite}{camp\_sub\_model\_pdfite}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00030}00030   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__sub__model__unifac}{camp\_sub\_model\_unifac}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00031}00031   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water}{camp\_sub\_model\_zsr\_aerosol\_water}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00032}00032 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00033}00033   \textcolor{keywordtype}{implicit none}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00034}00034   \textcolor{keywordtype}{private}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00035}00035 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00036}00036   \textcolor{keywordtype}{public} :: \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00037}00037 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00038}00038 \textcolor{comment}{  !> Identifiers for sub-\/models -\/ used by binary packing/unpacking functions}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00039}\mbox{\hyperlink{namespacecamp__sub__model__factory_acd9a6a58701b54a28cab0579cacaec20}{00039}}   \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{parameter}, \textcolor{keywordtype}{public} :: \mbox{\hyperlink{namespacecamp__sub__model__factory_acd9a6a58701b54a28cab0579cacaec20}{sub\_model\_unifac}} = 1}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00040}\mbox{\hyperlink{namespacecamp__sub__model__factory_ac306069c30a21681076df001460db8fd}{00040}}   \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{parameter}, \textcolor{keywordtype}{public} :: \mbox{\hyperlink{namespacecamp__sub__model__factory_ac306069c30a21681076df001460db8fd}{sub\_model\_zsr\_aerosol\_water}} = 2}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00041}\mbox{\hyperlink{namespacecamp__sub__model__factory_af261d5964ec6583b19d2a631486e1cc8}{00041}}   \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{parameter}, \textcolor{keywordtype}{public} :: \mbox{\hyperlink{namespacecamp__sub__model__factory_af261d5964ec6583b19d2a631486e1cc8}{sub\_model\_pdfite}} = 3}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00042}00042 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00043}00043 \textcolor{comment}{  !> Factory type for sub-\/models}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00044}00044 \textcolor{comment}{  !!}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00045}00045 \textcolor{comment}{  !! Provides new instances of type extending sub\_model\_data\_t by name or}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00046}00046 \textcolor{comment}{  !! from input file data}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00047}\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{00047}}   \textcolor{keyword}{type} :: \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00048}00048   \textcolor{keyword}{contains}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00049}00049 \textcolor{comment}{    !> Create a new sub-\/model by type name}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00050}\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a0b07ebb4ef850b1bf2aec73df3edcf4c}{00050}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__sub__model__factory_a3a05475e7fc4cba67b74353ed34205e8}{create}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00051}00051 \textcolor{comment}{    !> Create a new aerosol representation from input data}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00052}\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a92f591aa0a296fd7de983f05998b1f40}{00052}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__sub__model__data_a3b98e38cc5c57a0a7ace9817adaf6df5}{load}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00053}00053 \textcolor{comment}{    !> Get the aerosol representation type}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00054}\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_ae1f149819c453319a2718367a89fe316}{00054}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__sub__model__factory_a027f8bdcfcdf1c0e71882ab67c8fb39b}{get\_type}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00055}00055 \textcolor{comment}{    !> Get a new update data object}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00056}\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a71292303a96b3c04bbcbc02bebe70c43}{00056}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__sub__model__factory_ac37e3d11329830a875b417c64faba36e}{initialize\_update\_data}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00057}00057 \textcolor{comment}{    !> Determine the number of bytes required to pack a given sub-\/model}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00058}\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a2ece82b9ae1e34598ced790d827ad5ca}{00058}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__sub__model__data_a428e7081801d630bdf8d9f544842a2a3}{pack\_size}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00059}00059 \textcolor{comment}{    !> Pack a given sub-\/model onto the buffer, advancing position}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00060}\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_ad24208b07750a3ad2807590ffde70bee}{00060}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__sub__model__data_ad3ae5763737bf7ebe30d20a9afd982ca}{bin\_pack}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00061}00061 \textcolor{comment}{    !> Unpack a sub-\/model from the buffer, advancing position}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00062}\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a3d938bec3fea4a764dce18a9a5b732df}{00062}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__sub__model__data_ae7192796fefdd97445c70b628da1733b}{bin\_unpack}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00063}00063   \textcolor{keyword}{end type }\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00064}00064 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00065}00065 \textcolor{keyword}{contains}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00066}00066 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00067}00067 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00068}00068 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00069}00069 \textcolor{comment}{  !> Create a new sub-\/model by type name}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00070}\mbox{\hyperlink{namespacecamp__sub__model__factory_a3a05475e7fc4cba67b74353ed34205e8}{00070}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__sub__model__factory_a3a05475e7fc4cba67b74353ed34205e8}{create}}(this, type\_name) \textcolor{keyword}{result} (new\_obj)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00071}00071 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00072}00072 \textcolor{comment}{    !> A new sub-\/model}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00073}00073     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\_model\_data\_t}}), \textcolor{keywordtype}{pointer} :: new\_obj\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00074}00074 \textcolor{comment}{    !> Sub-\/model factory}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00075}00075     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}), \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00076}00076 \textcolor{comment}{    !> Type of the sub-\/model}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00077}00077     \textcolor{keywordtype}{character(len=*)}, \textcolor{keywordtype}{intent(in)} :: type\_name}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00078}00078 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00079}00079     new\_obj => null()}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00080}00080 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00081}00081     \textcolor{keywordflow}{select case} (type\_name)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00082}00082       \textcolor{keywordflow}{case} (\textcolor{stringliteral}{"{}SUB\_MODEL\_PDFITE"{}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00083}00083         new\_obj => \mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\_model\_pdfite\_t}}()}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00084}00084       \textcolor{keywordflow}{case} (\textcolor{stringliteral}{"{}SUB\_MODEL\_UNIFAC"{}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00085}00085         new\_obj => \mbox{\hyperlink{structcamp__sub__model__unifac_1_1sub__model__unifac__t}{sub\_model\_unifac\_t}}()}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00086}00086       \textcolor{keywordflow}{case} (\textcolor{stringliteral}{"{}SUB\_MODEL\_ZSR\_AEROSOL\_WATER"{}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00087}00087         new\_obj => \mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\_model\_zsr\_aerosol\_water\_t}}()}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00088}00088 \textcolor{keywordflow}{      case default}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00089}00089         \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(293855421, \textcolor{stringliteral}{"{}Unknown sub-\/model type: "{}}//type\_name)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00090}00090 \textcolor{keywordflow}{    end select}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00091}00091 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00092}00092   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__sub__model__factory_a3a05475e7fc4cba67b74353ed34205e8}{create}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00093}00093 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00094}00094 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00095}00095 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00096}00096 \textcolor{comment}{  !> Load a sub-\/model based on its type}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00097}00097 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_JSON}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00098}\mbox{\hyperlink{namespacecamp__sub__model__factory_a80dee2f5639b9b365210aab59c767a4e}{00098}} \textcolor{preprocessor}{}  \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__sub__model__data_a3b98e38cc5c57a0a7ace9817adaf6df5}{load}}(this, json, j\_obj) \textcolor{keyword}{result} (new\_obj)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00099}00099 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00100}00100 \textcolor{comment}{    !> A new sub-\/model}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00101}00101     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\_model\_data\_t}}), \textcolor{keywordtype}{pointer} :: new\_obj\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00102}00102 \textcolor{comment}{    !> Sub-\/model factory}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00103}00103     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}), \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00104}00104 \textcolor{comment}{    !> JSON core}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00105}00105     \textcolor{keywordtype}{type}(json\_core), \textcolor{keywordtype}{pointer}, \textcolor{keywordtype}{intent(in)} :: json\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00106}00106 \textcolor{comment}{    !> JSON object}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00107}00107     \textcolor{keywordtype}{type}(json\_value), \textcolor{keywordtype}{pointer}, \textcolor{keywordtype}{intent(in)} :: j\_obj}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00108}00108 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00109}00109     \textcolor{keywordtype}{character(kind=json\_ck, len=:)}, \textcolor{keywordtype}{allocatable} :: unicode\_type\_name}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00110}00110     \textcolor{keywordtype}{character(len=:)}, \textcolor{keywordtype}{allocatable} :: type\_name}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00111}00111     \textcolor{keywordtype}{logical(kind=json\_lk)} :: found}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00112}00112 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00113}00113     new\_obj => null()}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00114}00114 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00115}00115     \textcolor{comment}{! Get the sub-\/model type}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00116}00116     \textcolor{keyword}{call }json\%get(j\_obj, \textcolor{stringliteral}{"{}type"{}}, unicode\_type\_name, found)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00117}00117     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(447218460, found, \textcolor{stringliteral}{'Missing sub-\/model type.'})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00118}00118     type\_name = unicode\_type\_name}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00119}00119 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00120}00120     \textcolor{comment}{! Create a new sub-\/model instance of the type specified}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00121}00121     new\_obj => this\%create(type\_name)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00122}00122 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00123}00123     \textcolor{comment}{! Load sub-\/model parameters from the json object}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00124}00124     \textcolor{keyword}{call }new\_obj\%load(json, j\_obj)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00125}00125 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00126}00126 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00127}00127 \textcolor{preprocessor}{}\textcolor{comment}{  !> Generic warning function when no input file support exists}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00128}00128   \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__sub__model__data_a3b98e38cc5c57a0a7ace9817adaf6df5}{load}}(this) \textcolor{keyword}{result} (new\_obj)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00129}00129 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00130}00130 \textcolor{comment}{    !> A new sub-\/model}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00131}00131     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\_model\_data\_t}}), \textcolor{keywordtype}{pointer} :: new\_obj\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00132}00132 \textcolor{comment}{    !> Sub-\/model factory}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00133}00133     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}), \textcolor{keywordtype}{intent(in)} :: this}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00134}00134 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00135}00135     new\_obj => null()}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00136}00136 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00137}00137     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab72bff2627c9468e4c352118b8dc7046}{warn\_msg}}(545649418, \textcolor{stringliteral}{"{}No support for input files."{}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00138}00138 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00139}00139 \textcolor{preprocessor}{}  \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__sub__model__data_a3b98e38cc5c57a0a7ace9817adaf6df5}{load}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00140}00140 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00141}00141 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00142}00142 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00143}00143 \textcolor{comment}{  !> Get the sub-\/model type as a constant}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00144}\mbox{\hyperlink{namespacecamp__sub__model__factory_a027f8bdcfcdf1c0e71882ab67c8fb39b}{00144}}   \textcolor{keyword}{integer(kind=i\_kind) }\textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__sub__model__factory_a027f8bdcfcdf1c0e71882ab67c8fb39b}{get\_type}}(this, sub\_model) \&}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00145}00145             result(sub\_model\_data\_type)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00146}00146 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00147}00147 \textcolor{comment}{    !> Sub-\/model factory}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00148}00148     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}), \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00149}00149 \textcolor{comment}{    !> Sub-\/model to get type of}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00150}00150     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\_model\_data\_t}}), \textcolor{keywordtype}{intent(in)} :: sub\_model}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00151}00151 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00152}00152     \textcolor{keywordflow}{select type} (sub\_model)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00153}00153 \textcolor{keywordflow}{      type is} (\mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\_model\_pdfite\_t}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00154}00154         sub\_model\_data\_type = \mbox{\hyperlink{namespacecamp__sub__model__factory_af261d5964ec6583b19d2a631486e1cc8}{sub\_model\_pdfite}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00155}00155 \textcolor{keywordflow}{      type is} (\mbox{\hyperlink{structcamp__sub__model__unifac_1_1sub__model__unifac__t}{sub\_model\_unifac\_t}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00156}00156         sub\_model\_data\_type = \mbox{\hyperlink{namespacecamp__sub__model__factory_acd9a6a58701b54a28cab0579cacaec20}{sub\_model\_unifac}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00157}00157 \textcolor{keywordflow}{      type is} (\mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\_model\_zsr\_aerosol\_water\_t}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00158}00158         sub\_model\_data\_type = \mbox{\hyperlink{namespacecamp__sub__model__factory_ac306069c30a21681076df001460db8fd}{sub\_model\_zsr\_aerosol\_water}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00159}00159 \textcolor{keywordflow}{      class default}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00160}00160         \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(695653684, \textcolor{stringliteral}{"{}Unknown sub-\/model type"{}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00161}00161 \textcolor{keywordflow}{    end select}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00162}00162 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00163}00163   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__sub__model__factory_a027f8bdcfcdf1c0e71882ab67c8fb39b}{get\_type}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00164}00164 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00165}00165 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00166}00166 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00167}00167 \textcolor{comment}{  !> Initialize an update data object}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00168}\mbox{\hyperlink{namespacecamp__sub__model__factory_ac37e3d11329830a875b417c64faba36e}{00168}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__sub__model__factory_ac37e3d11329830a875b417c64faba36e}{initialize\_update\_data}}(this, sub\_model, update\_data)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00169}00169 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00170}00170 \textcolor{comment}{    !> Sub-\/model factory}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00171}00171     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}), \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00172}00172 \textcolor{comment}{    !> Sub-\/model to be updated}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00173}00173     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\_model\_data\_t}}), \textcolor{keywordtype}{intent(inout)} :: sub\_model\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00174}00174 \textcolor{comment}{    !> Update data object}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00175}00175     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\_model\_update\_data\_t}}), \textcolor{keywordtype}{intent(out)} :: update\_data}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00176}00176 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00177}00177     \textcolor{keywordflow}{select type} (update\_data)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00178}00178 \textcolor{keywordflow}{      class default}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00179}00179         \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(245232793, \textcolor{stringliteral}{"{}Internal error -\/ update data type missing"{}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00180}00180 \textcolor{keywordflow}{    end select}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00181}00181 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00182}00182   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__sub__model__factory_ac37e3d11329830a875b417c64faba36e}{initialize\_update\_data}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00183}00183 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00184}00184 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00185}00185 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00186}00186 \textcolor{comment}{  !> Determine the size of a binary required to pack a sub-\/model}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00187}\mbox{\hyperlink{namespacecamp__sub__model__factory_af73bdd51e97a9f4f82a68c658196ec0d}{00187}}   \textcolor{keyword}{integer(kind=i\_kind) }\textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__sub__model__data_a428e7081801d630bdf8d9f544842a2a3}{pack\_size}}(this, sub\_model, comm)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00188}00188 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00189}00189 \textcolor{comment}{    !> Sub-\/model factory}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00190}00190     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}) :: this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00191}00191 \textcolor{comment}{    !> Sub-\/model to pack}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00192}00192     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\_model\_data\_t}}), \textcolor{keywordtype}{intent(in)} :: sub\_model\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00193}00193 \textcolor{comment}{    !> MPI communicator}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00194}00194     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(in)} :: comm}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00195}00195 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00196}00196     \mbox{\hyperlink{namespacecamp__sub__model__data_a428e7081801d630bdf8d9f544842a2a3}{pack\_size}} =  \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(int(1, kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}), comm) + \&}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00197}00197                  sub\_model\%pack\_size(comm)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00198}00198 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00199}00199   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__sub__model__data_a428e7081801d630bdf8d9f544842a2a3}{pack\_size}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00200}00200 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00201}00201 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00202}00202 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00203}00203 \textcolor{comment}{  !> Pack the given value to the buffer, advancing position}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00204}\mbox{\hyperlink{namespacecamp__sub__model__factory_ab25c5f5d7e73e6c52a328a762685366c}{00204}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__sub__model__data_ad3ae5763737bf7ebe30d20a9afd982ca}{bin\_pack}}(this, sub\_model, buffer, pos, comm)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00205}00205 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00206}00206 \textcolor{comment}{    !> Sub-\/model factory}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00207}00207     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}), \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00208}00208 \textcolor{comment}{    !> Sub-\/model to pack}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00209}00209     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\_model\_data\_t}}), \textcolor{keywordtype}{intent(in)} :: sub\_model\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00210}00210 \textcolor{comment}{    !> Memory buffer}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00211}00211     \textcolor{keywordtype}{character}, \textcolor{keywordtype}{intent(inout)} :: buffer(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00212}00212 \textcolor{comment}{    !> Current buffer position}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00213}00213     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(inout)} :: pos\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00214}00214 \textcolor{comment}{    !> MPI communicator}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00215}00215     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(in)} :: comm}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00216}00216 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00217}00217 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00218}00218 \textcolor{preprocessor}{}    \textcolor{keywordtype}{integer} :: sub\_model\_data\_type, i\_sub\_model, prev\_position}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00219}00219 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00220}00220     prev\_position = pos}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00221}00221     \textcolor{keywordflow}{select type} (sub\_model)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00222}00222 \textcolor{keywordflow}{      type is} (\mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\_model\_pdfite\_t}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00223}00223         sub\_model\_data\_type = \mbox{\hyperlink{namespacecamp__sub__model__factory_af261d5964ec6583b19d2a631486e1cc8}{sub\_model\_pdfite}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00224}00224 \textcolor{keywordflow}{      type is} (\mbox{\hyperlink{structcamp__sub__model__unifac_1_1sub__model__unifac__t}{sub\_model\_unifac\_t}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00225}00225         sub\_model\_data\_type = \mbox{\hyperlink{namespacecamp__sub__model__factory_acd9a6a58701b54a28cab0579cacaec20}{sub\_model\_unifac}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00226}00226 \textcolor{keywordflow}{      type is} (\mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\_model\_zsr\_aerosol\_water\_t}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00227}00227         sub\_model\_data\_type = \mbox{\hyperlink{namespacecamp__sub__model__factory_ac306069c30a21681076df001460db8fd}{sub\_model\_zsr\_aerosol\_water}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00228}00228 \textcolor{keywordflow}{      class default}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00229}00229         \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(850922257, \textcolor{stringliteral}{"{}Trying to pack sub-\/model of unknown type."{}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00230}00230 \textcolor{keywordflow}{    end select}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00231}00231     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer, pos, sub\_model\_data\_type, comm)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00232}00232     \textcolor{keyword}{call }sub\_model\%bin\_pack(buffer, pos, comm)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00233}00233     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(340451545, \&}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00234}00234          pos -\/ prev\_position <= this\%pack\_size(sub\_model, comm))}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00235}00235 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00236}00236 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00237}00237   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__sub__model__data_ad3ae5763737bf7ebe30d20a9afd982ca}{bin\_pack}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00238}00238 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00239}00239 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00240}00240 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00241}00241 \textcolor{comment}{  !> Unpack the given value to the buffer, advancing position}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00242}\mbox{\hyperlink{namespacecamp__sub__model__factory_af5a07fe8d1151801816196830f46691d}{00242}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__sub__model__data_ae7192796fefdd97445c70b628da1733b}{bin\_unpack}}(this, buffer, pos, comm) \textcolor{keyword}{result} (sub\_model)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00243}00243 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00244}00244 \textcolor{comment}{    !> Unpacked sub-\/model}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00245}00245     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\_model\_data\_t}}), \textcolor{keywordtype}{pointer} :: sub\_model\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00246}00246 \textcolor{comment}{    !> Sub-\/model factory}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00247}00247     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}), \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00248}00248 \textcolor{comment}{    !> Memory buffer}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00249}00249     \textcolor{keywordtype}{character}, \textcolor{keywordtype}{intent(inout)} :: buffer(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00250}00250 \textcolor{comment}{    !> Current buffer position}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00251}00251     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(inout)} :: pos\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00252}00252 \textcolor{comment}{    !> MPI communicator}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00253}00253     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(in)} :: comm}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00254}00254 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00255}00255 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00256}00256 \textcolor{preprocessor}{}    \textcolor{keywordtype}{integer} :: sub\_model\_data\_type, i\_sub\_model, prev\_position}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00257}00257 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00258}00258     prev\_position = pos}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00259}00259     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer, pos, sub\_model\_data\_type, comm)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00260}00260     \textcolor{keywordflow}{select case} (sub\_model\_data\_type)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00261}00261       \textcolor{keywordflow}{case} (\mbox{\hyperlink{namespacecamp__sub__model__factory_af261d5964ec6583b19d2a631486e1cc8}{sub\_model\_pdfite}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00262}00262         sub\_model => \mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\_model\_pdfite\_t}}()}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00263}00263       \textcolor{keywordflow}{case} (\mbox{\hyperlink{namespacecamp__sub__model__factory_acd9a6a58701b54a28cab0579cacaec20}{sub\_model\_unifac}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00264}00264         sub\_model => \mbox{\hyperlink{structcamp__sub__model__unifac_1_1sub__model__unifac__t}{sub\_model\_unifac\_t}}()}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00265}00265       \textcolor{keywordflow}{case} (\mbox{\hyperlink{namespacecamp__sub__model__factory_ac306069c30a21681076df001460db8fd}{sub\_model\_zsr\_aerosol\_water}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00266}00266         sub\_model => \mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\_model\_zsr\_aerosol\_water\_t}}()}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00267}00267 \textcolor{keywordflow}{      case default}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00268}00268         \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(786366152, \textcolor{stringliteral}{"{}Trying to unpack sub-\/model of unknown "{}}// \&}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00269}00269                 \textcolor{stringliteral}{"{}type: "{}}//trim(\mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}(sub\_model\_data\_type)))}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00270}00270 \textcolor{keywordflow}{    end select}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00271}00271     \textcolor{keyword}{call }sub\_model\%bin\_unpack(buffer, pos, comm)}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00272}00272     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(209433801, \&}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00273}00273          pos -\/ prev\_position <= this\%pack\_size(sub\_model, comm))}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00274}00274 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00275}00275 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00276}00276   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__sub__model__data_ae7192796fefdd97445c70b628da1733b}{bin\_unpack}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00277}00277 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00278}00278 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00279}00279 }
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00280}00280 \textcolor{keyword}{end module }\mbox{\hyperlink{namespacecamp__sub__model__factory}{camp\_sub\_model\_factory}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00001}00001\ \textcolor{comment}{!\ Copyright\ (C)\ 2021\ Barcelona\ Supercomputing\ Center\ and\ University\ of}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00002}00002\ \textcolor{comment}{!\ Illinois\ at\ Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00003}00003\ \textcolor{comment}{!\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00004}00004\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00005}00005\ \textcolor{comment}{!>\ \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00006}00006\ \textcolor{comment}{!>\ The\ camp\_sub\_model\_factory\ module.}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00007}00007\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00008}00008\ \textcolor{comment}{!>\ \(\backslash\)page\ camp\_sub\_model\_add\ CAMP:\ Adding\ a\ Sub\ Model}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00009}00009\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00010}00010\ \textcolor{comment}{!!\ TODO\ write\ instructions}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00011}00011\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00012}00012\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00013}00013\ \textcolor{comment}{!>\ The\ sub\_model\_factory\_t\ type\ and\ associated\ subroutines}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00014}\mbox{\hyperlink{namespacecamp__sub__model__factory}{00014}}\ \textcolor{keyword}{module}\ \mbox{\hyperlink{namespacecamp__sub__model__factory}{camp\_sub\_model\_factory}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00016}00016\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_JSON}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00017}00017\ \textcolor{preprocessor}{}\ \ \textcolor{keywordtype}{use\ }json\_module}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00018}00018\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00019}00019\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00020}00020\ \textcolor{preprocessor}{}\ \ \textcolor{keywordtype}{use\ }mpi}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00021}00021\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00022}00022\ \textcolor{preprocessor}{}\ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}\ :\ \mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}},\ \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00023}00023\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__mpi}{camp\_mpi}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00024}00024\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__sub__model__data}{camp\_sub\_model\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00025}00025\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__util}{camp\_util}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}\ :\ \mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}},\ \mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}},\ \mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}},\ \&}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00026}00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_ab72bff2627c9468e4c352118b8dc7046}{warn\_msg}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00028}00028\ \ \ \textcolor{comment}{!\ Use\ all\ sub-\/models}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00029}00029\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__sub__model__pdfite}{camp\_sub\_model\_pdfite}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00030}00030\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__sub__model__unifac}{camp\_sub\_model\_unifac}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00031}00031\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water}{camp\_sub\_model\_zsr\_aerosol\_water}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00033}00033\ \ \ \textcolor{keywordtype}{implicit\ none}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00034}00034\ \ \ \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00036}00036\ \ \ \textcolor{keywordtype}{public}\ ::\ \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00037}00037\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00038}00038\ \textcolor{comment}{\ \ !>\ Identifiers\ for\ sub-\/models\ -\/\ used\ by\ binary\ packing/unpacking\ functions}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00039}\mbox{\hyperlink{namespacecamp__sub__model__factory_acd9a6a58701b54a28cab0579cacaec20}{00039}}\ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{parameter},\ \textcolor{keywordtype}{public}\ ::\ \mbox{\hyperlink{namespacecamp__sub__model__factory_acd9a6a58701b54a28cab0579cacaec20}{sub\_model\_unifac}}\ =\ 1}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00040}\mbox{\hyperlink{namespacecamp__sub__model__factory_ac306069c30a21681076df001460db8fd}{00040}}\ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{parameter},\ \textcolor{keywordtype}{public}\ ::\ \mbox{\hyperlink{namespacecamp__sub__model__factory_ac306069c30a21681076df001460db8fd}{sub\_model\_zsr\_aerosol\_water}}\ =\ 2}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00041}\mbox{\hyperlink{namespacecamp__sub__model__factory_af261d5964ec6583b19d2a631486e1cc8}{00041}}\ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{parameter},\ \textcolor{keywordtype}{public}\ ::\ \mbox{\hyperlink{namespacecamp__sub__model__factory_af261d5964ec6583b19d2a631486e1cc8}{sub\_model\_pdfite}}\ =\ 3}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00042}00042\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00043}00043\ \textcolor{comment}{\ \ !>\ Factory\ type\ for\ sub-\/models}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00044}00044\ \textcolor{comment}{\ \ !!}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00045}00045\ \textcolor{comment}{\ \ !!\ Provides\ new\ instances\ of\ type\ extending\ sub\_model\_data\_t\ by\ name\ or}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00046}00046\ \textcolor{comment}{\ \ !!\ from\ input\ file\ data}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00047}\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{00047}}\ \ \ \textcolor{keyword}{type}\ ::\ \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00048}00048\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00049}00049\ \textcolor{comment}{\ \ \ \ !>\ Create\ a\ new\ sub-\/model\ by\ type\ name}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00050}\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a41b820cbaf26b489a976495f525cf8d3}{00050}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__sub__model__factory_a3a05475e7fc4cba67b74353ed34205e8}{create}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00051}00051\ \textcolor{comment}{\ \ \ \ !>\ Create\ a\ new\ aerosol\ representation\ from\ input\ data}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00052}\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_aa6be2995fcd7755f780264b5bc303f0a}{00052}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__sub__model__data_a3b98e38cc5c57a0a7ace9817adaf6df5}{load}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00053}00053\ \textcolor{comment}{\ \ \ \ !>\ Get\ the\ aerosol\ representation\ type}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00054}\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a4890ddb80612450e0a79db38f39448f8}{00054}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__sub__model__factory_a027f8bdcfcdf1c0e71882ab67c8fb39b}{get\_type}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00055}00055\ \textcolor{comment}{\ \ \ \ !>\ Get\ a\ new\ update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00056}\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a732bd8ef8505d28db3d5ed5e623319cd}{00056}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__sub__model__factory_ac37e3d11329830a875b417c64faba36e}{initialize\_update\_data}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00057}00057\ \textcolor{comment}{\ \ \ \ !>\ Determine\ the\ number\ of\ bytes\ required\ to\ pack\ a\ given\ sub-\/model}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00058}\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a3da081446e688cba14fc27a4e1a4d15a}{00058}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__sub__model__data_a428e7081801d630bdf8d9f544842a2a3}{pack\_size}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00059}00059\ \textcolor{comment}{\ \ \ \ !>\ Pack\ a\ given\ sub-\/model\ onto\ the\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00060}\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_aa27641d64c20ce473ad0ee2447e4dfc5}{00060}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__sub__model__data_ad3ae5763737bf7ebe30d20a9afd982ca}{bin\_pack}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00061}00061\ \textcolor{comment}{\ \ \ \ !>\ Unpack\ a\ sub-\/model\ from\ the\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00062}\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a5d2586b818773d5c3dc328f8abcb0891}{00062}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__sub__model__data_ae7192796fefdd97445c70b628da1733b}{bin\_unpack}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00063}00063\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00065}00065\ \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00067}00067\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00068}00068\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00069}00069\ \textcolor{comment}{\ \ !>\ Create\ a\ new\ sub-\/model\ by\ type\ name}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00070}\mbox{\hyperlink{namespacecamp__sub__model__factory_a3a05475e7fc4cba67b74353ed34205e8}{00070}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__sub__model__factory_a3a05475e7fc4cba67b74353ed34205e8}{create}}(this,\ type\_name)\ \textcolor{keyword}{result}\ (new\_obj)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00071}00071\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00072}00072\ \textcolor{comment}{\ \ \ \ !>\ A\ new\ sub-\/model}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00073}00073\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\_model\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_obj\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00074}00074\ \textcolor{comment}{\ \ \ \ !>\ Sub-\/model\ factory}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00075}00075\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00076}00076\ \textcolor{comment}{\ \ \ \ !>\ Type\ of\ the\ sub-\/model}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00077}00077\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{intent(in)}\ ::\ type\_name}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00079}00079\ \ \ \ \ new\_obj\ =>\ null()}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00081}00081\ \ \ \ \ \textcolor{keywordflow}{select\ case}\ (type\_name)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00082}00082\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\textcolor{stringliteral}{"{}SUB\_MODEL\_PDFITE"{}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00083}00083\ \ \ \ \ \ \ \ \ new\_obj\ =>\ \mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\_model\_pdfite\_t}}()}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00084}00084\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\textcolor{stringliteral}{"{}SUB\_MODEL\_UNIFAC"{}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00085}00085\ \ \ \ \ \ \ \ \ new\_obj\ =>\ \mbox{\hyperlink{structcamp__sub__model__unifac_1_1sub__model__unifac__t}{sub\_model\_unifac\_t}}()}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00086}00086\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\textcolor{stringliteral}{"{}SUB\_MODEL\_ZSR\_AEROSOL\_WATER"{}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00087}00087\ \ \ \ \ \ \ \ \ new\_obj\ =>\ \mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\_model\_zsr\_aerosol\_water\_t}}()}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00088}00088\ \textcolor{keywordflow}{\ \ \ \ \ \ case\ default}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(293855421,\ \textcolor{stringliteral}{"{}Unknown\ sub-\/model\ type:\ "{}}//type\_name)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00090}00090\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00092}00092\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__sub__model__factory_a3a05475e7fc4cba67b74353ed34205e8}{create}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00094}00094\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00095}00095\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00096}00096\ \textcolor{comment}{\ \ !>\ Load\ a\ sub-\/model\ based\ on\ its\ type}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00097}00097\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_JSON}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00098}\mbox{\hyperlink{namespacecamp__sub__model__factory_a80dee2f5639b9b365210aab59c767a4e}{00098}}\ \textcolor{preprocessor}{}\ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a3b98e38cc5c57a0a7ace9817adaf6df5}{load}}(this,\ json,\ j\_obj)\ \textcolor{keyword}{result}\ (new\_obj)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00099}00099\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00100}00100\ \textcolor{comment}{\ \ \ \ !>\ A\ new\ sub-\/model}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00101}00101\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\_model\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_obj\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00102}00102\ \textcolor{comment}{\ \ \ \ !>\ Sub-\/model\ factory}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00103}00103\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00104}00104\ \textcolor{comment}{\ \ \ \ !>\ JSON\ core}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00105}00105\ \ \ \ \ \textcolor{keywordtype}{type}(json\_core),\ \textcolor{keywordtype}{pointer},\ \textcolor{keywordtype}{intent(in)}\ ::\ json\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00106}00106\ \textcolor{comment}{\ \ \ \ !>\ JSON\ object}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00107}00107\ \ \ \ \ \textcolor{keywordtype}{type}(json\_value),\ \textcolor{keywordtype}{pointer},\ \textcolor{keywordtype}{intent(in)}\ ::\ j\_obj}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00108}00108\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00109}00109\ \ \ \ \ \textcolor{keywordtype}{character(kind=json\_ck,\ len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ unicode\_type\_name}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00110}00110\ \ \ \ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ type\_name}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00111}00111\ \ \ \ \ \textcolor{keywordtype}{logical(kind=json\_lk)}\ ::\ found}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00113}00113\ \ \ \ \ new\_obj\ =>\ null()}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00115}00115\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ sub-\/model\ type}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00116}00116\ \ \ \ \ \textcolor{keyword}{call\ }json\%get(j\_obj,\ \textcolor{stringliteral}{"{}type"{}},\ unicode\_type\_name,\ found)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00117}00117\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(447218460,\ found,\ \textcolor{stringliteral}{'Missing\ sub-\/model\ type.'})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00118}00118\ \ \ \ \ type\_name\ =\ unicode\_type\_name}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00120}00120\ \ \ \ \ \textcolor{comment}{!\ Create\ a\ new\ sub-\/model\ instance\ of\ the\ type\ specified}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00121}00121\ \ \ \ \ new\_obj\ =>\ this\%create(type\_name)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00123}00123\ \ \ \ \ \textcolor{comment}{!\ Load\ sub-\/model\ parameters\ from\ the\ json\ object}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00124}00124\ \ \ \ \ \textcolor{keyword}{call\ }new\_obj\%load(json,\ j\_obj)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00126}00126\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00127}00127\ \textcolor{preprocessor}{}\textcolor{comment}{\ \ !>\ Generic\ warning\ function\ when\ no\ input\ file\ support\ exists}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00128}00128\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a3b98e38cc5c57a0a7ace9817adaf6df5}{load}}(this)\ \textcolor{keyword}{result}\ (new\_obj)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00129}00129\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00130}00130\ \textcolor{comment}{\ \ \ \ !>\ A\ new\ sub-\/model}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00131}00131\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\_model\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_obj\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00132}00132\ \textcolor{comment}{\ \ \ \ !>\ Sub-\/model\ factory}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00133}00133\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00134}00134\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00135}00135\ \ \ \ \ new\_obj\ =>\ null()}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00137}00137\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab72bff2627c9468e4c352118b8dc7046}{warn\_msg}}(545649418,\ \textcolor{stringliteral}{"{}No\ support\ for\ input\ files."{}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00138}00138\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00139}00139\ \textcolor{preprocessor}{}\ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a3b98e38cc5c57a0a7ace9817adaf6df5}{load}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00140}00140\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00141}00141\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00142}00142\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00143}00143\ \textcolor{comment}{\ \ !>\ Get\ the\ sub-\/model\ type\ as\ a\ constant}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00144}\mbox{\hyperlink{namespacecamp__sub__model__factory_a027f8bdcfcdf1c0e71882ab67c8fb39b}{00144}}\ \ \ \textcolor{keyword}{integer(kind=i\_kind)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__sub__model__factory_a027f8bdcfcdf1c0e71882ab67c8fb39b}{get\_type}}(this,\ sub\_model)\ \&}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ result(sub\_model\_data\_type)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00146}00146\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00147}00147\ \textcolor{comment}{\ \ \ \ !>\ Sub-\/model\ factory}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00148}00148\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00149}00149\ \textcolor{comment}{\ \ \ \ !>\ Sub-\/model\ to\ get\ type\ of}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00150}00150\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\_model\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ sub\_model}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00152}00152\ \ \ \ \ \textcolor{keywordflow}{select\ type}\ (sub\_model)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00153}00153\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\_model\_pdfite\_t}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00154}00154\ \ \ \ \ \ \ \ \ sub\_model\_data\_type\ =\ \mbox{\hyperlink{namespacecamp__sub__model__factory_af261d5964ec6583b19d2a631486e1cc8}{sub\_model\_pdfite}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00155}00155\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__sub__model__unifac_1_1sub__model__unifac__t}{sub\_model\_unifac\_t}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00156}00156\ \ \ \ \ \ \ \ \ sub\_model\_data\_type\ =\ \mbox{\hyperlink{namespacecamp__sub__model__factory_acd9a6a58701b54a28cab0579cacaec20}{sub\_model\_unifac}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00157}00157\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\_model\_zsr\_aerosol\_water\_t}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00158}00158\ \ \ \ \ \ \ \ \ sub\_model\_data\_type\ =\ \mbox{\hyperlink{namespacecamp__sub__model__factory_ac306069c30a21681076df001460db8fd}{sub\_model\_zsr\_aerosol\_water}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00159}00159\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00160}00160\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(695653684,\ \textcolor{stringliteral}{"{}Unknown\ sub-\/model\ type"{}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00161}00161\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00162}00162\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00163}00163\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__sub__model__factory_a027f8bdcfcdf1c0e71882ab67c8fb39b}{get\_type}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00165}00165\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00166}00166\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00167}00167\ \textcolor{comment}{\ \ !>\ Initialize\ an\ update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00168}\mbox{\hyperlink{namespacecamp__sub__model__factory_ac37e3d11329830a875b417c64faba36e}{00168}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__factory_ac37e3d11329830a875b417c64faba36e}{initialize\_update\_data}}(this,\ sub\_model,\ update\_data)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00169}00169\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00170}00170\ \textcolor{comment}{\ \ \ \ !>\ Sub-\/model\ factory}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00171}00171\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00172}00172\ \textcolor{comment}{\ \ \ \ !>\ Sub-\/model\ to\ be\ updated}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00173}00173\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\_model\_data\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ sub\_model\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00174}00174\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00175}00175\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\_model\_update\_data\_t}}),\ \textcolor{keywordtype}{intent(out)}\ ::\ update\_data}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00176}00176\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00177}00177\ \ \ \ \ \textcolor{keywordflow}{select\ type}\ (update\_data)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00178}00178\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00179}00179\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(245232793,\ \textcolor{stringliteral}{"{}Internal\ error\ -\/\ update\ data\ type\ missing"{}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00180}00180\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00182}00182\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__factory_ac37e3d11329830a875b417c64faba36e}{initialize\_update\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00184}00184\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00185}00185\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00186}00186\ \textcolor{comment}{\ \ !>\ Determine\ the\ size\ of\ a\ binary\ required\ to\ pack\ a\ sub-\/model}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00187}\mbox{\hyperlink{namespacecamp__sub__model__factory_af73bdd51e97a9f4f82a68c658196ec0d}{00187}}\ \ \ \textcolor{keyword}{integer(kind=i\_kind)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a428e7081801d630bdf8d9f544842a2a3}{pack\_size}}(this,\ sub\_model,\ comm)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00188}00188\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00189}00189\ \textcolor{comment}{\ \ \ \ !>\ Sub-\/model\ factory}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00190}00190\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}})\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00191}00191\ \textcolor{comment}{\ \ \ \ !>\ Sub-\/model\ to\ pack}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00192}00192\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\_model\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ sub\_model\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00193}00193\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00194}00194\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00195}00195\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00196}00196\ \ \ \ \ \mbox{\hyperlink{namespacecamp__sub__model__data_a428e7081801d630bdf8d9f544842a2a3}{pack\_size}}\ =\ \ \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(int(1,\ kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}),\ comm)\ +\ \&}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sub\_model\%pack\_size(comm)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00199}00199\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a428e7081801d630bdf8d9f544842a2a3}{pack\_size}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00201}00201\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00202}00202\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00203}00203\ \textcolor{comment}{\ \ !>\ Pack\ the\ given\ value\ to\ the\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00204}\mbox{\hyperlink{namespacecamp__sub__model__factory_ab25c5f5d7e73e6c52a328a762685366c}{00204}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_ad3ae5763737bf7ebe30d20a9afd982ca}{bin\_pack}}(this,\ sub\_model,\ buffer,\ pos,\ comm)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00205}00205\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00206}00206\ \textcolor{comment}{\ \ \ \ !>\ Sub-\/model\ factory}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00207}00207\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00208}00208\ \textcolor{comment}{\ \ \ \ !>\ Sub-\/model\ to\ pack}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00209}00209\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\_model\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ sub\_model\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00210}00210\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00211}00211\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00212}00212\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00213}00213\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00214}00214\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00215}00215\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00216}00216\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00217}00217\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00218}00218\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ sub\_model\_data\_type,\ i\_sub\_model,\ prev\_position}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00219}00219\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00220}00220\ \ \ \ \ prev\_position\ =\ pos}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00221}00221\ \ \ \ \ \textcolor{keywordflow}{select\ type}\ (sub\_model)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00222}00222\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\_model\_pdfite\_t}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00223}00223\ \ \ \ \ \ \ \ \ sub\_model\_data\_type\ =\ \mbox{\hyperlink{namespacecamp__sub__model__factory_af261d5964ec6583b19d2a631486e1cc8}{sub\_model\_pdfite}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00224}00224\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__sub__model__unifac_1_1sub__model__unifac__t}{sub\_model\_unifac\_t}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00225}00225\ \ \ \ \ \ \ \ \ sub\_model\_data\_type\ =\ \mbox{\hyperlink{namespacecamp__sub__model__factory_acd9a6a58701b54a28cab0579cacaec20}{sub\_model\_unifac}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00226}00226\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\_model\_zsr\_aerosol\_water\_t}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00227}00227\ \ \ \ \ \ \ \ \ sub\_model\_data\_type\ =\ \mbox{\hyperlink{namespacecamp__sub__model__factory_ac306069c30a21681076df001460db8fd}{sub\_model\_zsr\_aerosol\_water}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00228}00228\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00229}00229\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(850922257,\ \textcolor{stringliteral}{"{}Trying\ to\ pack\ sub-\/model\ of\ unknown\ type."{}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00230}00230\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00231}00231\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer,\ pos,\ sub\_model\_data\_type,\ comm)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00232}00232\ \ \ \ \ \textcolor{keyword}{call\ }sub\_model\%bin\_pack(buffer,\ pos,\ comm)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00233}00233\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(340451545,\ \&}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00234}00234\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(sub\_model,\ comm))}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00235}00235\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00236}00236\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00237}00237\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_ad3ae5763737bf7ebe30d20a9afd982ca}{bin\_pack}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00238}00238\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00239}00239\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00240}00240\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00241}00241\ \textcolor{comment}{\ \ !>\ Unpack\ the\ given\ value\ to\ the\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00242}\mbox{\hyperlink{namespacecamp__sub__model__factory_af5a07fe8d1151801816196830f46691d}{00242}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_ae7192796fefdd97445c70b628da1733b}{bin\_unpack}}(this,\ buffer,\ pos,\ comm)\ \textcolor{keyword}{result}\ (sub\_model)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00243}00243\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00244}00244\ \textcolor{comment}{\ \ \ \ !>\ Unpacked\ sub-\/model}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00245}00245\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\_model\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ sub\_model\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00246}00246\ \textcolor{comment}{\ \ \ \ !>\ Sub-\/model\ factory}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00247}00247\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\_model\_factory\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00248}00248\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00249}00249\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00250}00250\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00251}00251\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00252}00252\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00253}00253\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00254}00254\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00255}00255\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00256}00256\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ sub\_model\_data\_type,\ i\_sub\_model,\ prev\_position}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00257}00257\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00258}00258\ \ \ \ \ prev\_position\ =\ pos}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00259}00259\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer,\ pos,\ sub\_model\_data\_type,\ comm)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00260}00260\ \ \ \ \ \textcolor{keywordflow}{select\ case}\ (sub\_model\_data\_type)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00261}00261\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\mbox{\hyperlink{namespacecamp__sub__model__factory_af261d5964ec6583b19d2a631486e1cc8}{sub\_model\_pdfite}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00262}00262\ \ \ \ \ \ \ \ \ sub\_model\ =>\ \mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\_model\_pdfite\_t}}()}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00263}00263\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\mbox{\hyperlink{namespacecamp__sub__model__factory_acd9a6a58701b54a28cab0579cacaec20}{sub\_model\_unifac}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00264}00264\ \ \ \ \ \ \ \ \ sub\_model\ =>\ \mbox{\hyperlink{structcamp__sub__model__unifac_1_1sub__model__unifac__t}{sub\_model\_unifac\_t}}()}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00265}00265\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\mbox{\hyperlink{namespacecamp__sub__model__factory_ac306069c30a21681076df001460db8fd}{sub\_model\_zsr\_aerosol\_water}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00266}00266\ \ \ \ \ \ \ \ \ sub\_model\ =>\ \mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\_model\_zsr\_aerosol\_water\_t}}()}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00267}00267\ \textcolor{keywordflow}{\ \ \ \ \ \ case\ default}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00268}00268\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(786366152,\ \textcolor{stringliteral}{"{}Trying\ to\ unpack\ sub-\/model\ of\ unknown\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}type:\ "{}}//trim(\mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}(sub\_model\_data\_type)))}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00270}00270\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00271}00271\ \ \ \ \ \textcolor{keyword}{call\ }sub\_model\%bin\_unpack(buffer,\ pos,\ comm)}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00272}00272\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(209433801,\ \&}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00273}00273\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(sub\_model,\ comm))}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00274}00274\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00275}00275\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00276}00276\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_ae7192796fefdd97445c70b628da1733b}{bin\_unpack}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00277}00277\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00278}00278\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00279}00279\ }
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00280}00280\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__sub__model__factory}{camp\_sub\_model\_factory}}}
 
 \end{DoxyCode}

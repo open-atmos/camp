@@ -1,6 +1,9 @@
 <map id="camp_mechanism_data::initialize" name="camp_mechanism_data::initialize">
-<area shape="rect" id="node1" title="Initialize the mechanism." alt="" coords="5,5,165,45"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="213,13,333,38"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="381,13,533,38"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="581,5,704,45"/>
+<area shape="rect" id="Node000001" title="Initialize the mechanism." alt="" coords="5,5,165,46"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="213,13,332,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,23,197,23,197,28,165,28"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="380,13,531,39"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="332,23,364,23,364,28,332,28"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="579,5,702,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="532,23,564,23,564,28,532,28"/>
 </map>

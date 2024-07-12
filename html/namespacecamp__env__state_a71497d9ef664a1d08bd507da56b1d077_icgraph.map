@@ -1,3 +1,4 @@
 <map id="camp_env_state::env_state_conc_to_ppb" name="camp_env_state::env_state_conc_to_ppb">
-<area shape="rect" id="node1" title="Convert (molecules m^{&#45;3}) to (ppb)." alt="" coords="5,29,151,69"/>
+<area shape="rect" id="Node000001" title="Convert (molecules m^{&#45;3}) to (ppb)." alt="" coords="5,29,150,70"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="100,16,92,10,77,8,64,10,56,14,53,20,55,28,49,29,48,20,52,11,63,5,78,3,94,5,103,12"/>
 </map>

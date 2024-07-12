@@ -1,26 +1,26 @@
-\hypertarget{rxn__factory_8_f90}{}\doxysection{rxn\+\_\+factory.\+F90 File Reference}
-\label{rxn__factory_8_f90}\index{rxn\_factory.F90@{rxn\_factory.F90}}
+\doxysection{rxn\+\_\+factory.\+F90 File Reference}
+\hypertarget{rxn__factory_8_f90}{}\label{rxn__factory_8_f90}\index{rxn\_factory.F90@{rxn\_factory.F90}}
 
 
-The \mbox{\hyperlink{namespacecamp__rxn__factory}{camp\+\_\+rxn\+\_\+factory}} module.  
+The \doxylink{namespacecamp__rxn__factory}{camp\+\_\+rxn\+\_\+factory} module.  
 
 
-\doxysubsection*{Data Types}
+\doxysubsubsection*{Data Types}
 \begin{DoxyCompactItemize}
 \item 
 type \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t}}
 \begin{DoxyCompactList}\small\item\em Factory type for chemical reactions. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Modules}
+\doxysubsubsection*{Modules}
 \begin{DoxyCompactItemize}
 \item 
 module \mbox{\hyperlink{namespacecamp__rxn__factory}{camp\+\_\+rxn\+\_\+factory}}
-\begin{DoxyCompactList}\small\item\em The abstract \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t}{rxn\+\_\+factory\+\_\+t}} structure and associated subroutines. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactList}\small\item\em The abstract \doxylink{structcamp__rxn__factory_1_1rxn__factory__t}{rxn\+\_\+factory\+\_\+t} structure and associated subroutines. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
 \item 
-class(rxn\+\_\+data\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__rxn__factory_a3975ec0b65f653a90ffc1e44d7b7353c}{camp\+\_\+rxn\+\_\+factory\+::create}} (this, type\+\_\+name)
+class(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\+\_\+data\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__factory_a3975ec0b65f653a90ffc1e44d7b7353c}{camp\+\_\+rxn\+\_\+factory\+::create}} (this, type\+\_\+name)
 \begin{DoxyCompactList}\small\item\em Create a new chemical reaction by type name. \end{DoxyCompactList}\item 
-class(rxn\+\_\+data\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__rxn__factory_a9c918055bf16f3e4db2f2ecd3d310b69}{camp\+\_\+rxn\+\_\+factory\+::load}} (this, json, j\+\_\+obj)
+class(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\+\_\+data\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__factory_a9c918055bf16f3e4db2f2ecd3d310b69}{camp\+\_\+rxn\+\_\+factory\+::load}} (this, json, j\+\_\+obj)
 \begin{DoxyCompactList}\small\item\em Load a reaction from input data. \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__rxn__factory_a458659feabba75328651b709a3b5f8cd}{camp\+\_\+rxn\+\_\+factory\+::get\+\_\+type}} (this, rxn)
 \begin{DoxyCompactList}\small\item\em Get the reaction type as a Rxn\+Type. \end{DoxyCompactList}\item 
@@ -30,9 +30,9 @@ integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__rxn__factory_
 \begin{DoxyCompactList}\small\item\em Determine the size of a binary required to pack a reaction. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__factory_af36f0101aafa792b21df852065e91c78}{camp\+\_\+rxn\+\_\+factory\+::bin\+\_\+pack}} (this, rxn, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
-class(rxn\+\_\+data\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__rxn__factory_aca756fabc73131844494b81fe160052d}{camp\+\_\+rxn\+\_\+factory\+::bin\+\_\+unpack}} (this, buffer, pos, comm)
+class(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\+\_\+data\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__factory_aca756fabc73131844494b81fe160052d}{camp\+\_\+rxn\+\_\+factory\+::bin\+\_\+unpack}} (this, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Unpack the given value to the buffer, advancing position. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Variables}
+\doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn__factory_adea8b1c9df8c84b68c20a1604df3ea01}{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+arrhenius}} = 1
@@ -72,7 +72,7 @@ integer(kind=i\+\_\+kind), parameter, public \mbox{\hyperlink{namespacecamp__rxn
 
 
 \doxysubsection{Detailed Description}
-The \mbox{\hyperlink{namespacecamp__rxn__factory}{camp\+\_\+rxn\+\_\+factory}} module. 
+The \doxylink{namespacecamp__rxn__factory}{camp\+\_\+rxn\+\_\+factory} module. 
 
 
 

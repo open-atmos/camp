@@ -1,6 +1,9 @@
 <map id="Model" name="Model">
-<area shape="rect" id="node1" title=" " alt="" coords="166,211,223,236"/>
-<area shape="rect" id="node2" href="$struct_model_element.html" title=" " alt="" coords="143,93,247,119"/>
-<area shape="rect" id="node3" href="$struct_model_element_data_pointers.html" title=" " alt="" coords="5,5,184,31"/>
-<area shape="rect" id="node4" href="$struct_model_element_data_indices.html" title=" " alt="" coords="208,5,381,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="166,213,223,238"/>
+<area shape="rect" id="Node000002" href="$struct_model_element.html" title=" " alt="" coords="143,94,246,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,135,197,212,192,212,192,135"/>
+<area shape="rect" id="Node000003" href="$struct_model_element_data_pointers.html" title=" " alt="" coords="5,5,184,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="122,39,182,92,179,96,118,43"/>
+<area shape="rect" id="Node000004" href="$struct_model_element_data_indices.html" title=" " alt="" coords="208,5,381,31"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="271,43,210,96,207,92,267,39"/>
 </map>

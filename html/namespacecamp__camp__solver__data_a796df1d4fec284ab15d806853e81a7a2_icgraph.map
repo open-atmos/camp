@@ -1,4 +1,5 @@
 <map id="camp_camp_solver_data::finalize" name="camp_camp_solver_data::finalize">
-<area shape="rect" id="node1" title="Finalize the solver data." alt="" coords="220,13,387,53"/>
-<area shape="rect" id="node2" href="$structcamp__camp__solver__data_1_1camp__solver__data__t.html#a82d204adf356b743a0d75bc286c26cf5" title="Finalize the solver data." alt="" coords="5,5,172,60"/>
+<area shape="rect" id="Node000001" title="Finalize the solver data." alt="" coords="220,13,386,54"/>
+<area shape="rect" id="Node000002" href="$structcamp__camp__solver__data_1_1camp__solver__data__t.html#a99e96d3eeedcb1574058d5b7219ddbca" title="Finalize the solver data." alt="" coords="5,5,172,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,36,172,36,172,31,204,31"/>
 </map>

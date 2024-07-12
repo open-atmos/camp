@@ -1,13 +1,19 @@
-\hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c}{}\doxysection{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c File Reference}
-\label{rxn___c_m_a_q___o_h___h_n_o3_8c}\index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
+\doxysection{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c File Reference}
+\hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c}{}\label{rxn___c_m_a_q___o_h___h_n_o3_8c}\index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 
 
 CMAQ\+\_\+\+OH\+\_\+\+HNO3 reaction solver functions.  
 
 
 Include dependency graph for rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c\+:
-% FIG 0
-\doxysubsection*{Macros}
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn___c_m_a_q___o_h___h_n_o3_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{TEMPERATURE\+\_\+\+K\+\_\+}}~env\+\_\+data\mbox{[}0\mbox{]}
@@ -54,24 +60,24 @@ Include dependency graph for rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c\+:
 \item 
 \#define \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}
 \item 
-\#define \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}
+\#define \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 \texorpdfstring{$\ast$}{*} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}
 \item 
 \#define \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)~float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}
 \end{DoxyCompactItemize}
-\doxysubsection*{Functions}
+\doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_ab0f2f55a3403589173d1d9dae525adb6}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
-\begin{DoxyCompactList}\small\item\em Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_ae50a551894469a76ff44e469f5d116d8}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+void \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_ab0f2f55a3403589173d1d9dae525adb6}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_ae50a551894469a76ff44e469f5d116d8}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_a34fb4ef73f1495b6fa99808153224aae}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_a34fb4ef73f1495b6fa99808153224aae}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update reaction data for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_a9dab88bd88d52496effc2ff4056f303f}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, double time\+\_\+step)
+void \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_a9dab88bd88d52496effc2ff4056f303f}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, double time\+\_\+step)
 \begin{DoxyCompactList}\small\item\em Calculate contributions to the time derivative $f(t,y)$ from this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_a64502ded9861c3e462d29af918d08c04}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, double time\+\_\+step)
-\begin{DoxyCompactList}\small\item\em Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_a49d47225b7a0fe5fd0003a6dcce08255}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+print}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+void \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_a64502ded9861c3e462d29af918d08c04}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_a49d47225b7a0fe5fd0003a6dcce08255}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+print}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the CMAQ\+\_\+\+OH\+\_\+\+HNO3 reaction parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -85,7 +91,7 @@ Definition in file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\
 
 
 \doxysubsection{Macro Definition Documentation}
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a91cd74713029c0906e8136c8628d548d}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a91cd74713029c0906e8136c8628d548d}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a91cd74713029c0906e8136c8628d548d}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a91cd74713029c0906e8136c8628d548d} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!CONV\_@{CONV\_}}
 \index{CONV\_@{CONV\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{CONV\_}{CONV\_}}
@@ -95,7 +101,7 @@ Definition in file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00032}{32}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_af9fc34858d09e71d3cffd88cf942bdf9}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_af9fc34858d09e71d3cffd88cf942bdf9}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_af9fc34858d09e71d3cffd88cf942bdf9}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_af9fc34858d09e71d3cffd88cf942bdf9} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!DERIV\_ID\_@{DERIV\_ID\_}}
 \index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
@@ -105,17 +111,17 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0003
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00039}{39}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_ab831aae98d4453927c63a93f55ee5a86}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_ab831aae98d4453927c63a93f55ee5a86}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_ab831aae98d4453927c63a93f55ee5a86}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_ab831aae98d4453927c63a93f55ee5a86} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!JAC\_ID\_@{JAC\_ID\_}}
 \index{JAC\_ID\_@{JAC\_ID\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 \texorpdfstring{$\ast$}{*} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00040}{40}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a6edaf985fb5047909411bbce5a225274}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a6edaf985fb5047909411bbce5a225274}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a6edaf985fb5047909411bbce5a225274}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a6edaf985fb5047909411bbce5a225274} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!k0\_A\_@{k0\_A\_}}
 \index{k0\_A\_@{k0\_A\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{k0\_A\_}{k0\_A\_}}
@@ -125,7 +131,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0004
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00022}{22}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a16624a96c403b0f24590c34b773235d7}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a16624a96c403b0f24590c34b773235d7}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a16624a96c403b0f24590c34b773235d7}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a16624a96c403b0f24590c34b773235d7} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!k0\_B\_@{k0\_B\_}}
 \index{k0\_B\_@{k0\_B\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{k0\_B\_}{k0\_B\_}}
@@ -135,7 +141,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0002
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00023}{23}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a7bdbb692960fcef6053e741ad7bcd772}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a7bdbb692960fcef6053e741ad7bcd772}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a7bdbb692960fcef6053e741ad7bcd772}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a7bdbb692960fcef6053e741ad7bcd772} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!k0\_C\_@{k0\_C\_}}
 \index{k0\_C\_@{k0\_C\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{k0\_C\_}{k0\_C\_}}
@@ -145,7 +151,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0002
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00024}{24}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a70c29a18f162c9a83914bba9b1e1206e}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a70c29a18f162c9a83914bba9b1e1206e}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a70c29a18f162c9a83914bba9b1e1206e}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a70c29a18f162c9a83914bba9b1e1206e} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!k2\_A\_@{k2\_A\_}}
 \index{k2\_A\_@{k2\_A\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{k2\_A\_}{k2\_A\_}}
@@ -155,7 +161,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0002
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00025}{25}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a60be7ab754b46342b1fa3b91760c4c2a}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a60be7ab754b46342b1fa3b91760c4c2a}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a60be7ab754b46342b1fa3b91760c4c2a}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a60be7ab754b46342b1fa3b91760c4c2a} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!k2\_B\_@{k2\_B\_}}
 \index{k2\_B\_@{k2\_B\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{k2\_B\_}{k2\_B\_}}
@@ -165,7 +171,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0002
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00026}{26}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a3c3ebe2b0fdababa4fcb32c28461ae7e}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a3c3ebe2b0fdababa4fcb32c28461ae7e}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a3c3ebe2b0fdababa4fcb32c28461ae7e}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a3c3ebe2b0fdababa4fcb32c28461ae7e} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!k2\_C\_@{k2\_C\_}}
 \index{k2\_C\_@{k2\_C\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{k2\_C\_}{k2\_C\_}}
@@ -175,7 +181,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0002
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00027}{27}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a8de19e803884115cbb1907ebc3877529}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a8de19e803884115cbb1907ebc3877529}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a8de19e803884115cbb1907ebc3877529}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a8de19e803884115cbb1907ebc3877529} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!k3\_A\_@{k3\_A\_}}
 \index{k3\_A\_@{k3\_A\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{k3\_A\_}{k3\_A\_}}
@@ -185,7 +191,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0002
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00028}{28}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a082da1dd102aa12e513383183e15e267}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a082da1dd102aa12e513383183e15e267}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a082da1dd102aa12e513383183e15e267}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a082da1dd102aa12e513383183e15e267} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!k3\_B\_@{k3\_B\_}}
 \index{k3\_B\_@{k3\_B\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{k3\_B\_}{k3\_B\_}}
@@ -195,7 +201,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0002
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00029}{29}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a55a59529331163678ff70d6aeb1554c4}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a55a59529331163678ff70d6aeb1554c4}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a55a59529331163678ff70d6aeb1554c4}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a55a59529331163678ff70d6aeb1554c4} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!k3\_C\_@{k3\_C\_}}
 \index{k3\_C\_@{k3\_C\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{k3\_C\_}{k3\_C\_}}
@@ -205,7 +211,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0002
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00030}{30}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a1f68a3544ae39a7815cbb5c09dfdeff0} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
 \index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
@@ -215,7 +221,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0003
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00036}{36}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a0e9ae6000e4ed18f5938bddaddb13d1b} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
 \index{NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_FLOAT\_PROP\_}{NUM\_FLOAT\_PROP\_}}
@@ -225,7 +231,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0003
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00035}{35}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
 \index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
@@ -235,7 +241,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0003
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00034}{34}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_acf951e890da75cd2d503ed6ce8211fc2}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_acf951e890da75cd2d503ed6ce8211fc2}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_acf951e890da75cd2d503ed6ce8211fc2}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_acf951e890da75cd2d503ed6ce8211fc2} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!NUM\_PROD\_@{NUM\_PROD\_}}
 \index{NUM\_PROD\_@{NUM\_PROD\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_PROD\_}{NUM\_PROD\_}}
@@ -245,7 +251,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0003
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00021}{21}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a05ef845cf6ed7ab9a774440c42af34fa}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a05ef845cf6ed7ab9a774440c42af34fa}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a05ef845cf6ed7ab9a774440c42af34fa}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a05ef845cf6ed7ab9a774440c42af34fa} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!NUM\_REACT\_@{NUM\_REACT\_}}
 \index{NUM\_REACT\_@{NUM\_REACT\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_REACT\_}{NUM\_REACT\_}}
@@ -255,7 +261,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0002
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00020}{20}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a32cc078fd8ca9ad0684c48ae0aad7135}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a32cc078fd8ca9ad0684c48ae0aad7135} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!PRESSURE\_PA\_@{PRESSURE\_PA\_}}
 \index{PRESSURE\_PA\_@{PRESSURE\_PA\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{PRESSURE\_PA\_}{PRESSURE\_PA\_}}
@@ -265,7 +271,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0002
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00018}{18}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a9fda90058c6a41b1dda6ded03321c4da}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a9fda90058c6a41b1dda6ded03321c4da}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a9fda90058c6a41b1dda6ded03321c4da}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a9fda90058c6a41b1dda6ded03321c4da} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!PROD\_@{PROD\_}}
 \index{PROD\_@{PROD\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{PROD\_}{PROD\_}}
@@ -275,7 +281,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0001
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00038}{38}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a6d62af2f44a112ef5b324cf406a830c2}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a6d62af2f44a112ef5b324cf406a830c2}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a6d62af2f44a112ef5b324cf406a830c2}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a6d62af2f44a112ef5b324cf406a830c2} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!RATE\_CONSTANT\_@{RATE\_CONSTANT\_}}
 \index{RATE\_CONSTANT\_@{RATE\_CONSTANT\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{RATE\_CONSTANT\_}{RATE\_CONSTANT\_}}
@@ -285,7 +291,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0003
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00033}{33}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_ae761e39657aac155d83eae9b338be571}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_ae761e39657aac155d83eae9b338be571}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_ae761e39657aac155d83eae9b338be571}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_ae761e39657aac155d83eae9b338be571} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!REACT\_@{REACT\_}}
 \index{REACT\_@{REACT\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{REACT\_}{REACT\_}}
@@ -295,7 +301,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0003
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00037}{37}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a1757f332a0485799c2ee77edff00c38a}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a1757f332a0485799c2ee77edff00c38a}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a1757f332a0485799c2ee77edff00c38a}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a1757f332a0485799c2ee77edff00c38a} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!SCALING\_@{SCALING\_}}
 \index{SCALING\_@{SCALING\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{SCALING\_}{SCALING\_}}
@@ -305,7 +311,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0003
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00031}{31}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!TEMPERATURE\_K\_@{TEMPERATURE\_K\_}}
 \index{TEMPERATURE\_K\_@{TEMPERATURE\_K\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{TEMPERATURE\_K\_}{TEMPERATURE\_K\_}}
@@ -315,7 +321,7 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0003
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00017}{17}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a9ae244708fd9c438bf840ed319733651}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a9ae244708fd9c438bf840ed319733651}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a9ae244708fd9c438bf840ed319733651}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a9ae244708fd9c438bf840ed319733651} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!YIELD\_@{YIELD\_}}
 \index{YIELD\_@{YIELD\_}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{YIELD\_}{YIELD\_}}
@@ -328,11 +334,11 @@ Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l0004
 
 
 \doxysubsection{Function Documentation}
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a9dab88bd88d52496effc2ff4056f303f}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a9dab88bd88d52496effc2ff4056f303f}} 
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a9dab88bd88d52496effc2ff4056f303f}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a9dab88bd88d52496effc2ff4056f303f} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!rxn\_CMAQ\_OH\_HNO3\_calc\_deriv\_contrib@{rxn\_CMAQ\_OH\_HNO3\_calc\_deriv\_contrib}}
 \index{rxn\_CMAQ\_OH\_HNO3\_calc\_deriv\_contrib@{rxn\_CMAQ\_OH\_HNO3\_calc\_deriv\_contrib}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_CMAQ\_OH\_HNO3\_calc\_deriv\_contrib()}{rxn\_CMAQ\_OH\_HNO3\_calc\_deriv\_contrib()}}
-{\footnotesize\ttfamily void rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
 
 
 
@@ -342,7 +348,7 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em time\+\_\+deriv} & \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} object \\
+{\em time\+\_\+deriv} & \doxylink{struct_time_derivative}{Time\+Derivative} object \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -358,22 +364,28 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00147}{147}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 1
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a64502ded9861c3e462d29af918d08c04}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a64502ded9861c3e462d29af918d08c04}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn___c_m_a_q___o_h___h_n_o3_8c_a9dab88bd88d52496effc2ff4056f303f_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a64502ded9861c3e462d29af918d08c04}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a64502ded9861c3e462d29af918d08c04} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!rxn\_CMAQ\_OH\_HNO3\_calc\_jac\_contrib@{rxn\_CMAQ\_OH\_HNO3\_calc\_jac\_contrib}}
 \index{rxn\_CMAQ\_OH\_HNO3\_calc\_jac\_contrib@{rxn\_CMAQ\_OH\_HNO3\_calc\_jac\_contrib}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_CMAQ\_OH\_HNO3\_calc\_jac\_contrib()}{rxn\_CMAQ\_OH\_HNO3\_calc\_jac\_contrib()}}
-{\footnotesize\ttfamily void rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
 
 
 
-Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from this reaction. 
+Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em jac} & Reaction \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+{\em jac} & Reaction \doxylink{struct_jacobian}{Jacobian} \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -389,16 +401,22 @@ Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00192}{192}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 2
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_ab0f2f55a3403589173d1d9dae525adb6}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_ab0f2f55a3403589173d1d9dae525adb6}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn___c_m_a_q___o_h___h_n_o3_8c_a64502ded9861c3e462d29af918d08c04_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_ab0f2f55a3403589173d1d9dae525adb6}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_ab0f2f55a3403589173d1d9dae525adb6} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!rxn\_CMAQ\_OH\_HNO3\_get\_used\_jac\_elem@{rxn\_CMAQ\_OH\_HNO3\_get\_used\_jac\_elem}}
 \index{rxn\_CMAQ\_OH\_HNO3\_get\_used\_jac\_elem@{rxn\_CMAQ\_OH\_HNO3\_get\_used\_jac\_elem}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_CMAQ\_OH\_HNO3\_get\_used\_jac\_elem()}{rxn\_CMAQ\_OH\_HNO3\_get\_used\_jac\_elem()}}
-{\footnotesize\ttfamily void rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac }\end{DoxyParamCaption})}
 
 
 
-Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. 
+Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -406,7 +424,7 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 \hline
 {\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
 \hline
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
 \hline
 \end{DoxyParams}
 
@@ -414,14 +432,26 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00049}{49}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 3
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn___c_m_a_q___o_h___h_n_o3_8c_ab0f2f55a3403589173d1d9dae525adb6_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 4
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a49d47225b7a0fe5fd0003a6dcce08255}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a49d47225b7a0fe5fd0003a6dcce08255}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn___c_m_a_q___o_h___h_n_o3_8c_ab0f2f55a3403589173d1d9dae525adb6_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a49d47225b7a0fe5fd0003a6dcce08255}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a49d47225b7a0fe5fd0003a6dcce08255} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!rxn\_CMAQ\_OH\_HNO3\_print@{rxn\_CMAQ\_OH\_HNO3\_print}}
 \index{rxn\_CMAQ\_OH\_HNO3\_print@{rxn\_CMAQ\_OH\_HNO3\_print}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_CMAQ\_OH\_HNO3\_print()}{rxn\_CMAQ\_OH\_HNO3\_print()}}
-{\footnotesize\ttfamily void rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+print (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -439,12 +469,18 @@ Print the CMAQ\+\_\+\+OH\+\_\+\+HNO3 reaction parameters.
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00235}{235}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 5
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a34fb4ef73f1495b6fa99808153224aae}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a34fb4ef73f1495b6fa99808153224aae}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=333pt]{rxn___c_m_a_q___o_h___h_n_o3_8c_a49d47225b7a0fe5fd0003a6dcce08255_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_a34fb4ef73f1495b6fa99808153224aae}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_a34fb4ef73f1495b6fa99808153224aae} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!rxn\_CMAQ\_OH\_HNO3\_update\_env\_state@{rxn\_CMAQ\_OH\_HNO3\_update\_env\_state}}
 \index{rxn\_CMAQ\_OH\_HNO3\_update\_env\_state@{rxn\_CMAQ\_OH\_HNO3\_update\_env\_state}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_CMAQ\_OH\_HNO3\_update\_env\_state()}{rxn\_CMAQ\_OH\_HNO3\_update\_env\_state()}}
-{\footnotesize\ttfamily void rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -468,12 +504,18 @@ For CMAQ\+\_\+\+OH\+\_\+\+HNO3 reaction this only involves recalculating the rat
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00110}{110}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 6
-\mbox{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_ae50a551894469a76ff44e469f5d116d8}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_ae50a551894469a76ff44e469f5d116d8}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn___c_m_a_q___o_h___h_n_o3_8c_a34fb4ef73f1495b6fa99808153224aae_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_ae50a551894469a76ff44e469f5d116d8}\label{rxn___c_m_a_q___o_h___h_n_o3_8c_ae50a551894469a76ff44e469f5d116d8} 
 \index{rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}!rxn\_CMAQ\_OH\_HNO3\_update\_ids@{rxn\_CMAQ\_OH\_HNO3\_update\_ids}}
 \index{rxn\_CMAQ\_OH\_HNO3\_update\_ids@{rxn\_CMAQ\_OH\_HNO3\_update\_ids}!rxn\_CMAQ\_OH\_HNO3.c@{rxn\_CMAQ\_OH\_HNO3.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_CMAQ\_OH\_HNO3\_update\_ids()}{rxn\_CMAQ\_OH\_HNO3\_update\_ids()}}
-{\footnotesize\ttfamily void rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -485,7 +527,7 @@ Update the time derivative and Jacbobian array indices.
 \hline
 {\em deriv\+\_\+ids} & Id of each state variable in the derivative array \\
 \hline
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -497,6 +539,18 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00074}{74}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 7
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn___c_m_a_q___o_h___h_n_o3_8c_ae50a551894469a76ff44e469f5d116d8_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 8
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn___c_m_a_q___o_h___h_n_o3_8c_ae50a551894469a76ff44e469f5d116d8_icgraph}
+\end{center}
+\end{figure}

@@ -1,6 +1,10 @@
 <map id="aero_rep_get_aero_phase_mass__kg_m3" name="aero_rep_get_aero_phase_mass__kg_m3">
-<area shape="rect" id="node1" title="Get the total mass of an aerosol phase in this representation &#160;( )" alt="" coords="5,49,176,89"/>
-<area shape="rect" id="node2" href="$aero__rep__modal__binned__mass_8c.html#aa84e95ce69656ab640edfdb32cc71d4c" title="Get the total mass in an aerosol phase &#160;( )" alt="" coords="251,5,411,60"/>
-<area shape="rect" id="node4" href="$aero__rep__single__particle_8c.html#ad49c89b34b57e5b644d6506ead9dea34" title="Get the total mass in an aerosol phase &#160;( )" alt="" coords="224,85,437,125"/>
-<area shape="rect" id="node3" href="$aero__phase__solver_8c.html#a965e0b9fc79db694be201edd05377dd1" title="Get the mass and average MW in an aerosol phase." alt="" coords="485,49,639,89"/>
+<area shape="rect" id="Node000001" title="Get the total mass of an aerosol phase in this representation &#160;( )" alt="" coords="5,49,176,90"/>
+<area shape="rect" id="Node000002" href="$aero__rep__modal__binned__mass_8c.html#aa84e95ce69656ab640edfdb32cc71d4c" title="Get the total mass in an aerosol phase &#160;( )" alt="" coords="250,5,410,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,54,235,45,235,50,177,59"/>
+<area shape="rect" id="Node000004" href="$aero__rep__single__particle_8c.html#ad49c89b34b57e5b644d6506ead9dea34" title="Get the total mass in an aerosol phase &#160;( )" alt="" coords="224,85,436,126"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="177,79,209,84,208,90,176,85"/>
+<area shape="rect" id="Node000003" href="$aero__phase__solver_8c.html#a965e0b9fc79db694be201edd05377dd1" title="Get the mass and average MW in an aerosol phase." alt="" coords="484,49,636,90"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="411,43,469,52,468,58,410,48"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="436,86,469,81,469,86,437,91"/>
 </map>

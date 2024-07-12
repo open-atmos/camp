@@ -1,4 +1,5 @@
 <map id="rxn_ternary_chemical_activation_calc_jac_contrib" name="rxn_ternary_chemical_activation_calc_jac_contrib">
-<area shape="rect" id="node1" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="5,5,149,60"/>
-<area shape="rect" id="node2" href="$_jacobian_8c.html#a844d8b2784c48a794ada38d053b1d1b3" title="Add a contribution to the Jacobian." alt="" coords="197,20,333,45"/>
+<area shape="rect" id="Node000001" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="5,5,149,61"/>
+<area shape="rect" id="Node000002" href="$_jacobian_8c.html#a844d8b2784c48a794ada38d053b1d1b3" title="Add a contribution to the Jacobian." alt="" coords="197,20,332,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,31,181,31,181,36,149,36"/>
 </map>

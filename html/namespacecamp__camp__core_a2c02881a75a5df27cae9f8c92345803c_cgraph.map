@@ -1,5 +1,8 @@
 <map id="camp_camp_core::state_size" name="camp_camp_core::state_size">
-<area shape="rect" id="node1" title="Get the size of the state array." alt="" coords="5,29,196,55"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="244,29,396,55"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="444,22,567,62"/>
+<area shape="rect" id="Node000001" title="Get the size of the state array." alt="" coords="5,29,195,55"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="64,31,57,21,61,11,76,5,100,3,127,5,140,12,138,17,125,10,100,8,77,10,65,15,62,20,68,27"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="243,29,394,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,40,227,40,227,45,195,45"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="442,22,564,63"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="394,40,426,40,426,45,394,45"/>
 </map>

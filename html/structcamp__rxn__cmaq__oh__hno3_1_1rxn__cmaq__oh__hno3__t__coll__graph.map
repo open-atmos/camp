@@ -1,4 +1,10 @@
 <map id="camp_rxn_cmaq_oh_hno3::rxn_cmaq_oh_hno3_t" name="camp_rxn_cmaq_oh_hno3::rxn_cmaq_oh_hno3_t">
-<area shape="rect" id="node1" title="Generic test reaction data type." alt="" coords="5,93,179,133"/>
-<area shape="rect" id="node2" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="25,5,159,45"/>
+<area shape="rect" id="Node000001" title="Generic test reaction data type." alt="" coords="5,318,178,358"/>
+<area shape="rect" id="Node000002" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="25,228,158,268"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,284,94,317,89,317,89,284"/>
+<area shape="rect" id="Node000003" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="7,139,176,165"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,180,94,227,89,227,89,180"/>
+<area shape="rect" id="Node000004" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="12,5,171,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="94,61,94,138,89,138,89,61"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="188,15,197,26,189,36,172,40,170,35,187,31,192,26,184,19"/>
 </map>

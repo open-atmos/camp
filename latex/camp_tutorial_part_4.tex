@@ -1,4 +1,6 @@
-This part of \mbox{\hyperlink{camp_tutorial}{Boot CAMP}} shows how to use CAMP\textquotesingle{}s message passing functions. If you\textquotesingle{}re only interested in using CAMP on a single processor, you can skip this part and move on to \mbox{\hyperlink{camp_tutorial_part_5}{Boot CAMP\+: Part 5 -\/ Aerosol Representations}}.
+\chapter{Boot CAMP\+: Part 4 -\/ Message Passing}
+\hypertarget{camp_tutorial_part_4}{}\label{camp_tutorial_part_4}\index{Boot CAMP: Part 4 -\/ Message Passing@{Boot CAMP: Part 4 -\/ Message Passing}}
+This part of \doxysectlink{camp_tutorial}{Boot CAMP}{0} shows how to use CAMP\textquotesingle{}s message passing functions. If you\textquotesingle{}re only interested in using CAMP on a single processor, you can skip this part and move on to \doxysectlink{camp_tutorial_part_5}{Boot CAMP\+: Part 5 -\/ Aerosol Representations}{0}.
 
 We\textquotesingle{}ll wrap our MPI code with a compiler flag named {\ttfamily USE\+\_\+\+MPI} to make sure our box model can be built with or without MPI. The order of operations is important for MPI runs and is summarized in the following table.
 
@@ -34,9 +36,9 @@ First, let\textquotesingle{}s add the modules we need for MPI. We\textquotesingl
 
 
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{\textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
-\DoxyCodeLine{\textcolor{preprocessor}{}  \textcolor{keywordtype}{use }mpi}
-\DoxyCodeLine{  \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__mpi}{camp\_mpi}}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\textcolor{preprocessor}{}\ \ \textcolor{keywordtype}{use\ }mpi}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__mpi}{camp\_mpi}}}
 \DoxyCodeLine{\textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCodeInclude}
@@ -46,41 +48,41 @@ Now we\textquotesingle{}ll declare a buffer, a position index, and a pack size
 
 
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{\textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
-\DoxyCodeLine{\textcolor{preprocessor}{}  \textcolor{keywordtype}{integer(kind=i\_kind)} :: pos, pack\_size}
-\DoxyCodeLine{  \textcolor{keywordtype}{character}, \textcolor{keywordtype}{allocatable} :: buffer(:)}
+\DoxyCodeLine{\textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\textcolor{preprocessor}{}\ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ pos,\ pack\_size}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{allocatable}\ ::\ buffer(:)}
 \DoxyCodeLine{\textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCodeInclude}
 
 
-Next, let\textquotesingle{}s initialize MPI and wrap some of our existing code in a conditional statement that ensures we load the input data and initialize CAMP on the primary process only (we\textquotesingle{}re including the existing call to the \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}} constructor and {\ttfamily camp\+\_\+core\+\_\+t\+::initialize()} to show the placement of the start of our new conditional block)\+:
+Next, let\textquotesingle{}s initialize MPI and wrap some of our existing code in a conditional statement that ensures we load the input data and initialize CAMP on the primary process only (we\textquotesingle{}re including the existing call to the \doxylink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t} constructor and {\ttfamily camp\+\_\+core\+\_\+t\+::initialize()} to show the placement of the start of our new conditional block)\+:
 
 
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{\textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
-\DoxyCodeLine{\textcolor{preprocessor}{}  \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a013fae7f812d8d9bd22dc73db714e115}{camp\_mpi\_init}}( )}
+\DoxyCodeLine{\textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\textcolor{preprocessor}{}\ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a013fae7f812d8d9bd22dc73db714e115}{camp\_mpi\_init}}(\ )}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{keywordflow}{if}( \mbox{\hyperlink{namespacecamp__mpi_a071b987e3ccab55010a23029249b73a4}{camp\_mpi\_rank}}( ) .eq. 0 ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\ \ \textcolor{keywordflow}{if}(\ \mbox{\hyperlink{namespacecamp__mpi_a071b987e3ccab55010a23029249b73a4}{camp\_mpi\_rank}}(\ )\ .eq.\ 0\ )\ \textcolor{keywordflow}{then}}
 \DoxyCodeLine{\textcolor{preprocessor}{\#endif}}
 \DoxyCodeLine{\textcolor{preprocessor}{}}
-\DoxyCodeLine{    camp\_core => camp\_core\_t( \textcolor{stringliteral}{"{}my\_config\_file.json"{}} )}
-\DoxyCodeLine{    \textcolor{keyword}{call }camp\_core\%initialize( )}
+\DoxyCodeLine{\ \ \ \ camp\_core\ =>\ camp\_core\_t(\ \textcolor{stringliteral}{"{}my\_config\_file.json"{}}\ )}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{call\ }camp\_core\%initialize(\ )}
 
 \end{DoxyCodeInclude}
 
 
-The {\ttfamily camp\+\_\+core\+\_\+t\+::initialize()} subroutine instructs the internal model elements to take their input data and condense it down into a small data block containing only the information they need to solve the chemical system during calls to {\ttfamily camp\+\_\+core\+\_\+t\+::solve()}. The \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}} MPI functions pass only this condensed data to other processes. So, after the core is passed, you will not have access to the raw input data or model \mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}} objects that we used to set up the \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__update__data__t}{rxn\+\_\+update\+\_\+data\+\_\+t}} objects in \mbox{\hyperlink{camp_tutorial_part_3}{part 3}}. Thus, all the setup of \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__update__data__t}{rxn\+\_\+update\+\_\+data\+\_\+t}} objects must be done on the primary process, before passing the core and update objects to the other processes.
+The {\ttfamily camp\+\_\+core\+\_\+t\+::initialize()} subroutine instructs the internal model elements to take their input data and condense it down into a small data block containing only the information they need to solve the chemical system during calls to {\ttfamily camp\+\_\+core\+\_\+t\+::solve()}. The \doxylink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t} MPI functions pass only this condensed data to other processes. So, after the core is passed, you will not have access to the raw input data or model \doxylink{structcamp__property_1_1property__t}{property\+\_\+t} objects that we used to set up the \doxylink{structcamp__rxn__data_1_1rxn__update__data__t}{rxn\+\_\+update\+\_\+data\+\_\+t} objects in \doxysectlink{camp_tutorial_part_3}{part 3}{0}. Thus, all the setup of \doxylink{structcamp__rxn__data_1_1rxn__update__data__t}{rxn\+\_\+update\+\_\+data\+\_\+t} objects must be done on the primary process, before passing the core and update objects to the other processes.
 
 So, let\textquotesingle{}s end our first MPI conditional block after we setup the $\ce{NO2}$ photolysis rxn\+\_\+update\+\_\+data\+\_\+t object and before the call to {\ttfamily camp\+\_\+core\+\_\+t\+::solver\+\_\+initialize()}. The first step is to get the size of the buffer to be used to pass the objects (the existing check that the $\ce{NO2}$ photolysis update data object is attached is included to show the placement of the following code block)\+:
 
 
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{\textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
-\DoxyCodeLine{\textcolor{preprocessor}{}    \textcolor{comment}{! Pack the core and the NO2 photolysis update data object}}
-\DoxyCodeLine{    pack\_size = camp\_core\%pack\_size( )               + \&}
-\DoxyCodeLine{                no2\_photolysis\%pack\_size( )}
-\DoxyCodeLine{    \textcolor{keyword}{allocate}( buffer( pack\_size ) )}
+\DoxyCodeLine{\textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\textcolor{preprocessor}{}\ \ \ \ \textcolor{comment}{!\ Pack\ the\ core\ and\ the\ NO2\ photolysis\ update\ data\ object}}
+\DoxyCodeLine{\ \ \ \ pack\_size\ =\ camp\_core\%pack\_size(\ )\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ \&}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ no2\_photolysis\%pack\_size(\ )}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{allocate}(\ buffer(\ pack\_size\ )\ )}
 
 \end{DoxyCodeInclude}
 
@@ -89,11 +91,11 @@ After we allocate the buffer on the primary process, we\textquotesingle{}ll pack
 
 
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{    pos = 0}
-\DoxyCodeLine{    \textcolor{keyword}{call }camp\_core\%bin\_pack(      buffer, pos )}
-\DoxyCodeLine{    \textcolor{keyword}{call }no2\_photolysis\%bin\_pack( buffer, pos )}
+\DoxyCodeLine{\ \ \ \ pos\ =\ 0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{call\ }camp\_core\%bin\_pack(\ \ \ \ \ \ buffer,\ pos\ )}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{call\ }no2\_photolysis\%bin\_pack(\ buffer,\ pos\ )}
 \DoxyCodeLine{}
-\DoxyCodeLine{\textcolor{keywordflow}{  end if} \textcolor{comment}{! primary process}}
+\DoxyCodeLine{\textcolor{keywordflow}{\ \ end\ if}\ \textcolor{comment}{!\ primary\ process}}
 
 \end{DoxyCodeInclude}
 
@@ -102,10 +104,10 @@ Next, we\textquotesingle{}ll pass the species indexes we looked up. (Remember, w
 
 
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{  \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a7b8bd92bfd70d41355c71943d41a528c}{camp\_mpi\_bcast\_integer}}( idx\_o3  )}
-\DoxyCodeLine{  \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a7b8bd92bfd70d41355c71943d41a528c}{camp\_mpi\_bcast\_integer}}( idx\_no  )}
-\DoxyCodeLine{  \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a7b8bd92bfd70d41355c71943d41a528c}{camp\_mpi\_bcast\_integer}}( idx\_no2 )}
-\DoxyCodeLine{  \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a7b8bd92bfd70d41355c71943d41a528c}{camp\_mpi\_bcast\_integer}}( idx\_o2  )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a7b8bd92bfd70d41355c71943d41a528c}{camp\_mpi\_bcast\_integer}}(\ idx\_o3\ \ )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a7b8bd92bfd70d41355c71943d41a528c}{camp\_mpi\_bcast\_integer}}(\ idx\_no\ \ )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a7b8bd92bfd70d41355c71943d41a528c}{camp\_mpi\_bcast\_integer}}(\ idx\_no2\ )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a7b8bd92bfd70d41355c71943d41a528c}{camp\_mpi\_bcast\_integer}}(\ idx\_o2\ \ )}
 
 \end{DoxyCodeInclude}
 
@@ -114,13 +116,13 @@ After we pack the objects and exit the primary process block, we\textquotesingle
 
 
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{  \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a7b8bd92bfd70d41355c71943d41a528c}{camp\_mpi\_bcast\_integer}}( pack\_size )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a7b8bd92bfd70d41355c71943d41a528c}{camp\_mpi\_bcast\_integer}}(\ pack\_size\ )}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{keywordflow}{if}( \mbox{\hyperlink{namespacecamp__mpi_a071b987e3ccab55010a23029249b73a4}{camp\_mpi\_rank}}( ) .gt. 0 ) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{    \textcolor{keyword}{allocate}( buffer( pack\_size ) )}
-\DoxyCodeLine{\textcolor{keywordflow}{  end if}}
+\DoxyCodeLine{\ \ \textcolor{keywordflow}{if}(\ \mbox{\hyperlink{namespacecamp__mpi_a071b987e3ccab55010a23029249b73a4}{camp\_mpi\_rank}}(\ )\ .gt.\ 0\ )\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{allocate}(\ buffer(\ pack\_size\ )\ )}
+\DoxyCodeLine{\textcolor{keywordflow}{\ \ end\ if}}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a2b70614f7b7ae69f1ea2dc0256e5cc61}{camp\_mpi\_bcast\_packed}}( buffer )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a2b70614f7b7ae69f1ea2dc0256e5cc61}{camp\_mpi\_bcast\_packed}}(\ buffer\ )}
 
 \end{DoxyCodeInclude}
 
@@ -129,22 +131,22 @@ Next, we\textquotesingle{}ll unpack the objects on the secondary processes\+:
 
 
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{  \textcolor{keywordflow}{if}( \mbox{\hyperlink{namespacecamp__mpi_a071b987e3ccab55010a23029249b73a4}{camp\_mpi\_rank}}( ) .gt. 0 ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\ \ \textcolor{keywordflow}{if}(\ \mbox{\hyperlink{namespacecamp__mpi_a071b987e3ccab55010a23029249b73a4}{camp\_mpi\_rank}}(\ )\ .gt.\ 0\ )\ \textcolor{keywordflow}{then}}
 \DoxyCodeLine{}
-\DoxyCodeLine{    camp\_core => camp\_core\_t( )}
-\DoxyCodeLine{    pos = 0}
-\DoxyCodeLine{    \textcolor{keyword}{call }camp\_core\%bin\_unpack(      buffer, pos )}
-\DoxyCodeLine{    \textcolor{keyword}{call }no2\_photolysis\%bin\_unpack( buffer, pos )}
+\DoxyCodeLine{\ \ \ \ camp\_core\ =>\ camp\_core\_t(\ )}
+\DoxyCodeLine{\ \ \ \ pos\ =\ 0}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{call\ }camp\_core\%bin\_unpack(\ \ \ \ \ \ buffer,\ pos\ )}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{call\ }no2\_photolysis\%bin\_unpack(\ buffer,\ pos\ )}
 \DoxyCodeLine{}
-\DoxyCodeLine{\textcolor{keywordflow}{  end if}}
+\DoxyCodeLine{\textcolor{keywordflow}{\ \ end\ if}}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{keyword}{deallocate}( buffer )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{deallocate}(\ buffer\ )}
 \DoxyCodeLine{\textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCodeInclude}
 
 
-Note that we call the \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}} constructor without passing the input file list. This creates an empty core on the secondary processes that we can fill with the packed data from the buffer. After unpacking the objects and deallocating the buffer, our message passing is complete, and the rest of the code remains the same, beginning with the call to {\ttfamily \mbox{\hyperlink{camp__solver_8c_a599ffdef916b139a1690bfd41aa386b6}{solver\+\_\+initialize()}}}.
+Note that we call the \doxylink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t} constructor without passing the input file list. This creates an empty core on the secondary processes that we can fill with the packed data from the buffer. After unpacking the objects and deallocating the buffer, our message passing is complete, and the rest of the code remains the same, beginning with the call to {\ttfamily \doxylink{camp__solver_8c_a599ffdef916b139a1690bfd41aa386b6}{solver\+\_\+initialize()}}.
 
 This is not a very useful parallelization of our box model, as we\textquotesingle{}re just solving the same system on every process, but it demonstrates how to initialize and pass the {\ttfamily camp\+\_\+core\+\_\+t} and {\ttfamily update\+\_\+data\+\_\+t} objects. The {\ttfamily camp\+\_\+state\+\_\+t\+::state\+\_\+var(\+:)} array can be accessed directly and passed however your model passes double-\/precision floating-\/point arrays, or you can use the {\ttfamily camp\+\_\+mpi\+\_\+pack\+\_\+size\+\_\+real\+\_\+array()}, {\ttfamily camp\+\_\+mpi\+\_\+pack\+\_\+real\+\_\+array()}, and {\ttfamily camp\+\_\+mpi\+\_\+unpack\+\_\+real\+\_\+array()} functions.
 
@@ -152,24 +154,24 @@ To finish up, let\textquotesingle{}s add a conditional block around the output t
 
 
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{\textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
-\DoxyCodeLine{\textcolor{preprocessor}{}  \textcolor{keywordflow}{if}( \mbox{\hyperlink{namespacecamp__mpi_a071b987e3ccab55010a23029249b73a4}{camp\_mpi\_rank}}( ) .eq. 1 ) \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\textcolor{preprocessor}{}\ \ \textcolor{keywordflow}{if}(\ \mbox{\hyperlink{namespacecamp__mpi_a071b987e3ccab55010a23029249b73a4}{camp\_mpi\_rank}}(\ )\ .eq.\ 1\ )\ \textcolor{keywordflow}{then}}
 \DoxyCodeLine{\textcolor{preprocessor}{\#endif}}
 \DoxyCodeLine{\textcolor{preprocessor}{}}
-\DoxyCodeLine{    \textcolor{keyword}{write}(*,fmt\_hdr) \textcolor{stringliteral}{"{}time"{}}, \textcolor{stringliteral}{"{}O3"{}}, \textcolor{stringliteral}{"{}NO"{}}, \textcolor{stringliteral}{"{}NO2"{}}, \textcolor{stringliteral}{"{}O2"{}}}
-\DoxyCodeLine{    \textcolor{keywordflow}{do} i\_time = 1, 100}
-\DoxyCodeLine{      \textcolor{keyword}{call }camp\_core\%solve( camp\_state, 1.0d-\/15 ) \textcolor{comment}{! time step in s}}
-\DoxyCodeLine{      \textcolor{keyword}{write}(*,fmt\_dat) i\_time*1.0e-\/15, \&}
-\DoxyCodeLine{                       camp\_state\%state\_var( idx\_o3  ), \&}
-\DoxyCodeLine{                       camp\_state\%state\_var( idx\_no  ), \&}
-\DoxyCodeLine{                       camp\_state\%state\_var( idx\_no2 ), \&}
-\DoxyCodeLine{                       camp\_state\%state\_var( idx\_o2  )}
-\DoxyCodeLine{\textcolor{keywordflow}{    end do}}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{write}(*,fmt\_hdr)\ \textcolor{stringliteral}{"{}time"{}},\ \textcolor{stringliteral}{"{}O3"{}},\ \textcolor{stringliteral}{"{}NO"{}},\ \textcolor{stringliteral}{"{}NO2"{}},\ \textcolor{stringliteral}{"{}O2"{}}}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{do}\ i\_time\ =\ 1,\ 100}
+\DoxyCodeLine{\ \ \ \ \ \ \textcolor{keyword}{call\ }camp\_core\%solve(\ camp\_state,\ 1.0d-\/15\ )\ \textcolor{comment}{!\ time\ step\ in\ s}}
+\DoxyCodeLine{\ \ \ \ \ \ \textcolor{keyword}{write}(*,fmt\_dat)\ i\_time*1.0e-\/15,\ \&}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ camp\_state\%state\_var(\ idx\_o3\ \ ),\ \&}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ camp\_state\%state\_var(\ idx\_no\ \ ),\ \&}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ camp\_state\%state\_var(\ idx\_no2\ ),\ \&}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ camp\_state\%state\_var(\ idx\_o2\ \ )}
+\DoxyCodeLine{\textcolor{keywordflow}{\ \ \ \ end\ do}}
 \DoxyCodeLine{}
-\DoxyCodeLine{\textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
-\DoxyCodeLine{\textcolor{preprocessor}{}\textcolor{keywordflow}{  end if}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\textcolor{preprocessor}{}\textcolor{keywordflow}{\ \ end\ if}}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a6dab941cdb9b6b5681872411eeee2d1b}{camp\_mpi\_finalize}}( )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a6dab941cdb9b6b5681872411eeee2d1b}{camp\_mpi\_finalize}}(\ )}
 \DoxyCodeLine{\textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCodeInclude}
@@ -177,46 +179,46 @@ To finish up, let\textquotesingle{}s add a conditional block around the output t
 
 To compile the model code with mpi, be sure to include the {\ttfamily USE\+\_\+\+MPI} flag definition\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{mpif90 -\/o run\_box\_model box\_model.F90 -\/DCAMP\_USE\_MPI -\/lcamp -\/I/usr/local/include/camp}
-\DoxyCodeLine{mpirun -\/v -\/np 2 run\_box\_model > output.txt}
+\DoxyCodeLine{mpif90\ -\/o\ run\_box\_model\ box\_model.F90\ -\/DCAMP\_USE\_MPI\ -\/lcamp\ -\/I/usr/local/include/camp}
+\DoxyCodeLine{mpirun\ -\/v\ -\/np\ 2\ run\_box\_model\ >\ output.txt}
 
 \end{DoxyCode}
 
 
-In later installments of \mbox{\hyperlink{camp_tutorial}{Boot CAMP}} we\textquotesingle{}ll include a section towards the end that describes any MPI-\/related code needed to run the updates described.
+In later installments of \doxysectlink{camp_tutorial}{Boot CAMP}{0} we\textquotesingle{}ll include a section towards the end that describes any MPI-\/related code needed to run the updates described.
 
-Now that our messages are passed, it\textquotesingle{}s aerosol time. That\textquotesingle{}s the topic of the \mbox{\hyperlink{camp_tutorial_part_5}{next installment of Boot CAMP}}!
+Now that our messages are passed, it\textquotesingle{}s aerosol time. That\textquotesingle{}s the topic of the \doxysectlink{camp_tutorial_part_5}{next installment of Boot CAMP}{0}!
 
 \DoxyHorRuler{0}
- \hypertarget{camp_tutorial_part_4_autotoc_md23}{}\doxysubsubsection{Docker Instructions}\label{camp_tutorial_part_4_autotoc_md23}
+ \hypertarget{camp_tutorial_part_4_autotoc_md23}{}\doxysubsubsection{\texorpdfstring{Docker Instructions}{Docker Instructions}}\label{camp_tutorial_part_4_autotoc_md23}
 To run a Docker container with MPI support, we\textquotesingle{}ll need to build the image locally. So, we\textquotesingle{}ll clone the CAMP repo, build the container with MPI and then run it\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{git clone https://github.com/open-\/atmos/camp.git}
-\DoxyCodeLine{cd camp}
-\DoxyCodeLine{docker build -\/f Dockerfile.mpi -\/t camp-\/test-\/mpi .}
-\DoxyCodeLine{docker run -\/-\/name camp -\/it camp-\/test-\/mpi bash}
+\DoxyCodeLine{git\ clone\ https://github.com/open-\/atmos/camp.git}
+\DoxyCodeLine{cd\ camp}
+\DoxyCodeLine{docker\ build\ -\/f\ Dockerfile.mpi\ -\/t\ camp-\/test-\/mpi\ .}
+\DoxyCodeLine{docker\ run\ -\/-\/name\ camp\ -\/it\ camp-\/test-\/mpi\ bash}
 
 \end{DoxyCode}
  Inside the container\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{sudo dnf install -\/y gnuplot}
-\DoxyCodeLine{mkdir boot-\/camp}
-\DoxyCodeLine{cd boot-\/camp}
-\DoxyCodeLine{cp ../camp/doc/camp\_tutorial/boot\_camp/part\_4\_code/* .}
-\DoxyCodeLine{mpif90 -\/o run\_box\_model box\_model.F90 -\/DCAMP\_USE\_MPI -\/lcamp -\/I/usr/local/include/camp}
-\DoxyCodeLine{mpirun -\/v -\/np 2 run\_box\_model > output.txt}
-\DoxyCodeLine{gnuplot plot.conf}
+\DoxyCodeLine{sudo\ dnf\ install\ -\/y\ gnuplot}
+\DoxyCodeLine{mkdir\ boot-\/camp}
+\DoxyCodeLine{cd\ boot-\/camp}
+\DoxyCodeLine{cp\ ../camp/doc/camp\_tutorial/boot\_camp/part\_4\_code/*\ .}
+\DoxyCodeLine{mpif90\ -\/o\ run\_box\_model\ box\_model.F90\ -\/DCAMP\_USE\_MPI\ -\/lcamp\ -\/I/usr/local/include/camp}
+\DoxyCodeLine{mpirun\ -\/v\ -\/np\ 2\ run\_box\_model\ >\ output.txt}
+\DoxyCodeLine{gnuplot\ plot.conf}
 \DoxyCodeLine{exit}
 
 \end{DoxyCode}
  Back outside the container\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{docker cp camp:/home/test\_user/boot-\/camp/results.png .}
-\DoxyCodeLine{docker container rm camp}
-\DoxyCodeLine{open results.png}
+\DoxyCodeLine{docker\ cp\ camp:/home/test\_user/boot-\/camp/results.png\ .}
+\DoxyCodeLine{docker\ container\ rm\ camp}
+\DoxyCodeLine{open\ results.png}
 
 \end{DoxyCode}
- You should get the same results as described in \mbox{\hyperlink{camp_tutorial_part_3}{Boot CAMP\+: Part 3 -\/ Updating CAMP Parameters}}
+ You should get the same results as described in \doxysectlink{camp_tutorial_part_3}{Boot CAMP\+: Part 3 -\/ Updating CAMP Parameters}{0}
 
 \DoxyHorRuler{0}
- {\bfseries{ \texorpdfstring{$<$}{<} Previous\+: }} \mbox{\hyperlink{camp_tutorial_part_3}{Boot CAMP\+: Part 3 -\/ Updating CAMP Parameters}}  \mbox{\hyperlink{camp_tutorial}{Index}}  {\bfseries{ Next\+: }} \mbox{\hyperlink{camp_tutorial_part_5}{Boot CAMP\+: Part 5 -\/ Aerosol Representations}} {\bfseries{ \texorpdfstring{$>$}{>} }} 
+ {\bfseries{ \texorpdfstring{$<$}{<} Previous\+: }} \doxysectlink{camp_tutorial_part_3}{Boot CAMP\+: Part 3 -\/ Updating CAMP Parameters}{0}  \doxysectlink{camp_tutorial}{Index}{0}  {\bfseries{ Next\+: }} \doxysectlink{camp_tutorial_part_5}{Boot CAMP\+: Part 5 -\/ Aerosol Representations}{0} {\bfseries{ \texorpdfstring{$>$}{>} }} 

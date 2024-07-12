@@ -1,22 +1,22 @@
-\hypertarget{namespacecamp__aero__phase__data}{}\doxysection{camp\+\_\+aero\+\_\+phase\+\_\+data Module Reference}
-\label{namespacecamp__aero__phase__data}\index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
+\doxysection{camp\+\_\+aero\+\_\+phase\+\_\+data Module Reference}
+\hypertarget{namespacecamp__aero__phase__data}{}\label{namespacecamp__aero__phase__data}\index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 
 
-The abstract \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}} structure and associated subroutines.  
+The abstract \doxylink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t} structure and associated subroutines.  
 
 
-\doxysubsection*{Data Types}
+\doxysubsubsection*{Data Types}
 \begin{DoxyCompactItemize}
 \item 
 type \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}
 \begin{DoxyCompactList}\small\item\em Pointer type for building arrays. \end{DoxyCompactList}\item 
 interface \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}}
 \begin{DoxyCompactList}\small\item\em Aerosol phase data type. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Functions/\+Subroutines}
+\doxysubsubsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
 \item 
 type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}{constructor}} (phase\+\_\+name, init\+\_\+size)
-\begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Constructor for \doxylink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__phase__data_a7e16fabf0efef62b446e6f7c98e4ea70}{load}} (this, json, j\+\_\+obj)
 \begin{DoxyCompactList}\small\item\em Load species from an input file. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__phase__data_a408fc2dbd4214ae958b98296176e71cb}{initialize}} (this, chem\+\_\+spec\+\_\+data)
@@ -26,7 +26,7 @@ character(len=\+:) function, allocatable \mbox{\hyperlink{namespacecamp__aero__p
 integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__phase__data_a3f1fce7eed369d2c40aa6ec071f85c17}{get\+\_\+size}} (this)
 \begin{DoxyCompactList}\small\item\em Get the number of species in the phase. \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__phase__data_a851caa6eba1fdf804498930649377d66}{num\+\_\+jac\+\_\+elem}} (this)
-\begin{DoxyCompactList}\small\item\em Get the number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} row elements needed during solving. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Get the number of \doxylink{struct_jacobian}{Jacobian} row elements needed during solving. \end{DoxyCompactList}\item 
 class(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__aero__phase__data_a50c5c02187f8f075971e71bf4e1654e5}{get\+\_\+property\+\_\+set}} (this)
 \begin{DoxyCompactList}\small\item\em Get the aerosol phase property set. \end{DoxyCompactList}\item 
 type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__aero__phase__data_a6b0e912f6d52db60cc06554c869c4d50}{get\+\_\+species\+\_\+names}} (this)
@@ -53,7 +53,7 @@ elemental subroutine \mbox{\hyperlink{namespacecamp__aero__phase__data_af443ab1c
 \begin{DoxyCompactList}\small\item\em Dereference a pointer to aerosol phase data. \end{DoxyCompactList}\item 
 elemental subroutine \mbox{\hyperlink{namespacecamp__aero__phase__data_ac4f198fb9d35e624894d640491ddc3e3}{ptr\+\_\+finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize a pointer to aerosol phase data. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Variables}
+\doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 integer(kind=i\+\_\+kind), parameter \mbox{\hyperlink{namespacecamp__aero__phase__data_a006dfd258bfd3e15760e11cd09710421}{realloc\+\_\+inc}} = 50
@@ -61,14 +61,14 @@ integer(kind=i\+\_\+kind), parameter \mbox{\hyperlink{namespacecamp__aero__phase
 
 
 \doxysubsection{Detailed Description}
-The abstract \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}} structure and associated subroutines. 
+The abstract \doxylink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t} structure and associated subroutines. 
 
 \doxysubsection{Function/\+Subroutine Documentation}
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_a7f6f358a40030a3a553ee6c98916b27a}\label{namespacecamp__aero__phase__data_a7f6f358a40030a3a553ee6c98916b27a}} 
+\Hypertarget{namespacecamp__aero__phase__data_a7f6f358a40030a3a553ee6c98916b27a}\label{namespacecamp__aero__phase__data_a7f6f358a40030a3a553ee6c98916b27a} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!add@{add}}
 \index{add@{add}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{add()}{add()}}
-{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+phase\+\_\+data\+::add (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}}), intent(inout)}]{this,  }\item[{character(len=$\ast$), intent(in)}]{spec\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+phase\+\_\+data\+::add (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}}), intent(inout)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{spec\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -86,8 +86,14 @@ Add a new chemical species to the phase.
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00628}{628}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 0
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_a78ab23075574ec07c5cd74364fd598fa}\label{namespacecamp__aero__phase__data_a78ab23075574ec07c5cd74364fd598fa}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__aero__phase__data_a7f6f358a40030a3a553ee6c98916b27a_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__aero__phase__data_a78ab23075574ec07c5cd74364fd598fa}\label{namespacecamp__aero__phase__data_a78ab23075574ec07c5cd74364fd598fa} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!bin\_pack@{bin\_pack}}
 \index{bin\_pack@{bin\_pack}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{bin\_pack()}{bin\_pack()}}
@@ -113,8 +119,14 @@ Pack the given value to the buffer, advancing position.
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00506}{506}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 1
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_a23c96791127ac6fd34c98a5ab639fdb6}\label{namespacecamp__aero__phase__data_a23c96791127ac6fd34c98a5ab639fdb6}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__aero__phase__data_a78ab23075574ec07c5cd74364fd598fa_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__aero__phase__data_a23c96791127ac6fd34c98a5ab639fdb6}\label{namespacecamp__aero__phase__data_a23c96791127ac6fd34c98a5ab639fdb6} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!bin\_unpack@{bin\_unpack}}
 \index{bin\_unpack@{bin\_unpack}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{bin\_unpack()}{bin\_unpack()}}
@@ -140,16 +152,22 @@ Unpack the given value from the buffer, advancing position.
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00532}{532}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 2
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}\label{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__aero__phase__data_a23c96791127ac6fd34c98a5ab639fdb6_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}\label{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!constructor@{constructor}}
 \index{constructor@{constructor}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{constructor()}{constructor()}}
-{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}}) function, pointer camp\+\_\+aero\+\_\+phase\+\_\+data\+::constructor (\begin{DoxyParamCaption}\item[{character(len=$\ast$), intent(in), optional}]{phase\+\_\+name,  }\item[{integer(kind=i\+\_\+kind), intent(in), optional}]{init\+\_\+size }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}}) function, pointer camp\+\_\+aero\+\_\+phase\+\_\+data\+::constructor (\begin{DoxyParamCaption}\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in), optional}]{phase\+\_\+name,  }\item[{integer(kind=i\+\_\+kind), intent(in), optional}]{init\+\_\+size }\end{DoxyParamCaption})}
 
 
 
-Constructor for \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}}. 
+Constructor for \doxylink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}. 
 
 \begin{DoxyReturn}{Returns}
 A new set of aerosol-\/phase species 
@@ -165,7 +183,7 @@ A new set of aerosol-\/phase species
 
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00162}{162}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_af443ab1c8928427f282158c27a2ccc38}\label{namespacecamp__aero__phase__data_af443ab1c8928427f282158c27a2ccc38}} 
+\Hypertarget{namespacecamp__aero__phase__data_af443ab1c8928427f282158c27a2ccc38}\label{namespacecamp__aero__phase__data_af443ab1c8928427f282158c27a2ccc38} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!dereference@{dereference}}
 \index{dereference@{dereference}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{dereference()}{dereference()}}
@@ -184,7 +202,7 @@ Dereference a pointer to aerosol phase data.
 
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00676}{676}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_ac5eaedf2265900988eaddb4872f1c0c2}\label{namespacecamp__aero__phase__data_ac5eaedf2265900988eaddb4872f1c0c2}} 
+\Hypertarget{namespacecamp__aero__phase__data_ac5eaedf2265900988eaddb4872f1c0c2}\label{namespacecamp__aero__phase__data_ac5eaedf2265900988eaddb4872f1c0c2} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!do\_print@{do\_print}}
 \index{do\_print@{do\_print}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{do\_print()}{do\_print()}}
@@ -205,7 +223,7 @@ Print out the aerosol phase data.
 
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00559}{559}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_a8b457646e5668e7125d29469ed581595}\label{namespacecamp__aero__phase__data_a8b457646e5668e7125d29469ed581595}} 
+\Hypertarget{namespacecamp__aero__phase__data_a8b457646e5668e7125d29469ed581595}\label{namespacecamp__aero__phase__data_a8b457646e5668e7125d29469ed581595} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!ensure\_size@{ensure\_size}}
 \index{ensure\_size@{ensure\_size}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{ensure\_size()}{ensure\_size()}}
@@ -226,7 +244,7 @@ Ensure there is enough room in the species dataset to add a specified number of 
 
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00606}{606}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}\label{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}} 
+\Hypertarget{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}\label{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
@@ -246,12 +264,18 @@ Finalize the aerosol phase data.
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00587}{587}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the caller graph for this function\+:
-% FIG 3
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_a8b7c5a7a8d16311b0de9850fc25e46a4}\label{namespacecamp__aero__phase__data_a8b7c5a7a8d16311b0de9850fc25e46a4}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__aero__phase__data_a8b7c5a7a8d16311b0de9850fc25e46a4}\label{namespacecamp__aero__phase__data_a8b7c5a7a8d16311b0de9850fc25e46a4} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!find@{find}}
 \index{find@{find}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{find()}{find()}}
-{\footnotesize\ttfamily integer(kind=i\+\_\+kind) function camp\+\_\+aero\+\_\+phase\+\_\+data\+::find (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=$\ast$), intent(in)}]{spec\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) function camp\+\_\+aero\+\_\+phase\+\_\+data\+::find (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{spec\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -268,7 +292,7 @@ Get the index of an aerosol-\/phase species by name. Return 0 if the species is 
 
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00653}{653}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_a50e3a12672f60404141d9f7d90ab049e}\label{namespacecamp__aero__phase__data_a50e3a12672f60404141d9f7d90ab049e}} 
+\Hypertarget{namespacecamp__aero__phase__data_a50e3a12672f60404141d9f7d90ab049e}\label{namespacecamp__aero__phase__data_a50e3a12672f60404141d9f7d90ab049e} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!get\_name@{get\_name}}
 \index{get\_name@{get\_name}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{get\_name()}{get\_name()}}
@@ -290,7 +314,7 @@ The name of the aerosol phase
 
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00390}{390}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_a50c5c02187f8f075971e71bf4e1654e5}\label{namespacecamp__aero__phase__data_a50c5c02187f8f075971e71bf4e1654e5}} 
+\Hypertarget{namespacecamp__aero__phase__data_a50c5c02187f8f075971e71bf4e1654e5}\label{namespacecamp__aero__phase__data_a50c5c02187f8f075971e71bf4e1654e5} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!get\_property\_set@{get\_property\_set}}
 \index{get\_property\_set@{get\_property\_set}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{get\_property\_set()}{get\_property\_set()}}
@@ -312,7 +336,7 @@ A pointer to the aerosol phase property set
 
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00437}{437}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_a3f1fce7eed369d2c40aa6ec071f85c17}\label{namespacecamp__aero__phase__data_a3f1fce7eed369d2c40aa6ec071f85c17}} 
+\Hypertarget{namespacecamp__aero__phase__data_a3f1fce7eed369d2c40aa6ec071f85c17}\label{namespacecamp__aero__phase__data_a3f1fce7eed369d2c40aa6ec071f85c17} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!get\_size@{get\_size}}
 \index{get\_size@{get\_size}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{get\_size()}{get\_size()}}
@@ -331,7 +355,7 @@ Get the number of species in the phase.
 
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00404}{404}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_a6b0e912f6d52db60cc06554c869c4d50}\label{namespacecamp__aero__phase__data_a6b0e912f6d52db60cc06554c869c4d50}} 
+\Hypertarget{namespacecamp__aero__phase__data_a6b0e912f6d52db60cc06554c869c4d50}\label{namespacecamp__aero__phase__data_a6b0e912f6d52db60cc06554c869c4d50} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!get\_species\_names@{get\_species\_names}}
 \index{get\_species\_names@{get\_species\_names}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{get\_species\_names()}{get\_species\_names()}}
@@ -353,11 +377,11 @@ Names of species in this phase
 
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00451}{451}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_ada739b156bc12eee77fe968408b8afc5}\label{namespacecamp__aero__phase__data_ada739b156bc12eee77fe968408b8afc5}} 
+\Hypertarget{namespacecamp__aero__phase__data_ada739b156bc12eee77fe968408b8afc5}\label{namespacecamp__aero__phase__data_ada739b156bc12eee77fe968408b8afc5} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!get\_species\_type@{get\_species\_type}}
 \index{get\_species\_type@{get\_species\_type}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{get\_species\_type()}{get\_species\_type()}}
-{\footnotesize\ttfamily integer(kind=i\+\_\+kind) function camp\+\_\+aero\+\_\+phase\+\_\+data\+::get\+\_\+species\+\_\+type (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=$\ast$), intent(in)}]{spec\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily integer(kind=i\+\_\+kind) function camp\+\_\+aero\+\_\+phase\+\_\+data\+::get\+\_\+species\+\_\+type (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{spec\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -378,8 +402,14 @@ The type of a species in this phase
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00470}{470}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 4
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_a408fc2dbd4214ae958b98296176e71cb}\label{namespacecamp__aero__phase__data_a408fc2dbd4214ae958b98296176e71cb}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__aero__phase__data_ada739b156bc12eee77fe968408b8afc5_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__aero__phase__data_a408fc2dbd4214ae958b98296176e71cb}\label{namespacecamp__aero__phase__data_a408fc2dbd4214ae958b98296176e71cb} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
@@ -401,8 +431,14 @@ Initialize the aerosol phase data, validating species names.
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00306}{306}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 5
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_a7e16fabf0efef62b446e6f7c98e4ea70}\label{namespacecamp__aero__phase__data_a7e16fabf0efef62b446e6f7c98e4ea70}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__aero__phase__data_a408fc2dbd4214ae958b98296176e71cb_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__aero__phase__data_a7e16fabf0efef62b446e6f7c98e4ea70}\label{namespacecamp__aero__phase__data_a7e16fabf0efef62b446e6f7c98e4ea70} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!load@{load}}
 \index{load@{load}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{load()}{load()}}
@@ -426,8 +462,14 @@ Load species from an input file.
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00227}{227}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 6
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_a851caa6eba1fdf804498930649377d66}\label{namespacecamp__aero__phase__data_a851caa6eba1fdf804498930649377d66}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__aero__phase__data_a7e16fabf0efef62b446e6f7c98e4ea70_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__aero__phase__data_a851caa6eba1fdf804498930649377d66}\label{namespacecamp__aero__phase__data_a851caa6eba1fdf804498930649377d66} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!num\_jac\_elem@{num\_jac\_elem}}
 \index{num\_jac\_elem@{num\_jac\_elem}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{num\_jac\_elem()}{num\_jac\_elem()}}
@@ -435,7 +477,7 @@ Here is the call graph for this function\+:
 
 
 
-Get the number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} row elements needed during solving. 
+Get the number of \doxylink{struct_jacobian}{Jacobian} row elements needed during solving. 
 
 
 \begin{DoxyParams}[1]{Parameters}
@@ -446,7 +488,7 @@ Get the number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} row elements need
 
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00416}{416}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_a8f3f446ed030f9ec8af894715c950807}\label{namespacecamp__aero__phase__data_a8f3f446ed030f9ec8af894715c950807}} 
+\Hypertarget{namespacecamp__aero__phase__data_a8f3f446ed030f9ec8af894715c950807}\label{namespacecamp__aero__phase__data_a8f3f446ed030f9ec8af894715c950807} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!pack\_size@{pack\_size}}
 \index{pack\_size@{pack\_size}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{pack\_size()}{pack\_size()}}
@@ -468,10 +510,22 @@ Determine the size of a binary required to pack the aerosol representation data.
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00490}{490}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 7
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__aero__phase__data_a8f3f446ed030f9ec8af894715c950807_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 8
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_ac4f198fb9d35e624894d640491ddc3e3}\label{namespacecamp__aero__phase__data_ac4f198fb9d35e624894d640491ddc3e3}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__aero__phase__data_a8f3f446ed030f9ec8af894715c950807_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__aero__phase__data_ac4f198fb9d35e624894d640491ddc3e3}\label{namespacecamp__aero__phase__data_ac4f198fb9d35e624894d640491ddc3e3} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!ptr\_finalize@{ptr\_finalize}}
 \index{ptr\_finalize@{ptr\_finalize}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{ptr\_finalize()}{ptr\_finalize()}}
@@ -491,11 +545,17 @@ Finalize a pointer to aerosol phase data.
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00688}{688}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the caller graph for this function\+:
-% FIG 9
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__aero__phase__data_ac4f198fb9d35e624894d640491ddc3e3_icgraph}
+\end{center}
+\end{figure}
 
 
 \doxysubsection{Variable Documentation}
-\mbox{\Hypertarget{namespacecamp__aero__phase__data_a006dfd258bfd3e15760e11cd09710421}\label{namespacecamp__aero__phase__data_a006dfd258bfd3e15760e11cd09710421}} 
+\Hypertarget{namespacecamp__aero__phase__data_a006dfd258bfd3e15760e11cd09710421}\label{namespacecamp__aero__phase__data_a006dfd258bfd3e15760e11cd09710421} 
 \index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!realloc\_inc@{realloc\_inc}}
 \index{realloc\_inc@{realloc\_inc}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
 \doxysubsubsection{\texorpdfstring{realloc\_inc}{realloc\_inc}}

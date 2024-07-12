@@ -1,0 +1,34 @@
+\doxysubsection{Input JSON Object Format\+: Sub-\/\+Model (general)}
+\hypertarget{input_format_sub_model}{}\label{input_format_sub_model}\index{Input JSON Object Format: Sub-\/Model (general)@{Input JSON Object Format: Sub-\/Model (general)}}
+A {\ttfamily json} object containing the information required by a \doxylink{camp_sub_model}{sub-\/model} of the form\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ "{}camp-\/data"{}\ :\ [}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}SUB\_MODEL\_TYPE"{},}
+\DoxyCodeLine{\ \ \ \ "{}some\ parameter"{}\ :\ 123.34,}
+\DoxyCodeLine{\ \ \ \ "{}some\ other\ parameter"{}\ :\ true,}
+\DoxyCodeLine{\ \ \ \ "{}nested\ parameters"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}sub\ param\ 1"{}\ :\ 12.43,}
+\DoxyCodeLine{\ \ \ \ \ \ "{}sub\ param\ other\ "{}\ :\ "{}some\ text"{},}
+\DoxyCodeLine{\ \ \ \ \ \ ...}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ ...}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ Sub-\/models must have a unique {\bfseries{type}} that corresponds to a valid sub-\/model type. These include\+:
+
+
+\begin{DoxyItemize}
+\item \doxylink{camp_sub_model_PDFiTE}{SUB\+\_\+\+MODEL\+\_\+\+PDFITE}
+\item \doxylink{camp_sub_model_UNIFAC}{SUB\+\_\+\+MODEL\+\_\+\+UNIFAC}
+\item \doxylink{camp_sub_model_ZSR_aerosol_water}{SUB\+\_\+\+MODEL\+\_\+\+ZSR\+\_\+\+AEROSOL\+\_\+\+WATER}
+\end{DoxyItemize}
+
+All remaining data are optional and may include and valid {\bfseries{json}} value, including nested objects. However, extending types will have specific requirements for the remaining data. \input{camp_sub_model__p_d_fi_t_e}
+\input{camp_sub_model__u_n_i_f_a_c}
+\input{camp_sub_model__z_s_r_aerosol_water}

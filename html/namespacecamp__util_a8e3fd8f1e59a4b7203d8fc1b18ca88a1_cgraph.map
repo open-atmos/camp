@@ -1,5 +1,8 @@
 <map id="camp_util::real_to_string_max_len" name="camp_util::real_to_string_max_len">
-<area shape="rect" id="node1" title="Convert a real to a string format of maximum length." alt="" coords="5,37,128,77"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="178,5,301,45"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#a0271943f212c32e76561b36ea2412dd7" title="Convert a double precision real to a string format." alt="" coords="176,69,303,109"/>
+<area shape="rect" id="Node000001" title="Convert a real to a string format of maximum length." alt="" coords="5,39,128,79"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="33,38,32,29,37,20,49,14,67,12,85,14,97,21,94,25,84,20,66,17,50,19,41,24,37,30,39,38"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="177,5,300,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,45,161,38,162,43,128,50"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#a0271943f212c32e76561b36ea2412dd7" title="Convert a double precision real to a string format." alt="" coords="176,71,301,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="128,68,161,74,160,79,127,73"/>
 </map>

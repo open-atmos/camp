@@ -1,5 +1,7 @@
 <map id="check_flag_fail" name="check_flag_fail">
-<area shape="rect" id="node1" title="Check the return value of a SUNDIALS function and exit on failure." alt="" coords="164,31,272,56"/>
-<area shape="rect" id="node2" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,5,116,31"/>
-<area shape="rect" id="node3" href="$camp__solver_8c.html#afc5ec8680b419e7ab49530d53a76cee4" title="Solve for a given timestep." alt="" coords="19,55,102,80"/>
+<area shape="rect" id="Node000001" title="Check the return value of a SUNDIALS function and exit on failure." alt="" coords="163,31,270,56"/>
+<area shape="rect" id="Node000002" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,5,115,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,35,114,30,115,24,148,30"/>
+<area shape="rect" id="Node000003" href="$camp__solver_8c.html#afc5ec8680b419e7ab49530d53a76cee4" title="Solve for a given timestep." alt="" coords="19,55,101,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="148,57,102,64,101,59,147,51"/>
 </map>

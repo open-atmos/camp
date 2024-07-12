@@ -1,13 +1,19 @@
-\hypertarget{aero__rep__single__particle_8c}{}\doxysection{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c File Reference}
-\label{aero__rep__single__particle_8c}\index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
+\doxysection{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c File Reference}
+\hypertarget{aero__rep__single__particle_8c}{}\label{aero__rep__single__particle_8c}\index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 
 
 Single particle aerosol representation functions.  
 
 
 Include dependency graph for aero\+\_\+rep\+\_\+single\+\_\+particle.\+c\+:
-% FIG 0
-\doxysubsection*{Macros}
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__single__particle_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \mbox{\hyperlink{aero__rep__single__particle_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{TEMPERATURE\+\_\+\+K\+\_\+}}~env\+\_\+data\mbox{[}0\mbox{]}
@@ -16,7 +22,7 @@ Include dependency graph for aero\+\_\+rep\+\_\+single\+\_\+particle.\+c\+:
 \item 
 \#define \mbox{\hyperlink{aero__rep__single__particle_8c_ace9813ffc99004762e44840f0df22ff5}{UPDATE\+\_\+\+NUMBER}}~0
 \item 
-\#define \mbox{\hyperlink{aero__rep__single__particle_8c_aff1191174604af4c86c622f98cd18c17}{NUM\+\_\+\+PHASE\+\_\+}}~int\+\_\+data\mbox{[}0\mbox{]}
+\#define \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}~int\+\_\+data\mbox{[}0\mbox{]}
 \item 
 \#define \mbox{\hyperlink{aero__rep__single__particle_8c_a7f41adc102bb4117dcf37be9d4580b0a}{AERO\+\_\+\+REP\+\_\+\+ID\+\_\+}}~int\+\_\+data\mbox{[}1\mbox{]}
 \item 
@@ -32,40 +38,48 @@ Include dependency graph for aero\+\_\+rep\+\_\+single\+\_\+particle.\+c\+:
 \item 
 \#define \mbox{\hyperlink{aero__rep__single__particle_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~\mbox{\hyperlink{aero__rep__single__particle_8c_a9a8f20dcd00b20eb44f20a23b8483562}{MAX\+\_\+\+PARTICLES\+\_\+}}
 \item 
-\#define \mbox{\hyperlink{aero__rep__single__particle_8c_a07ea549f36f691ae067d983b25bd430a}{PHASE\+\_\+\+STATE\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+l\mbox{]}-\/1)
 \item 
-\#define \mbox{\hyperlink{aero__rep__single__particle_8c_a4a3d5932c356a11e4d570ffda6c16f61}{PHASE\+\_\+\+MODEL\+\_\+\+DATA\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\+\_\+\+PHASE\+\_\+\+END\+\_\+}}(l)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}+l\mbox{]}-\/1)
 \item 
-\#define \mbox{\hyperlink{aero__rep__single__particle_8c_a21029173eab3966c8f06fcb723c822a1}{PHASE\+\_\+\+NUM\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]}
+\#define \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\+\_\+\+NUM\+\_\+\+PHASES\+\_\+}}~(\mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\+\_\+\+PHASE\+\_\+\+END\+\_\+}}(\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}-\/1)-\/\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(0)+1)
+\item 
+\#define \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\+\_\+\+PHASES\+\_\+}}(l)~(\mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\+\_\+\+PHASE\+\_\+\+END\+\_\+}}(l)-\/\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)+1)
+\item 
+\#define \mbox{\hyperlink{aero__rep__single__particle_8c_ab3956491dbbbf0687d3c0ae80d483ebf}{PHASE\+\_\+\+STATE\+\_\+\+ID\+\_\+}}(l,  p)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)+p\mbox{]}-\/1)
+\item 
+\#define \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\+\_\+\+MODEL\+\_\+\+DATA\+\_\+\+ID\+\_\+}}(l,  p)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\+\_\+\+NUM\+\_\+\+PHASES\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)+p\mbox{]}-\/1)
+\item 
+\#define \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\+\_\+\+NUM\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(l,  p)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\+\_\+\+NUM\+\_\+\+PHASES\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)+p\mbox{]}
 \end{DoxyCompactItemize}
-\doxysubsection*{Functions}
+\doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-int \mbox{\hyperlink{aero__rep__single__particle_8c_a076423c54855479ccee0af37f2d9840a}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$jac\+\_\+struct)
-\begin{DoxyCompactList}\small\item\em Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calcualtions of mass and volume. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__single__particle_8c_ac118d92685e58dda51e1a4a7ac16ddda}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+dependencies}} (int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$state\+\_\+flags)
+int \mbox{\hyperlink{aero__rep__single__particle_8c_a076423c54855479ccee0af37f2d9840a}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \texorpdfstring{$\ast$}{*}jac\+\_\+struct)
+\begin{DoxyCompactList}\small\item\em Flag \doxylink{struct_jacobian}{Jacobian} elements used in calcualtions of mass and volume. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__rep__single__particle_8c_ac118d92685e58dda51e1a4a7ac16ddda}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+dependencies}} (int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \texorpdfstring{$\ast$}{*}state\+\_\+flags)
 \begin{DoxyCompactList}\small\item\em Flag elements on the state array used by this aerosol representation. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__single__particle_8c_abb3778ac04df76a32ac3359b8cabe51b}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{aero__rep__single__particle_8c_abb3778ac04df76a32ac3359b8cabe51b}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update aerosol representation data for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__single__particle_8c_afc5e4c6a81bf52bf0c8ee88037a4954d}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{aero__rep__single__particle_8c_afc5e4c6a81bf52bf0c8ee88037a4954d}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update aerosol representation data for a new state. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$radius, double $\ast$partial\+\_\+deriv, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}radius, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Get the effective particle radius $r_{eff}$ (m) \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__single__particle_8c_afa7d35b774d0ab4d7cad7fb30d75e897}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$number\+\_\+conc, double $\ast$partial\+\_\+deriv, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{aero__rep__single__particle_8c_afa7d35b774d0ab4d7cad7fb30d75e897}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}number\+\_\+conc, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Get the particle number concentration $n$ ( $\mbox{\si{\#\per\cubic\metre}}$) \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__single__particle_8c_a59114de73dd305d5825a8547155b8946}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type}} (int aero\+\_\+phase\+\_\+idx, int $\ast$aero\+\_\+conc\+\_\+type, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{aero__rep__single__particle_8c_a59114de73dd305d5825a8547155b8946}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type}} (int aero\+\_\+phase\+\_\+idx, int \texorpdfstring{$\ast$}{*}aero\+\_\+conc\+\_\+type, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Get the type of aerosol concentration used. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__single__particle_8c_ad49c89b34b57e5b644d6506ead9dea34}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+phase\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$aero\+\_\+phase\+\_\+mass, double $\ast$partial\+\_\+deriv, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{aero__rep__single__particle_8c_ad49c89b34b57e5b644d6506ead9dea34}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+phase\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}aero\+\_\+phase\+\_\+mass, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Get the total mass in an aerosol phase $m$ ( $\mbox{\si{\kilogram\per\cubic\metre}}$) \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__single__particle_8c_a203b6931fd5a504b7cc1750eb582b60c}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+phase\+\_\+avg\+\_\+\+MW\+\_\+\+\_\+kg\+\_\+mol}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$aero\+\_\+phase\+\_\+avg\+\_\+\+MW, double $\ast$partial\+\_\+deriv, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{aero__rep__single__particle_8c_a203b6931fd5a504b7cc1750eb582b60c}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+phase\+\_\+avg\+\_\+\+MW\+\_\+\+\_\+kg\+\_\+mol}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}aero\+\_\+phase\+\_\+avg\+\_\+\+MW, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Get the average molecular weight in an aerosol phase $m$ ( $\mbox{\si{\kilo\gram\per\mol}}$) \end{DoxyCompactList}\item 
-\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \mbox{\hyperlink{aero__rep__single__particle_8c_abe4da510bed46cee8a75f90917764311}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+data}} (void $\ast$update\+\_\+data, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \mbox{\hyperlink{aero__rep__single__particle_8c_abe4da510bed46cee8a75f90917764311}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+data}} (void \texorpdfstring{$\ast$}{*}update\+\_\+data, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update aerosol representation data. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__single__particle_8c_a93b022b244ab389f594b3c1ee8956d26}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+print}} (int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data)
+void \mbox{\hyperlink{aero__rep__single__particle_8c_a93b022b244ab389f594b3c1ee8956d26}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+print}} (int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the Single Particle reaction parameters. \end{DoxyCompactList}\item 
-void $\ast$ \mbox{\hyperlink{aero__rep__single__particle_8c_a66f59ead26878bf26b00ac2f7447662c}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+create\+\_\+number\+\_\+update\+\_\+data}} ()
+void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{aero__rep__single__particle_8c_a66f59ead26878bf26b00ac2f7447662c}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+create\+\_\+number\+\_\+update\+\_\+data}} ()
 \begin{DoxyCompactList}\small\item\em Create update data for new particle number. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__single__particle_8c_afc23dec55d2720c18e17a3cdbb6b6a7f}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+set\+\_\+number\+\_\+update\+\_\+data\+\_\+\+\_\+n\+\_\+m3}} (void $\ast$update\+\_\+data, int aero\+\_\+rep\+\_\+id, int particle\+\_\+id, double number\+\_\+conc)
+void \mbox{\hyperlink{aero__rep__single__particle_8c_afc23dec55d2720c18e17a3cdbb6b6a7f}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+set\+\_\+number\+\_\+update\+\_\+data\+\_\+\+\_\+n\+\_\+m3}} (void \texorpdfstring{$\ast$}{*}update\+\_\+data, int aero\+\_\+rep\+\_\+id, int particle\+\_\+id, double number\+\_\+conc)
 \begin{DoxyCompactList}\small\item\em Set number update data (\#/m3) \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -79,7 +93,7 @@ Definition in file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\
 
 
 \doxysubsection{Macro Definition Documentation}
-\mbox{\Hypertarget{aero__rep__single__particle_8c_a7f41adc102bb4117dcf37be9d4580b0a}\label{aero__rep__single__particle_8c_a7f41adc102bb4117dcf37be9d4580b0a}} 
+\Hypertarget{aero__rep__single__particle_8c_a7f41adc102bb4117dcf37be9d4580b0a}\label{aero__rep__single__particle_8c_a7f41adc102bb4117dcf37be9d4580b0a} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!AERO\_REP\_ID\_@{AERO\_REP\_ID\_}}
 \index{AERO\_REP\_ID\_@{AERO\_REP\_ID\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{AERO\_REP\_ID\_}{AERO\_REP\_ID\_}}
@@ -89,7 +103,27 @@ Definition in file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00024}{24}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__single__particle_8c_a9a8f20dcd00b20eb44f20a23b8483562}\label{aero__rep__single__particle_8c_a9a8f20dcd00b20eb44f20a23b8483562}} 
+\Hypertarget{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}\label{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c} 
+\index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!LAYER\_PHASE\_END\_@{LAYER\_PHASE\_END\_}}
+\index{LAYER\_PHASE\_END\_@{LAYER\_PHASE\_END\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
+\doxysubsubsection{\texorpdfstring{LAYER\_PHASE\_END\_}{LAYER\_PHASE\_END\_}}
+{\footnotesize\ttfamily \#define LAYER\+\_\+\+PHASE\+\_\+\+END\+\_\+(\begin{DoxyParamCaption}\item[{}]{l }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}+l\mbox{]}-\/1)}
+
+
+
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00032}{32}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+
+\Hypertarget{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}\label{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e} 
+\index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!LAYER\_PHASE\_START\_@{LAYER\_PHASE\_START\_}}
+\index{LAYER\_PHASE\_START\_@{LAYER\_PHASE\_START\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
+\doxysubsubsection{\texorpdfstring{LAYER\_PHASE\_START\_}{LAYER\_PHASE\_START\_}}
+{\footnotesize\ttfamily \#define LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+(\begin{DoxyParamCaption}\item[{}]{l }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+l\mbox{]}-\/1)}
+
+
+
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00031}{31}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+
+\Hypertarget{aero__rep__single__particle_8c_a9a8f20dcd00b20eb44f20a23b8483562}\label{aero__rep__single__particle_8c_a9a8f20dcd00b20eb44f20a23b8483562} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!MAX\_PARTICLES\_@{MAX\_PARTICLES\_}}
 \index{MAX\_PARTICLES\_@{MAX\_PARTICLES\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{MAX\_PARTICLES\_}{MAX\_PARTICLES\_}}
@@ -99,7 +133,7 @@ Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00024
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00025}{25}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__single__particle_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{aero__rep__single__particle_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}} 
+\Hypertarget{aero__rep__single__particle_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{aero__rep__single__particle_8c_a1f68a3544ae39a7815cbb5c09dfdeff0} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
 \index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
@@ -109,7 +143,7 @@ Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00025
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00030}{30}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__single__particle_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{aero__rep__single__particle_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}} 
+\Hypertarget{aero__rep__single__particle_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{aero__rep__single__particle_8c_a0e9ae6000e4ed18f5938bddaddb13d1b} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
 \index{NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_FLOAT\_PROP\_}{NUM\_FLOAT\_PROP\_}}
@@ -119,7 +153,7 @@ Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00030
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00029}{29}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__single__particle_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{aero__rep__single__particle_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\Hypertarget{aero__rep__single__particle_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{aero__rep__single__particle_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
 \index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
@@ -129,17 +163,27 @@ Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00029
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00028}{28}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__single__particle_8c_aff1191174604af4c86c622f98cd18c17}\label{aero__rep__single__particle_8c_aff1191174604af4c86c622f98cd18c17}} 
-\index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!NUM\_PHASE\_@{NUM\_PHASE\_}}
-\index{NUM\_PHASE\_@{NUM\_PHASE\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
-\doxysubsubsection{\texorpdfstring{NUM\_PHASE\_}{NUM\_PHASE\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+PHASE\+\_\+~int\+\_\+data\mbox{[}0\mbox{]}}
+\Hypertarget{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}\label{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89} 
+\index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!NUM\_LAYERS\_@{NUM\_LAYERS\_}}
+\index{NUM\_LAYERS\_@{NUM\_LAYERS\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_LAYERS\_}{NUM\_LAYERS\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+LAYERS\+\_\+~int\+\_\+data\mbox{[}0\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00023}{23}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__single__particle_8c_af2c159c650af709701e7c5ae2f153ce3}\label{aero__rep__single__particle_8c_af2c159c650af709701e7c5ae2f153ce3}} 
+\Hypertarget{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}\label{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44} 
+\index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!NUM\_PHASES\_@{NUM\_PHASES\_}}
+\index{NUM\_PHASES\_@{NUM\_PHASES\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
+\doxysubsubsection{\texorpdfstring{NUM\_PHASES\_}{NUM\_PHASES\_}}
+{\footnotesize\ttfamily \#define NUM\+\_\+\+PHASES\+\_\+(\begin{DoxyParamCaption}\item[{}]{l }\end{DoxyParamCaption})~(\mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\+\_\+\+PHASE\+\_\+\+END\+\_\+}}(l)-\/\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)+1)}
+
+
+
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00034}{34}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+
+\Hypertarget{aero__rep__single__particle_8c_af2c159c650af709701e7c5ae2f153ce3}\label{aero__rep__single__particle_8c_af2c159c650af709701e7c5ae2f153ce3} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!NUMBER\_CONC\_@{NUMBER\_CONC\_}}
 \index{NUMBER\_CONC\_@{NUMBER\_CONC\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{NUMBER\_CONC\_}{NUMBER\_CONC\_}}
@@ -149,7 +193,7 @@ Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00023
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00027}{27}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__single__particle_8c_a5362f2b785d3da92675466d9256f3cfd}\label{aero__rep__single__particle_8c_a5362f2b785d3da92675466d9256f3cfd}} 
+\Hypertarget{aero__rep__single__particle_8c_a5362f2b785d3da92675466d9256f3cfd}\label{aero__rep__single__particle_8c_a5362f2b785d3da92675466d9256f3cfd} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!PARTICLE\_STATE\_SIZE\_@{PARTICLE\_STATE\_SIZE\_}}
 \index{PARTICLE\_STATE\_SIZE\_@{PARTICLE\_STATE\_SIZE\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{PARTICLE\_STATE\_SIZE\_}{PARTICLE\_STATE\_SIZE\_}}
@@ -159,37 +203,37 @@ Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00027
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00026}{26}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__single__particle_8c_a4a3d5932c356a11e4d570ffda6c16f61}\label{aero__rep__single__particle_8c_a4a3d5932c356a11e4d570ffda6c16f61}} 
+\Hypertarget{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}\label{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!PHASE\_MODEL\_DATA\_ID\_@{PHASE\_MODEL\_DATA\_ID\_}}
 \index{PHASE\_MODEL\_DATA\_ID\_@{PHASE\_MODEL\_DATA\_ID\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_MODEL\_DATA\_ID\_}{PHASE\_MODEL\_DATA\_ID\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+MODEL\+\_\+\+DATA\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PHASE\+\_\+\+MODEL\+\_\+\+DATA\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{l,  }\item[{}]{p }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\+\_\+\+NUM\+\_\+\+PHASES\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)+p\mbox{]}-\/1)}
 
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00032}{32}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00036}{36}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__single__particle_8c_a21029173eab3966c8f06fcb723c822a1}\label{aero__rep__single__particle_8c_a21029173eab3966c8f06fcb723c822a1}} 
+\Hypertarget{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}\label{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!PHASE\_NUM\_JAC\_ELEM\_@{PHASE\_NUM\_JAC\_ELEM\_}}
 \index{PHASE\_NUM\_JAC\_ELEM\_@{PHASE\_NUM\_JAC\_ELEM\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_NUM\_JAC\_ELEM\_}{PHASE\_NUM\_JAC\_ELEM\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+NUM\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}} + x\mbox{]}}
+{\footnotesize\ttfamily \#define PHASE\+\_\+\+NUM\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{l,  }\item[{}]{p }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\+\_\+\+NUM\+\_\+\+PHASES\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)+p\mbox{]}}
 
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00033}{33}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00037}{37}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__single__particle_8c_a07ea549f36f691ae067d983b25bd430a}\label{aero__rep__single__particle_8c_a07ea549f36f691ae067d983b25bd430a}} 
+\Hypertarget{aero__rep__single__particle_8c_ab3956491dbbbf0687d3c0ae80d483ebf}\label{aero__rep__single__particle_8c_ab3956491dbbbf0687d3c0ae80d483ebf} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!PHASE\_STATE\_ID\_@{PHASE\_STATE\_ID\_}}
 \index{PHASE\_STATE\_ID\_@{PHASE\_STATE\_ID\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_STATE\_ID\_}{PHASE\_STATE\_ID\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+STATE\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PHASE\+\_\+\+STATE\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{l,  }\item[{}]{p }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)+p\mbox{]}-\/1)}
 
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00031}{31}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00035}{35}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__single__particle_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{aero__rep__single__particle_8c_a32cc078fd8ca9ad0684c48ae0aad7135}} 
+\Hypertarget{aero__rep__single__particle_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{aero__rep__single__particle_8c_a32cc078fd8ca9ad0684c48ae0aad7135} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!PRESSURE\_PA\_@{PRESSURE\_PA\_}}
 \index{PRESSURE\_PA\_@{PRESSURE\_PA\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{PRESSURE\_PA\_}{PRESSURE\_PA\_}}
@@ -199,7 +243,7 @@ Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00031
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00019}{19}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__single__particle_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{aero__rep__single__particle_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}} 
+\Hypertarget{aero__rep__single__particle_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{aero__rep__single__particle_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!TEMPERATURE\_K\_@{TEMPERATURE\_K\_}}
 \index{TEMPERATURE\_K\_@{TEMPERATURE\_K\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{TEMPERATURE\_K\_}{TEMPERATURE\_K\_}}
@@ -209,7 +253,17 @@ Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00019
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00018}{18}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__single__particle_8c_ace9813ffc99004762e44840f0df22ff5}\label{aero__rep__single__particle_8c_ace9813ffc99004762e44840f0df22ff5}} 
+\Hypertarget{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}\label{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad} 
+\index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!TOTAL\_NUM\_PHASES\_@{TOTAL\_NUM\_PHASES\_}}
+\index{TOTAL\_NUM\_PHASES\_@{TOTAL\_NUM\_PHASES\_}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
+\doxysubsubsection{\texorpdfstring{TOTAL\_NUM\_PHASES\_}{TOTAL\_NUM\_PHASES\_}}
+{\footnotesize\ttfamily \#define TOTAL\+\_\+\+NUM\+\_\+\+PHASES\+\_\+~(\mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\+\_\+\+PHASE\+\_\+\+END\+\_\+}}(\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}-\/1)-\/\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(0)+1)}
+
+
+
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00033}{33}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+
+\Hypertarget{aero__rep__single__particle_8c_ace9813ffc99004762e44840f0df22ff5}\label{aero__rep__single__particle_8c_ace9813ffc99004762e44840f0df22ff5} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!UPDATE\_NUMBER@{UPDATE\_NUMBER}}
 \index{UPDATE\_NUMBER@{UPDATE\_NUMBER}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{UPDATE\_NUMBER}{UPDATE\_NUMBER}}
@@ -222,11 +276,11 @@ Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00021
 
 
 \doxysubsection{Function Documentation}
-\mbox{\Hypertarget{aero__rep__single__particle_8c_a66f59ead26878bf26b00ac2f7447662c}\label{aero__rep__single__particle_8c_a66f59ead26878bf26b00ac2f7447662c}} 
+\Hypertarget{aero__rep__single__particle_8c_a66f59ead26878bf26b00ac2f7447662c}\label{aero__rep__single__particle_8c_a66f59ead26878bf26b00ac2f7447662c} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_create\_number\_update\_data@{aero\_rep\_single\_particle\_create\_number\_update\_data}}
 \index{aero\_rep\_single\_particle\_create\_number\_update\_data@{aero\_rep\_single\_particle\_create\_number\_update\_data}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_create\_number\_update\_data()}{aero\_rep\_single\_particle\_create\_number\_update\_data()}}
-{\footnotesize\ttfamily void $\ast$ aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+create\+\_\+number\+\_\+update\+\_\+data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void \texorpdfstring{$\ast$}{*} aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+create\+\_\+number\+\_\+update\+\_\+data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
 
 
@@ -237,13 +291,13 @@ Pointer to a new number update data object
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00405}{405}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00442}{442}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__single__particle_8c_a59114de73dd305d5825a8547155b8946}\label{aero__rep__single__particle_8c_a59114de73dd305d5825a8547155b8946}} 
+\Hypertarget{aero__rep__single__particle_8c_a59114de73dd305d5825a8547155b8946}\label{aero__rep__single__particle_8c_a59114de73dd305d5825a8547155b8946} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_aero\_conc\_type@{aero\_rep\_single\_particle\_get\_aero\_conc\_type}}
 \index{aero\_rep\_single\_particle\_get\_aero\_conc\_type@{aero\_rep\_single\_particle\_get\_aero\_conc\_type}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_get\_aero\_conc\_type()}{aero\_rep\_single\_particle\_get\_aero\_conc\_type()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type (\begin{DoxyParamCaption}\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{int $\ast$}]{aero\+\_\+conc\+\_\+type,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type (\begin{DoxyParamCaption}\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+conc\+\_\+type,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -266,15 +320,21 @@ Single particle concentrations are per-\/particle.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00229}{229}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00250}{250}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 1
-\mbox{\Hypertarget{aero__rep__single__particle_8c_a203b6931fd5a504b7cc1750eb582b60c}\label{aero__rep__single__particle_8c_a203b6931fd5a504b7cc1750eb582b60c}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__single__particle_8c_a59114de73dd305d5825a8547155b8946_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__single__particle_8c_a203b6931fd5a504b7cc1750eb582b60c}\label{aero__rep__single__particle_8c_a203b6931fd5a504b7cc1750eb582b60c} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol@{aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}}
 \index{aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol@{aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol()}{aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+phase\+\_\+avg\+\_\+\+MW\+\_\+\+\_\+kg\+\_\+mol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{aero\+\_\+phase\+\_\+avg\+\_\+\+MW,  }\item[{double $\ast$}]{partial\+\_\+deriv,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+phase\+\_\+avg\+\_\+\+MW\+\_\+\+\_\+kg\+\_\+mol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+phase\+\_\+avg\+\_\+\+MW,  }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -301,17 +361,29 @@ The single particle mass is set for each new state as the sum of the masses of t
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00304}{304}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00331}{331}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 2
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__single__particle_8c_a203b6931fd5a504b7cc1750eb582b60c_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 3
-\mbox{\Hypertarget{aero__rep__single__particle_8c_ad49c89b34b57e5b644d6506ead9dea34}\label{aero__rep__single__particle_8c_ad49c89b34b57e5b644d6506ead9dea34}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__single__particle_8c_a203b6931fd5a504b7cc1750eb582b60c_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__single__particle_8c_ad49c89b34b57e5b644d6506ead9dea34}\label{aero__rep__single__particle_8c_ad49c89b34b57e5b644d6506ead9dea34} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3@{aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3}}
 \index{aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3@{aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3()}{aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+phase\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{aero\+\_\+phase\+\_\+mass,  }\item[{double $\ast$}]{partial\+\_\+deriv,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+phase\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+phase\+\_\+mass,  }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -338,17 +410,29 @@ The single particle mass is set for each new state as the sum of the masses of t
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00260}{260}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00282}{282}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 4
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__single__particle_8c_ad49c89b34b57e5b644d6506ead9dea34_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 5
-\mbox{\Hypertarget{aero__rep__single__particle_8c_ac118d92685e58dda51e1a4a7ac16ddda}\label{aero__rep__single__particle_8c_ac118d92685e58dda51e1a4a7ac16ddda}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__single__particle_8c_ad49c89b34b57e5b644d6506ead9dea34_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__single__particle_8c_ac118d92685e58dda51e1a4a7ac16ddda}\label{aero__rep__single__particle_8c_ac118d92685e58dda51e1a4a7ac16ddda} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_dependencies@{aero\_rep\_single\_particle\_get\_dependencies}}
 \index{aero\_rep\_single\_particle\_get\_dependencies@{aero\_rep\_single\_particle\_get\_dependencies}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_get\_dependencies()}{aero\_rep\_single\_particle\_get\_dependencies()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+dependencies (\begin{DoxyParamCaption}\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$}]{state\+\_\+flags }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+dependencies (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \texorpdfstring{$\ast$}{*}}]{state\+\_\+flags }\end{DoxyParamCaption})}
 
 
 
@@ -367,15 +451,21 @@ The single particle aerosol representation functions do not use state array valu
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00079}{79}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00086}{86}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 6
-\mbox{\Hypertarget{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891}\label{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__single__particle_8c_ac118d92685e58dda51e1a4a7ac16ddda_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891}\label{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_effective\_radius\_\_m@{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m}}
 \index{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m@{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m()}{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{radius,  }\item[{double $\ast$}]{partial\+\_\+deriv,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double \texorpdfstring{$\ast$}{*}}]{radius,  }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -400,17 +490,29 @@ Get the effective particle radius $r_{eff}$ (m)
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00143}{143}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00153}{153}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 7
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 8
-\mbox{\Hypertarget{aero__rep__single__particle_8c_afa7d35b774d0ab4d7cad7fb30d75e897}\label{aero__rep__single__particle_8c_afa7d35b774d0ab4d7cad7fb30d75e897}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__single__particle_8c_afa7d35b774d0ab4d7cad7fb30d75e897}\label{aero__rep__single__particle_8c_afa7d35b774d0ab4d7cad7fb30d75e897} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3@{aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3}}
 \index{aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3@{aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3()}{aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{number\+\_\+conc,  }\item[{double $\ast$}]{partial\+\_\+deriv,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double \texorpdfstring{$\ast$}{*}}]{number\+\_\+conc,  }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -437,19 +539,25 @@ This single particle number concentration is set by the aerosol model prior to s
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00196}{196}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00212}{212}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 9
-\mbox{\Hypertarget{aero__rep__single__particle_8c_a076423c54855479ccee0af37f2d9840a}\label{aero__rep__single__particle_8c_a076423c54855479ccee0af37f2d9840a}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__single__particle_8c_afa7d35b774d0ab4d7cad7fb30d75e897_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__single__particle_8c_a076423c54855479ccee0af37f2d9840a}\label{aero__rep__single__particle_8c_a076423c54855479ccee0af37f2d9840a} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_used\_jac\_elem@{aero\_rep\_single\_particle\_get\_used\_jac\_elem}}
 \index{aero\_rep\_single\_particle\_get\_used\_jac\_elem@{aero\_rep\_single\_particle\_get\_used\_jac\_elem}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_get\_used\_jac\_elem()}{aero\_rep\_single\_particle\_get\_used\_jac\_elem()}}
-{\footnotesize\ttfamily int aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$}]{jac\+\_\+struct }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \texorpdfstring{$\ast$}{*}}]{jac\+\_\+struct }\end{DoxyParamCaption})}
 
 
 
-Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calcualtions of mass and volume. 
+Flag \doxylink{struct_jacobian}{Jacobian} elements used in calcualtions of mass and volume. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -461,25 +569,37 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calcualtions 
 \hline
 {\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase to find elements for \\
 \hline
-{\em jac\+\_\+struct} & 1D array of flags indicating potentially non-\/zero \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements. (The dependent variable should have been chosen by the calling function.) \\
+{\em jac\+\_\+struct} & 1D array of flags indicating potentially non-\/zero \doxylink{struct_jacobian}{Jacobian} elements. (The dependent variable should have been chosen by the calling function.) \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements flagged 
+Number of \doxylink{struct_jacobian}{Jacobian} elements flagged 
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00047}{47}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00052}{52}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 10
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=348pt]{aero__rep__single__particle_8c_a076423c54855479ccee0af37f2d9840a_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 11
-\mbox{\Hypertarget{aero__rep__single__particle_8c_a93b022b244ab389f594b3c1ee8956d26}\label{aero__rep__single__particle_8c_a93b022b244ab389f594b3c1ee8956d26}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__single__particle_8c_a076423c54855479ccee0af37f2d9840a_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__single__particle_8c_a93b022b244ab389f594b3c1ee8956d26}\label{aero__rep__single__particle_8c_a93b022b244ab389f594b3c1ee8956d26} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_print@{aero\_rep\_single\_particle\_print}}
 \index{aero\_rep\_single\_particle\_print@{aero\_rep\_single\_particle\_print}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_print()}{aero\_rep\_single\_particle\_print()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+print (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -494,15 +614,21 @@ Print the Single Particle reaction parameters.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00381}{381}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00414}{414}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 12
-\mbox{\Hypertarget{aero__rep__single__particle_8c_afc23dec55d2720c18e17a3cdbb6b6a7f}\label{aero__rep__single__particle_8c_afc23dec55d2720c18e17a3cdbb6b6a7f}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=339pt]{aero__rep__single__particle_8c_a93b022b244ab389f594b3c1ee8956d26_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__single__particle_8c_afc23dec55d2720c18e17a3cdbb6b6a7f}\label{aero__rep__single__particle_8c_afc23dec55d2720c18e17a3cdbb6b6a7f} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3@{aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3}}
 \index{aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3@{aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3()}{aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+set\+\_\+number\+\_\+update\+\_\+data\+\_\+\+\_\+n\+\_\+m3 (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data,  }\item[{int}]{aero\+\_\+rep\+\_\+id,  }\item[{int}]{particle\+\_\+id,  }\item[{double}]{number\+\_\+conc }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+set\+\_\+number\+\_\+update\+\_\+data\+\_\+\+\_\+n\+\_\+m3 (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{update\+\_\+data,  }\item[{int}]{aero\+\_\+rep\+\_\+id,  }\item[{int}]{particle\+\_\+id,  }\item[{double}]{number\+\_\+conc }\end{DoxyParamCaption})}
 
 
 
@@ -521,13 +647,13 @@ Set number update data (\#/m3)
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00421}{421}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00458}{458}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__single__particle_8c_abe4da510bed46cee8a75f90917764311}\label{aero__rep__single__particle_8c_abe4da510bed46cee8a75f90917764311}} 
+\Hypertarget{aero__rep__single__particle_8c_abe4da510bed46cee8a75f90917764311}\label{aero__rep__single__particle_8c_abe4da510bed46cee8a75f90917764311} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_update\_data@{aero\_rep\_single\_particle\_update\_data}}
 \index{aero\_rep\_single\_particle\_update\_data@{aero\_rep\_single\_particle\_update\_data}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_update\_data()}{aero\_rep\_single\_particle\_update\_data()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{update\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -558,15 +684,21 @@ Flag indicating whether this is the aerosol representation to update
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00351}{351}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00383}{383}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 13
-\mbox{\Hypertarget{aero__rep__single__particle_8c_abb3778ac04df76a32ac3359b8cabe51b}\label{aero__rep__single__particle_8c_abb3778ac04df76a32ac3359b8cabe51b}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=349pt]{aero__rep__single__particle_8c_abe4da510bed46cee8a75f90917764311_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__single__particle_8c_abb3778ac04df76a32ac3359b8cabe51b}\label{aero__rep__single__particle_8c_abb3778ac04df76a32ac3359b8cabe51b} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_update\_env\_state@{aero\_rep\_single\_particle\_update\_env\_state}}
 \index{aero\_rep\_single\_particle\_update\_env\_state@{aero\_rep\_single\_particle\_update\_env\_state}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_update\_env\_state()}{aero\_rep\_single\_particle\_update\_env\_state()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -587,15 +719,21 @@ The single particle aerosol representation does not use environmental conditions
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00100}{100}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00108}{108}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 14
-\mbox{\Hypertarget{aero__rep__single__particle_8c_afc5e4c6a81bf52bf0c8ee88037a4954d}\label{aero__rep__single__particle_8c_afc5e4c6a81bf52bf0c8ee88037a4954d}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__single__particle_8c_abb3778ac04df76a32ac3359b8cabe51b_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__single__particle_8c_afc5e4c6a81bf52bf0c8ee88037a4954d}\label{aero__rep__single__particle_8c_afc5e4c6a81bf52bf0c8ee88037a4954d} 
 \index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_update\_state@{aero\_rep\_single\_particle\_update\_state}}
 \index{aero\_rep\_single\_particle\_update\_state@{aero\_rep\_single\_particle\_update\_state}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_update\_state()}{aero\_rep\_single\_particle\_update\_state()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -614,7 +752,13 @@ Update aerosol representation data for a new state.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00120}{120}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00129}{129}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 15
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__single__particle_8c_afc5e4c6a81bf52bf0c8ee88037a4954d_icgraph}
+\end{center}
+\end{figure}

@@ -1,0 +1,40 @@
+\doxysubsubsection{CAMP\+: Aqueous-\/\+Phase Equilibrium}
+\hypertarget{camp_rxn_aqueous_equilibrium}{}\label{camp_rxn_aqueous_equilibrium}\index{CAMP: Aqueous-\/Phase Equilibrium@{CAMP: Aqueous-\/Phase Equilibrium}}
+Aqueous equilibrium reactions are calculated as forward and reverse reactions. The reverse rate constant must be provided as part of the input data and the forward rate constant is calculated using the provided reverse rate constant and an equilibrium constant of the following format\+:
+
+\[
+   Ae^{C({1/T-1/298})}
+ \]
+
+where $A$ is the pre-\/exponential factor ( $s^{-1}$), $C$ is a constant and $T$ is the temperature (K).
+
+Input data for aqueous equilibrium equations should take the form \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}AQUEOUS\_EQUILIBRIUM"{},}
+\DoxyCodeLine{\ \ "{}A"{}\ :\ 123.45,}
+\DoxyCodeLine{\ \ "{}C"{}\ :\ 123.45,}
+\DoxyCodeLine{\ \ "{}k\_reverse"{}\ :\ 123.45,}
+\DoxyCodeLine{\ \ "{}phase"{}\ :\ "{}my\ aqueous\ phase"{},}
+\DoxyCodeLine{\ \ "{}time\ unit"{}\ :\ "{}MIN"{},}
+\DoxyCodeLine{\ \ "{}aqueous-\/phase\ water"{}\ :\ "{}H2O\_aq"{},}
+\DoxyCodeLine{\ \ "{}ion\ pair"{}\ :\ "{}spec3-\/spec4"{},}
+\DoxyCodeLine{\ \ "{}reactants"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ "{}spec1"{}\ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ "{}spec2"{}\ :\ \{\ "{}qty"{}\ :\ 2\ \},}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ "{}products"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ "{}spec3"{}\ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ "{}spec4"{}\ :\ \{\ "{}qty"{}\ :\ 0.65\ \},}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\ \ ...}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ The key-\/value pairs {\bfseries{reactants}} and {\bfseries{products}} are required. Reactants and products without a {\bfseries{qty}} value are assumed to appear once in the reaction equation. Reactant and product species must be present in the specified phase and include a {\bfseries{molecular}} {\bfseries{weight}} {\bfseries{}}\mbox{[}{\bfseries{kg}} {\bfseries{mol-\/1}}\mbox{]} parameter in kg $\mbox{mole}^{-1}$. The parameter {\bfseries{aqueous-\/phase}} {\bfseries{water}} is required and must be the name of the aerosol-\/phase species that is used for water. The parameter {\bfseries{ion}} {\bfseries{pair}} is optional. When it is included its value must be the name of an ion pair that is present in the specified aerosol phase. Its mean binary activity coefficient will be applied to the reverse reaction.
+
+When {\bfseries{A}} is not included, it is assumed to be 1.\+0, when {\bfseries{C}} is not included, it is assumed to be 0.\+0. The reverse reaction rate constant {\bfseries{k\+\_\+reverse}} is required.
+
+The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. 

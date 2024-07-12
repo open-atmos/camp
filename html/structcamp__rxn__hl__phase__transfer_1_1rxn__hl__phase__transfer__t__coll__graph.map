@@ -1,4 +1,10 @@
 <map id="camp_rxn_hl_phase_transfer::rxn_hl_phase_transfer_t" name="camp_rxn_hl_phase_transfer::rxn_hl_phase_transfer_t">
-<area shape="rect" id="node1" title="Generic test reaction data type." alt="" coords="5,93,193,133"/>
-<area shape="rect" id="node2" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="33,5,166,45"/>
+<area shape="rect" id="Node000001" title="Generic test reaction data type." alt="" coords="5,318,193,358"/>
+<area shape="rect" id="Node000002" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="33,228,165,268"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,284,102,317,96,317,96,284"/>
+<area shape="rect" id="Node000003" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="14,139,184,165"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="102,180,102,227,96,227,96,180"/>
+<area shape="rect" id="Node000004" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="20,5,178,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="102,61,102,138,96,138,96,61"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="195,15,205,26,197,36,179,40,178,35,194,31,200,26,192,19"/>
 </map>

@@ -1,303 +1,303 @@
-\hypertarget{rxn__surface_8_f90_source}{}\doxysection{rxn\+\_\+surface.\+F90}
-\label{rxn__surface_8_f90_source}\index{rxn\_surface.F90@{rxn\_surface.F90}}
+\doxysection{rxn\+\_\+surface.\+F90}
+\hypertarget{rxn__surface_8_f90_source}{}\label{rxn__surface_8_f90_source}\index{rxn\_surface.F90@{rxn\_surface.F90}}
 \mbox{\hyperlink{rxn__surface_8_f90}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2023 Barcelona Supercomputing Center, University of}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00002}00002 \textcolor{comment}{! Illinois at Urbana-\/Champaign, and National Center for Atmospheric Research}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00003}00003 \textcolor{comment}{! SPDX-\/License-\/Identifier: MIT}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00004}00004 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00005}00005 \textcolor{comment}{!> \(\backslash\)file}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00006}00006 \textcolor{comment}{!> The camp\_rxn\_surface module.}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00007}00007 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00008}00008 \textcolor{comment}{!> \(\backslash\)page camp\_rxn\_surface CAMP: Surface (Hetergeneous) Reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00009}00009 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00010}00010 \textcolor{comment}{!! Surface reactions transform gas-\/phase species into gas-\/phase products}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00011}00011 \textcolor{comment}{!! according to a rate that is calculated based on the total exposed surface}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00012}00012 \textcolor{comment}{!! area of a condensed phase.}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00013}00013 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00014}00014 \textcolor{comment}{!! For surface reactions of the gas phase species X, the reaction rate is}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00015}00015 \textcolor{comment}{!! calculated assuming large particles (continuum regime) as:}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00016}00016 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00017}00017 \textcolor{comment}{!! \(\backslash\)f[}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00018}00018 \textcolor{comment}{!!   r\_\{surface\} = k\_\{surface\}\(\backslash\)mbox\{[X]\}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00019}00019 \textcolor{comment}{!! \(\backslash\)f]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00020}00020 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00021}00021 \textcolor{comment}{!! where \(\backslash\)f\$[\(\backslash\)mbox\{X\}]\(\backslash\)f\$ is the gas-\/phase concentration of species X [ppm]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00022}00022 \textcolor{comment}{!! and the rate constant \(\backslash\)f\$k\_\{surface\}\(\backslash\)f\$ [1/s] is calculated as:}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00023}00023 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00024}00024 \textcolor{comment}{!! \(\backslash\)f[}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00025}00025 \textcolor{comment}{!! k\_\{surface\} = \(\backslash\)frac\{4N\_a \(\backslash\)pi r\string^2\_e\}\{\(\backslash\)left(\(\backslash\)frac\{r\_e\}\{D\_g\} + \(\backslash\)frac\{4\}\{v(T)\(\backslash\)gamma\}\(\backslash\)right)\}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00026}00026 \textcolor{comment}{!! \(\backslash\)f]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00027}00027 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00028}00028 \textcolor{comment}{!! where \(\backslash\)f\$N\_a\(\backslash\)f\$ is the number concentration of particles}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00029}00029 \textcolor{comment}{!! [particles\(\backslash\)f\$\(\backslash\)mbox\{m\}\string^\{-\/3\}\(\backslash\)f\$], \(\backslash\)f\$r\_e\(\backslash\)f\$ is the effective particle radius [m],}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00030}00030 \textcolor{comment}{!! \(\backslash\)f\$D\_g\(\backslash\)f\$ is the gas-\/phase diffusion coefficient of the reactant}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00031}00031 \textcolor{comment}{!! [\(\backslash\)f\$\(\backslash\)mbox\{m\}\string^2\(\backslash\)mbox\{s\}\string^\{-\/1\}\(\backslash\)f\$], \(\backslash\)f\$\(\backslash\)gamma\(\backslash\)f\$ is the reaction probability [unitless],}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00032}00032 \textcolor{comment}{!! and v is the mean free speed of the gas-\/phase reactant:}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00033}00033 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00034}00034 \textcolor{comment}{!! \(\backslash\)f[}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00035}00035 \textcolor{comment}{!!   v = \(\backslash\)sqrt\{\(\backslash\)frac\{8RT\}\{\(\backslash\)pi MW\}\}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00036}00036 \textcolor{comment}{!! \(\backslash\)f]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00037}00037 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00038}00038 \textcolor{comment}{!! where R is the ideal gas constant [\(\backslash\)f\$\(\backslash\)mbox\{J\}\(\backslash\), \(\backslash\)mbox\{K\}\string^\{-\/1\}\(\backslash\),}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00039}00039 \textcolor{comment}{!! \(\backslash\)mbox\{mol\}\string^\{-\/1\}\(\backslash\)f\$], T is temperature [K], and MW is the molecular weight of}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00040}00040 \textcolor{comment}{!! the gas-\/phase reactant [\(\backslash\)f\$\(\backslash\)mbox\{kg\}\(\backslash\), \(\backslash\)mbox\{mol\}\string^\{-\/1\}\(\backslash\)f\$]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00041}00041 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00042}00042 \textcolor{comment}{!! Input data for surface reactions have the following format :}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00043}00043 \textcolor{comment}{!! \(\backslash\)code\{.json\}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00044}00044 \textcolor{comment}{!!   \{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00045}00045 \textcolor{comment}{!!     "{}type"{} : "{}SURFACE"{},}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00046}00046 \textcolor{comment}{!!     "{}gas-\/phase reactant"{} : "{}my gas species"{},}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00047}00047 \textcolor{comment}{!!     "{}reaction probability"{} : 0.2,}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00048}00048 \textcolor{comment}{!!     "{}gas-\/phase products"{} : \{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00049}00049 \textcolor{comment}{!!        "{}my other gas species"{} : \{ \},}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00050}00050 \textcolor{comment}{!!        "{}another gas species"{} : \{ "{}yield"{} : 0.3 \}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00051}00051 \textcolor{comment}{!!     \},}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00052}00052 \textcolor{comment}{!!     "{}areosol phase"{} : "{}my aqueous phase"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00053}00053 \textcolor{comment}{!!   \}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00054}00054 \textcolor{comment}{!! \(\backslash\)endcode}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00055}00055 \textcolor{comment}{!! The key-\/value pairs \(\backslash\)b gas-\/phase \(\backslash\)b reactant, \(\backslash\)b reaction \(\backslash\)b probability,}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00056}00056 \textcolor{comment}{!! and \(\backslash\)b aerosol-\/phase are required.}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00057}00057 \textcolor{comment}{!! Only one gas-\/phase reactant is allowed, but multiple products can be present.}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00058}00058 \textcolor{comment}{!! The key-\/value pair \(\backslash\)b yield for product species is optional and defaults to 1.0.}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00059}00059 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00060}00060 \textcolor{comment}{!! The gas-\/phase reactant species must include properties}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00061}00061 \textcolor{comment}{!! \(\backslash\)b diffusion \(\backslash\)b coeff \(\backslash\)b [\(\backslash\)b m2 \(\backslash\)b s-\/1],}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00062}00062 \textcolor{comment}{!! which specifies the diffusion coefficient in}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00063}00063 \textcolor{comment}{!! \(\backslash\)f\$\(\backslash\)mbox\{m\}\string^2\(\backslash\),\(\backslash\)mbox\{s\}\string^\{-\/1\}\(\backslash\)f\$, and \(\backslash\)b molecular \(\backslash\)b weight}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00064}00064 \textcolor{comment}{!! \(\backslash\)b [\(\backslash\)b kg \(\backslash\)b mol-\/1], which specifies the molecular weight of the species in}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00065}00065 \textcolor{comment}{!! \(\backslash\)f\$\(\backslash\)mbox\{kg\}\(\backslash\),\(\backslash\)mbox\{mol\}\string^\{-\/1\}\(\backslash\)f\$.}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00066}00066 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00067}00067 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00068}00068 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00069}00069 \textcolor{comment}{!> The rxn\_surface\_t type and associated functions.}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00070}\mbox{\hyperlink{namespacecamp__rxn__surface}{00070}} \textcolor{keyword}{module} \mbox{\hyperlink{namespacecamp__rxn__surface}{camp\_rxn\_surface}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00071}00071 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00072}00072   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__aero__phase__data}{camp\_aero\_phase\_data}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00073}00073   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__aero__rep__data}{camp\_aero\_rep\_data}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00074}00074   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__chem__spec__data}{camp\_chem\_spec\_data}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00075}00075   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}},                        \textcolor{keywordtype}{only}: \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00076}00076   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__camp__state}{camp\_camp\_state}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00077}00077   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__property}{camp\_property}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00078}00078   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__rxn__data}{camp\_rxn\_data}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00079}00079   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__util}{camp\_util}},                             \textcolor{keywordtype}{only}: \mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}, \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}, \mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}, \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00080}00080                                                   \mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}, \mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}, \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00081}00081                                                   \mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}, \mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00082}00082 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00083}00083   \textcolor{keywordtype}{implicit none}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00084}00084   \textcolor{keywordtype}{private}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00085}00085 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00086}00086 \textcolor{preprocessor}{\#define DIFF\_COEFF\_ this\%condensed\_data\_real(1)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00087}00087 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define GAMMA\_ this\%condensed\_data\_real(2)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00088}00088 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define MW\_ this\%condensed\_data\_real(3)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00089}00089 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define NUM\_AERO\_PHASE\_ this\%condensed\_data\_int(1)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00090}00090 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define REACT\_ID\_ this\%condensed\_data\_int(2)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00091}00091 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define NUM\_PROD\_ this\%condensed\_data\_int(3)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00092}00092 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define NUM\_INT\_PROP\_ 3}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00093}00093 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define NUM\_REAL\_PROP\_ 3}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00094}00094 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define NUM\_ENV\_PARAM\_ 1}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00095}00095 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define PROD\_ID\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_+x)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00096}00096 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define DERIV\_ID\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_+NUM\_PROD\_+x)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00097}00097 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define JAC\_ID\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_+1+2*NUM\_PROD\_+x)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00098}00098 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define PHASE\_INT\_LOC\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_+2+3*NUM\_PROD\_+x)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00099}00099 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define PHASE\_REAL\_LOC\_(x) this\%condensed\_data\_int(NUM\_INT\_PROP\_+2+3*NUM\_PROD\_+NUM\_AERO\_PHASE\_+x)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00100}00100 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define AERO\_PHASE\_ID\_(x) this\%condensed\_data\_int(PHASE\_INT\_LOC\_(x))}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00101}00101 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define AERO\_REP\_ID\_(x) this\%condensed\_data\_int(PHASE\_INT\_LOC\_(x)+1)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00102}00102 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define NUM\_AERO\_PHASE\_JAC\_ELEM\_(x) this\%condensed\_data\_int(PHASE\_INT\_LOC\_(x)+2)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00103}00103 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define PHASE\_JAC\_ID\_(x,s,e) this\%condensed\_data\_int(PHASE\_INT\_LOC\_(x)+3+(s-\/1)*NUM\_AERO\_PHASE\_JAC\_ELEM\_(x)+e)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00104}00104 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define YIELD\_(x) this\%condensed\_data\_real(NUM\_REAL\_PROP\_+x)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00105}00105 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define EFF\_RAD\_JAC\_ELEM\_(x,e) this\%condensed\_data\_real(PHASE\_REAL\_LOC\_(x)+(e-\/1))}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00106}00106 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define NUM\_CONC\_JAC\_ELEM\_(x,e) this\%condensed\_data\_real(PHASE\_REAL\_LOC\_(x)+NUM\_AERO\_PHASE\_JAC\_ELEM\_(x)+(e-\/1))}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00107}00107 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00108}00108   \textcolor{keywordtype}{public} :: \mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\_surface\_t}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00109}00109 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00110}00110 \textcolor{comment}{  !> Generic test reaction data type}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00111}\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{00111}}   \textcolor{keyword}{type}, \textcolor{keyword}{extends}(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\_data\_t}}) :: \mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\_surface\_t}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00112}00112   \textcolor{keyword}{contains}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00113}00113 \textcolor{comment}{    !> Reaction initialization}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00114}\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t_afaa319beb73ea40174c472f980e8b55a}{00114}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00115}00115 \textcolor{comment}{    !> Finalize the reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00116}\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t_a6c486155238136facda8abb85060a0e4}{00116}}     final :: \mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00117}00117   \textcolor{keyword}{end type }\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\_surface\_t}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00118}00118 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00119}00119 \textcolor{comment}{  !> Constructor for rxn\_surface\_t}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00120}00120   \textcolor{keyword}{interface} \mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\_surface\_t}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00121}00121     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}{constructor}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00122}00122   \textcolor{keyword}{end interface }\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\_surface\_t}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00123}00123 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00124}00124 \textcolor{keyword}{contains}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00125}00125 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00126}00126 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00127}00127 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00128}00128 \textcolor{comment}{  !> Constructor for surface reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00129}\mbox{\hyperlink{namespacecamp__rxn__surface_a62155c1bc1cca817f7fce0f3dedb50e8}{00129}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}{constructor}}() \textcolor{keyword}{result}(new\_obj)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00130}00130 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00131}00131 \textcolor{comment}{    !> A new reaction instance}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00132}00132     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\_surface\_t}}), \textcolor{keywordtype}{pointer} :: new\_obj}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00133}00133 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00134}00134     \textcolor{keyword}{allocate}(new\_obj)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00135}00135     new\_obj\%rxn\_phase = \mbox{\hyperlink{namespacecamp__rxn__data_a5af1c18da3738674ca3911fe3acf3102}{aero\_rxn}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00136}00136 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00137}00137   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}{constructor}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00138}00138 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00139}00139 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00140}00140 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00141}00141 \textcolor{comment}{  !> Initialize the reaction data, validating component data and loading}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00142}00142 \textcolor{comment}{  !! any required information into the condensed data arrays for use during}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00143}00143 \textcolor{comment}{  !! solving}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00144}\mbox{\hyperlink{namespacecamp__rxn__surface_a25af23484c87395619d93dd31b5ed529}{00144}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}(this, chem\_spec\_data, aero\_rep, n\_cells)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00145}00145 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00146}00146 \textcolor{comment}{    !> Reaction data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00147}00147     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\_surface\_t}}), \textcolor{keywordtype}{intent(inout)} :: this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00148}00148 \textcolor{comment}{    !> Chemical species data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00149}00149     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}), \textcolor{keywordtype}{intent(in)} :: chem\_spec\_data\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00150}00150 \textcolor{comment}{    !> Aerosol representations}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00151}00151     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\_rep\_data\_ptr}}), \textcolor{keywordtype}{pointer}, \textcolor{keywordtype}{intent(in)} :: aero\_rep(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00152}00152 \textcolor{comment}{    !> Number of grid cells to solve simultaneously}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00153}00153     \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{intent(in)} :: n\_cells}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00154}00154 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00155}00155     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}), \textcolor{keywordtype}{pointer} :: products, spec\_props}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00156}00156     \textcolor{keywordtype}{character(len=:)}, \textcolor{keywordtype}{allocatable} :: key\_name, reactant\_name, product\_name, \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00157}00157                                      phase\_name, error\_msg}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00158}00158     \textcolor{keywordtype}{integer} :: i\_spec, n\_aero\_jac\_elem, n\_aero\_phase, i\_phase, i\_aero\_rep, \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00159}00159                i\_aero\_id}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00160}00160     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{allocatable} :: phase\_ids(:)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00161}00161 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: temp\_real}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00162}00162 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00163}00163     \textcolor{keywordflow}{if} (.not. \textcolor{keyword}{associated}(this\%property\_set)) \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(244070915, \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00164}00164             \textcolor{stringliteral}{"{}Missing property set needed to initialize surface reaction."{}})}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00165}00165 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00166}00166     key\_name = \textcolor{stringliteral}{"{}gas-\/phase reactant"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00167}00167     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(807568174, \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00168}00168             this\%property\_set\%get\_string(key\_name, reactant\_name), \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00169}00169             \textcolor{stringliteral}{"{}Missing gas-\/phase reactant name in surface reaction."{}})}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00170}00170 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00171}00171     key\_name = \textcolor{stringliteral}{"{}gas-\/phase products"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00172}00172     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(285567904, \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00173}00173             this\%property\_set\%get\_property\_t(key\_name, products), \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00174}00174             \textcolor{stringliteral}{"{}Missing gas-\/phase products for surface reaction."{}})}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00175}00175 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00176}00176     key\_name = \textcolor{stringliteral}{"{}aerosol phase"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00177}00177     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(939211358, \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00178}00178             this\%property\_set\%get\_string(key\_name, phase\_name), \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00179}00179             \textcolor{stringliteral}{"{}Missing aerosol phase in surface reaction."{}})}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00180}00180 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00181}00181     error\_msg = \textcolor{stringliteral}{"{} for surface reaction of gas-\/phase species '"{}}// \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00182}00182                 reactant\_name//\textcolor{stringliteral}{"{}' on aerosol phase '"{}}//phase\_name//\textcolor{stringliteral}{"{}'"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00183}00183 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00184}00184     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(362731302, \textcolor{keyword}{associated}(aero\_rep))}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00185}00185     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(187310091, \textcolor{keyword}{size}(aero\_rep) .gt. 0, \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00186}00186             \textcolor{stringliteral}{"{}Missing aerosol representation"{}}//error\_msg)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00187}00187 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00188}00188     \textcolor{comment}{! Count the number of Jacobian elements needed in calculations of mass,}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00189}00189     \textcolor{comment}{! volume, etc. and the number of instances of the aerosol phase}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00190}00190     n\_aero\_jac\_elem = 0}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00191}00191     n\_aero\_phase = 0}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00192}00192     \textcolor{keywordflow}{do} i\_aero\_rep = 1, \textcolor{keyword}{size}(aero\_rep)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00193}00193       phase\_ids = aero\_rep(i\_aero\_rep)\%val\%phase\_ids(phase\_name)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00194}00194       n\_aero\_phase = n\_aero\_phase + \textcolor{keyword}{size}(phase\_ids)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00195}00195       \textcolor{keywordflow}{do} i\_phase = 1, \textcolor{keyword}{size}(phase\_ids)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00196}00196         n\_aero\_jac\_elem = n\_aero\_jac\_elem + \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00197}00197             aero\_rep(i\_aero\_rep)\%val\%num\_jac\_elem(phase\_ids(i\_phase))}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00198}00198 \textcolor{keywordflow}{      end do}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00199}00199 \textcolor{keywordflow}{    end do}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00200}00200 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00201}00201     \textcolor{keyword}{allocate}(this\%condensed\_data\_int(num\_int\_prop\_             \& \textcolor{comment}{! NUM\_AERO\_PHASE, REACT\_ID, NUM\_PROD}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00202}00202                                      + 2 + 3 * products\%size() \& \textcolor{comment}{! PROD\_ID, DERIV\_ID, JAC\_ID}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00203}00203                                      + 2 * n\_aero\_phase        \& \textcolor{comment}{! PHASE\_INT\_LOC, PHASE\_REAL\_LOC}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00204}00204                                      + n\_aero\_phase * 3        \& \textcolor{comment}{! AERO\_PHASE\_ID, AERO\_REP\_ID, NUM\_AERO\_PHASE\_JAC\_ELEM}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00205}00205                                      + (1 + products\%size()) * n\_aero\_jac\_elem)) \textcolor{comment}{! PHASE\_JAC\_ID}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00206}00206     \textcolor{keyword}{allocate}(this\%condensed\_data\_real(num\_real\_prop\_           \& \textcolor{comment}{! DIFF\_COEFF, GAMMA, MW}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00207}00207                                      + products\%size()         \& \textcolor{comment}{! YIELD}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00208}00208                                      + 2 * n\_aero\_jac\_elem))     \textcolor{comment}{! EFF\_RAD\_JAC\_ELEM, NUM\_CONC\_JAC\_ELEM}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00209}00209     this\%condensed\_data\_int(:) = 0\_i\_kind}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00210}00210     this\%condensed\_data\_real(:) = 0.0\_dp}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00211}00211 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00212}00212     \textcolor{comment}{! Save space for the environment-\/dependent parameters}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00213}00213     this\%num\_env\_params = num\_env\_param\_}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00214}00214 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00215}00215     num\_aero\_phase\_ = n\_aero\_phase}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00216}00216 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00217}00217     key\_name = \textcolor{stringliteral}{"{}reaction probability"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00218}00218     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(388486564, \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00219}00219             this\%property\_set\%get\_real(key\_name, gamma\_), \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00220}00220             \textcolor{stringliteral}{"{}Missing reaction probability for"{}}//error\_msg)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00221}00221 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00222}00222     \textcolor{comment}{! Save the reactant information}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00223}00223     react\_id\_ = chem\_spec\_data\%gas\_state\_id(reactant\_name)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00224}00224     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(908581300, react\_id\_ .gt. 0, \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00225}00225                     \textcolor{stringliteral}{"{}Missing gas-\/phase species"{}}//error\_msg)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00226}00226     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(792904182, \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00227}00227                     chem\_spec\_data\%get\_property\_set(reactant\_name, spec\_props), \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00228}00228                     \textcolor{stringliteral}{"{}Missing gas-\/phase species properties"{}}//error\_msg)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00229}00229     key\_name = \textcolor{stringliteral}{"{}molecular weight [kg mol-\/1]"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00230}00230     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(110823327, spec\_props\%get\_real(key\_name, mw\_), \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00231}00231                     \textcolor{stringliteral}{"{}Missing molecular weight for gas-\/phase reactant"{}}//error\_msg)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00232}00232     key\_name = \textcolor{stringliteral}{"{}diffusion coeff [m2 s-\/1]"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00233}00233     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(860403969, spec\_props\%get\_real(key\_name, diff\_coeff\_), \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00234}00234                     \textcolor{stringliteral}{"{}Missing diffusion coefficient for gas-\/phase reactant"{}}// \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00235}00235                     error\_msg)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00236}00236 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00237}00237     \textcolor{comment}{! Save the product information}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00238}00238     num\_prod\_ = products\%size()}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00239}00239     \textcolor{keyword}{call }products\%iter\_reset()}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00240}00240     i\_spec = 1}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00241}00241     \textcolor{keywordflow}{do} \textcolor{keywordflow}{while} (products\%get\_key(product\_name))}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00242}00242       prod\_id\_(i\_spec) = chem\_spec\_data\%gas\_state\_id(product\_name)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00243}00243       \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(863839516, prod\_id\_(i\_spec) .gt. 0, \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00244}00244               \textcolor{stringliteral}{"{}Missing surface reaction product: "{}}//product\_name)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00245}00245       \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(237691686, products\%get\_property\_t(val=spec\_props))}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00246}00246       yield\_(i\_spec) = 1.0\_dp}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00247}00247       key\_name = \textcolor{stringliteral}{"{}yield"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00248}00248       \textcolor{keywordflow}{if} (spec\_props\%get\_real(key\_name, temp\_real)) yield\_(i\_spec) = temp\_real}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00249}00249       \textcolor{keyword}{call }products\%iter\_next()}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00250}00250       i\_spec = i\_spec + 1}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00251}00251 \textcolor{keywordflow}{    end do}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00252}00252 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00253}00253     \textcolor{comment}{! Set aerosol phase specific indices}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00254}00254     i\_aero\_id = 1}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00255}00255     phase\_int\_loc\_(i\_aero\_id) = num\_int\_prop\_ + 2 + 3 * num\_prod\_ + \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00256}00256                                 2 * num\_aero\_phase\_ + 1}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00257}00257     phase\_real\_loc\_(i\_aero\_id) = num\_real\_prop\_ + num\_prod\_ + 1}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00258}00258     \textcolor{keywordflow}{do} i\_aero\_rep = 1, \textcolor{keyword}{size}(aero\_rep)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00259}00259       phase\_ids = aero\_rep(i\_aero\_rep)\%val\%phase\_ids(phase\_name)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00260}00260       \textcolor{keywordflow}{do} i\_phase = 1, \textcolor{keyword}{size}(phase\_ids)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00261}00261         num\_aero\_phase\_jac\_elem\_(i\_aero\_id) = \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00262}00262             aero\_rep(i\_aero\_rep)\%val\%num\_jac\_elem(phase\_ids(i\_phase))}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00263}00263         aero\_phase\_id\_(i\_aero\_id) = phase\_ids(i\_phase)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00264}00264         aero\_rep\_id\_(i\_aero\_id) = i\_aero\_rep}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00265}00265         i\_aero\_id = i\_aero\_id + 1}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00266}00266         \textcolor{keywordflow}{if} (i\_aero\_id .le. num\_aero\_phase\_) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00267}00267           phase\_int\_loc\_(i\_aero\_id)  = phase\_int\_loc\_(i\_aero\_id -\/ 1) + 3 + \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00268}00268                                        (1 + num\_prod\_) * \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00269}00269                                        num\_aero\_phase\_jac\_elem\_(i\_aero\_id -\/ 1)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00270}00270           phase\_real\_loc\_(i\_aero\_id) = phase\_real\_loc\_(i\_aero\_id -\/ 1) + \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00271}00271                                    2 * num\_aero\_phase\_jac\_elem\_(i\_aero\_id -\/ 1)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00272}00272 \textcolor{keywordflow}{        end if}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00273}00273 \textcolor{keywordflow}{      end do}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00274}00274 \textcolor{keywordflow}{    end do}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00275}00275 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00276}00276   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00277}00277 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00278}00278 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00279}00279 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00280}00280 \textcolor{comment}{  !> Finalize the reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00281}\mbox{\hyperlink{namespacecamp__rxn__surface_ab3b5e4fadaa198cb962a28e3c0b2eace}{00281}}   \textcolor{keywordtype}{elemental} \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}(this)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00282}00282 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00283}00283 \textcolor{comment}{    !> Reaction data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00284}00284     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\_surface\_t}}), \textcolor{keywordtype}{intent(inout)} :: this}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00285}00285 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00286}00286     \textcolor{keywordflow}{if} (\textcolor{keyword}{associated}(this\%property\_set)) \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00287}00287             \textcolor{keyword}{deallocate}(this\%property\_set)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00288}00288     \textcolor{keywordflow}{if} (\textcolor{keyword}{allocated}(this\%condensed\_data\_real)) \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00289}00289             \textcolor{keyword}{deallocate}(this\%condensed\_data\_real)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00290}00290     \textcolor{keywordflow}{if} (\textcolor{keyword}{allocated}(this\%condensed\_data\_int)) \&}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00291}00291             \textcolor{keyword}{deallocate}(this\%condensed\_data\_int)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00292}00292 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00293}00293   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00294}00294 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00295}00295 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00296}00296 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00297}00297 \textcolor{keyword}{end module }\mbox{\hyperlink{namespacecamp__rxn__surface}{camp\_rxn\_surface}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00001}00001\ \textcolor{comment}{!\ Copyright\ (C)\ 2023\ Barcelona\ Supercomputing\ Center,\ University\ of}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00002}00002\ \textcolor{comment}{!\ Illinois\ at\ Urbana-\/Champaign,\ and\ National\ Center\ for\ Atmospheric\ Research}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00003}00003\ \textcolor{comment}{!\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00004}00004\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00005}00005\ \textcolor{comment}{!>\ \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00006}00006\ \textcolor{comment}{!>\ The\ camp\_rxn\_surface\ module.}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00007}00007\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00008}00008\ \textcolor{comment}{!>\ \(\backslash\)page\ camp\_rxn\_surface\ CAMP:\ Surface\ (Hetergeneous)\ Reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00009}00009\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00010}00010\ \textcolor{comment}{!!\ Surface\ reactions\ transform\ gas-\/phase\ species\ into\ gas-\/phase\ products}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00011}00011\ \textcolor{comment}{!!\ according\ to\ a\ rate\ that\ is\ calculated\ based\ on\ the\ total\ exposed\ surface}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00012}00012\ \textcolor{comment}{!!\ area\ of\ a\ condensed\ phase.}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00013}00013\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00014}00014\ \textcolor{comment}{!!\ For\ surface\ reactions\ of\ the\ gas\ phase\ species\ X,\ the\ reaction\ rate\ is}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00015}00015\ \textcolor{comment}{!!\ calculated\ assuming\ large\ particles\ (continuum\ regime)\ as:}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00016}00016\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00017}00017\ \textcolor{comment}{!!\ \(\backslash\)f[}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00018}00018\ \textcolor{comment}{!!\ \ \ r\_\{surface\}\ =\ k\_\{surface\}\(\backslash\)mbox\{[X]\}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00019}00019\ \textcolor{comment}{!!\ \(\backslash\)f]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00020}00020\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00021}00021\ \textcolor{comment}{!!\ where\ \(\backslash\)f\$[\(\backslash\)mbox\{X\}]\(\backslash\)f\$\ is\ the\ gas-\/phase\ concentration\ of\ species\ X\ [ppm]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00022}00022\ \textcolor{comment}{!!\ and\ the\ rate\ constant\ \(\backslash\)f\$k\_\{surface\}\(\backslash\)f\$\ [1/s]\ is\ calculated\ as:}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00023}00023\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00024}00024\ \textcolor{comment}{!!\ \(\backslash\)f[}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00025}00025\ \textcolor{comment}{!!\ k\_\{surface\}\ =\ \(\backslash\)frac\{4N\_a\ \(\backslash\)pi\ r\string^2\_e\}\{\(\backslash\)left(\(\backslash\)frac\{r\_e\}\{D\_g\}\ +\ \(\backslash\)frac\{4\}\{v(T)\(\backslash\)gamma\}\(\backslash\)right)\}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00026}00026\ \textcolor{comment}{!!\ \(\backslash\)f]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00027}00027\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00028}00028\ \textcolor{comment}{!!\ where\ \(\backslash\)f\$N\_a\(\backslash\)f\$\ is\ the\ number\ concentration\ of\ particles}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00029}00029\ \textcolor{comment}{!!\ [particles\(\backslash\)f\$\(\backslash\)mbox\{m\}\string^\{-\/3\}\(\backslash\)f\$],\ \(\backslash\)f\$r\_e\(\backslash\)f\$\ is\ the\ effective\ particle\ radius\ [m],}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00030}00030\ \textcolor{comment}{!!\ \(\backslash\)f\$D\_g\(\backslash\)f\$\ is\ the\ gas-\/phase\ diffusion\ coefficient\ of\ the\ reactant}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00031}00031\ \textcolor{comment}{!!\ [\(\backslash\)f\$\(\backslash\)mbox\{m\}\string^2\(\backslash\)mbox\{s\}\string^\{-\/1\}\(\backslash\)f\$],\ \(\backslash\)f\$\(\backslash\)gamma\(\backslash\)f\$\ is\ the\ reaction\ probability\ [unitless],}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00032}00032\ \textcolor{comment}{!!\ and\ v\ is\ the\ mean\ free\ speed\ of\ the\ gas-\/phase\ reactant:}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00033}00033\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00034}00034\ \textcolor{comment}{!!\ \(\backslash\)f[}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00035}00035\ \textcolor{comment}{!!\ \ \ v\ =\ \(\backslash\)sqrt\{\(\backslash\)frac\{8RT\}\{\(\backslash\)pi\ MW\}\}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00036}00036\ \textcolor{comment}{!!\ \(\backslash\)f]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00037}00037\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00038}00038\ \textcolor{comment}{!!\ where\ R\ is\ the\ ideal\ gas\ constant\ [\(\backslash\)f\$\(\backslash\)mbox\{J\}\(\backslash\),\ \(\backslash\)mbox\{K\}\string^\{-\/1\}\(\backslash\),}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00039}00039\ \textcolor{comment}{!!\ \(\backslash\)mbox\{mol\}\string^\{-\/1\}\(\backslash\)f\$],\ T\ is\ temperature\ [K],\ and\ MW\ is\ the\ molecular\ weight\ of}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00040}00040\ \textcolor{comment}{!!\ the\ gas-\/phase\ reactant\ [\(\backslash\)f\$\(\backslash\)mbox\{kg\}\(\backslash\),\ \(\backslash\)mbox\{mol\}\string^\{-\/1\}\(\backslash\)f\$]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00041}00041\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00042}00042\ \textcolor{comment}{!!\ Input\ data\ for\ surface\ reactions\ have\ the\ following\ format\ :}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00043}00043\ \textcolor{comment}{!!\ \(\backslash\)code\{.json\}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00044}00044\ \textcolor{comment}{!!\ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00045}00045\ \textcolor{comment}{!!\ \ \ \ \ "{}type"{}\ :\ "{}SURFACE"{},}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00046}00046\ \textcolor{comment}{!!\ \ \ \ \ "{}gas-\/phase\ reactant"{}\ :\ "{}my\ gas\ species"{},}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00047}00047\ \textcolor{comment}{!!\ \ \ \ \ "{}reaction\ probability"{}\ :\ 0.2,}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00048}00048\ \textcolor{comment}{!!\ \ \ \ \ "{}gas-\/phase\ products"{}\ :\ \{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00049}00049\ \textcolor{comment}{!!\ \ \ \ \ \ \ \ "{}my\ other\ gas\ species"{}\ :\ \{\ \},}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00050}00050\ \textcolor{comment}{!!\ \ \ \ \ \ \ \ "{}another\ gas\ species"{}\ :\ \{\ "{}yield"{}\ :\ 0.3\ \}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00051}00051\ \textcolor{comment}{!!\ \ \ \ \ \},}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00052}00052\ \textcolor{comment}{!!\ \ \ \ \ "{}areosol\ phase"{}\ :\ "{}my\ aqueous\ phase"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00053}00053\ \textcolor{comment}{!!\ \ \ \}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00054}00054\ \textcolor{comment}{!!\ \(\backslash\)endcode}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00055}00055\ \textcolor{comment}{!!\ The\ key-\/value\ pairs\ \(\backslash\)b\ gas-\/phase\ \(\backslash\)b\ reactant,\ \(\backslash\)b\ reaction\ \(\backslash\)b\ probability,}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00056}00056\ \textcolor{comment}{!!\ and\ \(\backslash\)b\ aerosol-\/phase\ are\ required.}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00057}00057\ \textcolor{comment}{!!\ Only\ one\ gas-\/phase\ reactant\ is\ allowed,\ but\ multiple\ products\ can\ be\ present.}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00058}00058\ \textcolor{comment}{!!\ The\ key-\/value\ pair\ \(\backslash\)b\ yield\ for\ product\ species\ is\ optional\ and\ defaults\ to\ 1.0.}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00059}00059\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00060}00060\ \textcolor{comment}{!!\ The\ gas-\/phase\ reactant\ species\ must\ include\ properties}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00061}00061\ \textcolor{comment}{!!\ \(\backslash\)b\ diffusion\ \(\backslash\)b\ coeff\ \(\backslash\)b\ [\(\backslash\)b\ m2\ \(\backslash\)b\ s-\/1],}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00062}00062\ \textcolor{comment}{!!\ which\ specifies\ the\ diffusion\ coefficient\ in}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00063}00063\ \textcolor{comment}{!!\ \(\backslash\)f\$\(\backslash\)mbox\{m\}\string^2\(\backslash\),\(\backslash\)mbox\{s\}\string^\{-\/1\}\(\backslash\)f\$,\ and\ \(\backslash\)b\ molecular\ \(\backslash\)b\ weight}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00064}00064\ \textcolor{comment}{!!\ \(\backslash\)b\ [\(\backslash\)b\ kg\ \(\backslash\)b\ mol-\/1],\ which\ specifies\ the\ molecular\ weight\ of\ the\ species\ in}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00065}00065\ \textcolor{comment}{!!\ \(\backslash\)f\$\(\backslash\)mbox\{kg\}\(\backslash\),\(\backslash\)mbox\{mol\}\string^\{-\/1\}\(\backslash\)f\$.}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00067}00067\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00068}00068\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00069}00069\ \textcolor{comment}{!>\ The\ rxn\_surface\_t\ type\ and\ associated\ functions.}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00070}\mbox{\hyperlink{namespacecamp__rxn__surface}{00070}}\ \textcolor{keyword}{module}\ \mbox{\hyperlink{namespacecamp__rxn__surface}{camp\_rxn\_surface}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00072}00072\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__aero__phase__data}{camp\_aero\_phase\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00073}00073\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__aero__rep__data}{camp\_aero\_rep\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00074}00074\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__chem__spec__data}{camp\_chem\_spec\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00075}00075\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}:\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00076}00076\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__camp__state}{camp\_camp\_state}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00077}00077\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__property}{camp\_property}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00078}00078\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rxn__data}{camp\_rxn\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00079}00079\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__util}{camp\_util}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}:\ \mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}},\ \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}},\ \mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}},\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}},\ \mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}},\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}},\ \mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00083}00083\ \ \ \textcolor{keywordtype}{implicit\ none}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00084}00084\ \ \ \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00086}00086\ \textcolor{preprocessor}{\#define\ DIFF\_COEFF\_\ this\%condensed\_data\_real(1)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00087}00087\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ GAMMA\_\ this\%condensed\_data\_real(2)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00088}00088\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ MW\_\ this\%condensed\_data\_real(3)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00089}00089\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_AERO\_PHASE\_\ this\%condensed\_data\_int(1)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00090}00090\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ REACT\_ID\_\ this\%condensed\_data\_int(2)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00091}00091\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_PROD\_\ this\%condensed\_data\_int(3)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00092}00092\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_INT\_PROP\_\ 3}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00093}00093\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_REAL\_PROP\_\ 3}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00094}00094\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_ENV\_PARAM\_\ 1}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00095}00095\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ PROD\_ID\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_+x)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00096}00096\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ DERIV\_ID\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_+NUM\_PROD\_+x)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00097}00097\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ JAC\_ID\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_+1+2*NUM\_PROD\_+x)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00098}00098\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ PHASE\_INT\_LOC\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_+2+3*NUM\_PROD\_+x)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00099}00099\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ PHASE\_REAL\_LOC\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_+2+3*NUM\_PROD\_+NUM\_AERO\_PHASE\_+x)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00100}00100\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ AERO\_PHASE\_ID\_(x)\ this\%condensed\_data\_int(PHASE\_INT\_LOC\_(x))}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00101}00101\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ AERO\_REP\_ID\_(x)\ this\%condensed\_data\_int(PHASE\_INT\_LOC\_(x)+1)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00102}00102\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_AERO\_PHASE\_JAC\_ELEM\_(x)\ this\%condensed\_data\_int(PHASE\_INT\_LOC\_(x)+2)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00103}00103\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ PHASE\_JAC\_ID\_(x,s,e)\ this\%condensed\_data\_int(PHASE\_INT\_LOC\_(x)+3+(s-\/1)*NUM\_AERO\_PHASE\_JAC\_ELEM\_(x)+e)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00104}00104\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ YIELD\_(x)\ this\%condensed\_data\_real(NUM\_REAL\_PROP\_+x)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00105}00105\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ EFF\_RAD\_JAC\_ELEM\_(x,e)\ this\%condensed\_data\_real(PHASE\_REAL\_LOC\_(x)+(e-\/1))}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00106}00106\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_CONC\_JAC\_ELEM\_(x,e)\ this\%condensed\_data\_real(PHASE\_REAL\_LOC\_(x)+NUM\_AERO\_PHASE\_JAC\_ELEM\_(x)+(e-\/1))}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00107}00107\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00108}00108\ \ \ \textcolor{keywordtype}{public}\ ::\ \mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\_surface\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00109}00109\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00110}00110\ \textcolor{comment}{\ \ !>\ Generic\ test\ reaction\ data\ type}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00111}\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{00111}}\ \ \ \textcolor{keyword}{type},\ \textcolor{keyword}{extends}(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\_data\_t}})\ ::\ \mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\_surface\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00112}00112\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00113}00113\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ initialization}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00114}\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t_abb57f96aeb9fc6b267b5ab03522f916c}{00114}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00115}00115\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00116}\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t_a75ce35939d28432653065c89892b9be1}{00116}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00117}00117\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\_surface\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00118}00118\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00119}00119\ \textcolor{comment}{\ \ !>\ Constructor\ for\ rxn\_surface\_t}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00120}00120\ \ \ \textcolor{keyword}{interface}\ \mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\_surface\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00121}00121\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}{constructor}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00122}00122\ \ \ \textcolor{keyword}{end\ interface\ }\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\_surface\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00124}00124\ \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00126}00126\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00127}00127\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00128}00128\ \textcolor{comment}{\ \ !>\ Constructor\ for\ surface\ reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00129}\mbox{\hyperlink{namespacecamp__rxn__surface_a62155c1bc1cca817f7fce0f3dedb50e8}{00129}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}{constructor}}()\ \textcolor{keyword}{result}(new\_obj)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00130}00130\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00131}00131\ \textcolor{comment}{\ \ \ \ !>\ A\ new\ reaction\ instance}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00132}00132\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\_surface\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_obj}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00133}00133\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00134}00134\ \ \ \ \ \textcolor{keyword}{allocate}(new\_obj)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00135}00135\ \ \ \ \ new\_obj\%rxn\_phase\ =\ \mbox{\hyperlink{namespacecamp__rxn__data_a5af1c18da3738674ca3911fe3acf3102}{aero\_rxn}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00137}00137\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}{constructor}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00139}00139\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00140}00140\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00141}00141\ \textcolor{comment}{\ \ !>\ Initialize\ the\ reaction\ data,\ validating\ component\ data\ and\ loading}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00142}00142\ \textcolor{comment}{\ \ !!\ any\ required\ information\ into\ the\ condensed\ data\ arrays\ for\ use\ during}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00143}00143\ \textcolor{comment}{\ \ !!\ solving}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00144}\mbox{\hyperlink{namespacecamp__rxn__surface_a25af23484c87395619d93dd31b5ed529}{00144}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}(this,\ chem\_spec\_data,\ aero\_rep,\ n\_cells)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00145}00145\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00146}00146\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00147}00147\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\_surface\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00148}00148\ \textcolor{comment}{\ \ \ \ !>\ Chemical\ species\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00149}00149\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ chem\_spec\_data\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00150}00150\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representations}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00151}00151\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\_rep\_data\_ptr}}),\ \textcolor{keywordtype}{pointer},\ \textcolor{keywordtype}{intent(in)}\ ::\ aero\_rep(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00152}00152\ \textcolor{comment}{\ \ \ \ !>\ Number\ of\ grid\ cells\ to\ solve\ simultaneously}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00153}00153\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)}\ ::\ n\_cells}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00154}00154\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00155}00155\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ products,\ spec\_props}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00156}00156\ \ \ \ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ key\_name,\ reactant\_name,\ product\_name,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ phase\_name,\ error\_msg}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00158}00158\ \ \ \ \ \textcolor{keywordtype}{integer}\ ::\ i\_spec,\ n\_aero\_jac\_elem,\ n\_aero\_phase,\ i\_phase,\ i\_aero\_rep,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_aero\_id}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00160}00160\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{allocatable}\ ::\ phase\_ids(:)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00161}00161\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ temp\_real}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00162}00162\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00163}00163\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ \textcolor{keyword}{associated}(this\%property\_set))\ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(244070915,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ property\ set\ needed\ to\ initialize\ surface\ reaction."{}})}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00165}00165\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00166}00166\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}gas-\/phase\ reactant"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00167}00167\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(807568174,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_string(key\_name,\ reactant\_name),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ gas-\/phase\ reactant\ name\ in\ surface\ reaction."{}})}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00170}00170\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00171}00171\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}gas-\/phase\ products"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00172}00172\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(285567904,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_property\_t(key\_name,\ products),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ gas-\/phase\ products\ for\ surface\ reaction."{}})}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00175}00175\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00176}00176\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}aerosol\ phase"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00177}00177\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(939211358,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_string(key\_name,\ phase\_name),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ aerosol\ phase\ in\ surface\ reaction."{}})}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00181}00181\ \ \ \ \ error\_msg\ =\ \textcolor{stringliteral}{"{}\ for\ surface\ reaction\ of\ gas-\/phase\ species\ '"{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ reactant\_name//\textcolor{stringliteral}{"{}'\ on\ aerosol\ phase\ '"{}}//phase\_name//\textcolor{stringliteral}{"{}'"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00183}00183\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00184}00184\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(362731302,\ \textcolor{keyword}{associated}(aero\_rep))}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00185}00185\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(187310091,\ \textcolor{keyword}{size}(aero\_rep)\ .gt.\ 0,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ aerosol\ representation"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00187}00187\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00188}00188\ \ \ \ \ \textcolor{comment}{!\ Count\ the\ number\ of\ Jacobian\ elements\ needed\ in\ calculations\ of\ mass,}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00189}00189\ \ \ \ \ \textcolor{comment}{!\ volume,\ etc.\ and\ the\ number\ of\ instances\ of\ the\ aerosol\ phase}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00190}00190\ \ \ \ \ n\_aero\_jac\_elem\ =\ 0}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00191}00191\ \ \ \ \ n\_aero\_phase\ =\ 0}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00192}00192\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_aero\_rep\ =\ 1,\ \textcolor{keyword}{size}(aero\_rep)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00193}00193\ \ \ \ \ \ \ phase\_ids\ =\ aero\_rep(i\_aero\_rep)\%val\%phase\_ids(phase\_name,\ is\_at\_surface=.\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00194}00194\ \ \ \ \ \ \ n\_aero\_phase\ =\ n\_aero\_phase\ +\ \textcolor{keyword}{size}(phase\_ids)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00195}00195\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\ =\ 1,\ \textcolor{keyword}{size}(phase\_ids)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00196}00196\ \ \ \ \ \ \ \ \ n\_aero\_jac\_elem\ =\ n\_aero\_jac\_elem\ +\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ aero\_rep(i\_aero\_rep)\%val\%num\_jac\_elem(phase\_ids(i\_phase))}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00198}00198\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00199}00199\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00201}00201\ \ \ \ \ \textcolor{keyword}{allocate}(this\%condensed\_data\_int(num\_int\_prop\_\ \ \ \ \ \ \ \ \ \ \ \ \ \&\ \textcolor{comment}{!\ NUM\_AERO\_PHASE,\ REACT\_ID,\ NUM\_PROD}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ 2\ +\ 3\ *\ products\%size()\ \&\ \textcolor{comment}{!\ PROD\_ID,\ DERIV\_ID,\ JAC\_ID}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ 2\ *\ n\_aero\_phase\ \ \ \ \ \ \ \ \&\ \textcolor{comment}{!\ PHASE\_INT\_LOC,\ PHASE\_REAL\_LOC}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ n\_aero\_phase\ *\ 3\ \ \ \ \ \ \ \ \&\ \textcolor{comment}{!\ AERO\_PHASE\_ID,\ AERO\_REP\_ID,\ NUM\_AERO\_PHASE\_JAC\_ELEM}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ (1\ +\ products\%size())\ *\ n\_aero\_jac\_elem))\ \textcolor{comment}{!\ PHASE\_JAC\_ID}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00206}00206\ \ \ \ \ \textcolor{keyword}{allocate}(this\%condensed\_data\_real(num\_real\_prop\_\ \ \ \ \ \ \ \ \ \ \ \&\ \textcolor{comment}{!\ DIFF\_COEFF,\ GAMMA,\ MW}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ products\%size()\ \ \ \ \ \ \ \ \ \&\ \textcolor{comment}{!\ YIELD}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ +\ 2\ *\ n\_aero\_jac\_elem))\ \ \ \ \ \textcolor{comment}{!\ EFF\_RAD\_JAC\_ELEM,\ NUM\_CONC\_JAC\_ELEM}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00209}00209\ \ \ \ \ this\%condensed\_data\_int(:)\ =\ 0\_i\_kind}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00210}00210\ \ \ \ \ this\%condensed\_data\_real(:)\ =\ 0.0\_dp}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00211}00211\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00212}00212\ \ \ \ \ \textcolor{comment}{!\ Save\ space\ for\ the\ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00213}00213\ \ \ \ \ this\%num\_env\_params\ =\ num\_env\_param\_}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00214}00214\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00215}00215\ \ \ \ \ num\_aero\_phase\_\ =\ n\_aero\_phase}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00216}00216\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00217}00217\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}reaction\ probability"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00218}00218\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(388486564,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_real(key\_name,\ gamma\_),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ reaction\ probability\ for"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00221}00221\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00222}00222\ \ \ \ \ \textcolor{comment}{!\ Save\ the\ reactant\ information}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00223}00223\ \ \ \ \ react\_id\_\ =\ chem\_spec\_data\%gas\_state\_id(reactant\_name)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00224}00224\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(908581300,\ react\_id\_\ .gt.\ 0,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ gas-\/phase\ species"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00226}00226\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(792904182,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ chem\_spec\_data\%get\_property\_set(reactant\_name,\ spec\_props),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ gas-\/phase\ species\ properties"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00229}00229\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}molecular\ weight\ [kg\ mol-\/1]"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00230}00230\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(110823327,\ spec\_props\%get\_real(key\_name,\ mw\_),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ molecular\ weight\ for\ gas-\/phase\ reactant"{}}//error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00232}00232\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}diffusion\ coeff\ [m2\ s-\/1]"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00233}00233\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(860403969,\ spec\_props\%get\_real(key\_name,\ diff\_coeff\_),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ diffusion\ coefficient\ for\ gas-\/phase\ reactant"{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ error\_msg)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00236}00236\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00237}00237\ \ \ \ \ \textcolor{comment}{!\ Save\ the\ product\ information}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00238}00238\ \ \ \ \ num\_prod\_\ =\ products\%size()}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00239}00239\ \ \ \ \ \textcolor{keyword}{call\ }products\%iter\_reset()}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00240}00240\ \ \ \ \ i\_spec\ =\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00241}00241\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (products\%get\_key(product\_name))}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00242}00242\ \ \ \ \ \ \ prod\_id\_(i\_spec)\ =\ chem\_spec\_data\%gas\_state\_id(product\_name)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00243}00243\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(863839516,\ prod\_id\_(i\_spec)\ .gt.\ 0,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00244}00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ surface\ reaction\ product:\ "{}}//product\_name)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00245}00245\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(237691686,\ products\%get\_property\_t(val=spec\_props))}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00246}00246\ \ \ \ \ \ \ yield\_(i\_spec)\ =\ 1.0\_dp}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00247}00247\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}yield"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00248}00248\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_real(key\_name,\ temp\_real))\ yield\_(i\_spec)\ =\ temp\_real}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00249}00249\ \ \ \ \ \ \ \textcolor{keyword}{call\ }products\%iter\_next()}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00250}00250\ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00251}00251\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00252}00252\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00253}00253\ \ \ \ \ \textcolor{comment}{!\ Set\ aerosol\ phase\ specific\ indices}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00254}00254\ \ \ \ \ i\_aero\_id\ =\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00255}00255\ \ \ \ \ phase\_int\_loc\_(i\_aero\_id)\ =\ num\_int\_prop\_\ +\ 2\ +\ 3\ *\ num\_prod\_\ +\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2\ *\ num\_aero\_phase\_\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00257}00257\ \ \ \ \ phase\_real\_loc\_(i\_aero\_id)\ =\ num\_real\_prop\_\ +\ num\_prod\_\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00258}00258\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_aero\_rep\ =\ 1,\ \textcolor{keyword}{size}(aero\_rep)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00259}00259\ \ \ \ \ \ \ phase\_ids\ =\ aero\_rep(i\_aero\_rep)\%val\%phase\_ids(phase\_name,\ is\_at\_surface=.\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00260}00260\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\ =\ 1,\ \textcolor{keyword}{size}(phase\_ids)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00261}00261\ \ \ \ \ \ \ \ \ num\_aero\_phase\_jac\_elem\_(i\_aero\_id)\ =\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ aero\_rep(i\_aero\_rep)\%val\%num\_jac\_elem(phase\_ids(i\_phase))}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00263}00263\ \ \ \ \ \ \ \ \ aero\_phase\_id\_(i\_aero\_id)\ =\ phase\_ids(i\_phase)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00264}00264\ \ \ \ \ \ \ \ \ aero\_rep\_id\_(i\_aero\_id)\ =\ i\_aero\_rep}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00265}00265\ \ \ \ \ \ \ \ \ i\_aero\_id\ =\ i\_aero\_id\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00266}00266\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_aero\_id\ .le.\ num\_aero\_phase\_)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ phase\_int\_loc\_(i\_aero\_id)\ \ =\ phase\_int\_loc\_(i\_aero\_id\ -\/\ 1)\ +\ 3\ +\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (1\ +\ num\_prod\_)\ *\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_aero\_phase\_jac\_elem\_(i\_aero\_id\ -\/\ 1)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ phase\_real\_loc\_(i\_aero\_id)\ =\ phase\_real\_loc\_(i\_aero\_id\ -\/\ 1)\ +\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2\ *\ num\_aero\_phase\_jac\_elem\_(i\_aero\_id\ -\/\ 1)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00272}00272\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00273}00273\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00274}00274\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00275}00275\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00276}00276\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00277}00277\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00278}00278\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00279}00279\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00280}00280\ \textcolor{comment}{\ \ !>\ Finalize\ the\ reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00281}\mbox{\hyperlink{namespacecamp__rxn__surface_ab3b5e4fadaa198cb962a28e3c0b2eace}{00281}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00282}00282\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00283}00283\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00284}00284\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\_surface\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00285}00285\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00286}00286\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{associated}(this\%property\_set))\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00287}00287\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%property\_set)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00288}00288\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_real))\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00289}00289\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_real)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00290}00290\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_int))\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_int)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00292}00292\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00293}00293\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00294}00294\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00295}00295\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00297}00297\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__surface}{camp\_rxn\_surface}}}
 
 \end{DoxyCode}

@@ -1,4 +1,6 @@
 <map id="camp_property::get_key" name="camp_property::get_key">
-<area shape="rect" id="node1" title="Get the key name of the element currently pointed to by the iterator. Returns true if the iterator po..." alt="" coords="5,29,164,55"/>
-<area shape="rect" id="node2" href="$namespacecamp__property.html#a52abce158c4eccd039de4f875d697869" title="Get the key name of a property." alt="" coords="212,29,345,55"/>
+<area shape="rect" id="Node000001" title="Get the key name of the element currently pointed to by the iterator. Returns true if the iterator po..." alt="" coords="5,29,163,55"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__property.html#a52abce158c4eccd039de4f875d697869" title="Get the key name of a property." alt="" coords="211,29,343,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,40,195,40,195,45,163,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="244,30,238,21,242,11,255,5,277,3,301,5,313,12,310,17,299,10,277,8,257,10,246,15,243,20,249,27"/>
 </map>

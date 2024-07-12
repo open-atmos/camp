@@ -1,4 +1,5 @@
 <map id="camp_rxn_photolysis::rxn_update_data_photolysis_t" name="camp_rxn_photolysis::rxn_update_data_photolysis_t">
-<area shape="rect" id="node1" title="Photolysis rate update object." alt="" coords="5,93,204,133"/>
-<area shape="rect" id="node2" href="$structcamp__rxn__data_1_1rxn__update__data__t.html" title="Update cookie." alt="" coords="38,5,171,45"/>
+<area shape="rect" id="Node000001" title="Photolysis rate update object." alt="" coords="5,94,204,135"/>
+<area shape="rect" id="Node000002" href="$structcamp__rxn__data_1_1rxn__update__data__t.html" title="Update cookie." alt="" coords="38,5,171,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,62,107,94,102,94,102,62"/>
 </map>

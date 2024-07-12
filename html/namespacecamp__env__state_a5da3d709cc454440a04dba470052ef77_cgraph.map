@@ -1,11 +1,23 @@
 <map id="camp_env_state::camp_mpi_pack_size_env_state" name="camp_env_state::camp_mpi_pack_size_env_state">
-<area shape="rect" id="node1" title="Determines the number of bytes required to pack the given value." alt="" coords="5,73,184,113"/>
-<area shape="rect" id="node2" href="$namespacecamp__mpi.html#abfca35b6c1f158dcb853326861d7e558" title="Determines the number of bytes required to pack the given value." alt="" coords="232,29,380,69"/>
-<area shape="rect" id="node9" href="$namespacecamp__mpi.html#ae392f982ac26c341bc44f829e5e12d61" title="Determines the number of bytes required to pack the given value." alt="" coords="232,117,380,157"/>
-<area shape="rect" id="node3" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="428,73,576,113"/>
-<area shape="rect" id="node4" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="624,73,772,113"/>
-<area shape="rect" id="node5" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="820,81,921,106"/>
-<area shape="rect" id="node6" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="969,81,1089,106"/>
-<area shape="rect" id="node7" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1137,81,1289,106"/>
-<area shape="rect" id="node8" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1337,73,1460,113"/>
+<area shape="rect" id="Node000001" title="Determines the number of bytes required to pack the given value." alt="" coords="5,75,184,115"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="55,75,53,65,59,56,73,50,95,48,117,50,131,57,129,61,116,56,94,53,74,55,62,60,58,66,60,73"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__mpi.html#abfca35b6c1f158dcb853326861d7e558" title="Determines the number of bytes required to pack the given value." alt="" coords="232,29,379,70"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="184,73,216,66,217,71,185,78"/>
+<area shape="rect" id="Node000009" href="$namespacecamp__mpi.html#ae392f982ac26c341bc44f829e5e12d61" title="Determines the number of bytes required to pack the given value." alt="" coords="232,119,379,159"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="185,111,217,118,216,123,184,116"/>
+<area shape="poly" id="edge9_Node000002_Node000002" title=" " alt="" coords="268,29,266,19,272,10,286,5,305,3,327,5,339,11,337,16,325,10,305,8,287,10,276,15,272,20,273,28"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="427,75,574,115"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="380,64,412,72,411,77,379,69"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="622,75,770,115"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="575,92,606,92,606,98,575,98"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="818,82,918,108"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="770,92,802,92,802,98,770,98"/>
+<area shape="rect" id="Node000006" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="966,82,1085,108"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="918,92,950,92,950,98,918,98"/>
+<area shape="rect" id="Node000007" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1133,82,1285,108"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="1086,92,1118,92,1118,98,1086,98"/>
+<area shape="rect" id="Node000008" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1333,75,1455,115"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="1285,92,1317,92,1317,98,1285,98"/>
+<area shape="poly" id="edge11_Node000009_Node000003" title=" " alt="" coords="379,120,411,112,412,118,380,125"/>
+<area shape="poly" id="edge12_Node000009_Node000009" title=" " alt="" coords="268,119,266,109,272,100,286,94,305,92,327,94,339,101,337,105,325,100,305,97,287,99,276,104,272,110,273,117"/>
 </map>

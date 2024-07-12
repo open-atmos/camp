@@ -1,6 +1,10 @@
 <map id="camp_rxn_factory::load" name="camp_rxn_factory::load">
-<area shape="rect" id="node1" title="Load a reaction from input data." alt="" coords="5,31,160,56"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="208,5,360,31"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#ab72bff2627c9468e4c352118b8dc7046" title="Prints a warning message." alt="" coords="212,55,356,80"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="408,23,531,63"/>
+<area shape="rect" id="Node000001" title="Load a reaction from input data." alt="" coords="5,31,159,56"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="207,5,358,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,31,191,27,192,32,160,36"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#ab72bff2627c9468e4c352118b8dc7046" title="Prints a warning message." alt="" coords="211,55,354,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="160,50,196,54,195,60,159,55"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="406,23,528,64"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="359,26,391,30,390,36,358,31"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="354,56,390,51,391,56,355,61"/>
 </map>

@@ -1,0 +1,41 @@
+\doxysubsubsection{CAMP\+: Henry\textquotesingle{}s Law Phase-\/\+Transfer Reaction}
+\hypertarget{camp_rxn__h_l_phase_transfer}{}\label{camp_rxn__h_l_phase_transfer}\index{CAMP: Henry\textquotesingle{}s Law Phase-\/Transfer Reaction@{CAMP: Henry\textquotesingle{}s Law Phase-\/Transfer Reaction}}
+Henry\textquotesingle{}s Law phase-\/trasfer reactions use equilibrium rate constants that are calculated as\+:
+
+\[
+   HLC(298K) * e^{C({1/T-1/298})}
+ \]
+
+where $HLC(298K)$ is the Henry\textquotesingle{}s Law constant at 298 K \mbox{[}M $\mbox{Pa}^{-1}$\mbox{]}, $C$ is a constant \mbox{[}K\mbox{]} and $T$ is the temperature \mbox{[}K\mbox{]}. Uptake kinetics are based on the particle effective radius, $r_{eff}$ \mbox{[} $\mbox{m}$\mbox{]}, the condensing species gas-\/phase diffusion coefficient, $D_g$ \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]}, its molecular weight $MW$ \mbox{[}kg $\mbox{mol}^{-3}$\mbox{]}, and $N^{*}$, which is used to calculate the mass accomodation coefficient.
+
+Mass accomodation coefficients and condensation rate constants are calculated using the method of Ervans et al. (2003) {\bfseries [Ervens2003]} and references therein. Mass accomodation coefficients ( $\alpha$) are calculated as\+:
+
+\[
+   \Delta H_{obs} = -10 \times (N^*-1) + 7.53 \times (N^{*2/3}-1) - 0.1 \times 10 \quad (\mbox{kcal}\,\mbox{M}^{-1})
+ \]  \[
+   \Delta S_{obs} = -13 \times (N^*-1) - 19 \times (N^*-1) + 9.21 \times (N^{*2/3}-1) - 0.1 \times 13 \quad (\mbox{cal}\,\mbox{M}^{-1}\,\mbox{K}^{-1})
+ \]  \[
+   \frac{\alpha}{1-\alpha} = e^{\frac{-\Delta G^{*}}{RT}}
+ \] If $\Delta H$ and $\Delta S$ are not provided, $\alpha$ is set to 0.\+1 {\bfseries [Zaveri2008]}.
+
+Condensation rate constants are calculated following {\bfseries [Zaveri2008]} as\+:  \[
+    k_c = 4 \pi r D_g f_{fs}( K_n, \alpha )
+  \] where $r$ is the radius of the particle(s) \mbox{[}m\mbox{]}, $D_g$ is the diffusion coefficient of the gas-\/phase species \mbox{[} $\mbox{m}^2\,\mbox{s}^{-1}$\mbox{]}, $f_{fs}( K_n, \alpha )$ is the Fuchs Sutugin transition regime correction factor \mbox{[}unitless\mbox{]}, $K_n$ is the Knudsen Number \mbox{[}unitess\mbox{]}, and $\alpha$ is the mass accomodation coefficient.
+
+Rates can be calculated as\+:  \[
+    r_c = [G] N_a k_c
+  \] where $[G]$ is the gas-\/phase species concentration \mbox{[}ppm\mbox{]}, $N_a$ is the number concentration of particles \mbox{[} $\mbox{particle}\,\mbox{m}^{-3}$\mbox{]} and the rate $r_c$ is in \mbox{[} $\mbox{ppm}\,\mbox{s}^{-1}$\mbox{]}. The particle radius used to calculate $k_{f}$ is the effective radius \mbox{[} $r_{eff}$\mbox{]}, which is taken as the "{}least-\/wrong"{} choice for condensation rates, as it is weighted to surface area {\bfseries [Zender2002]} .
+
+Input data for Phase transfer equations have the following format \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}HL\_PHASE\_TRANSFER"{},}
+\DoxyCodeLine{\ \ "{}gas-\/phase\ species"{}\ :\ "{}my\ gas\ spec"{},}
+\DoxyCodeLine{\ \ "{}aerosol-\/phase\ species"{}\ :\ "{}my\ aero\ spec"{},}
+\DoxyCodeLine{\ \ "{}areosol\ phase"{}\ :\ "{}my\ aqueous\ phase"{},}
+\DoxyCodeLine{\ \ "{}aerosol-\/phase\ water"{}\ :\ "{}H2O\_aq"{},}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ The key-\/value pairs {\bfseries{gas-\/phase}} {\bfseries{species}}, and {\bfseries{aerosol-\/phase}} {\bfseries{species}} are required. Only one gas-\/ and one aerosol-\/phase species are allowed per phase-\/transfer reaction. Additionally, gas-\/phase species must include parameters named {\bfseries{HLC(298\+K)}} {\bfseries{}}\mbox{[}{\bfseries{M}} {\bfseries{Pa-\/1}}\mbox{]}, which is the Henry\textquotesingle{}s Law constant at 298 K, {\bfseries{HLC}} {\bfseries{exp}} {\bfseries{factor}} {\bfseries{}}\mbox{[}{\bfseries{K}}\mbox{]}, which is the Henry\textquotesingle{}s Law constant exponential factor "{}\+C"{}, {\bfseries{diffusion}} {\bfseries{coeff}} {\bfseries{}}\mbox{[}{\bfseries{m2}} {\bfseries{s-\/1}}\mbox{]}, which specifies the diffusion coefficient in $\mbox{m}^2\,\mbox{s}^{-1}$, and {\bfseries{molecular}} {\bfseries{weight}} {\bfseries{}}\mbox{[}{\bfseries{kg}} {\bfseries{mol-\/1}}\mbox{]}, which specifies the molecular weight of the species in $\mbox{kg}\,\mbox{mol}^{-1}$. They may optionally include the parameter {\bfseries{N}} {\bfseries{star}}, which will be used to calculate the mass accomodation coefficient. When this parameter is not included, the mass accomodation coefficient is assumed to be 1.\+0. 

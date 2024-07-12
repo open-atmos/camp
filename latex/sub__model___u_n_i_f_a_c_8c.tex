@@ -1,13 +1,19 @@
-\hypertarget{sub__model___u_n_i_f_a_c_8c}{}\doxysection{sub\+\_\+model\+\_\+\+UNIFAC.\+c File Reference}
-\label{sub__model___u_n_i_f_a_c_8c}\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
+\doxysection{sub\+\_\+model\+\_\+\+UNIFAC.\+c File Reference}
+\hypertarget{sub__model___u_n_i_f_a_c_8c}{}\label{sub__model___u_n_i_f_a_c_8c}\index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 
 
 UNIFAC activity coefficient calculation.  
 
 
 Include dependency graph for sub\+\_\+model\+\_\+\+UNIFAC.\+c\+:
-% FIG 0
-\doxysubsection*{Macros}
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__model___u_n_i_f_a_c_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{TEMPERATURE\+\_\+\+K\+\_\+}}~env\+\_\+data\mbox{[}0\mbox{]}
@@ -30,7 +36,7 @@ Include dependency graph for sub\+\_\+model\+\_\+\+UNIFAC.\+c\+:
 \item 
 \#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3}{NUM\+\_\+\+UNIQUE\+\_\+\+PHASE\+\_\+}} + p\mbox{]} -\/ 1)
 \item 
-\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a56362e1faed2ba94b75e5a223b60b424}{PHASE\+\_\+\+ENV\+\_\+\+LOC\+\_\+}}(p)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3}{NUM\+\_\+\+UNIQUE\+\_\+\+PHASE\+\_\+}} + p\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a56362e1faed2ba94b75e5a223b60b424}{PHASE\+\_\+\+ENV\+\_\+\+LOC\+\_\+}}(p)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3}{NUM\+\_\+\+UNIQUE\+\_\+\+PHASE\+\_\+}} + p\mbox{]} -\/ 1)
 \item 
 \#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}{NUM\+\_\+\+PHASE\+\_\+\+INSTANCE\+\_\+}}(p)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(p)\mbox{]})
 \item 
@@ -50,50 +56,50 @@ Include dependency graph for sub\+\_\+model\+\_\+\+UNIFAC.\+c\+:
 \item 
 \#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_abb8a6874bbc52c11b838e00ab5ebaa5e}{R\+\_\+\+K\+\_\+}}(k)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + k\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a11f518c4fa348d90c90a134ef758e178}{X\+\_\+\+K\+\_\+}}(m)~(float\+\_\+data\mbox{[}2 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a11f518c4fa348d90c90a134ef758e178}{X\+\_\+\+K\+\_\+}}(m)~(float\+\_\+data\mbox{[}2 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a55b754107c270c7b258232638bf7d394}{DTHETA\+\_\+\+M\+\_\+\+DC\+\_\+\+I\+\_\+}}(m)~(float\+\_\+data\mbox{[}3 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a55b754107c270c7b258232638bf7d394}{DTHETA\+\_\+\+M\+\_\+\+DC\+\_\+\+I\+\_\+}}(m)~(float\+\_\+data\mbox{[}3 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a58eb0df01fce1899886c4facd3626bd4}{XI\+\_\+\+M\+\_\+}}(m)~(float\+\_\+data\mbox{[}4 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a58eb0df01fce1899886c4facd3626bd4}{XI\+\_\+\+M\+\_\+}}(m)~(float\+\_\+data\mbox{[}4 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac8a1e8e8621a611a828d65edc020a3bd}{LN\+\_\+\+GAMMA\+\_\+\+K\+\_\+}}(m)~(float\+\_\+data\mbox{[}5 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac8a1e8e8621a611a828d65edc020a3bd}{LN\+\_\+\+GAMMA\+\_\+\+K\+\_\+}}(m)~(float\+\_\+data\mbox{[}5 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad857d77cfc3f85ade1e96ba998454aa9}{A\+\_\+\+MN\+\_\+}}(m,  n)~(float\+\_\+data\mbox{[}(m + 6) $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + n\mbox{]})
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad857d77cfc3f85ade1e96ba998454aa9}{A\+\_\+\+MN\+\_\+}}(m,  n)~(float\+\_\+data\mbox{[}(m + 6) \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + n\mbox{]})
 \item 
 \#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a38622e7bf04110a9c042849b3fb136f1}{R\+\_\+\+I\+\_\+}}(p,  i)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + i\mbox{]})
 \item 
 \#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a63ace1f59944016dd0bf93573fa74b13}{Q\+\_\+\+I\+\_\+}}(p,  i)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ae785d2a9fe11700b737572da4bc84b14}{L\+\_\+\+I\+\_\+}}(p,  i)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 2 $\ast$ \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ae785d2a9fe11700b737572da4bc84b14}{L\+\_\+\+I\+\_\+}}(p,  i)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 2 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1f5c2d7f5d00731ad2b59dafd08f8b26}{MW\+\_\+\+I\+\_\+}}(p,  i)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 3 $\ast$ \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a1f5c2d7f5d00731ad2b59dafd08f8b26}{MW\+\_\+\+I\+\_\+}}(p,  i)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 3 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a5bed7503a53ee02a5bc252ee13f96724}{X\+\_\+\+I\+\_\+}}(p,  i)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 4 $\ast$ \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a5bed7503a53ee02a5bc252ee13f96724}{X\+\_\+\+I\+\_\+}}(p,  i)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 4 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})
 \item 
 \#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a784850b02be0d6211e0118a9d3d16a9c}{THETA\+\_\+\+M\+\_\+}}(m)~(sub\+\_\+model\+\_\+env\+\_\+data\mbox{[}m\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac79faf34253439fe5e701f2ec3b03b8c}{PSI\+\_\+\+MN\+\_\+}}(m,  n)~(sub\+\_\+model\+\_\+env\+\_\+data\mbox{[}(m + 1) $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + n\mbox{]})
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac79faf34253439fe5e701f2ec3b03b8c}{PSI\+\_\+\+MN\+\_\+}}(m,  n)~(sub\+\_\+model\+\_\+env\+\_\+data\mbox{[}(m + 1) \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + n\mbox{]})
 \item 
-\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a38e65393d48cdee41eefe73e2279e55a}{LN\+\_\+\+GAMMA\+\_\+\+IK\+\_\+}}(p,  i,  k)~  (sub\+\_\+model\+\_\+env\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a56362e1faed2ba94b75e5a223b60b424}{PHASE\+\_\+\+ENV\+\_\+\+LOC\+\_\+}}(p) + i $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + k\mbox{]})
+\#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a38e65393d48cdee41eefe73e2279e55a}{LN\+\_\+\+GAMMA\+\_\+\+IK\+\_\+}}(p,  i,  k)~  (sub\+\_\+model\+\_\+env\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a56362e1faed2ba94b75e5a223b60b424}{PHASE\+\_\+\+ENV\+\_\+\+LOC\+\_\+}}(p) + i \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + k\mbox{]})
 \item 
 \#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa0dffbf9b27f4705b9462d86376d1506}{INT\+\_\+\+DATA\+\_\+\+SIZE\+\_\+}}~(\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a6dc5674d6d69ee7413767ee9076138ae}{TOTAL\+\_\+\+INT\+\_\+\+PROP\+\_\+}})
 \item 
 \#define \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a4c9e4c5f3ca6b19f4eb79ae59cc281eb}{FLOAT\+\_\+\+DATA\+\_\+\+SIZE\+\_\+}}~(\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a449afc986a9379f304456d0b93c06c52}{TOTAL\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}})
 \end{DoxyCompactItemize}
-\doxysubsection*{Functions}
+\doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a6895ac51f6122ce830f30d8b1f09d052}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
-\begin{DoxyCompactList}\small\item\em Get the \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used for a particular row of the matrix. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a2674d98846a9c4933d56156ec1f0deb5}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+ids}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, int $\ast$deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
-\begin{DoxyCompactList}\small\item\em Update stored ids for elements used within a row of the \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a43f3628a20f1bf545034554576e9c85c}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+env\+\_\+state}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, double $\ast$sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data)
+void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a6895ac51f6122ce830f30d8b1f09d052}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Get the \doxylink{struct_jacobian}{Jacobian} elements used for a particular row of the matrix. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a2674d98846a9c4933d56156ec1f0deb5}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+ids}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
+\begin{DoxyCompactList}\small\item\em Update stored ids for elements used within a row of the \doxylink{struct_jacobian}{Jacobian} matrix. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a43f3628a20f1bf545034554576e9c85c}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+env\+\_\+state}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update sub-\/model data for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a91d55564c556bf61d6bf0ccac7b43e4b}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+calculate}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, double $\ast$sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data)
+void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a91d55564c556bf61d6bf0ccac7b43e4b}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+calculate}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Perform the sub-\/model calculations for the current model state. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0301d06b09af90fcfe49f9a1ba7c6742}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+jac\+\_\+contrib}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, double $\ast$sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, realtype $\ast$J, double time\+\_\+step)
-\begin{DoxyCompactList}\small\item\em Add contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from derivates calculated using the output of this sub model. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac47310b67585f52b71ff6aac1c603ba5}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+print}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data)
+void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0301d06b09af90fcfe49f9a1ba7c6742}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+jac\+\_\+contrib}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, realtype \texorpdfstring{$\ast$}{*}J, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Add contributions to the \doxylink{struct_jacobian}{Jacobian} from derivates calculated using the output of this sub model. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac47310b67585f52b71ff6aac1c603ba5}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+print}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the sub model data. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -109,27 +115,27 @@ Definition in file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\
 
 
 \doxysubsection{Macro Definition Documentation}
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ad857d77cfc3f85ade1e96ba998454aa9}\label{sub__model___u_n_i_f_a_c_8c_ad857d77cfc3f85ade1e96ba998454aa9}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_ad857d77cfc3f85ade1e96ba998454aa9}\label{sub__model___u_n_i_f_a_c_8c_ad857d77cfc3f85ade1e96ba998454aa9} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!A\_MN\_@{A\_MN\_}}
 \index{A\_MN\_@{A\_MN\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{A\_MN\_}{A\_MN\_}}
-{\footnotesize\ttfamily \#define A\+\_\+\+MN\+\_\+(\begin{DoxyParamCaption}\item[{}]{m,  }\item[{}]{n }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}(m + 6) $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + n\mbox{]})}
+{\footnotesize\ttfamily \#define A\+\_\+\+MN\+\_\+(\begin{DoxyParamCaption}\item[{}]{m,  }\item[{}]{n }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}(m + 6) \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + n\mbox{]})}
 
 
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00058}{58}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a55b754107c270c7b258232638bf7d394}\label{sub__model___u_n_i_f_a_c_8c_a55b754107c270c7b258232638bf7d394}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a55b754107c270c7b258232638bf7d394}\label{sub__model___u_n_i_f_a_c_8c_a55b754107c270c7b258232638bf7d394} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!DTHETA\_M\_DC\_I\_@{DTHETA\_M\_DC\_I\_}}
 \index{DTHETA\_M\_DC\_I\_@{DTHETA\_M\_DC\_I\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{DTHETA\_M\_DC\_I\_}{DTHETA\_M\_DC\_I\_}}
-{\footnotesize\ttfamily \#define DTHETA\+\_\+\+M\+\_\+\+DC\+\_\+\+I\+\_\+(\begin{DoxyParamCaption}\item[{}]{m }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}3 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})}
+{\footnotesize\ttfamily \#define DTHETA\+\_\+\+M\+\_\+\+DC\+\_\+\+I\+\_\+(\begin{DoxyParamCaption}\item[{}]{m }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}3 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})}
 
 
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00055}{55}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a4c9e4c5f3ca6b19f4eb79ae59cc281eb}\label{sub__model___u_n_i_f_a_c_8c_a4c9e4c5f3ca6b19f4eb79ae59cc281eb}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a4c9e4c5f3ca6b19f4eb79ae59cc281eb}\label{sub__model___u_n_i_f_a_c_8c_a4c9e4c5f3ca6b19f4eb79ae59cc281eb} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!FLOAT\_DATA\_SIZE\_@{FLOAT\_DATA\_SIZE\_}}
 \index{FLOAT\_DATA\_SIZE\_@{FLOAT\_DATA\_SIZE\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{FLOAT\_DATA\_SIZE\_}{FLOAT\_DATA\_SIZE\_}}
@@ -139,7 +145,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00055}{5
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00071}{71}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_aa4a9078d99a1dbfa58de04936d652bce}\label{sub__model___u_n_i_f_a_c_8c_aa4a9078d99a1dbfa58de04936d652bce}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_aa4a9078d99a1dbfa58de04936d652bce}\label{sub__model___u_n_i_f_a_c_8c_aa4a9078d99a1dbfa58de04936d652bce} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!GAMMA\_ID\_@{GAMMA\_ID\_}}
 \index{GAMMA\_ID\_@{GAMMA\_ID\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{GAMMA\_ID\_}{GAMMA\_ID\_}}
@@ -149,7 +155,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00071}{7
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00042}{42}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_aa0dffbf9b27f4705b9462d86376d1506}\label{sub__model___u_n_i_f_a_c_8c_aa0dffbf9b27f4705b9462d86376d1506}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_aa0dffbf9b27f4705b9462d86376d1506}\label{sub__model___u_n_i_f_a_c_8c_aa0dffbf9b27f4705b9462d86376d1506} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!INT\_DATA\_SIZE\_@{INT\_DATA\_SIZE\_}}
 \index{INT\_DATA\_SIZE\_@{INT\_DATA\_SIZE\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{INT\_DATA\_SIZE\_}{INT\_DATA\_SIZE\_}}
@@ -159,7 +165,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00042}{4
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00070}{70}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ad30fc663399a0c977685d511359e6f7a}\label{sub__model___u_n_i_f_a_c_8c_ad30fc663399a0c977685d511359e6f7a}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_ad30fc663399a0c977685d511359e6f7a}\label{sub__model___u_n_i_f_a_c_8c_ad30fc663399a0c977685d511359e6f7a} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!JAC\_ID\_@{JAC\_ID\_}}
 \index{JAC\_ID\_@{JAC\_ID\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
@@ -167,55 +173,55 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00070}{7
 
 {\bfseries Value\+:}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{  int\_data[\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\_INT\_LOC\_}}(p) + 2 + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}{NUM\_PHASE\_INSTANCE\_}}(p) + \(\backslash\)}
-\DoxyCodeLine{           (2 + c * \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\_SPEC\_}}(p) + j) * \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\_SPEC\_}}(p) + i]}
+\DoxyCodeLine{\ \ int\_data[\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\_INT\_LOC\_}}(p)\ +\ 2\ +\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}{NUM\_PHASE\_INSTANCE\_}}(p)\ +\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ (2\ +\ c\ *\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\_SPEC\_}}(p)\ +\ j)\ *\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\_SPEC\_}}(p)\ +\ i]}
 
 \end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00044}{44}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ae785d2a9fe11700b737572da4bc84b14}\label{sub__model___u_n_i_f_a_c_8c_ae785d2a9fe11700b737572da4bc84b14}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_ae785d2a9fe11700b737572da4bc84b14}\label{sub__model___u_n_i_f_a_c_8c_ae785d2a9fe11700b737572da4bc84b14} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!L\_I\_@{L\_I\_}}
 \index{L\_I\_@{L\_I\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{L\_I\_}{L\_I\_}}
-{\footnotesize\ttfamily \#define L\+\_\+\+I\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{i }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 2 $\ast$ \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})}
+{\footnotesize\ttfamily \#define L\+\_\+\+I\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{i }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 2 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})}
 
 
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00061}{61}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a38e65393d48cdee41eefe73e2279e55a}\label{sub__model___u_n_i_f_a_c_8c_a38e65393d48cdee41eefe73e2279e55a}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a38e65393d48cdee41eefe73e2279e55a}\label{sub__model___u_n_i_f_a_c_8c_a38e65393d48cdee41eefe73e2279e55a} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!LN\_GAMMA\_IK\_@{LN\_GAMMA\_IK\_}}
 \index{LN\_GAMMA\_IK\_@{LN\_GAMMA\_IK\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{LN\_GAMMA\_IK\_}{LN\_GAMMA\_IK\_}}
-{\footnotesize\ttfamily \#define LN\+\_\+\+GAMMA\+\_\+\+IK\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{i,  }\item[{}]{k }\end{DoxyParamCaption})~  (sub\+\_\+model\+\_\+env\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a56362e1faed2ba94b75e5a223b60b424}{PHASE\+\_\+\+ENV\+\_\+\+LOC\+\_\+}}(p) + i $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + k\mbox{]})}
+{\footnotesize\ttfamily \#define LN\+\_\+\+GAMMA\+\_\+\+IK\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{i,  }\item[{}]{k }\end{DoxyParamCaption})~  (sub\+\_\+model\+\_\+env\+\_\+data\mbox{[}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a56362e1faed2ba94b75e5a223b60b424}{PHASE\+\_\+\+ENV\+\_\+\+LOC\+\_\+}}(p) + i \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + k\mbox{]})}
 
 
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00067}{67}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ac8a1e8e8621a611a828d65edc020a3bd}\label{sub__model___u_n_i_f_a_c_8c_ac8a1e8e8621a611a828d65edc020a3bd}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_ac8a1e8e8621a611a828d65edc020a3bd}\label{sub__model___u_n_i_f_a_c_8c_ac8a1e8e8621a611a828d65edc020a3bd} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!LN\_GAMMA\_K\_@{LN\_GAMMA\_K\_}}
 \index{LN\_GAMMA\_K\_@{LN\_GAMMA\_K\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{LN\_GAMMA\_K\_}{LN\_GAMMA\_K\_}}
-{\footnotesize\ttfamily \#define LN\+\_\+\+GAMMA\+\_\+\+K\+\_\+(\begin{DoxyParamCaption}\item[{}]{m }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}5 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})}
+{\footnotesize\ttfamily \#define LN\+\_\+\+GAMMA\+\_\+\+K\+\_\+(\begin{DoxyParamCaption}\item[{}]{m }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}5 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})}
 
 
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00057}{57}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a1f5c2d7f5d00731ad2b59dafd08f8b26}\label{sub__model___u_n_i_f_a_c_8c_a1f5c2d7f5d00731ad2b59dafd08f8b26}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a1f5c2d7f5d00731ad2b59dafd08f8b26}\label{sub__model___u_n_i_f_a_c_8c_a1f5c2d7f5d00731ad2b59dafd08f8b26} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!MW\_I\_@{MW\_I\_}}
 \index{MW\_I\_@{MW\_I\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{MW\_I\_}{MW\_I\_}}
-{\footnotesize\ttfamily \#define MW\+\_\+\+I\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{i }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 3 $\ast$ \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})}
+{\footnotesize\ttfamily \#define MW\+\_\+\+I\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{i }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 3 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})}
 
 
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00062}{62}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{sub__model___u_n_i_f_a_c_8c_a0e9ae6000e4ed18f5938bddaddb13d1b} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
 \index{NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_FLOAT\_PROP\_}{NUM\_FLOAT\_PROP\_}}
@@ -225,7 +231,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00062}{6
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00031}{31}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}\label{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}\label{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!NUM\_GROUP\_@{NUM\_GROUP\_}}
 \index{NUM\_GROUP\_@{NUM\_GROUP\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_GROUP\_}{NUM\_GROUP\_}}
@@ -235,7 +241,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00031}{3
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00027}{27}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{sub__model___u_n_i_f_a_c_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{sub__model___u_n_i_f_a_c_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
 \index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
@@ -245,7 +251,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00027}{2
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00030}{30}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}\label{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}\label{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!NUM\_PHASE\_INSTANCE\_@{NUM\_PHASE\_INSTANCE\_}}
 \index{NUM\_PHASE\_INSTANCE\_@{NUM\_PHASE\_INSTANCE\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_PHASE\_INSTANCE\_}{NUM\_PHASE\_INSTANCE\_}}
@@ -255,7 +261,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00030}{3
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00037}{37}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}\label{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}\label{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!NUM\_SPEC\_@{NUM\_SPEC\_}}
 \index{NUM\_SPEC\_@{NUM\_SPEC\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_SPEC\_}{NUM\_SPEC\_}}
@@ -265,7 +271,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00037}{3
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00038}{38}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3}\label{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3}\label{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!NUM\_UNIQUE\_PHASE\_@{NUM\_UNIQUE\_PHASE\_}}
 \index{NUM\_UNIQUE\_PHASE\_@{NUM\_UNIQUE\_PHASE\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_UNIQUE\_PHASE\_}{NUM\_UNIQUE\_PHASE\_}}
@@ -275,17 +281,17 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00038}{3
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00026}{26}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a56362e1faed2ba94b75e5a223b60b424}\label{sub__model___u_n_i_f_a_c_8c_a56362e1faed2ba94b75e5a223b60b424}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a56362e1faed2ba94b75e5a223b60b424}\label{sub__model___u_n_i_f_a_c_8c_a56362e1faed2ba94b75e5a223b60b424} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!PHASE\_ENV\_LOC\_@{PHASE\_ENV\_LOC\_}}
 \index{PHASE\_ENV\_LOC\_@{PHASE\_ENV\_LOC\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_ENV\_LOC\_}{PHASE\_ENV\_LOC\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+ENV\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{p }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3}{NUM\+\_\+\+UNIQUE\+\_\+\+PHASE\+\_\+}} + p\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PHASE\+\_\+\+ENV\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{p }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3}{NUM\+\_\+\+UNIQUE\+\_\+\+PHASE\+\_\+}} + p\mbox{]} -\/ 1)}
 
 
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00035}{35}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}\label{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0}\label{sub__model___u_n_i_f_a_c_8c_a1ad2cc048e99792784cf0798275e6ff0} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!PHASE\_FLOAT\_LOC\_@{PHASE\_FLOAT\_LOC\_}}
 \index{PHASE\_FLOAT\_LOC\_@{PHASE\_FLOAT\_LOC\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_FLOAT\_LOC\_}{PHASE\_FLOAT\_LOC\_}}
@@ -295,7 +301,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00035}{3
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00033}{33}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a5d0bb63217866cb57183969e2d75b54d}\label{sub__model___u_n_i_f_a_c_8c_a5d0bb63217866cb57183969e2d75b54d}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a5d0bb63217866cb57183969e2d75b54d}\label{sub__model___u_n_i_f_a_c_8c_a5d0bb63217866cb57183969e2d75b54d} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!PHASE\_INST\_ID\_@{PHASE\_INST\_ID\_}}
 \index{PHASE\_INST\_ID\_@{PHASE\_INST\_ID\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_INST\_ID\_}{PHASE\_INST\_ID\_}}
@@ -305,7 +311,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00033}{3
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00039}{39}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}\label{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}\label{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!PHASE\_INT\_LOC\_@{PHASE\_INT\_LOC\_}}
 \index{PHASE\_INT\_LOC\_@{PHASE\_INT\_LOC\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_INT\_LOC\_}{PHASE\_INT\_LOC\_}}
@@ -315,7 +321,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00039}{3
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00032}{32}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{sub__model___u_n_i_f_a_c_8c_a32cc078fd8ca9ad0684c48ae0aad7135}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{sub__model___u_n_i_f_a_c_8c_a32cc078fd8ca9ad0684c48ae0aad7135} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!PRESSURE\_PA\_@{PRESSURE\_PA\_}}
 \index{PRESSURE\_PA\_@{PRESSURE\_PA\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{PRESSURE\_PA\_}{PRESSURE\_PA\_}}
@@ -325,17 +331,17 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00032}{3
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00024}{24}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ac79faf34253439fe5e701f2ec3b03b8c}\label{sub__model___u_n_i_f_a_c_8c_ac79faf34253439fe5e701f2ec3b03b8c}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_ac79faf34253439fe5e701f2ec3b03b8c}\label{sub__model___u_n_i_f_a_c_8c_ac79faf34253439fe5e701f2ec3b03b8c} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!PSI\_MN\_@{PSI\_MN\_}}
 \index{PSI\_MN\_@{PSI\_MN\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{PSI\_MN\_}{PSI\_MN\_}}
-{\footnotesize\ttfamily \#define PSI\+\_\+\+MN\+\_\+(\begin{DoxyParamCaption}\item[{}]{m,  }\item[{}]{n }\end{DoxyParamCaption})~(sub\+\_\+model\+\_\+env\+\_\+data\mbox{[}(m + 1) $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + n\mbox{]})}
+{\footnotesize\ttfamily \#define PSI\+\_\+\+MN\+\_\+(\begin{DoxyParamCaption}\item[{}]{m,  }\item[{}]{n }\end{DoxyParamCaption})~(sub\+\_\+model\+\_\+env\+\_\+data\mbox{[}(m + 1) \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + n\mbox{]})}
 
 
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00066}{66}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a63ace1f59944016dd0bf93573fa74b13}\label{sub__model___u_n_i_f_a_c_8c_a63ace1f59944016dd0bf93573fa74b13}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a63ace1f59944016dd0bf93573fa74b13}\label{sub__model___u_n_i_f_a_c_8c_a63ace1f59944016dd0bf93573fa74b13} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!Q\_I\_@{Q\_I\_}}
 \index{Q\_I\_@{Q\_I\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{Q\_I\_}{Q\_I\_}}
@@ -345,7 +351,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00066}{6
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00060}{60}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ab84695ff3bb6d0fc0423220bf68fcbc8}\label{sub__model___u_n_i_f_a_c_8c_ab84695ff3bb6d0fc0423220bf68fcbc8}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_ab84695ff3bb6d0fc0423220bf68fcbc8}\label{sub__model___u_n_i_f_a_c_8c_ab84695ff3bb6d0fc0423220bf68fcbc8} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!Q\_K\_@{Q\_K\_}}
 \index{Q\_K\_@{Q\_K\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{Q\_K\_}{Q\_K\_}}
@@ -355,7 +361,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00060}{6
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00052}{52}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a38622e7bf04110a9c042849b3fb136f1}\label{sub__model___u_n_i_f_a_c_8c_a38622e7bf04110a9c042849b3fb136f1}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a38622e7bf04110a9c042849b3fb136f1}\label{sub__model___u_n_i_f_a_c_8c_a38622e7bf04110a9c042849b3fb136f1} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!R\_I\_@{R\_I\_}}
 \index{R\_I\_@{R\_I\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{R\_I\_}{R\_I\_}}
@@ -365,7 +371,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00052}{5
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00059}{59}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_abb8a6874bbc52c11b838e00ab5ebaa5e}\label{sub__model___u_n_i_f_a_c_8c_abb8a6874bbc52c11b838e00ab5ebaa5e}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_abb8a6874bbc52c11b838e00ab5ebaa5e}\label{sub__model___u_n_i_f_a_c_8c_abb8a6874bbc52c11b838e00ab5ebaa5e} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!R\_K\_@{R\_K\_}}
 \index{R\_K\_@{R\_K\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{R\_K\_}{R\_K\_}}
@@ -375,7 +381,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00059}{5
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00053}{53}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a3299a6a03f2fe000f07ddd544fd0ae5a}\label{sub__model___u_n_i_f_a_c_8c_a3299a6a03f2fe000f07ddd544fd0ae5a}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a3299a6a03f2fe000f07ddd544fd0ae5a}\label{sub__model___u_n_i_f_a_c_8c_a3299a6a03f2fe000f07ddd544fd0ae5a} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!SPEC\_ID\_@{SPEC\_ID\_}}
 \index{SPEC\_ID\_@{SPEC\_ID\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{SPEC\_ID\_}{SPEC\_ID\_}}
@@ -385,7 +391,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00053}{5
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00040}{40}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{sub__model___u_n_i_f_a_c_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{sub__model___u_n_i_f_a_c_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!TEMPERATURE\_K\_@{TEMPERATURE\_K\_}}
 \index{TEMPERATURE\_K\_@{TEMPERATURE\_K\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{TEMPERATURE\_K\_}{TEMPERATURE\_K\_}}
@@ -395,7 +401,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00040}{4
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00023}{23}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a784850b02be0d6211e0118a9d3d16a9c}\label{sub__model___u_n_i_f_a_c_8c_a784850b02be0d6211e0118a9d3d16a9c}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a784850b02be0d6211e0118a9d3d16a9c}\label{sub__model___u_n_i_f_a_c_8c_a784850b02be0d6211e0118a9d3d16a9c} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!THETA\_M\_@{THETA\_M\_}}
 \index{THETA\_M\_@{THETA\_M\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{THETA\_M\_}{THETA\_M\_}}
@@ -405,7 +411,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00023}{2
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00065}{65}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a449afc986a9379f304456d0b93c06c52}\label{sub__model___u_n_i_f_a_c_8c_a449afc986a9379f304456d0b93c06c52}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a449afc986a9379f304456d0b93c06c52}\label{sub__model___u_n_i_f_a_c_8c_a449afc986a9379f304456d0b93c06c52} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!TOTAL\_FLOAT\_PROP\_@{TOTAL\_FLOAT\_PROP\_}}
 \index{TOTAL\_FLOAT\_PROP\_@{TOTAL\_FLOAT\_PROP\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{TOTAL\_FLOAT\_PROP\_}{TOTAL\_FLOAT\_PROP\_}}
@@ -415,7 +421,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00065}{6
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00029}{29}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a6dc5674d6d69ee7413767ee9076138ae}\label{sub__model___u_n_i_f_a_c_8c_a6dc5674d6d69ee7413767ee9076138ae}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a6dc5674d6d69ee7413767ee9076138ae}\label{sub__model___u_n_i_f_a_c_8c_a6dc5674d6d69ee7413767ee9076138ae} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!TOTAL\_INT\_PROP\_@{TOTAL\_INT\_PROP\_}}
 \index{TOTAL\_INT\_PROP\_@{TOTAL\_INT\_PROP\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{TOTAL\_INT\_PROP\_}{TOTAL\_INT\_PROP\_}}
@@ -425,7 +431,7 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00029}{2
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00028}{28}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_adfb11739bde704494a85f005ed76cc70}\label{sub__model___u_n_i_f_a_c_8c_adfb11739bde704494a85f005ed76cc70}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_adfb11739bde704494a85f005ed76cc70}\label{sub__model___u_n_i_f_a_c_8c_adfb11739bde704494a85f005ed76cc70} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!V\_IK\_@{V\_IK\_}}
 \index{V\_IK\_@{V\_IK\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{V\_IK\_}{V\_IK\_}}
@@ -433,40 +439,40 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00028}{2
 
 {\bfseries Value\+:}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{  (int\_data[\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\_INT\_LOC\_}}(p) + 2 + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}{NUM\_PHASE\_INSTANCE\_}}(p) +                 \(\backslash\)}
-\DoxyCodeLine{            (k + 2 + \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}{NUM\_PHASE\_INSTANCE\_}}(p) * \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\_SPEC\_}}(p)) * \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\_SPEC\_}}(p) + \(\backslash\)}
-\DoxyCodeLine{            i])}
+\DoxyCodeLine{\ \ (int\_data[\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac0b5b9446b202d1ce286ecefe0108869}{PHASE\_INT\_LOC\_}}(p)\ +\ 2\ +\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}{NUM\_PHASE\_INSTANCE\_}}(p)\ +\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ (k\ +\ 2\ +\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a96afb96b89157441704719c55a19fd76}{NUM\_PHASE\_INSTANCE\_}}(p)\ *\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\_SPEC\_}}(p))\ *\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a9a5c42fc20a0cc885faf74920b1f8281}{NUM\_SPEC\_}}(p)\ +\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ i])}
 
 \end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00047}{47}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a5bed7503a53ee02a5bc252ee13f96724}\label{sub__model___u_n_i_f_a_c_8c_a5bed7503a53ee02a5bc252ee13f96724}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a5bed7503a53ee02a5bc252ee13f96724}\label{sub__model___u_n_i_f_a_c_8c_a5bed7503a53ee02a5bc252ee13f96724} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!X\_I\_@{X\_I\_}}
 \index{X\_I\_@{X\_I\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{X\_I\_}{X\_I\_}}
-{\footnotesize\ttfamily \#define X\+\_\+\+I\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{i }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 4 $\ast$ \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})}
+{\footnotesize\ttfamily \#define X\+\_\+\+I\+\_\+(\begin{DoxyParamCaption}\item[{}]{p,  }\item[{}]{i }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\+\_\+\+FLOAT\+\_\+\+LOC\+\_\+}}(p) + 4 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\+\_\+\+SPEC\+\_\+}}(p) + i\mbox{]})}
 
 
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00063}{63}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a11f518c4fa348d90c90a134ef758e178}\label{sub__model___u_n_i_f_a_c_8c_a11f518c4fa348d90c90a134ef758e178}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a11f518c4fa348d90c90a134ef758e178}\label{sub__model___u_n_i_f_a_c_8c_a11f518c4fa348d90c90a134ef758e178} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!X\_K\_@{X\_K\_}}
 \index{X\_K\_@{X\_K\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{X\_K\_}{X\_K\_}}
-{\footnotesize\ttfamily \#define X\+\_\+\+K\+\_\+(\begin{DoxyParamCaption}\item[{}]{m }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}2 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})}
+{\footnotesize\ttfamily \#define X\+\_\+\+K\+\_\+(\begin{DoxyParamCaption}\item[{}]{m }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}2 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})}
 
 
 
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00054}{54}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a58eb0df01fce1899886c4facd3626bd4}\label{sub__model___u_n_i_f_a_c_8c_a58eb0df01fce1899886c4facd3626bd4}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a58eb0df01fce1899886c4facd3626bd4}\label{sub__model___u_n_i_f_a_c_8c_a58eb0df01fce1899886c4facd3626bd4} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!XI\_M\_@{XI\_M\_}}
 \index{XI\_M\_@{XI\_M\_}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{XI\_M\_}{XI\_M\_}}
-{\footnotesize\ttfamily \#define XI\+\_\+\+M\+\_\+(\begin{DoxyParamCaption}\item[{}]{m }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}4 $\ast$ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})}
+{\footnotesize\ttfamily \#define XI\+\_\+\+M\+\_\+(\begin{DoxyParamCaption}\item[{}]{m }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}4 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\+\_\+\+GROUP\+\_\+}} + m\mbox{]})}
 
 
 
@@ -475,17 +481,17 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00056}{5
 
 
 \doxysubsection{Function Documentation}
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a91d55564c556bf61d6bf0ccac7b43e4b}\label{sub__model___u_n_i_f_a_c_8c_a91d55564c556bf61d6bf0ccac7b43e4b}} 
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a91d55564c556bf61d6bf0ccac7b43e4b}\label{sub__model___u_n_i_f_a_c_8c_a91d55564c556bf61d6bf0ccac7b43e4b} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!sub\_model\_UNIFAC\_calculate@{sub\_model\_UNIFAC\_calculate}}
 \index{sub\_model\_UNIFAC\_calculate@{sub\_model\_UNIFAC\_calculate}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_calculate()}{sub\_model\_UNIFAC\_calculate()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+calculate (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+calculate (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data }\end{DoxyParamCaption})}
 
 
 
 Perform the sub-\/model calculations for the current model state. 
 
-These calculations are based on equations (1)--(9) in {\bfseries [Marcolli2005]}. Variable names used in the derivation of the \mbox{\hyperlink{struct_jacobian}{Jacobian}} equations are adopted here for consistency. Specifically, these are\+:  \[
+These calculations are based on equations (1)--(9) in {\bfseries [Marcolli2005]}. Variable names used in the derivation of the \doxylink{struct_jacobian}{Jacobian} equations are adopted here for consistency. Specifically, these are\+:  \[
   \begin{align*}
    \sigma & \equiv \displaystyle\sum_k r_k x_k, \\
    \tau & \equiv \displaystyle\sum_k q_k x_k, \\
@@ -494,7 +500,7 @@ These calculations are based on equations (1)--(9) in {\bfseries [Marcolli2005]}
                   \displaystyle\sum_i v_j^{(i)} x_i}, \textrm{ and} \\
    \Pi & \equiv \displaystyle\sum_n Q_n X_n. \\
   \end{align*}
-\] Using these variables and subscript $j$ for the species whose activity is being calculated for easy comparison with the \mbox{\hyperlink{struct_jacobian}{Jacobian}} calculations, equations (1)--(9) in {\bfseries [Marcolli2005]} become\+:  \[
+\] Using these variables and subscript $j$ for the species whose activity is being calculated for easy comparison with the \doxylink{struct_jacobian}{Jacobian} calculations, equations (1)--(9) in {\bfseries [Marcolli2005]} become\+:  \[
   \begin{align*}
    \ln{\gamma_j} & = \ln{\gamma_j^C} + \ln{\gamma_j^R} & (1) \\
    \alpha_w & = \gamma_w x_w & (2) \\
@@ -533,16 +539,22 @@ These calculations are based on equations (1)--(9) in {\bfseries [Marcolli2005]}
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00226}{226}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 1
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a0301d06b09af90fcfe49f9a1ba7c6742}\label{sub__model___u_n_i_f_a_c_8c_a0301d06b09af90fcfe49f9a1ba7c6742}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__model___u_n_i_f_a_c_8c_a91d55564c556bf61d6bf0ccac7b43e4b_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a0301d06b09af90fcfe49f9a1ba7c6742}\label{sub__model___u_n_i_f_a_c_8c_a0301d06b09af90fcfe49f9a1ba7c6742} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!sub\_model\_UNIFAC\_get\_jac\_contrib@{sub\_model\_UNIFAC\_get\_jac\_contrib}}
 \index{sub\_model\_UNIFAC\_get\_jac\_contrib@{sub\_model\_UNIFAC\_get\_jac\_contrib}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_get\_jac\_contrib()}{sub\_model\_UNIFAC\_get\_jac\_contrib()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{realtype $\ast$}]{J,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{realtype \texorpdfstring{$\ast$}{*}}]{J,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
 
 
 
-Add contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from derivates calculated using the output of this sub model. 
+Add contributions to the \doxylink{struct_jacobian}{Jacobian} from derivates calculated using the output of this sub model. 
 
 This derivation starts from equations (1)--(9) in {\bfseries [Marcolli2005]}. The mole fraction of species $i$ is calculated as\+:  \[
    x_i = \frac{m_i}{m_T},
@@ -719,7 +731,7 @@ This derivation starts from equations (1)--(9) in {\bfseries [Marcolli2005]}. Th
 \hline
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em J} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} to be calculated \\
+{\em J} & \doxylink{struct_jacobian}{Jacobian} to be calculated \\
 \hline
 {\em time\+\_\+step} & Current time step \mbox{[}s\mbox{]} \\
 \hline
@@ -729,16 +741,22 @@ This derivation starts from equations (1)--(9) in {\bfseries [Marcolli2005]}. Th
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00575}{575}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 2
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a6895ac51f6122ce830f30d8b1f09d052}\label{sub__model___u_n_i_f_a_c_8c_a6895ac51f6122ce830f30d8b1f09d052}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__model___u_n_i_f_a_c_8c_a0301d06b09af90fcfe49f9a1ba7c6742_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a6895ac51f6122ce830f30d8b1f09d052}\label{sub__model___u_n_i_f_a_c_8c_a6895ac51f6122ce830f30d8b1f09d052} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!sub\_model\_UNIFAC\_get\_used\_jac\_elem@{sub\_model\_UNIFAC\_get\_used\_jac\_elem}}
 \index{sub\_model\_UNIFAC\_get\_used\_jac\_elem@{sub\_model\_UNIFAC\_get\_used\_jac\_elem}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_get\_used\_jac\_elem()}{sub\_model\_UNIFAC\_get\_used\_jac\_elem()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac }\end{DoxyParamCaption})}
 
 
 
-Get the \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used for a particular row of the matrix. 
+Get the \doxylink{struct_jacobian}{Jacobian} elements used for a particular row of the matrix. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -746,7 +764,7 @@ Get the \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used for a particu
 \hline
 {\em sub\+\_\+model\+\_\+float\+\_\+data} & Pointer to the sub model floating-\/point data \\
 \hline
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
 \hline
 \end{DoxyParams}
 
@@ -754,14 +772,26 @@ Get the \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used for a particu
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00082}{82}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 3
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__model___u_n_i_f_a_c_8c_a6895ac51f6122ce830f30d8b1f09d052_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 4
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_ac47310b67585f52b71ff6aac1c603ba5}\label{sub__model___u_n_i_f_a_c_8c_ac47310b67585f52b71ff6aac1c603ba5}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__model___u_n_i_f_a_c_8c_a6895ac51f6122ce830f30d8b1f09d052_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_ac47310b67585f52b71ff6aac1c603ba5}\label{sub__model___u_n_i_f_a_c_8c_ac47310b67585f52b71ff6aac1c603ba5} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!sub\_model\_UNIFAC\_print@{sub\_model\_UNIFAC\_print}}
 \index{sub\_model\_UNIFAC\_print@{sub\_model\_UNIFAC\_print}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_print()}{sub\_model\_UNIFAC\_print()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+print (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -779,12 +809,18 @@ Print the sub model data.
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00771}{771}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 5
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a43f3628a20f1bf545034554576e9c85c}\label{sub__model___u_n_i_f_a_c_8c_a43f3628a20f1bf545034554576e9c85c}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__model___u_n_i_f_a_c_8c_ac47310b67585f52b71ff6aac1c603ba5_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a43f3628a20f1bf545034554576e9c85c}\label{sub__model___u_n_i_f_a_c_8c_a43f3628a20f1bf545034554576e9c85c} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!sub\_model\_UNIFAC\_update\_env\_state@{sub\_model\_UNIFAC\_update\_env\_state}}
 \index{sub\_model\_UNIFAC\_update\_env\_state@{sub\_model\_UNIFAC\_update\_env\_state}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_update\_env\_state()}{sub\_model\_UNIFAC\_update\_env\_state()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -806,16 +842,22 @@ Update sub-\/model data for new environmental conditions.
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00129}{129}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 6
-\mbox{\Hypertarget{sub__model___u_n_i_f_a_c_8c_a2674d98846a9c4933d56156ec1f0deb5}\label{sub__model___u_n_i_f_a_c_8c_a2674d98846a9c4933d56156ec1f0deb5}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__model___u_n_i_f_a_c_8c_a43f3628a20f1bf545034554576e9c85c_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__model___u_n_i_f_a_c_8c_a2674d98846a9c4933d56156ec1f0deb5}\label{sub__model___u_n_i_f_a_c_8c_a2674d98846a9c4933d56156ec1f0deb5} 
 \index{sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}!sub\_model\_UNIFAC\_update\_ids@{sub\_model\_UNIFAC\_update\_ids}}
 \index{sub\_model\_UNIFAC\_update\_ids@{sub\_model\_UNIFAC\_update\_ids}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_update\_ids()}{sub\_model\_UNIFAC\_update\_ids()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{int $\ast$}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac }\end{DoxyParamCaption})}
 
 
 
-Update stored ids for elements used within a row of the \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix. 
+Update stored ids for elements used within a row of the \doxylink{struct_jacobian}{Jacobian} matrix. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -825,7 +867,7 @@ Update stored ids for elements used within a row of the \mbox{\hyperlink{struct_
 \hline
 {\em deriv\+\_\+ids} & Indices for state array variables on the solver state array \\
 \hline
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
 \hline
 \end{DoxyParams}
 
@@ -833,6 +875,18 @@ Update stored ids for elements used within a row of the \mbox{\hyperlink{struct_
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00106}{106}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 7
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__model___u_n_i_f_a_c_8c_a2674d98846a9c4933d56156ec1f0deb5_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 8
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__model___u_n_i_f_a_c_8c_a2674d98846a9c4933d56156ec1f0deb5_icgraph}
+\end{center}
+\end{figure}

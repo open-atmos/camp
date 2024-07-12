@@ -1,38 +1,38 @@
-\hypertarget{namespacecamp__env__state}{}\doxysection{camp\+\_\+env\+\_\+state Module Reference}
-\label{namespacecamp__env__state}\index{camp\_env\_state@{camp\_env\_state}}
+\doxysection{camp\+\_\+env\+\_\+state Module Reference}
+\hypertarget{namespacecamp__env__state}{}\label{namespacecamp__env__state}\index{camp\_env\_state@{camp\_env\_state}}
 
 
-The \mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\+\_\+state\+\_\+t}} structure and associated subroutines.  
+The \doxylink{structcamp__env__state_1_1env__state__t}{env\+\_\+state\+\_\+t} structure and associated subroutines.  
 
 
-\doxysubsection*{Data Types}
+\doxysubsubsection*{Data Types}
 \begin{DoxyCompactItemize}
 \item 
 type \mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{env\+\_\+state\+\_\+ptr}}
-\begin{DoxyCompactList}\small\item\em Pointer for \mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\+\_\+state\+\_\+t}}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Pointer for \doxylink{structcamp__env__state_1_1env__state__t}{env\+\_\+state\+\_\+t}. \end{DoxyCompactList}\item 
 type \mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\+\_\+state\+\_\+t}}
 \begin{DoxyCompactList}\small\item\em Current environment state. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Functions/\+Subroutines}
+\doxysubsubsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
 \item 
 subroutine \mbox{\hyperlink{namespacecamp__env__state_ac51ba858506da25f49bbd32320bbeb75}{env\+\_\+state\+\_\+add}} (env\+\_\+state, env\+\_\+state\+\_\+delta)
 \begin{DoxyCompactList}\small\item\em env\+\_\+state += env\+\_\+state\+\_\+delta \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__env__state_a85f6d9d704e9949d321b51d97965d276}{env\+\_\+state\+\_\+scale}} (env\+\_\+state, alpha)
-\begin{DoxyCompactList}\small\item\em env\+\_\+state $\ast$= alpha \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em env\+\_\+state \texorpdfstring{$\ast$}{*}= alpha \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__env__state_aed371f10382a89dce6a108a550cc94e7}{env\+\_\+state\+\_\+change\+\_\+water\+\_\+volume}} (env\+\_\+state, dv)
 \begin{DoxyCompactList}\small\item\em Adds the given water volume to the water vapor and updates all environment quantities. \end{DoxyCompactList}\item 
 real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457}{env\+\_\+state\+\_\+sat\+\_\+vapor\+\_\+pressure}} (env\+\_\+state)
 \begin{DoxyCompactList}\small\item\em Computes the current saturation vapor pressure (Pa). \end{DoxyCompactList}\item 
 real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__env__state_af8f56c1aae7d482b1a9a62b342edd85d}{env\+\_\+state\+\_\+air\+\_\+den}} (env\+\_\+state)
-\begin{DoxyCompactList}\small\item\em Air density (kg m$^\wedge$\{-\/3\}). \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Air density (kg m\texorpdfstring{$^\wedge$}{\string^}\{-\/3\}). \end{DoxyCompactList}\item 
 real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}{env\+\_\+state\+\_\+air\+\_\+molar\+\_\+den}} (env\+\_\+state)
-\begin{DoxyCompactList}\small\item\em Air molar density (mol m$^\wedge$\{-\/3\}). \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Air molar density (mol m\texorpdfstring{$^\wedge$}{\string^}\{-\/3\}). \end{DoxyCompactList}\item 
 real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__env__state_a510247c52aff804a61315f2d12ae9ae2}{env\+\_\+state\+\_\+a}} (env\+\_\+state)
 \begin{DoxyCompactList}\small\item\em Condensation $A$ parameter. \end{DoxyCompactList}\item 
 real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__env__state_a4706a3e61a7f2fe4554b57b126192754}{env\+\_\+state\+\_\+ppb\+\_\+to\+\_\+conc}} (env\+\_\+state, ppb)
-\begin{DoxyCompactList}\small\item\em Convert (ppb) to (molecules m$^\wedge$\{-\/3\}). \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Convert (ppb) to (molecules m\texorpdfstring{$^\wedge$}{\string^}\{-\/3\}). \end{DoxyCompactList}\item 
 real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) function \mbox{\hyperlink{namespacecamp__env__state_a71497d9ef664a1d08bd507da56b1d077}{env\+\_\+state\+\_\+conc\+\_\+to\+\_\+ppb}} (env\+\_\+state, conc)
-\begin{DoxyCompactList}\small\item\em Convert (molecules m$^\wedge$\{-\/3\}) to (ppb). \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Convert (molecules m\texorpdfstring{$^\wedge$}{\string^}\{-\/3\}) to (ppb). \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__env__state_acd71d6143a8e08e77473bf24f1752af6}{env\+\_\+state\+\_\+mix}} (val)
 \begin{DoxyCompactList}\small\item\em Average val over all processes. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__env__state_aa8f8e6e85adf7327d31a2f64324d49a4}{env\+\_\+state\+\_\+reduce\+\_\+avg}} (val)
@@ -52,10 +52,10 @@ subroutine \mbox{\hyperlink{namespacecamp__env__state_a8ec95b192896c36ea9c1b39ad
 
 
 \doxysubsection{Detailed Description}
-The \mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\+\_\+state\+\_\+t}} structure and associated subroutines. 
+The \doxylink{structcamp__env__state_1_1env__state__t}{env\+\_\+state\+\_\+t} structure and associated subroutines. 
 
 \doxysubsection{Function/\+Subroutine Documentation}
-\mbox{\Hypertarget{namespacecamp__env__state_a151aed99a15531066bb5ef8b25d4b94e}\label{namespacecamp__env__state_a151aed99a15531066bb5ef8b25d4b94e}} 
+\Hypertarget{namespacecamp__env__state_a151aed99a15531066bb5ef8b25d4b94e}\label{namespacecamp__env__state_a151aed99a15531066bb5ef8b25d4b94e} 
 \index{camp\_env\_state@{camp\_env\_state}!camp\_mpi\_pack\_env\_state@{camp\_mpi\_pack\_env\_state}}
 \index{camp\_mpi\_pack\_env\_state@{camp\_mpi\_pack\_env\_state}!camp\_env\_state@{camp\_env\_state}}
 \doxysubsubsection{\texorpdfstring{camp\_mpi\_pack\_env\_state()}{camp\_mpi\_pack\_env\_state()}}
@@ -79,8 +79,14 @@ Packs the given value into the buffer, advancing position.
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00302}{302}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 0
-\mbox{\Hypertarget{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}\label{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__env__state_a151aed99a15531066bb5ef8b25d4b94e_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}\label{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77} 
 \index{camp\_env\_state@{camp\_env\_state}!camp\_mpi\_pack\_size\_env\_state@{camp\_mpi\_pack\_size\_env\_state}}
 \index{camp\_mpi\_pack\_size\_env\_state@{camp\_mpi\_pack\_size\_env\_state}!camp\_env\_state@{camp\_env\_state}}
 \doxysubsubsection{\texorpdfstring{camp\_mpi\_pack\_size\_env\_state()}{camp\_mpi\_pack\_size\_env\_state()}}
@@ -100,10 +106,22 @@ Determines the number of bytes required to pack the given value.
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00279}{279}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 1
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 2
-\mbox{\Hypertarget{namespacecamp__env__state_af55024977aafd912d718d87887a5b114}\label{namespacecamp__env__state_af55024977aafd912d718d87887a5b114}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__env__state_af55024977aafd912d718d87887a5b114}\label{namespacecamp__env__state_af55024977aafd912d718d87887a5b114} 
 \index{camp\_env\_state@{camp\_env\_state}!camp\_mpi\_reduce\_avg\_env\_state@{camp\_mpi\_reduce\_avg\_env\_state}}
 \index{camp\_mpi\_reduce\_avg\_env\_state@{camp\_mpi\_reduce\_avg\_env\_state}!camp\_env\_state@{camp\_env\_state}}
 \doxysubsubsection{\texorpdfstring{camp\_mpi\_reduce\_avg\_env\_state()}{camp\_mpi\_reduce\_avg\_env\_state()}}
@@ -125,8 +143,14 @@ Computes the average of val across all processes, storing the result in val\+\_\
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00369}{369}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 3
-\mbox{\Hypertarget{namespacecamp__env__state_a80c14bca3257629238c18686269a4084}\label{namespacecamp__env__state_a80c14bca3257629238c18686269a4084}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__env__state_af55024977aafd912d718d87887a5b114_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__env__state_a80c14bca3257629238c18686269a4084}\label{namespacecamp__env__state_a80c14bca3257629238c18686269a4084} 
 \index{camp\_env\_state@{camp\_env\_state}!camp\_mpi\_unpack\_env\_state@{camp\_mpi\_unpack\_env\_state}}
 \index{camp\_mpi\_unpack\_env\_state@{camp\_mpi\_unpack\_env\_state}!camp\_env\_state@{camp\_env\_state}}
 \doxysubsubsection{\texorpdfstring{camp\_mpi\_unpack\_env\_state()}{camp\_mpi\_unpack\_env\_state()}}
@@ -150,8 +174,14 @@ Unpacks the given value from the buffer, advancing position.
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00335}{335}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 4
-\mbox{\Hypertarget{namespacecamp__env__state_a510247c52aff804a61315f2d12ae9ae2}\label{namespacecamp__env__state_a510247c52aff804a61315f2d12ae9ae2}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__env__state_a80c14bca3257629238c18686269a4084_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__env__state_a510247c52aff804a61315f2d12ae9ae2}\label{namespacecamp__env__state_a510247c52aff804a61315f2d12ae9ae2} 
 \index{camp\_env\_state@{camp\_env\_state}!env\_state\_a@{env\_state\_a}}
 \index{env\_state\_a@{env\_state\_a}!camp\_env\_state@{camp\_env\_state}}
 \doxysubsubsection{\texorpdfstring{env\_state\_a()}{env\_state\_a()}}
@@ -171,10 +201,22 @@ Condensation $A$ parameter.
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00191}{191}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 5
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=188pt]{namespacecamp__env__state_a510247c52aff804a61315f2d12ae9ae2_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 6
-\mbox{\Hypertarget{namespacecamp__env__state_ac51ba858506da25f49bbd32320bbeb75}\label{namespacecamp__env__state_ac51ba858506da25f49bbd32320bbeb75}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=188pt]{namespacecamp__env__state_a510247c52aff804a61315f2d12ae9ae2_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__env__state_ac51ba858506da25f49bbd32320bbeb75}\label{namespacecamp__env__state_ac51ba858506da25f49bbd32320bbeb75} 
 \index{camp\_env\_state@{camp\_env\_state}!env\_state\_add@{env\_state\_add}}
 \index{env\_state\_add@{env\_state\_add}!camp\_env\_state@{camp\_env\_state}}
 \doxysubsubsection{\texorpdfstring{env\_state\_add()}{env\_state\_add()}}
@@ -195,7 +237,7 @@ env\+\_\+state += env\+\_\+state\+\_\+delta
 
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00071}{71}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__env__state_af8f56c1aae7d482b1a9a62b342edd85d}\label{namespacecamp__env__state_af8f56c1aae7d482b1a9a62b342edd85d}} 
+\Hypertarget{namespacecamp__env__state_af8f56c1aae7d482b1a9a62b342edd85d}\label{namespacecamp__env__state_af8f56c1aae7d482b1a9a62b342edd85d} 
 \index{camp\_env\_state@{camp\_env\_state}!env\_state\_air\_den@{env\_state\_air\_den}}
 \index{env\_state\_air\_den@{env\_state\_air\_den}!camp\_env\_state@{camp\_env\_state}}
 \doxysubsubsection{\texorpdfstring{env\_state\_air\_den()}{env\_state\_air\_den()}}
@@ -203,7 +245,7 @@ Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00071}{71}} of file
 
 
 
-Air density (kg m$^\wedge$\{-\/3\}). 
+Air density (kg m\texorpdfstring{$^\wedge$}{\string^}\{-\/3\}). 
 
 
 \begin{DoxyParams}[1]{Parameters}
@@ -215,10 +257,22 @@ Air density (kg m$^\wedge$\{-\/3\}).
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00165}{165}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 7
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=333pt]{namespacecamp__env__state_af8f56c1aae7d482b1a9a62b342edd85d_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 8
-\mbox{\Hypertarget{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}\label{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=188pt]{namespacecamp__env__state_af8f56c1aae7d482b1a9a62b342edd85d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}\label{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9} 
 \index{camp\_env\_state@{camp\_env\_state}!env\_state\_air\_molar\_den@{env\_state\_air\_molar\_den}}
 \index{env\_state\_air\_molar\_den@{env\_state\_air\_molar\_den}!camp\_env\_state@{camp\_env\_state}}
 \doxysubsubsection{\texorpdfstring{env\_state\_air\_molar\_den()}{env\_state\_air\_molar\_den()}}
@@ -226,7 +280,7 @@ Here is the caller graph for this function\+:
 
 
 
-Air molar density (mol m$^\wedge$\{-\/3\}). 
+Air molar density (mol m\texorpdfstring{$^\wedge$}{\string^}\{-\/3\}). 
 
 
 \begin{DoxyParams}[1]{Parameters}
@@ -238,10 +292,22 @@ Air molar density (mol m$^\wedge$\{-\/3\}).
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00178}{178}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 9
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=189pt]{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 10
-\mbox{\Hypertarget{namespacecamp__env__state_aed371f10382a89dce6a108a550cc94e7}\label{namespacecamp__env__state_aed371f10382a89dce6a108a550cc94e7}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=333pt]{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__env__state_aed371f10382a89dce6a108a550cc94e7}\label{namespacecamp__env__state_aed371f10382a89dce6a108a550cc94e7} 
 \index{camp\_env\_state@{camp\_env\_state}!env\_state\_change\_water\_volume@{env\_state\_change\_water\_volume}}
 \index{env\_state\_change\_water\_volume@{env\_state\_change\_water\_volume}!camp\_env\_state@{camp\_env\_state}}
 \doxysubsubsection{\texorpdfstring{env\_state\_change\_water\_volume()}{env\_state\_change\_water\_volume()}}
@@ -255,7 +321,7 @@ Adds the given water volume to the water vapor and updates all environment quant
 \begin{DoxyParams}[1]{Parameters}
 \mbox{\texttt{ in,out}}  & {\em env\+\_\+state} & Environment state to update. \\
 \hline
-\mbox{\texttt{ in}}  & {\em dv} & Volume concentration of water added (m$^\wedge$3/m$^\wedge$3). \\
+\mbox{\texttt{ in}}  & {\em dv} & Volume concentration of water added (m\texorpdfstring{$^\wedge$}{\string^}3/m\texorpdfstring{$^\wedge$}{\string^}3). \\
 \hline
 \end{DoxyParams}
 
@@ -263,8 +329,14 @@ Adds the given water volume to the water vapor and updates all environment quant
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00122}{122}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 11
-\mbox{\Hypertarget{namespacecamp__env__state_a71497d9ef664a1d08bd507da56b1d077}\label{namespacecamp__env__state_a71497d9ef664a1d08bd507da56b1d077}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__env__state_aed371f10382a89dce6a108a550cc94e7_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__env__state_a71497d9ef664a1d08bd507da56b1d077}\label{namespacecamp__env__state_a71497d9ef664a1d08bd507da56b1d077} 
 \index{camp\_env\_state@{camp\_env\_state}!env\_state\_conc\_to\_ppb@{env\_state\_conc\_to\_ppb}}
 \index{env\_state\_conc\_to\_ppb@{env\_state\_conc\_to\_ppb}!camp\_env\_state@{camp\_env\_state}}
 \doxysubsubsection{\texorpdfstring{env\_state\_conc\_to\_ppb()}{env\_state\_conc\_to\_ppb()}}
@@ -272,13 +344,13 @@ Here is the call graph for this function\+:
 
 
 
-Convert (molecules m$^\wedge$\{-\/3\}) to (ppb). 
+Convert (molecules m\texorpdfstring{$^\wedge$}{\string^}\{-\/3\}) to (ppb). 
 
 
 \begin{DoxyParams}[1]{Parameters}
 \mbox{\texttt{ in}}  & {\em env\+\_\+state} & Environment state. \\
 \hline
-\mbox{\texttt{ in}}  & {\em conc} & Concentration (molecules m$^\wedge$\{-\/3\}). \\
+\mbox{\texttt{ in}}  & {\em conc} & Concentration (molecules m\texorpdfstring{$^\wedge$}{\string^}\{-\/3\}). \\
 \hline
 \end{DoxyParams}
 
@@ -286,10 +358,22 @@ Convert (molecules m$^\wedge$\{-\/3\}) to (ppb).
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00219}{219}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 12
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=333pt]{namespacecamp__env__state_a71497d9ef664a1d08bd507da56b1d077_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 13
-\mbox{\Hypertarget{namespacecamp__env__state_acd71d6143a8e08e77473bf24f1752af6}\label{namespacecamp__env__state_acd71d6143a8e08e77473bf24f1752af6}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=188pt]{namespacecamp__env__state_a71497d9ef664a1d08bd507da56b1d077_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__env__state_acd71d6143a8e08e77473bf24f1752af6}\label{namespacecamp__env__state_acd71d6143a8e08e77473bf24f1752af6} 
 \index{camp\_env\_state@{camp\_env\_state}!env\_state\_mix@{env\_state\_mix}}
 \index{env\_state\_mix@{env\_state\_mix}!camp\_env\_state@{camp\_env\_state}}
 \doxysubsubsection{\texorpdfstring{env\_state\_mix()}{env\_state\_mix()}}
@@ -309,8 +393,14 @@ Average val over all processes.
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00234}{234}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 14
-\mbox{\Hypertarget{namespacecamp__env__state_a4706a3e61a7f2fe4554b57b126192754}\label{namespacecamp__env__state_a4706a3e61a7f2fe4554b57b126192754}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__env__state_acd71d6143a8e08e77473bf24f1752af6_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__env__state_a4706a3e61a7f2fe4554b57b126192754}\label{namespacecamp__env__state_a4706a3e61a7f2fe4554b57b126192754} 
 \index{camp\_env\_state@{camp\_env\_state}!env\_state\_ppb\_to\_conc@{env\_state\_ppb\_to\_conc}}
 \index{env\_state\_ppb\_to\_conc@{env\_state\_ppb\_to\_conc}!camp\_env\_state@{camp\_env\_state}}
 \doxysubsubsection{\texorpdfstring{env\_state\_ppb\_to\_conc()}{env\_state\_ppb\_to\_conc()}}
@@ -318,7 +408,7 @@ Here is the call graph for this function\+:
 
 
 
-Convert (ppb) to (molecules m$^\wedge$\{-\/3\}). 
+Convert (ppb) to (molecules m\texorpdfstring{$^\wedge$}{\string^}\{-\/3\}). 
 
 
 \begin{DoxyParams}[1]{Parameters}
@@ -332,10 +422,22 @@ Convert (ppb) to (molecules m$^\wedge$\{-\/3\}).
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00204}{204}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 15
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=333pt]{namespacecamp__env__state_a4706a3e61a7f2fe4554b57b126192754_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 16
-\mbox{\Hypertarget{namespacecamp__env__state_aa8f8e6e85adf7327d31a2f64324d49a4}\label{namespacecamp__env__state_aa8f8e6e85adf7327d31a2f64324d49a4}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=188pt]{namespacecamp__env__state_a4706a3e61a7f2fe4554b57b126192754_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__env__state_aa8f8e6e85adf7327d31a2f64324d49a4}\label{namespacecamp__env__state_aa8f8e6e85adf7327d31a2f64324d49a4} 
 \index{camp\_env\_state@{camp\_env\_state}!env\_state\_reduce\_avg@{env\_state\_reduce\_avg}}
 \index{env\_state\_reduce\_avg@{env\_state\_reduce\_avg}!camp\_env\_state@{camp\_env\_state}}
 \doxysubsubsection{\texorpdfstring{env\_state\_reduce\_avg()}{env\_state\_reduce\_avg()}}
@@ -355,8 +457,14 @@ Average val over all processes, with the result only on the root process.
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00256}{256}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 17
-\mbox{\Hypertarget{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457}\label{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__env__state_aa8f8e6e85adf7327d31a2f64324d49a4_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457}\label{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457} 
 \index{camp\_env\_state@{camp\_env\_state}!env\_state\_sat\_vapor\_pressure@{env\_state\_sat\_vapor\_pressure}}
 \index{env\_state\_sat\_vapor\_pressure@{env\_state\_sat\_vapor\_pressure}!camp\_env\_state@{camp\_env\_state}}
 \doxysubsubsection{\texorpdfstring{env\_state\_sat\_vapor\_pressure()}{env\_state\_sat\_vapor\_pressure()}}
@@ -376,10 +484,22 @@ Computes the current saturation vapor pressure (Pa).
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00151}{151}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 18
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=214pt]{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 19
-\mbox{\Hypertarget{namespacecamp__env__state_a85f6d9d704e9949d321b51d97965d276}\label{namespacecamp__env__state_a85f6d9d704e9949d321b51d97965d276}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__env__state_a85f6d9d704e9949d321b51d97965d276}\label{namespacecamp__env__state_a85f6d9d704e9949d321b51d97965d276} 
 \index{camp\_env\_state@{camp\_env\_state}!env\_state\_scale@{env\_state\_scale}}
 \index{env\_state\_scale@{env\_state\_scale}!camp\_env\_state@{camp\_env\_state}}
 \doxysubsubsection{\texorpdfstring{env\_state\_scale()}{env\_state\_scale()}}
@@ -387,7 +507,7 @@ Here is the caller graph for this function\+:
 
 
 
-env\+\_\+state $\ast$= alpha 
+env\+\_\+state \texorpdfstring{$\ast$}{*}= alpha 
 
 
 \begin{DoxyParams}[1]{Parameters}
@@ -400,7 +520,7 @@ env\+\_\+state $\ast$= alpha
 
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00097}{97}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__env__state_a8ec95b192896c36ea9c1b39add39e65a}\label{namespacecamp__env__state_a8ec95b192896c36ea9c1b39add39e65a}} 
+\Hypertarget{namespacecamp__env__state_a8ec95b192896c36ea9c1b39add39e65a}\label{namespacecamp__env__state_a8ec95b192896c36ea9c1b39add39e65a} 
 \index{camp\_env\_state@{camp\_env\_state}!set\_pressure\_pa@{set\_pressure\_pa}}
 \index{set\_pressure\_pa@{set\_pressure\_pa}!camp\_env\_state@{camp\_env\_state}}
 \doxysubsubsection{\texorpdfstring{set\_pressure\_pa()}{set\_pressure\_pa()}}
@@ -421,7 +541,7 @@ Set the pressure (Pa)
 
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00400}{400}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__env__state_a980571eae0b75e18ea08f03d0ab9d3d7}\label{namespacecamp__env__state_a980571eae0b75e18ea08f03d0ab9d3d7}} 
+\Hypertarget{namespacecamp__env__state_a980571eae0b75e18ea08f03d0ab9d3d7}\label{namespacecamp__env__state_a980571eae0b75e18ea08f03d0ab9d3d7} 
 \index{camp\_env\_state@{camp\_env\_state}!set\_temperature\_k@{set\_temperature\_k}}
 \index{set\_temperature\_k@{set\_temperature\_k}!camp\_env\_state@{camp\_env\_state}}
 \doxysubsubsection{\texorpdfstring{set\_temperature\_k()}{set\_temperature\_k()}}

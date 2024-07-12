@@ -1,4 +1,5 @@
 <map id="solver_get_statistics" name="solver_get_statistics">
-<area shape="rect" id="node1" title="Get solver statistics after an integration attempt." alt="" coords="5,5,148,31"/>
-<area shape="rect" id="node2" href="$camp__solver_8c.html#a08519bb4526ffd3db7f49b33ba7600aa" title="Check the return value of a SUNDIALS function." alt="" coords="196,5,280,31"/>
+<area shape="rect" id="Node000001" title="Get solver statistics after an integration attempt." alt="" coords="5,5,147,31"/>
+<area shape="rect" id="Node000002" href="$camp__solver_8c.html#a08519bb4526ffd3db7f49b33ba7600aa" title="Check the return value of a SUNDIALS function." alt="" coords="195,5,278,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,16,179,16,179,21,147,21"/>
 </map>

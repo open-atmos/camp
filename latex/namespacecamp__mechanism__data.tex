@@ -1,22 +1,22 @@
-\hypertarget{namespacecamp__mechanism__data}{}\doxysection{camp\+\_\+mechanism\+\_\+data Module Reference}
-\label{namespacecamp__mechanism__data}\index{camp\_mechanism\_data@{camp\_mechanism\_data}}
+\doxysection{camp\+\_\+mechanism\+\_\+data Module Reference}
+\hypertarget{namespacecamp__mechanism__data}{}\label{namespacecamp__mechanism__data}\index{camp\_mechanism\_data@{camp\_mechanism\_data}}
 
 
-The \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t}} structure and associated subroutines.  
+The \doxylink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t} structure and associated subroutines.  
 
 
-\doxysubsection*{Data Types}
+\doxysubsubsection*{Data Types}
 \begin{DoxyCompactItemize}
 \item 
 type \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__ptr}{mechanism\+\_\+data\+\_\+ptr}}
 \begin{DoxyCompactList}\small\item\em Pointer type for building arrays. \end{DoxyCompactList}\item 
 interface \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t}}
 \begin{DoxyCompactList}\small\item\em A chemical mechanism. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Functions/\+Subroutines}
+\doxysubsubsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
 \item 
 type(\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__mechanism__data_af970b0d8a93435848c8418ec4ff96162}{constructor}} (mech\+\_\+name, init\+\_\+size)
-\begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t}}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Constructor for \doxylink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t}. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__mechanism__data_ab0662f5d7752a1c95a1e34d481403de6}{ensure\+\_\+size}} (this, num\+\_\+rxn)
 \begin{DoxyCompactList}\small\item\em Ensure there is enough room in the reaction dataset to add a specified number of reactions. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__mechanism__data_a7e606aeae7ea067149b1c4301d251536}{load}} (this, json, j\+\_\+obj)
@@ -43,7 +43,7 @@ elemental subroutine \mbox{\hyperlink{namespacecamp__mechanism__data_ac628ddcd5d
 \begin{DoxyCompactList}\small\item\em Dereference a pointer to a mechanism. \end{DoxyCompactList}\item 
 elemental subroutine \mbox{\hyperlink{namespacecamp__mechanism__data_a489bbb2e3e203acfa091c3947c757a16}{ptr\+\_\+finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize a pointer to mechanism data. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Variables}
+\doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 integer(kind=i\+\_\+kind), parameter \mbox{\hyperlink{namespacecamp__mechanism__data_a069019f3f5432d5cb7c5d4ad7de04d04}{realloc\+\_\+inc}} = 50
@@ -53,10 +53,10 @@ integer(kind=i\+\_\+kind), parameter \mbox{\hyperlink{namespacecamp__mechanism__
 
 
 \doxysubsection{Detailed Description}
-The \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t}} structure and associated subroutines. 
+The \doxylink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t} structure and associated subroutines. 
 
 \doxysubsection{Function/\+Subroutine Documentation}
-\mbox{\Hypertarget{namespacecamp__mechanism__data_ab7c50086535f67dcf89f70b2134161c2}\label{namespacecamp__mechanism__data_ab7c50086535f67dcf89f70b2134161c2}} 
+\Hypertarget{namespacecamp__mechanism__data_ab7c50086535f67dcf89f70b2134161c2}\label{namespacecamp__mechanism__data_ab7c50086535f67dcf89f70b2134161c2} 
 \index{camp\_mechanism\_data@{camp\_mechanism\_data}!bin\_pack@{bin\_pack}}
 \index{bin\_pack@{bin\_pack}!camp\_mechanism\_data@{camp\_mechanism\_data}}
 \doxysubsubsection{\texorpdfstring{bin\_pack()}{bin\_pack()}}
@@ -82,8 +82,14 @@ Pack the given value to the buffer, advancing position.
 Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00339}{339}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 0
-\mbox{\Hypertarget{namespacecamp__mechanism__data_adf572ed08a396f4ef9389a64721fa9b2}\label{namespacecamp__mechanism__data_adf572ed08a396f4ef9389a64721fa9b2}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__mechanism__data_ab7c50086535f67dcf89f70b2134161c2_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__mechanism__data_adf572ed08a396f4ef9389a64721fa9b2}\label{namespacecamp__mechanism__data_adf572ed08a396f4ef9389a64721fa9b2} 
 \index{camp\_mechanism\_data@{camp\_mechanism\_data}!bin\_unpack@{bin\_unpack}}
 \index{bin\_unpack@{bin\_unpack}!camp\_mechanism\_data@{camp\_mechanism\_data}}
 \doxysubsubsection{\texorpdfstring{bin\_unpack()}{bin\_unpack()}}
@@ -109,16 +115,22 @@ Unpack the given value to the buffer, advancing position.
 Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00370}{370}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 1
-\mbox{\Hypertarget{namespacecamp__mechanism__data_af970b0d8a93435848c8418ec4ff96162}\label{namespacecamp__mechanism__data_af970b0d8a93435848c8418ec4ff96162}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__mechanism__data_adf572ed08a396f4ef9389a64721fa9b2_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__mechanism__data_af970b0d8a93435848c8418ec4ff96162}\label{namespacecamp__mechanism__data_af970b0d8a93435848c8418ec4ff96162} 
 \index{camp\_mechanism\_data@{camp\_mechanism\_data}!constructor@{constructor}}
 \index{constructor@{constructor}!camp\_mechanism\_data@{camp\_mechanism\_data}}
 \doxysubsubsection{\texorpdfstring{constructor()}{constructor()}}
-{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t}}) function, pointer camp\+\_\+mechanism\+\_\+data\+::constructor (\begin{DoxyParamCaption}\item[{character(len=$\ast$), intent(in), optional}]{mech\+\_\+name,  }\item[{integer(i\+\_\+kind), intent(in), optional}]{init\+\_\+size }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t}}) function, pointer camp\+\_\+mechanism\+\_\+data\+::constructor (\begin{DoxyParamCaption}\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in), optional}]{mech\+\_\+name,  }\item[{integer(i\+\_\+kind), intent(in), optional}]{init\+\_\+size }\end{DoxyParamCaption})}
 
 
 
-Constructor for \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t}}. 
+Constructor for \doxylink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t}. 
 
 \begin{DoxyReturn}{Returns}
 Chemical mechanism 
@@ -134,7 +146,7 @@ Chemical mechanism
 
 Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00118}{118}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__mechanism__data_ac628ddcd5da2ac88501e14df1a0b221d}\label{namespacecamp__mechanism__data_ac628ddcd5da2ac88501e14df1a0b221d}} 
+\Hypertarget{namespacecamp__mechanism__data_ac628ddcd5da2ac88501e14df1a0b221d}\label{namespacecamp__mechanism__data_ac628ddcd5da2ac88501e14df1a0b221d} 
 \index{camp\_mechanism\_data@{camp\_mechanism\_data}!dereference@{dereference}}
 \index{dereference@{dereference}!camp\_mechanism\_data@{camp\_mechanism\_data}}
 \doxysubsubsection{\texorpdfstring{dereference()}{dereference()}}
@@ -153,7 +165,7 @@ Dereference a pointer to a mechanism.
 
 Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00440}{440}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__mechanism__data_ada2febb1f2d7d65bb2e008f630122da8}\label{namespacecamp__mechanism__data_ada2febb1f2d7d65bb2e008f630122da8}} 
+\Hypertarget{namespacecamp__mechanism__data_ada2febb1f2d7d65bb2e008f630122da8}\label{namespacecamp__mechanism__data_ada2febb1f2d7d65bb2e008f630122da8} 
 \index{camp\_mechanism\_data@{camp\_mechanism\_data}!do\_print@{do\_print}}
 \index{do\_print@{do\_print}!camp\_mechanism\_data@{camp\_mechanism\_data}}
 \doxysubsubsection{\texorpdfstring{do\_print()}{do\_print()}}
@@ -174,7 +186,7 @@ Print the mechanism data.
 
 Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00401}{401}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__mechanism__data_ab0662f5d7752a1c95a1e34d481403de6}\label{namespacecamp__mechanism__data_ab0662f5d7752a1c95a1e34d481403de6}} 
+\Hypertarget{namespacecamp__mechanism__data_ab0662f5d7752a1c95a1e34d481403de6}\label{namespacecamp__mechanism__data_ab0662f5d7752a1c95a1e34d481403de6} 
 \index{camp\_mechanism\_data@{camp\_mechanism\_data}!ensure\_size@{ensure\_size}}
 \index{ensure\_size@{ensure\_size}!camp\_mechanism\_data@{camp\_mechanism\_data}}
 \doxysubsubsection{\texorpdfstring{ensure\_size()}{ensure\_size()}}
@@ -195,7 +207,7 @@ Ensure there is enough room in the reaction dataset to add a specified number of
 
 Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00146}{146}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__mechanism__data_a1381c2540df1e68eb3e59c6e312e35b8}\label{namespacecamp__mechanism__data_a1381c2540df1e68eb3e59c6e312e35b8}} 
+\Hypertarget{namespacecamp__mechanism__data_a1381c2540df1e68eb3e59c6e312e35b8}\label{namespacecamp__mechanism__data_a1381c2540df1e68eb3e59c6e312e35b8} 
 \index{camp\_mechanism\_data@{camp\_mechanism\_data}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_mechanism\_data@{camp\_mechanism\_data}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
@@ -214,7 +226,7 @@ Finalize the mechanism.
 
 Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00426}{426}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__mechanism__data_a79e4b0bbc6e45ff91d24792792e548df}\label{namespacecamp__mechanism__data_a79e4b0bbc6e45ff91d24792792e548df}} 
+\Hypertarget{namespacecamp__mechanism__data_a79e4b0bbc6e45ff91d24792792e548df}\label{namespacecamp__mechanism__data_a79e4b0bbc6e45ff91d24792792e548df} 
 \index{camp\_mechanism\_data@{camp\_mechanism\_data}!get\_name@{get\_name}}
 \index{get\_name@{get\_name}!camp\_mechanism\_data@{camp\_mechanism\_data}}
 \doxysubsubsection{\texorpdfstring{get\_name()}{get\_name()}}
@@ -236,7 +248,7 @@ Name of the mechanism
 
 Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00304}{304}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__mechanism__data_a2b363899c2a7373f881d0e48660b6cb8}\label{namespacecamp__mechanism__data_a2b363899c2a7373f881d0e48660b6cb8}} 
+\Hypertarget{namespacecamp__mechanism__data_a2b363899c2a7373f881d0e48660b6cb8}\label{namespacecamp__mechanism__data_a2b363899c2a7373f881d0e48660b6cb8} 
 \index{camp\_mechanism\_data@{camp\_mechanism\_data}!get\_rxn@{get\_rxn}}
 \index{get\_rxn@{get\_rxn}!camp\_mechanism\_data@{camp\_mechanism\_data}}
 \doxysubsubsection{\texorpdfstring{get\_rxn()}{get\_rxn()}}
@@ -261,8 +273,14 @@ Pointer to the reaction
 Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00284}{284}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 2
-\mbox{\Hypertarget{namespacecamp__mechanism__data_ac0743ed975608d96950a12106218d1f3}\label{namespacecamp__mechanism__data_ac0743ed975608d96950a12106218d1f3}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__mechanism__data_a2b363899c2a7373f881d0e48660b6cb8_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__mechanism__data_ac0743ed975608d96950a12106218d1f3}\label{namespacecamp__mechanism__data_ac0743ed975608d96950a12106218d1f3} 
 \index{camp\_mechanism\_data@{camp\_mechanism\_data}!get\_size@{get\_size}}
 \index{get\_size@{get\_size}!camp\_mechanism\_data@{camp\_mechanism\_data}}
 \doxysubsubsection{\texorpdfstring{get\_size()}{get\_size()}}
@@ -281,7 +299,7 @@ Get the current size of the chemical mechanism.
 
 Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00272}{272}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__mechanism__data_a4fc9449724815adbd24978dc723e06b7}\label{namespacecamp__mechanism__data_a4fc9449724815adbd24978dc723e06b7}} 
+\Hypertarget{namespacecamp__mechanism__data_a4fc9449724815adbd24978dc723e06b7}\label{namespacecamp__mechanism__data_a4fc9449724815adbd24978dc723e06b7} 
 \index{camp\_mechanism\_data@{camp\_mechanism\_data}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_mechanism\_data@{camp\_mechanism\_data}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
@@ -307,8 +325,14 @@ Initialize the mechanism.
 Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00248}{248}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 3
-\mbox{\Hypertarget{namespacecamp__mechanism__data_a7e606aeae7ea067149b1c4301d251536}\label{namespacecamp__mechanism__data_a7e606aeae7ea067149b1c4301d251536}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__mechanism__data_a4fc9449724815adbd24978dc723e06b7_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__mechanism__data_a7e606aeae7ea067149b1c4301d251536}\label{namespacecamp__mechanism__data_a7e606aeae7ea067149b1c4301d251536} 
 \index{camp\_mechanism\_data@{camp\_mechanism\_data}!load@{load}}
 \index{load@{load}!camp\_mechanism\_data@{camp\_mechanism\_data}}
 \doxysubsubsection{\texorpdfstring{load()}{load()}}
@@ -332,8 +356,14 @@ Load a chemical mechanism from an input file.
 Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00193}{193}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 4
-\mbox{\Hypertarget{namespacecamp__mechanism__data_a07d730e121af5fd3035f6ccddb855b72}\label{namespacecamp__mechanism__data_a07d730e121af5fd3035f6ccddb855b72}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__mechanism__data_a7e606aeae7ea067149b1c4301d251536_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__mechanism__data_a07d730e121af5fd3035f6ccddb855b72}\label{namespacecamp__mechanism__data_a07d730e121af5fd3035f6ccddb855b72} 
 \index{camp\_mechanism\_data@{camp\_mechanism\_data}!pack\_size@{pack\_size}}
 \index{pack\_size@{pack\_size}!camp\_mechanism\_data@{camp\_mechanism\_data}}
 \doxysubsubsection{\texorpdfstring{pack\_size()}{pack\_size()}}
@@ -355,8 +385,14 @@ Determine the size of a binary required to pack the mechanism.
 Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00318}{318}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 5
-\mbox{\Hypertarget{namespacecamp__mechanism__data_a489bbb2e3e203acfa091c3947c757a16}\label{namespacecamp__mechanism__data_a489bbb2e3e203acfa091c3947c757a16}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__mechanism__data_a07d730e121af5fd3035f6ccddb855b72_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__mechanism__data_a489bbb2e3e203acfa091c3947c757a16}\label{namespacecamp__mechanism__data_a489bbb2e3e203acfa091c3947c757a16} 
 \index{camp\_mechanism\_data@{camp\_mechanism\_data}!ptr\_finalize@{ptr\_finalize}}
 \index{ptr\_finalize@{ptr\_finalize}!camp\_mechanism\_data@{camp\_mechanism\_data}}
 \doxysubsubsection{\texorpdfstring{ptr\_finalize()}{ptr\_finalize()}}
@@ -378,7 +414,7 @@ Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00452}{452}} o
 
 
 \doxysubsection{Variable Documentation}
-\mbox{\Hypertarget{namespacecamp__mechanism__data_a099bce7f39e8ff2b991dc3072bea5c4e}\label{namespacecamp__mechanism__data_a099bce7f39e8ff2b991dc3072bea5c4e}} 
+\Hypertarget{namespacecamp__mechanism__data_a099bce7f39e8ff2b991dc3072bea5c4e}\label{namespacecamp__mechanism__data_a099bce7f39e8ff2b991dc3072bea5c4e} 
 \index{camp\_mechanism\_data@{camp\_mechanism\_data}!mech\_file\_unit@{mech\_file\_unit}}
 \index{mech\_file\_unit@{mech\_file\_unit}!camp\_mechanism\_data@{camp\_mechanism\_data}}
 \doxysubsubsection{\texorpdfstring{mech\_file\_unit}{mech\_file\_unit}}
@@ -392,7 +428,7 @@ Fixed module file unit.
 
 Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00053}{53}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{namespacecamp__mechanism__data_a069019f3f5432d5cb7c5d4ad7de04d04}\label{namespacecamp__mechanism__data_a069019f3f5432d5cb7c5d4ad7de04d04}} 
+\Hypertarget{namespacecamp__mechanism__data_a069019f3f5432d5cb7c5d4ad7de04d04}\label{namespacecamp__mechanism__data_a069019f3f5432d5cb7c5d4ad7de04d04} 
 \index{camp\_mechanism\_data@{camp\_mechanism\_data}!realloc\_inc@{realloc\_inc}}
 \index{realloc\_inc@{realloc\_inc}!camp\_mechanism\_data@{camp\_mechanism\_data}}
 \doxysubsubsection{\texorpdfstring{realloc\_inc}{realloc\_inc}}

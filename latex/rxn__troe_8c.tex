@@ -1,13 +1,19 @@
-\hypertarget{rxn__troe_8c}{}\doxysection{rxn\+\_\+troe.\+c File Reference}
-\label{rxn__troe_8c}\index{rxn\_troe.c@{rxn\_troe.c}}
+\doxysection{rxn\+\_\+troe.\+c File Reference}
+\hypertarget{rxn__troe_8c}{}\label{rxn__troe_8c}\index{rxn\_troe.c@{rxn\_troe.c}}
 
 
 Troe reaction solver functions.  
 
 
 Include dependency graph for rxn\+\_\+troe.\+c\+:
-% FIG 0
-\doxysubsection*{Macros}
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__troe_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \mbox{\hyperlink{rxn__troe_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{TEMPERATURE\+\_\+\+K\+\_\+}}~env\+\_\+data\mbox{[}0\mbox{]}
@@ -50,24 +56,24 @@ Include dependency graph for rxn\+\_\+troe.\+c\+:
 \item 
 \#define \mbox{\hyperlink{rxn__troe_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}
 \item 
-\#define \mbox{\hyperlink{rxn__troe_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}
+\#define \mbox{\hyperlink{rxn__troe_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 \texorpdfstring{$\ast$}{*} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}
 \item 
 \#define \mbox{\hyperlink{rxn__troe_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)~float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}
 \end{DoxyCompactItemize}
-\doxysubsection*{Functions}
+\doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{rxn__troe_8c_a8d762626ae8950f250d052a06e996db3}{rxn\+\_\+troe\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
-\begin{DoxyCompactList}\small\item\em Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__troe_8c_ab035a7b5e3990e133d055b13cbd74a08}{rxn\+\_\+troe\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+void \mbox{\hyperlink{rxn__troe_8c_a8d762626ae8950f250d052a06e996db3}{rxn\+\_\+troe\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__troe_8c_ab035a7b5e3990e133d055b13cbd74a08}{rxn\+\_\+troe\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__troe_8c_ad2f31b90abffa527604e554295d3a40f}{rxn\+\_\+troe\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{rxn__troe_8c_ad2f31b90abffa527604e554295d3a40f}{rxn\+\_\+troe\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update reaction data for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__troe_8c_ae2174a745239e629f1c5480a52c3f6f2}{rxn\+\_\+troe\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+void \mbox{\hyperlink{rxn__troe_8c_ae2174a745239e629f1c5480a52c3f6f2}{rxn\+\_\+troe\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
 \begin{DoxyCompactList}\small\item\em Calculate contributions to the time derivative $f(t,y)$ from this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__troe_8c_a4f34c34a0b24bbbb11a127246e3fd35e}{rxn\+\_\+troe\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data, double $\ast$rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
-\begin{DoxyCompactList}\small\item\em Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__troe_8c_a7c9a6d7ecc68d520fa5dc35557a1c329}{rxn\+\_\+troe\+\_\+print}} (int $\ast$rxn\+\_\+int\+\_\+data, double $\ast$rxn\+\_\+float\+\_\+data)
+void \mbox{\hyperlink{rxn__troe_8c_a4f34c34a0b24bbbb11a127246e3fd35e}{rxn\+\_\+troe\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__troe_8c_a7c9a6d7ecc68d520fa5dc35557a1c329}{rxn\+\_\+troe\+\_\+print}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the Troe reaction parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -81,7 +87,7 @@ Definition in file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
 
 \doxysubsection{Macro Definition Documentation}
-\mbox{\Hypertarget{rxn__troe_8c_a91cd74713029c0906e8136c8628d548d}\label{rxn__troe_8c_a91cd74713029c0906e8136c8628d548d}} 
+\Hypertarget{rxn__troe_8c_a91cd74713029c0906e8136c8628d548d}\label{rxn__troe_8c_a91cd74713029c0906e8136c8628d548d} 
 \index{rxn\_troe.c@{rxn\_troe.c}!CONV\_@{CONV\_}}
 \index{CONV\_@{CONV\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{CONV\_}{CONV\_}}
@@ -91,7 +97,7 @@ Definition in file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00031}{31}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_af9fc34858d09e71d3cffd88cf942bdf9}\label{rxn__troe_8c_af9fc34858d09e71d3cffd88cf942bdf9}} 
+\Hypertarget{rxn__troe_8c_af9fc34858d09e71d3cffd88cf942bdf9}\label{rxn__troe_8c_af9fc34858d09e71d3cffd88cf942bdf9} 
 \index{rxn\_troe.c@{rxn\_troe.c}!DERIV\_ID\_@{DERIV\_ID\_}}
 \index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
@@ -101,7 +107,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00031}{31}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00037}{37}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_a6267e7c711fe83110e1c029d10f39bcf}\label{rxn__troe_8c_a6267e7c711fe83110e1c029d10f39bcf}} 
+\Hypertarget{rxn__troe_8c_a6267e7c711fe83110e1c029d10f39bcf}\label{rxn__troe_8c_a6267e7c711fe83110e1c029d10f39bcf} 
 \index{rxn\_troe.c@{rxn\_troe.c}!FC\_@{FC\_}}
 \index{FC\_@{FC\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{FC\_}{FC\_}}
@@ -111,17 +117,17 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00037}{37}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00028}{28}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_ab831aae98d4453927c63a93f55ee5a86}\label{rxn__troe_8c_ab831aae98d4453927c63a93f55ee5a86}} 
+\Hypertarget{rxn__troe_8c_ab831aae98d4453927c63a93f55ee5a86}\label{rxn__troe_8c_ab831aae98d4453927c63a93f55ee5a86} 
 \index{rxn\_troe.c@{rxn\_troe.c}!JAC\_ID\_@{JAC\_ID\_}}
 \index{JAC\_ID\_@{JAC\_ID\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 $\ast$ (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 \texorpdfstring{$\ast$}{*} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00038}{38}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_afe0274693f1a18cc380fd9a5019dc9ec}\label{rxn__troe_8c_afe0274693f1a18cc380fd9a5019dc9ec}} 
+\Hypertarget{rxn__troe_8c_afe0274693f1a18cc380fd9a5019dc9ec}\label{rxn__troe_8c_afe0274693f1a18cc380fd9a5019dc9ec} 
 \index{rxn\_troe.c@{rxn\_troe.c}!K0\_A\_@{K0\_A\_}}
 \index{K0\_A\_@{K0\_A\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{K0\_A\_}{K0\_A\_}}
@@ -131,7 +137,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00038}{38}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00022}{22}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_af88a0e9a1d85e31ff607f8c3c21504f0}\label{rxn__troe_8c_af88a0e9a1d85e31ff607f8c3c21504f0}} 
+\Hypertarget{rxn__troe_8c_af88a0e9a1d85e31ff607f8c3c21504f0}\label{rxn__troe_8c_af88a0e9a1d85e31ff607f8c3c21504f0} 
 \index{rxn\_troe.c@{rxn\_troe.c}!K0\_B\_@{K0\_B\_}}
 \index{K0\_B\_@{K0\_B\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{K0\_B\_}{K0\_B\_}}
@@ -141,7 +147,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00022}{22}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00023}{23}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_ad4d9b5a157f445a533aa2bf71f47c834}\label{rxn__troe_8c_ad4d9b5a157f445a533aa2bf71f47c834}} 
+\Hypertarget{rxn__troe_8c_ad4d9b5a157f445a533aa2bf71f47c834}\label{rxn__troe_8c_ad4d9b5a157f445a533aa2bf71f47c834} 
 \index{rxn\_troe.c@{rxn\_troe.c}!K0\_C\_@{K0\_C\_}}
 \index{K0\_C\_@{K0\_C\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{K0\_C\_}{K0\_C\_}}
@@ -151,7 +157,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00023}{23}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00024}{24}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_a7c40adc4be1941500736f3b1279cfa87}\label{rxn__troe_8c_a7c40adc4be1941500736f3b1279cfa87}} 
+\Hypertarget{rxn__troe_8c_a7c40adc4be1941500736f3b1279cfa87}\label{rxn__troe_8c_a7c40adc4be1941500736f3b1279cfa87} 
 \index{rxn\_troe.c@{rxn\_troe.c}!KINF\_A\_@{KINF\_A\_}}
 \index{KINF\_A\_@{KINF\_A\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{KINF\_A\_}{KINF\_A\_}}
@@ -161,7 +167,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00024}{24}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00025}{25}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_ad3559ea79b144db1d48568c8a2cd0e14}\label{rxn__troe_8c_ad3559ea79b144db1d48568c8a2cd0e14}} 
+\Hypertarget{rxn__troe_8c_ad3559ea79b144db1d48568c8a2cd0e14}\label{rxn__troe_8c_ad3559ea79b144db1d48568c8a2cd0e14} 
 \index{rxn\_troe.c@{rxn\_troe.c}!KINF\_B\_@{KINF\_B\_}}
 \index{KINF\_B\_@{KINF\_B\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{KINF\_B\_}{KINF\_B\_}}
@@ -171,7 +177,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00025}{25}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00026}{26}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_abf4c4644048cac0688c585e9e47cb976}\label{rxn__troe_8c_abf4c4644048cac0688c585e9e47cb976}} 
+\Hypertarget{rxn__troe_8c_abf4c4644048cac0688c585e9e47cb976}\label{rxn__troe_8c_abf4c4644048cac0688c585e9e47cb976} 
 \index{rxn\_troe.c@{rxn\_troe.c}!KINF\_C\_@{KINF\_C\_}}
 \index{KINF\_C\_@{KINF\_C\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{KINF\_C\_}{KINF\_C\_}}
@@ -181,7 +187,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00026}{26}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00027}{27}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_afca135e3ddf148ea7c3d1e42643999ae}\label{rxn__troe_8c_afca135e3ddf148ea7c3d1e42643999ae}} 
+\Hypertarget{rxn__troe_8c_afca135e3ddf148ea7c3d1e42643999ae}\label{rxn__troe_8c_afca135e3ddf148ea7c3d1e42643999ae} 
 \index{rxn\_troe.c@{rxn\_troe.c}!N\_@{N\_}}
 \index{N\_@{N\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{N\_}{N\_}}
@@ -191,7 +197,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00027}{27}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00029}{29}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{rxn__troe_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}} 
+\Hypertarget{rxn__troe_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{rxn__troe_8c_a0e9ae6000e4ed18f5938bddaddb13d1b} 
 \index{rxn\_troe.c@{rxn\_troe.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
 \index{NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_FLOAT\_PROP\_}{NUM\_FLOAT\_PROP\_}}
@@ -201,7 +207,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00029}{29}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00034}{34}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn__troe_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\Hypertarget{rxn__troe_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn__troe_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
 \index{rxn\_troe.c@{rxn\_troe.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
 \index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
@@ -211,7 +217,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00034}{34}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00033}{33}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_acf951e890da75cd2d503ed6ce8211fc2}\label{rxn__troe_8c_acf951e890da75cd2d503ed6ce8211fc2}} 
+\Hypertarget{rxn__troe_8c_acf951e890da75cd2d503ed6ce8211fc2}\label{rxn__troe_8c_acf951e890da75cd2d503ed6ce8211fc2} 
 \index{rxn\_troe.c@{rxn\_troe.c}!NUM\_PROD\_@{NUM\_PROD\_}}
 \index{NUM\_PROD\_@{NUM\_PROD\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_PROD\_}{NUM\_PROD\_}}
@@ -221,7 +227,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00033}{33}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00021}{21}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_a05ef845cf6ed7ab9a774440c42af34fa}\label{rxn__troe_8c_a05ef845cf6ed7ab9a774440c42af34fa}} 
+\Hypertarget{rxn__troe_8c_a05ef845cf6ed7ab9a774440c42af34fa}\label{rxn__troe_8c_a05ef845cf6ed7ab9a774440c42af34fa} 
 \index{rxn\_troe.c@{rxn\_troe.c}!NUM\_REACT\_@{NUM\_REACT\_}}
 \index{NUM\_REACT\_@{NUM\_REACT\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_REACT\_}{NUM\_REACT\_}}
@@ -231,7 +237,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00021}{21}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00020}{20}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{rxn__troe_8c_a32cc078fd8ca9ad0684c48ae0aad7135}} 
+\Hypertarget{rxn__troe_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{rxn__troe_8c_a32cc078fd8ca9ad0684c48ae0aad7135} 
 \index{rxn\_troe.c@{rxn\_troe.c}!PRESSURE\_PA\_@{PRESSURE\_PA\_}}
 \index{PRESSURE\_PA\_@{PRESSURE\_PA\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{PRESSURE\_PA\_}{PRESSURE\_PA\_}}
@@ -241,7 +247,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00020}{20}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00018}{18}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_a9fda90058c6a41b1dda6ded03321c4da}\label{rxn__troe_8c_a9fda90058c6a41b1dda6ded03321c4da}} 
+\Hypertarget{rxn__troe_8c_a9fda90058c6a41b1dda6ded03321c4da}\label{rxn__troe_8c_a9fda90058c6a41b1dda6ded03321c4da} 
 \index{rxn\_troe.c@{rxn\_troe.c}!PROD\_@{PROD\_}}
 \index{PROD\_@{PROD\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{PROD\_}{PROD\_}}
@@ -251,7 +257,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00018}{18}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00036}{36}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_a6d62af2f44a112ef5b324cf406a830c2}\label{rxn__troe_8c_a6d62af2f44a112ef5b324cf406a830c2}} 
+\Hypertarget{rxn__troe_8c_a6d62af2f44a112ef5b324cf406a830c2}\label{rxn__troe_8c_a6d62af2f44a112ef5b324cf406a830c2} 
 \index{rxn\_troe.c@{rxn\_troe.c}!RATE\_CONSTANT\_@{RATE\_CONSTANT\_}}
 \index{RATE\_CONSTANT\_@{RATE\_CONSTANT\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{RATE\_CONSTANT\_}{RATE\_CONSTANT\_}}
@@ -261,7 +267,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00036}{36}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00032}{32}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_ae761e39657aac155d83eae9b338be571}\label{rxn__troe_8c_ae761e39657aac155d83eae9b338be571}} 
+\Hypertarget{rxn__troe_8c_ae761e39657aac155d83eae9b338be571}\label{rxn__troe_8c_ae761e39657aac155d83eae9b338be571} 
 \index{rxn\_troe.c@{rxn\_troe.c}!REACT\_@{REACT\_}}
 \index{REACT\_@{REACT\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{REACT\_}{REACT\_}}
@@ -271,7 +277,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00032}{32}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00035}{35}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_a1757f332a0485799c2ee77edff00c38a}\label{rxn__troe_8c_a1757f332a0485799c2ee77edff00c38a}} 
+\Hypertarget{rxn__troe_8c_a1757f332a0485799c2ee77edff00c38a}\label{rxn__troe_8c_a1757f332a0485799c2ee77edff00c38a} 
 \index{rxn\_troe.c@{rxn\_troe.c}!SCALING\_@{SCALING\_}}
 \index{SCALING\_@{SCALING\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{SCALING\_}{SCALING\_}}
@@ -281,7 +287,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00035}{35}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00030}{30}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{rxn__troe_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}} 
+\Hypertarget{rxn__troe_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{rxn__troe_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60} 
 \index{rxn\_troe.c@{rxn\_troe.c}!TEMPERATURE\_K\_@{TEMPERATURE\_K\_}}
 \index{TEMPERATURE\_K\_@{TEMPERATURE\_K\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{TEMPERATURE\_K\_}{TEMPERATURE\_K\_}}
@@ -291,7 +297,7 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00030}{30}} of file \mb
 
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00017}{17}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
-\mbox{\Hypertarget{rxn__troe_8c_a9ae244708fd9c438bf840ed319733651}\label{rxn__troe_8c_a9ae244708fd9c438bf840ed319733651}} 
+\Hypertarget{rxn__troe_8c_a9ae244708fd9c438bf840ed319733651}\label{rxn__troe_8c_a9ae244708fd9c438bf840ed319733651} 
 \index{rxn\_troe.c@{rxn\_troe.c}!YIELD\_@{YIELD\_}}
 \index{YIELD\_@{YIELD\_}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{YIELD\_}{YIELD\_}}
@@ -304,11 +310,11 @@ Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00039}{39}} of file \mb
 
 
 \doxysubsection{Function Documentation}
-\mbox{\Hypertarget{rxn__troe_8c_ae2174a745239e629f1c5480a52c3f6f2}\label{rxn__troe_8c_ae2174a745239e629f1c5480a52c3f6f2}} 
+\Hypertarget{rxn__troe_8c_ae2174a745239e629f1c5480a52c3f6f2}\label{rxn__troe_8c_ae2174a745239e629f1c5480a52c3f6f2} 
 \index{rxn\_troe.c@{rxn\_troe.c}!rxn\_troe\_calc\_deriv\_contrib@{rxn\_troe\_calc\_deriv\_contrib}}
 \index{rxn\_troe\_calc\_deriv\_contrib@{rxn\_troe\_calc\_deriv\_contrib}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_troe\_calc\_deriv\_contrib()}{rxn\_troe\_calc\_deriv\_contrib()}}
-{\footnotesize\ttfamily void rxn\+\_\+troe\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+troe\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
 
 
 
@@ -318,7 +324,7 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data, including the state array \\
 \hline
-{\em time\+\_\+deriv} & \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} object \\
+{\em time\+\_\+deriv} & \doxylink{struct_time_derivative}{Time\+Derivative} object \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -334,24 +340,36 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00143}{143}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 1
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=319pt]{rxn__troe_8c_ae2174a745239e629f1c5480a52c3f6f2_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 2
-\mbox{\Hypertarget{rxn__troe_8c_a4f34c34a0b24bbbb11a127246e3fd35e}\label{rxn__troe_8c_a4f34c34a0b24bbbb11a127246e3fd35e}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__troe_8c_ae2174a745239e629f1c5480a52c3f6f2_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rxn__troe_8c_a4f34c34a0b24bbbb11a127246e3fd35e}\label{rxn__troe_8c_a4f34c34a0b24bbbb11a127246e3fd35e} 
 \index{rxn\_troe.c@{rxn\_troe.c}!rxn\_troe\_calc\_jac\_contrib@{rxn\_troe\_calc\_jac\_contrib}}
 \index{rxn\_troe\_calc\_jac\_contrib@{rxn\_troe\_calc\_jac\_contrib}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_troe\_calc\_jac\_contrib()}{rxn\_troe\_calc\_jac\_contrib()}}
-{\footnotesize\ttfamily void rxn\+\_\+troe\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+troe\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
 
 
 
-Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from this reaction. 
+Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em jac} & Reaction \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+{\em jac} & Reaction \doxylink{struct_jacobian}{Jacobian} \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -367,18 +385,30 @@ Calculate contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00189}{189}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 3
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=344pt]{rxn__troe_8c_a4f34c34a0b24bbbb11a127246e3fd35e_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 4
-\mbox{\Hypertarget{rxn__troe_8c_a8d762626ae8950f250d052a06e996db3}\label{rxn__troe_8c_a8d762626ae8950f250d052a06e996db3}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__troe_8c_a4f34c34a0b24bbbb11a127246e3fd35e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rxn__troe_8c_a8d762626ae8950f250d052a06e996db3}\label{rxn__troe_8c_a8d762626ae8950f250d052a06e996db3} 
 \index{rxn\_troe.c@{rxn\_troe.c}!rxn\_troe\_get\_used\_jac\_elem@{rxn\_troe\_get\_used\_jac\_elem}}
 \index{rxn\_troe\_get\_used\_jac\_elem@{rxn\_troe\_get\_used\_jac\_elem}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_troe\_get\_used\_jac\_elem()}{rxn\_troe\_get\_used\_jac\_elem()}}
-{\footnotesize\ttfamily void rxn\+\_\+troe\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+troe\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac }\end{DoxyParamCaption})}
 
 
 
-Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction. 
+Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -386,7 +416,7 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 \hline
 {\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
 \hline
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
 \hline
 \end{DoxyParams}
 
@@ -394,14 +424,26 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this reaction
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00047}{47}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 5
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__troe_8c_a8d762626ae8950f250d052a06e996db3_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 6
-\mbox{\Hypertarget{rxn__troe_8c_a7c9a6d7ecc68d520fa5dc35557a1c329}\label{rxn__troe_8c_a7c9a6d7ecc68d520fa5dc35557a1c329}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__troe_8c_a8d762626ae8950f250d052a06e996db3_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rxn__troe_8c_a7c9a6d7ecc68d520fa5dc35557a1c329}\label{rxn__troe_8c_a7c9a6d7ecc68d520fa5dc35557a1c329} 
 \index{rxn\_troe.c@{rxn\_troe.c}!rxn\_troe\_print@{rxn\_troe\_print}}
 \index{rxn\_troe\_print@{rxn\_troe\_print}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_troe\_print()}{rxn\_troe\_print()}}
-{\footnotesize\ttfamily void rxn\+\_\+troe\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+troe\+\_\+print (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -419,12 +461,18 @@ Print the Troe reaction parameters.
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00231}{231}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 7
-\mbox{\Hypertarget{rxn__troe_8c_ad2f31b90abffa527604e554295d3a40f}\label{rxn__troe_8c_ad2f31b90abffa527604e554295d3a40f}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=267pt]{rxn__troe_8c_a7c9a6d7ecc68d520fa5dc35557a1c329_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rxn__troe_8c_ad2f31b90abffa527604e554295d3a40f}\label{rxn__troe_8c_ad2f31b90abffa527604e554295d3a40f} 
 \index{rxn\_troe.c@{rxn\_troe.c}!rxn\_troe\_update\_env\_state@{rxn\_troe\_update\_env\_state}}
 \index{rxn\_troe\_update\_env\_state@{rxn\_troe\_update\_env\_state}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_troe\_update\_env\_state()}{rxn\_troe\_update\_env\_state()}}
-{\footnotesize\ttfamily void rxn\+\_\+troe\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+troe\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -448,12 +496,18 @@ For Troe reaction this only involves recalculating the rate constant.
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00107}{107}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 8
-\mbox{\Hypertarget{rxn__troe_8c_ab035a7b5e3990e133d055b13cbd74a08}\label{rxn__troe_8c_ab035a7b5e3990e133d055b13cbd74a08}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__troe_8c_ad2f31b90abffa527604e554295d3a40f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rxn__troe_8c_ab035a7b5e3990e133d055b13cbd74a08}\label{rxn__troe_8c_ab035a7b5e3990e133d055b13cbd74a08} 
 \index{rxn\_troe.c@{rxn\_troe.c}!rxn\_troe\_update\_ids@{rxn\_troe\_update\_ids}}
 \index{rxn\_troe\_update\_ids@{rxn\_troe\_update\_ids}!rxn\_troe.c@{rxn\_troe.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_troe\_update\_ids()}{rxn\_troe\_update\_ids()}}
-{\footnotesize\ttfamily void rxn\+\_\+troe\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int $\ast$}]{rxn\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+troe\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -465,7 +519,7 @@ Update the time derivative and Jacbobian array indices.
 \hline
 {\em deriv\+\_\+ids} & Id of each state variable in the derivative array \\
 \hline
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -477,6 +531,18 @@ Update the time derivative and Jacbobian array indices.
 Definition at line \mbox{\hyperlink{rxn__troe_8c_source_l00072}{72}} of file \mbox{\hyperlink{rxn__troe_8c_source}{rxn\+\_\+troe.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 9
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=342pt]{rxn__troe_8c_ab035a7b5e3990e133d055b13cbd74a08_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 10
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__troe_8c_ab035a7b5e3990e133d055b13cbd74a08_icgraph}
+\end{center}
+\end{figure}

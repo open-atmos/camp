@@ -1,4 +1,5 @@
 <map id="camp_util::split_string" name="camp_util::split_string">
-<area shape="rect" id="node1" title="Splits a string on a substring." alt="" coords="180,13,327,38"/>
-<area shape="rect" id="node2" href="$structcamp__util_1_1string__t.html#af2e8e8519761739c035e8257a6fd30fd" title=" " alt="" coords="5,5,132,45"/>
+<area shape="rect" id="Node000001" title="Splits a string on a substring." alt="" coords="180,13,326,39"/>
+<area shape="rect" id="Node000002" href="$structcamp__util_1_1string__t.html#acf924ca1ec986e42feadc6a6c5f0260f" title="Splits a string on a substring." alt="" coords="5,5,132,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,28,132,28,132,23,164,23"/>
 </map>

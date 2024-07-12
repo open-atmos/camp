@@ -1,5 +1,7 @@
 <map id="jacobian_initialize_empty" name="jacobian_initialize_empty">
-<area shape="rect" id="node1" title="Initialize the Jacobian." alt="" coords="5,5,128,45"/>
-<area shape="rect" id="node2" href="$_jacobian_8c.html#a0c0108de18ada97dc46782f7223ceef8" title="Free memory associated with a Jacobian." alt="" coords="176,13,275,38"/>
-<area shape="rect" id="node3" href="$_jacobian_8c.html#a7bc2fe67ae132c04bf45e69934e6be1f" title="Free memory associated with a JacobianColumnElements." alt="" coords="323,13,531,38"/>
+<area shape="rect" id="Node000001" title="Initialize the Jacobian." alt="" coords="5,5,128,46"/>
+<area shape="rect" id="Node000002" href="$_jacobian_8c.html#a0c0108de18ada97dc46782f7223ceef8" title="Free memory associated with a Jacobian." alt="" coords="176,13,274,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,23,160,23,160,28,128,28"/>
+<area shape="rect" id="Node000003" href="$_jacobian_8c.html#a7bc2fe67ae132c04bf45e69934e6be1f" title="Free memory associated with a JacobianColumnElements." alt="" coords="322,13,529,39"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="275,23,306,23,306,28,275,28"/>
 </map>

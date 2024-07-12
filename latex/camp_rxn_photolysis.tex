@@ -1,0 +1,30 @@
+\doxysubsubsection{CAMP\+: Photolysis}
+\hypertarget{camp_rxn_photolysis}{}\label{camp_rxn_photolysis}\index{CAMP: Photolysis@{CAMP: Photolysis}}
+Photolysis reactions take the form\+:
+
+\[\ce{
+   X + h $\nu$ -> Y_1 ( + Y_2 \dots )
+ }\]
+
+where $\ce{X}$ is the species being photolyzed, and $\ce{Y_n}$ are the photolysis products.
+
+Photolysis rate constants (including the $\ce{h $\nu$}$ term) can be constant or set from an external photolysis module using the {\ttfamily \doxylink{structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t}{camp\+\_\+rxn\+\_\+photolysis\+::rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t}} object. External modules can use the {\ttfamily \doxylink{structcamp__rxn__photolysis_1_1rxn__photolysis__t_a9194b942fea553a27aa64d79c1f8d558}{camp\+\_\+rxn\+\_\+photolysis\+::rxn\+\_\+photolysis\+\_\+t\+::get\+\_\+property\+\_\+set()}} function during initilialization to access any needed reaction parameters to identify certain photolysis reactions. An {\ttfamily camp\+\_\+rxn\+\_\+photolysis\+::update\+\_\+data\+\_\+photolysis\+\_\+t} object should be initialized for each photolysis reaction. These objects can then be used during solving to update the photolysis rate from an external module.
+
+Input data for photolysis reactions have the following format \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}PHOTOLYSIS"{},}
+\DoxyCodeLine{\ \ "{}reactants"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ "{}spec1"{}\ :\ \{\}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ "{}products"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ "{}spec2"{}\ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ "{}spec3"{}\ :\ \{\ "{}yield"{}\ :\ 0.65\ \},}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ "{}scaling\ factor"{}\ :\ 1.2,}
+\DoxyCodeLine{\ \ ...}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ The key-\/value pairs {\bfseries{reactants}}, and {\bfseries{products}} are required. There must be exactly one key-\/value pair in the {\bfseries{reactants}} object whose name is the species being photolyzed and whose value is an empty {\ttfamily json} object. Any number of products may be present. Products without a specified {\bfseries{yield}} are assumed to have a {\bfseries{yield}} of 1.\+0. The {\bfseries{scaling}} {\bfseries{factor}} is optional, and can be used to set a constant scaling factor for the rate constant. When the {\bfseries{scaling}} {\bfseries{factor}} is not provided, it is assumed to be 1.\+0. All other data is optional and will be available to external photolysis modules during initialization. Rate constants are in units of $s^{-1}$, and must be set using a {\ttfamily rxn\+\_\+photolysis\+\_\+update\+\_\+data\+\_\+t} object. 

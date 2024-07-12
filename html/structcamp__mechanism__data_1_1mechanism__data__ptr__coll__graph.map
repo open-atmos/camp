@@ -1,0 +1,7 @@
+<map id="camp_mechanism_data::mechanism_data_ptr" name="camp_mechanism_data::mechanism_data_ptr">
+<area shape="rect" id="Node000001" title="Pointer type for building arrays." alt="" coords="5,213,165,253"/>
+<area shape="rect" id="Node000002" href="$structcamp__mechanism__data_1_1mechanism__data__t.html" title="A chemical mechanism." alt="" coords="5,109,165,150"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,165,88,212,82,212,82,165"/>
+<area shape="rect" id="Node000003" href="$structcamp__rxn__data_1_1rxn__data__ptr.html" title="Pointer type for building arrays of mixed reactions." alt="" coords="19,5,151,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="88,62,88,109,82,109,82,62"/>
+</map>

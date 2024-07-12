@@ -1,0 +1,67 @@
+\doxysubsection{Input JSON Object Format\+: Reaction (general)}
+\hypertarget{input_format_rxn}{}\label{input_format_rxn}\index{Input JSON Object Format: Reaction (general)@{Input JSON Object Format: Reaction (general)}}
+A {\ttfamily json} object containing information about a chemical reaction or physical process in the gas phase, in an \doxylink{camp_aero_phase}{aerosol phase}, or between two phases (phase-\/transfer). \doxylink{camp_rxn}{Reactions} are used to build \doxylink{camp_mechanism}{mechanisms} and are only found within an input \doxylink{input_format_mechanism}{mechanism object} in an array labelled {\bfseries{reactions}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ "{}camp-\/data"{}\ :\ [}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ "{}name"{}\ :\ "{}my\ mechanism"{},}
+\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}MECHANISM"{},}
+\DoxyCodeLine{\ \ \ \ "{}reactions"{}\ :\ [}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}type"{}\ :\ "{}REACTION\_TYPE"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}reactants"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}some\ species"{}\ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}another\ species"{}\ :\ \{\ "{}qty"{}\ :\ 2\ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}products"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}product\ species"{}\ :\ \{\ "{}yield"{}\ :\ 0.42\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}another\ prod\ species"{}\ :\ \{\}}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}some\ parameter"{}\ :\ 123.34,}
+\DoxyCodeLine{\ \ \ \ \ \ "{}some\ other\ parameter"{}\ :\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ "{}nested\ parameters"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ "{}sub\ param\ 1"{}\ :\ 12.43,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ "{}sub\ param\ other"{}\ :\ "{}some\ text"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ ...}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}type"{}\ :\ "{}REACTION\_TYPE"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}reactants"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}that\ one\ species"{}\ :\ \{\ "{}qty"{}\ :\ 3\ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}some\ parameter"{}\ :\ 123.34,}
+\DoxyCodeLine{\ \ \ \ \ \ ...}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\ \ ]\},}
+\DoxyCodeLine{\ \ ...}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ The key-\/value pair {\bfseries{type}} is required and its value must correspond to a valid reaction type. Valid reaction types include\+:
+
+
+\begin{DoxyItemize}
+\item \doxylink{camp_rxn_arrhenius}{ARRHENIUS}
+\item \doxylink{camp_rxn_aqueous_equilibrium}{AQUEOUS\+\_\+\+EQUILIBRIUM}
+\item \doxylink{camp_rxn_CMAQ_H2O2}{CMAQ\+\_\+\+H2\+O2}
+\item \doxylink{camp_rxn_CMAQ_OH_HNO3}{CMAQ\+\_\+\+OH\+\_\+\+HNO3}
+\item \doxylink{camp_rxn_condensed_phase_arrhenius}{CONDENSED\+\_\+\+PHASE\+\_\+\+ARRHENIUS}
+\item \doxylink{camp_rxn_HL_phase_transfer}{HL\+\_\+\+PHASE\+\_\+\+TRANSFER}
+\item \doxylink{camp_rxn_SIMPOL_phase_transfer}{SIMPOL\+\_\+\+PHASE\+\_\+\+TRANSFER}
+\item \doxylink{camp_rxn_photolysis}{PHOTOLYSIS}
+\item \doxylink{camp_rxn_troe}{TROE}
+\end{DoxyItemize}
+
+All remaining data are optional and may include any valid {\ttfamily json} value, including nested objects. However, extending types (i.\+e. reactions) will have specific requirements for the remaining data. Additionally it is recommended to use the above format for reactants and products when developing derived types that extend {\ttfamily \doxylink{structcamp__rxn__data_1_1rxn__data__t}{rxn\+\_\+data\+\_\+t}}, and to use {\bfseries{type}} values that match the name of the extending derived-\/type. For example, the reaction type {\ttfamily rxn\+\_\+photolysis\+\_\+t} would have a {\bfseries{type}} of {\bfseries{PHOTOLYSIS}}. \input{camp_rxn_arrhenius}
+\input{camp_rxn_aqueous_equilibrium}
+\input{camp_rxn__c_m_a_q__h2_o2}
+\input{camp_rxn__c_m_a_q__o_h__h_n_o3}
+\input{camp_rxn_condensed_phase_arrhenius}
+\input{camp_rxn__h_l_phase_transfer}
+\input{camp_rxn__s_i_m_p_o_l_phase_transfer}
+\input{camp_rxn_photolysis}
+\input{camp_rxn_troe}

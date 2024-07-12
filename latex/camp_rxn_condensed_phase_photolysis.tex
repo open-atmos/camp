@@ -1,0 +1,40 @@
+\doxysubsection{CAMP\+: Condensed-\/\+Phase Photolysis Reaction}
+\hypertarget{camp_rxn_condensed_phase_photolysis}{}\label{camp_rxn_condensed_phase_photolysis}\index{CAMP: Condensed-\/Phase Photolysis Reaction@{CAMP: Condensed-\/Phase Photolysis Reaction}}
+Condensed-\/\+Phase Photolysis reactions take the form\+:
+
+\[\ce{
+   X + h $\nu$ -> Y_1 ( + Y_2 \dots )
+ }\]
+
+where $\ce{X}$ is the species being photolyzed, and $\ce{Y_n}$ are the photolysis products.
+
+The reaction rate can be scaled by providing the "{}scaling factor"{} keyword in the json configuration.
+
+Input data for condensed-\/phase Photolysis reactions have the following format\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}CONDENSED\_PHASE\_PHOTOLYSIS"{},}
+\DoxyCodeLine{\ \ "{}rate"{}\ :\ 123.45,}
+\DoxyCodeLine{\ \ "{}units"{}\ :\ "{}M"{},}
+\DoxyCodeLine{\ \ "{}aerosol\ phase"{}\ :\ "{}my\ aqueous\ phase"{},}
+\DoxyCodeLine{\ \ "{}aerosol-\/phase\ water"{}\ :\ "{}H2O\_aq"{},}
+\DoxyCodeLine{\ \ "{}reactants"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ "{}spec1"{}\ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ "{}products"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ "{}spec3"{}\ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ "{}spec4"{}\ :\ \{\ "{}yield"{}\ :\ 0.65\ \},}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ "{}scaling\ factor"{}:\ 11.20}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ The key-\/value pairs {\bfseries{reactants}}, and {\bfseries{products}} are required. Reactants without a {\bfseries{qty}} value are assumed to appear once in the reaction equation. Products without a specified {\bfseries{yield}} are assumed to have a {\bfseries{yield}} of 1.\+0.
+
+Units for the reactants and products must be specified using the key {\bfseries{units}} and can be either {\bfseries{M}} or {\bfseries{mol}} {\bfseries{m-\/3}}. If units of {\bfseries{M}} are specified, a key-\/value pair {\bfseries{aerosol-\/phase}} {\bfseries{water}} must also be included whose value is a string specifying the name for water in the aerosol phase.
+
+The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit.
+
+The key-\/value pair {\bfseries{aerosol}} {\bfseries{phase}} is required and must specify the name of the aerosol-\/phase in which the reaction occurs. 

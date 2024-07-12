@@ -1,11 +1,23 @@
 <map id="camp_mpi::camp_mpi_reduce_avg_real" name="camp_mpi::camp_mpi_reduce_avg_real">
-<area shape="rect" id="node1" title="Computes the average of val across all processes, storing the result in val_avg on the root process." alt="" coords="5,46,153,86"/>
-<area shape="rect" id="node2" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="429,46,577,86"/>
-<area shape="rect" id="node8" href="$namespacecamp__mpi.html#a071b987e3ccab55010a23029249b73a4" title="Returns the rank of the current process." alt="" coords="201,54,381,79"/>
-<area shape="rect" id="node9" href="$namespacecamp__mpi.html#ac12772749475620730de7ac0fd2f88d7" title="Returns the total number of processes." alt="" coords="202,127,381,152"/>
-<area shape="rect" id="node3" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="625,46,773,86"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="821,54,923,79"/>
-<area shape="rect" id="node5" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="971,54,1091,79"/>
-<area shape="rect" id="node6" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1139,54,1291,79"/>
-<area shape="rect" id="node7" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1339,46,1461,86"/>
+<area shape="rect" id="Node000001" title="Computes the average of val across all processes, storing the result in val_avg on the root process." alt="" coords="5,46,153,87"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="428,46,575,87"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,43,158,27,200,14,250,6,290,3,330,6,381,14,415,24,448,37,446,42,413,29,379,19,330,11,290,8,251,11,201,19,159,32,121,48"/>
+<area shape="rect" id="Node000008" href="$namespacecamp__mpi.html#a071b987e3ccab55010a23029249b73a4" title="Returns the rank of the current process." alt="" coords="201,53,380,79"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="153,64,185,64,185,69,153,69"/>
+<area shape="rect" id="Node000009" href="$namespacecamp__mpi.html#ac12772749475620730de7ac0fd2f88d7" title="Returns the total number of processes." alt="" coords="202,127,379,152"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="140,85,237,119,236,124,139,90"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="623,46,771,87"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="576,64,607,64,607,69,576,69"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="819,53,919,79"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="771,64,803,64,803,69,771,69"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="967,53,1086,79"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="919,64,951,64,951,69,919,69"/>
+<area shape="rect" id="Node000006" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1134,53,1286,79"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1087,64,1119,64,1119,69,1087,69"/>
+<area shape="rect" id="Node000007" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1334,46,1456,87"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1286,64,1318,64,1318,69,1286,69"/>
+<area shape="poly" id="edge8_Node000008_Node000002" title=" " alt="" coords="380,64,412,64,412,69,380,69"/>
+<area shape="poly" id="edge9_Node000008_Node000008" title=" " alt="" coords="255,55,248,45,252,35,267,29,290,27,316,29,329,36,327,41,315,35,290,32,268,34,256,39,253,44,259,51"/>
+<area shape="poly" id="edge11_Node000009_Node000002" title=" " alt="" coords="329,124,426,90,427,95,331,129"/>
+<area shape="poly" id="edge12_Node000009_Node000009" title=" " alt="" coords="255,128,248,118,252,108,267,102,290,100,316,103,329,110,327,114,315,108,290,105,268,107,256,112,253,118,259,125"/>
 </map>

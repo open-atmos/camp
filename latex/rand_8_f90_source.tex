@@ -1,666 +1,666 @@
-\hypertarget{rand_8_f90_source}{}\doxysection{rand.\+F90}
-\label{rand_8_f90_source}\index{rand.F90@{rand.F90}}
+\doxysection{rand.\+F90}
+\hypertarget{rand_8_f90_source}{}\label{rand_8_f90_source}\index{rand.F90@{rand.F90}}
 \mbox{\hyperlink{rand_8_f90}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2007-\/2021 Barcelona Supercomputing Center and University of}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00002}00002 \textcolor{comment}{! Illinois at Urbana-\/Champaign}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00003}00003 \textcolor{comment}{! SPDX-\/License-\/Identifier: MIT}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00004}00004 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00005}00005 \textcolor{comment}{!> \(\backslash\)file}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00006}00006 \textcolor{comment}{!> The camp\_rand module.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00007}00007 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00008}00008 \textcolor{comment}{!> Random number generators.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00009}\mbox{\hyperlink{namespacecamp__rand}{00009}} \textcolor{keyword}{module} \mbox{\hyperlink{namespacecamp__rand}{camp\_rand}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00010}00010 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00011}00011   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__util}{camp\_util}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00012}00012   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00013}00013   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__mpi}{camp\_mpi}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00014}00014 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00015}00015 \textcolor{preprocessor}{}  \textcolor{keywordtype}{use }iso\_c\_binding}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00016}00016 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00017}00017 \textcolor{preprocessor}{}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00018}00018 \textcolor{comment}{  !> Length of a UUID string.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00019}\mbox{\hyperlink{namespacecamp__rand_a5114dab7a95ed6892f3b745ed4f6305d}{00019}}   \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacecamp__rand_a5114dab7a95ed6892f3b745ed4f6305d}{camp\_uuid\_len}} = 36}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00020}00020 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00021}00021 \textcolor{comment}{  !> Result code indicating successful completion.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00022}\mbox{\hyperlink{namespacecamp__rand_a9a4c4d38959ee17ef78d086dacb27808}{00022}}   \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacecamp__rand_a9a4c4d38959ee17ef78d086dacb27808}{camp\_rand\_gsl\_success}}      = 0\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00023}00023 \textcolor{comment}{  !> Result code indicating initialization failure.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00024}\mbox{\hyperlink{namespacecamp__rand_a58d88e6213ec230b2c8ff9b274337eda}{00024}}   \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacecamp__rand_a58d88e6213ec230b2c8ff9b274337eda}{camp\_rand\_gsl\_init\_fail}}    = 1\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00025}00025 \textcolor{comment}{  !> Result code indicating the generator was not initialized when it}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00026}00026 \textcolor{comment}{  !> should have been.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00027}\mbox{\hyperlink{namespacecamp__rand_af7602a6c71a449ebcec1b2d63481d9f1}{00027}}   \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacecamp__rand_af7602a6c71a449ebcec1b2d63481d9f1}{camp\_rand\_gsl\_not\_init}}     = 2\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00028}00028 \textcolor{comment}{  !> Result code indicating the generator was already initialized when}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00029}00029 \textcolor{comment}{  !> an initialization was attempted.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00030}\mbox{\hyperlink{namespacecamp__rand_a72a5ddc7d711cc3345c3e49c127da02d}{00030}}   \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacecamp__rand_a72a5ddc7d711cc3345c3e49c127da02d}{camp\_rand\_gsl\_already\_init}} = 3}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00031}00031 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00032}00032 \textcolor{comment}{  !> Next sequential id}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00033}\mbox{\hyperlink{namespacecamp__rand_aa2faf6c17ce9681e2d85009cd8876616}{00033}}   \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{private} :: \mbox{\hyperlink{namespacecamp__rand_aa2faf6c17ce9681e2d85009cd8876616}{next\_id}} = 100}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00034}00034 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00035}00035 \textcolor{keyword}{contains}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00036}00036 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00037}00037 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00038}00038 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00039}00039 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00040}00040 \textcolor{preprocessor}{}\textcolor{comment}{  !> Check the return value of a call to one of the GSL RNG functions.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00041}00041   \textcolor{keyword}{subroutine }rand\_check\_gsl(code, value)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00042}00042 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00043}00043 \textcolor{comment}{    !> Error code.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00044}00044     \textcolor{keywordtype}{integer} :: code\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00045}00045 \textcolor{comment}{    !> Return value.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00046}00046     \textcolor{keywordtype}{integer(kind=c\_int)} :: value}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00047}00047 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00048}00048     \textcolor{keywordflow}{if} (\textcolor{keywordtype}{value} == \mbox{\hyperlink{namespacecamp__rand_a9a4c4d38959ee17ef78d086dacb27808}{camp\_rand\_gsl\_success}}) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00049}00049        \textcolor{keywordflow}{return}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00050}00050     \textcolor{keywordflow}{elseif} (\textcolor{keywordtype}{value} == \mbox{\hyperlink{namespacecamp__rand_a58d88e6213ec230b2c8ff9b274337eda}{camp\_rand\_gsl\_init\_fail}}) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00051}00051        \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(code, \textcolor{stringliteral}{"{}GSL RNG initialization failed"{}})}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00052}00052     \textcolor{keywordflow}{elseif} (\textcolor{keywordtype}{value} == \mbox{\hyperlink{namespacecamp__rand_af7602a6c71a449ebcec1b2d63481d9f1}{camp\_rand\_gsl\_not\_init}}) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00053}00053        \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(code, \textcolor{stringliteral}{"{}GSL RNG has not been successfully initialized"{}})}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00054}00054     \textcolor{keywordflow}{elseif} (\textcolor{keywordtype}{value} == \mbox{\hyperlink{namespacecamp__rand_a72a5ddc7d711cc3345c3e49c127da02d}{camp\_rand\_gsl\_already\_init}}) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00055}00055        \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(code, \textcolor{stringliteral}{"{}GSL RNG was already initialized"{}})}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00056}00056     \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00057}00057        \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(code, \textcolor{stringliteral}{"{}Unknown GSL RNG interface return value: "{}} \&}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00058}00058             // trim(\mbox{\hyperlink{namespacecamp__util_acd72e4626dcfefffaa08c42cfa7949bc}{integer\_to\_string}}(\textcolor{keywordtype}{value})))}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00059}00059 \textcolor{keywordflow}{    end if}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00060}00060 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00061}00061   \textcolor{keyword}{end subroutine }rand\_check\_gsl}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00062}00062 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00063}00063 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00064}00064 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00065}00065 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00066}00066 \textcolor{comment}{  !> Initializes the random number generator to the state defined by}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00067}00067 \textcolor{comment}{  !> the given seed plus offset. If the seed is 0 then a seed is}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00068}00068 \textcolor{comment}{  !> auto-\/generated from the current time plus offset.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00069}\mbox{\hyperlink{namespacecamp__rand_a90d79e868de55c0438ab39ab7c4dcf76}{00069}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__rand_a90d79e868de55c0438ab39ab7c4dcf76}{camp\_srand}}(seed, offset)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00070}00070 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00071}00071 \textcolor{comment}{    !> Random number generator seed.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00072}00072     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(in)} :: seed\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00073}00073 \textcolor{comment}{    !> Random number generator offset.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00074}00074     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(in)} :: offset}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00075}00075 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00076}00076     \textcolor{keywordtype}{integer} :: i, n, clock}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00077}00077     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{allocatable} :: seed\_vec(:)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00078}00078 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00079}00079 \textcolor{preprocessor}{}    \textcolor{keywordtype}{integer(kind=c\_int)} :: c\_clock}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00080}00080 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00081}00081 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00082}00082 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00083}00083 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#ifndef DOXYGEN\_SKIP\_DOC}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00084}00084 \textcolor{preprocessor}{}    \textcolor{keyword}{interface}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00085}00085        \textcolor{keyword}{integer(kind=c\_int) }\textcolor{keyword}{function }\mbox{\hyperlink{rand__gsl_8c_ad7746428b015f3f2da1eadeb262237b6}{camp\_srand\_gsl}}(seed) \textcolor{keyword}{bind(c)}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00086}00086          \textcolor{keywordtype}{use }iso\_c\_binding}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00087}00087          \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: seed}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00088}00088        \textcolor{keyword}{end function }\mbox{\hyperlink{rand__gsl_8c_ad7746428b015f3f2da1eadeb262237b6}{camp\_srand\_gsl}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00089}00089     \textcolor{keyword}{end interface}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00090}00090 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00091}00091 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00092}00092 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00093}00093     \textcolor{keywordflow}{if} (seed == 0) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00094}00094        \textcolor{keywordflow}{if} (\mbox{\hyperlink{namespacecamp__mpi_a071b987e3ccab55010a23029249b73a4}{camp\_mpi\_rank}}() == 0) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00095}00095           \textcolor{keyword}{call }system\_clock(count = clock)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00096}00096 \textcolor{keywordflow}{       end if}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00097}00097        \textcolor{comment}{! ensure all nodes use exactly the same seed base, to avoid}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00098}00098        \textcolor{comment}{! accidental correlations}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00099}00099        \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a7b8bd92bfd70d41355c71943d41a528c}{camp\_mpi\_bcast\_integer}}(clock)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00100}00100     \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00101}00101        clock = seed}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00102}00102 \textcolor{keywordflow}{    end if}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00103}00103     clock = clock + 67 * offset}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00104}00104 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00105}00105 \textcolor{preprocessor}{}    c\_clock = int(clock, kind=c\_int)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00106}00106     \textcolor{keyword}{call }rand\_check\_gsl(100489590, \mbox{\hyperlink{rand__gsl_8c_ad7746428b015f3f2da1eadeb262237b6}{camp\_srand\_gsl}}(c\_clock))}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00107}00107 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00108}00108 \textcolor{preprocessor}{}    \textcolor{keyword}{call }random\_seed(\textcolor{keyword}{size} = n)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00109}00109     \textcolor{keyword}{allocate}(seed\_vec(n))}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00110}00110     i = 0 \textcolor{comment}{! HACK to shut up gfortran warning}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00111}00111     seed\_vec = clock + 37 * (/ (i -\/ 1, i = 1, n) /)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00112}00112     \textcolor{keyword}{call }random\_seed(put = seed\_vec)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00113}00113     \textcolor{keyword}{deallocate}(seed\_vec)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00114}00114 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00115}00115 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00116}00116   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__rand_a90d79e868de55c0438ab39ab7c4dcf76}{camp\_srand}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00117}00117 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00118}00118 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00119}00119 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00120}00120 \textcolor{comment}{  !> Cleanup the random number generator.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00121}\mbox{\hyperlink{namespacecamp__rand_a67fe9351306f38d3024e6aea4220e3c8}{00121}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__rand_a67fe9351306f38d3024e6aea4220e3c8}{camp\_rand\_finalize}}()}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00122}00122 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00123}00123 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00124}00124 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00125}00125 \textcolor{preprocessor}{\#ifndef DOXYGEN\_SKIP\_DOC}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00126}00126 \textcolor{preprocessor}{}    \textcolor{keyword}{interface}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00127}00127        \textcolor{keyword}{integer(kind=c\_int) }\textcolor{keyword}{function }\mbox{\hyperlink{rand__gsl_8c_a1bd137bff02ae81a2261e0aca1604492}{camp\_rand\_finalize\_gsl}}() \textcolor{keyword}{bind(c)}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00128}00128          \textcolor{keywordtype}{use }iso\_c\_binding}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00129}00129        \textcolor{keyword}{end function }\mbox{\hyperlink{rand__gsl_8c_a1bd137bff02ae81a2261e0aca1604492}{camp\_rand\_finalize\_gsl}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00130}00130     \textcolor{keyword}{end interface}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00131}00131 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00132}00132 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00133}00133     \textcolor{keyword}{call }rand\_check\_gsl(489538382, \mbox{\hyperlink{rand__gsl_8c_a1bd137bff02ae81a2261e0aca1604492}{camp\_rand\_finalize\_gsl}}())}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00134}00134 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00135}00135 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00136}00136   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__rand_a67fe9351306f38d3024e6aea4220e3c8}{camp\_rand\_finalize}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00137}00137 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00138}00138 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00139}00139 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00140}00140 \textcolor{comment}{  !> Returns a random number between 0 and 1.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00141}\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{00141}} \textcolor{keywordtype}{  real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}()}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00142}00142 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00143}00143 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00144}00144 \textcolor{preprocessor}{}\textcolor{keywordtype}{    real}(kind=c\_double), \textcolor{keywordtype}{target} :: rnd}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00145}00145     \textcolor{keywordtype}{type}(c\_ptr) :: rnd\_ptr}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00146}00146 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00147}00147 \textcolor{preprocessor}{}\textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: rnd}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00148}00148 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00149}00149 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00150}00150 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00151}00151 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#ifndef DOXYGEN\_SKIP\_DOC}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00152}00152 \textcolor{preprocessor}{}    \textcolor{keyword}{interface}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00153}00153        \textcolor{keyword}{integer(kind=c\_int) }\textcolor{keyword}{function }\mbox{\hyperlink{rand__gsl_8c_abd204acb91a0adebb638deae62396379}{camp\_rand\_gsl}}(harvest) \textcolor{keyword}{bind(c)}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00154}00154          \textcolor{keywordtype}{use }iso\_c\_binding}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00155}00155          \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: harvest}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00156}00156        \textcolor{keyword}{end function }\mbox{\hyperlink{rand__gsl_8c_abd204acb91a0adebb638deae62396379}{camp\_rand\_gsl}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00157}00157     \textcolor{keyword}{end interface}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00158}00158 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00159}00159 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00160}00160 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00161}00161 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00162}00162 \textcolor{preprocessor}{}    rnd\_ptr = c\_loc(rnd)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00163}00163     \textcolor{keyword}{call }rand\_check\_gsl(843777138, \mbox{\hyperlink{rand__gsl_8c_abd204acb91a0adebb638deae62396379}{camp\_rand\_gsl}}(rnd\_ptr))}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00164}00164     \mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}} = real(rnd, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00165}00165 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00166}00166 \textcolor{preprocessor}{}    \textcolor{keyword}{call }random\_number(rnd)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00167}00167     \mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}} = rnd}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00168}00168 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00169}00169 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00170}00170   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00171}00171 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00172}00172 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00173}00173 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00174}00174 \textcolor{comment}{  !> Returns a random integer between 1 and n.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00175}\mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{00175}}   \textcolor{keyword}{integer }\textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}(n)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00176}00176 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00177}00177 \textcolor{comment}{    !> Maximum random number to generate.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00178}00178     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(in)} :: n}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00179}00179 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00180}00180 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00181}00181 \textcolor{preprocessor}{}    \textcolor{keywordtype}{integer(kind=c\_int)} :: n\_c}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00182}00182     \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{target} :: harvest}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00183}00183     \textcolor{keywordtype}{type}(c\_ptr) :: harvest\_ptr}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00184}00184 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00185}00185 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00186}00186 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00187}00187 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#ifndef DOXYGEN\_SKIP\_DOC}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00188}00188 \textcolor{preprocessor}{}    \textcolor{keyword}{interface}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00189}00189        \textcolor{keyword}{integer(kind=c\_int) }\textcolor{keyword}{function }\mbox{\hyperlink{rand__gsl_8c_a0ebca9079073ff12ca49babd5f49edb9}{camp\_rand\_int\_gsl}}(n, harvest) \textcolor{keyword}{bind(c)}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00190}00190          \textcolor{keywordtype}{use }iso\_c\_binding}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00191}00191          \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00192}00192          \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: harvest}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00193}00193        \textcolor{keyword}{end function }\mbox{\hyperlink{rand__gsl_8c_a0ebca9079073ff12ca49babd5f49edb9}{camp\_rand\_int\_gsl}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00194}00194     \textcolor{keyword}{end interface}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00195}00195 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00196}00196 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00197}00197 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00198}00198     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(669532625, n >= 1)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00199}00199 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00200}00200 \textcolor{preprocessor}{}    n\_c = int(n, kind=c\_int)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00201}00201     harvest\_ptr = c\_loc(harvest)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00202}00202     \textcolor{keyword}{call }rand\_check\_gsl(388234845, \mbox{\hyperlink{rand__gsl_8c_a0ebca9079073ff12ca49babd5f49edb9}{camp\_rand\_int\_gsl}}(n\_c, harvest\_ptr))}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00203}00203     \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}} = int(harvest)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00204}00204 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00205}00205 \textcolor{preprocessor}{}    \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}} = mod(int(\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}() * real(n, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})), n) + 1}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00206}00206 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00207}00207 \textcolor{preprocessor}{}    \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(515838689, \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}} >= 1)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00208}00208     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(802560153, \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}} <= n)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00209}00209 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00210}00210   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00211}00211 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00212}00212 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00213}00213 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00214}00214 \textcolor{comment}{  !> Round val to \(\backslash\)c floor(val) or \(\backslash\)c ceiling(val) with probability}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00215}00215 \textcolor{comment}{  !> proportional to the relative distance from \(\backslash\)c val. That is,}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00216}00216 \textcolor{comment}{  !> Prob(prob\_round(val) == floor(val)) = ceil(val) -\/ val.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00217}\mbox{\hyperlink{namespacecamp__rand_a4ff2053765052f38c615a8bce9ff7365}{00217}}   \textcolor{keyword}{integer }\textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__rand_a4ff2053765052f38c615a8bce9ff7365}{prob\_round}}(val)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00218}00218 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00219}00219 \textcolor{comment}{    !> Value to round.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00220}00220 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), \textcolor{keywordtype}{intent(in)} :: val}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00221}00221 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00222}00222     \textcolor{comment}{! FIXME: can replace this with:}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00223}00223     \textcolor{comment}{! prob\_round = floor(val + camp\_random())}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00224}00224     \textcolor{keywordflow}{if} (\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}() < real(ceiling(val), kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) -\/ val) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00225}00225        \mbox{\hyperlink{namespacecamp__rand_a4ff2053765052f38c615a8bce9ff7365}{prob\_round}} = floor(val)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00226}00226     \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00227}00227        \mbox{\hyperlink{namespacecamp__rand_a4ff2053765052f38c615a8bce9ff7365}{prob\_round}} = ceiling(val)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00228}00228 \textcolor{keywordflow}{    endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00229}00229 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00230}00230   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__rand_a4ff2053765052f38c615a8bce9ff7365}{prob\_round}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00231}00231 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00232}00232 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00233}00233 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00234}00234 \textcolor{comment}{  !> Generate a Poisson-\/distributed random number with the given}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00235}00235 \textcolor{comment}{  !> mean.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00236}00236 \textcolor{comment}{  !!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00237}00237 \textcolor{comment}{  !! See http://en.wikipedia.org/wiki/Poisson\_distribution for}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00238}00238 \textcolor{comment}{  !! information on the method. The method used at present is rather}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00239}00239 \textcolor{comment}{  !! inefficient and inaccurate (brute force for mean below 10 and}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00240}00240 \textcolor{comment}{  !! normal approximation above that point).}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00241}00241 \textcolor{comment}{  !!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00242}00242 \textcolor{comment}{  !! The best known method appears to be due to Ahrens and Dieter (ACM}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00243}00243 \textcolor{comment}{  !! Trans. Math. Software, 8(2), 163-\/179, 1982) and is available (in}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00244}00244 \textcolor{comment}{  !! various forms) from:}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00245}00245 \textcolor{comment}{  !!     -\/ http://www.netlib.org/toms/599}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00246}00246 \textcolor{comment}{  !!     -\/ http://www.netlib.org/random/ranlib.f.tar.gz}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00247}00247 \textcolor{comment}{  !!     -\/ http://users.bigpond.net.au/amiller/random/random.f90}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00248}00248 \textcolor{comment}{  !!     -\/ http://www.netlib.org/random/random.f90}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00249}00249 \textcolor{comment}{  !!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00250}00250 \textcolor{comment}{  !! Unfortunately the above code is under the non-\/free license:}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00251}00251 \textcolor{comment}{  !!     -\/ http://www.acm.org/pubs/copyright\_policy/softwareCRnotice.html}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00252}00252 \textcolor{comment}{  !!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00253}00253 \textcolor{comment}{  !! For other reasonable methods see L. Devroye, "{}Non-\/Uniform Random}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00254}00254 \textcolor{comment}{  !! Variate Generation"{}, Springer-\/Verlag, 1986.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00255}\mbox{\hyperlink{namespacecamp__rand_afeef7ff3370b9d984897647d64070725}{00255}}   \textcolor{keyword}{integer }\textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__rand_afeef7ff3370b9d984897647d64070725}{rand\_poisson}}(mean)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00256}00256 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00257}00257 \textcolor{comment}{    !> Mean of the distribution.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00258}00258 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), \textcolor{keywordtype}{intent(in)} :: mean}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00259}00259 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00260}00260 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00261}00261 \textcolor{preprocessor}{}\textcolor{keywordtype}{    real}(kind=c\_double) :: mean\_c}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00262}00262     \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{target} :: harvest}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00263}00263     \textcolor{keywordtype}{type}(c\_ptr) :: harvest\_ptr}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00264}00264 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00265}00265 \textcolor{preprocessor}{}\textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: l, p}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00266}00266     \textcolor{keywordtype}{integer} :: k}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00267}00267 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00268}00268 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00269}00269 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00270}00270 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#ifndef DOXYGEN\_SKIP\_DOC}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00271}00271 \textcolor{preprocessor}{}    \textcolor{keyword}{interface}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00272}00272        \textcolor{keyword}{integer(kind=c\_int) }\textcolor{keyword}{function }\mbox{\hyperlink{rand__gsl_8c_a40555ee4862b906fb1a2ace9b76114a1}{camp\_rand\_poisson\_gsl}}(mean, harvest) \&}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00273}00273             \textcolor{keyword}{bind(c)}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00274}00274          \textcolor{keywordtype}{use }iso\_c\_binding}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00275}00275 \textcolor{keywordtype}{         real}(kind=c\_double), \textcolor{keywordtype}{value} :: mean}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00276}00276          \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: harvest}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00277}00277        \textcolor{keyword}{end function }\mbox{\hyperlink{rand__gsl_8c_a40555ee4862b906fb1a2ace9b76114a1}{camp\_rand\_poisson\_gsl}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00278}00278     \textcolor{keyword}{end interface}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00279}00279 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00280}00280 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00281}00281 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00282}00282     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(368397056, mean >= 0d0)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00283}00283 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00284}00284 \textcolor{preprocessor}{}    mean\_c = real(mean, kind=c\_double)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00285}00285     harvest\_ptr = c\_loc(harvest)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00286}00286     \textcolor{keyword}{call }rand\_check\_gsl(353483140, \&}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00287}00287          \mbox{\hyperlink{rand__gsl_8c_a40555ee4862b906fb1a2ace9b76114a1}{camp\_rand\_poisson\_gsl}}(mean\_c, harvest\_ptr))}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00288}00288     \mbox{\hyperlink{namespacecamp__rand_afeef7ff3370b9d984897647d64070725}{rand\_poisson}} = int(harvest)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00289}00289 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00290}00290 \textcolor{preprocessor}{}    \textcolor{keywordflow}{if} (mean <= 10d0) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00291}00291        \textcolor{comment}{! exact method due to Knuth}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00292}00292        l = exp(-\/mean)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00293}00293        k = 0}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00294}00294        p = 1d0}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00295}00295        \textcolor{keywordflow}{do}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00296}00296           k = k + 1}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00297}00297           p = p * \mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}()}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00298}00298           \textcolor{keywordflow}{if} (p < l) \textcolor{keywordflow}{exit}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00299}00299 \textcolor{keywordflow}{       end do}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00300}00300        \mbox{\hyperlink{namespacecamp__rand_afeef7ff3370b9d984897647d64070725}{rand\_poisson}} = k -\/ 1}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00301}00301     \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00302}00302        \textcolor{comment}{! normal approximation with a continuity correction}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00303}00303        k = nint(\mbox{\hyperlink{namespacecamp__rand_ac20e458bc43a3e432568ea44c054778e}{rand\_normal}}(mean, sqrt(mean)))}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00304}00304        \mbox{\hyperlink{namespacecamp__rand_afeef7ff3370b9d984897647d64070725}{rand\_poisson}} = max(k, 0)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00305}00305 \textcolor{keywordflow}{    end if}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00306}00306 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00307}00307 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00308}00308   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__rand_afeef7ff3370b9d984897647d64070725}{rand\_poisson}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00309}00309 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00310}00310 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00311}00311 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00312}00312 \textcolor{comment}{  !> Generate a Binomial-\/distributed random number with the given}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00313}00313 \textcolor{comment}{  !> parameters.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00314}00314 \textcolor{comment}{  !!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00315}00315 \textcolor{comment}{  !! See http://en.wikipedia.org/wiki/Binomial\_distribution for}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00316}00316 \textcolor{comment}{  !! information on the method. The method used at present is rather}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00317}00317 \textcolor{comment}{  !! inefficient and inaccurate (brute force for \(\backslash\)f\$np \(\backslash\)le 10\(\backslash\)f\$ and}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00318}00318 \textcolor{comment}{  !! \(\backslash\)f\$n(1-\/p) \(\backslash\)le 10\(\backslash\)f\$, otherwise normal approximation).}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00319}00319 \textcolor{comment}{  !!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00320}00320 \textcolor{comment}{  !! For better methods, see L. Devroye, "{}Non-\/Uniform Random Variate}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00321}00321 \textcolor{comment}{  !! Generation"{}, Springer-\/Verlag, 1986.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00322}\mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{00322}}   \textcolor{keyword}{integer }\textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}}(n, p)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00323}00323 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00324}00324 \textcolor{comment}{    !> Sample size.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00325}00325     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(in)} :: n\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00326}00326 \textcolor{comment}{    !> Sample probability.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00327}00327 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), \textcolor{keywordtype}{intent(in)} :: p}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00328}00328 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00329}00329 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00330}00330 \textcolor{preprocessor}{}    \textcolor{keywordtype}{integer(kind=c\_int)} :: n\_c}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00331}00331 \textcolor{keywordtype}{    real}(kind=c\_double) :: p\_c}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00332}00332     \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{target} :: harvest}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00333}00333     \textcolor{keywordtype}{type}(c\_ptr) :: harvest\_ptr}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00334}00334 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00335}00335 \textcolor{preprocessor}{}\textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: np, nomp, q, g\_real}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00336}00336     \textcolor{keywordtype}{integer} :: k, g, sum}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00337}00337 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00338}00338 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00339}00339 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00340}00340 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#ifndef DOXYGEN\_SKIP\_DOC}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00341}00341 \textcolor{preprocessor}{}    \textcolor{keyword}{interface}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00342}00342        \textcolor{keyword}{integer(kind=c\_int) }\textcolor{keyword}{function }\mbox{\hyperlink{rand__gsl_8c_af73fad1b3cd91ba86a264bae77b3eee5}{camp\_rand\_binomial\_gsl}}(n, p, harvest) \&}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00343}00343             \textcolor{keyword}{bind(c)}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00344}00344          \textcolor{keywordtype}{use }iso\_c\_binding}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00345}00345          \textcolor{keywordtype}{integer(kind=c\_int)}, \textcolor{keywordtype}{value} :: n}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00346}00346 \textcolor{keywordtype}{         real}(kind=c\_double), \textcolor{keywordtype}{value} :: p}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00347}00347          \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: harvest}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00348}00348        \textcolor{keyword}{end function }\mbox{\hyperlink{rand__gsl_8c_af73fad1b3cd91ba86a264bae77b3eee5}{camp\_rand\_binomial\_gsl}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00349}00349     \textcolor{keyword}{end interface}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00350}00350 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00351}00351 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00352}00352 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00353}00353     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(130699849, n >= 0)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00354}00354     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(754379796, p >= 0d0)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00355}00355     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(678506029, p <= 1d0)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00356}00356 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00357}00357 \textcolor{preprocessor}{}    n\_c = int(n, kind=c\_int)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00358}00358     p\_c = real(p, kind=c\_double)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00359}00359     harvest\_ptr = c\_loc(harvest)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00360}00360     \textcolor{keyword}{call }rand\_check\_gsl(208869397, \&}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00361}00361          \mbox{\hyperlink{rand__gsl_8c_af73fad1b3cd91ba86a264bae77b3eee5}{camp\_rand\_binomial\_gsl}}(n\_c, p\_c, harvest\_ptr))}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00362}00362     \mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}} = int(harvest)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00363}00363 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00364}00364 \textcolor{preprocessor}{}    np = real(n, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) * p}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00365}00365     nomp = real(n, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) * (1d0 -\/ p)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00366}00366     \textcolor{keywordflow}{if} ((np >= 10d0) .and. (nomp >= 10d0)) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00367}00367        \textcolor{comment}{! normal approximation with continuity correction}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00368}00368        k = nint(\mbox{\hyperlink{namespacecamp__rand_ac20e458bc43a3e432568ea44c054778e}{rand\_normal}}(np, sqrt(np * (1d0 -\/ p))))}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00369}00369        \mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}} = min(max(k, 0), n)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00370}00370     \textcolor{keywordflow}{elseif} (np < 1d-\/200) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00371}00371        \mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}} = 0}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00372}00372     \textcolor{keywordflow}{elseif} (nomp < 1d-\/200) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00373}00373        \mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}} = n}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00374}00374     \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00375}00375        \textcolor{comment}{! First waiting time method of Devroye (p. 525).}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00376}00376        \textcolor{comment}{! We want p small, so if p > 1/2 then we compute with 1 -\/ p and}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00377}00377        \textcolor{comment}{! take n -\/ k at the end.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00378}00378        \textcolor{keywordflow}{if} (p <= 0.5d0) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00379}00379           q = p}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00380}00380        \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00381}00381           q = 1d0 -\/ p}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00382}00382 \textcolor{keywordflow}{       end if}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00383}00383        k = 0}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00384}00384        sum = 0}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00385}00385        \textcolor{keywordflow}{do}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00386}00386           \textcolor{comment}{! G is geometric(q)}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00387}00387           g\_real = log(\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}()) / log(1d0 -\/ q)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00388}00388           \textcolor{comment}{! early bailout for cases to avoid integer overflow}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00389}00389           \textcolor{keywordflow}{if} (g\_real > real(n -\/ sum, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})) \textcolor{keywordflow}{exit}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00390}00390           g = ceiling(g\_real)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00391}00391           sum = sum + g}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00392}00392           \textcolor{keywordflow}{if} (sum > n) \textcolor{keywordflow}{exit}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00393}00393           k = k + 1}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00394}00394 \textcolor{keywordflow}{       end do}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00395}00395        \textcolor{keywordflow}{if} (p <= 0.5d0) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00396}00396           \mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}} = k}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00397}00397        \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00398}00398           \mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}} = n -\/ k}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00399}00399 \textcolor{keywordflow}{       end if}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00400}00400        \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(359087410, \mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}} <= n)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00401}00401 \textcolor{keywordflow}{    end if}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00402}00402 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00403}00403 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00404}00404   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00405}00405 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00406}00406 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00407}00407 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00408}00408 \textcolor{comment}{  !> Generates a normally distributed random number with the given}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00409}00409 \textcolor{comment}{  !> mean and standard deviation.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00410}\mbox{\hyperlink{namespacecamp__rand_ac20e458bc43a3e432568ea44c054778e}{00410}} \textcolor{keywordtype}{  real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__rand_ac20e458bc43a3e432568ea44c054778e}{rand\_normal}}(mean, stddev)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00411}00411 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00412}00412 \textcolor{comment}{    !> Mean of distribution.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00413}00413 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), \textcolor{keywordtype}{intent(in)} :: mean\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00414}00414 \textcolor{comment}{    !> Standard deviation of distribution.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00415}00415 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), \textcolor{keywordtype}{intent(in)} :: stddev}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00416}00416 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00417}00417 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00418}00418 \textcolor{preprocessor}{}\textcolor{keywordtype}{    real}(kind=c\_double) :: mean\_c, stddev\_c}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00419}00419 \textcolor{keywordtype}{    real}(kind=c\_double), \textcolor{keywordtype}{target} :: harvest}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00420}00420     \textcolor{keywordtype}{type}(c\_ptr) :: harvest\_ptr}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00421}00421 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00422}00422 \textcolor{preprocessor}{}\textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: u1, u2, r, theta, z0, z1}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00423}00423 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00424}00424 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00425}00425 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00426}00426 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#ifndef DOXYGEN\_SKIP\_DOC}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00427}00427 \textcolor{preprocessor}{}    \textcolor{keyword}{interface}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00428}00428        \textcolor{keyword}{integer(kind=c\_int) }\textcolor{keyword}{function }\mbox{\hyperlink{rand__gsl_8c_a77cc930abbc556f2ff28f676d1b740bc}{camp\_rand\_normal\_gsl}}(mean, stddev, \&}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00429}00429             harvest) \textcolor{keyword}{bind(c)}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00430}00430          \textcolor{keywordtype}{use }iso\_c\_binding}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00431}00431 \textcolor{keywordtype}{         real}(kind=c\_double), \textcolor{keywordtype}{value} :: mean}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00432}00432 \textcolor{keywordtype}{         real}(kind=c\_double), \textcolor{keywordtype}{value} :: stddev}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00433}00433          \textcolor{keywordtype}{type}(c\_ptr), \textcolor{keywordtype}{value} :: harvest}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00434}00434        \textcolor{keyword}{end function }\mbox{\hyperlink{rand__gsl_8c_a77cc930abbc556f2ff28f676d1b740bc}{camp\_rand\_normal\_gsl}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00435}00435     \textcolor{keyword}{end interface}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00436}00436 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00437}00437 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00438}00438 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00439}00439     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(898978929, stddev >= 0d0)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00440}00440 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00441}00441 \textcolor{preprocessor}{}    mean\_c = real(mean, kind=c\_double)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00442}00442     stddev\_c = real(stddev, kind=c\_double)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00443}00443     harvest\_ptr = c\_loc(harvest)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00444}00444     \textcolor{keyword}{call }rand\_check\_gsl(102078576, \&}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00445}00445          \mbox{\hyperlink{rand__gsl_8c_a77cc930abbc556f2ff28f676d1b740bc}{camp\_rand\_normal\_gsl}}(mean\_c, stddev\_c, harvest\_ptr))}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00446}00446     \mbox{\hyperlink{namespacecamp__rand_ac20e458bc43a3e432568ea44c054778e}{rand\_normal}} = real(harvest, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00447}00447 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00448}00448 \textcolor{preprocessor}{}    \textcolor{comment}{! Uses the Box-\/Muller transform}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00449}00449     \textcolor{comment}{! http://en.wikipedia.org/wiki/Box-\/Muller\_transform}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00450}00450     u1 = \mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}()}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00451}00451     u2 = \mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}()}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00452}00452     r = sqrt(-\/2d0 * log(u1))}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00453}00453     theta = 2d0 * \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%pi * u2}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00454}00454     z0 = r * cos(theta)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00455}00455     z1 = r * sin(theta)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00456}00456     \textcolor{comment}{! z0 and z1 are now independent N(0,1) random variables}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00457}00457     \textcolor{comment}{! We throw away z1, but we could use a SAVE variable to only do}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00458}00458     \textcolor{comment}{! the computation on every second call of this function.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00459}00459     \mbox{\hyperlink{namespacecamp__rand_ac20e458bc43a3e432568ea44c054778e}{rand\_normal}} = stddev * z0 + mean}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00460}00460 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00461}00461 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00462}00462   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__rand_ac20e458bc43a3e432568ea44c054778e}{rand\_normal}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00463}00463 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00464}00464 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00465}00465 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00466}00466 \textcolor{comment}{  !> Generates a vector of normally distributed random numbers with}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00467}00467 \textcolor{comment}{  !> the given means and standard deviations. This is a set of}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00468}00468 \textcolor{comment}{  !> normally distributed scalars, not a normally distributed vector.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00469}\mbox{\hyperlink{namespacecamp__rand_ad3032643d586f9de792d5f6858223704}{00469}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__rand_ad3032643d586f9de792d5f6858223704}{rand\_normal\_array\_1d}}(mean, stddev, val)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00470}00470 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00471}00471 \textcolor{comment}{    !> Array of means.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00472}00472 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), \textcolor{keywordtype}{intent(in)} :: mean(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00473}00473 \textcolor{comment}{    !> Array of standard deviations.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00474}00474 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), \textcolor{keywordtype}{intent(in)} :: stddev(\textcolor{keyword}{size}(mean))\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00475}00475 \textcolor{comment}{    !> Array of sampled normal random variables.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00476}00476 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), \textcolor{keywordtype}{intent(out)} :: val(\textcolor{keyword}{size}(mean))}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00477}00477 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00478}00478     \textcolor{keywordtype}{integer} :: i}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00479}00479 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00480}00480     \textcolor{keywordflow}{do} i = 1,\textcolor{keyword}{size}(mean)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00481}00481        val(i) = \mbox{\hyperlink{namespacecamp__rand_ac20e458bc43a3e432568ea44c054778e}{rand\_normal}}(mean(i), stddev(i))}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00482}00482 \textcolor{keywordflow}{    end do}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00483}00483 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00484}00484   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__rand_ad3032643d586f9de792d5f6858223704}{rand\_normal\_array\_1d}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00485}00485 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00486}00486 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00487}00487 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00488}00488 \textcolor{comment}{  !> Sample the given continuous probability density function.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00489}00489 \textcolor{comment}{  !!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00490}00490 \textcolor{comment}{  !! That is, return a number k = 1,...,n such that prob(k) = pdf(k) /}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00491}00491 \textcolor{comment}{  !! sum(pdf). Uses accept-\/reject.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00492}\mbox{\hyperlink{namespacecamp__rand_a1f91bce93606a8f03711ca24653ea3a4}{00492}}   \textcolor{keyword}{integer }\textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__rand_a1f91bce93606a8f03711ca24653ea3a4}{sample\_cts\_pdf}}(pdf)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00493}00493 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00494}00494 \textcolor{comment}{    !> Probability density function (not normalized).}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00495}00495 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), \textcolor{keywordtype}{intent(in)} :: pdf(:)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00496}00496 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00497}00497 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: pdf\_max}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00498}00498     \textcolor{keywordtype}{integer} :: k}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00499}00499     \textcolor{keywordtype}{logical} :: found}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00500}00500 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00501}00501     \textcolor{comment}{! use accept-\/reject}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00502}00502     pdf\_max = maxval(pdf)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00503}00503     \textcolor{keywordflow}{if} (minval(pdf) < 0d0) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00504}00504        \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(121838078, \textcolor{stringliteral}{'pdf contains negative values'})}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00505}00505 \textcolor{keywordflow}{    end if}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00506}00506     \textcolor{keywordflow}{if} (pdf\_max <= 0d0) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00507}00507        \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(119208863, \textcolor{stringliteral}{'pdf is not positive'})}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00508}00508 \textcolor{keywordflow}{    end if}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00509}00509     found = .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00510}00510     \textcolor{keywordflow}{do} \textcolor{keywordflow}{while} (.not. found)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00511}00511        k = \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}(\textcolor{keyword}{size}(pdf))}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00512}00512        \textcolor{keywordflow}{if} (\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}() < pdf(k) / pdf\_max) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00513}00513           found = .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00514}00514 \textcolor{keywordflow}{       end if}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00515}00515 \textcolor{keywordflow}{    end do}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00516}00516     \mbox{\hyperlink{namespacecamp__rand_a1f91bce93606a8f03711ca24653ea3a4}{sample\_cts\_pdf}} = k}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00517}00517 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00518}00518   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__rand_a1f91bce93606a8f03711ca24653ea3a4}{sample\_cts\_pdf}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00519}00519 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00520}00520 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00521}00521 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00522}00522 \textcolor{comment}{  !> Sample the given discrete probability density function.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00523}00523 \textcolor{comment}{  !!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00524}00524 \textcolor{comment}{  !! That is, return a number k = 1,...,n such that prob(k) = pdf(k) /}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00525}00525 \textcolor{comment}{  !! sum(pdf). Uses accept-\/reject.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00526}\mbox{\hyperlink{namespacecamp__rand_a8317841f695b0c19583c216170857572}{00526}}   \textcolor{keyword}{integer }\textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__rand_a8317841f695b0c19583c216170857572}{sample\_disc\_pdf}}(pdf)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00527}00527 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00528}00528 \textcolor{comment}{    !> Probability density function.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00529}00529     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(in)} :: pdf(:)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00530}00530 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00531}00531     \textcolor{keywordtype}{integer} :: pdf\_max, k}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00532}00532     \textcolor{keywordtype}{logical} :: found}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00533}00533 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00534}00534     \textcolor{comment}{! use accept-\/reject}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00535}00535     pdf\_max = maxval(pdf)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00536}00536     \textcolor{keywordflow}{if} (minval(pdf) < 0) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00537}00537        \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(598024763, \textcolor{stringliteral}{'pdf contains negative values'})}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00538}00538 \textcolor{keywordflow}{    end if}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00539}00539     \textcolor{keywordflow}{if} (pdf\_max <= 0) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00540}00540        \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(109961454, \textcolor{stringliteral}{'pdf is not positive'})}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00541}00541 \textcolor{keywordflow}{    end if}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00542}00542     found = .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00543}00543     \textcolor{keywordflow}{do} \textcolor{keywordflow}{while} (.not. found)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00544}00544        k = \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}(\textcolor{keyword}{size}(pdf))}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00545}00545        \textcolor{keywordflow}{if} (\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}() < real(pdf(k), kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) / real(pdf\_max, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00546}00546           found = .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00547}00547 \textcolor{keywordflow}{       end if}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00548}00548 \textcolor{keywordflow}{    end do}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00549}00549     \mbox{\hyperlink{namespacecamp__rand_a8317841f695b0c19583c216170857572}{sample\_disc\_pdf}} = k}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00550}00550 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00551}00551   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__rand_a8317841f695b0c19583c216170857572}{sample\_disc\_pdf}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00552}00552 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00553}00553 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00554}00554 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00555}00555 \textcolor{comment}{  !> Convert a real-\/valued vector into an integer-\/valued vector by}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00556}00556 \textcolor{comment}{  !> sampling.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00557}00557 \textcolor{comment}{  !!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00558}00558 \textcolor{comment}{  !! Use n\_samp samples. Each discrete entry is sampled with a PDF}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00559}00559 \textcolor{comment}{  !! given by vec\_cts. This is very slow for large n\_samp or large n.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00560}\mbox{\hyperlink{namespacecamp__rand_a24c8c27808b19383b261d200b91b69de}{00560}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__rand_a24c8c27808b19383b261d200b91b69de}{sample\_vec\_cts\_to\_disc}}(vec\_cts, n\_samp, vec\_disc)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00561}00561 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00562}00562 \textcolor{comment}{    !> Continuous vector.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00563}00563 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), \textcolor{keywordtype}{intent(in)} :: vec\_cts(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00564}00564 \textcolor{comment}{    !> Number of discrete samples to use.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00565}00565     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(in)} :: n\_samp\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00566}00566 \textcolor{comment}{    !> Discretized vector.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00567}00567     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(out)} :: vec\_disc(size(vec\_cts))}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00568}00568 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00569}00569     \textcolor{keywordtype}{integer} :: i\_samp, k}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00570}00570 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00571}00571     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(617770167, n\_samp >= 0)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00572}00572     vec\_disc = 0}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00573}00573     \textcolor{keywordflow}{do} i\_samp = 1,n\_samp}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00574}00574        k = \mbox{\hyperlink{namespacecamp__rand_a1f91bce93606a8f03711ca24653ea3a4}{sample\_cts\_pdf}}(vec\_cts)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00575}00575        vec\_disc(k) = vec\_disc(k) + 1}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00576}00576 \textcolor{keywordflow}{    end do}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00577}00577 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00578}00578   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__rand_a24c8c27808b19383b261d200b91b69de}{sample\_vec\_cts\_to\_disc}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00579}00579 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00580}00580 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00581}00581 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00582}00582 \textcolor{comment}{  !> Generate a random hexadecimal character.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00583}\mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{00583}}   \textcolor{keyword}{character }\textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}}()}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00584}00584 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00585}00585     \textcolor{keywordtype}{integer} :: i}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00586}00586 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00587}00587     i = \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}(16)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00588}00588     \textcolor{keywordflow}{if} (i <= 10) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00589}00589        \mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}} = achar(iachar(\textcolor{stringliteral}{'0'}) + i -\/ 1)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00590}00590     \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00591}00591        \mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}} = achar(iachar(\textcolor{stringliteral}{'A'}) + i -\/ 11)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00592}00592 \textcolor{keywordflow}{    end if}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00593}00593 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00594}00594   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00595}00595 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00596}00596 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00597}00597 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00598}00598 \textcolor{comment}{  !> Generate a version 4 UUID as a string.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00599}00599 \textcolor{comment}{  !!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00600}00600 \textcolor{comment}{  !! See http://en.wikipedia.org/wiki/Universally\_Unique\_Identifier}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00601}00601 \textcolor{comment}{  !! for format details.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00602}\mbox{\hyperlink{namespacecamp__rand_ae36190e0e83c7a16138ed38ec071521c}{00602}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__rand_ae36190e0e83c7a16138ed38ec071521c}{uuid4\_str}}(uuid)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00603}00603 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00604}00604 \textcolor{comment}{    !> The newly generated UUID string.}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00605}00605     \textcolor{keywordtype}{character(len=CAMP\_UUID\_LEN)}, \textcolor{keywordtype}{intent(out)} :: uuid}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00606}00606 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00607}00607     \textcolor{keywordtype}{integer} :: i}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00608}00608 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00609}00609     \textcolor{keywordflow}{do} i = 1,8}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00610}00610        uuid(i:i) = \mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}}()}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00611}00611 \textcolor{keywordflow}{    end do}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00612}00612     uuid(9:9) = \textcolor{stringliteral}{'-\/'}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00613}00613     \textcolor{keywordflow}{do} i = 1,4}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00614}00614        uuid((i + 9):(i + 9)) = \mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}}()}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00615}00615 \textcolor{keywordflow}{    end do}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00616}00616     uuid(14:14) = \textcolor{stringliteral}{'-\/'}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00617}00617     \textcolor{keywordflow}{do} i = 1,4}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00618}00618        uuid((i + 14):(i + 14)) = \mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}}()}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00619}00619 \textcolor{keywordflow}{    end do}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00620}00620     uuid(19:19) = \textcolor{stringliteral}{'-\/'}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00621}00621     \textcolor{keywordflow}{do} i = 1,4}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00622}00622        uuid((i + 19):(i + 19)) = \mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}}()}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00623}00623 \textcolor{keywordflow}{    end do}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00624}00624     uuid(24:24) = \textcolor{stringliteral}{'-\/'}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00625}00625     \textcolor{keywordflow}{do} i = 1,12}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00626}00626        uuid((i + 24):(i + 24)) = \mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}}()}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00627}00627 \textcolor{keywordflow}{    end do}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00628}00628 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00629}00629     uuid(15:15) = \textcolor{stringliteral}{'4'}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00630}00630 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00631}00631     i = \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}(4)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00632}00632     \textcolor{keywordflow}{if} (i <= 2) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00633}00633        uuid(20:20) = achar(iachar(\textcolor{stringliteral}{'8'}) + i -\/ 1)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00634}00634     \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00635}00635        uuid(20:20) = achar(iachar(\textcolor{stringliteral}{'A'}) + i -\/ 3)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00636}00636 \textcolor{keywordflow}{    end if}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00637}00637 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00638}00638   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__rand_ae36190e0e83c7a16138ed38ec071521c}{uuid4\_str}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00639}00639 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00640}00640 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00641}00641 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00642}00642 \textcolor{comment}{  !> Generate an integer id}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00643}00643 \textcolor{comment}{  !! Ids will be sequential, and can only be generated by the primary process}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00644}\mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{00644}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{generate\_int\_id}}() \textcolor{keyword}{result}(id)}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00645}00645 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00646}00646 \textcolor{comment}{    !> The generated id}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00647}00647     \textcolor{keywordtype}{integer(kind=i\_kind)} :: id}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00648}00648 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00649}00649     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(226665912, \mbox{\hyperlink{namespacecamp__mpi_a071b987e3ccab55010a23029249b73a4}{camp\_mpi\_rank}}().eq.0, \&}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00650}00650                     \textcolor{stringliteral}{"{}Sequential ids can only be generated on the primary "{}}//\&}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00651}00651                     \textcolor{stringliteral}{"{}process."{}})}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00652}00652 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00653}00653     id = \mbox{\hyperlink{namespacecamp__rand_aa2faf6c17ce9681e2d85009cd8876616}{next\_id}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00654}00654     \mbox{\hyperlink{namespacecamp__rand_aa2faf6c17ce9681e2d85009cd8876616}{next\_id}} = \mbox{\hyperlink{namespacecamp__rand_aa2faf6c17ce9681e2d85009cd8876616}{next\_id}} + 1}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00655}00655 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00656}00656   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{generate\_int\_id}}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00657}00657 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00658}00658 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00659}00659 }
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00660}00660 \textcolor{keyword}{end module }\mbox{\hyperlink{namespacecamp__rand}{camp\_rand}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00001}00001\ \textcolor{comment}{!\ Copyright\ (C)\ 2007-\/2021\ Barcelona\ Supercomputing\ Center\ and\ University\ of}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00002}00002\ \textcolor{comment}{!\ Illinois\ at\ Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00003}00003\ \textcolor{comment}{!\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00004}00004\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00005}00005\ \textcolor{comment}{!>\ \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00006}00006\ \textcolor{comment}{!>\ The\ camp\_rand\ module.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00007}00007\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00008}00008\ \textcolor{comment}{!>\ Random\ number\ generators.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00009}\mbox{\hyperlink{namespacecamp__rand}{00009}}\ \textcolor{keyword}{module}\ \mbox{\hyperlink{namespacecamp__rand}{camp\_rand}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00011}00011\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__util}{camp\_util}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00012}00012\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00013}00013\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__mpi}{camp\_mpi}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00014}00014\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00015}00015\ \textcolor{preprocessor}{}\ \ \textcolor{keywordtype}{use\ }iso\_c\_binding}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00016}00016\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00017}00017\ \textcolor{preprocessor}{}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00018}00018\ \textcolor{comment}{\ \ !>\ Length\ of\ a\ UUID\ string.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00019}\mbox{\hyperlink{namespacecamp__rand_a5114dab7a95ed6892f3b745ed4f6305d}{00019}}\ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{parameter}\ ::\ \mbox{\hyperlink{namespacecamp__rand_a5114dab7a95ed6892f3b745ed4f6305d}{camp\_uuid\_len}}\ =\ 36}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00020}00020\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00021}00021\ \textcolor{comment}{\ \ !>\ Result\ code\ indicating\ successful\ completion.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00022}\mbox{\hyperlink{namespacecamp__rand_a9a4c4d38959ee17ef78d086dacb27808}{00022}}\ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{parameter}\ ::\ \mbox{\hyperlink{namespacecamp__rand_a9a4c4d38959ee17ef78d086dacb27808}{camp\_rand\_gsl\_success}}\ \ \ \ \ \ =\ 0\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00023}00023\ \textcolor{comment}{\ \ !>\ Result\ code\ indicating\ initialization\ failure.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00024}\mbox{\hyperlink{namespacecamp__rand_a58d88e6213ec230b2c8ff9b274337eda}{00024}}\ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{parameter}\ ::\ \mbox{\hyperlink{namespacecamp__rand_a58d88e6213ec230b2c8ff9b274337eda}{camp\_rand\_gsl\_init\_fail}}\ \ \ \ =\ 1\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00025}00025\ \textcolor{comment}{\ \ !>\ Result\ code\ indicating\ the\ generator\ was\ not\ initialized\ when\ it}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00026}00026\ \textcolor{comment}{\ \ !>\ should\ have\ been.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00027}\mbox{\hyperlink{namespacecamp__rand_af7602a6c71a449ebcec1b2d63481d9f1}{00027}}\ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{parameter}\ ::\ \mbox{\hyperlink{namespacecamp__rand_af7602a6c71a449ebcec1b2d63481d9f1}{camp\_rand\_gsl\_not\_init}}\ \ \ \ \ =\ 2\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00028}00028\ \textcolor{comment}{\ \ !>\ Result\ code\ indicating\ the\ generator\ was\ already\ initialized\ when}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00029}00029\ \textcolor{comment}{\ \ !>\ an\ initialization\ was\ attempted.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00030}\mbox{\hyperlink{namespacecamp__rand_a72a5ddc7d711cc3345c3e49c127da02d}{00030}}\ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{parameter}\ ::\ \mbox{\hyperlink{namespacecamp__rand_a72a5ddc7d711cc3345c3e49c127da02d}{camp\_rand\_gsl\_already\_init}}\ =\ 3}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00031}00031\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00032}00032\ \textcolor{comment}{\ \ !>\ Next\ sequential\ id}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00033}\mbox{\hyperlink{namespacecamp__rand_aa2faf6c17ce9681e2d85009cd8876616}{00033}}\ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{private}\ ::\ \mbox{\hyperlink{namespacecamp__rand_aa2faf6c17ce9681e2d85009cd8876616}{next\_id}}\ =\ 100}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00035}00035\ \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00037}00037\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00039}00039\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00040}00040\ \textcolor{preprocessor}{}\textcolor{comment}{\ \ !>\ Check\ the\ return\ value\ of\ a\ call\ to\ one\ of\ the\ GSL\ RNG\ functions.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00041}00041\ \ \ \textcolor{keyword}{subroutine\ }rand\_check\_gsl(code,\ value)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00042}00042\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00043}00043\ \textcolor{comment}{\ \ \ \ !>\ Error\ code.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00044}00044\ \ \ \ \ \textcolor{keywordtype}{integer}\ ::\ code\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00045}00045\ \textcolor{comment}{\ \ \ \ !>\ Return\ value.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00046}00046\ \ \ \ \ \textcolor{keywordtype}{integer(kind=c\_int)}\ ::\ value}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00048}00048\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keywordtype}{value}\ ==\ \mbox{\hyperlink{namespacecamp__rand_a9a4c4d38959ee17ef78d086dacb27808}{camp\_rand\_gsl\_success}})\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00049}00049\ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00050}00050\ \ \ \ \ \textcolor{keywordflow}{elseif}\ (\textcolor{keywordtype}{value}\ ==\ \mbox{\hyperlink{namespacecamp__rand_a58d88e6213ec230b2c8ff9b274337eda}{camp\_rand\_gsl\_init\_fail}})\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00051}00051\ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(code,\ \textcolor{stringliteral}{"{}GSL\ RNG\ initialization\ failed"{}})}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00052}00052\ \ \ \ \ \textcolor{keywordflow}{elseif}\ (\textcolor{keywordtype}{value}\ ==\ \mbox{\hyperlink{namespacecamp__rand_af7602a6c71a449ebcec1b2d63481d9f1}{camp\_rand\_gsl\_not\_init}})\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00053}00053\ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(code,\ \textcolor{stringliteral}{"{}GSL\ RNG\ has\ not\ been\ successfully\ initialized"{}})}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00054}00054\ \ \ \ \ \textcolor{keywordflow}{elseif}\ (\textcolor{keywordtype}{value}\ ==\ \mbox{\hyperlink{namespacecamp__rand_a72a5ddc7d711cc3345c3e49c127da02d}{camp\_rand\_gsl\_already\_init}})\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00055}00055\ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(code,\ \textcolor{stringliteral}{"{}GSL\ RNG\ was\ already\ initialized"{}})}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00056}00056\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00057}00057\ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(code,\ \textcolor{stringliteral}{"{}Unknown\ GSL\ RNG\ interface\ return\ value:\ "{}}\ \&}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ //\ trim(\mbox{\hyperlink{namespacecamp__util_acd72e4626dcfefffaa08c42cfa7949bc}{integer\_to\_string}}(\textcolor{keywordtype}{value})))}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00059}00059\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00061}00061\ \ \ \textcolor{keyword}{end\ subroutine\ }rand\_check\_gsl}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00062}00062\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00063}00063\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00064}00064\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00065}00065\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00066}00066\ \textcolor{comment}{\ \ !>\ Initializes\ the\ random\ number\ generator\ to\ the\ state\ defined\ by}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00067}00067\ \textcolor{comment}{\ \ !>\ the\ given\ seed\ plus\ offset.\ If\ the\ seed\ is\ 0\ then\ a\ seed\ is}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00068}00068\ \textcolor{comment}{\ \ !>\ auto-\/generated\ from\ the\ current\ time\ plus\ offset.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00069}\mbox{\hyperlink{namespacecamp__rand_a90d79e868de55c0438ab39ab7c4dcf76}{00069}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rand_a90d79e868de55c0438ab39ab7c4dcf76}{camp\_srand}}(seed,\ offset)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00070}00070\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00071}00071\ \textcolor{comment}{\ \ \ \ !>\ Random\ number\ generator\ seed.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00072}00072\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ seed\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00073}00073\ \textcolor{comment}{\ \ \ \ !>\ Random\ number\ generator\ offset.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00074}00074\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ offset}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00076}00076\ \ \ \ \ \textcolor{keywordtype}{integer}\ ::\ i,\ n,\ clock}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00077}00077\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{allocatable}\ ::\ seed\_vec(:)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00078}00078\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00079}00079\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer(kind=c\_int)}\ ::\ c\_clock}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00080}00080\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00081}00081\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00082}00082\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00083}00083\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#ifndef\ DOXYGEN\_SKIP\_DOC}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00084}00084\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keyword}{interface}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00085}00085\ \ \ \ \ \ \ \ \textcolor{keyword}{integer(kind=c\_int)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{rand__gsl_8c_ad7746428b015f3f2da1eadeb262237b6}{camp\_srand\_gsl}}(seed)\ \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{use\ }iso\_c\_binding}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{integer(kind=c\_int)},\ \textcolor{keywordtype}{value}\ ::\ seed}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00088}00088\ \ \ \ \ \ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{rand__gsl_8c_ad7746428b015f3f2da1eadeb262237b6}{camp\_srand\_gsl}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00089}00089\ \ \ \ \ \textcolor{keyword}{end\ interface}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00090}00090\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00091}00091\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00092}00092\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00093}00093\ \ \ \ \ \textcolor{keywordflow}{if}\ (seed\ ==\ 0)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00094}00094\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespacecamp__mpi_a071b987e3ccab55010a23029249b73a4}{camp\_mpi\_rank}}()\ ==\ 0)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }system\_clock(count\ =\ clock)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00096}00096\ \textcolor{keywordflow}{\ \ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00097}00097\ \ \ \ \ \ \ \ \textcolor{comment}{!\ ensure\ all\ nodes\ use\ exactly\ the\ same\ seed\ base,\ to\ avoid}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00098}00098\ \ \ \ \ \ \ \ \textcolor{comment}{!\ accidental\ correlations}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00099}00099\ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a7b8bd92bfd70d41355c71943d41a528c}{camp\_mpi\_bcast\_integer}}(clock)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00100}00100\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00101}00101\ \ \ \ \ \ \ \ clock\ =\ seed}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00102}00102\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00103}00103\ \ \ \ \ clock\ =\ clock\ +\ 67\ *\ offset}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00104}00104\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00105}00105\ \textcolor{preprocessor}{}\ \ \ \ c\_clock\ =\ int(clock,\ kind=c\_int)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00106}00106\ \ \ \ \ \textcolor{keyword}{call\ }rand\_check\_gsl(100489590,\ \mbox{\hyperlink{rand__gsl_8c_ad7746428b015f3f2da1eadeb262237b6}{camp\_srand\_gsl}}(c\_clock))}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00107}00107\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00108}00108\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keyword}{call\ }random\_seed(\textcolor{keyword}{size}\ =\ n)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00109}00109\ \ \ \ \ \textcolor{keyword}{allocate}(seed\_vec(n))}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00110}00110\ \ \ \ \ i\ =\ 0\ \textcolor{comment}{!\ HACK\ to\ shut\ up\ gfortran\ warning}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00111}00111\ \ \ \ \ seed\_vec\ =\ clock\ +\ 37\ *\ (/\ (i\ -\/\ 1,\ i\ =\ 1,\ n)\ /)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00112}00112\ \ \ \ \ \textcolor{keyword}{call\ }random\_seed(put\ =\ seed\_vec)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00113}00113\ \ \ \ \ \textcolor{keyword}{deallocate}(seed\_vec)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00114}00114\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00115}00115\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00116}00116\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rand_a90d79e868de55c0438ab39ab7c4dcf76}{camp\_srand}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00118}00118\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00119}00119\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00120}00120\ \textcolor{comment}{\ \ !>\ Cleanup\ the\ random\ number\ generator.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00121}\mbox{\hyperlink{namespacecamp__rand_a67fe9351306f38d3024e6aea4220e3c8}{00121}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rand_a67fe9351306f38d3024e6aea4220e3c8}{camp\_rand\_finalize}}()}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00123}00123\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00124}00124\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00125}00125\ \textcolor{preprocessor}{\#ifndef\ DOXYGEN\_SKIP\_DOC}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00126}00126\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keyword}{interface}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00127}00127\ \ \ \ \ \ \ \ \textcolor{keyword}{integer(kind=c\_int)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{rand__gsl_8c_a1bd137bff02ae81a2261e0aca1604492}{camp\_rand\_finalize\_gsl}}()\ \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00128}00128\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{use\ }iso\_c\_binding}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00129}00129\ \ \ \ \ \ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{rand__gsl_8c_a1bd137bff02ae81a2261e0aca1604492}{camp\_rand\_finalize\_gsl}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00130}00130\ \ \ \ \ \textcolor{keyword}{end\ interface}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00131}00131\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00132}00132\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00133}00133\ \ \ \ \ \textcolor{keyword}{call\ }rand\_check\_gsl(489538382,\ \mbox{\hyperlink{rand__gsl_8c_a1bd137bff02ae81a2261e0aca1604492}{camp\_rand\_finalize\_gsl}}())}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00134}00134\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00135}00135\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00136}00136\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rand_a67fe9351306f38d3024e6aea4220e3c8}{camp\_rand\_finalize}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00137}00137\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00138}00138\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00139}00139\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00140}00140\ \textcolor{comment}{\ \ !>\ Returns\ a\ random\ number\ between\ 0\ and\ 1.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00141}\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{00141}}\ \textcolor{keywordtype}{\ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}()}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00142}00142\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00143}00143\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00144}00144\ \textcolor{preprocessor}{}\textcolor{keywordtype}{\ \ \ \ real}(kind=c\_double),\ \textcolor{keywordtype}{target}\ ::\ rnd}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00145}00145\ \ \ \ \ \textcolor{keywordtype}{type}(c\_ptr)\ ::\ rnd\_ptr}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00146}00146\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00147}00147\ \textcolor{preprocessor}{}\textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ rnd}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00148}00148\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00149}00149\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00150}00150\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00151}00151\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#ifndef\ DOXYGEN\_SKIP\_DOC}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00152}00152\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keyword}{interface}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00153}00153\ \ \ \ \ \ \ \ \textcolor{keyword}{integer(kind=c\_int)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{rand__gsl_8c_abd204acb91a0adebb638deae62396379}{camp\_rand\_gsl}}(harvest)\ \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{use\ }iso\_c\_binding}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{type}(c\_ptr),\ \textcolor{keywordtype}{value}\ ::\ harvest}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00156}00156\ \ \ \ \ \ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{rand__gsl_8c_abd204acb91a0adebb638deae62396379}{camp\_rand\_gsl}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00157}00157\ \ \ \ \ \textcolor{keyword}{end\ interface}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00158}00158\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00159}00159\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00160}00160\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00161}00161\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00162}00162\ \textcolor{preprocessor}{}\ \ \ \ rnd\_ptr\ =\ c\_loc(rnd)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00163}00163\ \ \ \ \ \textcolor{keyword}{call\ }rand\_check\_gsl(843777138,\ \mbox{\hyperlink{rand__gsl_8c_abd204acb91a0adebb638deae62396379}{camp\_rand\_gsl}}(rnd\_ptr))}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00164}00164\ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}\ =\ real(rnd,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00165}00165\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00166}00166\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keyword}{call\ }random\_number(rnd)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00167}00167\ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}\ =\ rnd}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00168}00168\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00169}00169\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00170}00170\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00171}00171\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00172}00172\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00173}00173\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00174}00174\ \textcolor{comment}{\ \ !>\ Returns\ a\ random\ integer\ between\ 1\ and\ n.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00175}\mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{00175}}\ \ \ \textcolor{keyword}{integer\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}(n)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00176}00176\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00177}00177\ \textcolor{comment}{\ \ \ \ !>\ Maximum\ random\ number\ to\ generate.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00178}00178\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ n}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00179}00179\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00180}00180\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00181}00181\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer(kind=c\_int)}\ ::\ n\_c}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00182}00182\ \ \ \ \ \textcolor{keywordtype}{integer(kind=c\_int)},\ \textcolor{keywordtype}{target}\ ::\ harvest}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00183}00183\ \ \ \ \ \textcolor{keywordtype}{type}(c\_ptr)\ ::\ harvest\_ptr}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00184}00184\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00185}00185\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00186}00186\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00187}00187\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#ifndef\ DOXYGEN\_SKIP\_DOC}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00188}00188\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keyword}{interface}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00189}00189\ \ \ \ \ \ \ \ \textcolor{keyword}{integer(kind=c\_int)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{rand__gsl_8c_a0ebca9079073ff12ca49babd5f49edb9}{camp\_rand\_int\_gsl}}(n,\ harvest)\ \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{use\ }iso\_c\_binding}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{integer(kind=c\_int)},\ \textcolor{keywordtype}{value}\ ::\ n}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{type}(c\_ptr),\ \textcolor{keywordtype}{value}\ ::\ harvest}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00193}00193\ \ \ \ \ \ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{rand__gsl_8c_a0ebca9079073ff12ca49babd5f49edb9}{camp\_rand\_int\_gsl}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00194}00194\ \ \ \ \ \textcolor{keyword}{end\ interface}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00195}00195\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00196}00196\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00197}00197\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00198}00198\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(669532625,\ n\ >=\ 1)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00199}00199\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00200}00200\ \textcolor{preprocessor}{}\ \ \ \ n\_c\ =\ int(n,\ kind=c\_int)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00201}00201\ \ \ \ \ harvest\_ptr\ =\ c\_loc(harvest)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00202}00202\ \ \ \ \ \textcolor{keyword}{call\ }rand\_check\_gsl(388234845,\ \mbox{\hyperlink{rand__gsl_8c_a0ebca9079073ff12ca49babd5f49edb9}{camp\_rand\_int\_gsl}}(n\_c,\ harvest\_ptr))}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00203}00203\ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}\ =\ int(harvest)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00204}00204\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00205}00205\ \textcolor{preprocessor}{}\ \ \ \ \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}\ =\ mod(int(\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}()\ *\ real(n,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})),\ n)\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00206}00206\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00207}00207\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(515838689,\ \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}\ >=\ 1)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00208}00208\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(802560153,\ \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}\ <=\ n)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00209}00209\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00210}00210\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00211}00211\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00212}00212\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00213}00213\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00214}00214\ \textcolor{comment}{\ \ !>\ Round\ val\ to\ \(\backslash\)c\ floor(val)\ or\ \(\backslash\)c\ ceiling(val)\ with\ probability}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00215}00215\ \textcolor{comment}{\ \ !>\ proportional\ to\ the\ relative\ distance\ from\ \(\backslash\)c\ val.\ That\ is,}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00216}00216\ \textcolor{comment}{\ \ !>\ Prob(prob\_round(val)\ ==\ floor(val))\ =\ ceil(val)\ -\/\ val.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00217}\mbox{\hyperlink{namespacecamp__rand_a4ff2053765052f38c615a8bce9ff7365}{00217}}\ \ \ \textcolor{keyword}{integer\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__rand_a4ff2053765052f38c615a8bce9ff7365}{prob\_round}}(val)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00218}00218\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00219}00219\ \textcolor{comment}{\ \ \ \ !>\ Value\ to\ round.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00220}00220\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ val}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00221}00221\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00222}00222\ \ \ \ \ \textcolor{comment}{!\ FIXME:\ can\ replace\ this\ with:}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00223}00223\ \ \ \ \ \textcolor{comment}{!\ prob\_round\ =\ floor(val\ +\ camp\_random())}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00224}00224\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}()\ <\ real(ceiling(val),\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ -\/\ val)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00225}00225\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_a4ff2053765052f38c615a8bce9ff7365}{prob\_round}}\ =\ floor(val)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00226}00226\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00227}00227\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_a4ff2053765052f38c615a8bce9ff7365}{prob\_round}}\ =\ ceiling(val)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00228}00228\ \textcolor{keywordflow}{\ \ \ \ endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00229}00229\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00230}00230\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__rand_a4ff2053765052f38c615a8bce9ff7365}{prob\_round}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00231}00231\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00232}00232\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00233}00233\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00234}00234\ \textcolor{comment}{\ \ !>\ Generate\ a\ Poisson-\/distributed\ random\ number\ with\ the\ given}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00235}00235\ \textcolor{comment}{\ \ !>\ mean.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00236}00236\ \textcolor{comment}{\ \ !!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00237}00237\ \textcolor{comment}{\ \ !!\ See\ http://en.wikipedia.org/wiki/Poisson\_distribution\ for}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00238}00238\ \textcolor{comment}{\ \ !!\ information\ on\ the\ method.\ The\ method\ used\ at\ present\ is\ rather}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00239}00239\ \textcolor{comment}{\ \ !!\ inefficient\ and\ inaccurate\ (brute\ force\ for\ mean\ below\ 10\ and}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00240}00240\ \textcolor{comment}{\ \ !!\ normal\ approximation\ above\ that\ point).}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00241}00241\ \textcolor{comment}{\ \ !!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00242}00242\ \textcolor{comment}{\ \ !!\ The\ best\ known\ method\ appears\ to\ be\ due\ to\ Ahrens\ and\ Dieter\ (ACM}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00243}00243\ \textcolor{comment}{\ \ !!\ Trans.\ Math.\ Software,\ 8(2),\ 163-\/179,\ 1982)\ and\ is\ available\ (in}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00244}00244\ \textcolor{comment}{\ \ !!\ various\ forms)\ from:}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00245}00245\ \textcolor{comment}{\ \ !!\ \ \ \ \ -\/\ http://www.netlib.org/toms/599}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00246}00246\ \textcolor{comment}{\ \ !!\ \ \ \ \ -\/\ http://www.netlib.org/random/ranlib.f.tar.gz}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00247}00247\ \textcolor{comment}{\ \ !!\ \ \ \ \ -\/\ http://users.bigpond.net.au/amiller/random/random.f90}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00248}00248\ \textcolor{comment}{\ \ !!\ \ \ \ \ -\/\ http://www.netlib.org/random/random.f90}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00249}00249\ \textcolor{comment}{\ \ !!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00250}00250\ \textcolor{comment}{\ \ !!\ Unfortunately\ the\ above\ code\ is\ under\ the\ non-\/free\ license:}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00251}00251\ \textcolor{comment}{\ \ !!\ \ \ \ \ -\/\ http://www.acm.org/pubs/copyright\_policy/softwareCRnotice.html}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00252}00252\ \textcolor{comment}{\ \ !!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00253}00253\ \textcolor{comment}{\ \ !!\ For\ other\ reasonable\ methods\ see\ L.\ Devroye,\ "{}Non-\/Uniform\ Random}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00254}00254\ \textcolor{comment}{\ \ !!\ Variate\ Generation"{},\ Springer-\/Verlag,\ 1986.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00255}\mbox{\hyperlink{namespacecamp__rand_afeef7ff3370b9d984897647d64070725}{00255}}\ \ \ \textcolor{keyword}{integer\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__rand_afeef7ff3370b9d984897647d64070725}{rand\_poisson}}(mean)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00256}00256\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00257}00257\ \textcolor{comment}{\ \ \ \ !>\ Mean\ of\ the\ distribution.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00258}00258\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ mean}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00259}00259\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00260}00260\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00261}00261\ \textcolor{preprocessor}{}\textcolor{keywordtype}{\ \ \ \ real}(kind=c\_double)\ ::\ mean\_c}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00262}00262\ \ \ \ \ \textcolor{keywordtype}{integer(kind=c\_int)},\ \textcolor{keywordtype}{target}\ ::\ harvest}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00263}00263\ \ \ \ \ \textcolor{keywordtype}{type}(c\_ptr)\ ::\ harvest\_ptr}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00264}00264\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00265}00265\ \textcolor{preprocessor}{}\textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ l,\ p}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00266}00266\ \ \ \ \ \textcolor{keywordtype}{integer}\ ::\ k}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00267}00267\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00268}00268\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00269}00269\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00270}00270\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#ifndef\ DOXYGEN\_SKIP\_DOC}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00271}00271\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keyword}{interface}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00272}00272\ \ \ \ \ \ \ \ \textcolor{keyword}{integer(kind=c\_int)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{rand__gsl_8c_a40555ee4862b906fb1a2ace9b76114a1}{camp\_rand\_poisson\_gsl}}(mean,\ harvest)\ \&}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00274}00274\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{use\ }iso\_c\_binding}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00275}00275\ \textcolor{keywordtype}{\ \ \ \ \ \ \ \ \ real}(kind=c\_double),\ \textcolor{keywordtype}{value}\ ::\ mean}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{type}(c\_ptr),\ \textcolor{keywordtype}{value}\ ::\ harvest}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00277}00277\ \ \ \ \ \ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{rand__gsl_8c_a40555ee4862b906fb1a2ace9b76114a1}{camp\_rand\_poisson\_gsl}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00278}00278\ \ \ \ \ \textcolor{keyword}{end\ interface}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00279}00279\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00280}00280\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00281}00281\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00282}00282\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(368397056,\ mean\ >=\ 0d0)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00283}00283\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00284}00284\ \textcolor{preprocessor}{}\ \ \ \ mean\_c\ =\ real(mean,\ kind=c\_double)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00285}00285\ \ \ \ \ harvest\_ptr\ =\ c\_loc(harvest)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00286}00286\ \ \ \ \ \textcolor{keyword}{call\ }rand\_check\_gsl(353483140,\ \&}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00287}00287\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rand__gsl_8c_a40555ee4862b906fb1a2ace9b76114a1}{camp\_rand\_poisson\_gsl}}(mean\_c,\ harvest\_ptr))}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00288}00288\ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_afeef7ff3370b9d984897647d64070725}{rand\_poisson}}\ =\ int(harvest)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00289}00289\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00290}00290\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordflow}{if}\ (mean\ <=\ 10d0)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00291}00291\ \ \ \ \ \ \ \ \textcolor{comment}{!\ exact\ method\ due\ to\ Knuth}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00292}00292\ \ \ \ \ \ \ \ l\ =\ exp(-\/mean)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00293}00293\ \ \ \ \ \ \ \ k\ =\ 0}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00294}00294\ \ \ \ \ \ \ \ p\ =\ 1d0}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00295}00295\ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ k\ =\ k\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ p\ =\ p\ *\ \mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}()}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ <\ l)\ \textcolor{keywordflow}{exit}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00299}00299\ \textcolor{keywordflow}{\ \ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00300}00300\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_afeef7ff3370b9d984897647d64070725}{rand\_poisson}}\ =\ k\ -\/\ 1}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00301}00301\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00302}00302\ \ \ \ \ \ \ \ \textcolor{comment}{!\ normal\ approximation\ with\ a\ continuity\ correction}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00303}00303\ \ \ \ \ \ \ \ k\ =\ nint(\mbox{\hyperlink{namespacecamp__rand_ac20e458bc43a3e432568ea44c054778e}{rand\_normal}}(mean,\ sqrt(mean)))}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00304}00304\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_afeef7ff3370b9d984897647d64070725}{rand\_poisson}}\ =\ max(k,\ 0)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00305}00305\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00306}00306\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00307}00307\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00308}00308\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__rand_afeef7ff3370b9d984897647d64070725}{rand\_poisson}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00309}00309\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00310}00310\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00311}00311\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00312}00312\ \textcolor{comment}{\ \ !>\ Generate\ a\ Binomial-\/distributed\ random\ number\ with\ the\ given}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00313}00313\ \textcolor{comment}{\ \ !>\ parameters.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00314}00314\ \textcolor{comment}{\ \ !!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00315}00315\ \textcolor{comment}{\ \ !!\ See\ http://en.wikipedia.org/wiki/Binomial\_distribution\ for}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00316}00316\ \textcolor{comment}{\ \ !!\ information\ on\ the\ method.\ The\ method\ used\ at\ present\ is\ rather}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00317}00317\ \textcolor{comment}{\ \ !!\ inefficient\ and\ inaccurate\ (brute\ force\ for\ \(\backslash\)f\$np\ \(\backslash\)le\ 10\(\backslash\)f\$\ and}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00318}00318\ \textcolor{comment}{\ \ !!\ \(\backslash\)f\$n(1-\/p)\ \(\backslash\)le\ 10\(\backslash\)f\$,\ otherwise\ normal\ approximation).}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00319}00319\ \textcolor{comment}{\ \ !!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00320}00320\ \textcolor{comment}{\ \ !!\ For\ better\ methods,\ see\ L.\ Devroye,\ "{}Non-\/Uniform\ Random\ Variate}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00321}00321\ \textcolor{comment}{\ \ !!\ Generation"{},\ Springer-\/Verlag,\ 1986.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00322}\mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{00322}}\ \ \ \textcolor{keyword}{integer\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}}(n,\ p)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00323}00323\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00324}00324\ \textcolor{comment}{\ \ \ \ !>\ Sample\ size.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00325}00325\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ n\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00326}00326\ \textcolor{comment}{\ \ \ \ !>\ Sample\ probability.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00327}00327\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ p}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00328}00328\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00329}00329\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00330}00330\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer(kind=c\_int)}\ ::\ n\_c}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00331}00331\ \textcolor{keywordtype}{\ \ \ \ real}(kind=c\_double)\ ::\ p\_c}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00332}00332\ \ \ \ \ \textcolor{keywordtype}{integer(kind=c\_int)},\ \textcolor{keywordtype}{target}\ ::\ harvest}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00333}00333\ \ \ \ \ \textcolor{keywordtype}{type}(c\_ptr)\ ::\ harvest\_ptr}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00334}00334\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00335}00335\ \textcolor{preprocessor}{}\textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ np,\ nomp,\ q,\ g\_real}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00336}00336\ \ \ \ \ \textcolor{keywordtype}{integer}\ ::\ k,\ g,\ sum}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00337}00337\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00338}00338\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00339}00339\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00340}00340\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#ifndef\ DOXYGEN\_SKIP\_DOC}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00341}00341\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keyword}{interface}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00342}00342\ \ \ \ \ \ \ \ \textcolor{keyword}{integer(kind=c\_int)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{rand__gsl_8c_af73fad1b3cd91ba86a264bae77b3eee5}{camp\_rand\_binomial\_gsl}}(n,\ p,\ harvest)\ \&}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{use\ }iso\_c\_binding}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{integer(kind=c\_int)},\ \textcolor{keywordtype}{value}\ ::\ n}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00346}00346\ \textcolor{keywordtype}{\ \ \ \ \ \ \ \ \ real}(kind=c\_double),\ \textcolor{keywordtype}{value}\ ::\ p}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{type}(c\_ptr),\ \textcolor{keywordtype}{value}\ ::\ harvest}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00348}00348\ \ \ \ \ \ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{rand__gsl_8c_af73fad1b3cd91ba86a264bae77b3eee5}{camp\_rand\_binomial\_gsl}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00349}00349\ \ \ \ \ \textcolor{keyword}{end\ interface}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00350}00350\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00351}00351\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00352}00352\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00353}00353\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(130699849,\ n\ >=\ 0)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00354}00354\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(754379796,\ p\ >=\ 0d0)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00355}00355\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(678506029,\ p\ <=\ 1d0)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00356}00356\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00357}00357\ \textcolor{preprocessor}{}\ \ \ \ n\_c\ =\ int(n,\ kind=c\_int)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00358}00358\ \ \ \ \ p\_c\ =\ real(p,\ kind=c\_double)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00359}00359\ \ \ \ \ harvest\_ptr\ =\ c\_loc(harvest)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00360}00360\ \ \ \ \ \textcolor{keyword}{call\ }rand\_check\_gsl(208869397,\ \&}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rand__gsl_8c_af73fad1b3cd91ba86a264bae77b3eee5}{camp\_rand\_binomial\_gsl}}(n\_c,\ p\_c,\ harvest\_ptr))}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00362}00362\ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}}\ =\ int(harvest)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00363}00363\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00364}00364\ \textcolor{preprocessor}{}\ \ \ \ np\ =\ real(n,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ *\ p}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00365}00365\ \ \ \ \ nomp\ =\ real(n,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ *\ (1d0\ -\/\ p)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00366}00366\ \ \ \ \ \textcolor{keywordflow}{if}\ ((np\ >=\ 10d0)\ .and.\ (nomp\ >=\ 10d0))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00367}00367\ \ \ \ \ \ \ \ \textcolor{comment}{!\ normal\ approximation\ with\ continuity\ correction}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00368}00368\ \ \ \ \ \ \ \ k\ =\ nint(\mbox{\hyperlink{namespacecamp__rand_ac20e458bc43a3e432568ea44c054778e}{rand\_normal}}(np,\ sqrt(np\ *\ (1d0\ -\/\ p))))}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00369}00369\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}}\ =\ min(max(k,\ 0),\ n)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00370}00370\ \ \ \ \ \textcolor{keywordflow}{elseif}\ (np\ <\ 1d-\/200)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00371}00371\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}}\ =\ 0}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00372}00372\ \ \ \ \ \textcolor{keywordflow}{elseif}\ (nomp\ <\ 1d-\/200)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00373}00373\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}}\ =\ n}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00374}00374\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00375}00375\ \ \ \ \ \ \ \ \textcolor{comment}{!\ First\ waiting\ time\ method\ of\ Devroye\ (p.\ 525).}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00376}00376\ \ \ \ \ \ \ \ \textcolor{comment}{!\ We\ want\ p\ small,\ so\ if\ p\ >\ 1/2\ then\ we\ compute\ with\ 1\ -\/\ p\ and}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00377}00377\ \ \ \ \ \ \ \ \textcolor{comment}{!\ take\ n\ -\/\ k\ at\ the\ end.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00378}00378\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ <=\ 0.5d0)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00379}00379\ \ \ \ \ \ \ \ \ \ \ q\ =\ p}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00380}00380\ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ q\ =\ 1d0\ -\/\ p}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00382}00382\ \textcolor{keywordflow}{\ \ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00383}00383\ \ \ \ \ \ \ \ k\ =\ 0}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00384}00384\ \ \ \ \ \ \ \ sum\ =\ 0}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00385}00385\ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ G\ is\ geometric(q)}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00387}00387\ \ \ \ \ \ \ \ \ \ \ g\_real\ =\ log(\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}())\ /\ log(1d0\ -\/\ q)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ early\ bailout\ for\ cases\ to\ avoid\ integer\ overflow}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (g\_real\ >\ real(n\ -\/\ sum,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}))\ \textcolor{keywordflow}{exit}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00390}00390\ \ \ \ \ \ \ \ \ \ \ g\ =\ ceiling(g\_real)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00391}00391\ \ \ \ \ \ \ \ \ \ \ sum\ =\ sum\ +\ g}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00392}00392\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (sum\ >\ n)\ \textcolor{keywordflow}{exit}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00393}00393\ \ \ \ \ \ \ \ \ \ \ k\ =\ k\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00394}00394\ \textcolor{keywordflow}{\ \ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00395}00395\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (p\ <=\ 0.5d0)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00396}00396\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}}\ =\ k}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00397}00397\ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00398}00398\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}}\ =\ n\ -\/\ k}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00399}00399\ \textcolor{keywordflow}{\ \ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00400}00400\ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(359087410,\ \mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}}\ <=\ n)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00401}00401\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00402}00402\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00403}00403\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00404}00404\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__rand_a613b0c64aa5bdface8e6d5aa30cec7c4}{rand\_binomial}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00405}00405\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00406}00406\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00407}00407\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00408}00408\ \textcolor{comment}{\ \ !>\ Generates\ a\ normally\ distributed\ random\ number\ with\ the\ given}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00409}00409\ \textcolor{comment}{\ \ !>\ mean\ and\ standard\ deviation.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00410}\mbox{\hyperlink{namespacecamp__rand_ac20e458bc43a3e432568ea44c054778e}{00410}}\ \textcolor{keywordtype}{\ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__rand_ac20e458bc43a3e432568ea44c054778e}{rand\_normal}}(mean,\ stddev)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00411}00411\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00412}00412\ \textcolor{comment}{\ \ \ \ !>\ Mean\ of\ distribution.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00413}00413\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ mean\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00414}00414\ \textcolor{comment}{\ \ \ \ !>\ Standard\ deviation\ of\ distribution.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00415}00415\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ stddev}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00416}00416\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00417}00417\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00418}00418\ \textcolor{preprocessor}{}\textcolor{keywordtype}{\ \ \ \ real}(kind=c\_double)\ ::\ mean\_c,\ stddev\_c}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00419}00419\ \textcolor{keywordtype}{\ \ \ \ real}(kind=c\_double),\ \textcolor{keywordtype}{target}\ ::\ harvest}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00420}00420\ \ \ \ \ \textcolor{keywordtype}{type}(c\_ptr)\ ::\ harvest\_ptr}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00421}00421\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00422}00422\ \textcolor{preprocessor}{}\textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ u1,\ u2,\ r,\ theta,\ z0,\ z1}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00423}00423\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00424}00424\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00425}00425\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00426}00426\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#ifndef\ DOXYGEN\_SKIP\_DOC}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00427}00427\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keyword}{interface}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00428}00428\ \ \ \ \ \ \ \ \textcolor{keyword}{integer(kind=c\_int)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{rand__gsl_8c_a77cc930abbc556f2ff28f676d1b740bc}{camp\_rand\_normal\_gsl}}(mean,\ stddev,\ \&}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ harvest)\ \textcolor{keyword}{bind(c)}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00430}00430\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{use\ }iso\_c\_binding}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00431}00431\ \textcolor{keywordtype}{\ \ \ \ \ \ \ \ \ real}(kind=c\_double),\ \textcolor{keywordtype}{value}\ ::\ mean}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00432}00432\ \textcolor{keywordtype}{\ \ \ \ \ \ \ \ \ real}(kind=c\_double),\ \textcolor{keywordtype}{value}\ ::\ stddev}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00433}00433\ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{type}(c\_ptr),\ \textcolor{keywordtype}{value}\ ::\ harvest}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00434}00434\ \ \ \ \ \ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{rand__gsl_8c_a77cc930abbc556f2ff28f676d1b740bc}{camp\_rand\_normal\_gsl}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00435}00435\ \ \ \ \ \textcolor{keyword}{end\ interface}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00436}00436\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00437}00437\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00438}00438\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00439}00439\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(898978929,\ stddev\ >=\ 0d0)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00440}00440\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00441}00441\ \textcolor{preprocessor}{}\ \ \ \ mean\_c\ =\ real(mean,\ kind=c\_double)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00442}00442\ \ \ \ \ stddev\_c\ =\ real(stddev,\ kind=c\_double)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00443}00443\ \ \ \ \ harvest\_ptr\ =\ c\_loc(harvest)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00444}00444\ \ \ \ \ \textcolor{keyword}{call\ }rand\_check\_gsl(102078576,\ \&}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00445}00445\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rand__gsl_8c_a77cc930abbc556f2ff28f676d1b740bc}{camp\_rand\_normal\_gsl}}(mean\_c,\ stddev\_c,\ harvest\_ptr))}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00446}00446\ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_ac20e458bc43a3e432568ea44c054778e}{rand\_normal}}\ =\ real(harvest,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00447}00447\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00448}00448\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{comment}{!\ Uses\ the\ Box-\/Muller\ transform}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00449}00449\ \ \ \ \ \textcolor{comment}{!\ http://en.wikipedia.org/wiki/Box-\/Muller\_transform}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00450}00450\ \ \ \ \ u1\ =\ \mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}()}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00451}00451\ \ \ \ \ u2\ =\ \mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}()}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00452}00452\ \ \ \ \ r\ =\ sqrt(-\/2d0\ *\ log(u1))}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00453}00453\ \ \ \ \ theta\ =\ 2d0\ *\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%pi\ *\ u2}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00454}00454\ \ \ \ \ z0\ =\ r\ *\ cos(theta)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00455}00455\ \ \ \ \ z1\ =\ r\ *\ sin(theta)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00456}00456\ \ \ \ \ \textcolor{comment}{!\ z0\ and\ z1\ are\ now\ independent\ N(0,1)\ random\ variables}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00457}00457\ \ \ \ \ \textcolor{comment}{!\ We\ throw\ away\ z1,\ but\ we\ could\ use\ a\ SAVE\ variable\ to\ only\ do}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00458}00458\ \ \ \ \ \textcolor{comment}{!\ the\ computation\ on\ every\ second\ call\ of\ this\ function.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00459}00459\ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_ac20e458bc43a3e432568ea44c054778e}{rand\_normal}}\ =\ stddev\ *\ z0\ +\ mean}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00460}00460\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00461}00461\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00462}00462\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__rand_ac20e458bc43a3e432568ea44c054778e}{rand\_normal}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00463}00463\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00464}00464\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00465}00465\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00466}00466\ \textcolor{comment}{\ \ !>\ Generates\ a\ vector\ of\ normally\ distributed\ random\ numbers\ with}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00467}00467\ \textcolor{comment}{\ \ !>\ the\ given\ means\ and\ standard\ deviations.\ This\ is\ a\ set\ of}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00468}00468\ \textcolor{comment}{\ \ !>\ normally\ distributed\ scalars,\ not\ a\ normally\ distributed\ vector.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00469}\mbox{\hyperlink{namespacecamp__rand_ad3032643d586f9de792d5f6858223704}{00469}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rand_ad3032643d586f9de792d5f6858223704}{rand\_normal\_array\_1d}}(mean,\ stddev,\ val)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00470}00470\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00471}00471\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ means.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00472}00472\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ mean(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00473}00473\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ standard\ deviations.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00474}00474\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ stddev(\textcolor{keyword}{size}(mean))\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00475}00475\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ sampled\ normal\ random\ variables.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00476}00476\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(out)}\ ::\ val(\textcolor{keyword}{size}(mean))}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00477}00477\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00478}00478\ \ \ \ \ \textcolor{keywordtype}{integer}\ ::\ i}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00479}00479\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00480}00480\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,\textcolor{keyword}{size}(mean)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00481}00481\ \ \ \ \ \ \ \ val(i)\ =\ \mbox{\hyperlink{namespacecamp__rand_ac20e458bc43a3e432568ea44c054778e}{rand\_normal}}(mean(i),\ stddev(i))}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00482}00482\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00483}00483\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00484}00484\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rand_ad3032643d586f9de792d5f6858223704}{rand\_normal\_array\_1d}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00485}00485\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00486}00486\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00487}00487\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00488}00488\ \textcolor{comment}{\ \ !>\ Sample\ the\ given\ continuous\ probability\ density\ function.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00489}00489\ \textcolor{comment}{\ \ !!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00490}00490\ \textcolor{comment}{\ \ !!\ That\ is,\ return\ a\ number\ k\ =\ 1,...,n\ such\ that\ prob(k)\ =\ pdf(k)\ /}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00491}00491\ \textcolor{comment}{\ \ !!\ sum(pdf).\ Uses\ accept-\/reject.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00492}\mbox{\hyperlink{namespacecamp__rand_a1f91bce93606a8f03711ca24653ea3a4}{00492}}\ \ \ \textcolor{keyword}{integer\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__rand_a1f91bce93606a8f03711ca24653ea3a4}{sample\_cts\_pdf}}(pdf)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00493}00493\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00494}00494\ \textcolor{comment}{\ \ \ \ !>\ Probability\ density\ function\ (not\ normalized).}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00495}00495\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ pdf(:)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00496}00496\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00497}00497\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ pdf\_max}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00498}00498\ \ \ \ \ \textcolor{keywordtype}{integer}\ ::\ k}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00499}00499\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ found}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00500}00500\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00501}00501\ \ \ \ \ \textcolor{comment}{!\ use\ accept-\/reject}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00502}00502\ \ \ \ \ pdf\_max\ =\ maxval(pdf)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00503}00503\ \ \ \ \ \textcolor{keywordflow}{if}\ (minval(pdf)\ <\ 0d0)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00504}00504\ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(121838078,\ \textcolor{stringliteral}{'pdf\ contains\ negative\ values'})}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00505}00505\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00506}00506\ \ \ \ \ \textcolor{keywordflow}{if}\ (pdf\_max\ <=\ 0d0)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00507}00507\ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(119208863,\ \textcolor{stringliteral}{'pdf\ is\ not\ positive'})}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00508}00508\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00509}00509\ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00510}00510\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (.not.\ found)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00511}00511\ \ \ \ \ \ \ \ k\ =\ \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}(\textcolor{keyword}{size}(pdf))}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00512}00512\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}()\ <\ pdf(k)\ /\ pdf\_max)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00513}00513\ \ \ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00514}00514\ \textcolor{keywordflow}{\ \ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00515}00515\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00516}00516\ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_a1f91bce93606a8f03711ca24653ea3a4}{sample\_cts\_pdf}}\ =\ k}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00517}00517\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00518}00518\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__rand_a1f91bce93606a8f03711ca24653ea3a4}{sample\_cts\_pdf}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00519}00519\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00520}00520\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00521}00521\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00522}00522\ \textcolor{comment}{\ \ !>\ Sample\ the\ given\ discrete\ probability\ density\ function.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00523}00523\ \textcolor{comment}{\ \ !!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00524}00524\ \textcolor{comment}{\ \ !!\ That\ is,\ return\ a\ number\ k\ =\ 1,...,n\ such\ that\ prob(k)\ =\ pdf(k)\ /}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00525}00525\ \textcolor{comment}{\ \ !!\ sum(pdf).\ Uses\ accept-\/reject.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00526}\mbox{\hyperlink{namespacecamp__rand_a8317841f695b0c19583c216170857572}{00526}}\ \ \ \textcolor{keyword}{integer\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__rand_a8317841f695b0c19583c216170857572}{sample\_disc\_pdf}}(pdf)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00527}00527\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00528}00528\ \textcolor{comment}{\ \ \ \ !>\ Probability\ density\ function.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00529}00529\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ pdf(:)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00530}00530\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00531}00531\ \ \ \ \ \textcolor{keywordtype}{integer}\ ::\ pdf\_max,\ k}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00532}00532\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ found}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00533}00533\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00534}00534\ \ \ \ \ \textcolor{comment}{!\ use\ accept-\/reject}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00535}00535\ \ \ \ \ pdf\_max\ =\ maxval(pdf)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00536}00536\ \ \ \ \ \textcolor{keywordflow}{if}\ (minval(pdf)\ <\ 0)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00537}00537\ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(598024763,\ \textcolor{stringliteral}{'pdf\ contains\ negative\ values'})}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00538}00538\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00539}00539\ \ \ \ \ \textcolor{keywordflow}{if}\ (pdf\_max\ <=\ 0)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00540}00540\ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(109961454,\ \textcolor{stringliteral}{'pdf\ is\ not\ positive'})}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00541}00541\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00542}00542\ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00543}00543\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (.not.\ found)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00544}00544\ \ \ \ \ \ \ \ k\ =\ \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}(\textcolor{keyword}{size}(pdf))}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00545}00545\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}()\ <\ real(pdf(k),\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ /\ real(pdf\_max,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00546}00546\ \ \ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00547}00547\ \textcolor{keywordflow}{\ \ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00548}00548\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00549}00549\ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_a8317841f695b0c19583c216170857572}{sample\_disc\_pdf}}\ =\ k}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00550}00550\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00551}00551\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__rand_a8317841f695b0c19583c216170857572}{sample\_disc\_pdf}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00552}00552\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00553}00553\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00554}00554\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00555}00555\ \textcolor{comment}{\ \ !>\ Convert\ a\ real-\/valued\ vector\ into\ an\ integer-\/valued\ vector\ by}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00556}00556\ \textcolor{comment}{\ \ !>\ sampling.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00557}00557\ \textcolor{comment}{\ \ !!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00558}00558\ \textcolor{comment}{\ \ !!\ Use\ n\_samp\ samples.\ Each\ discrete\ entry\ is\ sampled\ with\ a\ PDF}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00559}00559\ \textcolor{comment}{\ \ !!\ given\ by\ vec\_cts.\ This\ is\ very\ slow\ for\ large\ n\_samp\ or\ large\ n.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00560}\mbox{\hyperlink{namespacecamp__rand_a24c8c27808b19383b261d200b91b69de}{00560}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rand_a24c8c27808b19383b261d200b91b69de}{sample\_vec\_cts\_to\_disc}}(vec\_cts,\ n\_samp,\ vec\_disc)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00561}00561\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00562}00562\ \textcolor{comment}{\ \ \ \ !>\ Continuous\ vector.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00563}00563\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ vec\_cts(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00564}00564\ \textcolor{comment}{\ \ \ \ !>\ Number\ of\ discrete\ samples\ to\ use.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00565}00565\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ n\_samp\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00566}00566\ \textcolor{comment}{\ \ \ \ !>\ Discretized\ vector.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00567}00567\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(out)}\ ::\ vec\_disc(size(vec\_cts))}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00568}00568\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00569}00569\ \ \ \ \ \textcolor{keywordtype}{integer}\ ::\ i\_samp,\ k}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00570}00570\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00571}00571\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(617770167,\ n\_samp\ >=\ 0)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00572}00572\ \ \ \ \ vec\_disc\ =\ 0}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00573}00573\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_samp\ =\ 1,n\_samp}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00574}00574\ \ \ \ \ \ \ \ k\ =\ \mbox{\hyperlink{namespacecamp__rand_a1f91bce93606a8f03711ca24653ea3a4}{sample\_cts\_pdf}}(vec\_cts)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00575}00575\ \ \ \ \ \ \ \ vec\_disc(k)\ =\ vec\_disc(k)\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00576}00576\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00577}00577\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00578}00578\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rand_a24c8c27808b19383b261d200b91b69de}{sample\_vec\_cts\_to\_disc}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00579}00579\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00580}00580\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00581}00581\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00582}00582\ \textcolor{comment}{\ \ !>\ Generate\ a\ random\ hexadecimal\ character.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00583}\mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{00583}}\ \ \ \textcolor{keyword}{character\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}}()}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00584}00584\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00585}00585\ \ \ \ \ \textcolor{keywordtype}{integer}\ ::\ i}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00586}00586\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00587}00587\ \ \ \ \ i\ =\ \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}(16)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00588}00588\ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ <=\ 10)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00589}00589\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}}\ =\ achar(iachar(\textcolor{stringliteral}{'0'})\ +\ i\ -\/\ 1)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00590}00590\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00591}00591\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}}\ =\ achar(iachar(\textcolor{stringliteral}{'A'})\ +\ i\ -\/\ 11)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00592}00592\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00593}00593\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00594}00594\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00595}00595\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00596}00596\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00597}00597\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00598}00598\ \textcolor{comment}{\ \ !>\ Generate\ a\ version\ 4\ UUID\ as\ a\ string.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00599}00599\ \textcolor{comment}{\ \ !!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00600}00600\ \textcolor{comment}{\ \ !!\ See\ http://en.wikipedia.org/wiki/Universally\_Unique\_Identifier}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00601}00601\ \textcolor{comment}{\ \ !!\ for\ format\ details.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00602}\mbox{\hyperlink{namespacecamp__rand_ae36190e0e83c7a16138ed38ec071521c}{00602}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rand_ae36190e0e83c7a16138ed38ec071521c}{uuid4\_str}}(uuid)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00603}00603\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00604}00604\ \textcolor{comment}{\ \ \ \ !>\ The\ newly\ generated\ UUID\ string.}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00605}00605\ \ \ \ \ \textcolor{keywordtype}{character(len=CAMP\_UUID\_LEN)},\ \textcolor{keywordtype}{intent(out)}\ ::\ uuid}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00606}00606\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00607}00607\ \ \ \ \ \textcolor{keywordtype}{integer}\ ::\ i}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00608}00608\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00609}00609\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,8}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00610}00610\ \ \ \ \ \ \ \ uuid(i:i)\ =\ \mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}}()}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00611}00611\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00612}00612\ \ \ \ \ uuid(9:9)\ =\ \textcolor{stringliteral}{'-\/'}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00613}00613\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,4}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00614}00614\ \ \ \ \ \ \ \ uuid((i\ +\ 9):(i\ +\ 9))\ =\ \mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}}()}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00615}00615\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00616}00616\ \ \ \ \ uuid(14:14)\ =\ \textcolor{stringliteral}{'-\/'}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00617}00617\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,4}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00618}00618\ \ \ \ \ \ \ \ uuid((i\ +\ 14):(i\ +\ 14))\ =\ \mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}}()}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00619}00619\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00620}00620\ \ \ \ \ uuid(19:19)\ =\ \textcolor{stringliteral}{'-\/'}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00621}00621\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,4}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00622}00622\ \ \ \ \ \ \ \ uuid((i\ +\ 19):(i\ +\ 19))\ =\ \mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}}()}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00623}00623\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00624}00624\ \ \ \ \ uuid(24:24)\ =\ \textcolor{stringliteral}{'-\/'}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00625}00625\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,12}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00626}00626\ \ \ \ \ \ \ \ uuid((i\ +\ 24):(i\ +\ 24))\ =\ \mbox{\hyperlink{namespacecamp__rand_a1411d895e3c99da9dc1c4d9062ae5288}{rand\_hex\_char}}()}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00627}00627\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00628}00628\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00629}00629\ \ \ \ \ uuid(15:15)\ =\ \textcolor{stringliteral}{'4'}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00630}00630\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00631}00631\ \ \ \ \ i\ =\ \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}(4)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00632}00632\ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ <=\ 2)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00633}00633\ \ \ \ \ \ \ \ uuid(20:20)\ =\ achar(iachar(\textcolor{stringliteral}{'8'})\ +\ i\ -\/\ 1)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00634}00634\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00635}00635\ \ \ \ \ \ \ \ uuid(20:20)\ =\ achar(iachar(\textcolor{stringliteral}{'A'})\ +\ i\ -\/\ 3)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00636}00636\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00637}00637\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00638}00638\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rand_ae36190e0e83c7a16138ed38ec071521c}{uuid4\_str}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00639}00639\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00640}00640\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00641}00641\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00642}00642\ \textcolor{comment}{\ \ !>\ Generate\ an\ integer\ id}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00643}00643\ \textcolor{comment}{\ \ !!\ Ids\ will\ be\ sequential,\ and\ can\ only\ be\ generated\ by\ the\ primary\ process}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00644}\mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{00644}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{generate\_int\_id}}()\ \textcolor{keyword}{result}(id)}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00645}00645\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00646}00646\ \textcolor{comment}{\ \ \ \ !>\ The\ generated\ id}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00647}00647\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ id}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00648}00648\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00649}00649\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(226665912,\ \mbox{\hyperlink{namespacecamp__mpi_a071b987e3ccab55010a23029249b73a4}{camp\_mpi\_rank}}().eq.0,\ \&}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00650}00650\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Sequential\ ids\ can\ only\ be\ generated\ on\ the\ primary\ "{}}//\&}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00651}00651\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}process."{}})}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00652}00652\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00653}00653\ \ \ \ \ id\ =\ \mbox{\hyperlink{namespacecamp__rand_aa2faf6c17ce9681e2d85009cd8876616}{next\_id}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00654}00654\ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_aa2faf6c17ce9681e2d85009cd8876616}{next\_id}}\ =\ \mbox{\hyperlink{namespacecamp__rand_aa2faf6c17ce9681e2d85009cd8876616}{next\_id}}\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00655}00655\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00656}00656\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{generate\_int\_id}}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00657}00657\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00658}00658\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00659}00659\ }
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00660}00660\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rand}{camp\_rand}}}
 
 \end{DoxyCode}

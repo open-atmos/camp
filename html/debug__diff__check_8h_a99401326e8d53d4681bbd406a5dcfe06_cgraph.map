@@ -1,4 +1,5 @@
 <map id="diff_check" name="diff_check">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,87,31"/>
-<area shape="rect" id="node2" href="$debug__diff__check_8c.html#afb1128f6f0a020b38c94b979026ac18b" title=" " alt="" coords="135,5,281,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,86,31"/>
+<area shape="rect" id="Node000002" href="$debug__diff__check_8c.html#afb1128f6f0a020b38c94b979026ac18b" title=" " alt="" coords="134,5,279,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,16,118,16,118,21,86,21"/>
 </map>

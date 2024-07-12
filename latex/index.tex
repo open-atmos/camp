@@ -1,14 +1,16 @@
-\mbox{\hyperlink{index}{CAMP}} is software for solving multi-\/phase chemistry in atmospheric models. For a overview of what \mbox{\hyperlink{index}{CAMP}} can do, check out \mbox{\hyperlink{camp_tutorial_part_0}{part 0 of the CAMP tutorial}}. A description of the CAMP model elements and how to use them follows.\hypertarget{index_autotoc_md6}{}\doxysection{CAMP Input Classes}\label{index_autotoc_md6}
+\chapter{CAMP Documentation}
+\hypertarget{index}{}\label{index}\index{CAMP Documentation@{CAMP Documentation}}
+\doxysectlink{index}{CAMP}{0} is software for solving multi-\/phase chemistry in atmospheric models. For a overview of what \doxysectlink{index}{CAMP}{0} can do, check out \doxysectlink{camp_tutorial_part_0}{part 0 of the CAMP tutorial}{0}. A description of the CAMP model elements and how to use them follows.\hypertarget{index_autotoc_md6}{}\doxysection{\texorpdfstring{CAMP Input Classes}{CAMP Input Classes}}\label{index_autotoc_md6}
 
 \begin{DoxyItemize}
-\item \mbox{\hyperlink{camp_aero_phase}{Aerosol Phases}}
-\item \mbox{\hyperlink{camp_aero_rep}{Aerosol Representations}}
-\item \mbox{\hyperlink{camp_species}{Chemical Species}}
-\item \mbox{\hyperlink{camp_mechanism}{Mechanisms}}
-\item \mbox{\hyperlink{camp_rxn}{Reactions}}
-\item \mbox{\hyperlink{camp_sub_model}{Sub-\/\+Models}}
-\end{DoxyItemize}\hypertarget{index_autotoc_md7}{}\doxysection{Usage}\label{index_autotoc_md7}
-\mbox{\hyperlink{index}{CAMP}} uses json input files to load \mbox{\hyperlink{input_format_species}{chemical species}}, \mbox{\hyperlink{input_format_mechanism}{mechanisms}}, \mbox{\hyperlink{input_format_aero_phase}{aerosol phases}}, \mbox{\hyperlink{input_format_aero_rep}{aerosol representations}}, and \mbox{\hyperlink{input_format_sub_model}{sub-\/models}} at runtime. How to use \mbox{\hyperlink{index}{CAMP}} in a new or existing model is described in the \mbox{\hyperlink{camp_tutorial}{Boot CAMP}} tutorial.\hypertarget{index_autotoc_md8}{}\doxysubsection{Compiling}\label{index_autotoc_md8}
+\item \doxylink{camp_aero_phase}{Aerosol Phases}
+\item \doxylink{camp_aero_rep}{Aerosol Representations}
+\item \doxylink{camp_species}{Chemical Species}
+\item \doxylink{camp_mechanism}{Mechanisms}
+\item \doxylink{camp_rxn}{Reactions}
+\item \doxylink{camp_sub_model}{Sub-\/\+Models}
+\end{DoxyItemize}\hypertarget{index_autotoc_md7}{}\doxysection{\texorpdfstring{Usage}{Usage}}\label{index_autotoc_md7}
+\doxysectlink{index}{CAMP}{0} uses json input files to load \doxylink{input_format_species}{chemical species}, \doxylink{input_format_mechanism}{mechanisms}, \doxylink{input_format_aero_phase}{aerosol phases}, \doxylink{input_format_aero_rep}{aerosol representations}, and \doxylink{input_format_sub_model}{sub-\/models} at runtime. How to use \doxysectlink{index}{CAMP}{0} in a new or existing model is described in the \doxysectlink{camp_tutorial}{Boot CAMP}{0} tutorial.\hypertarget{index_autotoc_md8}{}\doxysubsection{\texorpdfstring{Compiling}{Compiling}}\label{index_autotoc_md8}
 You will need to have c and Fortran compilers along with CMake to build the CAMP library. In addition, CAMP has the following dependencies\+:
 
 \tabulinesep=1mm
@@ -34,22 +36,29 @@ To install CAMP locally, from the {\ttfamily camp/} folder\+:
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{mkdir build}
-\DoxyCodeLine{cd build}
-\DoxyCodeLine{cmake ..}
-\DoxyCodeLine{make install}
+\DoxyCodeLine{mkdir\ build}
+\DoxyCodeLine{cd\ build}
+\DoxyCodeLine{cmake\ ..}
+\DoxyCodeLine{make\ install}
 
 \end{DoxyCode}
 
 
-You can also check out \mbox{\hyperlink{_dockerfile}{./\+Dockerfile}} (or \mbox{\hyperlink{_dockerfile_8mpi}{./\+Dockerfile.mpi}} for MPI applications) to see how CAMP is built for automated testing.\hypertarget{index_autotoc_md9}{}\doxysubsection{Input files}\label{index_autotoc_md9}
-\mbox{\hyperlink{index}{CAMP}} uses two types of input files\+:
+You can also check out \doxylink{_dockerfile}{./\+Dockerfile} (or \doxylink{_dockerfile_8mpi}{./\+Dockerfile.mpi} for MPI applications) to see how CAMP is built for automated testing.\hypertarget{index_autotoc_md9}{}\doxysubsection{\texorpdfstring{Input files}{Input files}}\label{index_autotoc_md9}
+\doxysectlink{index}{CAMP}{0} uses two types of input files\+:
 
 
 \begin{DoxyItemize}
-\item \mbox{\hyperlink{input_format_camp_file_list}{File List}} A {\ttfamily json} file containing a list of \mbox{\hyperlink{index}{CAMP}} configuration file names.
-\item \mbox{\hyperlink{input_format_camp_config}{Configuration File}} One or more {\ttfamily json} files containing all the \mbox{\hyperlink{index}{CAMP}} configuration data.
+\item \doxylink{input_format_camp_file_list}{File List} A {\ttfamily json} file containing a list of \doxysectlink{index}{CAMP}{0} configuration file names.
+\item \doxylink{input_format_camp_config}{Configuration File} One or more {\ttfamily json} files containing all the \doxysectlink{index}{CAMP}{0} configuration data.
 \end{DoxyItemize}
 
-To initialize \mbox{\hyperlink{index}{CAMP}} , the path to the \mbox{\hyperlink{input_format_camp_file_list}{file list}} must be passed to the \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+camp\+\_\+core\+::camp\+\_\+core\+\_\+t}} constructor. The method by which this is done depends on the host model configuration.\hypertarget{index_autotoc_md10}{}\doxysubsection{CAMP tutorial}\label{index_autotoc_md10}
-Follow the \mbox{\hyperlink{camp_tutorial}{Boot CAMP}} tutorial to see how to integrate CAMP into your favorite model! 
+To initialize \doxysectlink{index}{CAMP}{0} , the path to the \doxylink{input_format_camp_file_list}{file list} must be passed to the \doxylink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+camp\+\_\+core\+::camp\+\_\+core\+\_\+t} constructor. The method by which this is done depends on the host model configuration.\hypertarget{index_autotoc_md10}{}\doxysubsection{\texorpdfstring{CAMP tutorial}{CAMP tutorial}}\label{index_autotoc_md10}
+Follow the \doxysectlink{camp_tutorial}{Boot CAMP}{0} tutorial to see how to integrate CAMP into your favorite model! \input{camp_aero_phase}
+\input{camp_aero_rep}
+\input{camp_species}
+\input{camp_mechanism}
+\input{camp_rxn}
+\input{camp_sub_model}
+\input{input_format_camp_file_list}
+\input{input_format_camp_config}

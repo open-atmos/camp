@@ -1,18 +1,28 @@
-\hypertarget{structcamp__env__state_1_1env__state__ptr}{}\doxysection{camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+ptr Type Reference}
-\label{structcamp__env__state_1_1env__state__ptr}\index{camp\_env\_state::env\_state\_ptr@{camp\_env\_state::env\_state\_ptr}}
+\doxysection{camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+ptr Type Reference}
+\hypertarget{structcamp__env__state_1_1env__state__ptr}{}\label{structcamp__env__state_1_1env__state__ptr}\index{camp\_env\_state::env\_state\_ptr@{camp\_env\_state::env\_state\_ptr}}
 
 
-Pointer for \mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\+\_\+state\+\_\+t}}.  
+Pointer for \doxylink{structcamp__env__state_1_1env__state__t}{env\+\_\+state\+\_\+t}.  
 
 
-\doxysubsection*{Public Member Functions}
+
+
+Collaboration diagram for camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+ptr\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=188pt]{structcamp__env__state_1_1env__state__ptr__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-procedure \mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr_a6af61b5b24b0baca592f255030eea1d5}{set\+\_\+temperature\+\_\+k}}
+procedure \mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr_a8d506fca918691fbea1f451de38416f3}{set\+\_\+temperature\+\_\+k}} (this, temperature)
 \begin{DoxyCompactList}\small\item\em Set the temperature (K) \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr_a725eb9503f67de835bcae9e63cc251bf}{set\+\_\+pressure\+\_\+pa}}
+procedure \mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr_a26f6a200a7b6beea730a66d087bcdc7d}{set\+\_\+pressure\+\_\+pa}} (this, pressure)
 \begin{DoxyCompactList}\small\item\em Set the pressure (Pa) \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Public Attributes}
+\doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
 type(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\+\_\+state\+\_\+t}}), pointer \mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr_aace5f29ac55866f9a8a947b0179d734b}{val}} =$>$ null()
@@ -20,37 +30,51 @@ type(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\+\_\+state\+\
 
 
 \doxysubsection{Detailed Description}
-Pointer for \mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\+\_\+state\+\_\+t}}. 
+Pointer for \doxylink{structcamp__env__state_1_1env__state__t}{env\+\_\+state\+\_\+t}. 
 
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00057}{57}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
 
 
 \doxysubsection{Member Function/\+Subroutine Documentation}
-\mbox{\Hypertarget{structcamp__env__state_1_1env__state__ptr_a725eb9503f67de835bcae9e63cc251bf}\label{structcamp__env__state_1_1env__state__ptr_a725eb9503f67de835bcae9e63cc251bf}} 
+\Hypertarget{structcamp__env__state_1_1env__state__ptr_a26f6a200a7b6beea730a66d087bcdc7d}\label{structcamp__env__state_1_1env__state__ptr_a26f6a200a7b6beea730a66d087bcdc7d} 
 \index{camp\_env\_state::env\_state\_ptr@{camp\_env\_state::env\_state\_ptr}!set\_pressure\_pa@{set\_pressure\_pa}}
 \index{set\_pressure\_pa@{set\_pressure\_pa}!camp\_env\_state::env\_state\_ptr@{camp\_env\_state::env\_state\_ptr}}
 \doxysubsubsection{\texorpdfstring{set\_pressure\_pa()}{set\_pressure\_pa()}}
-{\footnotesize\ttfamily procedure camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+ptr\+::set\+\_\+pressure\+\_\+pa}
+{\footnotesize\ttfamily procedure camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+ptr\+::set\+\_\+pressure\+\_\+pa (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{env\+\_\+state\+\_\+ptr}}), intent(inout)}]{this,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{pressure }\end{DoxyParamCaption})}
 
 
 
 Set the pressure (Pa) 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Environmental state pointer \\
+\hline
+\mbox{\texttt{ in}}  & {\em pressure} & New pressure (Pa) \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00063}{63}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__env__state_1_1env__state__ptr_a6af61b5b24b0baca592f255030eea1d5}\label{structcamp__env__state_1_1env__state__ptr_a6af61b5b24b0baca592f255030eea1d5}} 
+\Hypertarget{structcamp__env__state_1_1env__state__ptr_a8d506fca918691fbea1f451de38416f3}\label{structcamp__env__state_1_1env__state__ptr_a8d506fca918691fbea1f451de38416f3} 
 \index{camp\_env\_state::env\_state\_ptr@{camp\_env\_state::env\_state\_ptr}!set\_temperature\_k@{set\_temperature\_k}}
 \index{set\_temperature\_k@{set\_temperature\_k}!camp\_env\_state::env\_state\_ptr@{camp\_env\_state::env\_state\_ptr}}
 \doxysubsubsection{\texorpdfstring{set\_temperature\_k()}{set\_temperature\_k()}}
-{\footnotesize\ttfamily procedure camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+ptr\+::set\+\_\+temperature\+\_\+k}
+{\footnotesize\ttfamily procedure camp\+\_\+env\+\_\+state\+::env\+\_\+state\+\_\+ptr\+::set\+\_\+temperature\+\_\+k (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{env\+\_\+state\+\_\+ptr}}), intent(inout)}]{this,  }\item[{real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), intent(in)}]{temperature }\end{DoxyParamCaption})}
 
 
 
 Set the temperature (K) 
 
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Environmental state pointer \\
+\hline
+\mbox{\texttt{ in}}  & {\em temperature} & New temperature (K) \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00061}{61}} of file \mbox{\hyperlink{env__state_8_f90_source}{env\+\_\+state.\+F90}}.
@@ -58,7 +82,7 @@ Definition at line \mbox{\hyperlink{env__state_8_f90_source_l00061}{61}} of file
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{structcamp__env__state_1_1env__state__ptr_aace5f29ac55866f9a8a947b0179d734b}\label{structcamp__env__state_1_1env__state__ptr_aace5f29ac55866f9a8a947b0179d734b}} 
+\Hypertarget{structcamp__env__state_1_1env__state__ptr_aace5f29ac55866f9a8a947b0179d734b}\label{structcamp__env__state_1_1env__state__ptr_aace5f29ac55866f9a8a947b0179d734b} 
 \index{camp\_env\_state::env\_state\_ptr@{camp\_env\_state::env\_state\_ptr}!val@{val}}
 \index{val@{val}!camp\_env\_state::env\_state\_ptr@{camp\_env\_state::env\_state\_ptr}}
 \doxysubsubsection{\texorpdfstring{val}{val}}

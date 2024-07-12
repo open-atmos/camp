@@ -1,0 +1,10 @@
+<map id="camp_chem_spec_data::chem_spec_data_t" name="camp_chem_spec_data::chem_spec_data_t">
+<area shape="rect" id="Node000001" title="Chemical species data." alt="" coords="40,228,199,268"/>
+<area shape="rect" id="Node000002" href="$structcamp__util_1_1string__t.html" title="String type for building arrays of string of various size." alt="" coords="5,139,132,165"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,177,111,226,106,228,80,179"/>
+<area shape="rect" id="Node000003" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="156,139,325,165"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="215,176,146,229,143,225,212,172"/>
+<area shape="rect" id="Node000004" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="161,5,320,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="243,61,243,138,238,138,238,61"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="337,15,346,26,338,36,321,40,319,35,336,31,341,26,333,19"/>
+</map>

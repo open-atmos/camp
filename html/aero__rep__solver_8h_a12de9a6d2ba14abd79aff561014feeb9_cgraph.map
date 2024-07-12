@@ -1,5 +1,7 @@
 <map id="aero_rep_update_env_state" name="aero_rep_update_env_state">
-<area shape="rect" id="node1" title="Update the aerosol representations for new environmental conditions." alt="" coords="5,37,152,77"/>
-<area shape="rect" id="node2" href="$aero__rep__modal__binned__mass_8c.html#a643ed1219181994b7427b80b71e0ce23" title="Update aerosol representation data for new environmental conditions." alt="" coords="200,5,371,45"/>
-<area shape="rect" id="node3" href="$aero__rep__single__particle_8c.html#abb3778ac04df76a32ac3359b8cabe51b" title="Update aerosol representation data for new environmental conditions." alt="" coords="204,69,367,109"/>
+<area shape="rect" id="Node000001" title="Update the aerosol representations for new environmental conditions." alt="" coords="5,39,151,79"/>
+<area shape="rect" id="Node000002" href="$aero__rep__modal__binned__mass_8c.html#a643ed1219181994b7427b80b71e0ce23" title="Update aerosol representation data for new environmental conditions." alt="" coords="199,5,369,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,45,183,39,184,45,151,50"/>
+<area shape="rect" id="Node000003" href="$aero__rep__single__particle_8c.html#abb3778ac04df76a32ac3359b8cabe51b" title="Update aerosol representation data for new environmental conditions." alt="" coords="203,71,365,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="151,68,188,73,187,79,151,73"/>
 </map>

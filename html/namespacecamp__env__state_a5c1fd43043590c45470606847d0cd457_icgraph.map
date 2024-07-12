@@ -1,4 +1,6 @@
 <map id="camp_env_state::env_state_sat_vapor_pressure" name="camp_env_state::env_state_sat_vapor_pressure">
-<area shape="rect" id="node1" title="Computes the current saturation vapor pressure (Pa)." alt="" coords="200,29,379,69"/>
-<area shape="rect" id="node2" href="$namespacecamp__env__state.html#aed371f10382a89dce6a108a550cc94e7" title="Adds the given water volume to the water vapor and updates all environment quantities." alt="" coords="5,22,152,77"/>
+<area shape="rect" id="Node000001" title="Computes the current saturation vapor pressure (Pa)." alt="" coords="199,29,377,70"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="322,16,309,10,288,8,268,10,256,15,251,20,253,28,248,29,246,19,253,10,267,5,288,3,311,5,324,11"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__env__state.html#aed371f10382a89dce6a108a550cc94e7" title="Adds the given water volume to the water vapor and updates all environment quantities." alt="" coords="5,22,151,78"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,52,151,52,151,47,183,47"/>
 </map>

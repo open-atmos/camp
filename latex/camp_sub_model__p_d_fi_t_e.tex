@@ -1,0 +1,135 @@
+\doxysubsubsection{CAMP\+: PD-\/\+Fi\+TE Activity}
+\hypertarget{camp_sub_model__p_d_fi_t_e}{}\label{camp_sub_model__p_d_fi_t_e}\index{CAMP: PD-\/FiTE Activity@{CAMP: PD-\/FiTE Activity}}
+PD-\/\+Fi\+TE activity calculates aerosol-\/phase species activities using Taylor series to describe partial derivatives of mean activity coefficients for ternary solutions, as described in Topping et al. (2009) {\bfseries [Topping2009]} . The mean binary activity coefficients for ion pairs are calculated according to eq. 15 in {\bfseries [Topping2009]} . The values are then made available to aqueous-\/phase reactions during solving.
+
+Input data for PDFi\+TE activity equations have the following format \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ "{}camp-\/data"{}\ :\ [}
+\DoxyCodeLine{\ \{}
+\DoxyCodeLine{\ \ \ "{}name"{}\ :\ "{}my\ PDFiTE\ activity"{},}
+\DoxyCodeLine{\ \ \ "{}type"{}\ :\ "{}SUB\_MODEL\_PDFITE"{},}
+\DoxyCodeLine{\ \ \ "{}gas-\/phase\ water"{}\ :\ "{}H2O"{},}
+\DoxyCodeLine{\ \ \ "{}aerosol-\/phase\ water"{}\ :\ "{}H2O\_aq"{},}
+\DoxyCodeLine{\ \ \ "{}aerosol\ phase"{}\ :\ "{}my\ aero\ phase"{},}
+\DoxyCodeLine{\ \ \ "{}calculate\ for"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ "{}H-\/NO3"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ "{}interactions"{}\ :\ [}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}ion\ pair"{}\ :\ "{}H-\/NO3"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}min\ RH"{}\ :\ 0.0,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}max\ RH"{}\ :\ 0.1,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}B"{}\ :\ [\ 0.925113\ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}ion\ pair"{}\ :\ "{}H-\/NO3"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}min\ RH"{}\ :\ 0.1,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}max\ RH"{}\ :\ 0.4,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}B"{}\ :\ [\ 0.12091,\ 13.497,\ -\/67.771,\ 144.01,\ -\/117.97\ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}ion\ pair"{}\ :\ "{}H-\/NO3"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}min\ RH"{}\ :\ 0.4,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}max\ RH"{}\ :\ 0.9,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}B"{}\ :\ [\ 1.3424,\ -\/0.8197,\ -\/0.52983,\ -\/0.37335\ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}ion\ pair"{}\ :\ "{}H-\/NO3"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}min\ RH"{}\ :\ 0.9,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}max\ RH"{}\ :\ 1.0,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}B"{}\ :\ [\ -\/0.3506505\ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}ion\ pair"{}\ :\ "{}NH4-\/NO3"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}min\ RH"{}\ :\ 0.0,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}max\ RH"{}\ :\ 0.1,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}B"{}\ :\ [\ -\/11.93308\ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}ion\ pair"{}\ :\ "{}NH4-\/NO3"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}min\ RH"{}\ :\ 0.1,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}max\ RH"{}\ :\ 0.99,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}B"{}\ :\ [\ -\/17.0372,\ 59.232,\ -\/86.312,\ 44.04\ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}ion\ pair"{}\ :\ "{}NH4-\/NO3"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}min\ RH"{}\ :\ 0.99,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}max\ RH"{}\ :\ 1.0,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ "{}B"{}\ :\ [\ -\/0.2599432\ ]}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ ]}
+\DoxyCodeLine{\ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ ...}
+\DoxyCodeLine{\ \ \ \}}
+\DoxyCodeLine{\ \}}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ The key-\/value pair {\bfseries{aerosol}} {\bfseries{phase}} is required to specify the aerosol phase for which to calculate activity coefficients. The key-\/value pairs {\bfseries{gas-\/phase}} {\bfseries{water}} and {\bfseries{aerosol-\/phase}} {\bfseries{water}} must also be present and specify the names for the water species in each phase. The final required key-\/value pair is {\bfseries{calculated}} {\bfseries{for}}, which should contain a set of ion pairs that activity coefficients will be calculated for.
+
+The key names in this set must correspond to ion pairs that are present in the specified aerosol phase. The values must contain a key-\/value pair named {\bfseries{interactions}} which includes an array of ion-\/pair interactions used to calculate equation 15 in {\bfseries [Topping2009]} .
+
+Each element in the {\bfseries{interactions}} array must include an {\bfseries{ion}} pair that exists in the specified aerosol phase, a {\bfseries{min}} {\bfseries{RH}} and {\bfseries{max}} {\bfseries{RH}} that specify the bounds for which the fitted curve is valid, and an array of {\bfseries{B}} values that specify the polynomial coefficients B0, B1, B2, ... as in equation 19 in {\bfseries [Topping2009]} . At least one polynomial coefficient must be present.
+
+If at least one interaction with an ion pair is included, enough interactions with that ion pair must be included to cover the entire RH range (0.\+0--1.\+0). Interactions are assume to cover the range (min\+RH, max\+RH\mbox{]}, except for the lowest RH interaction, which covers th range \mbox{[}0.\+0, max\+RH\mbox{]}.
+
+When the interacting ion pair is the same as the ion-\/pair for which the mean binary activity coefficient is being calculated, the interaction parameters are used to calculate $ln(\gamma_A^0(\mathrm{RH}))$. Otherwise, the parameters are used to calculate $\frac{d\ln{\gamma_A(\mathrm{RH})}}{d(N_{B,M}N_{B,x})}$.
+
+For the above example, the following input data should be present\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}name"{}\ :\ "{}H2O"{},}
+\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{\ \ "{}phase"{}\ :\ "{}GAS"{},}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}name"{}\ :\ "{}H2O\_aq"{},}
+\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{\ \ "{}phase"{}\ :\ "{}AEROSOL"{},}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}name"{}\ :\ "{}H\_p"{},}
+\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{\ \ "{}phase"{}\ :\ "{}AEROSOL"{},}
+\DoxyCodeLine{\ \ "{}charge"{}\ :\ 1,}
+\DoxyCodeLine{\ \ "{}molecular\ weight\ [kg\ mol-\/1]"{}\ :\ 1.008}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}name"{}\ :\ "{}NH4\_p"{},}
+\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{\ \ "{}phase"{}\ :\ "{}AEROSOL"{},}
+\DoxyCodeLine{\ \ "{}charge"{}\ :\ 1,}
+\DoxyCodeLine{\ \ "{}molecular\ weight"{}\ :\ 18.04}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}name"{}\ :\ "{}NO3\_m"{},}
+\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{\ \ "{}phase"{}\ :\ "{}AEROSOL"{},}
+\DoxyCodeLine{\ \ "{}charge"{}\ :\ -\/1}
+\DoxyCodeLine{\ \ "{}molecular\ weight\ [kg\ mol-\/1]"{}\ :\ 62.0049}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}name"{}\ :\ "{}NH4-\/NO3"{},}
+\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{\ \ "{}tracer\ type"{}\ :\ "{}ION\_PAIR"{},}
+\DoxyCodeLine{\ \ "{}ions"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ "{}NH4\_p"{}\ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ "{}NO3\_m"{}\ :\ \{\}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}name"{}\ :\ "{}H-\/NO3"{},}
+\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{\ \ "{}tracer\ type"{}\ :\ "{}ION\_PAIR"{},}
+\DoxyCodeLine{\ \ "{}ions"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ "{}H\_p"{}\ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ "{}NO3\_m"{}\ :\ \{\}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\},}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}name"{}\ :\ "{}my\ aero\ phase"{},}
+\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}AERO\_PHASE"{},}
+\DoxyCodeLine{\ \ "{}species"{}\ :\ ["{}H\_p"{},\ "{}NO3\_m"{},\ "{}NH4\_p"{},\ "{}NH4-\/NO3"{},\ "{}H-\/NO3"{},\ "{}H2O\_aq"{}]}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ 

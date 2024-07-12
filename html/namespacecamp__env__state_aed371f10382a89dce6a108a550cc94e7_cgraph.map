@@ -1,6 +1,10 @@
 <map id="camp_env_state::env_state_change_water_volume" name="camp_env_state::env_state_change_water_volume">
-<area shape="rect" id="node1" title="Adds the given water volume to the water vapor and updates all environment quantities." alt="" coords="5,51,152,106"/>
-<area shape="rect" id="node2" href="$namespacecamp__env__state.html#a5c1fd43043590c45470606847d0cd457" title="Computes the current saturation vapor pressure (Pa)." alt="" coords="200,29,379,69"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#ab72bff2627c9468e4c352118b8dc7046" title="Prints a warning message." alt="" coords="217,94,361,119"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="427,87,549,127"/>
+<area shape="rect" id="Node000001" title="Adds the given water volume to the water vapor and updates all environment quantities." alt="" coords="5,51,151,107"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__env__state.html#a5c1fd43043590c45470606847d0cd457" title="Computes the current saturation vapor pressure (Pa)." alt="" coords="199,29,377,70"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,66,183,62,184,67,152,71"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#ab72bff2627c9468e4c352118b8dc7046" title="Prints a warning message." alt="" coords="216,94,360,120"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="152,86,201,93,201,98,151,91"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="250,29,248,19,254,10,268,5,288,3,309,5,322,11,320,16,308,10,288,8,269,10,258,15,253,20,255,28"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="425,87,547,127"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="360,104,409,104,409,110,360,110"/>
 </map>

@@ -1,52 +1,64 @@
-\hypertarget{sub__models_8h}{}\doxysection{sub\+\_\+models.\+h File Reference}
-\label{sub__models_8h}\index{sub\_models.h@{sub\_models.h}}
+\doxysection{sub\+\_\+models.\+h File Reference}
+\hypertarget{sub__models_8h}{}\label{sub__models_8h}\index{sub\_models.h@{sub\_models.h}}
 
 
 Header file for sub model functions.  
 
 
 Include dependency graph for sub\+\_\+models.\+h\+:
-% FIG 0
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h__incl}
+\end{center}
+\end{figure}
 This graph shows which files directly or indirectly include this file\+:
-% FIG 1
-\doxysubsection*{Functions}
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{sub__models_8h_a1c3598c177755e3ca9d3bde1ace7c0e0}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
-\begin{DoxyCompactList}\small\item\em Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this sub model. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__models_8h_ad0578f51652ce992842c2e65c8d84e55}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+update\+\_\+ids}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, int $\ast$deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
+void \mbox{\hyperlink{sub__models_8h_a1c3598c177755e3ca9d3bde1ace7c0e0}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Flag \doxylink{struct_jacobian}{Jacobian} elements used by this sub model. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__models_8h_ad0578f51652ce992842c2e65c8d84e55}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+update\+\_\+ids}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
 \begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__models_8h_ae2d20ec59ac4397714d038f51324809d}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+update\+\_\+env\+\_\+state}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, double $\ast$sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data)
+void \mbox{\hyperlink{sub__models_8h_ae2d20ec59ac4397714d038f51324809d}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+update\+\_\+env\+\_\+state}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update sub model data for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__models_8h_a2f46f791a4a74c77e283b5afb91911aa}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+calculate}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, double $\ast$sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data)
+void \mbox{\hyperlink{sub__models_8h_a2f46f791a4a74c77e283b5afb91911aa}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+calculate}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Perform the sub-\/model calculations for the current model state. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__models_8h_a50d2ccc5a5c4b40019447f6b7dd5feab}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+get\+\_\+jac\+\_\+contrib}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, double $\ast$sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, realtype $\ast$J, double time\+\_\+step)
-\begin{DoxyCompactList}\small\item\em Add contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from derivates calculated using the output of this sub model. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__models_8h_a57f2820ce385881014fed09a82ae5364}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+print}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data)
+void \mbox{\hyperlink{sub__models_8h_a50d2ccc5a5c4b40019447f6b7dd5feab}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+get\+\_\+jac\+\_\+contrib}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, realtype \texorpdfstring{$\ast$}{*}J, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Add contributions to the \doxylink{struct_jacobian}{Jacobian} from derivates calculated using the output of this sub model. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__models_8h_a57f2820ce385881014fed09a82ae5364}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+print}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the PDFi\+TE Activity sub model parameters. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__models_8h_a6895ac51f6122ce830f30d8b1f09d052}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
-\begin{DoxyCompactList}\small\item\em Get the \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used for a particular row of the matrix. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__models_8h_a2674d98846a9c4933d56156ec1f0deb5}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+ids}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, int $\ast$deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
-\begin{DoxyCompactList}\small\item\em Update stored ids for elements used within a row of the \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__models_8h_a43f3628a20f1bf545034554576e9c85c}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+env\+\_\+state}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, double $\ast$sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data)
+void \mbox{\hyperlink{sub__models_8h_a6895ac51f6122ce830f30d8b1f09d052}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Get the \doxylink{struct_jacobian}{Jacobian} elements used for a particular row of the matrix. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__models_8h_a2674d98846a9c4933d56156ec1f0deb5}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+ids}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
+\begin{DoxyCompactList}\small\item\em Update stored ids for elements used within a row of the \doxylink{struct_jacobian}{Jacobian} matrix. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__models_8h_a43f3628a20f1bf545034554576e9c85c}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+env\+\_\+state}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update sub-\/model data for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__models_8h_a91d55564c556bf61d6bf0ccac7b43e4b}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+calculate}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, double $\ast$sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data)
+void \mbox{\hyperlink{sub__models_8h_a91d55564c556bf61d6bf0ccac7b43e4b}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+calculate}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Perform the sub-\/model calculations for the current model state. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__models_8h_a0301d06b09af90fcfe49f9a1ba7c6742}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+jac\+\_\+contrib}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, double $\ast$sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, realtype $\ast$J, double time\+\_\+step)
-\begin{DoxyCompactList}\small\item\em Add contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from derivates calculated using the output of this sub model. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__models_8h_ac47310b67585f52b71ff6aac1c603ba5}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+print}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data)
+void \mbox{\hyperlink{sub__models_8h_a0301d06b09af90fcfe49f9a1ba7c6742}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+jac\+\_\+contrib}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, realtype \texorpdfstring{$\ast$}{*}J, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Add contributions to the \doxylink{struct_jacobian}{Jacobian} from derivates calculated using the output of this sub model. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__models_8h_ac47310b67585f52b71ff6aac1c603ba5}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+print}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the sub model data. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__models_8h_a0c47a7f4b91fa19f71a1a69237a6754e}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
-\begin{DoxyCompactList}\small\item\em Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this sub model. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__models_8h_af42c83e6bae3321e17f4bf21620e36ed}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+update\+\_\+ids}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, int $\ast$deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
+void \mbox{\hyperlink{sub__models_8h_a0c47a7f4b91fa19f71a1a69237a6754e}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Flag \doxylink{struct_jacobian}{Jacobian} elements used by this sub model. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__models_8h_af42c83e6bae3321e17f4bf21620e36ed}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+update\+\_\+ids}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
 \begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__models_8h_a915b2885008bfb4bd6c9c37efd6e8d82}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+update\+\_\+env\+\_\+state}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, double $\ast$sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data)
+void \mbox{\hyperlink{sub__models_8h_a915b2885008bfb4bd6c9c37efd6e8d82}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+update\+\_\+env\+\_\+state}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update sub model data for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__models_8h_a6639a32646d84e02917b64167f36ea89}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+calculate}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, double $\ast$sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data)
+void \mbox{\hyperlink{sub__models_8h_a6639a32646d84e02917b64167f36ea89}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+calculate}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Do pre-\/derivative calculations. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__models_8h_aa6bf886e4a9fadb02913dab07e19018b}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+get\+\_\+jac\+\_\+contrib}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data, double $\ast$sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, realtype $\ast$J, double time\+\_\+step)
-\begin{DoxyCompactList}\small\item\em Add contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from derivates calculated using the output of this sub model. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__models_8h_a74a95ee9cc01c0905493fcb19e00c8b0}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+print}} (int $\ast$sub\+\_\+model\+\_\+int\+\_\+data, double $\ast$sub\+\_\+model\+\_\+float\+\_\+data)
+void \mbox{\hyperlink{sub__models_8h_aa6bf886e4a9fadb02913dab07e19018b}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+get\+\_\+jac\+\_\+contrib}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, realtype \texorpdfstring{$\ast$}{*}J, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Add contributions to the \doxylink{struct_jacobian}{Jacobian} from derivates calculated using the output of this sub model. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__models_8h_a74a95ee9cc01c0905493fcb19e00c8b0}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+print}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the ZSR Aerosol Water sub model parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -60,11 +72,11 @@ Definition in file \mbox{\hyperlink{sub__models_8h_source}{sub\+\_\+models.\+h}}
 
 
 \doxysubsection{Function Documentation}
-\mbox{\Hypertarget{sub__models_8h_a2f46f791a4a74c77e283b5afb91911aa}\label{sub__models_8h_a2f46f791a4a74c77e283b5afb91911aa}} 
+\Hypertarget{sub__models_8h_a2f46f791a4a74c77e283b5afb91911aa}\label{sub__models_8h_a2f46f791a4a74c77e283b5afb91911aa} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_PDFiTE\_calculate@{sub\_model\_PDFiTE\_calculate}}
 \index{sub\_model\_PDFiTE\_calculate@{sub\_model\_PDFiTE\_calculate}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_PDFiTE\_calculate()}{sub\_model\_PDFiTE\_calculate()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+calculate (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+calculate (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -86,16 +98,22 @@ Perform the sub-\/model calculations for the current model state.
 Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00167}{167}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 2
-\mbox{\Hypertarget{sub__models_8h_a50d2ccc5a5c4b40019447f6b7dd5feab}\label{sub__models_8h_a50d2ccc5a5c4b40019447f6b7dd5feab}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_a2f46f791a4a74c77e283b5afb91911aa_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__models_8h_a50d2ccc5a5c4b40019447f6b7dd5feab}\label{sub__models_8h_a50d2ccc5a5c4b40019447f6b7dd5feab} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_PDFiTE\_get\_jac\_contrib@{sub\_model\_PDFiTE\_get\_jac\_contrib}}
 \index{sub\_model\_PDFiTE\_get\_jac\_contrib@{sub\_model\_PDFiTE\_get\_jac\_contrib}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_PDFiTE\_get\_jac\_contrib()}{sub\_model\_PDFiTE\_get\_jac\_contrib()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+get\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{realtype $\ast$}]{J,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+get\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{realtype \texorpdfstring{$\ast$}{*}}]{J,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
 
 
 
-Add contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from derivates calculated using the output of this sub model. 
+Add contributions to the \doxylink{struct_jacobian}{Jacobian} from derivates calculated using the output of this sub model. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -107,7 +125,7 @@ Add contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from deriv
 \hline
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em J} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} to be calculated \\
+{\em J} & \doxylink{struct_jacobian}{Jacobian} to be calculated \\
 \hline
 {\em time\+\_\+step} & Current time step in \mbox{[}s\mbox{]} \\
 \hline
@@ -117,16 +135,22 @@ Add contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from deriv
 Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00277}{277}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 3
-\mbox{\Hypertarget{sub__models_8h_a1c3598c177755e3ca9d3bde1ace7c0e0}\label{sub__models_8h_a1c3598c177755e3ca9d3bde1ace7c0e0}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_a50d2ccc5a5c4b40019447f6b7dd5feab_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__models_8h_a1c3598c177755e3ca9d3bde1ace7c0e0}\label{sub__models_8h_a1c3598c177755e3ca9d3bde1ace7c0e0} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_PDFiTE\_get\_used\_jac\_elem@{sub\_model\_PDFiTE\_get\_used\_jac\_elem}}
 \index{sub\_model\_PDFiTE\_get\_used\_jac\_elem@{sub\_model\_PDFiTE\_get\_used\_jac\_elem}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_PDFiTE\_get\_used\_jac\_elem()}{sub\_model\_PDFiTE\_get\_used\_jac\_elem()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac }\end{DoxyParamCaption})}
 
 
 
-Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this sub model. 
+Flag \doxylink{struct_jacobian}{Jacobian} elements used by this sub model. 
 
 activity sub models are assumed to be at equilibrium
 
@@ -136,7 +160,7 @@ activity sub models are assumed to be at equilibrium
 \hline
 {\em sub\+\_\+model\+\_\+float\+\_\+data} & Pointer to the sub model floating-\/point data \\
 \hline
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
 \hline
 \end{DoxyParams}
 
@@ -144,14 +168,26 @@ activity sub models are assumed to be at equilibrium
 Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00073}{73}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 4
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_a1c3598c177755e3ca9d3bde1ace7c0e0_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 5
-\mbox{\Hypertarget{sub__models_8h_a57f2820ce385881014fed09a82ae5364}\label{sub__models_8h_a57f2820ce385881014fed09a82ae5364}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_a1c3598c177755e3ca9d3bde1ace7c0e0_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__models_8h_a57f2820ce385881014fed09a82ae5364}\label{sub__models_8h_a57f2820ce385881014fed09a82ae5364} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_PDFiTE\_print@{sub\_model\_PDFiTE\_print}}
 \index{sub\_model\_PDFiTE\_print@{sub\_model\_PDFiTE\_print}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_PDFiTE\_print()}{sub\_model\_PDFiTE\_print()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+print (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -169,12 +205,18 @@ Print the PDFi\+TE Activity sub model parameters.
 Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00462}{462}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 6
-\mbox{\Hypertarget{sub__models_8h_ae2d20ec59ac4397714d038f51324809d}\label{sub__models_8h_ae2d20ec59ac4397714d038f51324809d}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_a57f2820ce385881014fed09a82ae5364_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__models_8h_ae2d20ec59ac4397714d038f51324809d}\label{sub__models_8h_ae2d20ec59ac4397714d038f51324809d} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_PDFiTE\_update\_env\_state@{sub\_model\_PDFiTE\_update\_env\_state}}
 \index{sub\_model\_PDFiTE\_update\_env\_state@{sub\_model\_PDFiTE\_update\_env\_state}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_PDFiTE\_update\_env\_state()}{sub\_model\_PDFiTE\_update\_env\_state()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -196,12 +238,18 @@ Update sub model data for new environmental conditions.
 Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00137}{137}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 7
-\mbox{\Hypertarget{sub__models_8h_ad0578f51652ce992842c2e65c8d84e55}\label{sub__models_8h_ad0578f51652ce992842c2e65c8d84e55}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_ae2d20ec59ac4397714d038f51324809d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__models_8h_ad0578f51652ce992842c2e65c8d84e55}\label{sub__models_8h_ad0578f51652ce992842c2e65c8d84e55} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_PDFiTE\_update\_ids@{sub\_model\_PDFiTE\_update\_ids}}
 \index{sub\_model\_PDFiTE\_update\_ids@{sub\_model\_PDFiTE\_update\_ids}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_PDFiTE\_update\_ids()}{sub\_model\_PDFiTE\_update\_ids()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{int $\ast$}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac }\end{DoxyParamCaption})}
 
 
 
@@ -217,7 +265,7 @@ activity sub models are assumed to be at equilibrium
 \hline
 {\em deriv\+\_\+ids} & Indices for state array variables on the solver state array \\
 \hline
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
 \hline
 \end{DoxyParams}
 
@@ -225,20 +273,32 @@ activity sub models are assumed to be at equilibrium
 Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00105}{105}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 8
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_ad0578f51652ce992842c2e65c8d84e55_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 9
-\mbox{\Hypertarget{sub__models_8h_a91d55564c556bf61d6bf0ccac7b43e4b}\label{sub__models_8h_a91d55564c556bf61d6bf0ccac7b43e4b}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_ad0578f51652ce992842c2e65c8d84e55_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__models_8h_a91d55564c556bf61d6bf0ccac7b43e4b}\label{sub__models_8h_a91d55564c556bf61d6bf0ccac7b43e4b} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_UNIFAC\_calculate@{sub\_model\_UNIFAC\_calculate}}
 \index{sub\_model\_UNIFAC\_calculate@{sub\_model\_UNIFAC\_calculate}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_calculate()}{sub\_model\_UNIFAC\_calculate()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+calculate (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+calculate (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data }\end{DoxyParamCaption})}
 
 
 
 Perform the sub-\/model calculations for the current model state. 
 
-These calculations are based on equations (1)--(9) in {\bfseries [Marcolli2005]}. Variable names used in the derivation of the \mbox{\hyperlink{struct_jacobian}{Jacobian}} equations are adopted here for consistency. Specifically, these are\+:  \[
+These calculations are based on equations (1)--(9) in {\bfseries [Marcolli2005]}. Variable names used in the derivation of the \doxylink{struct_jacobian}{Jacobian} equations are adopted here for consistency. Specifically, these are\+:  \[
   \begin{align*}
    \sigma & \equiv \displaystyle\sum_k r_k x_k, \\
    \tau & \equiv \displaystyle\sum_k q_k x_k, \\
@@ -247,7 +307,7 @@ These calculations are based on equations (1)--(9) in {\bfseries [Marcolli2005]}
                   \displaystyle\sum_i v_j^{(i)} x_i}, \textrm{ and} \\
    \Pi & \equiv \displaystyle\sum_n Q_n X_n. \\
   \end{align*}
-\] Using these variables and subscript $j$ for the species whose activity is being calculated for easy comparison with the \mbox{\hyperlink{struct_jacobian}{Jacobian}} calculations, equations (1)--(9) in {\bfseries [Marcolli2005]} become\+:  \[
+\] Using these variables and subscript $j$ for the species whose activity is being calculated for easy comparison with the \doxylink{struct_jacobian}{Jacobian} calculations, equations (1)--(9) in {\bfseries [Marcolli2005]} become\+:  \[
   \begin{align*}
    \ln{\gamma_j} & = \ln{\gamma_j^C} + \ln{\gamma_j^R} & (1) \\
    \alpha_w & = \gamma_w x_w & (2) \\
@@ -286,16 +346,22 @@ These calculations are based on equations (1)--(9) in {\bfseries [Marcolli2005]}
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00226}{226}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 10
-\mbox{\Hypertarget{sub__models_8h_a0301d06b09af90fcfe49f9a1ba7c6742}\label{sub__models_8h_a0301d06b09af90fcfe49f9a1ba7c6742}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_a91d55564c556bf61d6bf0ccac7b43e4b_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__models_8h_a0301d06b09af90fcfe49f9a1ba7c6742}\label{sub__models_8h_a0301d06b09af90fcfe49f9a1ba7c6742} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_UNIFAC\_get\_jac\_contrib@{sub\_model\_UNIFAC\_get\_jac\_contrib}}
 \index{sub\_model\_UNIFAC\_get\_jac\_contrib@{sub\_model\_UNIFAC\_get\_jac\_contrib}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_get\_jac\_contrib()}{sub\_model\_UNIFAC\_get\_jac\_contrib()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{realtype $\ast$}]{J,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{realtype \texorpdfstring{$\ast$}{*}}]{J,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
 
 
 
-Add contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from derivates calculated using the output of this sub model. 
+Add contributions to the \doxylink{struct_jacobian}{Jacobian} from derivates calculated using the output of this sub model. 
 
 This derivation starts from equations (1)--(9) in {\bfseries [Marcolli2005]}. The mole fraction of species $i$ is calculated as\+:  \[
    x_i = \frac{m_i}{m_T},
@@ -472,7 +538,7 @@ This derivation starts from equations (1)--(9) in {\bfseries [Marcolli2005]}. Th
 \hline
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em J} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} to be calculated \\
+{\em J} & \doxylink{struct_jacobian}{Jacobian} to be calculated \\
 \hline
 {\em time\+\_\+step} & Current time step \mbox{[}s\mbox{]} \\
 \hline
@@ -482,16 +548,22 @@ This derivation starts from equations (1)--(9) in {\bfseries [Marcolli2005]}. Th
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00575}{575}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 11
-\mbox{\Hypertarget{sub__models_8h_a6895ac51f6122ce830f30d8b1f09d052}\label{sub__models_8h_a6895ac51f6122ce830f30d8b1f09d052}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_a0301d06b09af90fcfe49f9a1ba7c6742_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__models_8h_a6895ac51f6122ce830f30d8b1f09d052}\label{sub__models_8h_a6895ac51f6122ce830f30d8b1f09d052} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_UNIFAC\_get\_used\_jac\_elem@{sub\_model\_UNIFAC\_get\_used\_jac\_elem}}
 \index{sub\_model\_UNIFAC\_get\_used\_jac\_elem@{sub\_model\_UNIFAC\_get\_used\_jac\_elem}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_get\_used\_jac\_elem()}{sub\_model\_UNIFAC\_get\_used\_jac\_elem()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac }\end{DoxyParamCaption})}
 
 
 
-Get the \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used for a particular row of the matrix. 
+Get the \doxylink{struct_jacobian}{Jacobian} elements used for a particular row of the matrix. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -499,7 +571,7 @@ Get the \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used for a particu
 \hline
 {\em sub\+\_\+model\+\_\+float\+\_\+data} & Pointer to the sub model floating-\/point data \\
 \hline
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
 \hline
 \end{DoxyParams}
 
@@ -507,14 +579,26 @@ Get the \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used for a particu
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00082}{82}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 12
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_a6895ac51f6122ce830f30d8b1f09d052_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 13
-\mbox{\Hypertarget{sub__models_8h_ac47310b67585f52b71ff6aac1c603ba5}\label{sub__models_8h_ac47310b67585f52b71ff6aac1c603ba5}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_a6895ac51f6122ce830f30d8b1f09d052_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__models_8h_ac47310b67585f52b71ff6aac1c603ba5}\label{sub__models_8h_ac47310b67585f52b71ff6aac1c603ba5} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_UNIFAC\_print@{sub\_model\_UNIFAC\_print}}
 \index{sub\_model\_UNIFAC\_print@{sub\_model\_UNIFAC\_print}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_print()}{sub\_model\_UNIFAC\_print()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+print (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -532,12 +616,18 @@ Print the sub model data.
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00771}{771}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 14
-\mbox{\Hypertarget{sub__models_8h_a43f3628a20f1bf545034554576e9c85c}\label{sub__models_8h_a43f3628a20f1bf545034554576e9c85c}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_ac47310b67585f52b71ff6aac1c603ba5_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__models_8h_a43f3628a20f1bf545034554576e9c85c}\label{sub__models_8h_a43f3628a20f1bf545034554576e9c85c} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_UNIFAC\_update\_env\_state@{sub\_model\_UNIFAC\_update\_env\_state}}
 \index{sub\_model\_UNIFAC\_update\_env\_state@{sub\_model\_UNIFAC\_update\_env\_state}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_update\_env\_state()}{sub\_model\_UNIFAC\_update\_env\_state()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -559,16 +649,22 @@ Update sub-\/model data for new environmental conditions.
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00129}{129}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 15
-\mbox{\Hypertarget{sub__models_8h_a2674d98846a9c4933d56156ec1f0deb5}\label{sub__models_8h_a2674d98846a9c4933d56156ec1f0deb5}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_a43f3628a20f1bf545034554576e9c85c_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__models_8h_a2674d98846a9c4933d56156ec1f0deb5}\label{sub__models_8h_a2674d98846a9c4933d56156ec1f0deb5} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_UNIFAC\_update\_ids@{sub\_model\_UNIFAC\_update\_ids}}
 \index{sub\_model\_UNIFAC\_update\_ids@{sub\_model\_UNIFAC\_update\_ids}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_update\_ids()}{sub\_model\_UNIFAC\_update\_ids()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{int $\ast$}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac }\end{DoxyParamCaption})}
 
 
 
-Update stored ids for elements used within a row of the \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix. 
+Update stored ids for elements used within a row of the \doxylink{struct_jacobian}{Jacobian} matrix. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -578,7 +674,7 @@ Update stored ids for elements used within a row of the \mbox{\hyperlink{struct_
 \hline
 {\em deriv\+\_\+ids} & Indices for state array variables on the solver state array \\
 \hline
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
 \hline
 \end{DoxyParams}
 
@@ -586,14 +682,26 @@ Update stored ids for elements used within a row of the \mbox{\hyperlink{struct_
 Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00106}{106}} of file \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source}{sub\+\_\+model\+\_\+\+UNIFAC.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 16
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_a2674d98846a9c4933d56156ec1f0deb5_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 17
-\mbox{\Hypertarget{sub__models_8h_a6639a32646d84e02917b64167f36ea89}\label{sub__models_8h_a6639a32646d84e02917b64167f36ea89}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_a2674d98846a9c4933d56156ec1f0deb5_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__models_8h_a6639a32646d84e02917b64167f36ea89}\label{sub__models_8h_a6639a32646d84e02917b64167f36ea89} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_ZSR\_aerosol\_water\_calculate@{sub\_model\_ZSR\_aerosol\_water\_calculate}}
 \index{sub\_model\_ZSR\_aerosol\_water\_calculate@{sub\_model\_ZSR\_aerosol\_water\_calculate}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_ZSR\_aerosol\_water\_calculate()}{sub\_model\_ZSR\_aerosol\_water\_calculate()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+calculate (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+calculate (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -615,16 +723,22 @@ Do pre-\/derivative calculations.
 Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source_l00216}{216}} of file \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 18
-\mbox{\Hypertarget{sub__models_8h_aa6bf886e4a9fadb02913dab07e19018b}\label{sub__models_8h_aa6bf886e4a9fadb02913dab07e19018b}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_a6639a32646d84e02917b64167f36ea89_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__models_8h_aa6bf886e4a9fadb02913dab07e19018b}\label{sub__models_8h_aa6bf886e4a9fadb02913dab07e19018b} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_ZSR\_aerosol\_water\_get\_jac\_contrib@{sub\_model\_ZSR\_aerosol\_water\_get\_jac\_contrib}}
 \index{sub\_model\_ZSR\_aerosol\_water\_get\_jac\_contrib@{sub\_model\_ZSR\_aerosol\_water\_get\_jac\_contrib}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_ZSR\_aerosol\_water\_get\_jac\_contrib()}{sub\_model\_ZSR\_aerosol\_water\_get\_jac\_contrib()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+get\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{realtype $\ast$}]{J,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+get\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{realtype \texorpdfstring{$\ast$}{*}}]{J,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
 
 
 
-Add contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from derivates calculated using the output of this sub model. 
+Add contributions to the \doxylink{struct_jacobian}{Jacobian} from derivates calculated using the output of this sub model. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -636,7 +750,7 @@ Add contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from deriv
 \hline
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em J} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} to be calculated \\
+{\em J} & \doxylink{struct_jacobian}{Jacobian} to be calculated \\
 \hline
 {\em time\+\_\+step} & Current time step \mbox{[}s\mbox{]} \\
 \hline
@@ -646,16 +760,22 @@ Add contributions to the \mbox{\hyperlink{struct_jacobian}{Jacobian}} from deriv
 Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source_l00314}{314}} of file \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 19
-\mbox{\Hypertarget{sub__models_8h_a0c47a7f4b91fa19f71a1a69237a6754e}\label{sub__models_8h_a0c47a7f4b91fa19f71a1a69237a6754e}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_aa6bf886e4a9fadb02913dab07e19018b_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__models_8h_a0c47a7f4b91fa19f71a1a69237a6754e}\label{sub__models_8h_a0c47a7f4b91fa19f71a1a69237a6754e} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_ZSR\_aerosol\_water\_get\_used\_jac\_elem@{sub\_model\_ZSR\_aerosol\_water\_get\_used\_jac\_elem}}
 \index{sub\_model\_ZSR\_aerosol\_water\_get\_used\_jac\_elem@{sub\_model\_ZSR\_aerosol\_water\_get\_used\_jac\_elem}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_ZSR\_aerosol\_water\_get\_used\_jac\_elem()}{sub\_model\_ZSR\_aerosol\_water\_get\_used\_jac\_elem()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac }\end{DoxyParamCaption})}
 
 
 
-Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by this sub model. 
+Flag \doxylink{struct_jacobian}{Jacobian} elements used by this sub model. 
 
 ZSR aerosol water sub models are assumed to be at equilibrium
 
@@ -665,7 +785,7 @@ ZSR aerosol water sub models are assumed to be at equilibrium
 \hline
 {\em sub\+\_\+model\+\_\+float\+\_\+data} & Pointer to the sub model floating-\/point data \\
 \hline
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
 \hline
 \end{DoxyParams}
 
@@ -673,14 +793,26 @@ ZSR aerosol water sub models are assumed to be at equilibrium
 Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source_l00081}{81}} of file \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 20
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_a0c47a7f4b91fa19f71a1a69237a6754e_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 21
-\mbox{\Hypertarget{sub__models_8h_a74a95ee9cc01c0905493fcb19e00c8b0}\label{sub__models_8h_a74a95ee9cc01c0905493fcb19e00c8b0}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_a0c47a7f4b91fa19f71a1a69237a6754e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__models_8h_a74a95ee9cc01c0905493fcb19e00c8b0}\label{sub__models_8h_a74a95ee9cc01c0905493fcb19e00c8b0} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_ZSR\_aerosol\_water\_print@{sub\_model\_ZSR\_aerosol\_water\_print}}
 \index{sub\_model\_ZSR\_aerosol\_water\_print@{sub\_model\_ZSR\_aerosol\_water\_print}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_ZSR\_aerosol\_water\_print()}{sub\_model\_ZSR\_aerosol\_water\_print()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+print (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -698,12 +830,18 @@ Print the ZSR Aerosol Water sub model parameters.
 Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source_l00445}{445}} of file \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 22
-\mbox{\Hypertarget{sub__models_8h_a915b2885008bfb4bd6c9c37efd6e8d82}\label{sub__models_8h_a915b2885008bfb4bd6c9c37efd6e8d82}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_a74a95ee9cc01c0905493fcb19e00c8b0_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__models_8h_a915b2885008bfb4bd6c9c37efd6e8d82}\label{sub__models_8h_a915b2885008bfb4bd6c9c37efd6e8d82} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_ZSR\_aerosol\_water\_update\_env\_state@{sub\_model\_ZSR\_aerosol\_water\_update\_env\_state}}
 \index{sub\_model\_ZSR\_aerosol\_water\_update\_env\_state@{sub\_model\_ZSR\_aerosol\_water\_update\_env\_state}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_ZSR\_aerosol\_water\_update\_env\_state()}{sub\_model\_ZSR\_aerosol\_water\_update\_env\_state()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data,  }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -725,12 +863,18 @@ Update sub model data for new environmental conditions.
 Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source_l00189}{189}} of file \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 23
-\mbox{\Hypertarget{sub__models_8h_af42c83e6bae3321e17f4bf21620e36ed}\label{sub__models_8h_af42c83e6bae3321e17f4bf21620e36ed}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_a915b2885008bfb4bd6c9c37efd6e8d82_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{sub__models_8h_af42c83e6bae3321e17f4bf21620e36ed}\label{sub__models_8h_af42c83e6bae3321e17f4bf21620e36ed} 
 \index{sub\_models.h@{sub\_models.h}!sub\_model\_ZSR\_aerosol\_water\_update\_ids@{sub\_model\_ZSR\_aerosol\_water\_update\_ids}}
 \index{sub\_model\_ZSR\_aerosol\_water\_update\_ids@{sub\_model\_ZSR\_aerosol\_water\_update\_ids}!sub\_models.h@{sub\_models.h}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_ZSR\_aerosol\_water\_update\_ids()}{sub\_model\_ZSR\_aerosol\_water\_update\_ids()}}
-{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{int $\ast$}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{int $\ast$}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac }\end{DoxyParamCaption})}
 
 
 
@@ -746,7 +890,7 @@ ZSR aerosol water sub models are assumed to be at equilibrium
 \hline
 {\em deriv\+\_\+ids} & Indices for state array variables on the solver state array \\
 \hline
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
 \hline
 \end{DoxyParams}
 
@@ -754,6 +898,18 @@ ZSR aerosol water sub models are assumed to be at equilibrium
 Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source_l00133}{133}} of file \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_source}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 24
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_af42c83e6bae3321e17f4bf21620e36ed_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 25
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{sub__models_8h_af42c83e6bae3321e17f4bf21620e36ed_icgraph}
+\end{center}
+\end{figure}

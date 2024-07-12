@@ -1,0 +1,23 @@
+\doxysubsection{CAMP\+: Wet Deposition}
+\hypertarget{camp_rxn_wet_deposition}{}\label{camp_rxn_wet_deposition}\index{CAMP: Wet Deposition@{CAMP: Wet Deposition}}
+Wet Deposition reactions take the form\+:
+
+\[
+   \mbox{X} \rightarrow
+ \]
+
+where $\ce{X}$ is a set of species in an aerosol phase undergoing wet deposition at a given rate.
+
+Wet deposition rate constants can be constant or set from an external module using the {\ttfamily \doxylink{structcamp__rxn__wet__deposition_1_1rxn__update__data__wet__deposition__t}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::rxn\+\_\+update\+\_\+data\+\_\+wet\+\_\+deposition\+\_\+t}} object. External modules should use the {\ttfamily \doxylink{structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t_a7fb15c2a258db67fede314623d946eb0}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::rxn\+\_\+wet\+\_\+deposition\+\_\+t\+::get\+\_\+property\+\_\+set()}} function during initilialization to access any needed reaction parameters to identify certain wet deposition reactions. An {\ttfamily camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::update\+\_\+data\+\_\+wet\+\_\+deposition\+\_\+t} object should be initialized for each wet deposition reaction. These objects can then be used during solving to update the wet deposition rate from an external module.
+
+Input data for wet deposition reactions have the following format \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}WET\_DEPOSITION"{},}
+\DoxyCodeLine{\ \ "{}aerosol\ phase"{}\ :\ "{}my\ aero\ phase"{},}
+\DoxyCodeLine{\ \ "{}scaling\ factor"{}\ :\ 1.2,}
+\DoxyCodeLine{\ \ ...}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ The key-\/value pair {\bfseries{aerosol}} {\bfseries{phase}} is required and its value must be the name of the aerosol phase undergoing wet deposition. All species within the aerosol phase in all instances of the aerosol phase will be removed according the first-\/order loss rate constant. The {\bfseries{scaling}} {\bfseries{factor}} is optional, and can be used to set a constant scaling factor for the rate constant. When a {\bfseries{scaling}} {\bfseries{factor}} is not provided, it is assumed to be 1.\+0. All other data is optional and will be available to external modules during initialization. Rate constants are in units of $s^{-1}$, and must be set using a {\ttfamily rxn\+\_\+wet\+\_\+deposition\+\_\+update\+\_\+data\+\_\+t} object. 

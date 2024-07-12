@@ -1,3 +1,4 @@
 <map id="camp_mpi::camp_mpi_allequal_integer" name="camp_mpi::camp_mpi_allequal_integer">
-<area shape="rect" id="node1" title="Returns whether all processors have the same value." alt="" coords="5,29,153,69"/>
+<area shape="rect" id="Node000001" title="Returns whether all processors have the same value." alt="" coords="5,29,153,70"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="102,16,94,10,79,8,65,10,57,14,54,20,56,28,50,29,49,20,54,11,64,5,79,3,95,5,105,12"/>
 </map>

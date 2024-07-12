@@ -1,110 +1,112 @@
-So far, we\textquotesingle{}ve \mbox{\hyperlink{camp_tutorial_part_1}{built a simple box model}} and \mbox{\hyperlink{camp_tutorial_part_2}{set up a simple chemical mechanism}} to run in that box model. Now, we\textquotesingle{}re going to make some final adjustments to make this a fully operational box model. In many cases, the host model needs to provide some information to CAMP that changes over the course of a model run. We\textquotesingle{}ve seen how to update environmental conditions like temperature and pressure, but other information requires some knowledge of the system being modeled. In the case of our simple mechanism, this is $\ce{NO2}$ photolysis. CAMP photolysis reactions need to know the photolysis rate at a given moment in the model run. Other reactions that need some external help include \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{emissions}}, \mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__first__order__loss__t}{first order loss}}, and \mbox{\hyperlink{structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t}{wet deposition}}.
+\chapter{Boot CAMP\+: Part 3 -\/ Updating CAMP Parameters}
+\hypertarget{camp_tutorial_part_3}{}\label{camp_tutorial_part_3}\index{Boot CAMP: Part 3 -\/ Updating CAMP Parameters@{Boot CAMP: Part 3 -\/ Updating CAMP Parameters}}
+So far, we\textquotesingle{}ve \doxysectlink{camp_tutorial_part_1}{built a simple box model}{0} and \doxysectlink{camp_tutorial_part_2}{set up a simple chemical mechanism}{0} to run in that box model. Now, we\textquotesingle{}re going to make some final adjustments to make this a fully operational box model. In many cases, the host model needs to provide some information to CAMP that changes over the course of a model run. We\textquotesingle{}ve seen how to update environmental conditions like temperature and pressure, but other information requires some knowledge of the system being modeled. In the case of our simple mechanism, this is $\ce{NO2}$ photolysis. CAMP photolysis reactions need to know the photolysis rate at a given moment in the model run. Other reactions that need some external help include \doxylink{structcamp__rxn__emission_1_1rxn__emission__t}{emissions}, \doxylink{structcamp__rxn__first__order__loss_1_1rxn__first__order__loss__t}{first order loss}, and \doxylink{structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t}{wet deposition}.
 
 Let\textquotesingle{}s update our box model to set the $\ce{NO2}$ photolysis rate. Before the call to solver\+\_\+initialize(), we\textquotesingle{}ll add the following code\+:
 
 
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{  \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__mechanism__data}{camp\_mechanism\_data}}}
-\DoxyCodeLine{  \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__rxn__data}{camp\_rxn\_data}}}
-\DoxyCodeLine{  \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__rxn__photolysis}{camp\_rxn\_photolysis}}}
-\DoxyCodeLine{  \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__rxn__factory}{camp\_rxn\_factory}}}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__mechanism__data}{camp\_mechanism\_data}}}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rxn__data}{camp\_rxn\_data}}}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rxn__photolysis}{camp\_rxn\_photolysis}}}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rxn__factory}{camp\_rxn\_factory}}}
 \DoxyCodeLine{}
 
 \end{DoxyCodeInclude}
  
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{  \textcolor{keywordtype}{integer(kind=i\_kind)} :: i\_rxn}
-\DoxyCodeLine{  \textcolor{keywordtype}{character(len=:)}, \textcolor{keywordtype}{allocatable} :: photo\_label}
-\DoxyCodeLine{  \textcolor{keywordtype}{type}(mechanism\_data\_t), \textcolor{keywordtype}{pointer} :: mechanism}
-\DoxyCodeLine{  \textcolor{keywordtype}{type}(rxn\_factory\_t) :: rxn\_factory}
-\DoxyCodeLine{  \textcolor{keywordtype}{class}(rxn\_data\_t), \textcolor{keywordtype}{pointer} :: photo\_rxn}
-\DoxyCodeLine{  \textcolor{keywordtype}{type}(rxn\_update\_data\_photolysis\_t) :: NO2\_photolysis}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_rxn}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ photo\_label}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{type}(mechanism\_data\_t),\ \textcolor{keywordtype}{pointer}\ ::\ mechanism}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{type}(rxn\_factory\_t)\ ::\ rxn\_factory}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{class}(rxn\_data\_t),\ \textcolor{keywordtype}{pointer}\ ::\ photo\_rxn}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{type}(rxn\_update\_data\_photolysis\_t)\ ::\ NO2\_photolysis}
 \DoxyCodeLine{}
 
 \end{DoxyCodeInclude}
  
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{  \textcolor{keywordflow}{if}( .not.camp\_core\%get\_mechanism( \textcolor{stringliteral}{"{}my simple mechanism"{}}, mechanism ) ) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{    \textcolor{keyword}{write}(*,*) \textcolor{stringliteral}{"{}Missing mechanism!"{}}}
-\DoxyCodeLine{    stop 3}
-\DoxyCodeLine{\textcolor{keywordflow}{  end if}}
+\DoxyCodeLine{\ \ \textcolor{keywordflow}{if}(\ .not.camp\_core\%get\_mechanism(\ \textcolor{stringliteral}{"{}my\ simple\ mechanism"{}},\ mechanism\ )\ )\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{write}(*,*)\ \textcolor{stringliteral}{"{}Missing\ mechanism!"{}}}
+\DoxyCodeLine{\ \ \ \ stop\ 3}
+\DoxyCodeLine{\textcolor{keywordflow}{\ \ end\ if}}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{keywordflow}{do} i\_rxn = 1, mechanism\%size( )}
-\DoxyCodeLine{    photo\_rxn => mechanism\%get\_rxn( i\_rxn )}
-\DoxyCodeLine{    \textcolor{keywordflow}{select type}( photo\_rxn )}
-\DoxyCodeLine{\textcolor{keywordflow}{      class is}( \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__photolysis__t}{rxn\_photolysis\_t}} )}
-\DoxyCodeLine{        \textcolor{keywordflow}{if}( photo\_rxn\%property\_set\%get\_string( \textcolor{stringliteral}{"{}my photo label"{}}, photo\_label ) ) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{          \textcolor{keywordflow}{if}( photo\_label .eq. \textcolor{stringliteral}{"{}NO2 photolysis"{}} ) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{            \textcolor{keyword}{call }camp\_core\%initialize\_update\_object( photo\_rxn, no2\_photolysis )}
-\DoxyCodeLine{\textcolor{keywordflow}{          end if}}
-\DoxyCodeLine{\textcolor{keywordflow}{        end if}}
-\DoxyCodeLine{\textcolor{keywordflow}{    end select}}
-\DoxyCodeLine{\textcolor{keywordflow}{  end do}}
+\DoxyCodeLine{\ \ \textcolor{keywordflow}{do}\ i\_rxn\ =\ 1,\ mechanism\%size(\ )}
+\DoxyCodeLine{\ \ \ \ photo\_rxn\ =>\ mechanism\%get\_rxn(\ i\_rxn\ )}
+\DoxyCodeLine{\ \ \ \ \textcolor{keywordflow}{select\ type}(\ photo\_rxn\ )}
+\DoxyCodeLine{\textcolor{keywordflow}{\ \ \ \ \ \ class\ is}(\ \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__photolysis__t}{rxn\_photolysis\_t}}\ )}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ photo\_rxn\%property\_set\%get\_string(\ \textcolor{stringliteral}{"{}my\ photo\ label"{}},\ photo\_label\ )\ )\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ photo\_label\ .eq.\ \textcolor{stringliteral}{"{}NO2\ photolysis"{}}\ )\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }camp\_core\%initialize\_update\_object(\ photo\_rxn,\ no2\_photolysis\ )}
+\DoxyCodeLine{\textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\textcolor{keywordflow}{\ \ end\ do}}
 
 \end{DoxyCodeInclude}
 
 
-We first find the chemical mechanism, which we named {\bfseries{my simple mechanism}} in the last part of the tutorial. Next, we cycle through the reactions in that mechanism looking for \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__photolysis__t}{rxn\+\_\+photolysis\+\_\+t}} reactions. Then, we check the properties of the photolysis reactions looking for a key-\/value pair name {\bfseries{my photo label}} and make sure its value is {\bfseries{NO2 photolysis}}, as we specified in the last section. The \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_adeab6a80bd18af573d65b3789311a99b}{property\+\_\+set}} of reactions gives you direct access to the input data for each reaction. This includes the information CAMP uses, like {\bfseries{reactants}} and {\bfseries{A}}, as well as those it doesn\textquotesingle{}t use, like our {\bfseries{my photo label}}. There are functions to get string, integers, real numbers, and subsets of properties from \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_adeab6a80bd18af573d65b3789311a99b}{property\+\_\+set}}. To see the available functions, see \mbox{\hyperlink{namespacecamp__property}{camp\+\_\+property}}. The last step is to fix our \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t}{rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t}} object to the $\ce{NO2}$ photolysis reaction we located, then at the end just make sure we found the reaction we were looking for. This and similar objects for other reactions that accept external updates allow you to change reaction parameters during a model run.
+We first find the chemical mechanism, which we named {\bfseries{my simple mechanism}} in the last part of the tutorial. Next, we cycle through the reactions in that mechanism looking for \doxylink{structcamp__rxn__photolysis_1_1rxn__photolysis__t}{rxn\+\_\+photolysis\+\_\+t} reactions. Then, we check the properties of the photolysis reactions looking for a key-\/value pair name {\bfseries{my photo label}} and make sure its value is {\bfseries{NO2 photolysis}}, as we specified in the last section. The \doxylink{structcamp__rxn__data_1_1rxn__data__t_adeab6a80bd18af573d65b3789311a99b}{property\+\_\+set} of reactions gives you direct access to the input data for each reaction. This includes the information CAMP uses, like {\bfseries{reactants}} and {\bfseries{A}}, as well as those it doesn\textquotesingle{}t use, like our {\bfseries{my photo label}}. There are functions to get string, integers, real numbers, and subsets of properties from \doxylink{structcamp__rxn__data_1_1rxn__data__t_adeab6a80bd18af573d65b3789311a99b}{property\+\_\+set}. To see the available functions, see \doxylink{namespacecamp__property}{camp\+\_\+property}. The last step is to fix our \doxylink{structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t}{rxn\+\_\+update\+\_\+data\+\_\+photolysis\+\_\+t} object to the $\ce{NO2}$ photolysis reaction we located, then at the end just make sure we found the reaction we were looking for. This and similar objects for other reactions that accept external updates allow you to change reaction parameters during a model run.
 
 Finally, we\textquotesingle{}ll add the following code before we start to loop over time and solve the chemistry\+:
 
 
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{  \textcolor{keyword}{call }no2\_photolysis\%set\_rate( 12.2d0 ) \textcolor{comment}{! rate in s-\/1}}
-\DoxyCodeLine{  \textcolor{keyword}{call }camp\_core\%update\_data( no2\_photolysis )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{call\ }no2\_photolysis\%set\_rate(\ 12.2d0\ )\ \textcolor{comment}{!\ rate\ in\ s-\/1}}
+\DoxyCodeLine{\ \ \textcolor{keyword}{call\ }camp\_core\%update\_data(\ no2\_photolysis\ )}
 
 \end{DoxyCodeInclude}
 
 
-Here, we simply set the reaction property of interest in our update data object, in this case the photolysis rate, and then pass this data to CAMP. This can be done before any call to \mbox{\hyperlink{namespacecamp__camp__core_a2c930e794dab3e8c87b47cbc35ea28a0}{solve()}}. This rate will remain the same until we change it again.
+Here, we simply set the reaction property of interest in our update data object, in this case the photolysis rate, and then pass this data to CAMP. This can be done before any call to \doxylink{namespacecamp__camp__core_a2c930e794dab3e8c87b47cbc35ea28a0}{solve()}. This rate will remain the same until we change it again.
 
 Now, our box model code and our input files are complete. To compile the code, try something like\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{gfortran -\/o run\_box\_model box\_model.F90 -\/lcamp -\/I/usr/local/include/camp}
+\DoxyCodeLine{gfortran\ -\/o\ run\_box\_model\ box\_model.F90\ -\/lcamp\ -\/I/usr/local/include/camp}
 
 \end{DoxyCode}
  Where the include path points to where the CAMP library {\ttfamily }.mod files are installed. If you have trouble compiling or running because of missing libraries, make sure your {\ttfamily LD\+\_\+\+LIBRARY\+\_\+\+PATH} and {\ttfamily PATH} include the directories where the CAMP, json-\/fortran, SUNDIALS, and Suite\+Sparse libraries are installed.
 
 Then, to run to mechanism\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{./run\_box\_model > output.txt}
+\DoxyCodeLine{./run\_box\_model\ >\ output.txt}
 
 \end{DoxyCode}
  If you have \href{http://www.gnuplot.info/}{\texttt{ gnuplot}} installed, you can copy /doc/camp\+\_\+tutorial/boot\+\_\+camp/part\+\_\+3\+\_\+code/plot.conf to the directory with your results and check out them out\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{gnuplot plot.conf}
+\DoxyCodeLine{gnuplot\ plot.conf}
 
 \end{DoxyCode}
  Our results look like this\+:
 
 
 
-In the \mbox{\hyperlink{camp_tutorial_part_4}{next installment}} of Boot CAMP, we\textquotesingle{}ll start passing messages!
+In the \doxysectlink{camp_tutorial_part_4}{next installment}{0} of Boot CAMP, we\textquotesingle{}ll start passing messages!
 
 The files described in this part of the tutorial and needed to run the box model and plot the results can be found in {\ttfamily /doc/camp\+\_\+tutorial/boot\+\_\+camp/part\+\_\+3\+\_\+code}.
 
 \DoxyHorRuler{0}
- \hypertarget{camp_tutorial_part_3_autotoc_md22}{}\doxysubsubsection{Docker Instructions}\label{camp_tutorial_part_3_autotoc_md22}
+ \hypertarget{camp_tutorial_part_3_autotoc_md22}{}\doxysubsubsection{\texorpdfstring{Docker Instructions}{Docker Instructions}}\label{camp_tutorial_part_3_autotoc_md22}
 Inside the container\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{dnf install -\/y gnuplot}
-\DoxyCodeLine{mkdir boot-\/camp}
-\DoxyCodeLine{cd boot-\/camp}
-\DoxyCodeLine{cp ../camp/doc/camp\_tutorial/boot\_camp/part\_3\_code/* .}
-\DoxyCodeLine{gfortran -\/o run\_box\_model box\_model.F90 -\/lcamp -\/I/usr/local/include/camp}
-\DoxyCodeLine{./run\_box\_model > output.txt}
-\DoxyCodeLine{gnuplot plot.conf}
+\DoxyCodeLine{dnf\ install\ -\/y\ gnuplot}
+\DoxyCodeLine{mkdir\ boot-\/camp}
+\DoxyCodeLine{cd\ boot-\/camp}
+\DoxyCodeLine{cp\ ../camp/doc/camp\_tutorial/boot\_camp/part\_3\_code/*\ .}
+\DoxyCodeLine{gfortran\ -\/o\ run\_box\_model\ box\_model.F90\ -\/lcamp\ -\/I/usr/local/include/camp}
+\DoxyCodeLine{./run\_box\_model\ >\ output.txt}
+\DoxyCodeLine{gnuplot\ plot.conf}
 \DoxyCodeLine{exit}
 
 \end{DoxyCode}
  Back outside the container\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{docker cp camp:/boot-\/camp/results.png .}
-\DoxyCodeLine{docker container rm camp}
-\DoxyCodeLine{open results.png}
+\DoxyCodeLine{docker\ cp\ camp:/boot-\/camp/results.png\ .}
+\DoxyCodeLine{docker\ container\ rm\ camp}
+\DoxyCodeLine{open\ results.png}
 
 \end{DoxyCode}
 
 
 \DoxyHorRuler{0}
- {\bfseries{ \texorpdfstring{$<$}{<} Previous\+: }} \mbox{\hyperlink{camp_tutorial_part_2}{Boot CAMP\+: Part 2 -\/ Mechanism}}  \mbox{\hyperlink{camp_tutorial}{Index}}  {\bfseries{ Next\+: }} \mbox{\hyperlink{camp_tutorial_part_4}{Boot CAMP\+: Part 4 -\/ Message Passing}} {\bfseries{ \texorpdfstring{$>$}{>} }} 
+ {\bfseries{ \texorpdfstring{$<$}{<} Previous\+: }} \doxysectlink{camp_tutorial_part_2}{Boot CAMP\+: Part 2 -\/ Mechanism}{0}  \doxysectlink{camp_tutorial}{Index}{0}  {\bfseries{ Next\+: }} \doxysectlink{camp_tutorial_part_4}{Boot CAMP\+: Part 4 -\/ Message Passing}{0} {\bfseries{ \texorpdfstring{$>$}{>} }} 

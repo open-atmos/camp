@@ -1,103 +1,105 @@
-Prior to beginning this tutorial, the CAMP library should be installed on your system. Installation instructions can be found \mbox{\hyperlink{index}{here}}. Alternatively, you can run CAMP in Docker following the instructions \mbox{\hyperlink{camp_tutorial}{here}}.
+\chapter{Boot CAMP\+: Part 1 -\/ Box Model}
+\hypertarget{camp_tutorial_part_1}{}\label{camp_tutorial_part_1}\index{Boot CAMP: Part 1 -\/ Box Model@{Boot CAMP: Part 1 -\/ Box Model}}
+Prior to beginning this tutorial, the CAMP library should be installed on your system. Installation instructions can be found \doxysectlink{index}{here}{0}. Alternatively, you can run CAMP in Docker following the instructions \doxysectlink{camp_tutorial}{here}{0}.
 
 The purpose of this tutorial is to demonstrate how to integrate CAMP into a new host model, and use it to build and solve a unique chemical system. Over the the course of this tutorial, we will build a simple box model, add CAMP for the chemistry solving, and develop a simple chemical mechanism that makes use of all the CAMP functionality. Key features of CAMP will be demonstrated, including it\textquotesingle{}s use with various aerosol representations (e.\+g., bins, modes, single particles), it\textquotesingle{}s combined gas-\/ and aerosol-\/phase solving, and it\textquotesingle{}s run-\/time chemical mechanism configuration.
 
-The box-\/model code in this tutorial is designed to make clear how to interact with CAMP, but it is not meant to represent a well-\/designed model. The code used in the tutorial can be found in {\ttfamily doc/camp\+\_\+tutorial/boot\+\_\+camp}.\hypertarget{camp_tutorial_part_1_autotoc_md21}{}\doxysubsection{CAMP box model}\label{camp_tutorial_part_1_autotoc_md21}
+The box-\/model code in this tutorial is designed to make clear how to interact with CAMP, but it is not meant to represent a well-\/designed model. The code used in the tutorial can be found in {\ttfamily doc/camp\+\_\+tutorial/boot\+\_\+camp}.\hypertarget{camp_tutorial_part_1_autotoc_md21}{}\doxysubsection{\texorpdfstring{CAMP box model}{CAMP box model}}\label{camp_tutorial_part_1_autotoc_md21}
 First, let\textquotesingle{}s build our simple box model. In a file named {\ttfamily box\+\_\+model.\+F90}, add the following code to load the CAMP modules we\textquotesingle{}ll need to get started\+:
 
 
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{\textcolor{keyword}{program} \mbox{\hyperlink{part__1__code_2box__model_8_f90_a3f8c0234515cc17b2f3e366868b8646b}{box\_model}}}
+\DoxyCodeLine{\textcolor{keyword}{program}\ \mbox{\hyperlink{part__1__code_2box__model_8_f90_a3f8c0234515cc17b2f3e366868b8646b}{box\_model}}}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__camp__core}{camp\_camp\_core}}}
-\DoxyCodeLine{  \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__camp__state}{camp\_camp\_state}}}
-\DoxyCodeLine{  \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}}}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__camp__core}{camp\_camp\_core}}}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__camp__state}{camp\_camp\_state}}}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}}}
 
 \end{DoxyCodeInclude}
 
 
-These modules provide two derived types that are needed in any CAMP implementation, \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}} and \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+state\+\_\+t}}. CAMP employs an object-\/oriented design in which all of its functionality is exposed through instances of derived types. Most CAMP modules include one public derived type, with some exceptions we\textquotesingle{}ll see later on.
+These modules provide two derived types that are needed in any CAMP implementation, \doxylink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t} and \doxylink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+state\+\_\+t}. CAMP employs an object-\/oriented design in which all of its functionality is exposed through instances of derived types. Most CAMP modules include one public derived type, with some exceptions we\textquotesingle{}ll see later on.
 
 Next, declare the needed variables and create and initialize a CAMP core\+:
 
 
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{  \textcolor{keywordtype}{type}(camp\_core\_t), \textcolor{keywordtype}{pointer} :: camp\_core}
-\DoxyCodeLine{  \textcolor{keywordtype}{type}(camp\_state\_t), \textcolor{keywordtype}{pointer} :: camp\_state}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{type}(camp\_core\_t),\ \textcolor{keywordtype}{pointer}\ ::\ camp\_core}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{type}(camp\_state\_t),\ \textcolor{keywordtype}{pointer}\ ::\ camp\_state}
 \DoxyCodeLine{}
 
 \end{DoxyCodeInclude}
  
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{  camp\_core => \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\_core\_t}}( \textcolor{stringliteral}{"{}my\_config\_file.json"{}} )}
-\DoxyCodeLine{  \textcolor{keyword}{call }camp\_core\%initialize( )}
+\DoxyCodeLine{\ \ camp\_core\ =>\ \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\_core\_t}}(\ \textcolor{stringliteral}{"{}my\_config\_file.json"{}}\ )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{call\ }camp\_core\%initialize(\ )}
 
 \end{DoxyCodeInclude}
 
 
-The \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t()}} constructor takes one argument\+: the path to a configuration file for the chemical mechanism you would like to run. (We\textquotesingle{}ll create this a little later in the tutorial.) The constructor reads the input data and creates internal objects to describe the system (reactions, species, etc.). The initialize() function instructs these model elements to validate their input data and assemble the information they will need during solving.
+The \doxylink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t()} constructor takes one argument\+: the path to a configuration file for the chemical mechanism you would like to run. (We\textquotesingle{}ll create this a little later in the tutorial.) The constructor reads the input data and creates internal objects to describe the system (reactions, species, etc.). The initialize() function instructs these model elements to validate their input data and assemble the information they will need during solving.
 
-In the first implementation of our box model, we will assume a fixed mechanism, so we will hard-\/code some species names. Later on we will use some \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}} functions to retrieve the species present in the model at run time to avoid this.
+In the first implementation of our box model, we will assume a fixed mechanism, so we will hard-\/code some species names. Later on we will use some \doxylink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t} functions to retrieve the species present in the model at run time to avoid this.
 
 
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{  \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__chem__spec__data}{camp\_chem\_spec\_data}}}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__chem__spec__data}{camp\_chem\_spec\_data}}}
 \DoxyCodeLine{}
 
 \end{DoxyCodeInclude}
  
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{  \textcolor{keywordtype}{integer(kind=i\_kind)} :: idx\_O3, idx\_NO, idx\_NO2, idx\_O2}
-\DoxyCodeLine{  \textcolor{keywordtype}{type}(chem\_spec\_data\_t), \textcolor{keywordtype}{pointer} :: chem\_spec\_data}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ idx\_O3,\ idx\_NO,\ idx\_NO2,\ idx\_O2}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{type}(chem\_spec\_data\_t),\ \textcolor{keywordtype}{pointer}\ ::\ chem\_spec\_data}
 \DoxyCodeLine{}
 
 \end{DoxyCodeInclude}
  
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{  \textcolor{keywordflow}{if}( .not.camp\_core\%get\_chem\_spec\_data( chem\_spec\_data ) ) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{    \textcolor{keyword}{write}(*,*) \textcolor{stringliteral}{"{}Something's gone wrong!"{}}}
-\DoxyCodeLine{    stop 3}
-\DoxyCodeLine{\textcolor{keywordflow}{  end if}}
+\DoxyCodeLine{\ \ \textcolor{keywordflow}{if}(\ .not.camp\_core\%get\_chem\_spec\_data(\ chem\_spec\_data\ )\ )\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{write}(*,*)\ \textcolor{stringliteral}{"{}Something's\ gone\ wrong!"{}}}
+\DoxyCodeLine{\ \ \ \ stop\ 3}
+\DoxyCodeLine{\textcolor{keywordflow}{\ \ end\ if}}
 \DoxyCodeLine{}
-\DoxyCodeLine{  idx\_o3  = chem\_spec\_data\%gas\_state\_id( \textcolor{stringliteral}{"{}O3"{}}  )}
-\DoxyCodeLine{  idx\_no  = chem\_spec\_data\%gas\_state\_id( \textcolor{stringliteral}{"{}NO"{}}  )}
-\DoxyCodeLine{  idx\_no2 = chem\_spec\_data\%gas\_state\_id( \textcolor{stringliteral}{"{}NO2"{}} )}
-\DoxyCodeLine{  idx\_o2  = chem\_spec\_data\%gas\_state\_id( \textcolor{stringliteral}{"{}O2"{}}  )}
-\DoxyCodeLine{  \textcolor{keywordflow}{if}( idx\_o3.eq.0 .or. idx\_no2.eq.0 .or.idx\_o2.eq.0 ) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{    \textcolor{keyword}{write}(*,*) \textcolor{stringliteral}{"{}Missing species!"{}}}
-\DoxyCodeLine{    stop 3}
-\DoxyCodeLine{\textcolor{keywordflow}{  end if}}
+\DoxyCodeLine{\ \ idx\_o3\ \ =\ chem\_spec\_data\%gas\_state\_id(\ \textcolor{stringliteral}{"{}O3"{}}\ \ )}
+\DoxyCodeLine{\ \ idx\_no\ \ =\ chem\_spec\_data\%gas\_state\_id(\ \textcolor{stringliteral}{"{}NO"{}}\ \ )}
+\DoxyCodeLine{\ \ idx\_no2\ =\ chem\_spec\_data\%gas\_state\_id(\ \textcolor{stringliteral}{"{}NO2"{}}\ )}
+\DoxyCodeLine{\ \ idx\_o2\ \ =\ chem\_spec\_data\%gas\_state\_id(\ \textcolor{stringliteral}{"{}O2"{}}\ \ )}
+\DoxyCodeLine{\ \ \textcolor{keywordflow}{if}(\ idx\_o3.eq.0\ .or.\ idx\_no2.eq.0\ .or.idx\_o2.eq.0\ )\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{write}(*,*)\ \textcolor{stringliteral}{"{}Missing\ species!"{}}}
+\DoxyCodeLine{\ \ \ \ stop\ 3}
+\DoxyCodeLine{\textcolor{keywordflow}{\ \ end\ if}}
 
 \end{DoxyCodeInclude}
 
 
-The \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}} object provides access to information about the chemical species present in the system. If there is a problem setting the \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}} pointer, for example if this function was called before initializing the \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}} object, this function returns {\ttfamily false}, otherwise it returns {\ttfamily true}. The \mbox{\hyperlink{namespacecamp__chem__spec__data_ae877fd6fbaaac9755fb3c2ceb7c86824}{gas\+\_\+state\+\_\+id()}} function returns the index on the state array for a gas-\/phase species. We will use these indices later on to set the initial conditions and to retrieve the modeled species concentrations. The \mbox{\hyperlink{namespacecamp__chem__spec__data_ae877fd6fbaaac9755fb3c2ceb7c86824}{gas\+\_\+state\+\_\+id()}} function returns 0 if a species is not found, so it is important to check the values after calling this function.
+The \doxylink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t} object provides access to information about the chemical species present in the system. If there is a problem setting the \doxylink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t} pointer, for example if this function was called before initializing the \doxylink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t} object, this function returns {\ttfamily false}, otherwise it returns {\ttfamily true}. The \doxylink{namespacecamp__chem__spec__data_ae877fd6fbaaac9755fb3c2ceb7c86824}{gas\+\_\+state\+\_\+id()} function returns the index on the state array for a gas-\/phase species. We will use these indices later on to set the initial conditions and to retrieve the modeled species concentrations. The \doxylink{namespacecamp__chem__spec__data_ae877fd6fbaaac9755fb3c2ceb7c86824}{gas\+\_\+state\+\_\+id()} function returns 0 if a species is not found, so it is important to check the values after calling this function.
 
 Now, let\textquotesingle{}s set up some conditions for our box model\+:
 
 
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{  \textcolor{keyword}{call }camp\_core\%solver\_initialize( )}
-\DoxyCodeLine{  camp\_state => camp\_core\%new\_state( )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{call\ }camp\_core\%solver\_initialize(\ )}
+\DoxyCodeLine{\ \ camp\_state\ =>\ camp\_core\%new\_state(\ )}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{keyword}{call }camp\_state\%env\_states(1)\%set\_temperature\_K(  275.4\_dp )}
-\DoxyCodeLine{  \textcolor{keyword}{call }camp\_state\%env\_states(1)\%set\_pressure\_Pa( 101532.2\_dp )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{call\ }camp\_state\%env\_states(1)\%set\_temperature\_K(\ \ 275.4\_dp\ )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{call\ }camp\_state\%env\_states(1)\%set\_pressure\_Pa(\ 101532.2\_dp\ )}
 \DoxyCodeLine{}
-\DoxyCodeLine{  camp\_state\%state\_var( idx\_o3   ) = 0.13  \textcolor{comment}{! [O3] in ppm}}
-\DoxyCodeLine{  camp\_state\%state\_var( idx\_no   ) = 0.02  \textcolor{comment}{! [NO] in ppm}}
-\DoxyCodeLine{  camp\_state\%state\_var( idx\_no2  ) = 0.053 \textcolor{comment}{! [NO2] in ppm}}
-\DoxyCodeLine{  camp\_state\%state\_var( idx\_o2   ) = 2.1e5 \textcolor{comment}{! [O2] in ppm}}
+\DoxyCodeLine{\ \ camp\_state\%state\_var(\ idx\_o3\ \ \ )\ =\ 0.13\ \ \textcolor{comment}{!\ [O3]\ in\ ppm}}
+\DoxyCodeLine{\ \ camp\_state\%state\_var(\ idx\_no\ \ \ )\ =\ 0.02\ \ \textcolor{comment}{!\ [NO]\ in\ ppm}}
+\DoxyCodeLine{\ \ camp\_state\%state\_var(\ idx\_no2\ \ )\ =\ 0.053\ \textcolor{comment}{!\ [NO2]\ in\ ppm}}
+\DoxyCodeLine{\ \ camp\_state\%state\_var(\ idx\_o2\ \ \ )\ =\ 2.1e5\ \textcolor{comment}{!\ [O2]\ in\ ppm}}
 
 \end{DoxyCodeInclude}
 
 
-The solver\+\_\+initialize() function gets the external solver (\href{https://computing.llnl.gov/projects/sundials/cvode}{\texttt{ CVODE}}) ready to solve the chemical system. The {\ttfamily camp\+\_\+state} now can be used to describe the state of the chemical system. It contains species concentrations (for which we will provide initial conditions in the next part of the tutorial) and environmental parameters. The temperature and pressure can be updated at any time before or between calls to the CAMP \mbox{\hyperlink{namespacecamp__camp__core_a2c930e794dab3e8c87b47cbc35ea28a0}{solve()}} function, but \mbox{\hyperlink{namespacecamp__camp__state_a9a2bdbcfc5f7bb9c17265dec43939afa}{update\+\_\+env\+\_\+state()}} must be called after changing either of these properties. Gas-\/phase species on the state array are in ppm.
+The solver\+\_\+initialize() function gets the external solver (\href{https://computing.llnl.gov/projects/sundials/cvode}{\texttt{ CVODE}}) ready to solve the chemical system. The {\ttfamily camp\+\_\+state} now can be used to describe the state of the chemical system. It contains species concentrations (for which we will provide initial conditions in the next part of the tutorial) and environmental parameters. The temperature and pressure can be updated at any time before or between calls to the CAMP \doxylink{namespacecamp__camp__core_a2c930e794dab3e8c87b47cbc35ea28a0}{solve()} function, but \doxylink{namespacecamp__camp__state_a9a2bdbcfc5f7bb9c17265dec43939afa}{update\+\_\+env\+\_\+state()} must be called after changing either of these properties. Gas-\/phase species on the state array are in ppm.
 
 With that, all that\textquotesingle{}s left is to solve the chemistry and output the results. We\textquotesingle{}ll include a loop over time so we have something interesting to plot.
 
 
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{  \textcolor{keywordtype}{integer(kind=i\_kind)} :: i\_time}
+\DoxyCodeLine{\ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_time}
 \DoxyCodeLine{}
 
 \end{DoxyCodeInclude}
@@ -105,29 +107,29 @@ With that, all that\textquotesingle{}s left is to solve the chemistry and output
 
 
 \begin{DoxyCodeInclude}{0}
-\DoxyCodeLine{  \textcolor{keyword}{write}(*,fmt\_hdr) \textcolor{stringliteral}{"{}time"{}}, \textcolor{stringliteral}{"{}O3"{}}, \textcolor{stringliteral}{"{}NO"{}}, \textcolor{stringliteral}{"{}NO2"{}}, \textcolor{stringliteral}{"{}O2"{}}}
-\DoxyCodeLine{  \textcolor{keywordflow}{do} i\_time = 1, 100}
-\DoxyCodeLine{    \textcolor{keyword}{call }camp\_core\%solve( camp\_state, 1.0d-\/15 ) \textcolor{comment}{! time step in s}}
-\DoxyCodeLine{    \textcolor{keyword}{write}(*,fmt\_dat) i\_time*1.0e-\/15, \&}
-\DoxyCodeLine{                     camp\_state\%state\_var( idx\_o3  ), \&}
-\DoxyCodeLine{                     camp\_state\%state\_var( idx\_no  ), \&}
-\DoxyCodeLine{                     camp\_state\%state\_var( idx\_no2 ), \&}
-\DoxyCodeLine{                     camp\_state\%state\_var( idx\_o2  )}
-\DoxyCodeLine{\textcolor{keywordflow}{  end do}}
+\DoxyCodeLine{\ \ \textcolor{keyword}{write}(*,fmt\_hdr)\ \textcolor{stringliteral}{"{}time"{}},\ \textcolor{stringliteral}{"{}O3"{}},\ \textcolor{stringliteral}{"{}NO"{}},\ \textcolor{stringliteral}{"{}NO2"{}},\ \textcolor{stringliteral}{"{}O2"{}}}
+\DoxyCodeLine{\ \ \textcolor{keywordflow}{do}\ i\_time\ =\ 1,\ 100}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{call\ }camp\_core\%solve(\ camp\_state,\ 1.0d-\/15\ )\ \textcolor{comment}{!\ time\ step\ in\ s}}
+\DoxyCodeLine{\ \ \ \ \textcolor{keyword}{write}(*,fmt\_dat)\ i\_time*1.0e-\/15,\ \&}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ camp\_state\%state\_var(\ idx\_o3\ \ ),\ \&}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ camp\_state\%state\_var(\ idx\_no\ \ ),\ \&}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ camp\_state\%state\_var(\ idx\_no2\ ),\ \&}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ camp\_state\%state\_var(\ idx\_o2\ \ )}
+\DoxyCodeLine{\textcolor{keywordflow}{\ \ end\ do}}
 \DoxyCodeLine{}
-\DoxyCodeLine{  \textcolor{keyword}{deallocate}( camp\_core )}
-\DoxyCodeLine{  \textcolor{keyword}{deallocate}( camp\_state )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{deallocate}(\ camp\_core\ )}
+\DoxyCodeLine{\ \ \textcolor{keyword}{deallocate}(\ camp\_state\ )}
 \DoxyCodeLine{}
-\DoxyCodeLine{\textcolor{keyword}{end program }\mbox{\hyperlink{part__1__code_2box__model_8_f90_a3f8c0234515cc17b2f3e366868b8646b}{box\_model}}}
+\DoxyCodeLine{\textcolor{keyword}{end\ program\ }\mbox{\hyperlink{part__1__code_2box__model_8_f90_a3f8c0234515cc17b2f3e366868b8646b}{box\_model}}}
 
 \end{DoxyCodeInclude}
 
 
-The \mbox{\hyperlink{namespacecamp__camp__core_a2c930e794dab3e8c87b47cbc35ea28a0}{solve()}} function advances the model state stored in {\ttfamily camp\+\_\+state} by solving the chemistry over the time step specified in the second argument. We\textquotesingle{}re keeping the time step small ( $10^{-15}$ s) for now so we have something interesting to plot from these very fast reactions. Deallocating the {\ttfamily camp\+\_\+core} and {\ttfamily camp\+\_\+state} pointers releases all the memory associated with CAMP.
+The \doxylink{namespacecamp__camp__core_a2c930e794dab3e8c87b47cbc35ea28a0}{solve()} function advances the model state stored in {\ttfamily camp\+\_\+state} by solving the chemistry over the time step specified in the second argument. We\textquotesingle{}re keeping the time step small ( $10^{-15}$ s) for now so we have something interesting to plot from these very fast reactions. Deallocating the {\ttfamily camp\+\_\+core} and {\ttfamily camp\+\_\+state} pointers releases all the memory associated with CAMP.
 
-That\textquotesingle{}s it for the initial box model code. Before we run the model, we\textquotesingle{}ll need to describe the chemical system to solve. We\textquotesingle{}ll do that in \mbox{\hyperlink{camp_tutorial_part_2}{part 2 of Boot CAMP}}!
+That\textquotesingle{}s it for the initial box model code. Before we run the model, we\textquotesingle{}ll need to describe the chemical system to solve. We\textquotesingle{}ll do that in \doxysectlink{camp_tutorial_part_2}{part 2 of Boot CAMP}{0}!
 
 The full box model code can be found in {\ttfamily \textbackslash{}doc\textbackslash{}camp\+\_\+tutorial\textbackslash{}part\+\_\+1\+\_\+code}.
 
 \DoxyHorRuler{0}
- {\bfseries{ \texorpdfstring{$<$}{<} Previous\+: }} \mbox{\hyperlink{camp_tutorial_part_0}{Boot CAMP\+: Part 0 -\/ Why CAMP?}}  \mbox{\hyperlink{camp_tutorial}{Index}}  {\bfseries{ Next\+: }} \mbox{\hyperlink{camp_tutorial_part_2}{Boot CAMP\+: Part 2 -\/ Mechanism}} {\bfseries{ \texorpdfstring{$>$}{>} }} 
+ {\bfseries{ \texorpdfstring{$<$}{<} Previous\+: }} \doxysectlink{camp_tutorial_part_0}{Boot CAMP\+: Part 0 -\/ Why CAMP?}{0}  \doxysectlink{camp_tutorial}{Index}{0}  {\bfseries{ Next\+: }} \doxysectlink{camp_tutorial_part_2}{Boot CAMP\+: Part 2 -\/ Mechanism}{0} {\bfseries{ \texorpdfstring{$>$}{>} }} 

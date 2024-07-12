@@ -1,5 +1,5 @@
-\hypertarget{structcamp__rxn__surface_1_1rxn__surface__t}{}\doxysection{camp\+\_\+rxn\+\_\+surface\+::rxn\+\_\+surface\+\_\+t Interface Reference}
-\label{structcamp__rxn__surface_1_1rxn__surface__t}\index{camp\_rxn\_surface::rxn\_surface\_t@{camp\_rxn\_surface::rxn\_surface\_t}}
+\doxysection{camp\+\_\+rxn\+\_\+surface\+::rxn\+\_\+surface\+\_\+t Interface Reference}
+\hypertarget{structcamp__rxn__surface_1_1rxn__surface__t}{}\label{structcamp__rxn__surface_1_1rxn__surface__t}\index{camp\_rxn\_surface::rxn\_surface\_t@{camp\_rxn\_surface::rxn\_surface\_t}}
 
 
 Generic test reaction data type.  
@@ -8,57 +8,124 @@ Generic test reaction data type.
 
 
 Inheritance diagram for camp\+\_\+rxn\+\_\+surface\+::rxn\+\_\+surface\+\_\+t\+:
-% FIG 0
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=193pt]{structcamp__rxn__surface_1_1rxn__surface__t__inherit__graph}
+\end{center}
+\end{figure}
 
 
 Collaboration diagram for camp\+\_\+rxn\+\_\+surface\+::rxn\+\_\+surface\+\_\+t\+:
-% FIG 1
-\doxysubsection*{Public Member Functions}
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=261pt]{structcamp__rxn__surface_1_1rxn__surface__t__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-procedure \mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t_afaa319beb73ea40174c472f980e8b55a}{initialize}}
+procedure \mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t_abb57f96aeb9fc6b267b5ab03522f916c}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Reaction initialization. \end{DoxyCompactList}\item 
-final \mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t_a6c486155238136facda8abb85060a0e4}{finalize}}
+final \mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t_a75ce35939d28432653065c89892b9be1}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Additional Inherited Members}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t}}}
+\begin{DoxyCompactItemize}
+\item 
+procedure(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}), deferred \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_a5f2f5f59b695ecf52a110454cc185fb4}{initialize}} \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}
+\begin{DoxyCompactList}\small\item\em Reaction initialization. Takes species, phase and reaction parameters and packs required information into the condensed data arrays for use during the model run. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_a4765c1f92ab19c2bde6ecf4eae311dce}{load}} (this, json, j\+\_\+obj)
+\begin{DoxyCompactList}\small\item\em Load data from an input file. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_a5345d0f777f7dc9407827eeadf657aaf}{check\+\_\+phase}} (this, \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_ac8908982f3c9248a95aa5e5df1505f69}{rxn\+\_\+phase}})
+\begin{DoxyCompactList}\small\item\em Check the phase of the reaction against the phase being solved for. During GAS\+\_\+\+RXN integrations, only GAS\+\_\+\+RXN reactions are solved. During AERO\+\_\+\+RXN integrations, only AERO\+\_\+\+RXN and GAS\+\_\+\+AERO\+\_\+\+RXN reactions are solved. During GAS\+\_\+\+AERO\+\_\+\+RXN integrations, all reactions are solved. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_a8e5603c7dfe59432f8fc48fd174916bd}{pack\+\_\+size}} (this, comm)
+\begin{DoxyCompactList}\small\item\em Determine the number of bytes required to pack the given value. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_a4893df33dc2211a302155ba3077a6dab}{bin\+\_\+pack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Packs the given value into the buffer, advancing position. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_a01eb503cccbe9394cae21717f466b851}{bin\+\_\+unpack}} (this, buffer, pos, comm)
+\begin{DoxyCompactList}\small\item\em Unpacks the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_a99bf54a015e6087d18b5db49d4d3475b}{print}} (this, file\+\_\+unit)
+\begin{DoxyCompactList}\small\item\em Print the reaction data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Attributes inherited from \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t}}}
+\begin{DoxyCompactItemize}
+\item 
+integer(kind=i\+\_\+kind), public \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_ac8908982f3c9248a95aa5e5df1505f69}{rxn\+\_\+phase}}
+\begin{DoxyCompactList}\small\item\em Reaction phase. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}), pointer, public \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_adeab6a80bd18af573d65b3789311a99b}{property\+\_\+set}} =$>$ null()
+\begin{DoxyCompactList}\small\item\em Reaction parameters. These will be available during initialization, but not during integration. All information required to calculate the time derivatives and \doxylink{struct_jacobian}{Jacobian} matrix constributions must be saved by the exdending type. \end{DoxyCompactList}\item 
+real(kind=dp), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_a26f9b453eadabbc59f7741e53116401d}{condensed\+\_\+data\+\_\+real}}
+\begin{DoxyCompactList}\small\item\em Condensed reaction data. Theses arrays will be available during integration, and should contain any information required by the rate and \doxylink{struct_jacobian}{Jacobian} constribution functions that cannot be obtained from the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}} object. (floating-\/point) \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), dimension(\+:), allocatable, public \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_ae6f3aac1eaf79e6ddf6df9d1671947df}{condensed\+\_\+data\+\_\+int}}
+\begin{DoxyCompactList}\small\item\em Condensed reaction data. Theses arrays will be available during integration, and should contain any information required by the rate and \doxylink{struct_jacobian}{Jacobian} constribution functions that cannot be obtained from the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t}} object. (integer) \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), public \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t_ad03f4b1a68b22ab8a25aaa0c31bb1fd1}{num\+\_\+env\+\_\+params}} = 0
+\begin{DoxyCompactList}\small\item\em Number of environment-\/dependent parameters These are parameters that need updated when environmental conditions change. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
 Generic test reaction data type. 
 
-Constructor for \mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\+\_\+surface\+\_\+t}}. 
+Constructor for \doxylink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\+\_\+surface\+\_\+t}. 
 
 Definition at line \mbox{\hyperlink{rxn__surface_8_f90_source_l00111}{111}} of file \mbox{\hyperlink{rxn__surface_8_f90_source}{rxn\+\_\+surface.\+F90}}.
 
 
 
-\doxysubsection{Member Function/\+Subroutine Documentation}
-\mbox{\Hypertarget{structcamp__rxn__surface_1_1rxn__surface__t_a6c486155238136facda8abb85060a0e4}\label{structcamp__rxn__surface_1_1rxn__surface__t_a6c486155238136facda8abb85060a0e4}} 
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structcamp__rxn__surface_1_1rxn__surface__t_a75ce35939d28432653065c89892b9be1}\label{structcamp__rxn__surface_1_1rxn__surface__t_a75ce35939d28432653065c89892b9be1} 
 \index{camp\_rxn\_surface::rxn\_surface\_t@{camp\_rxn\_surface::rxn\_surface\_t}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_surface::rxn\_surface\_t@{camp\_rxn\_surface::rxn\_surface\_t}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily final camp\+\_\+rxn\+\_\+surface\+::rxn\+\_\+surface\+\_\+t\+::finalize\hspace{0.3cm}{\ttfamily [final]}}
+{\footnotesize\ttfamily final camp\+\_\+rxn\+\_\+surface\+::rxn\+\_\+surface\+\_\+t\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\+\_\+surface\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [final]}}
 
 
 
 Finalize the reaction. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Reaction data \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{rxn__surface_8_f90_source_l00116}{116}} of file \mbox{\hyperlink{rxn__surface_8_f90_source}{rxn\+\_\+surface.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 2
-\mbox{\Hypertarget{structcamp__rxn__surface_1_1rxn__surface__t_afaa319beb73ea40174c472f980e8b55a}\label{structcamp__rxn__surface_1_1rxn__surface__t_afaa319beb73ea40174c472f980e8b55a}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=348pt]{structcamp__rxn__surface_1_1rxn__surface__t_a75ce35939d28432653065c89892b9be1_cgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\Hypertarget{structcamp__rxn__surface_1_1rxn__surface__t_abb57f96aeb9fc6b267b5ab03522f916c}\label{structcamp__rxn__surface_1_1rxn__surface__t_abb57f96aeb9fc6b267b5ab03522f916c} 
 \index{camp\_rxn\_surface::rxn\_surface\_t@{camp\_rxn\_surface::rxn\_surface\_t}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_surface::rxn\_surface\_t@{camp\_rxn\_surface::rxn\_surface\_t}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+surface\+::rxn\+\_\+surface\+\_\+t\+::initialize}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+surface\+::rxn\+\_\+surface\+\_\+t\+::initialize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\+\_\+surface\+\_\+t}}), intent(inout)}]{this,  }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data,  }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells }\end{DoxyParamCaption})}
 
 
 
 Reaction initialization. 
 
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Reaction data \\
+\hline
+\mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations \\
+\hline
+\mbox{\texttt{ in}}  & {\em n\+\_\+cells} & Number of grid cells to solve simultaneously \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{rxn__surface_8_f90_source_l00114}{114}} of file \mbox{\hyperlink{rxn__surface_8_f90_source}{rxn\+\_\+surface.\+F90}}.

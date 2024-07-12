@@ -1,4 +1,7 @@
 <map id="camp_util::entropy" name="camp_util::entropy">
-<area shape="rect" id="node1" title="Compute the entropy of a probability mass function (non necessarily normalized)." alt="" coords="5,29,132,55"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ae006a4a997ed6d6872b9e318409b784e" title="Compute &#160;for computing entropy." alt="" coords="180,29,303,55"/>
+<area shape="rect" id="Node000001" title="Compute the entropy of a probability mass function (non necessarily normalized)." alt="" coords="5,29,131,55"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="39,30,33,21,37,11,49,5,68,3,89,5,100,12,97,16,87,10,68,8,50,10,41,15,39,20,43,28"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#ae006a4a997ed6d6872b9e318409b784e" title="Compute &#160;for computing entropy." alt="" coords="179,29,300,55"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="131,40,163,40,163,45,131,45"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="210,30,205,21,208,11,220,5,239,3,260,5,271,12,268,16,258,10,239,8,221,10,212,15,210,20,215,28"/>
 </map>

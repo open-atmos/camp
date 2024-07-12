@@ -1,4 +1,7 @@
 <map id="camp_util::linspace_find" name="camp_util::linspace_find">
-<area shape="rect" id="node1" title="Find the position of a real number in a 1D linear array." alt="" coords="216,29,375,55"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a93a495ba49b1eb41fa119ebdfa684db3" title="Find the position of a real number in a 1D logarithmic array." alt="" coords="5,29,168,55"/>
+<area shape="rect" id="Node000001" title="Find the position of a real number in a 1D linear array." alt="" coords="216,29,374,55"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="331,17,319,10,295,8,273,10,261,15,259,20,264,27,260,31,253,21,257,11,272,5,295,3,320,5,333,12"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#a93a495ba49b1eb41fa119ebdfa684db3" title="Find the position of a real number in a 1D logarithmic array." alt="" coords="5,29,168,55"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="200,45,168,45,168,40,200,40"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="123,17,111,10,86,8,65,10,53,15,50,20,56,27,52,31,45,21,49,11,63,5,87,3,112,5,125,12"/>
 </map>

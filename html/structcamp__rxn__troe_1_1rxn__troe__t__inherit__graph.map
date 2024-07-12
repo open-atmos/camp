@@ -1,4 +1,5 @@
 <map id="camp_rxn_troe::rxn_troe_t" name="camp_rxn_troe::rxn_troe_t">
-<area shape="rect" id="node1" title="Generic test reaction data type." alt="" coords="7,93,137,133"/>
-<area shape="rect" id="node2" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="5,5,139,45"/>
+<area shape="rect" id="Node000001" title="Generic test reaction data type." alt="" coords="7,94,136,135"/>
+<area shape="rect" id="Node000002" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="5,5,138,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,62,74,94,69,94,69,62"/>
 </map>

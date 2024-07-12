@@ -1,11 +1,24 @@
 <map id="camp_rand::rand_binomial" name="camp_rand::rand_binomial">
-<area shape="rect" id="node1" title="Generate a Binomial&#45;distributed random number with the given parameters." alt="" coords="5,74,177,99"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="466,13,586,38"/>
-<area shape="rect" id="node5" href="$rand__gsl_8c.html#af73fad1b3cd91ba86a264bae77b3eee5" title="Generate a Binomial&#45;distributed random integer." alt="" coords="225,37,391,62"/>
-<area shape="rect" id="node6" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="439,161,613,186"/>
-<area shape="rect" id="node8" href="$namespacecamp__rand.html#ac20e458bc43a3e432568ea44c054778e" title="Generates a normally distributed random number with the given mean and standard deviation." alt="" coords="227,110,389,135"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="661,13,813,38"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="861,5,984,45"/>
-<area shape="rect" id="node7" href="$rand__gsl_8c.html#abd204acb91a0adebb638deae62396379" title="Generate a uniform random number in ." alt="" coords="682,161,793,186"/>
-<area shape="rect" id="node9" href="$rand__gsl_8c.html#a77cc930abbc556f2ff28f676d1b740bc" title="Generate a normally&#45;distributed random number." alt="" coords="448,87,604,113"/>
+<area shape="rect" id="Node000001" title="Generate a Binomial&#45;distributed random number with the given parameters." alt="" coords="5,74,177,100"/>
+<area shape="poly" id="edge8_Node000001_Node000001" title=" " alt="" coords="55,75,48,66,52,56,67,50,91,48,117,50,131,57,128,62,116,55,91,53,68,55,56,60,53,65,59,72"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="464,13,583,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,71,161,44,192,31,224,22,282,13,342,9,449,14,449,19,342,15,283,18,225,27,194,36,164,49,114,76"/>
+<area shape="rect" id="Node000005" href="$rand__gsl_8c.html#af73fad1b3cd91ba86a264bae77b3eee5" title="Generate a Binomial&#45;distributed random integer." alt="" coords="225,37,389,63"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="169,71,213,63,214,68,170,76"/>
+<area shape="rect" id="Node000006" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="437,161,610,187"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="116,98,165,123,225,146,326,164,422,171,422,176,325,169,224,151,163,128,114,103"/>
+<area shape="rect" id="Node000008" href="$namespacecamp__rand.html#ac20e458bc43a3e432568ea44c054778e" title="Generates a normally distributed random number with the given mean and standard deviation." alt="" coords="226,110,388,136"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="172,98,211,104,210,110,171,103"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="658,13,810,39"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="584,23,643,23,643,28,584,28"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="858,5,980,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="810,23,842,23,842,28,810,28"/>
+<area shape="poly" id="edge7_Node000006_Node000006" title=" " alt="" coords="489,162,482,152,486,142,500,136,524,134,549,137,563,144,560,148,548,142,524,139,501,141,490,146,487,152,493,159"/>
+<area shape="rect" id="Node000007" href="$rand__gsl_8c.html#abd204acb91a0adebb638deae62396379" title="Generate a uniform random number in ." alt="" coords="679,161,789,187"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="611,171,664,171,664,176,611,176"/>
+<area shape="poly" id="edge10_Node000008_Node000002" title=" " alt="" coords="336,107,478,43,480,48,339,112"/>
+<area shape="poly" id="edge12_Node000008_Node000006" title=" " alt="" coords="366,134,452,154,450,159,364,139"/>
+<area shape="poly" id="edge13_Node000008_Node000008" title=" " alt="" coords="271,111,264,102,268,92,283,86,307,84,333,86,347,93,344,98,332,91,307,89,284,91,272,96,269,101,275,108"/>
+<area shape="rect" id="Node000009" href="$rand__gsl_8c.html#a77cc930abbc556f2ff28f676d1b740bc" title="Generate a normally&#45;distributed random number." alt="" coords="446,88,601,113"/>
+<area shape="poly" id="edge11_Node000008_Node000009" title=" " alt="" coords="388,112,430,107,431,113,389,117"/>
 </map>

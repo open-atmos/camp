@@ -1,0 +1,41 @@
+\doxysubsection{CAMP\+: Ternary Chemical Activation Reaction}
+\hypertarget{camp_rxn_ternary_chemical_activation}{}\label{camp_rxn_ternary_chemical_activation}\index{CAMP: Ternary Chemical Activation Reaction@{CAMP: Ternary Chemical Activation Reaction}}
+Ternary Chemical Activation reaction rate constant equations take the form\+:
+
+\[
+   \frac{k_0}{1+k_0[\mbox{M}]/k_{\inf}}F_C^{(1+1/N[log_{10}(k_0[\mbox{M}]/k_{\inf})]^2)^{-1}}
+ \]
+
+where $k_0$ is the low-\/pressure limiting rate constant, $k_{\inf}$ is the high-\/pressure limiting rate constant, $[\mbox{M}]$ is the density of air, and $F_C$ and $N$ are parameters that determine the shape of the fall-\/off curve, and are typically 0.\+6 and 1.\+0, respectively {\bfseries [JPL15]}. $k_0$ and $k_{\inf}$ are calculated as \doxylink{camp_rxn_arrhenius}{Arrhenius} rate constants with $D=300$ and $E=0$.
+
+Input data for Ternary Chemical Activation reactions have the following format \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}TERNARY\_CHEMICAL\_ACTIVATION"{},}
+\DoxyCodeLine{\ \ "{}k0\_A"{}\ :\ 5.6E-\/12,}
+\DoxyCodeLine{\ \ "{}k0\_B"{}\ :\ -\/1.8,}
+\DoxyCodeLine{\ \ "{}k0\_C"{}\ :\ 180.0,}
+\DoxyCodeLine{\ \ "{}kinf\_A"{}\ :\ 3.4E-\/12,}
+\DoxyCodeLine{\ \ "{}kinf\_B"{}\ :\ -\/1.6,}
+\DoxyCodeLine{\ \ "{}kinf\_C"{}\ :\ 104.1,}
+\DoxyCodeLine{\ \ "{}Fc"{}\ \ :\ 0.7,}
+\DoxyCodeLine{\ \ "{}N"{}\ \ :\ 0.9,}
+\DoxyCodeLine{\ \ "{}time\ unit"{}\ :\ "{}MIN"{},}
+\DoxyCodeLine{\ \ "{}reactants"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ "{}spec1"{}\ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ "{}spec2"{}\ :\ \{\ "{}qty"{}\ :\ 2\ \},}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ "{}products"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ "{}spec3"{}\ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ "{}spec4"{}\ :\ \{\ "{}yield"{}\ :\ 0.65\ \},}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ The key-\/value pairs {\bfseries{reactants}}, and {\bfseries{products}} are required. Reactants without a {\bfseries{qty}} value are assumed to appear once in the reaction equation. Products without a specified {\bfseries{yield}} are assumed to have a {\bfseries{yield}} of 1.\+0.
+
+The two sets of parameters beginning with {\bfseries{k0\+\_\+}} and {\bfseries{kinf\+\_\+}} are the \doxylink{camp_rxn_arrhenius}{Arrhenius} parameters for the $k_0$ and $k_{\inf}$ rate constants, respectively. When not present, {\bfseries{\+\_\+A}} parameters are assumed to be 1.\+0, {\bfseries{\+\_\+B}} to be 0.\+0, {\bfseries{\+\_\+C}} to be 0.\+0, {\bfseries{Fc}} to be 0.\+6 and {\bfseries{N}} to be 1.\+0.
+
+The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. 

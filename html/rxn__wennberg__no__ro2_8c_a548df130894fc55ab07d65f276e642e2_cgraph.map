@@ -1,4 +1,5 @@
 <map id="rxn_wennberg_no_ro2_calc_jac_contrib" name="rxn_wennberg_no_ro2_calc_jac_contrib">
-<area shape="rect" id="node1" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="5,5,153,45"/>
-<area shape="rect" id="node2" href="$_jacobian_8c.html#a844d8b2784c48a794ada38d053b1d1b3" title="Add a contribution to the Jacobian." alt="" coords="201,13,337,38"/>
+<area shape="rect" id="Node000001" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="5,5,153,46"/>
+<area shape="rect" id="Node000002" href="$_jacobian_8c.html#a844d8b2784c48a794ada38d053b1d1b3" title="Add a contribution to the Jacobian." alt="" coords="201,13,336,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,23,185,23,185,28,153,28"/>
 </map>

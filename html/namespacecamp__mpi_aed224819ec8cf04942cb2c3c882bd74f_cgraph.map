@@ -1,9 +1,15 @@
 <map id="camp_mpi::camp_mpi_allreduce_sum_integer" name="camp_mpi::camp_mpi_allreduce_sum_integer">
-<area shape="rect" id="node1" title="Computes the sum of val across all processes, storing the result in val_sum on all processes." alt="" coords="5,5,164,45"/>
-<area shape="rect" id="node2" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="212,5,360,45"/>
-<area shape="rect" id="node3" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="408,5,556,45"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="604,13,705,38"/>
-<area shape="rect" id="node5" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="753,13,873,38"/>
-<area shape="rect" id="node6" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="921,13,1073,38"/>
-<area shape="rect" id="node7" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1121,5,1244,45"/>
+<area shape="rect" id="Node000001" title="Computes the sum of val across all processes, storing the result in val_sum on all processes." alt="" coords="5,5,164,46"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="212,5,359,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,23,196,23,196,28,164,28"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="407,5,554,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="360,23,391,23,391,28,360,28"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="602,13,703,39"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="555,23,587,23,587,28,555,28"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="751,13,870,39"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="703,23,735,23,735,28,703,28"/>
+<area shape="rect" id="Node000006" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="918,13,1069,39"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="870,23,902,23,902,28,870,28"/>
+<area shape="rect" id="Node000007" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1117,5,1240,46"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1070,23,1102,23,1102,28,1070,28"/>
 </map>

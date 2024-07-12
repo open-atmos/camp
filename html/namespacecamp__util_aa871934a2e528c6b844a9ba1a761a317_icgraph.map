@@ -1,4 +1,5 @@
 <map id="camp_util::open_file_read" name="camp_util::open_file_read">
-<area shape="rect" id="node1" title="Open a file for reading with an automatically assigned unit and test that it succeeds...." alt="" coords="176,5,343,31"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a8880473ee9de8b37a6612c3a110661df" title="Load a real array from a text file." alt="" coords="5,5,128,31"/>
+<area shape="rect" id="Node000001" title="Open a file for reading with an automatically assigned unit and test that it succeeds...." alt="" coords="175,5,341,31"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#a8880473ee9de8b37a6612c3a110661df" title="Load a real array from a text file." alt="" coords="5,5,127,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,21,127,21,127,16,159,16"/>
 </map>

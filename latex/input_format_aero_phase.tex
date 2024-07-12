@@ -1,0 +1,26 @@
+\doxysubsection{Input JSON Object Format\+: Aerosol Phase}
+\hypertarget{input_format_aero_phase}{}\label{input_format_aero_phase}\index{Input JSON Object Format: Aerosol Phase@{Input JSON Object Format: Aerosol Phase}}
+A {\ttfamily json} object containing information about an \doxylink{camp_aero_phase}{aerosol phase} has the following format\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ "{}camp-\/data"{}\ :\ [}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ "{}name"{}\ :\ "{}my\ aerosol\ phase"{}}
+\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}AERO\_PHASE"{}}
+\DoxyCodeLine{\ \ \ \ "{}species"{}\ :\ [}
+\DoxyCodeLine{\ \ \ \ \ \ "{}a\ species"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}another\ species"{},}
+\DoxyCodeLine{\ \ \ \ \ \ ...}
+\DoxyCodeLine{\ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ ...}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ The key-\/value pair {\bfseries{name}} is required and must contain the unique name used for this \doxylink{camp_aero_phase}{aerosol phase} in the \doxylink{input_format_mechanism}{mechanism}. The key-\/value pair {\bfseries{type}} is also required and its value must be {\bfseries{AERO\+\_\+\+PHASE}}.
+
+A list of species names should be included in a key-\/value pair named {\bfseries{species}} whose value is an array of species names. These names must correspond to \doxylink{input_format_species}{chemcical species} names. \doxylink{input_format_species}{Chemical species} included in the {\bfseries{species}} array must have a {\bfseries{phase}} of {\bfseries{AEROSOL}} and must include key value pairs {\bfseries{molecular}} {\bfseries{weight}} {\bfseries{}}\mbox{[}{\bfseries{kg}} {\bfseries{mol-\/1}}\mbox{]} and {\bfseries{density}} {\bfseries{}}\mbox{[}{\bfseries{kg}} {\bfseries{m-\/3}}\mbox{]}.
+
+All other data is optional and may include any valid {\ttfamily json} value. Multiple entries with the same aerosol phase {\bfseries{name}} will be merged into a single phase, but duplicate property names for the same phase will cause an error. 

@@ -1,27 +1,27 @@
-\hypertarget{sub__model___u_n_i_f_a_c_8_f90}{}\doxysection{sub\+\_\+model\+\_\+\+UNIFAC.\+F90 File Reference}
-\label{sub__model___u_n_i_f_a_c_8_f90}\index{sub\_model\_UNIFAC.F90@{sub\_model\_UNIFAC.F90}}
+\doxysection{sub\+\_\+model\+\_\+\+UNIFAC.\+F90 File Reference}
+\hypertarget{sub__model___u_n_i_f_a_c_8_f90}{}\label{sub__model___u_n_i_f_a_c_8_f90}\index{sub\_model\_UNIFAC.F90@{sub\_model\_UNIFAC.F90}}
 
 
 The camp\+\_\+sub\+\_\+model\+\_\+\+UNIFAC module.  
 
 
-\doxysubsection*{Data Types}
+\doxysubsubsection*{Data Types}
 \begin{DoxyCompactItemize}
 \item 
 interface \mbox{\hyperlink{structcamp__sub__model__unifac_1_1sub__model__unifac__t}{camp\+\_\+sub\+\_\+model\+\_\+unifac\+::sub\+\_\+model\+\_\+unifac\+\_\+t}}
 \begin{DoxyCompactList}\small\item\em UNIFAC activity coefficient calculation. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Modules}
+\doxysubsubsection*{Modules}
 \begin{DoxyCompactItemize}
 \item 
 module \mbox{\hyperlink{namespacecamp__sub__model__unifac}{camp\+\_\+sub\+\_\+model\+\_\+unifac}}
 \begin{DoxyCompactList}\small\item\em The sub\+\_\+model\+\_\+\+UNIFAC\+\_\+t type and assocatiated subroutines. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Functions/\+Subroutines}
+\doxysubsubsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
 \item 
-type(sub\+\_\+model\+\_\+unifac\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__sub__model__unifac_a89e080c08f73a01541fb39904fb8e937}{camp\+\_\+sub\+\_\+model\+\_\+unifac\+::constructor}} ()
+type(\mbox{\hyperlink{structcamp__sub__model__unifac_1_1sub__model__unifac__t}{sub\+\_\+model\+\_\+unifac\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__sub__model__unifac_a89e080c08f73a01541fb39904fb8e937}{camp\+\_\+sub\+\_\+model\+\_\+unifac\+::constructor}} ()
 \begin{DoxyCompactList}\small\item\em Constructor for sub\+\_\+model\+\_\+\+UNIFAC\+\_\+t. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__sub__model__unifac_a5f271b6afe0f91a722e5b397cb795246}{camp\+\_\+sub\+\_\+model\+\_\+unifac\+::initialize}} (this, aero\+\_\+rep\+\_\+set, aero\+\_\+phase\+\_\+set, chem\+\_\+spec\+\_\+data)
-\begin{DoxyCompactList}\small\item\em Initialize the sub model data, validating input parameters and loading any required information form the {\ttfamily \mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t_a75ddb7997b5cba90a8b86212c4888142}{sub\+\_\+model\+\_\+data\+\_\+t\+::property\+\_\+set}}}. This routine should be called once for each sub model at the beginning of the model run after all the input files have been read in. It ensures all data required during the model run are included in the condensed data arrays. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Initialize the sub model data, validating input parameters and loading any required information form the {\ttfamily \doxylink{structcamp__sub__model__data_1_1sub__model__data__t_a75ddb7997b5cba90a8b86212c4888142}{sub\+\_\+model\+\_\+data\+\_\+t\+::property\+\_\+set}}. This routine should be called once for each sub model at the beginning of the model run after all the input files have been read in. It ensures all data required during the model run are included in the condensed data arrays. \end{DoxyCompactList}\item 
 real(kind=dp) function \mbox{\hyperlink{namespacecamp__sub__model__unifac_ac71c049cd944d4636a64e15b9d1d0836}{camp\+\_\+sub\+\_\+model\+\_\+unifac\+::priority}} (this)
 \begin{DoxyCompactList}\small\item\em Return a real number representing the priority of the sub model calculations. Low priority sub models may use the results of higher priority sub models. Lower numbers indicate higher priority. \end{DoxyCompactList}\item 
 elemental subroutine \mbox{\hyperlink{namespacecamp__sub__model__unifac_a5cb75bbe8b4e46cda1058e8c0dbf0372}{camp\+\_\+sub\+\_\+model\+\_\+unifac\+::finalize}} (this)

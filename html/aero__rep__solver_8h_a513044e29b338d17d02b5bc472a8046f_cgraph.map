@@ -1,6 +1,10 @@
 <map id="aero_rep_get_aero_phase_avg_MW__kg_mol" name="aero_rep_get_aero_phase_avg_MW__kg_mol">
-<area shape="rect" id="node1" title="Get the average molecular weight of an aerosol phase in this representation &#160;( )" alt="" coords="5,53,176,93"/>
-<area shape="rect" id="node2" href="$aero__rep__modal__binned__mass_8c.html#a2c1fd8badaa6ebffd2b45ab5314c1279" title="Get the average molecular weight in an aerosol phase &#160;( )" alt="" coords="233,5,393,60"/>
-<area shape="rect" id="node4" href="$aero__rep__single__particle_8c.html#a203b6931fd5a504b7cc1750eb582b60c" title="Get the average molecular weight in an aerosol phase &#160;( )" alt="" coords="224,84,403,139"/>
-<area shape="rect" id="node3" href="$aero__phase__solver_8c.html#a965e0b9fc79db694be201edd05377dd1" title="Get the mass and average MW in an aerosol phase." alt="" coords="451,53,604,93"/>
+<area shape="rect" id="Node000001" title="Get the average molecular weight of an aerosol phase in this representation &#160;( )" alt="" coords="5,53,176,94"/>
+<area shape="rect" id="Node000002" href="$aero__rep__modal__binned__mass_8c.html#a2c1fd8badaa6ebffd2b45ab5314c1279" title="Get the average molecular weight in an aerosol phase &#160;( )" alt="" coords="233,5,393,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,55,217,48,218,53,177,60"/>
+<area shape="rect" id="Node000004" href="$aero__rep__single__particle_8c.html#a203b6931fd5a504b7cc1750eb582b60c" title="Get the average molecular weight in an aerosol phase &#160;( )" alt="" coords="224,85,402,141"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="177,86,209,92,208,97,176,91"/>
+<area shape="rect" id="Node000003" href="$aero__phase__solver_8c.html#a965e0b9fc79db694be201edd05377dd1" title="Get the mass and average MW in an aerosol phase." alt="" coords="450,53,602,94"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="393,45,435,53,434,59,392,51"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="402,94,434,88,435,93,403,99"/>
 </map>

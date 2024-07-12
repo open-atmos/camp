@@ -1,89 +1,89 @@
-\hypertarget{time__derivative_8h_source}{}\doxysection{time\+\_\+derivative.\+h}
-\label{time__derivative_8h_source}\index{time\_derivative.h@{time\_derivative.h}}
+\doxysection{time\+\_\+derivative.\+h}
+\hypertarget{time__derivative_8h_source}{}\label{time__derivative_8h_source}\index{time\_derivative.h@{time\_derivative.h}}
 \mbox{\hyperlink{time__derivative_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00001}00001 \textcolor{comment}{/* Copyright (C) 2021 Barcelona Supercomputing Center and University of}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00002}00002 \textcolor{comment}{ * Illinois at Urbana-\/Champaign}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00003}00003 \textcolor{comment}{ * SPDX-\/License-\/Identifier: MIT}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00004}00004 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00005}00005 \textcolor{comment}{ * Header for the time derivative structure and related functions}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00006}00006 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00007}00007 \textcolor{comment}{ */}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00008}00008 \textcolor{comment}{/** \(\backslash\)file}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00009}00009 \textcolor{comment}{ * \(\backslash\)brief Header for the time derivative structure and related functions}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00010}00010 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00011}00011 \textcolor{preprocessor}{\#ifndef TIME\_DERIVATIVE\_H}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00012}00012 \textcolor{preprocessor}{\#define TIME\_DERIVATIVE\_H}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00013}00013 }
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00014}00014 \textcolor{preprocessor}{\#include <math.h>}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00015}00015 \textcolor{preprocessor}{\#include <stdlib.h>}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00016}00016 }
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00017}00017 \textcolor{comment}{// Threshhold for precisition loss in rate calculations}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00018}\mbox{\hyperlink{time__derivative_8h_a57ebf21fd3d346b7d46d50880d7c6e17}{00018}} \textcolor{preprocessor}{\#define MAX\_PRECISION\_LOSS 1.0e-\/14}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00019}00019 }
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00020}00020 \textcolor{comment}{/* Time derivative for solver species */}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00021}\mbox{\hyperlink{struct_time_derivative}{00021}} \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00022}\mbox{\hyperlink{struct_time_derivative_a6277312dbaefeb11d9a19350b8f2275e}{00022}}   \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} \mbox{\hyperlink{struct_time_derivative_a6277312dbaefeb11d9a19350b8f2275e}{num\_spec}};          \textcolor{comment}{// Number of species in the derivative}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00023}\mbox{\hyperlink{struct_time_derivative_ac1eaecb747d807d3632c98617f60196d}{00023}}   \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} *\mbox{\hyperlink{struct_time_derivative_ac1eaecb747d807d3632c98617f60196d}{production\_rates}};  \textcolor{comment}{// Production rates for all species}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00024}\mbox{\hyperlink{struct_time_derivative_a86f2fad757866a2fe26538741f8e4091}{00024}}   \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} *\mbox{\hyperlink{struct_time_derivative_a86f2fad757866a2fe26538741f8e4091}{loss\_rates}};        \textcolor{comment}{// Loss rates for all species}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00025}00025 \textcolor{preprocessor}{\#ifdef CAMP\_DEBUG}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00026}00026   \textcolor{keywordtype}{double} last\_max\_loss\_precision;  \textcolor{comment}{// Maximum loss of precision at last output}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00027}00027 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00028}00028 \} \mbox{\hyperlink{struct_time_derivative}{TimeDerivative}};}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00029}00029 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00030}00030 \textcolor{comment}{/** \(\backslash\)brief Initialize the derivative}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00031}00031 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00032}00032 \textcolor{comment}{ * \(\backslash\)param time\_deriv Pointer to the TimeDerivative object}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00033}00033 \textcolor{comment}{ * \(\backslash\)param num\_spec Number of species to include in the derivative}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00034}00034 \textcolor{comment}{ * \(\backslash\)return Flag indicating whether the derivative was sucessfully initialized}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00035}00035 \textcolor{comment}{ *         (0 = false; 1 = true)}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00036}00036 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00037}00037 \textcolor{keywordtype}{int} \mbox{\hyperlink{time__derivative_8h_a5580eaa480804f34c307349e33d3b100}{time\_derivative\_initialize}}(\mbox{\hyperlink{struct_time_derivative}{TimeDerivative}} *time\_deriv,}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00038}00038                                \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} num\_spec);}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00039}00039 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00040}00040 \textcolor{comment}{/** \(\backslash\)brief Reset the derivative}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00041}00041 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00042}00042 \textcolor{comment}{ * \(\backslash\)param time\_deriv TimeDerivative object}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00043}00043 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00044}00044 \textcolor{keywordtype}{void} \mbox{\hyperlink{time__derivative_8h_a72dd19ea5bc2be11ace50e82bbd7857f}{time\_derivative\_reset}}(\mbox{\hyperlink{struct_time_derivative}{TimeDerivative}} time\_deriv);}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00045}00045 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00046}00046 \textcolor{comment}{/** \(\backslash\)brief Output the current derivative array}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00047}00047 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00048}00048 \textcolor{comment}{ * \(\backslash\)param time\_deriv TimeDerivative object}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00049}00049 \textcolor{comment}{ * \(\backslash\)param dest\_array Pointer to the destination array}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00050}00050 \textcolor{comment}{ * \(\backslash\)param deriv\_est Pointer to an estimate of the derivative array (optional)}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00051}00051 \textcolor{comment}{ * \(\backslash\)param output\_precision Output the estimated loss of precision for each}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00052}00052 \textcolor{comment}{ * species if output\_precision == 1}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00053}00053 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00054}00054 \textcolor{keywordtype}{void} \mbox{\hyperlink{time__derivative_8h_ae2c31a72134750c12f2f5d8e32c3a99d}{time\_derivative\_output}}(\mbox{\hyperlink{struct_time_derivative}{TimeDerivative}} time\_deriv, \textcolor{keywordtype}{double} *dest\_array,}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00055}00055                             \textcolor{keywordtype}{double} *deriv\_est, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} output\_precision);}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00056}00056 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00057}00057 \textcolor{comment}{/** \(\backslash\)brief Add a contribution to the time derivative}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00058}00058 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00059}00059 \textcolor{comment}{ * \(\backslash\)param time\_deriv TimeDerivative object}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00060}00060 \textcolor{comment}{ * \(\backslash\)param spec\_id Index of the species to update rates for}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00061}00061 \textcolor{comment}{ * \(\backslash\)param rate\_contribution Value to add to the time derivative for speces}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00062}00062 \textcolor{comment}{ * spec\_id}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00063}00063 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00064}00064 \textcolor{keywordtype}{void} \mbox{\hyperlink{time__derivative_8h_af4c9ab5040b544a8ec4b63a1c75922e2}{time\_derivative\_add\_value}}(\mbox{\hyperlink{struct_time_derivative}{TimeDerivative}} time\_deriv, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} spec\_id,}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00065}00065                                \textcolor{keywordtype}{long} \textcolor{keywordtype}{double} rate\_contribution);}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00066}00066 }
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00067}00067 \textcolor{preprocessor}{\#ifdef CAMP\_DEBUG}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00068}00068 \textcolor{comment}{/** \(\backslash\)brief Maximum loss of precision at the last output of the derivative}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00069}00069 \textcolor{comment}{ *         in bits}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00070}00070 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00071}00071 \textcolor{comment}{ * \(\backslash\)param time\_deriv TimeDerivative object}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00072}00072 \textcolor{comment}{ * \(\backslash\)return maximum loss of precision}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00073}00073 \textcolor{comment}{ */}\textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00074}00074 \textcolor{keywordtype}{double} time\_derivative\_max\_loss\_precision(\mbox{\hyperlink{struct_time_derivative}{TimeDerivative}} time\_deriv);}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00075}00075 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00076}00076 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00077}00077 \textcolor{comment}{/** \(\backslash\)brief Free memory associated with a TimeDerivative}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00078}00078 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00079}00079 \textcolor{comment}{ * \(\backslash\)param time\_deriv TimeDerivative object}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00080}00080 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00081}00081 \textcolor{keywordtype}{void} \mbox{\hyperlink{time__derivative_8h_a1193647828d9df2f5bb391b508a2a2c1}{time\_derivative\_free}}(\mbox{\hyperlink{struct_time_derivative}{TimeDerivative}} time\_deriv);}
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00082}00082 }
-\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00083}00083 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00001}00001\ \textcolor{comment}{/*\ Copyright\ (C)\ 2021\ Barcelona\ Supercomputing\ Center\ and\ University\ of}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00002}00002\ \textcolor{comment}{\ *\ Illinois\ at\ Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00003}00003\ \textcolor{comment}{\ *\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00004}00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00005}00005\ \textcolor{comment}{\ *\ Header\ for\ the\ time\ derivative\ structure\ and\ related\ functions}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00006}00006\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00007}00007\ \textcolor{comment}{\ */}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00008}00008\ \textcolor{comment}{/**\ \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00009}00009\ \textcolor{comment}{\ *\ \(\backslash\)brief\ Header\ for\ the\ time\ derivative\ structure\ and\ related\ functions}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00010}00010\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00011}00011\ \textcolor{preprocessor}{\#ifndef\ TIME\_DERIVATIVE\_H}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00012}00012\ \textcolor{preprocessor}{\#define\ TIME\_DERIVATIVE\_H}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00014}00014\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00015}00015\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00017}00017\ \textcolor{comment}{//\ Threshhold\ for\ precisition\ loss\ in\ rate\ calculations}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00018}\mbox{\hyperlink{time__derivative_8h_a57ebf21fd3d346b7d46d50880d7c6e17}{00018}}\ \textcolor{preprocessor}{\#define\ MAX\_PRECISION\_LOSS\ 1.0e-\/14}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00020}00020\ \textcolor{comment}{/*\ Time\ derivative\ for\ solver\ species\ */}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00021}\mbox{\hyperlink{struct_time_derivative}{00021}}\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00022}\mbox{\hyperlink{struct_time_derivative_a6277312dbaefeb11d9a19350b8f2275e}{00022}}\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_time_derivative_a6277312dbaefeb11d9a19350b8f2275e}{num\_spec}};\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Number\ of\ species\ in\ the\ derivative}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00023}\mbox{\hyperlink{struct_time_derivative_ac1eaecb747d807d3632c98617f60196d}{00023}}\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ *\mbox{\hyperlink{struct_time_derivative_ac1eaecb747d807d3632c98617f60196d}{production\_rates}};\ \ \textcolor{comment}{//\ Production\ rates\ for\ all\ species}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00024}\mbox{\hyperlink{struct_time_derivative_a86f2fad757866a2fe26538741f8e4091}{00024}}\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ *\mbox{\hyperlink{struct_time_derivative_a86f2fad757866a2fe26538741f8e4091}{loss\_rates}};\ \ \ \ \ \ \ \ \textcolor{comment}{//\ Loss\ rates\ for\ all\ species}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00025}00025\ \textcolor{preprocessor}{\#ifdef\ CAMP\_DEBUG}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00026}00026\ \ \ \textcolor{keywordtype}{double}\ last\_max\_loss\_precision;\ \ \textcolor{comment}{//\ Maximum\ loss\ of\ precision\ at\ last\ output}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00027}00027\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00028}00028\ \}\ \mbox{\hyperlink{struct_time_derivative}{TimeDerivative}};}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00029}00029\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00030}00030\ \textcolor{comment}{/**\ \(\backslash\)brief\ Initialize\ the\ derivative}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00031}00031\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00032}00032\ \textcolor{comment}{\ *\ \(\backslash\)param\ time\_deriv\ Pointer\ to\ the\ TimeDerivative\ object}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00033}00033\ \textcolor{comment}{\ *\ \(\backslash\)param\ num\_spec\ Number\ of\ species\ to\ include\ in\ the\ derivative}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00034}00034\ \textcolor{comment}{\ *\ \(\backslash\)return\ Flag\ indicating\ whether\ the\ derivative\ was\ sucessfully\ initialized}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00035}00035\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ (0\ =\ false;\ 1\ =\ true)}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00036}00036\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00037}00037\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{time__derivative_8h_a5580eaa480804f34c307349e33d3b100}{time\_derivative\_initialize}}(\mbox{\hyperlink{struct_time_derivative}{TimeDerivative}}\ *time\_deriv,}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00038}00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ num\_spec);}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00039}00039\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00040}00040\ \textcolor{comment}{/**\ \(\backslash\)brief\ Reset\ the\ derivative}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00041}00041\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00042}00042\ \textcolor{comment}{\ *\ \(\backslash\)param\ time\_deriv\ TimeDerivative\ object}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00043}00043\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00044}00044\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{time__derivative_8h_a72dd19ea5bc2be11ace50e82bbd7857f}{time\_derivative\_reset}}(\mbox{\hyperlink{struct_time_derivative}{TimeDerivative}}\ time\_deriv);}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00045}00045\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00046}00046\ \textcolor{comment}{/**\ \(\backslash\)brief\ Output\ the\ current\ derivative\ array}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00047}00047\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00048}00048\ \textcolor{comment}{\ *\ \(\backslash\)param\ time\_deriv\ TimeDerivative\ object}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00049}00049\ \textcolor{comment}{\ *\ \(\backslash\)param\ dest\_array\ Pointer\ to\ the\ destination\ array}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00050}00050\ \textcolor{comment}{\ *\ \(\backslash\)param\ deriv\_est\ Pointer\ to\ an\ estimate\ of\ the\ derivative\ array\ (optional)}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00051}00051\ \textcolor{comment}{\ *\ \(\backslash\)param\ output\_precision\ Output\ the\ estimated\ loss\ of\ precision\ for\ each}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00052}00052\ \textcolor{comment}{\ *\ species\ if\ output\_precision\ ==\ 1}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00053}00053\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00054}00054\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{time__derivative_8h_ae2c31a72134750c12f2f5d8e32c3a99d}{time\_derivative\_output}}(\mbox{\hyperlink{struct_time_derivative}{TimeDerivative}}\ time\_deriv,\ \textcolor{keywordtype}{double}\ *dest\_array,}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *deriv\_est,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ output\_precision);}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00056}00056\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00057}00057\ \textcolor{comment}{/**\ \(\backslash\)brief\ Add\ a\ contribution\ to\ the\ time\ derivative}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00058}00058\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00059}00059\ \textcolor{comment}{\ *\ \(\backslash\)param\ time\_deriv\ TimeDerivative\ object}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00060}00060\ \textcolor{comment}{\ *\ \(\backslash\)param\ spec\_id\ Index\ of\ the\ species\ to\ update\ rates\ for}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00061}00061\ \textcolor{comment}{\ *\ \(\backslash\)param\ rate\_contribution\ Value\ to\ add\ to\ the\ time\ derivative\ for\ speces}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00062}00062\ \textcolor{comment}{\ *\ spec\_id}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00063}00063\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00064}00064\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{time__derivative_8h_af4c9ab5040b544a8ec4b63a1c75922e2}{time\_derivative\_add\_value}}(\mbox{\hyperlink{struct_time_derivative}{TimeDerivative}}\ time\_deriv,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ spec\_id,}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ rate\_contribution);}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00066}00066\ }
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00067}00067\ \textcolor{preprocessor}{\#ifdef\ CAMP\_DEBUG}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00068}00068\ \textcolor{comment}{/**\ \(\backslash\)brief\ Maximum\ loss\ of\ precision\ at\ the\ last\ output\ of\ the\ derivative}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00069}00069\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ in\ bits}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00070}00070\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00071}00071\ \textcolor{comment}{\ *\ \(\backslash\)param\ time\_deriv\ TimeDerivative\ object}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00072}00072\ \textcolor{comment}{\ *\ \(\backslash\)return\ maximum\ loss\ of\ precision}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00073}00073\ \textcolor{comment}{\ */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00074}00074\ \textcolor{keywordtype}{double}\ time\_derivative\_max\_loss\_precision(\mbox{\hyperlink{struct_time_derivative}{TimeDerivative}}\ time\_deriv);}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00075}00075\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00076}00076\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00077}00077\ \textcolor{comment}{/**\ \(\backslash\)brief\ Free\ memory\ associated\ with\ a\ TimeDerivative}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00078}00078\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00079}00079\ \textcolor{comment}{\ *\ \(\backslash\)param\ time\_deriv\ TimeDerivative\ object}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00080}00080\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00081}00081\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{time__derivative_8h_a1193647828d9df2f5bb391b508a2a2c1}{time\_derivative\_free}}(\mbox{\hyperlink{struct_time_derivative}{TimeDerivative}}\ time\_deriv);}
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{time__derivative_8h_source_l00083}00083\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

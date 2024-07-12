@@ -1,42 +1,54 @@
-\hypertarget{rxn__solver_8h}{}\doxysection{rxn\+\_\+solver.\+h File Reference}
-\label{rxn__solver_8h}\index{rxn\_solver.h@{rxn\_solver.h}}
+\doxysection{rxn\+\_\+solver.\+h File Reference}
+\hypertarget{rxn__solver_8h}{}\label{rxn__solver_8h}\index{rxn\_solver.h@{rxn\_solver.h}}
 
 
 Header file for abstract reaction functions.  
 
 
 Include dependency graph for rxn\+\_\+solver.\+h\+:
-% FIG 0
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__solver_8h__incl}
+\end{center}
+\end{figure}
 This graph shows which files directly or indirectly include this file\+:
-% FIG 1
-\doxysubsection*{Functions}
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=244pt]{rxn__solver_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{rxn__solver_8h_a6816597d1e59964f558cfc82b004549e}{rxn\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$jac)
-\begin{DoxyCompactList}\small\item\em Get the \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by a particular reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__solver_8h_a04e1414725ffbbb0b16fca416d826c1d}{rxn\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
-\begin{DoxyCompactList}\small\item\em Update the time derivative and \mbox{\hyperlink{struct_jacobian}{Jacobian}} array ids. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__solver_8h_ab3d4bbab05647b5931a81ead002a5805}{rxn\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data)
+void \mbox{\hyperlink{rxn__solver_8h_a6816597d1e59964f558cfc82b004549e}{rxn\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Get the \doxylink{struct_jacobian}{Jacobian} elements used by a particular reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__solver_8h_a04e1414725ffbbb0b16fca416d826c1d}{rxn\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
+\begin{DoxyCompactList}\small\item\em Update the time derivative and \doxylink{struct_jacobian}{Jacobian} array ids. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__solver_8h_ab3d4bbab05647b5931a81ead002a5805}{rxn\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update reaction data for new environmental state. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__solver_8h_a26cb09c8c727eaf3d6ffcadef09c2558}{rxn\+\_\+reset\+\_\+state\+\_\+adjustments}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data)
+void \mbox{\hyperlink{rxn__solver_8h_a26cb09c8c727eaf3d6ffcadef09c2558}{rxn\+\_\+reset\+\_\+state\+\_\+adjustments}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \item 
-void \mbox{\hyperlink{rxn__solver_8h_afad5f98a024caf885890a5dc22a95e34}{rxn\+\_\+adjust\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data)
+void \mbox{\hyperlink{rxn__solver_8h_afad5f98a024caf885890a5dc22a95e34}{rxn\+\_\+adjust\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \item 
-void \mbox{\hyperlink{rxn__solver_8h_a607b803e7a4b427940312560ae0e5ba3}{rxn\+\_\+print\+\_\+data}} (void $\ast$solver\+\_\+data)
+void \mbox{\hyperlink{rxn__solver_8h_a607b803e7a4b427940312560ae0e5ba3}{rxn\+\_\+print\+\_\+data}} (void \texorpdfstring{$\ast$}{*}solver\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the reaction data. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__solver_8h_a433d6326b9ec30d4525bf974cbef30d5}{rxn\+\_\+calc\+\_\+deriv}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, double time\+\_\+step)
+void \mbox{\hyperlink{rxn__solver_8h_a433d6326b9ec30d4525bf974cbef30d5}{rxn\+\_\+calc\+\_\+deriv}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, double time\+\_\+step)
 \item 
-void \mbox{\hyperlink{rxn__solver_8h_a0dfcff0b669aa2322b0bea608aacd9e1}{rxn\+\_\+calc\+\_\+deriv\+\_\+specific\+\_\+types}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, double time\+\_\+step)
+void \mbox{\hyperlink{rxn__solver_8h_a0dfcff0b669aa2322b0bea608aacd9e1}{rxn\+\_\+calc\+\_\+deriv\+\_\+specific\+\_\+types}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, double time\+\_\+step)
 \item 
-void \mbox{\hyperlink{rxn__solver_8h_aaaf970bdabbe2794bddb385a3606f01f}{rxn\+\_\+calc\+\_\+jac}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, double time\+\_\+step)
+void \mbox{\hyperlink{rxn__solver_8h_aaaf970bdabbe2794bddb385a3606f01f}{rxn\+\_\+calc\+\_\+jac}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, double time\+\_\+step)
 \item 
-void \mbox{\hyperlink{rxn__solver_8h_af903ecb6a69d0f1f080fc88c93edc33f}{rxn\+\_\+calc\+\_\+jac\+\_\+specific\+\_\+types}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, double time\+\_\+step)
+void \mbox{\hyperlink{rxn__solver_8h_af903ecb6a69d0f1f080fc88c93edc33f}{rxn\+\_\+calc\+\_\+jac\+\_\+specific\+\_\+types}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, double time\+\_\+step)
 \item 
-void \mbox{\hyperlink{rxn__solver_8h_a411c814fb8bd6d71da9c339f632e4a4b}{rxn\+\_\+add\+\_\+condensed\+\_\+data}} (int rxn\+\_\+type, int n\+\_\+int\+\_\+param, int n\+\_\+float\+\_\+param, int n\+\_\+env\+\_\+param, int $\ast$int\+\_\+param, double $\ast$float\+\_\+param, void $\ast$solver\+\_\+data)
+void \mbox{\hyperlink{rxn__solver_8h_a411c814fb8bd6d71da9c339f632e4a4b}{rxn\+\_\+add\+\_\+condensed\+\_\+data}} (int rxn\+\_\+type, int n\+\_\+int\+\_\+param, int n\+\_\+float\+\_\+param, int n\+\_\+env\+\_\+param, int \texorpdfstring{$\ast$}{*}int\+\_\+param, double \texorpdfstring{$\ast$}{*}float\+\_\+param, void \texorpdfstring{$\ast$}{*}solver\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Add condensed data to the condensed data block of memory. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__solver_8h_ae35bddd1d3cc8d012789600176c7595b}{rxn\+\_\+update\+\_\+data}} (int cell\+\_\+id, int $\ast$rxn\+\_\+id, int update\+\_\+rxn\+\_\+type, void $\ast$update\+\_\+data, void $\ast$solver\+\_\+data)
+void \mbox{\hyperlink{rxn__solver_8h_ae35bddd1d3cc8d012789600176c7595b}{rxn\+\_\+update\+\_\+data}} (int cell\+\_\+id, int \texorpdfstring{$\ast$}{*}rxn\+\_\+id, int update\+\_\+rxn\+\_\+type, void \texorpdfstring{$\ast$}{*}update\+\_\+data, void \texorpdfstring{$\ast$}{*}solver\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update reaction data. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__solver_8h_a64380078ecb4d18fdf6bbf2d3bdff9e8}{rxn\+\_\+free\+\_\+update\+\_\+data}} (void $\ast$update\+\_\+data)
+void \mbox{\hyperlink{rxn__solver_8h_a64380078ecb4d18fdf6bbf2d3bdff9e8}{rxn\+\_\+free\+\_\+update\+\_\+data}} (void \texorpdfstring{$\ast$}{*}update\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Free an update data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -50,11 +62,11 @@ Definition in file \mbox{\hyperlink{rxn__solver_8h_source}{rxn\+\_\+solver.\+h}}
 
 
 \doxysubsection{Function Documentation}
-\mbox{\Hypertarget{rxn__solver_8h_a411c814fb8bd6d71da9c339f632e4a4b}\label{rxn__solver_8h_a411c814fb8bd6d71da9c339f632e4a4b}} 
+\Hypertarget{rxn__solver_8h_a411c814fb8bd6d71da9c339f632e4a4b}\label{rxn__solver_8h_a411c814fb8bd6d71da9c339f632e4a4b} 
 \index{rxn\_solver.h@{rxn\_solver.h}!rxn\_add\_condensed\_data@{rxn\_add\_condensed\_data}}
 \index{rxn\_add\_condensed\_data@{rxn\_add\_condensed\_data}!rxn\_solver.h@{rxn\_solver.h}}
 \doxysubsubsection{\texorpdfstring{rxn\_add\_condensed\_data()}{rxn\_add\_condensed\_data()}}
-{\footnotesize\ttfamily void rxn\+\_\+add\+\_\+condensed\+\_\+data (\begin{DoxyParamCaption}\item[{int}]{rxn\+\_\+type,  }\item[{int}]{n\+\_\+int\+\_\+param,  }\item[{int}]{n\+\_\+float\+\_\+param,  }\item[{int}]{n\+\_\+env\+\_\+param,  }\item[{int $\ast$}]{int\+\_\+param,  }\item[{double $\ast$}]{float\+\_\+param,  }\item[{void $\ast$}]{solver\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+add\+\_\+condensed\+\_\+data (\begin{DoxyParamCaption}\item[{int}]{rxn\+\_\+type,  }\item[{int}]{n\+\_\+int\+\_\+param,  }\item[{int}]{n\+\_\+float\+\_\+param,  }\item[{int}]{n\+\_\+env\+\_\+param,  }\item[{int \texorpdfstring{$\ast$}{*}}]{int\+\_\+param,  }\item[{double \texorpdfstring{$\ast$}{*}}]{float\+\_\+param,  }\item[{void \texorpdfstring{$\ast$}{*}}]{solver\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -81,41 +93,41 @@ Add condensed data to the condensed data block of memory.
 
 Definition at line \mbox{\hyperlink{rxn__solver_8c_source_l00658}{658}} of file \mbox{\hyperlink{rxn__solver_8c_source}{rxn\+\_\+solver.\+c}}.
 
-\mbox{\Hypertarget{rxn__solver_8h_afad5f98a024caf885890a5dc22a95e34}\label{rxn__solver_8h_afad5f98a024caf885890a5dc22a95e34}} 
+\Hypertarget{rxn__solver_8h_afad5f98a024caf885890a5dc22a95e34}\label{rxn__solver_8h_afad5f98a024caf885890a5dc22a95e34} 
 \index{rxn\_solver.h@{rxn\_solver.h}!rxn\_adjust\_state@{rxn\_adjust\_state}}
 \index{rxn\_adjust\_state@{rxn\_adjust\_state}!rxn\_solver.h@{rxn\_solver.h}}
 \doxysubsubsection{\texorpdfstring{rxn\_adjust\_state()}{rxn\_adjust\_state()}}
-{\footnotesize\ttfamily void rxn\+\_\+adjust\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+adjust\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{rxn__solver_8h_a433d6326b9ec30d4525bf974cbef30d5}\label{rxn__solver_8h_a433d6326b9ec30d4525bf974cbef30d5}} 
+\Hypertarget{rxn__solver_8h_a433d6326b9ec30d4525bf974cbef30d5}\label{rxn__solver_8h_a433d6326b9ec30d4525bf974cbef30d5} 
 \index{rxn\_solver.h@{rxn\_solver.h}!rxn\_calc\_deriv@{rxn\_calc\_deriv}}
 \index{rxn\_calc\_deriv@{rxn\_calc\_deriv}!rxn\_solver.h@{rxn\_solver.h}}
 \doxysubsubsection{\texorpdfstring{rxn\_calc\_deriv()}{rxn\_calc\_deriv()}}
-{\footnotesize\ttfamily void rxn\+\_\+calc\+\_\+deriv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+calc\+\_\+deriv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{rxn__solver_8h_a0dfcff0b669aa2322b0bea608aacd9e1}\label{rxn__solver_8h_a0dfcff0b669aa2322b0bea608aacd9e1}} 
+\Hypertarget{rxn__solver_8h_a0dfcff0b669aa2322b0bea608aacd9e1}\label{rxn__solver_8h_a0dfcff0b669aa2322b0bea608aacd9e1} 
 \index{rxn\_solver.h@{rxn\_solver.h}!rxn\_calc\_deriv\_specific\_types@{rxn\_calc\_deriv\_specific\_types}}
 \index{rxn\_calc\_deriv\_specific\_types@{rxn\_calc\_deriv\_specific\_types}!rxn\_solver.h@{rxn\_solver.h}}
 \doxysubsubsection{\texorpdfstring{rxn\_calc\_deriv\_specific\_types()}{rxn\_calc\_deriv\_specific\_types()}}
-{\footnotesize\ttfamily void rxn\+\_\+calc\+\_\+deriv\+\_\+specific\+\_\+types (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+calc\+\_\+deriv\+\_\+specific\+\_\+types (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{rxn__solver_8h_aaaf970bdabbe2794bddb385a3606f01f}\label{rxn__solver_8h_aaaf970bdabbe2794bddb385a3606f01f}} 
+\Hypertarget{rxn__solver_8h_aaaf970bdabbe2794bddb385a3606f01f}\label{rxn__solver_8h_aaaf970bdabbe2794bddb385a3606f01f} 
 \index{rxn\_solver.h@{rxn\_solver.h}!rxn\_calc\_jac@{rxn\_calc\_jac}}
 \index{rxn\_calc\_jac@{rxn\_calc\_jac}!rxn\_solver.h@{rxn\_solver.h}}
 \doxysubsubsection{\texorpdfstring{rxn\_calc\_jac()}{rxn\_calc\_jac()}}
-{\footnotesize\ttfamily void rxn\+\_\+calc\+\_\+jac (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+calc\+\_\+jac (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{rxn__solver_8h_af903ecb6a69d0f1f080fc88c93edc33f}\label{rxn__solver_8h_af903ecb6a69d0f1f080fc88c93edc33f}} 
+\Hypertarget{rxn__solver_8h_af903ecb6a69d0f1f080fc88c93edc33f}\label{rxn__solver_8h_af903ecb6a69d0f1f080fc88c93edc33f} 
 \index{rxn\_solver.h@{rxn\_solver.h}!rxn\_calc\_jac\_specific\_types@{rxn\_calc\_jac\_specific\_types}}
 \index{rxn\_calc\_jac\_specific\_types@{rxn\_calc\_jac\_specific\_types}!rxn\_solver.h@{rxn\_solver.h}}
 \doxysubsubsection{\texorpdfstring{rxn\_calc\_jac\_specific\_types()}{rxn\_calc\_jac\_specific\_types()}}
-{\footnotesize\ttfamily void rxn\+\_\+calc\+\_\+jac\+\_\+specific\+\_\+types (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+calc\+\_\+jac\+\_\+specific\+\_\+types (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{double}]{time\+\_\+step }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{rxn__solver_8h_a64380078ecb4d18fdf6bbf2d3bdff9e8}\label{rxn__solver_8h_a64380078ecb4d18fdf6bbf2d3bdff9e8}} 
+\Hypertarget{rxn__solver_8h_a64380078ecb4d18fdf6bbf2d3bdff9e8}\label{rxn__solver_8h_a64380078ecb4d18fdf6bbf2d3bdff9e8} 
 \index{rxn\_solver.h@{rxn\_solver.h}!rxn\_free\_update\_data@{rxn\_free\_update\_data}}
 \index{rxn\_free\_update\_data@{rxn\_free\_update\_data}!rxn\_solver.h@{rxn\_solver.h}}
 \doxysubsubsection{\texorpdfstring{rxn\_free\_update\_data()}{rxn\_free\_update\_data()}}
-{\footnotesize\ttfamily void rxn\+\_\+free\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+free\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{update\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -130,15 +142,15 @@ Free an update data object.
 
 Definition at line \mbox{\hyperlink{rxn__solver_8c_source_l00851}{851}} of file \mbox{\hyperlink{rxn__solver_8c_source}{rxn\+\_\+solver.\+c}}.
 
-\mbox{\Hypertarget{rxn__solver_8h_a6816597d1e59964f558cfc82b004549e}\label{rxn__solver_8h_a6816597d1e59964f558cfc82b004549e}} 
+\Hypertarget{rxn__solver_8h_a6816597d1e59964f558cfc82b004549e}\label{rxn__solver_8h_a6816597d1e59964f558cfc82b004549e} 
 \index{rxn\_solver.h@{rxn\_solver.h}!rxn\_get\_used\_jac\_elem@{rxn\_get\_used\_jac\_elem}}
 \index{rxn\_get\_used\_jac\_elem@{rxn\_get\_used\_jac\_elem}!rxn\_solver.h@{rxn\_solver.h}}
 \doxysubsubsection{\texorpdfstring{rxn\_get\_used\_jac\_elem()}{rxn\_get\_used\_jac\_elem()}}
-{\footnotesize\ttfamily void rxn\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} $\ast$}]{jac }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac }\end{DoxyParamCaption})}
 
 
 
-Get the \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used by a particular reaction. 
+Get the \doxylink{struct_jacobian}{Jacobian} elements used by a particular reaction. 
 
 Public reaction functions
 
@@ -146,7 +158,7 @@ Public reaction functions
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & A pointer to the model data \\
 \hline
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
 \hline
 \end{DoxyParams}
 
@@ -154,14 +166,26 @@ Public reaction functions
 Definition at line \mbox{\hyperlink{rxn__solver_8c_source_l00042}{42}} of file \mbox{\hyperlink{rxn__solver_8c_source}{rxn\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 2
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__solver_8h_a6816597d1e59964f558cfc82b004549e_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 3
-\mbox{\Hypertarget{rxn__solver_8h_a607b803e7a4b427940312560ae0e5ba3}\label{rxn__solver_8h_a607b803e7a4b427940312560ae0e5ba3}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__solver_8h_a6816597d1e59964f558cfc82b004549e_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rxn__solver_8h_a607b803e7a4b427940312560ae0e5ba3}\label{rxn__solver_8h_a607b803e7a4b427940312560ae0e5ba3} 
 \index{rxn\_solver.h@{rxn\_solver.h}!rxn\_print\_data@{rxn\_print\_data}}
 \index{rxn\_print\_data@{rxn\_print\_data}!rxn\_solver.h@{rxn\_solver.h}}
 \doxysubsubsection{\texorpdfstring{rxn\_print\_data()}{rxn\_print\_data()}}
-{\footnotesize\ttfamily void rxn\+\_\+print\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{solver\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+print\+\_\+data (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{solver\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -177,18 +201,24 @@ Print the reaction data.
 Definition at line \mbox{\hyperlink{rxn__solver_8c_source_l00769}{769}} of file \mbox{\hyperlink{rxn__solver_8c_source}{rxn\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 4
-\mbox{\Hypertarget{rxn__solver_8h_a26cb09c8c727eaf3d6ffcadef09c2558}\label{rxn__solver_8h_a26cb09c8c727eaf3d6ffcadef09c2558}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=550pt]{rxn__solver_8h_a607b803e7a4b427940312560ae0e5ba3_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rxn__solver_8h_a26cb09c8c727eaf3d6ffcadef09c2558}\label{rxn__solver_8h_a26cb09c8c727eaf3d6ffcadef09c2558} 
 \index{rxn\_solver.h@{rxn\_solver.h}!rxn\_reset\_state\_adjustments@{rxn\_reset\_state\_adjustments}}
 \index{rxn\_reset\_state\_adjustments@{rxn\_reset\_state\_adjustments}!rxn\_solver.h@{rxn\_solver.h}}
 \doxysubsubsection{\texorpdfstring{rxn\_reset\_state\_adjustments()}{rxn\_reset\_state\_adjustments()}}
-{\footnotesize\ttfamily void rxn\+\_\+reset\+\_\+state\+\_\+adjustments (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+reset\+\_\+state\+\_\+adjustments (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data }\end{DoxyParamCaption})}
 
-\mbox{\Hypertarget{rxn__solver_8h_ae35bddd1d3cc8d012789600176c7595b}\label{rxn__solver_8h_ae35bddd1d3cc8d012789600176c7595b}} 
+\Hypertarget{rxn__solver_8h_ae35bddd1d3cc8d012789600176c7595b}\label{rxn__solver_8h_ae35bddd1d3cc8d012789600176c7595b} 
 \index{rxn\_solver.h@{rxn\_solver.h}!rxn\_update\_data@{rxn\_update\_data}}
 \index{rxn\_update\_data@{rxn\_update\_data}!rxn\_solver.h@{rxn\_solver.h}}
 \doxysubsubsection{\texorpdfstring{rxn\_update\_data()}{rxn\_update\_data()}}
-{\footnotesize\ttfamily void rxn\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{int}]{cell\+\_\+id,  }\item[{int $\ast$}]{rxn\+\_\+id,  }\item[{int}]{update\+\_\+rxn\+\_\+type,  }\item[{void $\ast$}]{update\+\_\+data,  }\item[{void $\ast$}]{solver\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{int}]{cell\+\_\+id,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+id,  }\item[{int}]{update\+\_\+rxn\+\_\+type,  }\item[{void \texorpdfstring{$\ast$}{*}}]{update\+\_\+data,  }\item[{void \texorpdfstring{$\ast$}{*}}]{solver\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -214,12 +244,18 @@ Update data for one or more reactions. Reactions of a certain type are passed a 
 Definition at line \mbox{\hyperlink{rxn__solver_8c_source_l00708}{708}} of file \mbox{\hyperlink{rxn__solver_8c_source}{rxn\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 5
-\mbox{\Hypertarget{rxn__solver_8h_ab3d4bbab05647b5931a81ead002a5805}\label{rxn__solver_8h_ab3d4bbab05647b5931a81ead002a5805}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=339pt]{rxn__solver_8h_ae35bddd1d3cc8d012789600176c7595b_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rxn__solver_8h_ab3d4bbab05647b5931a81ead002a5805}\label{rxn__solver_8h_ab3d4bbab05647b5931a81ead002a5805} 
 \index{rxn\_solver.h@{rxn\_solver.h}!rxn\_update\_env\_state@{rxn\_update\_env\_state}}
 \index{rxn\_update\_env\_state@{rxn\_update\_env\_state}!rxn\_solver.h@{rxn\_solver.h}}
 \doxysubsubsection{\texorpdfstring{rxn\_update\_env\_state()}{rxn\_update\_env\_state()}}
-{\footnotesize\ttfamily void rxn\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -235,18 +271,30 @@ Update reaction data for new environmental state.
 Definition at line \mbox{\hyperlink{rxn__solver_8c_source_l00224}{224}} of file \mbox{\hyperlink{rxn__solver_8c_source}{rxn\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 6
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__solver_8h_ab3d4bbab05647b5931a81ead002a5805_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 7
-\mbox{\Hypertarget{rxn__solver_8h_a04e1414725ffbbb0b16fca416d826c1d}\label{rxn__solver_8h_a04e1414725ffbbb0b16fca416d826c1d}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=288pt]{rxn__solver_8h_ab3d4bbab05647b5931a81ead002a5805_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rxn__solver_8h_a04e1414725ffbbb0b16fca416d826c1d}\label{rxn__solver_8h_a04e1414725ffbbb0b16fca416d826c1d} 
 \index{rxn\_solver.h@{rxn\_solver.h}!rxn\_update\_ids@{rxn\_update\_ids}}
 \index{rxn\_update\_ids@{rxn\_update\_ids}!rxn\_solver.h@{rxn\_solver.h}}
 \doxysubsubsection{\texorpdfstring{rxn\_update\_ids()}{rxn\_update\_ids()}}
-{\footnotesize\ttfamily void rxn\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void rxn\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac }\end{DoxyParamCaption})}
 
 
 
-Update the time derivative and \mbox{\hyperlink{struct_jacobian}{Jacobian}} array ids. 
+Update the time derivative and \doxylink{struct_jacobian}{Jacobian} array ids. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -254,7 +302,7 @@ Update the time derivative and \mbox{\hyperlink{struct_jacobian}{Jacobian}} arra
 \hline
 {\em deriv\+\_\+ids} & Ids for state variables on the time derivative array \\
 \hline
-{\em jac} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} \\
+{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
 \hline
 \end{DoxyParams}
 
@@ -262,6 +310,18 @@ Update the time derivative and \mbox{\hyperlink{struct_jacobian}{Jacobian}} arra
 Definition at line \mbox{\hyperlink{rxn__solver_8c_source_l00131}{131}} of file \mbox{\hyperlink{rxn__solver_8c_source}{rxn\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 8
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__solver_8h_a04e1414725ffbbb0b16fca416d826c1d_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 9
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__solver_8h_a04e1414725ffbbb0b16fca416d826c1d_icgraph}
+\end{center}
+\end{figure}

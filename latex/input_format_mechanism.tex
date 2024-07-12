@@ -1,0 +1,18 @@
+\doxysubsection{Input JSON Object Format\+: Mechanism}
+\hypertarget{input_format_mechanism}{}\label{input_format_mechanism}\index{Input JSON Object Format: Mechanism@{Input JSON Object Format: Mechanism}}
+A {\ttfamily json} object containing information about a \doxylink{camp_mechanism}{chemical mechanism} has the following format \+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ "{}camp-\/data"{}\ :\ [}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ "{}name"{}\ :\ "{}my\ mechanism"{},}
+\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}MECHANISM"{},}
+\DoxyCodeLine{\ \ \ \ "{}reactions"{}\ :\ [}
+\DoxyCodeLine{\ \ \ \ \ \ ...}
+\DoxyCodeLine{\ \ \ \ ]}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ A \doxylink{camp_mechanism}{mechanism} object must have a unique {\bfseries{name}}, a {\bfseries{type}} of {\bfseries{MECHANISM}} and an array of \doxylink{input_format_rxn}{reaction objects} labelled {\bfseries{reactions}}. Mechanism data may be split into multiple mechanism objects across input files -\/ they will be combined based on the mechanism name. 

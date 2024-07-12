@@ -1,90 +1,90 @@
-\hypertarget{camp__solver_8h_source}{}\doxysection{camp\+\_\+solver.\+h}
-\label{camp__solver_8h_source}\index{camp\_solver.h@{camp\_solver.h}}
+\doxysection{camp\+\_\+solver.\+h}
+\hypertarget{camp__solver_8h_source}{}\label{camp__solver_8h_source}\index{camp\_solver.h@{camp\_solver.h}}
 \mbox{\hyperlink{camp__solver_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00001}00001 \textcolor{comment}{/* Copyright (C) 2021 Barcelona Supercomputing Center and University of}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00002}00002 \textcolor{comment}{ * Illinois at Urbana-\/Champaign}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00003}00003 \textcolor{comment}{ * SPDX-\/License-\/Identifier: MIT}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00004}00004 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00005}00005 \textcolor{comment}{ * Header file for solver functions}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00006}00006 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00007}00007 \textcolor{comment}{ */}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00008}00008 \textcolor{comment}{/** \(\backslash\)file}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00009}00009 \textcolor{comment}{ * \(\backslash\)brief Header file for solver functions}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00010}00010 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00011}00011 \textcolor{preprocessor}{\#ifndef CAMP\_SOLVER\_H\_}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00012}00012 \textcolor{preprocessor}{\#define CAMP\_SOLVER\_H\_}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00013}00013 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{camp__common_8h}{camp\_common.h}}"{}}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00014}00014 }
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00015}00015 \textcolor{comment}{/* Functions called by camp-\/chem */}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00016}00016 \textcolor{keywordtype}{void} *\mbox{\hyperlink{camp__solver_8h_a68b93bb3ad0a17bb25dba4061bbf52d8}{solver\_new}}(\textcolor{keywordtype}{int} n\_state\_var, \textcolor{keywordtype}{int} n\_cells, \textcolor{keywordtype}{int} *var\_type, \textcolor{keywordtype}{int} n\_rxn,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00017}00017                  \textcolor{keywordtype}{int} n\_rxn\_int\_param, \textcolor{keywordtype}{int} n\_rxn\_float\_param,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00018}00018                  \textcolor{keywordtype}{int} n\_rxn\_env\_param, \textcolor{keywordtype}{int} n\_aero\_phase,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00019}00019                  \textcolor{keywordtype}{int} n\_aero\_phase\_int\_param, \textcolor{keywordtype}{int} n\_aero\_phase\_float\_param,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00020}00020                  \textcolor{keywordtype}{int} n\_aero\_rep, \textcolor{keywordtype}{int} n\_aero\_rep\_int\_param,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00021}00021                  \textcolor{keywordtype}{int} n\_aero\_rep\_float\_param, \textcolor{keywordtype}{int} n\_aero\_rep\_env\_param,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00022}00022                  \textcolor{keywordtype}{int} n\_sub\_model, \textcolor{keywordtype}{int} n\_sub\_model\_int\_param,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00023}00023                  \textcolor{keywordtype}{int} n\_sub\_model\_float\_param, \textcolor{keywordtype}{int} n\_sub\_model\_env\_param);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00024}00024 \textcolor{keywordtype}{void} \mbox{\hyperlink{camp__solver_8h_a599ffdef916b139a1690bfd41aa386b6}{solver\_initialize}}(\textcolor{keywordtype}{void} *solver\_data, \textcolor{keywordtype}{double} *abs\_tol, \textcolor{keywordtype}{double} rel\_tol,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00025}00025                        \textcolor{keywordtype}{int} max\_steps, \textcolor{keywordtype}{int} max\_conv\_fails);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00026}00026 \textcolor{preprocessor}{\#ifdef CAMP\_DEBUG}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00027}00027 \textcolor{keywordtype}{int} solver\_set\_debug\_out(\textcolor{keywordtype}{void} *solver\_data, \textcolor{keywordtype}{bool} do\_output);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00028}00028 \textcolor{keywordtype}{int} solver\_set\_eval\_jac(\textcolor{keywordtype}{void} *solver\_data, \textcolor{keywordtype}{bool} eval\_Jac);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00029}00029 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00030}00030 \textcolor{keywordtype}{int} \mbox{\hyperlink{camp__solver_8h_afc5ec8680b419e7ab49530d53a76cee4}{solver\_run}}(\textcolor{keywordtype}{void} *solver\_data, \textcolor{keywordtype}{double} *state, \textcolor{keywordtype}{double} *env, \textcolor{keywordtype}{double} t\_initial,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00031}00031                \textcolor{keywordtype}{double} t\_final);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00032}00032 \textcolor{keywordtype}{void} \mbox{\hyperlink{camp__solver_8h_a0de7bd46f75dd8496488b32c4983ec77}{solver\_get\_statistics}}(\textcolor{keywordtype}{void} *solver\_data, \textcolor{keywordtype}{int} *solver\_flag, \textcolor{keywordtype}{int} *num\_steps,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00033}00033                            \textcolor{keywordtype}{int} *RHS\_evals, \textcolor{keywordtype}{int} *LS\_setups,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00034}00034                            \textcolor{keywordtype}{int} *error\_test\_fails, \textcolor{keywordtype}{int} *NLS\_iters,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00035}00035                            \textcolor{keywordtype}{int} *NLS\_convergence\_fails, \textcolor{keywordtype}{int} *DLS\_Jac\_evals,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00036}00036                            \textcolor{keywordtype}{int} *DLS\_RHS\_evals, \textcolor{keywordtype}{double} *last\_time\_step\_\_s,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00037}00037                            \textcolor{keywordtype}{double} *next\_time\_step\_\_s, \textcolor{keywordtype}{int} *Jac\_eval\_fails,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00038}00038                            \textcolor{keywordtype}{int} *RHS\_evals\_total, \textcolor{keywordtype}{int} *Jac\_evals\_total,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00039}00039                            \textcolor{keywordtype}{double} *RHS\_time\_\_s, \textcolor{keywordtype}{double} *Jac\_time\_\_s,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00040}00040                            \textcolor{keywordtype}{double} *max\_loss\_precision);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00041}00041 \textcolor{keywordtype}{void} \mbox{\hyperlink{camp__solver_8h_a946f57c971834de0c7cb185263cd3c78}{solver\_free}}(\textcolor{keywordtype}{void} *solver\_data);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00042}00042 \textcolor{keywordtype}{void} \mbox{\hyperlink{camp__solver_8h_a01ab307718c5b5304fc16472d23d999f}{model\_free}}(\mbox{\hyperlink{struct_model_data}{ModelData}} model\_data);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00043}00043 }
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00044}00044 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_SUNDIALS}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00045}00045 \textcolor{comment}{/* Functions called by the solver */}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00046}00046 \textcolor{keywordtype}{int} \mbox{\hyperlink{camp__solver_8h_a8a734481deea8aa979d12919f1085b65}{f}}(realtype t, N\_Vector y, N\_Vector deriv, \textcolor{keywordtype}{void} *model\_data);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00047}00047 \textcolor{keywordtype}{int} \mbox{\hyperlink{camp__solver_8h_a78e694c3221a39e0b96a5f40fa0fc0dd}{Jac}}(realtype t, N\_Vector y, N\_Vector deriv, SUNMatrix J, \textcolor{keywordtype}{void} *model\_data,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00048}00048         N\_Vector tmp1, N\_Vector tmp2, N\_Vector tmp3);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00049}\mbox{\hyperlink{camp__solver_8h_a2fa3892570de5fd26fb97da6b91568ff}{00049}} \textcolor{keywordtype}{int} \mbox{\hyperlink{camp__solver_8h_a2fa3892570de5fd26fb97da6b91568ff}{guess\_helper}}(\textcolor{keyword}{const} realtype t\_n, \textcolor{keyword}{const} realtype h\_n, N\_Vector y\_n,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00050}00050                  N\_Vector y\_n1, N\_Vector hf, \textcolor{keywordtype}{void} *solver\_data, N\_Vector tmp1,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00051}00051                  N\_Vector corr);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00052}00052 \textcolor{keywordtype}{void} \mbox{\hyperlink{camp__solver_8h_ac1241091f152db7fd2aa734994c48b24}{error\_handler}}(\textcolor{keywordtype}{int} error\_code, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *module, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *function,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00053}00053                    \textcolor{keywordtype}{char} *msg, \textcolor{keywordtype}{void} *sd);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00054}00054 }
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00055}00055 \textcolor{comment}{/* SUNDIALS support functions */}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00056}00056 \textcolor{keywordtype}{int} \mbox{\hyperlink{camp__solver_8h_a21373e1f8bad206f6437deeea571f51c}{camp\_solver\_update\_model\_state}}(N\_Vector solver\_state, \mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00057}00057                                    realtype threshhold,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00058}00058                                    realtype replacement\_value);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00059}00059 SUNMatrix \mbox{\hyperlink{camp__solver_8h_a5b485fa25356197023889f3795888e98}{get\_jac\_init}}(\mbox{\hyperlink{struct_solver_data}{SolverData}} *solver\_data);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00060}00060 \textcolor{keywordtype}{bool} \mbox{\hyperlink{camp__solver_8h_ad45be595da1a1d6fd40179d9743a9a65}{check\_Jac}}(realtype t, N\_Vector y, SUNMatrix J, N\_Vector deriv,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00061}00061                N\_Vector tmp, N\_Vector tmp1, \textcolor{keywordtype}{void} *solver\_data);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00062}00062 \textcolor{keywordtype}{int} \mbox{\hyperlink{camp__solver_8h_a08519bb4526ffd3db7f49b33ba7600aa}{check\_flag}}(\textcolor{keywordtype}{void} *flag\_value, \textcolor{keywordtype}{char} *func\_name, \textcolor{keywordtype}{int} opt);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00063}00063 \textcolor{keywordtype}{void} \mbox{\hyperlink{camp__solver_8h_a736da263e758eddff5578b8685edc459}{check\_flag\_fail}}(\textcolor{keywordtype}{void} *flag\_value, \textcolor{keywordtype}{char} *func\_name, \textcolor{keywordtype}{int} opt);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00064}00064 \textcolor{keywordtype}{void} \mbox{\hyperlink{camp__solver_8h_af081ac08d4a99b2ff2d02de98ecd01e0}{solver\_reset\_timers}}(\textcolor{keywordtype}{void} *solver\_data);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00065}\mbox{\hyperlink{camp__solver_8h_aa27659e81a1e22c9ab59889e8e7cd341}{00065}} \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{camp__solver_8h_aa27659e81a1e22c9ab59889e8e7cd341}{solver\_print\_stats}}(\textcolor{keywordtype}{void} *cvode\_mem);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00066}\mbox{\hyperlink{camp__solver_8h_adfee57a3797c09d1fb585d9f49477c32}{00066}} \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{camp__solver_8h_adfee57a3797c09d1fb585d9f49477c32}{print\_data\_sizes}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *md);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00067}\mbox{\hyperlink{camp__solver_8h_a5e1481fdcb1fc315878002edb9346b77}{00067}} \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{camp__solver_8h_a5e1481fdcb1fc315878002edb9346b77}{print\_jacobian}}(SUNMatrix M);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00068}\mbox{\hyperlink{camp__solver_8h_a99ec22cbccaf8d6c6ab6a30f27474cfa}{00068}} \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{camp__solver_8h_a99ec22cbccaf8d6c6ab6a30f27474cfa}{print\_derivative}}(N\_Vector deriv);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00069}00069 \textcolor{keywordtype}{bool} \mbox{\hyperlink{camp__solver_8h_a51bc2a16028d4c72dd39669c31f6fc17}{is\_anything\_going\_on\_here}}(\mbox{\hyperlink{struct_solver_data}{SolverData}} *sd, realtype t\_initial,}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00070}00070                                realtype t\_final);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00071}00071 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00072}00072 \textcolor{keywordtype}{double} gsl\_f(\textcolor{keywordtype}{double} x, \textcolor{keywordtype}{void} *param);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00073}00073 \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00074}00074   \textcolor{keywordtype}{int} ind\_var;              \textcolor{comment}{// independent variable index}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00075}00075   \textcolor{keywordtype}{int} dep\_var;              \textcolor{comment}{// dependent variable index}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00076}00076   realtype t;               \textcolor{comment}{// current model time (s)}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00077}00077   N\_Vector y;               \textcolor{comment}{// dependent variable array}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00078}00078   N\_Vector deriv;           \textcolor{comment}{// time derivative vector f(t,y)}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00079}00079   \mbox{\hyperlink{struct_solver_data}{SolverData}} *solver\_data;  \textcolor{comment}{// solver data}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00080}00080 \} GSLParam;}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00081}00081 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00082}00082 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00083}00083 }
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00084}00084 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00001}00001\ \textcolor{comment}{/*\ Copyright\ (C)\ 2021\ Barcelona\ Supercomputing\ Center\ and\ University\ of}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00002}00002\ \textcolor{comment}{\ *\ Illinois\ at\ Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00003}00003\ \textcolor{comment}{\ *\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00004}00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00005}00005\ \textcolor{comment}{\ *\ Header\ file\ for\ solver\ functions}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00006}00006\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00007}00007\ \textcolor{comment}{\ */}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00008}00008\ \textcolor{comment}{/**\ \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00009}00009\ \textcolor{comment}{\ *\ \(\backslash\)brief\ Header\ file\ for\ solver\ functions}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00010}00010\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00011}00011\ \textcolor{preprocessor}{\#ifndef\ CAMP\_SOLVER\_H\_}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00012}00012\ \textcolor{preprocessor}{\#define\ CAMP\_SOLVER\_H\_}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00013}00013\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{camp__common_8h}{camp\_common.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00015}00015\ \textcolor{comment}{/*\ Functions\ called\ by\ camp-\/chem\ */}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00016}00016\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{camp__solver_8h_a68b93bb3ad0a17bb25dba4061bbf52d8}{solver\_new}}(\textcolor{keywordtype}{int}\ n\_state\_var,\ \textcolor{keywordtype}{int}\ n\_cells,\ \textcolor{keywordtype}{int}\ *var\_type,\ \textcolor{keywordtype}{int}\ n\_rxn,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00017}00017\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ n\_rxn\_int\_param,\ \textcolor{keywordtype}{int}\ n\_rxn\_float\_param,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00018}00018\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ n\_rxn\_env\_param,\ \textcolor{keywordtype}{int}\ n\_aero\_phase,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00019}00019\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ n\_aero\_phase\_int\_param,\ \textcolor{keywordtype}{int}\ n\_aero\_phase\_float\_param,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00020}00020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ n\_aero\_rep,\ \textcolor{keywordtype}{int}\ n\_aero\_rep\_int\_param,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00021}00021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ n\_aero\_rep\_float\_param,\ \textcolor{keywordtype}{int}\ n\_aero\_rep\_env\_param,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00022}00022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ n\_sub\_model,\ \textcolor{keywordtype}{int}\ n\_sub\_model\_int\_param,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00023}00023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ n\_sub\_model\_float\_param,\ \textcolor{keywordtype}{int}\ n\_sub\_model\_env\_param);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00024}00024\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{camp__solver_8h_a599ffdef916b139a1690bfd41aa386b6}{solver\_initialize}}(\textcolor{keywordtype}{void}\ *solver\_data,\ \textcolor{keywordtype}{double}\ *abs\_tol,\ \textcolor{keywordtype}{double}\ rel\_tol,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00025}00025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ max\_steps,\ \textcolor{keywordtype}{int}\ max\_conv\_fails);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00026}00026\ \textcolor{preprocessor}{\#ifdef\ CAMP\_DEBUG}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00027}00027\ \textcolor{keywordtype}{int}\ solver\_set\_debug\_out(\textcolor{keywordtype}{void}\ *solver\_data,\ \textcolor{keywordtype}{bool}\ do\_output);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00028}00028\ \textcolor{keywordtype}{int}\ solver\_set\_eval\_jac(\textcolor{keywordtype}{void}\ *solver\_data,\ \textcolor{keywordtype}{bool}\ eval\_Jac);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00029}00029\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00030}00030\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{camp__solver_8h_afc5ec8680b419e7ab49530d53a76cee4}{solver\_run}}(\textcolor{keywordtype}{void}\ *solver\_data,\ \textcolor{keywordtype}{double}\ *state,\ \textcolor{keywordtype}{double}\ *env,\ \textcolor{keywordtype}{double}\ t\_initial,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ t\_final);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00032}00032\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{camp__solver_8h_a0de7bd46f75dd8496488b32c4983ec77}{solver\_get\_statistics}}(\textcolor{keywordtype}{void}\ *solver\_data,\ \textcolor{keywordtype}{int}\ *solver\_flag,\ \textcolor{keywordtype}{int}\ *num\_steps,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *RHS\_evals,\ \textcolor{keywordtype}{int}\ *LS\_setups,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *error\_test\_fails,\ \textcolor{keywordtype}{int}\ *NLS\_iters,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *NLS\_convergence\_fails,\ \textcolor{keywordtype}{int}\ *DLS\_Jac\_evals,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *DLS\_RHS\_evals,\ \textcolor{keywordtype}{double}\ *last\_time\_step\_\_s,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *next\_time\_step\_\_s,\ \textcolor{keywordtype}{int}\ *Jac\_eval\_fails,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00038}00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *RHS\_evals\_total,\ \textcolor{keywordtype}{int}\ *Jac\_evals\_total,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *RHS\_time\_\_s,\ \textcolor{keywordtype}{double}\ *Jac\_time\_\_s,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *max\_loss\_precision);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00041}00041\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{camp__solver_8h_a946f57c971834de0c7cb185263cd3c78}{solver\_free}}(\textcolor{keywordtype}{void}\ *solver\_data);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00042}00042\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{camp__solver_8h_a01ab307718c5b5304fc16472d23d999f}{model\_free}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ model\_data);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00044}00044\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_SUNDIALS}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00045}00045\ \textcolor{comment}{/*\ Functions\ called\ by\ the\ solver\ */}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00046}00046\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{camp__solver_8h_a8a734481deea8aa979d12919f1085b65}{f}}(realtype\ t,\ N\_Vector\ y,\ N\_Vector\ deriv,\ \textcolor{keywordtype}{void}\ *model\_data);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00047}00047\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{camp__solver_8h_a78e694c3221a39e0b96a5f40fa0fc0dd}{Jac}}(realtype\ t,\ N\_Vector\ y,\ N\_Vector\ deriv,\ SUNMatrix\ J,\ \textcolor{keywordtype}{void}\ *model\_data,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00048}00048\ \ \ \ \ \ \ \ \ N\_Vector\ tmp1,\ N\_Vector\ tmp2,\ N\_Vector\ tmp3);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00049}\mbox{\hyperlink{camp__solver_8h_a2fa3892570de5fd26fb97da6b91568ff}{00049}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{camp__solver_8h_a2fa3892570de5fd26fb97da6b91568ff}{guess\_helper}}(\textcolor{keyword}{const}\ realtype\ t\_n,\ \textcolor{keyword}{const}\ realtype\ h\_n,\ N\_Vector\ y\_n,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ N\_Vector\ y\_n1,\ N\_Vector\ hf,\ \textcolor{keywordtype}{void}\ *solver\_data,\ N\_Vector\ tmp1,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ N\_Vector\ corr);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00052}00052\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{camp__solver_8h_ac1241091f152db7fd2aa734994c48b24}{error\_handler}}(\textcolor{keywordtype}{int}\ error\_code,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *module,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *function,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{char}\ *msg,\ \textcolor{keywordtype}{void}\ *sd);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00055}00055\ \textcolor{comment}{/*\ SUNDIALS\ support\ functions\ */}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00056}00056\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{camp__solver_8h_a21373e1f8bad206f6437deeea571f51c}{camp\_solver\_update\_model\_state}}(N\_Vector\ solver\_state,\ \mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ realtype\ threshhold,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ realtype\ replacement\_value);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00059}00059\ SUNMatrix\ \mbox{\hyperlink{camp__solver_8h_a5b485fa25356197023889f3795888e98}{get\_jac\_init}}(\mbox{\hyperlink{struct_solver_data}{SolverData}}\ *solver\_data);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00060}00060\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{camp__solver_8h_ad45be595da1a1d6fd40179d9743a9a65}{check\_Jac}}(realtype\ t,\ N\_Vector\ y,\ SUNMatrix\ J,\ N\_Vector\ deriv,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ N\_Vector\ tmp,\ N\_Vector\ tmp1,\ \textcolor{keywordtype}{void}\ *solver\_data);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00062}00062\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{camp__solver_8h_a08519bb4526ffd3db7f49b33ba7600aa}{check\_flag}}(\textcolor{keywordtype}{void}\ *flag\_value,\ \textcolor{keywordtype}{char}\ *func\_name,\ \textcolor{keywordtype}{int}\ opt);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00063}00063\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{camp__solver_8h_a736da263e758eddff5578b8685edc459}{check\_flag\_fail}}(\textcolor{keywordtype}{void}\ *flag\_value,\ \textcolor{keywordtype}{char}\ *func\_name,\ \textcolor{keywordtype}{int}\ opt);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00064}00064\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{camp__solver_8h_af081ac08d4a99b2ff2d02de98ecd01e0}{solver\_reset\_timers}}(\textcolor{keywordtype}{void}\ *solver\_data);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00065}\mbox{\hyperlink{camp__solver_8h_aa27659e81a1e22c9ab59889e8e7cd341}{00065}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{camp__solver_8h_aa27659e81a1e22c9ab59889e8e7cd341}{solver\_print\_stats}}(\textcolor{keywordtype}{void}\ *cvode\_mem);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00066}\mbox{\hyperlink{camp__solver_8h_adfee57a3797c09d1fb585d9f49477c32}{00066}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{camp__solver_8h_adfee57a3797c09d1fb585d9f49477c32}{print\_data\_sizes}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *md);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00067}\mbox{\hyperlink{camp__solver_8h_a5e1481fdcb1fc315878002edb9346b77}{00067}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{camp__solver_8h_a5e1481fdcb1fc315878002edb9346b77}{print\_jacobian}}(SUNMatrix\ M);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00068}\mbox{\hyperlink{camp__solver_8h_a99ec22cbccaf8d6c6ab6a30f27474cfa}{00068}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{camp__solver_8h_a99ec22cbccaf8d6c6ab6a30f27474cfa}{print\_derivative}}(N\_Vector\ deriv);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00069}00069\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{camp__solver_8h_a51bc2a16028d4c72dd39669c31f6fc17}{is\_anything\_going\_on\_here}}(\mbox{\hyperlink{struct_solver_data}{SolverData}}\ *sd,\ realtype\ t\_initial,}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ realtype\ t\_final);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00071}00071\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00072}00072\ \textcolor{keywordtype}{double}\ gsl\_f(\textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{void}\ *param);}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00073}00073\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00074}00074\ \ \ \textcolor{keywordtype}{int}\ ind\_var;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ independent\ variable\ index}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00075}00075\ \ \ \textcolor{keywordtype}{int}\ dep\_var;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ dependent\ variable\ index}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00076}00076\ \ \ realtype\ t;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ current\ model\ time\ (s)}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00077}00077\ \ \ N\_Vector\ y;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ dependent\ variable\ array}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00078}00078\ \ \ N\_Vector\ deriv;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ time\ derivative\ vector\ f(t,y)}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00079}00079\ \ \ \mbox{\hyperlink{struct_solver_data}{SolverData}}\ *solver\_data;\ \ \textcolor{comment}{//\ solver\ data}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00080}00080\ \}\ GSLParam;}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00081}00081\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00082}00082\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00084}00084\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

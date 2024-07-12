@@ -1,20 +1,37 @@
 <map id="camp_rxn_data::rxn_data_t" name="camp_rxn_data::rxn_data_t">
-<area shape="rect" id="node1" title="Abstract reaction data type." alt="" coords="5,564,139,604"/>
-<area shape="rect" id="node2" href="$structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t.html" title="Generic test reaction data type." alt="" coords="191,5,393,45"/>
-<area shape="rect" id="node3" href="$structcamp__rxn__arrhenius_1_1rxn__arrhenius__t.html" title="Generic test reaction data type." alt="" coords="223,69,361,109"/>
-<area shape="rect" id="node4" href="$structcamp__rxn__cmaq__h2o2_1_1rxn__cmaq__h2o2__t.html" title="Generic test reaction data type." alt="" coords="216,133,368,173"/>
-<area shape="rect" id="node5" href="$structcamp__rxn__cmaq__oh__hno3_1_1rxn__cmaq__oh__hno3__t.html" title="Generic test reaction data type." alt="" coords="205,197,379,237"/>
-<area shape="rect" id="node6" href="$structcamp__rxn__condensed__phase__arrhenius_1_1rxn__condensed__phase__arrhenius__t.html" title="Generic test reaction data type." alt="" coords="189,262,395,317"/>
-<area shape="rect" id="node7" href="$structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t.html" title="Generic test reaction data type." alt="" coords="187,341,397,395"/>
-<area shape="rect" id="node8" href="$structcamp__rxn__emission_1_1rxn__emission__t.html" title="Generic test reaction data type." alt="" coords="221,420,363,460"/>
-<area shape="rect" id="node9" href="$structcamp__rxn__first__order__loss_1_1rxn__first__order__loss__t.html" title="Generic test reaction data type." alt="" coords="221,485,363,539"/>
-<area shape="rect" id="node10" href="$structcamp__rxn__hl__phase__transfer_1_1rxn__hl__phase__transfer__t.html" title="Generic test reaction data type." alt="" coords="198,564,386,604"/>
-<area shape="rect" id="node11" href="$structcamp__rxn__photolysis_1_1rxn__photolysis__t.html" title="Generic test reaction data type." alt="" coords="221,628,363,668"/>
-<area shape="rect" id="node12" href="$structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t.html" title="Generic test reaction data type." alt="" coords="209,693,375,747"/>
-<area shape="rect" id="node13" href="$structcamp__rxn__surface_1_1rxn__surface__t.html" title="Generic test reaction data type." alt="" coords="217,772,367,812"/>
-<area shape="rect" id="node14" href="$structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t.html" title="Generic test reaction data type." alt="" coords="201,837,383,891"/>
-<area shape="rect" id="node15" href="$structcamp__rxn__troe_1_1rxn__troe__t.html" title="Generic test reaction data type." alt="" coords="227,916,357,956"/>
-<area shape="rect" id="node16" href="$structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t.html" title="Generic test reaction data type." alt="" coords="197,980,387,1020"/>
-<area shape="rect" id="node17" href="$structcamp__rxn__wennberg__tunneling_1_1rxn__wennberg__tunneling__t.html" title="Generic test reaction data type." alt="" coords="192,1044,392,1084"/>
-<area shape="rect" id="node18" href="$structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t.html" title="Generic test reaction data type." alt="" coords="206,1108,378,1148"/>
+<area shape="rect" id="Node000001" title="Abstract reaction data type." alt="" coords="5,569,138,610"/>
+<area shape="rect" id="Node000002" href="$structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t.html" title="Generic test reaction data type." alt="" coords="189,5,392,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,554,85,442,107,294,121,219,139,152,160,96,184,57,199,45,202,49,188,61,165,98,144,153,127,221,112,295,90,442,78,554"/>
+<area shape="rect" id="Node000003" href="$structcamp__rxn__arrhenius_1_1rxn__arrhenius__t.html" title="Generic test reaction data type." alt="" coords="222,71,359,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,554,88,454,111,326,143,204,162,156,184,123,201,109,220,99,223,104,204,113,188,126,167,158,148,205,116,327,93,455,80,554"/>
+<area shape="rect" id="Node000004" href="$structcamp__rxn__cmaq__h2o2_1_1rxn__cmaq__h2o2__t.html" title="Generic test reaction data type." alt="" coords="215,136,366,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="70,554,74,478,89,381,104,329,124,278,150,230,184,188,213,168,216,173,187,192,155,233,129,280,109,331,95,382,79,479,75,554"/>
+<area shape="rect" id="Node000005" href="$structcamp__rxn__cmaq__oh__hno3_1_1rxn__cmaq__oh__hno3__t.html" title="Generic test reaction data type." alt="" coords="204,201,377,242"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="72,553,79,489,98,409,112,366,131,325,155,286,184,252,202,238,205,243,187,256,159,289,136,327,117,368,103,410,85,490,77,554"/>
+<area shape="rect" id="Node000006" href="$structcamp__rxn__condensed__phase__arrhenius_1_1rxn__condensed__phase__arrhenius__t.html" title="Generic test reaction data type." alt="" coords="188,266,393,322"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="77,553,89,504,110,445,141,385,161,357,184,332,199,320,202,324,187,336,165,360,146,388,115,447,95,506,82,555"/>
+<area shape="rect" id="Node000007" href="$structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t.html" title="Generic test reaction data type." alt="" coords="186,346,395,402"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="85,554,123,483,151,445,184,412,201,400,204,404,187,416,155,448,128,485,89,556"/>
+<area shape="rect" id="Node000008" href="$structcamp__rxn__emission_1_1rxn__emission__t.html" title="Generic test reaction data type." alt="" coords="219,425,362,466"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="96,555,135,514,184,475,218,460,220,465,187,480,139,518,100,559"/>
+<area shape="rect" id="Node000009" href="$structcamp__rxn__first__order__loss_1_1rxn__first__order__loss__t.html" title="Generic test reaction data type." alt="" coords="220,490,361,546"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="149,561,218,538,220,544,151,567"/>
+<area shape="rect" id="Node000010" href="$structcamp__rxn__hl__phase__transfer_1_1rxn__hl__phase__transfer__t.html" title="Generic test reaction data type." alt="" coords="197,569,384,610"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="153,587,196,587,196,592,153,592"/>
+<area shape="rect" id="Node000011" href="$structcamp__rxn__photolysis_1_1rxn__photolysis__t.html" title="Generic test reaction data type." alt="" coords="219,635,362,675"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="153,611,220,631,219,637,152,616"/>
+<area shape="rect" id="Node000012" href="$structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t.html" title="Generic test reaction data type." alt="" coords="208,699,373,755"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="105,619,142,653,187,685,209,696,206,701,184,689,139,657,101,623"/>
+<area shape="rect" id="Node000013" href="$structcamp__rxn__surface_1_1rxn__surface__t.html" title="Generic test reaction data type." alt="" coords="215,779,366,819"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="89,623,105,657,126,695,154,733,187,765,216,781,213,785,184,769,150,736,122,698,100,660,84,626"/>
+<area shape="rect" id="Node000014" href="$structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t.html" title="Generic test reaction data type." alt="" coords="199,843,382,899"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="83,625,96,671,118,725,148,781,166,806,187,829,203,841,199,845,184,833,162,810,143,784,113,728,91,672,78,626"/>
+<area shape="rect" id="Node000015" href="$structcamp__rxn__troe_1_1rxn__troe__t.html" title="Generic test reaction data type." alt="" coords="226,923,355,963"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="78,625,86,686,105,763,119,802,137,841,160,877,187,909,206,922,227,931,224,936,203,927,184,913,156,880,132,844,114,804,100,764,81,687,73,626"/>
+<area shape="rect" id="Node000016" href="$structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t.html" title="Generic test reaction data type." alt="" coords="196,988,385,1029"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="75,626,80,698,97,791,111,840,130,888,156,933,188,973,203,985,200,990,184,977,151,936,125,891,106,842,91,792,75,699,70,626"/>
+<area shape="rect" id="Node000017" href="$structcamp__rxn__wennberg__tunneling_1_1rxn__wennberg__tunneling__t.html" title="Generic test reaction data type." alt="" coords="191,1053,390,1094"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="80,625,94,722,117,845,149,962,167,1008,188,1039,203,1051,199,1055,184,1042,163,1010,144,964,112,846,89,722,75,626"/>
+<area shape="rect" id="Node000018" href="$structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t.html" title="Generic test reaction data type." alt="" coords="205,1119,376,1159"/>
+<area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="79,625,91,735,113,878,128,949,145,1014,165,1068,188,1104,206,1118,203,1122,184,1107,160,1070,140,1016,123,951,108,879,86,735,73,626"/>
 </map>

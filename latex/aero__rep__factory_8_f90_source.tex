@@ -1,479 +1,479 @@
-\hypertarget{aero__rep__factory_8_f90_source}{}\doxysection{aero\+\_\+rep\+\_\+factory.\+F90}
-\label{aero__rep__factory_8_f90_source}\index{aero\_rep\_factory.F90@{aero\_rep\_factory.F90}}
+\doxysection{aero\+\_\+rep\+\_\+factory.\+F90}
+\hypertarget{aero__rep__factory_8_f90_source}{}\label{aero__rep__factory_8_f90_source}\index{aero\_rep\_factory.F90@{aero\_rep\_factory.F90}}
 \mbox{\hyperlink{aero__rep__factory_8_f90}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2021 Barcelona Supercomputing Center and University of}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00002}00002 \textcolor{comment}{! Illinois at Urbana-\/Champaign}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00003}00003 \textcolor{comment}{! SPDX-\/License-\/Identifier: MIT}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00004}00004 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00005}00005 \textcolor{comment}{!> \(\backslash\)file}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00006}00006 \textcolor{comment}{!> The camp\_aero\_rep\_factory module.}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00007}00007 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00008}00008 \textcolor{comment}{!> \(\backslash\)page camp\_aero\_rep\_add CAMP: Adding an Aerosol Representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00009}00009 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00010}00010 \textcolor{comment}{!! NOTE: These instructions are out-\/of-\/date. TODO update}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00011}00011 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00012}00012 \textcolor{comment}{!! Adding an \(\backslash\)ref camp\_aero\_rep "{}aerosol representation"{} to the \(\backslash\)ref}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00013}00013 \textcolor{comment}{!! index "{}camp-\/chem"{} module can be done in the following steps:}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00014}00014 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00015}00015 \textcolor{comment}{!! \#\# Step 1. Create a new aerosol representation module \#\#}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00016}00016 \textcolor{comment}{!!   The module should be placed in the \(\backslash\)c /src/aero\_reps folder and}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00017}00017 \textcolor{comment}{!!   extend the abstract \(\backslash\)c camp\_aero\_rep\_data::aero\_rep\_data\_t type,}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00018}00018 \textcolor{comment}{!!   overriding all deferred functions, and providing a constructor that}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00019}00019 \textcolor{comment}{!!   returns a pointer to a newly allocated instance of the new type:}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00020}00020 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00021}00021 \textcolor{comment}{!! \(\backslash\)code\{.f90\}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00022}00022 \textcolor{comment}{!! module camp\_aero\_rep\_foo}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00023}00023 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00024}00024 \textcolor{comment}{!!   use ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00025}00025 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00026}00026 \textcolor{comment}{!!   implicit none}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00027}00027 \textcolor{comment}{!!   private}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00028}00028 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00029}00029 \textcolor{comment}{!!   public :: aero\_rep\_foo\_t}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00030}00030 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00031}00031 \textcolor{comment}{!!   type, extends(aero\_rep\_data\_t) :: aero\_rep\_foo\_t}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00032}00032 \textcolor{comment}{!!   contains}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00033}00033 \textcolor{comment}{!!     ... (all deferred functions) ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00034}00034 \textcolor{comment}{!!   end type :: aero\_rep\_foo\_t}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00035}00035 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00036}00036 \textcolor{comment}{!!   ! Constructor}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00037}00037 \textcolor{comment}{!!   interface aero\_rep\_foo\_t}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00038}00038 \textcolor{comment}{!!     procedure :: constructor}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00039}00039 \textcolor{comment}{!!   end interface aero\_rep\_foo\_t}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00040}00040 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00041}00041 \textcolor{comment}{!!   function constructor() result (new\_obj)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00042}00042 \textcolor{comment}{!!     type(aero\_rep\_foo\_t), pointer :: new\_obj}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00043}00043 \textcolor{comment}{!!     allocate(new\_obj)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00044}00044 \textcolor{comment}{!!   end function constructor}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00045}00045 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00046}00046 \textcolor{comment}{!!   ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00047}00047 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00048}00048 \textcolor{comment}{!! end module camp\_aero\_rep\_foo}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00049}00049 \textcolor{comment}{!! \(\backslash\)endcode}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00050}00050 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00051}00051 \textcolor{comment}{!! \#\# Step 2. Create a new aerosol representation state module \#\#}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00052}00052 \textcolor{comment}{!!   The module should also be placed in the \(\backslash\)c /src/aero\_reps folder and}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00053}00053 \textcolor{comment}{!!   should extend the abstract \(\backslash\)c camp\_aero\_rep\_state::aero\_rep\_state\_t}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00054}00054 \textcolor{comment}{!!   type, overriding all deferred functions, and providing a constructor}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00055}00055 \textcolor{comment}{!!   that returns a pointer to a newly allocated instance of the new type:}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00056}00056 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00057}00057 \textcolor{comment}{!! \(\backslash\)code\{.f90\}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00058}00058 \textcolor{comment}{!! module camp\_aero\_rep\_foo\_state}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00059}00059 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00060}00060 \textcolor{comment}{!!   use ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00061}00061 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00062}00062 \textcolor{comment}{!!   implicit none}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00063}00063 \textcolor{comment}{!!   private}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00064}00064 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00065}00065 \textcolor{comment}{!!   public :: aero\_rep\_foo\_state\_t}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00066}00066 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00067}00067 \textcolor{comment}{!!   type, extends(aero\_rep\_state\_t) :: aero\_rep\_foo\_state\_t}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00068}00068 \textcolor{comment}{!!   contains}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00069}00069 \textcolor{comment}{!!     ... (all deferred functions) ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00070}00070 \textcolor{comment}{!!   end type :: aero\_rep\_foo\_state\_t}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00071}00071 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00072}00072 \textcolor{comment}{!!   ! Constructor}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00073}00073 \textcolor{comment}{!!   interface aero\_rep\_foo\_state\_t}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00074}00074 \textcolor{comment}{!!     procedure :: constructor}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00075}00075 \textcolor{comment}{!!   end interface aero\_rep\_foo\_state\_t}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00076}00076 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00077}00077 \textcolor{comment}{!!   function constructor() result (new\_obj)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00078}00078 \textcolor{comment}{!!     type(aero\_rep\_foo\_state\_t), pointer :: new\_obj}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00079}00079 \textcolor{comment}{!!     allocate(new\_obj)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00080}00080 \textcolor{comment}{!!   end function constructor}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00081}00081 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00082}00082 \textcolor{comment}{!!   ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00083}00083 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00084}00084 \textcolor{comment}{!! end module camp\_aero\_rep\_foo\_state}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00085}00085 \textcolor{comment}{!! \(\backslash\)endcode}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00086}00086 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00087}00087 \textcolor{comment}{!! \#\# Step 3. Add the aerosol representation to the \(\backslash\)c  camp\_aero\_rep\_factory module \#\#}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00088}00088 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00089}00089 \textcolor{comment}{!! \(\backslash\)code\{.f90\}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00090}00090 \textcolor{comment}{!! module camp\_aero\_rep\_factory}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00091}00091 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00092}00092 \textcolor{comment}{!! ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00093}00093 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00094}00094 \textcolor{comment}{!!  ! Use all aerosol representation modules}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00095}00095 \textcolor{comment}{!!  ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00096}00096 \textcolor{comment}{!!  use camp\_aero\_rep\_foo}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00097}00097 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00098}00098 \textcolor{comment}{!!  ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00099}00099 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00100}00100 \textcolor{comment}{!!  !> Identifiers for aerosol representations -\/ used by binary packing/unpacking}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00101}00101 \textcolor{comment}{!!  !! functions}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00102}00102 \textcolor{comment}{!!  ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00103}00103 \textcolor{comment}{!!  integer(kind=i\_kind), parameter :: AERO\_REP\_FOO = 32}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00104}00104 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00105}00105 \textcolor{comment}{!!  ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00106}00106 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00107}00107 \textcolor{comment}{!!  !> Create a new aerosol representation by type name}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00108}00108 \textcolor{comment}{!!  function create(this, type\_name) result (new\_obj)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00109}00109 \textcolor{comment}{!!    ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00110}00110 \textcolor{comment}{!!    select case (type\_name)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00111}00111 \textcolor{comment}{!!      ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00112}00112 \textcolor{comment}{!!      case ("{}AERO\_REP\_FOO"{})}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00113}00113 \textcolor{comment}{!!        new\_obj => aero\_rep\_foo\_t()}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00114}00114 \textcolor{comment}{!!    ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00115}00115 \textcolor{comment}{!!  end function create}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00116}00116 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00117}00117 \textcolor{comment}{!! ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00118}00118 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00119}00119 \textcolor{comment}{!!  !> Pack the given value to the buffer, advancing position}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00120}00120 \textcolor{comment}{!!  subroutine bin\_pack(this, aero\_rep, buffer, pos)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00121}00121 \textcolor{comment}{!!    ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00122}00122 \textcolor{comment}{!!    select type (aero\_rep)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00123}00123 \textcolor{comment}{!!      ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00124}00124 \textcolor{comment}{!!      type is (aero\_rep\_foo\_t)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00125}00125 \textcolor{comment}{!!        aero\_rep\_type = AERO\_REP\_FOO}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00126}00126 \textcolor{comment}{!!    ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00127}00127 \textcolor{comment}{!!  end subroutine bin\_pack}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00128}00128 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00129}00129 \textcolor{comment}{!! ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00130}00130 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00131}00131 \textcolor{comment}{!!  !> Unpack the given value to the buffer, advancing position}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00132}00132 \textcolor{comment}{!!  function bin\_unpack(this, buffer, pos) result (aero\_rep)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00133}00133 \textcolor{comment}{!!    ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00134}00134 \textcolor{comment}{!!    select case (aero\_rep\_type)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00135}00135 \textcolor{comment}{!!      ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00136}00136 \textcolor{comment}{!!      case (AERO\_REP\_FOO)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00137}00137 \textcolor{comment}{!!        aero\_rep => aero\_rep\_foo\_t()}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00138}00138 \textcolor{comment}{!!    ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00139}00139 \textcolor{comment}{!!  end function bin\_unpack}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00140}00140 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00141}00141 \textcolor{comment}{!! ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00142}00142 \textcolor{comment}{!! end module camp\_aero\_rep\_factory}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00143}00143 \textcolor{comment}{!! \(\backslash\)endcode}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00144}00144 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00145}00145 \textcolor{comment}{!! \#\# Step 4. Add the new module to the CMakeList file in the root directory. \#\#}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00146}00146 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00147}00147 \textcolor{comment}{!! \(\backslash\)code\{.unparsed\}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00148}00148 \textcolor{comment}{!! ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00149}00149 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00150}00150 \textcolor{comment}{!! \# partmc library}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00151}00151 \textcolor{comment}{!! ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00152}00152 \textcolor{comment}{!! set(AEROSOL\_REPS\_SRC}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00153}00153 \textcolor{comment}{!!   ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00154}00154 \textcolor{comment}{!!   src/aero\_reps/aero\_rep\_foo.F90}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00155}00155 \textcolor{comment}{!!   src/aero\_reps/aero\_rep\_foo\_state.F90}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00156}00156 \textcolor{comment}{!! )}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00157}00157 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00158}00158 \textcolor{comment}{!! ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00159}00159 \textcolor{comment}{!! \(\backslash\)endcode}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00160}00160 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00161}00161 \textcolor{comment}{!! \#\# Step 5. Add unit tests for the new \(\backslash\)c aero\_rep\_foo\_t and \(\backslash\)c aero\_rep\_foo\_state\_t types \#\#}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00162}00162 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00163}00163 \textcolor{comment}{!! Unit testing should be based on the actual functions of the new module, but}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00164}00164 \textcolor{comment}{!! in general 80\% code coverage is recommended. Some examples can be found in}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00165}00165 \textcolor{comment}{!! the \(\backslash\)c /src/test folder}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00166}00166 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00167}00167 \textcolor{comment}{!! \#\# Usage \#\#}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00168}00168 \textcolor{comment}{!! The new \(\backslash\)ref camp\_aero\_rep "{}aerosol representation"{} is now ready to use.}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00169}00169 \textcolor{comment}{!! To include it in a \(\backslash\)c camp\_camp\_core::camp\_core\_t instance, add an \(\backslash\)ref}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00170}00170 \textcolor{comment}{!! input\_format\_aero\_rep "{}aerosol representation object"{} to a new or existing}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00171}00171 \textcolor{comment}{!! \(\backslash\)ref input\_format\_camp\_config "{}camp-\/chem configuration file"{} with a}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00172}00172 \textcolor{comment}{!! \(\backslash\)b type corresponding to the newly created type, along with any required}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00173}00173 \textcolor{comment}{!! parameters:}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00174}00174 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00175}00175 \textcolor{comment}{!! \(\backslash\)code\{.json\}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00176}00176 \textcolor{comment}{!! \{ "{}camp-\/data"{} : [}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00177}00177 \textcolor{comment}{!!   \{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00178}00178 \textcolor{comment}{!!     "{}type"{} : "{}AERO\_REP\_FOO"{},}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00179}00179 \textcolor{comment}{!!     ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00180}00180 \textcolor{comment}{!!   \},}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00181}00181 \textcolor{comment}{!!   ...}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00182}00182 \textcolor{comment}{!! ]\}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00183}00183 \textcolor{comment}{!! \(\backslash\)endcode}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00184}00184 \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00185}00185 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00186}00186 \textcolor{comment}{!> The aero\_rep\_factory\_t type and associated subroutines.}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00187}\mbox{\hyperlink{namespacecamp__aero__rep__factory}{00187}} \textcolor{keyword}{module} \mbox{\hyperlink{namespacecamp__aero__rep__factory}{camp\_aero\_rep\_factory}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00188}00188 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00189}00189 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_JSON}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00190}00190 \textcolor{preprocessor}{}  \textcolor{keywordtype}{use }json\_module}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00191}00191 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00192}00192 \textcolor{preprocessor}{}\textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00193}00193 \textcolor{preprocessor}{}  \textcolor{keywordtype}{use }mpi}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00194}00194 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00195}00195 \textcolor{preprocessor}{}  \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__aero__rep__data}{camp\_aero\_rep\_data}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00196}00196   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}},                  \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}, \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00197}00197   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__mpi}{camp\_mpi}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00198}00198   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__util}{camp\_util}},                       \textcolor{keywordtype}{only} : \mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}, \mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}}, \mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}, \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00199}00199                                              \mbox{\hyperlink{namespacecamp__util_ab72bff2627c9468e4c352118b8dc7046}{warn\_msg}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00200}00200 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00201}00201   \textcolor{comment}{! Use all aerosol representation modules}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00202}00202   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass}{camp\_aero\_rep\_modal\_binned\_mass}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00203}00203   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle}{camp\_aero\_rep\_single\_particle}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00204}00204 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00205}00205   \textcolor{keywordtype}{use }iso\_c\_binding}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00206}00206 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00207}00207   \textcolor{keywordtype}{implicit none}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00208}00208   \textcolor{keywordtype}{private}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00209}00209 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00210}00210   \textcolor{keywordtype}{public} :: \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00211}00211 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00212}00212 \textcolor{comment}{  !> Identifiers for aerosol representations -\/ used by binary}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00213}00213 \textcolor{comment}{  !! packing/unpacking functions}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00214}\mbox{\hyperlink{namespacecamp__aero__rep__factory_af4559c6fce1f4f711d48af7bbf8fd4c7}{00214}}   \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacecamp__aero__rep__factory_af4559c6fce1f4f711d48af7bbf8fd4c7}{aero\_rep\_single\_particle}}   = 1}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00215}\mbox{\hyperlink{namespacecamp__aero__rep__factory_abbe922d2fcc0aa086075adae07f97105}{00215}}   \textcolor{keywordtype}{integer(kind=i\_kind)}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacecamp__aero__rep__factory_abbe922d2fcc0aa086075adae07f97105}{aero\_rep\_modal\_binned\_mass}} = 2}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00216}00216 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00217}00217 \textcolor{comment}{  !> Factory type for aerosol representations}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00218}00218 \textcolor{comment}{  !!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00219}00219 \textcolor{comment}{  !! Provides new instances of types extending aero\_rep\_data\_t by name or}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00220}00220 \textcolor{comment}{  !! from input file data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00221}\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{00221}}   \textcolor{keyword}{type} :: \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00222}00222   \textcolor{keyword}{contains}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00223}00223 \textcolor{comment}{    !> Create a new aerosol representation by type name}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00224}\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_adb761a7103bfbd45ec29294afe665f75}{00224}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__aero__rep__factory_a05ad0c111be18449a3b8f850f9a1e0ac}{create}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00225}00225 \textcolor{comment}{    !> Create a new aerosol representation from input data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00226}\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a2d4fa12447f5fe406aea088495aba23a}{00226}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__aero__rep__data_a6382f457a6313e92f81831a73aa16b07}{load}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00227}00227 \textcolor{comment}{    !> Get the aerosol representation type}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00228}\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a8b8ac2cf143837b0483b6af555a6c7ae}{00228}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__aero__rep__factory_ad0ab0fa3366dcb225e7e1e97a507bc77}{get\_type}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00229}00229 \textcolor{comment}{    !> Initialize an update data object}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00230}\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_ab68d6c66c06cef4f0b7f3be5f7ef0e59}{00230}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__aero__rep__factory_a672c9b8ea08337ff22c5178606996c35}{initialize\_update\_data}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00231}00231 \textcolor{comment}{    !> Determine the number of bytes required to pack an given aerosol}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00232}00232 \textcolor{comment}{    !! representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00233}\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_acca3fa986faec3be7503c66f4064b5ce}{00233}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__aero__rep__data_a4a1d35f1a4f0f3a24aae257c90eb7d7b}{pack\_size}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00234}00234 \textcolor{comment}{    !> Pack a given aerosol representation to the buffer, advancing the}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00235}00235 \textcolor{comment}{    !! position}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00236}\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a840def710afec55fb75fc7c0ba2fe312}{00236}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__aero__rep__data_aa471287791c2cad0240436fe9235112b}{bin\_pack}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00237}00237 \textcolor{comment}{    !> Unpack a aerosol representation from the buffer, advancing the position}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00238}\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_abaab507649a4524af238459387f354f1}{00238}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__aero__rep__data_a91546a38b603abfb401ca201801661d2}{bin\_unpack}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00239}00239   \textcolor{keyword}{end type }\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00240}00240 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00241}00241 \textcolor{keyword}{contains}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00242}00242 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00243}00243 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00244}00244 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00245}00245 \textcolor{comment}{  !> Create a new aerosol representation by type name}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00246}\mbox{\hyperlink{namespacecamp__aero__rep__factory_a05ad0c111be18449a3b8f850f9a1e0ac}{00246}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__aero__rep__factory_a05ad0c111be18449a3b8f850f9a1e0ac}{create}}(this, type\_name) \textcolor{keyword}{result} (new\_obj)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00247}00247 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00248}00248 \textcolor{comment}{    !> An aerosol representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00249}00249     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\_rep\_data\_t}}), \textcolor{keywordtype}{pointer} :: new\_obj\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00250}00250 \textcolor{comment}{    !> Aerosol representation factory}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00251}00251     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}), \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00252}00252 \textcolor{comment}{    !> Name of the aerosol representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00253}00253     \textcolor{keywordtype}{character(len=*)}, \textcolor{keywordtype}{intent(in)} :: type\_name}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00254}00254 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00255}00255     new\_obj => null()}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00256}00256 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00257}00257     \textcolor{keywordflow}{select case} (type\_name)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00258}00258       \textcolor{keywordflow}{case} (\textcolor{stringliteral}{"{}AERO\_REP\_MODAL\_BINNED\_MASS"{}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00259}00259         new\_obj => \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\_rep\_modal\_binned\_mass\_t}}()}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00260}00260       \textcolor{keywordflow}{case} (\textcolor{stringliteral}{"{}AERO\_REP\_SINGLE\_PARTICLE"{}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00261}00261         new\_obj => \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\_rep\_single\_particle\_t}}()}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00262}00262 \textcolor{keywordflow}{      case default}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00263}00263         \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(792930166, \textcolor{stringliteral}{"{}Unknown aerosol representation type: "{}} \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00264}00264                 //type\_name)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00265}00265 \textcolor{keywordflow}{    end select}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00266}00266 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00267}00267   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__aero__rep__factory_a05ad0c111be18449a3b8f850f9a1e0ac}{create}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00268}00268 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00269}00269 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00270}00270 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00271}00271 \textcolor{comment}{  !> Load an aerosol represenation based on its type}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00272}00272 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_JSON}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00273}\mbox{\hyperlink{namespacecamp__aero__rep__factory_ad5175de41dc6f1190f16cb6819baf4ca}{00273}} \textcolor{preprocessor}{}  \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__aero__rep__data_a6382f457a6313e92f81831a73aa16b07}{load}}(this, json, j\_obj) \textcolor{keyword}{result} (new\_obj)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00274}00274 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00275}00275 \textcolor{comment}{    !> An aerosol representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00276}00276     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\_rep\_data\_t}}), \textcolor{keywordtype}{pointer} :: new\_obj\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00277}00277 \textcolor{comment}{    !> Aerosol representation factory}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00278}00278     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}), \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00279}00279 \textcolor{comment}{    !> JSON core}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00280}00280     \textcolor{keywordtype}{type}(json\_core), \textcolor{keywordtype}{pointer}, \textcolor{keywordtype}{intent(in)} :: json\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00281}00281 \textcolor{comment}{    !> JSON object}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00282}00282     \textcolor{keywordtype}{type}(json\_value), \textcolor{keywordtype}{pointer}, \textcolor{keywordtype}{intent(in)} :: j\_obj}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00283}00283 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00284}00284     \textcolor{keywordtype}{character(kind=json\_ck, len=:)}, \textcolor{keywordtype}{allocatable} :: unicode\_name}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00285}00285     \textcolor{keywordtype}{character(len=:)}, \textcolor{keywordtype}{allocatable} :: type\_name}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00286}00286     \textcolor{keywordtype}{logical(kind=json\_lk)} :: found}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00287}00287 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00288}00288     new\_obj => null()}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00289}00289 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00290}00290     \textcolor{comment}{! get the aerosol representation type}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00291}00291     \textcolor{keyword}{call }json\%get(j\_obj, \textcolor{stringliteral}{"{}type"{}}, unicode\_name, found)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00292}00292     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(904082395, found, \textcolor{stringliteral}{'Missing aerosol representation type.'})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00293}00293     type\_name = unicode\_name}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00294}00294 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00295}00295     \textcolor{comment}{! create a new aerosol representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00296}00296     new\_obj => this\%create(type\_name)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00297}00297 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00298}00298     \textcolor{comment}{! load aerosol representation parameters from the json object}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00299}00299     \textcolor{keyword}{call }new\_obj\%load(json, j\_obj)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00300}00300 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00301}00301 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00302}00302 \textcolor{preprocessor}{}  \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__aero__rep__data_a6382f457a6313e92f81831a73aa16b07}{load}}(this) \textcolor{keyword}{result} (new\_obj)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00303}00303 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00304}00304 \textcolor{comment}{    !> An aerosol representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00305}00305     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\_rep\_data\_t}}), \textcolor{keywordtype}{pointer} :: new\_obj\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00306}00306 \textcolor{comment}{    !> Aerosol representation factory}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00307}00307     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}), \textcolor{keywordtype}{intent(in)} :: this}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00308}00308 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00309}00309     new\_obj => null()}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00310}00310 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00311}00311     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab72bff2627c9468e4c352118b8dc7046}{warn\_msg}}(723960750, \textcolor{stringliteral}{"{}No support for input files."{}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00312}00312 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00313}00313 \textcolor{preprocessor}{}  \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__aero__rep__data_a6382f457a6313e92f81831a73aa16b07}{load}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00314}00314 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00315}00315 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00316}00316 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00317}00317 \textcolor{comment}{  !> Get the aerosol reaction type}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00318}\mbox{\hyperlink{namespacecamp__aero__rep__factory_ad0ab0fa3366dcb225e7e1e97a507bc77}{00318}}   \textcolor{keyword}{integer(kind=i\_kind) }\textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__aero__rep__factory_ad0ab0fa3366dcb225e7e1e97a507bc77}{get\_type}}(this, aero\_rep) \textcolor{keyword}{result}(aero\_rep\_type)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00319}00319 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00320}00320 \textcolor{comment}{    !> Aerosol representation factory}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00321}00321     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}), \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00322}00322 \textcolor{comment}{    !> Aerosol representation to get the type of}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00323}00323     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\_rep\_data\_t}}), \textcolor{keywordtype}{intent(in)} :: aero\_rep}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00324}00324 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00325}00325     \textcolor{keywordflow}{select type} (aero\_rep)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00326}00326 \textcolor{keywordflow}{      type is} (\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\_rep\_modal\_binned\_mass\_t}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00327}00327         aero\_rep\_type = \mbox{\hyperlink{namespacecamp__aero__rep__factory_abbe922d2fcc0aa086075adae07f97105}{aero\_rep\_modal\_binned\_mass}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00328}00328 \textcolor{keywordflow}{      type is} (\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\_rep\_single\_particle\_t}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00329}00329         aero\_rep\_type = \mbox{\hyperlink{namespacecamp__aero__rep__factory_af4559c6fce1f4f711d48af7bbf8fd4c7}{aero\_rep\_single\_particle}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00330}00330 \textcolor{keywordflow}{      class default}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00331}00331         \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(865927801, \textcolor{stringliteral}{"{}Unknown aerosol representation type"{}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00332}00332 \textcolor{keywordflow}{    end select}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00333}00333 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00334}00334   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__aero__rep__factory_ad0ab0fa3366dcb225e7e1e97a507bc77}{get\_type}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00335}00335 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00336}00336 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00337}00337 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00338}00338 \textcolor{comment}{  !> Get a new update data object}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00339}\mbox{\hyperlink{namespacecamp__aero__rep__factory_a672c9b8ea08337ff22c5178606996c35}{00339}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__aero__rep__factory_a672c9b8ea08337ff22c5178606996c35}{initialize\_update\_data}}(this, aero\_rep, update\_data)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00340}00340 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00341}00341 \textcolor{comment}{    !> Aerosol representation factory}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00342}00342     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}), \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00343}00343 \textcolor{comment}{    !> Aerosol representation to be updated}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00344}00344     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\_rep\_data\_t}}), \textcolor{keywordtype}{intent(inout)} :: aero\_rep\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00345}00345 \textcolor{comment}{    !> Update data object}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00346}00346     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__update__data__t}{aero\_rep\_update\_data\_t}}), \textcolor{keywordtype}{intent(out)} :: update\_data}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00347}00347 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00348}00348     \textcolor{keywordflow}{select type} (update\_data)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00349}00349 \textcolor{keywordflow}{      type is} (\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00350}00350         \textcolor{keywordflow}{select type} (aero\_rep)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00351}00351 \textcolor{keywordflow}{          type is} (\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\_rep\_single\_particle\_t}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00352}00352             \textcolor{keyword}{call }aero\_rep\%update\_data\_initialize\_number(update\_data, \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00353}00353                                                  \mbox{\hyperlink{namespacecamp__aero__rep__factory_af4559c6fce1f4f711d48af7bbf8fd4c7}{aero\_rep\_single\_particle}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00354}00354 \textcolor{keywordflow}{          class default}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00355}00355             \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(584145506, \textcolor{stringliteral}{"{}Update data <-\/> aero rep mismatch"{}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00356}00356 \textcolor{keywordflow}{        end select}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00357}00357 \textcolor{keywordflow}{      type is} (\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t}{aero\_rep\_update\_data\_modal\_binned\_mass\_gmd\_t}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00358}00358         \textcolor{keywordflow}{select type} (aero\_rep)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00359}00359 \textcolor{keywordflow}{          type is} (\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\_rep\_modal\_binned\_mass\_t}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00360}00360             \textcolor{keyword}{call }aero\_rep\%update\_data\_initialize\_GMD(update\_data, \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00361}00361                                                  \mbox{\hyperlink{namespacecamp__aero__rep__factory_abbe922d2fcc0aa086075adae07f97105}{aero\_rep\_modal\_binned\_mass}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00362}00362 \textcolor{keywordflow}{          class default}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00363}00363             \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(696463851, \textcolor{stringliteral}{"{}Update data <-\/> aero rep mismatch"{}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00364}00364 \textcolor{keywordflow}{        end select}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00365}00365 \textcolor{keywordflow}{      type is} (\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}{aero\_rep\_update\_data\_modal\_binned\_mass\_gsd\_t}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00366}00366         \textcolor{keywordflow}{select type} (aero\_rep)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00367}00367 \textcolor{keywordflow}{          type is} (\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\_rep\_modal\_binned\_mass\_t}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00368}00368             \textcolor{keyword}{call }aero\_rep\%update\_data\_initialize\_GSD(update\_data, \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00369}00369                                                  \mbox{\hyperlink{namespacecamp__aero__rep__factory_abbe922d2fcc0aa086075adae07f97105}{aero\_rep\_modal\_binned\_mass}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00370}00370 \textcolor{keywordflow}{          class default}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00371}00371             \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(526306947, \textcolor{stringliteral}{"{}Update data <-\/> aero rep mismatch"{}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00372}00372 \textcolor{keywordflow}{        end select}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00373}00373 \textcolor{keywordflow}{      class default}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00374}00374         \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(916635086, \textcolor{stringliteral}{"{}Internal error -\/ update data type missing."{}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00375}00375 \textcolor{keywordflow}{    end select}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00376}00376 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00377}00377   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__aero__rep__factory_a672c9b8ea08337ff22c5178606996c35}{initialize\_update\_data}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00378}00378 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00379}00379 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00380}00380 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00381}00381 \textcolor{comment}{  !> Determine the size of a binary required to pack an aerosol representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00382}\mbox{\hyperlink{namespacecamp__aero__rep__factory_a253696180679d443a17dc5d00973d2b1}{00382}}   \textcolor{keyword}{integer(kind=i\_kind) }\textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__aero__rep__data_a4a1d35f1a4f0f3a24aae257c90eb7d7b}{pack\_size}}(this, aero\_rep, comm)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00383}00383 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00384}00384 \textcolor{comment}{    !> Aerosol representation factory}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00385}00385     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}), \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00386}00386 \textcolor{comment}{    !> Aerosol representation to pack}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00387}00387     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\_rep\_data\_t}}), \textcolor{keywordtype}{intent(in)} :: aero\_rep\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00388}00388 \textcolor{comment}{    !> MPI communicator}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00389}00389     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(in)} :: comm}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00390}00390 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00391}00391     \mbox{\hyperlink{namespacecamp__aero__rep__data_a4a1d35f1a4f0f3a24aae257c90eb7d7b}{pack\_size}} =  \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(int(1, kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}), comm) + \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00392}00392                  aero\_rep\%pack\_size(comm)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00393}00393 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00394}00394   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__aero__rep__data_a4a1d35f1a4f0f3a24aae257c90eb7d7b}{pack\_size}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00395}00395 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00396}00396 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00397}00397 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00398}00398 \textcolor{comment}{  !> Pack the given value to the buffer, advancing position}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00399}\mbox{\hyperlink{namespacecamp__aero__rep__factory_ac86219905f216bd3e27e13f9146346a9}{00399}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__aero__rep__data_aa471287791c2cad0240436fe9235112b}{bin\_pack}}(this, aero\_rep, buffer, pos, comm)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00400}00400 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00401}00401 \textcolor{comment}{    !> Aerosol representation factory}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00402}00402     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}), \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00403}00403 \textcolor{comment}{    !> Aerosol representation to pack}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00404}00404     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\_rep\_data\_t}}), \textcolor{keywordtype}{intent(in)} :: aero\_rep\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00405}00405 \textcolor{comment}{    !> Memory buffer}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00406}00406     \textcolor{keywordtype}{character}, \textcolor{keywordtype}{intent(inout)} :: buffer(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00407}00407 \textcolor{comment}{    !> Current buffer position}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00408}00408     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(inout)} :: pos\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00409}00409 \textcolor{comment}{    !> MPI communicator}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00410}00410     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(in)} :: comm}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00411}00411 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00412}00412 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00413}00413 \textcolor{preprocessor}{}    \textcolor{keywordtype}{integer} :: aero\_rep\_type, i\_aero\_rep, prev\_position}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00414}00414 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00415}00415     prev\_position = pos}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00416}00416     \textcolor{keywordflow}{select type} (aero\_rep)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00417}00417 \textcolor{keywordflow}{      type is} (\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\_rep\_modal\_binned\_mass\_t}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00418}00418         aero\_rep\_type = \mbox{\hyperlink{namespacecamp__aero__rep__factory_abbe922d2fcc0aa086075adae07f97105}{aero\_rep\_modal\_binned\_mass}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00419}00419 \textcolor{keywordflow}{      type is} (\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\_rep\_single\_particle\_t}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00420}00420         aero\_rep\_type = \mbox{\hyperlink{namespacecamp__aero__rep__factory_af4559c6fce1f4f711d48af7bbf8fd4c7}{aero\_rep\_single\_particle}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00421}00421 \textcolor{keywordflow}{      class default}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00422}00422         \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(278244560, \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00423}00423                 \textcolor{stringliteral}{"{}Trying to pack aerosol representation of unknown type."{}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00424}00424 \textcolor{keywordflow}{    end select}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00425}00425     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer, pos, aero\_rep\_type, comm)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00426}00426     \textcolor{keyword}{call }aero\_rep\%bin\_pack(buffer, pos, comm)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00427}00427     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(897674844, \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00428}00428          pos -\/ prev\_position <= this\%pack\_size(aero\_rep, comm))}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00429}00429 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00430}00430 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00431}00431   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__aero__rep__data_aa471287791c2cad0240436fe9235112b}{bin\_pack}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00432}00432 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00433}00433 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00434}00434 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00435}00435 \textcolor{comment}{  !> Unpack the given value to the buffer, advancing position}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00436}\mbox{\hyperlink{namespacecamp__aero__rep__factory_a13df10c87120a3cd50610e104b4d3939}{00436}}   \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__aero__rep__data_a91546a38b603abfb401ca201801661d2}{bin\_unpack}}(this, buffer, pos, comm) \textcolor{keyword}{result} (aero\_rep)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00437}00437 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00438}00438 \textcolor{comment}{    !> Unpacked aerosol representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00439}00439     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\_rep\_data\_t}}), \textcolor{keywordtype}{pointer} :: aero\_rep\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00440}00440 \textcolor{comment}{    !> Aerosol representation factory}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00441}00441     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}), \textcolor{keywordtype}{intent(in)} :: this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00442}00442 \textcolor{comment}{    !> Memory buffer}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00443}00443     \textcolor{keywordtype}{character}, \textcolor{keywordtype}{intent(inout)} :: buffer(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00444}00444 \textcolor{comment}{    !> Current buffer position}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00445}00445     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(inout)} :: pos\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00446}00446 \textcolor{comment}{    !> MPI communicator}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00447}00447     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(in)} :: comm}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00448}00448 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00449}00449 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00450}00450 \textcolor{preprocessor}{}    \textcolor{keywordtype}{integer} :: aero\_rep\_type, i\_aero\_rep, prev\_position}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00451}00451 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00452}00452     prev\_position = pos}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00453}00453     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer, pos, aero\_rep\_type, comm)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00454}00454     \textcolor{keywordflow}{select case} (aero\_rep\_type)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00455}00455       \textcolor{keywordflow}{case} (\mbox{\hyperlink{namespacecamp__aero__rep__factory_abbe922d2fcc0aa086075adae07f97105}{aero\_rep\_modal\_binned\_mass}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00456}00456         aero\_rep => \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\_rep\_modal\_binned\_mass\_t}}()}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00457}00457       \textcolor{keywordflow}{case} (\mbox{\hyperlink{namespacecamp__aero__rep__factory_af4559c6fce1f4f711d48af7bbf8fd4c7}{aero\_rep\_single\_particle}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00458}00458         aero\_rep => \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\_rep\_single\_particle\_t}}()}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00459}00459 \textcolor{keywordflow}{      case default}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00460}00460         \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(106634417, \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00461}00461                 \textcolor{stringliteral}{"{}Trying to unpack aerosol representation of unknown type:"{}}// \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00462}00462                 \mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}(aero\_rep\_type))}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00463}00463 \textcolor{keywordflow}{    end select}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00464}00464     \textcolor{keyword}{call }aero\_rep\%bin\_unpack(buffer, pos, comm)}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00465}00465     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(948795857, \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00466}00466          pos -\/ prev\_position <= this\%pack\_size(aero\_rep, comm))}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00467}00467 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00468}00468 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00469}00469   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__aero__rep__data_a91546a38b603abfb401ca201801661d2}{bin\_unpack}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00470}00470 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00471}00471 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00472}00472 }
-\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00473}00473 \textcolor{keyword}{end module }\mbox{\hyperlink{namespacecamp__aero__rep__factory}{camp\_aero\_rep\_factory}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00001}00001\ \textcolor{comment}{!\ Copyright\ (C)\ 2021\ Barcelona\ Supercomputing\ Center\ and\ University\ of}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00002}00002\ \textcolor{comment}{!\ Illinois\ at\ Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00003}00003\ \textcolor{comment}{!\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00004}00004\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00005}00005\ \textcolor{comment}{!>\ \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00006}00006\ \textcolor{comment}{!>\ The\ camp\_aero\_rep\_factory\ module.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00007}00007\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00008}00008\ \textcolor{comment}{!>\ \(\backslash\)page\ camp\_aero\_rep\_add\ CAMP:\ Adding\ an\ Aerosol\ Representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00009}00009\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00010}00010\ \textcolor{comment}{!!\ NOTE:\ These\ instructions\ are\ out-\/of-\/date.\ TODO\ update}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00011}00011\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00012}00012\ \textcolor{comment}{!!\ Adding\ an\ \(\backslash\)ref\ camp\_aero\_rep\ "{}aerosol\ representation"{}\ to\ the\ \(\backslash\)ref}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00013}00013\ \textcolor{comment}{!!\ index\ "{}camp-\/chem"{}\ module\ can\ be\ done\ in\ the\ following\ steps:}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00014}00014\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00015}00015\ \textcolor{comment}{!!\ \#\#\ Step\ 1.\ Create\ a\ new\ aerosol\ representation\ module\ \#\#}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00016}00016\ \textcolor{comment}{!!\ \ \ The\ module\ should\ be\ placed\ in\ the\ \(\backslash\)c\ /src/aero\_reps\ folder\ and}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00017}00017\ \textcolor{comment}{!!\ \ \ extend\ the\ abstract\ \(\backslash\)c\ camp\_aero\_rep\_data::aero\_rep\_data\_t\ type,}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00018}00018\ \textcolor{comment}{!!\ \ \ overriding\ all\ deferred\ functions,\ and\ providing\ a\ constructor\ that}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00019}00019\ \textcolor{comment}{!!\ \ \ returns\ a\ pointer\ to\ a\ newly\ allocated\ instance\ of\ the\ new\ type:}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00020}00020\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00021}00021\ \textcolor{comment}{!!\ \(\backslash\)code\{.f90\}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00022}00022\ \textcolor{comment}{!!\ module\ camp\_aero\_rep\_foo}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00023}00023\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00024}00024\ \textcolor{comment}{!!\ \ \ use\ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00025}00025\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00026}00026\ \textcolor{comment}{!!\ \ \ implicit\ none}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00027}00027\ \textcolor{comment}{!!\ \ \ private}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00028}00028\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00029}00029\ \textcolor{comment}{!!\ \ \ public\ ::\ aero\_rep\_foo\_t}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00030}00030\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00031}00031\ \textcolor{comment}{!!\ \ \ type,\ extends(aero\_rep\_data\_t)\ ::\ aero\_rep\_foo\_t}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00032}00032\ \textcolor{comment}{!!\ \ \ contains}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00033}00033\ \textcolor{comment}{!!\ \ \ \ \ ...\ (all\ deferred\ functions)\ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00034}00034\ \textcolor{comment}{!!\ \ \ end\ type\ ::\ aero\_rep\_foo\_t}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00035}00035\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00036}00036\ \textcolor{comment}{!!\ \ \ !\ Constructor}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00037}00037\ \textcolor{comment}{!!\ \ \ interface\ aero\_rep\_foo\_t}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00038}00038\ \textcolor{comment}{!!\ \ \ \ \ procedure\ ::\ constructor}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00039}00039\ \textcolor{comment}{!!\ \ \ end\ interface\ aero\_rep\_foo\_t}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00040}00040\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00041}00041\ \textcolor{comment}{!!\ \ \ function\ constructor()\ result\ (new\_obj)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00042}00042\ \textcolor{comment}{!!\ \ \ \ \ type(aero\_rep\_foo\_t),\ pointer\ ::\ new\_obj}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00043}00043\ \textcolor{comment}{!!\ \ \ \ \ allocate(new\_obj)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00044}00044\ \textcolor{comment}{!!\ \ \ end\ function\ constructor}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00045}00045\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00046}00046\ \textcolor{comment}{!!\ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00047}00047\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00048}00048\ \textcolor{comment}{!!\ end\ module\ camp\_aero\_rep\_foo}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00049}00049\ \textcolor{comment}{!!\ \(\backslash\)endcode}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00050}00050\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00051}00051\ \textcolor{comment}{!!\ \#\#\ Step\ 2.\ Create\ a\ new\ aerosol\ representation\ state\ module\ \#\#}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00052}00052\ \textcolor{comment}{!!\ \ \ The\ module\ should\ also\ be\ placed\ in\ the\ \(\backslash\)c\ /src/aero\_reps\ folder\ and}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00053}00053\ \textcolor{comment}{!!\ \ \ should\ extend\ the\ abstract\ \(\backslash\)c\ camp\_aero\_rep\_state::aero\_rep\_state\_t}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00054}00054\ \textcolor{comment}{!!\ \ \ type,\ overriding\ all\ deferred\ functions,\ and\ providing\ a\ constructor}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00055}00055\ \textcolor{comment}{!!\ \ \ that\ returns\ a\ pointer\ to\ a\ newly\ allocated\ instance\ of\ the\ new\ type:}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00056}00056\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00057}00057\ \textcolor{comment}{!!\ \(\backslash\)code\{.f90\}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00058}00058\ \textcolor{comment}{!!\ module\ camp\_aero\_rep\_foo\_state}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00059}00059\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00060}00060\ \textcolor{comment}{!!\ \ \ use\ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00061}00061\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00062}00062\ \textcolor{comment}{!!\ \ \ implicit\ none}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00063}00063\ \textcolor{comment}{!!\ \ \ private}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00064}00064\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00065}00065\ \textcolor{comment}{!!\ \ \ public\ ::\ aero\_rep\_foo\_state\_t}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00066}00066\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00067}00067\ \textcolor{comment}{!!\ \ \ type,\ extends(aero\_rep\_state\_t)\ ::\ aero\_rep\_foo\_state\_t}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00068}00068\ \textcolor{comment}{!!\ \ \ contains}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00069}00069\ \textcolor{comment}{!!\ \ \ \ \ ...\ (all\ deferred\ functions)\ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00070}00070\ \textcolor{comment}{!!\ \ \ end\ type\ ::\ aero\_rep\_foo\_state\_t}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00071}00071\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00072}00072\ \textcolor{comment}{!!\ \ \ !\ Constructor}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00073}00073\ \textcolor{comment}{!!\ \ \ interface\ aero\_rep\_foo\_state\_t}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00074}00074\ \textcolor{comment}{!!\ \ \ \ \ procedure\ ::\ constructor}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00075}00075\ \textcolor{comment}{!!\ \ \ end\ interface\ aero\_rep\_foo\_state\_t}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00076}00076\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00077}00077\ \textcolor{comment}{!!\ \ \ function\ constructor()\ result\ (new\_obj)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00078}00078\ \textcolor{comment}{!!\ \ \ \ \ type(aero\_rep\_foo\_state\_t),\ pointer\ ::\ new\_obj}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00079}00079\ \textcolor{comment}{!!\ \ \ \ \ allocate(new\_obj)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00080}00080\ \textcolor{comment}{!!\ \ \ end\ function\ constructor}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00081}00081\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00082}00082\ \textcolor{comment}{!!\ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00083}00083\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00084}00084\ \textcolor{comment}{!!\ end\ module\ camp\_aero\_rep\_foo\_state}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00085}00085\ \textcolor{comment}{!!\ \(\backslash\)endcode}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00086}00086\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00087}00087\ \textcolor{comment}{!!\ \#\#\ Step\ 3.\ Add\ the\ aerosol\ representation\ to\ the\ \(\backslash\)c\ \ camp\_aero\_rep\_factory\ module\ \#\#}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00088}00088\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00089}00089\ \textcolor{comment}{!!\ \(\backslash\)code\{.f90\}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00090}00090\ \textcolor{comment}{!!\ module\ camp\_aero\_rep\_factory}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00091}00091\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00092}00092\ \textcolor{comment}{!!\ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00093}00093\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00094}00094\ \textcolor{comment}{!!\ \ !\ Use\ all\ aerosol\ representation\ modules}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00095}00095\ \textcolor{comment}{!!\ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00096}00096\ \textcolor{comment}{!!\ \ use\ camp\_aero\_rep\_foo}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00097}00097\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00098}00098\ \textcolor{comment}{!!\ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00099}00099\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00100}00100\ \textcolor{comment}{!!\ \ !>\ Identifiers\ for\ aerosol\ representations\ -\/\ used\ by\ binary\ packing/unpacking}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00101}00101\ \textcolor{comment}{!!\ \ !!\ functions}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00102}00102\ \textcolor{comment}{!!\ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00103}00103\ \textcolor{comment}{!!\ \ integer(kind=i\_kind),\ parameter\ ::\ AERO\_REP\_FOO\ =\ 32}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00104}00104\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00105}00105\ \textcolor{comment}{!!\ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00106}00106\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00107}00107\ \textcolor{comment}{!!\ \ !>\ Create\ a\ new\ aerosol\ representation\ by\ type\ name}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00108}00108\ \textcolor{comment}{!!\ \ function\ create(this,\ type\_name)\ result\ (new\_obj)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00109}00109\ \textcolor{comment}{!!\ \ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00110}00110\ \textcolor{comment}{!!\ \ \ \ select\ case\ (type\_name)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00111}00111\ \textcolor{comment}{!!\ \ \ \ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00112}00112\ \textcolor{comment}{!!\ \ \ \ \ \ case\ ("{}AERO\_REP\_FOO"{})}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00113}00113\ \textcolor{comment}{!!\ \ \ \ \ \ \ \ new\_obj\ =>\ aero\_rep\_foo\_t()}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00114}00114\ \textcolor{comment}{!!\ \ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00115}00115\ \textcolor{comment}{!!\ \ end\ function\ create}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00116}00116\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00117}00117\ \textcolor{comment}{!!\ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00118}00118\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00119}00119\ \textcolor{comment}{!!\ \ !>\ Pack\ the\ given\ value\ to\ the\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00120}00120\ \textcolor{comment}{!!\ \ subroutine\ bin\_pack(this,\ aero\_rep,\ buffer,\ pos)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00121}00121\ \textcolor{comment}{!!\ \ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00122}00122\ \textcolor{comment}{!!\ \ \ \ select\ type\ (aero\_rep)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00123}00123\ \textcolor{comment}{!!\ \ \ \ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00124}00124\ \textcolor{comment}{!!\ \ \ \ \ \ type\ is\ (aero\_rep\_foo\_t)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00125}00125\ \textcolor{comment}{!!\ \ \ \ \ \ \ \ aero\_rep\_type\ =\ AERO\_REP\_FOO}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00126}00126\ \textcolor{comment}{!!\ \ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00127}00127\ \textcolor{comment}{!!\ \ end\ subroutine\ bin\_pack}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00128}00128\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00129}00129\ \textcolor{comment}{!!\ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00130}00130\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00131}00131\ \textcolor{comment}{!!\ \ !>\ Unpack\ the\ given\ value\ to\ the\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00132}00132\ \textcolor{comment}{!!\ \ function\ bin\_unpack(this,\ buffer,\ pos)\ result\ (aero\_rep)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00133}00133\ \textcolor{comment}{!!\ \ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00134}00134\ \textcolor{comment}{!!\ \ \ \ select\ case\ (aero\_rep\_type)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00135}00135\ \textcolor{comment}{!!\ \ \ \ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00136}00136\ \textcolor{comment}{!!\ \ \ \ \ \ case\ (AERO\_REP\_FOO)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00137}00137\ \textcolor{comment}{!!\ \ \ \ \ \ \ \ aero\_rep\ =>\ aero\_rep\_foo\_t()}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00138}00138\ \textcolor{comment}{!!\ \ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00139}00139\ \textcolor{comment}{!!\ \ end\ function\ bin\_unpack}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00140}00140\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00141}00141\ \textcolor{comment}{!!\ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00142}00142\ \textcolor{comment}{!!\ end\ module\ camp\_aero\_rep\_factory}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00143}00143\ \textcolor{comment}{!!\ \(\backslash\)endcode}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00144}00144\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00145}00145\ \textcolor{comment}{!!\ \#\#\ Step\ 4.\ Add\ the\ new\ module\ to\ the\ CMakeList\ file\ in\ the\ root\ directory.\ \#\#}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00146}00146\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00147}00147\ \textcolor{comment}{!!\ \(\backslash\)code\{.unparsed\}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00148}00148\ \textcolor{comment}{!!\ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00149}00149\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00150}00150\ \textcolor{comment}{!!\ \#\ partmc\ library}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00151}00151\ \textcolor{comment}{!!\ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00152}00152\ \textcolor{comment}{!!\ set(AEROSOL\_REPS\_SRC}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00153}00153\ \textcolor{comment}{!!\ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00154}00154\ \textcolor{comment}{!!\ \ \ src/aero\_reps/aero\_rep\_foo.F90}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00155}00155\ \textcolor{comment}{!!\ \ \ src/aero\_reps/aero\_rep\_foo\_state.F90}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00156}00156\ \textcolor{comment}{!!\ )}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00157}00157\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00158}00158\ \textcolor{comment}{!!\ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00159}00159\ \textcolor{comment}{!!\ \(\backslash\)endcode}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00160}00160\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00161}00161\ \textcolor{comment}{!!\ \#\#\ Step\ 5.\ Add\ unit\ tests\ for\ the\ new\ \(\backslash\)c\ aero\_rep\_foo\_t\ and\ \(\backslash\)c\ aero\_rep\_foo\_state\_t\ types\ \#\#}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00162}00162\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00163}00163\ \textcolor{comment}{!!\ Unit\ testing\ should\ be\ based\ on\ the\ actual\ functions\ of\ the\ new\ module,\ but}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00164}00164\ \textcolor{comment}{!!\ in\ general\ 80\%\ code\ coverage\ is\ recommended.\ Some\ examples\ can\ be\ found\ in}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00165}00165\ \textcolor{comment}{!!\ the\ \(\backslash\)c\ /src/test\ folder}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00166}00166\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00167}00167\ \textcolor{comment}{!!\ \#\#\ Usage\ \#\#}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00168}00168\ \textcolor{comment}{!!\ The\ new\ \(\backslash\)ref\ camp\_aero\_rep\ "{}aerosol\ representation"{}\ is\ now\ ready\ to\ use.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00169}00169\ \textcolor{comment}{!!\ To\ include\ it\ in\ a\ \(\backslash\)c\ camp\_camp\_core::camp\_core\_t\ instance,\ add\ an\ \(\backslash\)ref}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00170}00170\ \textcolor{comment}{!!\ input\_format\_aero\_rep\ "{}aerosol\ representation\ object"{}\ to\ a\ new\ or\ existing}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00171}00171\ \textcolor{comment}{!!\ \(\backslash\)ref\ input\_format\_camp\_config\ "{}camp-\/chem\ configuration\ file"{}\ with\ a}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00172}00172\ \textcolor{comment}{!!\ \(\backslash\)b\ type\ corresponding\ to\ the\ newly\ created\ type,\ along\ with\ any\ required}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00173}00173\ \textcolor{comment}{!!\ parameters:}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00174}00174\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00175}00175\ \textcolor{comment}{!!\ \(\backslash\)code\{.json\}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00176}00176\ \textcolor{comment}{!!\ \{\ "{}camp-\/data"{}\ :\ [}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00177}00177\ \textcolor{comment}{!!\ \ \ \{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00178}00178\ \textcolor{comment}{!!\ \ \ \ \ "{}type"{}\ :\ "{}AERO\_REP\_FOO"{},}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00179}00179\ \textcolor{comment}{!!\ \ \ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00180}00180\ \textcolor{comment}{!!\ \ \ \},}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00181}00181\ \textcolor{comment}{!!\ \ \ ...}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00182}00182\ \textcolor{comment}{!!\ ]\}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00183}00183\ \textcolor{comment}{!!\ \(\backslash\)endcode}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00184}00184\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00185}00185\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00186}00186\ \textcolor{comment}{!>\ The\ aero\_rep\_factory\_t\ type\ and\ associated\ subroutines.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00187}\mbox{\hyperlink{namespacecamp__aero__rep__factory}{00187}}\ \textcolor{keyword}{module}\ \mbox{\hyperlink{namespacecamp__aero__rep__factory}{camp\_aero\_rep\_factory}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00188}00188\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00189}00189\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_JSON}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00190}00190\ \textcolor{preprocessor}{}\ \ \textcolor{keywordtype}{use\ }json\_module}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00191}00191\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00192}00192\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00193}00193\ \textcolor{preprocessor}{}\ \ \textcolor{keywordtype}{use\ }mpi}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00194}00194\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00195}00195\ \textcolor{preprocessor}{}\ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__aero__rep__data}{camp\_aero\_rep\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00196}00196\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}\ :\ \mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}},\ \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00197}00197\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__mpi}{camp\_mpi}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00198}00198\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__util}{camp\_util}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}\ :\ \mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}},\ \mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}},\ \mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}},\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_ab72bff2627c9468e4c352118b8dc7046}{warn\_msg}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00201}00201\ \ \ \textcolor{comment}{!\ Use\ all\ aerosol\ representation\ modules}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00202}00202\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass}{camp\_aero\_rep\_modal\_binned\_mass}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00203}00203\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle}{camp\_aero\_rep\_single\_particle}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00204}00204\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00205}00205\ \ \ \textcolor{keywordtype}{use\ }iso\_c\_binding}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00206}00206\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00207}00207\ \ \ \textcolor{keywordtype}{implicit\ none}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00208}00208\ \ \ \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00209}00209\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00210}00210\ \ \ \textcolor{keywordtype}{public}\ ::\ \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00211}00211\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00212}00212\ \textcolor{comment}{\ \ !>\ Identifiers\ for\ aerosol\ representations\ -\/\ used\ by\ binary}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00213}00213\ \textcolor{comment}{\ \ !!\ packing/unpacking\ functions}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00214}\mbox{\hyperlink{namespacecamp__aero__rep__factory_af4559c6fce1f4f711d48af7bbf8fd4c7}{00214}}\ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{parameter}\ ::\ \mbox{\hyperlink{namespacecamp__aero__rep__factory_af4559c6fce1f4f711d48af7bbf8fd4c7}{aero\_rep\_single\_particle}}\ \ \ =\ 1}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00215}\mbox{\hyperlink{namespacecamp__aero__rep__factory_abbe922d2fcc0aa086075adae07f97105}{00215}}\ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{parameter}\ ::\ \mbox{\hyperlink{namespacecamp__aero__rep__factory_abbe922d2fcc0aa086075adae07f97105}{aero\_rep\_modal\_binned\_mass}}\ =\ 2}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00216}00216\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00217}00217\ \textcolor{comment}{\ \ !>\ Factory\ type\ for\ aerosol\ representations}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00218}00218\ \textcolor{comment}{\ \ !!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00219}00219\ \textcolor{comment}{\ \ !!\ Provides\ new\ instances\ of\ types\ extending\ aero\_rep\_data\_t\ by\ name\ or}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00220}00220\ \textcolor{comment}{\ \ !!\ from\ input\ file\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00221}\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{00221}}\ \ \ \textcolor{keyword}{type}\ ::\ \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00222}00222\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00223}00223\ \textcolor{comment}{\ \ \ \ !>\ Create\ a\ new\ aerosol\ representation\ by\ type\ name}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00224}\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_aa62c770c69cf67e92dd3a620f4d151d5}{00224}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__aero__rep__factory_a05ad0c111be18449a3b8f850f9a1e0ac}{create}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00225}00225\ \textcolor{comment}{\ \ \ \ !>\ Create\ a\ new\ aerosol\ representation\ from\ input\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00226}\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a60c7ba950d7d4b1d7b04bf991a8c60fb}{00226}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__aero__rep__data_a6382f457a6313e92f81831a73aa16b07}{load}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00227}00227\ \textcolor{comment}{\ \ \ \ !>\ Get\ the\ aerosol\ representation\ type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00228}\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a76e63dd4c0b3388aee44d952f804f9cc}{00228}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__aero__rep__factory_ad0ab0fa3366dcb225e7e1e97a507bc77}{get\_type}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00229}00229\ \textcolor{comment}{\ \ \ \ !>\ Initialize\ an\ update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00230}\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_afe6ea629227ebe304200612eabda2ea2}{00230}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__aero__rep__factory_a672c9b8ea08337ff22c5178606996c35}{initialize\_update\_data}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00231}00231\ \textcolor{comment}{\ \ \ \ !>\ Determine\ the\ number\ of\ bytes\ required\ to\ pack\ an\ given\ aerosol}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00232}00232\ \textcolor{comment}{\ \ \ \ !!\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00233}\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a1c4acaddfa5e520231e51bfd565a6c7e}{00233}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__aero__rep__data_a4a1d35f1a4f0f3a24aae257c90eb7d7b}{pack\_size}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00234}00234\ \textcolor{comment}{\ \ \ \ !>\ Pack\ a\ given\ aerosol\ representation\ to\ the\ buffer,\ advancing\ the}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00235}00235\ \textcolor{comment}{\ \ \ \ !!\ position}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00236}\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_af6c6a2ec3268ea0b450503cb76c8e2da}{00236}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__aero__rep__data_aa471287791c2cad0240436fe9235112b}{bin\_pack}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00237}00237\ \textcolor{comment}{\ \ \ \ !>\ Unpack\ a\ aerosol\ representation\ from\ the\ buffer,\ advancing\ the\ position}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00238}\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a3f750e502166fcc7b85ab05e4bcc9132}{00238}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__aero__rep__data_a91546a38b603abfb401ca201801661d2}{bin\_unpack}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00239}00239\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00240}00240\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00241}00241\ \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00242}00242\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00243}00243\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00244}00244\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00245}00245\ \textcolor{comment}{\ \ !>\ Create\ a\ new\ aerosol\ representation\ by\ type\ name}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00246}\mbox{\hyperlink{namespacecamp__aero__rep__factory_a05ad0c111be18449a3b8f850f9a1e0ac}{00246}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__aero__rep__factory_a05ad0c111be18449a3b8f850f9a1e0ac}{create}}(this,\ type\_name)\ \textcolor{keyword}{result}\ (new\_obj)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00247}00247\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00248}00248\ \textcolor{comment}{\ \ \ \ !>\ An\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00249}00249\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\_rep\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_obj\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00250}00250\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ factory}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00251}00251\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00252}00252\ \textcolor{comment}{\ \ \ \ !>\ Name\ of\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00253}00253\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{intent(in)}\ ::\ type\_name}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00254}00254\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00255}00255\ \ \ \ \ new\_obj\ =>\ null()}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00256}00256\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00257}00257\ \ \ \ \ \textcolor{keywordflow}{select\ case}\ (type\_name)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00258}00258\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\textcolor{stringliteral}{"{}AERO\_REP\_MODAL\_BINNED\_MASS"{}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00259}00259\ \ \ \ \ \ \ \ \ new\_obj\ =>\ \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\_rep\_modal\_binned\_mass\_t}}()}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00260}00260\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\textcolor{stringliteral}{"{}AERO\_REP\_SINGLE\_PARTICLE"{}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00261}00261\ \ \ \ \ \ \ \ \ new\_obj\ =>\ \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\_rep\_single\_particle\_t}}()}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00262}00262\ \textcolor{keywordflow}{\ \ \ \ \ \ case\ default}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00263}00263\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(792930166,\ \textcolor{stringliteral}{"{}Unknown\ aerosol\ representation\ type:\ "{}}\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ //type\_name)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00265}00265\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00266}00266\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00267}00267\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__aero__rep__factory_a05ad0c111be18449a3b8f850f9a1e0ac}{create}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00268}00268\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00269}00269\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00270}00270\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00271}00271\ \textcolor{comment}{\ \ !>\ Load\ an\ aerosol\ represenation\ based\ on\ its\ type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00272}00272\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_JSON}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00273}\mbox{\hyperlink{namespacecamp__aero__rep__factory_ad5175de41dc6f1190f16cb6819baf4ca}{00273}}\ \textcolor{preprocessor}{}\ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_a6382f457a6313e92f81831a73aa16b07}{load}}(this,\ json,\ j\_obj)\ \textcolor{keyword}{result}\ (new\_obj)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00274}00274\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00275}00275\ \textcolor{comment}{\ \ \ \ !>\ An\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00276}00276\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\_rep\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_obj\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00277}00277\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ factory}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00278}00278\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00279}00279\ \textcolor{comment}{\ \ \ \ !>\ JSON\ core}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00280}00280\ \ \ \ \ \textcolor{keywordtype}{type}(json\_core),\ \textcolor{keywordtype}{pointer},\ \textcolor{keywordtype}{intent(in)}\ ::\ json\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00281}00281\ \textcolor{comment}{\ \ \ \ !>\ JSON\ object}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00282}00282\ \ \ \ \ \textcolor{keywordtype}{type}(json\_value),\ \textcolor{keywordtype}{pointer},\ \textcolor{keywordtype}{intent(in)}\ ::\ j\_obj}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00283}00283\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00284}00284\ \ \ \ \ \textcolor{keywordtype}{character(kind=json\_ck,\ len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ unicode\_name}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00285}00285\ \ \ \ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ type\_name}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00286}00286\ \ \ \ \ \textcolor{keywordtype}{logical(kind=json\_lk)}\ ::\ found}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00287}00287\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00288}00288\ \ \ \ \ new\_obj\ =>\ null()}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00289}00289\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00290}00290\ \ \ \ \ \textcolor{comment}{!\ get\ the\ aerosol\ representation\ type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00291}00291\ \ \ \ \ \textcolor{keyword}{call\ }json\%get(j\_obj,\ \textcolor{stringliteral}{"{}type"{}},\ unicode\_name,\ found)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00292}00292\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(904082395,\ found,\ \textcolor{stringliteral}{'Missing\ aerosol\ representation\ type.'})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00293}00293\ \ \ \ \ type\_name\ =\ unicode\_name}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00294}00294\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00295}00295\ \ \ \ \ \textcolor{comment}{!\ create\ a\ new\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00296}00296\ \ \ \ \ new\_obj\ =>\ this\%create(type\_name)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00297}00297\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00298}00298\ \ \ \ \ \textcolor{comment}{!\ load\ aerosol\ representation\ parameters\ from\ the\ json\ object}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00299}00299\ \ \ \ \ \textcolor{keyword}{call\ }new\_obj\%load(json,\ j\_obj)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00300}00300\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00301}00301\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00302}00302\ \textcolor{preprocessor}{}\ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_a6382f457a6313e92f81831a73aa16b07}{load}}(this)\ \textcolor{keyword}{result}\ (new\_obj)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00303}00303\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00304}00304\ \textcolor{comment}{\ \ \ \ !>\ An\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00305}00305\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\_rep\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_obj\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00306}00306\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ factory}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00307}00307\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00308}00308\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00309}00309\ \ \ \ \ new\_obj\ =>\ null()}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00310}00310\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00311}00311\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab72bff2627c9468e4c352118b8dc7046}{warn\_msg}}(723960750,\ \textcolor{stringliteral}{"{}No\ support\ for\ input\ files."{}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00312}00312\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00313}00313\ \textcolor{preprocessor}{}\ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_a6382f457a6313e92f81831a73aa16b07}{load}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00314}00314\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00315}00315\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00316}00316\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00317}00317\ \textcolor{comment}{\ \ !>\ Get\ the\ aerosol\ reaction\ type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00318}\mbox{\hyperlink{namespacecamp__aero__rep__factory_ad0ab0fa3366dcb225e7e1e97a507bc77}{00318}}\ \ \ \textcolor{keyword}{integer(kind=i\_kind)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__aero__rep__factory_ad0ab0fa3366dcb225e7e1e97a507bc77}{get\_type}}(this,\ aero\_rep)\ \textcolor{keyword}{result}(aero\_rep\_type)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00319}00319\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00320}00320\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ factory}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00321}00321\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00322}00322\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ to\ get\ the\ type\ of}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00323}00323\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\_rep\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ aero\_rep}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00324}00324\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00325}00325\ \ \ \ \ \textcolor{keywordflow}{select\ type}\ (aero\_rep)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00326}00326\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\_rep\_modal\_binned\_mass\_t}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00327}00327\ \ \ \ \ \ \ \ \ aero\_rep\_type\ =\ \mbox{\hyperlink{namespacecamp__aero__rep__factory_abbe922d2fcc0aa086075adae07f97105}{aero\_rep\_modal\_binned\_mass}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00328}00328\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\_rep\_single\_particle\_t}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00329}00329\ \ \ \ \ \ \ \ \ aero\_rep\_type\ =\ \mbox{\hyperlink{namespacecamp__aero__rep__factory_af4559c6fce1f4f711d48af7bbf8fd4c7}{aero\_rep\_single\_particle}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00330}00330\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00331}00331\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(865927801,\ \textcolor{stringliteral}{"{}Unknown\ aerosol\ representation\ type"{}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00332}00332\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00333}00333\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00334}00334\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__aero__rep__factory_ad0ab0fa3366dcb225e7e1e97a507bc77}{get\_type}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00335}00335\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00336}00336\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00337}00337\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00338}00338\ \textcolor{comment}{\ \ !>\ Get\ a\ new\ update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00339}\mbox{\hyperlink{namespacecamp__aero__rep__factory_a672c9b8ea08337ff22c5178606996c35}{00339}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__factory_a672c9b8ea08337ff22c5178606996c35}{initialize\_update\_data}}(this,\ aero\_rep,\ update\_data)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00340}00340\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00341}00341\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ factory}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00342}00342\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00343}00343\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ to\ be\ updated}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00344}00344\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\_rep\_data\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ aero\_rep\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00345}00345\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00346}00346\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__update__data__t}{aero\_rep\_update\_data\_t}}),\ \textcolor{keywordtype}{intent(out)}\ ::\ update\_data}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00347}00347\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00348}00348\ \ \ \ \ \textcolor{keywordflow}{select\ type}\ (update\_data)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00349}00349\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00350}00350\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{select\ type}\ (aero\_rep)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00351}00351\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\_rep\_single\_particle\_t}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00352}00352\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }aero\_rep\%update\_data\_initialize\_number(update\_data,\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__aero__rep__factory_af4559c6fce1f4f711d48af7bbf8fd4c7}{aero\_rep\_single\_particle}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00354}00354\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(584145506,\ \textcolor{stringliteral}{"{}Update\ data\ <-\/>\ aero\ rep\ mismatch"{}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00356}00356\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00357}00357\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t}{aero\_rep\_update\_data\_modal\_binned\_mass\_gmd\_t}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00358}00358\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{select\ type}\ (aero\_rep)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00359}00359\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\_rep\_modal\_binned\_mass\_t}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }aero\_rep\%update\_data\_initialize\_GMD(update\_data,\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__aero__rep__factory_abbe922d2fcc0aa086075adae07f97105}{aero\_rep\_modal\_binned\_mass}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00362}00362\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00363}00363\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(696463851,\ \textcolor{stringliteral}{"{}Update\ data\ <-\/>\ aero\ rep\ mismatch"{}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00364}00364\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00365}00365\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}{aero\_rep\_update\_data\_modal\_binned\_mass\_gsd\_t}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00366}00366\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{select\ type}\ (aero\_rep)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00367}00367\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\_rep\_modal\_binned\_mass\_t}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }aero\_rep\%update\_data\_initialize\_GSD(update\_data,\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__aero__rep__factory_abbe922d2fcc0aa086075adae07f97105}{aero\_rep\_modal\_binned\_mass}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00370}00370\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00371}00371\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(526306947,\ \textcolor{stringliteral}{"{}Update\ data\ <-\/>\ aero\ rep\ mismatch"{}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00372}00372\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00373}00373\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00374}00374\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(916635086,\ \textcolor{stringliteral}{"{}Internal\ error\ -\/\ update\ data\ type\ missing."{}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00375}00375\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00376}00376\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00377}00377\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__factory_a672c9b8ea08337ff22c5178606996c35}{initialize\_update\_data}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00378}00378\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00379}00379\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00380}00380\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00381}00381\ \textcolor{comment}{\ \ !>\ Determine\ the\ size\ of\ a\ binary\ required\ to\ pack\ an\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00382}\mbox{\hyperlink{namespacecamp__aero__rep__factory_a253696180679d443a17dc5d00973d2b1}{00382}}\ \ \ \textcolor{keyword}{integer(kind=i\_kind)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_a4a1d35f1a4f0f3a24aae257c90eb7d7b}{pack\_size}}(this,\ aero\_rep,\ comm)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00383}00383\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00384}00384\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ factory}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00385}00385\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00386}00386\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ to\ pack}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00387}00387\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\_rep\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ aero\_rep\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00388}00388\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00389}00389\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00390}00390\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00391}00391\ \ \ \ \ \mbox{\hyperlink{namespacecamp__aero__rep__data_a4a1d35f1a4f0f3a24aae257c90eb7d7b}{pack\_size}}\ =\ \ \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(int(1,\ kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}),\ comm)\ +\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00392}00392\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aero\_rep\%pack\_size(comm)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00393}00393\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00394}00394\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_a4a1d35f1a4f0f3a24aae257c90eb7d7b}{pack\_size}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00395}00395\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00396}00396\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00397}00397\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00398}00398\ \textcolor{comment}{\ \ !>\ Pack\ the\ given\ value\ to\ the\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00399}\mbox{\hyperlink{namespacecamp__aero__rep__factory_ac86219905f216bd3e27e13f9146346a9}{00399}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_aa471287791c2cad0240436fe9235112b}{bin\_pack}}(this,\ aero\_rep,\ buffer,\ pos,\ comm)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00400}00400\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00401}00401\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ factory}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00402}00402\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00403}00403\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ to\ pack}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00404}00404\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\_rep\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ aero\_rep\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00405}00405\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00406}00406\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00407}00407\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00408}00408\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00409}00409\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00410}00410\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00411}00411\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00412}00412\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00413}00413\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ aero\_rep\_type,\ i\_aero\_rep,\ prev\_position}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00414}00414\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00415}00415\ \ \ \ \ prev\_position\ =\ pos}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00416}00416\ \ \ \ \ \textcolor{keywordflow}{select\ type}\ (aero\_rep)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00417}00417\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\_rep\_modal\_binned\_mass\_t}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00418}00418\ \ \ \ \ \ \ \ \ aero\_rep\_type\ =\ \mbox{\hyperlink{namespacecamp__aero__rep__factory_abbe922d2fcc0aa086075adae07f97105}{aero\_rep\_modal\_binned\_mass}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00419}00419\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\_rep\_single\_particle\_t}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00420}00420\ \ \ \ \ \ \ \ \ aero\_rep\_type\ =\ \mbox{\hyperlink{namespacecamp__aero__rep__factory_af4559c6fce1f4f711d48af7bbf8fd4c7}{aero\_rep\_single\_particle}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00421}00421\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00422}00422\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(278244560,\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00423}00423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Trying\ to\ pack\ aerosol\ representation\ of\ unknown\ type."{}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00424}00424\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00425}00425\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer,\ pos,\ aero\_rep\_type,\ comm)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00426}00426\ \ \ \ \ \textcolor{keyword}{call\ }aero\_rep\%bin\_pack(buffer,\ pos,\ comm)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00427}00427\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(897674844,\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00428}00428\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(aero\_rep,\ comm))}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00429}00429\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00430}00430\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00431}00431\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_aa471287791c2cad0240436fe9235112b}{bin\_pack}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00432}00432\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00433}00433\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00434}00434\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00435}00435\ \textcolor{comment}{\ \ !>\ Unpack\ the\ given\ value\ to\ the\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00436}\mbox{\hyperlink{namespacecamp__aero__rep__factory_a13df10c87120a3cd50610e104b4d3939}{00436}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_a91546a38b603abfb401ca201801661d2}{bin\_unpack}}(this,\ buffer,\ pos,\ comm)\ \textcolor{keyword}{result}\ (aero\_rep)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00437}00437\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00438}00438\ \textcolor{comment}{\ \ \ \ !>\ Unpacked\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00439}00439\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\_rep\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ aero\_rep\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00440}00440\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ factory}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00441}00441\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\_rep\_factory\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00442}00442\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00443}00443\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00444}00444\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00445}00445\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00446}00446\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00447}00447\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00448}00448\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00449}00449\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00450}00450\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ aero\_rep\_type,\ i\_aero\_rep,\ prev\_position}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00451}00451\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00452}00452\ \ \ \ \ prev\_position\ =\ pos}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00453}00453\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer,\ pos,\ aero\_rep\_type,\ comm)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00454}00454\ \ \ \ \ \textcolor{keywordflow}{select\ case}\ (aero\_rep\_type)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00455}00455\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\mbox{\hyperlink{namespacecamp__aero__rep__factory_abbe922d2fcc0aa086075adae07f97105}{aero\_rep\_modal\_binned\_mass}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00456}00456\ \ \ \ \ \ \ \ \ aero\_rep\ =>\ \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\_rep\_modal\_binned\_mass\_t}}()}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00457}00457\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\mbox{\hyperlink{namespacecamp__aero__rep__factory_af4559c6fce1f4f711d48af7bbf8fd4c7}{aero\_rep\_single\_particle}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00458}00458\ \ \ \ \ \ \ \ \ aero\_rep\ =>\ \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\_rep\_single\_particle\_t}}()}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00459}00459\ \textcolor{keywordflow}{\ \ \ \ \ \ case\ default}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00460}00460\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(106634417,\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00461}00461\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Trying\ to\ unpack\ aerosol\ representation\ of\ unknown\ type:"{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00462}00462\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}(aero\_rep\_type))}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00463}00463\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00464}00464\ \ \ \ \ \textcolor{keyword}{call\ }aero\_rep\%bin\_unpack(buffer,\ pos,\ comm)}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00465}00465\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(948795857,\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00466}00466\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(aero\_rep,\ comm))}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00467}00467\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00468}00468\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00469}00469\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_a91546a38b603abfb401ca201801661d2}{bin\_unpack}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00470}00470\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00471}00471\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00472}00472\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__factory_8_f90_source_l00473}00473\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__aero__rep__factory}{camp\_aero\_rep\_factory}}}
 
 \end{DoxyCode}

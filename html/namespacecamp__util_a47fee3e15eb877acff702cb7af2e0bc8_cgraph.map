@@ -1,3 +1,4 @@
 <map id="camp_util::linspace_find" name="camp_util::linspace_find">
-<area shape="rect" id="node1" title="Find the position of a real number in a 1D linear array." alt="" coords="5,29,164,55"/>
+<area shape="rect" id="Node000001" title="Find the position of a real number in a 1D linear array." alt="" coords="5,29,164,55"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="57,30,52,21,55,11,66,5,85,3,104,5,114,12,111,16,102,10,84,8,68,10,59,15,58,20,62,28"/>
 </map>

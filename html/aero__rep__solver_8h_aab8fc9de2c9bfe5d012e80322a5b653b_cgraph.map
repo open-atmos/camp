@@ -1,6 +1,9 @@
 <map id="aero_rep_get_effective_radius__m" name="aero_rep_get_effective_radius__m">
-<area shape="rect" id="node1" title="Get the effective particle radius, &#160;(m)" alt="" coords="5,37,159,77"/>
-<area shape="rect" id="node2" href="$aero__rep__modal__binned__mass_8c.html#a8d5bf734337581d90c2280ab858ccf96" title="Get the effective particle radius &#160;(m)" alt="" coords="207,5,416,45"/>
-<area shape="rect" id="node3" href="$aero__rep__single__particle_8c.html#a48b11d345d89071d34e67b5063b1b891" title="Get the effective particle radius &#160;(m)" alt="" coords="226,69,397,109"/>
-<area shape="rect" id="node4" href="$aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="464,69,627,109"/>
+<area shape="rect" id="Node000001" title="Get the effective particle radius, &#160;(m)" alt="" coords="5,39,158,79"/>
+<area shape="rect" id="Node000002" href="$aero__rep__modal__binned__mass_8c.html#a8d5bf734337581d90c2280ab858ccf96" title="Get the effective particle radius &#160;(m)" alt="" coords="206,5,414,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,45,190,41,191,46,158,51"/>
+<area shape="rect" id="Node000003" href="$aero__rep__single__particle_8c.html#a48b11d345d89071d34e67b5063b1b891" title="Get the effective particle radius &#160;(m)" alt="" coords="225,71,395,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="158,67,210,74,209,80,158,72"/>
+<area shape="rect" id="Node000004" href="$aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="462,71,624,111"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="395,88,446,88,446,94,395,94"/>
 </map>

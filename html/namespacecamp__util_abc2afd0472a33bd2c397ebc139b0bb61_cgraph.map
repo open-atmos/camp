@@ -1,6 +1,10 @@
 <map id="camp_util::string_to_logical" name="camp_util::string_to_logical">
-<area shape="rect" id="node1" title="Convert a string to a logical." alt="" coords="5,29,140,69"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="188,37,321,62"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="369,37,521,62"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="569,29,692,69"/>
+<area shape="rect" id="Node000001" title="Convert a string to a logical." alt="" coords="5,29,139,70"/>
+<area shape="poly" id="edge4_Node000001_Node000001" title=" " alt="" coords="37,29,36,19,41,10,54,5,72,3,92,5,104,11,101,16,90,10,72,8,55,10,45,14,41,20,43,28"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="187,37,319,63"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="139,47,171,47,171,52,139,52"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="367,37,518,63"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="320,47,352,47,352,52,320,52"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="566,29,689,70"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="519,47,551,47,551,52,519,52"/>
 </map>

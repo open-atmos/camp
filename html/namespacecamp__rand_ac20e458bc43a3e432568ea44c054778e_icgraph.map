@@ -1,6 +1,12 @@
 <map id="camp_rand::rand_normal" name="camp_rand::rand_normal">
-<area shape="rect" id="node1" title="Generates a normally distributed random number with the given mean and standard deviation." alt="" coords="225,87,388,112"/>
-<area shape="rect" id="node2" href="$namespacecamp__rand.html#a613b0c64aa5bdface8e6d5aa30cec7c4" title="Generate a Binomial&#45;distributed random number with the given parameters." alt="" coords="5,29,177,55"/>
-<area shape="rect" id="node3" href="$namespacecamp__rand.html#ad3032643d586f9de792d5f6858223704" title="Generates a vector of normally distributed random numbers with the given means and standard deviation..." alt="" coords="10,79,173,119"/>
-<area shape="rect" id="node4" href="$namespacecamp__rand.html#afeef7ff3370b9d984897647d64070725" title="Generate a Poisson&#45;distributed random number with the given mean." alt="" coords="7,168,176,193"/>
+<area shape="rect" id="Node000001" title="Generates a normally distributed random number with the given mean and standard deviation." alt="" coords="225,87,387,112"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="343,74,331,68,306,65,283,67,271,72,268,77,274,85,270,88,263,78,267,68,282,62,306,60,332,63,346,70"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__rand.html#a613b0c64aa5bdface8e6d5aa30cec7c4" title="Generate a Binomial&#45;distributed random number with the given parameters." alt="" coords="5,29,177,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="240,85,141,58,143,53,241,80"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__rand.html#ad3032643d586f9de792d5f6858223704" title="Generates a vector of normally distributed random numbers with the given means and standard deviation..." alt="" coords="10,79,172,120"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="209,102,173,102,173,97,209,97"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__rand.html#afeef7ff3370b9d984897647d64070725" title="Generate a Poisson&#45;distributed random number with the given mean." alt="" coords="7,168,175,194"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="256,121,128,170,126,165,254,116"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="128,17,116,10,91,8,68,10,56,15,53,20,59,27,55,31,48,21,52,11,67,5,91,3,117,5,131,12"/>
+<area shape="poly" id="edge6_Node000004_Node000004" title=" " alt="" coords="128,156,116,149,91,147,68,149,56,153,53,159,59,166,55,169,48,159,52,150,67,143,91,141,117,144,131,151"/>
 </map>

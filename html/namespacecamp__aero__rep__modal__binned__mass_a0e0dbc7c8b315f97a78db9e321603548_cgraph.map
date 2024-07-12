@@ -1,5 +1,7 @@
 <map id="camp_aero_rep_modal_binned_mass::get_section_id" name="camp_aero_rep_modal_binned_mass::get_section_id">
-<area shape="rect" id="node1" title="Get an id for a mode or bin by name for use with updates from external modules." alt="" coords="5,5,201,45"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="249,13,401,38"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="449,5,572,45"/>
+<area shape="rect" id="Node000001" title="Get an id for a mode or bin by name for use with updates from external modules." alt="" coords="5,5,201,46"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="249,13,400,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,23,234,23,234,28,201,28"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="448,5,570,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="400,23,432,23,432,28,400,28"/>
 </map>

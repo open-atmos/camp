@@ -1,4 +1,10 @@
 <map id="camp_rxn_ternary_chemical_activation::rxn_ternary_chemical_activation_t" name="camp_rxn_ternary_chemical_activation::rxn_ternary_chemical_activation_t">
-<area shape="rect" id="node1" title="Generic test reaction data type." alt="" coords="5,93,188,148"/>
-<area shape="rect" id="node2" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="30,5,163,45"/>
+<area shape="rect" id="Node000001" title="Generic test reaction data type." alt="" coords="5,318,188,373"/>
+<area shape="rect" id="Node000002" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="30,228,163,268"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,284,99,317,94,317,94,284"/>
+<area shape="rect" id="Node000003" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="12,139,181,165"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,180,99,227,94,227,94,180"/>
+<area shape="rect" id="Node000004" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="17,5,176,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="99,61,99,138,94,138,94,61"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="193,15,202,26,194,36,177,40,175,35,192,31,197,26,189,19"/>
 </map>

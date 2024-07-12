@@ -1,5 +1,8 @@
 <map id="camp_sub_model_data::pack_size" name="camp_sub_model_data::pack_size">
-<area shape="rect" id="node1" title="Determine the size of a binary required to pack the reaction data." alt="" coords="224,41,380,81"/>
-<area shape="rect" id="node2" href="$namespacecamp__sub__model__factory.html#af73bdd51e97a9f4f82a68c658196ec0d" title="Determine the size of a binary required to pack a sub&#45;model." alt="" coords="5,5,176,45"/>
-<area shape="rect" id="node3" href="$namespacecamp__sub__model__data.html#a220d5f85a6afee00ee82db72f03e48a3" title="Determine the size of a binary required to pack the reaction data." alt="" coords="6,70,175,125"/>
+<area shape="rect" id="Node000001" title="Determine the size of a binary required to pack the reaction data." alt="" coords="223,41,378,82"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="334,28,322,22,300,20,280,22,268,27,264,32,266,40,260,41,259,31,265,22,279,17,300,15,323,17,337,23"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__sub__model__factory.html#af73bdd51e97a9f4f82a68c658196ec0d" title="Determine the size of a binary required to pack a sub&#45;model." alt="" coords="5,5,175,46"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="207,48,175,43,176,38,208,43"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__sub__model__data.html#a220d5f85a6afee00ee82db72f03e48a3" title="Determine the size of a binary required to pack the reaction data." alt="" coords="6,70,174,126"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="208,80,175,86,174,81,207,75"/>
 </map>

@@ -1,85 +1,85 @@
-\hypertarget{constants_8_f90_source}{}\doxysection{constants.\+F90}
-\label{constants_8_f90_source}\index{constants.F90@{constants.F90}}
+\doxysection{constants.\+F90}
+\hypertarget{constants_8_f90_source}{}\label{constants_8_f90_source}\index{constants.F90@{constants.F90}}
 \mbox{\hyperlink{constants_8_f90}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2005-\/2021 Barcelona Supercomputing Center and University of}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00002}00002 \textcolor{comment}{! Illinois at Urbana-\/Champaign}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00003}00003 \textcolor{comment}{! SPDX-\/License-\/Identifier: MIT}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00004}00004 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00005}00005 \textcolor{comment}{!> \(\backslash\)file}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00006}00006 \textcolor{comment}{!> The camp\_constants module.}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00007}00007 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00008}00008 \textcolor{comment}{!> Physical constants.}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00009}\mbox{\hyperlink{namespacecamp__constants}{00009}} \textcolor{keyword}{module} \mbox{\hyperlink{namespacecamp__constants}{camp\_constants}}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00010}00010 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00011}00011 \textcolor{comment}{  !> Kind of a single precision real number.}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00012}\mbox{\hyperlink{namespacecamp__constants_ae5a812d758a5e2742cb945e981dff38a}{00012}}   \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacecamp__constants_ae5a812d758a5e2742cb945e981dff38a}{sp}} = kind(0.0)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00013}00013 \textcolor{comment}{  !> Kind of a single precision complex number.}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00014}\mbox{\hyperlink{namespacecamp__constants_a22c45ae2be3ec958d776e0021f537431}{00014}}   \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacecamp__constants_a22c45ae2be3ec958d776e0021f537431}{sc}} = \mbox{\hyperlink{namespacecamp__constants_ae5a812d758a5e2742cb945e981dff38a}{sp}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00015}00015 \textcolor{comment}{  !> Kind of a double precision real number.}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00016}\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{00016}}   \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}} = kind(0.d0)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00017}00017 \textcolor{comment}{  !> Kind of a double precision complex number.}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00018}\mbox{\hyperlink{namespacecamp__constants_a39b2446a58e0cac3b0d157f0cf7249bf}{00018}}   \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacecamp__constants_a39b2446a58e0cac3b0d157f0cf7249bf}{dc}} = \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00019}00019 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00020}00020 \textcolor{comment}{  !> Kind of an integer}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00021}\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{00021}}   \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{parameter} :: \mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}} = kind(1)}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00022}00022 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00023}00023 \textcolor{comment}{  !> Physical constants.}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00024}00024 \textcolor{comment}{  !!}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00025}00025 \textcolor{comment}{  !! These are all absolute constants. Environment parameters that in}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00026}00026 \textcolor{comment}{  !! principle could change should go in scenario.f90.}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00027}00027 \textcolor{comment}{  !!}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00028}00028 \textcolor{comment}{  !! To access a constant in a subroutine you should <tt>use}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00029}00029 \textcolor{comment}{  !! camp\_constants</tt> and then the constant value is accessed with}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00030}00030 \textcolor{comment}{  !! \(\backslash\)c const\%\%pi or similar. Note that the type is called \(\backslash\)c const\_t}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00031}00031 \textcolor{comment}{  !! (with a trailing \_t) but the single saved variable to access them}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00032}00032 \textcolor{comment}{  !! is just called \(\backslash\)c const.}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00033}\mbox{\hyperlink{structcamp__constants_1_1const__t}{00033}}   \textcolor{keyword}{type} \mbox{\hyperlink{structcamp__constants_1_1const__t}{const\_t}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00034}00034 \textcolor{comment}{     !> Pi.}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00035}\mbox{\hyperlink{structcamp__constants_1_1const__t_aa99d68250c59ac9edbb10dcf0835d7f5}{00035}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: pi = 3.14159265358979323846d0\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00036}00036 \textcolor{comment}{     !> Boltzmann constant (J K\string^\{-\/1\}).}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00037}\mbox{\hyperlink{structcamp__constants_1_1const__t_a497607123b8cf80501e2bc4a1f723b1f}{00037}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: boltzmann = 1.3806505d-\/23\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00038}00038 \textcolor{comment}{     !> Avogadro's number (mole\string^\{-\/1\}).}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00039}\mbox{\hyperlink{structcamp__constants_1_1const__t_a9a96db1149679f85855ee596b2c2b027}{00039}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: avagadro = 6.02214179d23\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00040}00040 \textcolor{comment}{     !> Universal gas constant (J mole\string^\{-\/1\} K\string^\{-\/1\}).}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00041}\mbox{\hyperlink{structcamp__constants_1_1const__t_af771d014939e61a99f855f457ae4594c}{00041}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: univ\_gas\_const = 8.314472d0\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00042}00042 \textcolor{comment}{     !> Acceleration due to gravity (m s\string^\{-\/2\}).}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00043}\mbox{\hyperlink{structcamp__constants_1_1const__t_a8c2642b677caaecf7966bac0edde9c01}{00043}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: std\_grav = 9.80665d0\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00044}00044 \textcolor{comment}{     !> Accomodation coefficient (have also used 0.045).}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00045}\mbox{\hyperlink{structcamp__constants_1_1const__t_a485f34cd7fdf86ee8687fdaf7ac2c479}{00045}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: accom\_coeff = 1d0}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00046}00046 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00047}00047 \textcolor{comment}{     !> Equilibrium water vapor pressure at 273 K (Pa).}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00048}\mbox{\hyperlink{structcamp__constants_1_1const__t_ad77a254bc9fd8e9bd87a39f3a0d2a728}{00048}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: water\_eq\_vap\_press = 611d0\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00049}00049 \textcolor{comment}{     !> Freezing point of water (K).}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00050}\mbox{\hyperlink{structcamp__constants_1_1const__t_ab5ece8a6b68b35eeb624be5b6827a899}{00050}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: water\_freeze\_temp = 273.15d0\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00051}00051 \textcolor{comment}{     !> Surface energy of water (J m\string^\{-\/2\}).}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00052}\mbox{\hyperlink{structcamp__constants_1_1const__t_ae68036ed4330227167ad8d5edc3551d0}{00052}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: water\_surf\_eng = 0.073d0\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00053}00053 \textcolor{comment}{     !> Latent heat of water (J kg\string^\{-\/1\}).}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00054}\mbox{\hyperlink{structcamp__constants_1_1const__t_ab4a2170cfd579a7d23f483d5de440068}{00054}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: water\_latent\_heat = 2.272d6\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00055}00055 \textcolor{comment}{     !> Specific heat of air (J kg\string^\{-\/1\} K\string^\{-\/1\}).}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00056}\mbox{\hyperlink{structcamp__constants_1_1const__t_a3f5dd012e7c3d43a098d8f65d3e16fb1}{00056}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: air\_spec\_heat = 1005d0\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00057}00057 \textcolor{comment}{     !> Molecular weight of water (kg mole\string^\{-\/1\}).}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00058}\mbox{\hyperlink{structcamp__constants_1_1const__t_a53788f49e7382b832956db1c05dda73e}{00058}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: water\_molec\_weight = 18d-\/3\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00059}00059 \textcolor{comment}{     !> Density of water (kg m\string^\{-\/3\}).}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00060}\mbox{\hyperlink{structcamp__constants_1_1const__t_aa1d5d447fa530f019fd8bb00a39b90a4}{00060}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: water\_density = 1d3}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00061}00061 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00062}00062 \textcolor{comment}{     !> Molecular weight of air (kg mole\string^\{-\/1\}).}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00063}\mbox{\hyperlink{structcamp__constants_1_1const__t_a280678a0cfd4323d622409c24c861947}{00063}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: air\_molec\_weight = 2.89644d-\/2\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00064}00064 \textcolor{comment}{     !> Atmospheric standard sea level pressure (Pa).}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00065}\mbox{\hyperlink{structcamp__constants_1_1const__t_af27bc50104971b5602613fe627de7263}{00065}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: air\_std\_press = 101325d0\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00066}00066 \textcolor{comment}{     !> Dynamic viscosity of air (kg m\string^\{-\/1\} s\string^\{-\/1\}).}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00067}\mbox{\hyperlink{structcamp__constants_1_1const__t_aa35d5a374174d2b6dbaae6c16c3d7599}{00067}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: air\_dyn\_visc = 1.78d-\/5}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00068}00068   \textcolor{keyword}{end type }\mbox{\hyperlink{structcamp__constants_1_1const__t}{const\_t}}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00069}00069 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00070}00070 \textcolor{comment}{  !> Fixed variable for accessing the constant's values.}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00071}00071 \textcolor{comment}{  !!}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00072}00072 \textcolor{comment}{  !! To access a constant in a subroutine you should <tt>use}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00073}00073 \textcolor{comment}{  !! camp\_constants</tt> and then the constant value is accessed with}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00074}00074 \textcolor{comment}{  !! \(\backslash\)c const\%\%pi or similar. Note that the type is called \(\backslash\)c const\_t}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00075}00075 \textcolor{comment}{  !! (with a trailing \_t) but the single saved variable to access them}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00076}00076 \textcolor{comment}{  !! is just called \(\backslash\)c const.}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00077}\mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{00077}}   \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__constants_1_1const__t}{const\_t}}), \textcolor{keywordtype}{save} :: \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}}
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00078}00078 }
-\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00079}00079 \textcolor{keyword}{end module }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00001}00001\ \textcolor{comment}{!\ Copyright\ (C)\ 2005-\/2021\ Barcelona\ Supercomputing\ Center\ and\ University\ of}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00002}00002\ \textcolor{comment}{!\ Illinois\ at\ Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00003}00003\ \textcolor{comment}{!\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00004}00004\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00005}00005\ \textcolor{comment}{!>\ \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00006}00006\ \textcolor{comment}{!>\ The\ camp\_constants\ module.}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00007}00007\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00008}00008\ \textcolor{comment}{!>\ Physical\ constants.}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00009}\mbox{\hyperlink{namespacecamp__constants}{00009}}\ \textcolor{keyword}{module}\ \mbox{\hyperlink{namespacecamp__constants}{camp\_constants}}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00010}00010\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00011}00011\ \textcolor{comment}{\ \ !>\ Kind\ of\ a\ single\ precision\ real\ number.}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00012}\mbox{\hyperlink{namespacecamp__constants_ae5a812d758a5e2742cb945e981dff38a}{00012}}\ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{parameter}\ ::\ \mbox{\hyperlink{namespacecamp__constants_ae5a812d758a5e2742cb945e981dff38a}{sp}}\ =\ kind(0.0)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00013}00013\ \textcolor{comment}{\ \ !>\ Kind\ of\ a\ single\ precision\ complex\ number.}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00014}\mbox{\hyperlink{namespacecamp__constants_a22c45ae2be3ec958d776e0021f537431}{00014}}\ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{parameter}\ ::\ \mbox{\hyperlink{namespacecamp__constants_a22c45ae2be3ec958d776e0021f537431}{sc}}\ =\ \mbox{\hyperlink{namespacecamp__constants_ae5a812d758a5e2742cb945e981dff38a}{sp}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00015}00015\ \textcolor{comment}{\ \ !>\ Kind\ of\ a\ double\ precision\ real\ number.}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00016}\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{00016}}\ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{parameter}\ ::\ \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}\ =\ kind(0.d0)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00017}00017\ \textcolor{comment}{\ \ !>\ Kind\ of\ a\ double\ precision\ complex\ number.}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00018}\mbox{\hyperlink{namespacecamp__constants_a39b2446a58e0cac3b0d157f0cf7249bf}{00018}}\ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{parameter}\ ::\ \mbox{\hyperlink{namespacecamp__constants_a39b2446a58e0cac3b0d157f0cf7249bf}{dc}}\ =\ \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00019}00019\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00020}00020\ \textcolor{comment}{\ \ !>\ Kind\ of\ an\ integer}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00021}\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{00021}}\ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{parameter}\ ::\ \mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}\ =\ kind(1)}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00022}00022\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00023}00023\ \textcolor{comment}{\ \ !>\ Physical\ constants.}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00024}00024\ \textcolor{comment}{\ \ !!}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00025}00025\ \textcolor{comment}{\ \ !!\ These\ are\ all\ absolute\ constants.\ Environment\ parameters\ that\ in}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00026}00026\ \textcolor{comment}{\ \ !!\ principle\ could\ change\ should\ go\ in\ scenario.f90.}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00027}00027\ \textcolor{comment}{\ \ !!}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00028}00028\ \textcolor{comment}{\ \ !!\ To\ access\ a\ constant\ in\ a\ subroutine\ you\ should\ <tt>use}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00029}00029\ \textcolor{comment}{\ \ !!\ camp\_constants</tt>\ and\ then\ the\ constant\ value\ is\ accessed\ with}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00030}00030\ \textcolor{comment}{\ \ !!\ \(\backslash\)c\ const\%\%pi\ or\ similar.\ Note\ that\ the\ type\ is\ called\ \(\backslash\)c\ const\_t}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00031}00031\ \textcolor{comment}{\ \ !!\ (with\ a\ trailing\ \_t)\ but\ the\ single\ saved\ variable\ to\ access\ them}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00032}00032\ \textcolor{comment}{\ \ !!\ is\ just\ called\ \(\backslash\)c\ const.}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00033}\mbox{\hyperlink{structcamp__constants_1_1const__t}{00033}}\ \ \ \textcolor{keyword}{type}\ \mbox{\hyperlink{structcamp__constants_1_1const__t}{const\_t}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00034}00034\ \textcolor{comment}{\ \ \ \ \ !>\ Pi.}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00035}\mbox{\hyperlink{structcamp__constants_1_1const__t_aa99d68250c59ac9edbb10dcf0835d7f5}{00035}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ pi\ =\ 3.14159265358979323846d0\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00036}00036\ \textcolor{comment}{\ \ \ \ \ !>\ Boltzmann\ constant\ (J\ K\string^\{-\/1\}).}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00037}\mbox{\hyperlink{structcamp__constants_1_1const__t_a497607123b8cf80501e2bc4a1f723b1f}{00037}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ boltzmann\ =\ 1.3806505d-\/23\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00038}00038\ \textcolor{comment}{\ \ \ \ \ !>\ Avogadro's\ number\ (mole\string^\{-\/1\}).}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00039}\mbox{\hyperlink{structcamp__constants_1_1const__t_a9a96db1149679f85855ee596b2c2b027}{00039}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ avagadro\ =\ 6.02214179d23\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00040}00040\ \textcolor{comment}{\ \ \ \ \ !>\ Universal\ gas\ constant\ (J\ mole\string^\{-\/1\}\ K\string^\{-\/1\}).}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00041}\mbox{\hyperlink{structcamp__constants_1_1const__t_af771d014939e61a99f855f457ae4594c}{00041}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ univ\_gas\_const\ =\ 8.314472d0\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00042}00042\ \textcolor{comment}{\ \ \ \ \ !>\ Acceleration\ due\ to\ gravity\ (m\ s\string^\{-\/2\}).}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00043}\mbox{\hyperlink{structcamp__constants_1_1const__t_a8c2642b677caaecf7966bac0edde9c01}{00043}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ std\_grav\ =\ 9.80665d0\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00044}00044\ \textcolor{comment}{\ \ \ \ \ !>\ Accomodation\ coefficient\ (have\ also\ used\ 0.045).}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00045}\mbox{\hyperlink{structcamp__constants_1_1const__t_a485f34cd7fdf86ee8687fdaf7ac2c479}{00045}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ accom\_coeff\ =\ 1d0}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00046}00046\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00047}00047\ \textcolor{comment}{\ \ \ \ \ !>\ Equilibrium\ water\ vapor\ pressure\ at\ 273\ K\ (Pa).}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00048}\mbox{\hyperlink{structcamp__constants_1_1const__t_ad77a254bc9fd8e9bd87a39f3a0d2a728}{00048}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ water\_eq\_vap\_press\ =\ 611d0\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00049}00049\ \textcolor{comment}{\ \ \ \ \ !>\ Freezing\ point\ of\ water\ (K).}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00050}\mbox{\hyperlink{structcamp__constants_1_1const__t_ab5ece8a6b68b35eeb624be5b6827a899}{00050}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ water\_freeze\_temp\ =\ 273.15d0\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00051}00051\ \textcolor{comment}{\ \ \ \ \ !>\ Surface\ energy\ of\ water\ (J\ m\string^\{-\/2\}).}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00052}\mbox{\hyperlink{structcamp__constants_1_1const__t_ae68036ed4330227167ad8d5edc3551d0}{00052}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ water\_surf\_eng\ =\ 0.073d0\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00053}00053\ \textcolor{comment}{\ \ \ \ \ !>\ Latent\ heat\ of\ water\ (J\ kg\string^\{-\/1\}).}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00054}\mbox{\hyperlink{structcamp__constants_1_1const__t_ab4a2170cfd579a7d23f483d5de440068}{00054}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ water\_latent\_heat\ =\ 2.272d6\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00055}00055\ \textcolor{comment}{\ \ \ \ \ !>\ Specific\ heat\ of\ air\ (J\ kg\string^\{-\/1\}\ K\string^\{-\/1\}).}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00056}\mbox{\hyperlink{structcamp__constants_1_1const__t_a3f5dd012e7c3d43a098d8f65d3e16fb1}{00056}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ air\_spec\_heat\ =\ 1005d0\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00057}00057\ \textcolor{comment}{\ \ \ \ \ !>\ Molecular\ weight\ of\ water\ (kg\ mole\string^\{-\/1\}).}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00058}\mbox{\hyperlink{structcamp__constants_1_1const__t_a53788f49e7382b832956db1c05dda73e}{00058}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ water\_molec\_weight\ =\ 18d-\/3\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00059}00059\ \textcolor{comment}{\ \ \ \ \ !>\ Density\ of\ water\ (kg\ m\string^\{-\/3\}).}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00060}\mbox{\hyperlink{structcamp__constants_1_1const__t_aa1d5d447fa530f019fd8bb00a39b90a4}{00060}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ water\_density\ =\ 1d3}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00061}00061\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00062}00062\ \textcolor{comment}{\ \ \ \ \ !>\ Molecular\ weight\ of\ air\ (kg\ mole\string^\{-\/1\}).}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00063}\mbox{\hyperlink{structcamp__constants_1_1const__t_a280678a0cfd4323d622409c24c861947}{00063}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ air\_molec\_weight\ =\ 2.89644d-\/2\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00064}00064\ \textcolor{comment}{\ \ \ \ \ !>\ Atmospheric\ standard\ sea\ level\ pressure\ (Pa).}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00065}\mbox{\hyperlink{structcamp__constants_1_1const__t_af27bc50104971b5602613fe627de7263}{00065}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ air\_std\_press\ =\ 101325d0\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00066}00066\ \textcolor{comment}{\ \ \ \ \ !>\ Dynamic\ viscosity\ of\ air\ (kg\ m\string^\{-\/1\}\ s\string^\{-\/1\}).}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00067}\mbox{\hyperlink{structcamp__constants_1_1const__t_aa35d5a374174d2b6dbaae6c16c3d7599}{00067}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ air\_dyn\_visc\ =\ 1.78d-\/5}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00068}00068\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__constants_1_1const__t}{const\_t}}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00069}00069\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00070}00070\ \textcolor{comment}{\ \ !>\ Fixed\ variable\ for\ accessing\ the\ constant's\ values.}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00071}00071\ \textcolor{comment}{\ \ !!}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00072}00072\ \textcolor{comment}{\ \ !!\ To\ access\ a\ constant\ in\ a\ subroutine\ you\ should\ <tt>use}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00073}00073\ \textcolor{comment}{\ \ !!\ camp\_constants</tt>\ and\ then\ the\ constant\ value\ is\ accessed\ with}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00074}00074\ \textcolor{comment}{\ \ !!\ \(\backslash\)c\ const\%\%pi\ or\ similar.\ Note\ that\ the\ type\ is\ called\ \(\backslash\)c\ const\_t}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00075}00075\ \textcolor{comment}{\ \ !!\ (with\ a\ trailing\ \_t)\ but\ the\ single\ saved\ variable\ to\ access\ them}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00076}00076\ \textcolor{comment}{\ \ !!\ is\ just\ called\ \(\backslash\)c\ const.}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00077}\mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{00077}}\ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__constants_1_1const__t}{const\_t}}),\ \textcolor{keywordtype}{save}\ ::\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}}
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{constants_8_f90_source_l00079}00079\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}}}
 
 \end{DoxyCode}

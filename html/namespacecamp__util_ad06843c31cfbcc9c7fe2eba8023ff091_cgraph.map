@@ -1,5 +1,7 @@
 <map id="camp_util::check_time_multiple" name="camp_util::check_time_multiple">
-<area shape="rect" id="node1" title="Check that the first time interval is close to an integer multiple of the second, and warn if it is n..." alt="" coords="5,5,156,45"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ab72bff2627c9468e4c352118b8dc7046" title="Prints a warning message." alt="" coords="204,13,348,38"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="396,5,519,45"/>
+<area shape="rect" id="Node000001" title="Check that the first time interval is close to an integer multiple of the second, and warn if it is n..." alt="" coords="5,5,156,46"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#ab72bff2627c9468e4c352118b8dc7046" title="Prints a warning message." alt="" coords="204,13,347,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,23,188,23,188,28,156,28"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="395,5,517,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="348,23,379,23,379,28,348,28"/>
 </map>

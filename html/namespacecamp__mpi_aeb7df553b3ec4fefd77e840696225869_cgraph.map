@@ -1,11 +1,21 @@
 <map id="camp_mpi::camp_mpi_allequal_real" name="camp_mpi::camp_mpi_allequal_real">
-<area shape="rect" id="node1" title="Returns whether all processors have the same value." alt="" coords="5,37,153,77"/>
-<area shape="rect" id="node2" href="$namespacecamp__mpi.html#a93e9a58cb81562d5ef35c94c04432438" title="Computes the maximum of val across all processes, storing the result in val_max on all processes." alt="" coords="201,5,349,45"/>
-<area shape="rect" id="node9" href="$namespacecamp__mpi.html#ad8a12dc8d547d496fc0ba69d9f17397c" title="Computes the minimum of val across all processes, storing the result in val_min on all processes." alt="" coords="201,69,349,109"/>
-<area shape="rect" id="node3" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="397,37,545,77"/>
-<area shape="rect" id="node4" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="593,37,741,77"/>
-<area shape="rect" id="node5" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="789,45,891,70"/>
-<area shape="rect" id="node6" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="939,45,1059,70"/>
-<area shape="rect" id="node7" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1107,45,1259,70"/>
-<area shape="rect" id="node8" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1307,37,1429,77"/>
+<area shape="rect" id="Node000001" title="Returns whether all processors have the same value." alt="" coords="5,39,153,79"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="42,39,40,29,46,20,59,14,79,12,100,14,113,21,111,25,99,20,79,17,61,19,49,24,45,30,47,37"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__mpi.html#a93e9a58cb81562d5ef35c94c04432438" title="Computes the maximum of val across all processes, storing the result in val_max on all processes." alt="" coords="201,5,348,46"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="153,44,185,38,186,44,154,49"/>
+<area shape="rect" id="Node000009" href="$namespacecamp__mpi.html#ad8a12dc8d547d496fc0ba69d9f17397c" title="Computes the minimum of val across all processes, storing the result in val_min on all processes." alt="" coords="201,71,348,111"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="154,68,186,74,185,79,153,74"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="396,39,543,79"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="349,36,381,41,380,46,348,41"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="591,39,739,79"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="544,56,575,56,575,62,544,62"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="787,46,887,72"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="739,56,771,56,771,62,739,62"/>
+<area shape="rect" id="Node000006" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="935,46,1054,72"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="887,56,919,56,919,62,887,62"/>
+<area shape="rect" id="Node000007" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1102,46,1254,72"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="1055,56,1087,56,1087,62,1055,62"/>
+<area shape="rect" id="Node000008" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1302,39,1424,79"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="1254,56,1286,56,1286,62,1254,62"/>
+<area shape="poly" id="edge10_Node000009_Node000003" title=" " alt="" coords="348,76,380,71,381,76,349,82"/>
 </map>

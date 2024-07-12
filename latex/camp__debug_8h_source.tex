@@ -1,257 +1,257 @@
-\hypertarget{camp__debug_8h_source}{}\doxysection{camp\+\_\+debug.\+h}
-\label{camp__debug_8h_source}\index{camp\_debug.h@{camp\_debug.h}}
+\doxysection{camp\+\_\+debug.\+h}
+\hypertarget{camp__debug_8h_source}{}\label{camp__debug_8h_source}\index{camp\_debug.h@{camp\_debug.h}}
 \mbox{\hyperlink{camp__debug_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00001}00001 \textcolor{comment}{/* Copyright (C) 2021 Barcelona Supercomputing Center and University of}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00002}00002 \textcolor{comment}{ * Illinois at Urbana-\/Champaign}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00003}00003 \textcolor{comment}{ * SPDX-\/License-\/Identifier: MIT}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00004}00004 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00005}00005 \textcolor{comment}{ * Header file with some debugging functions for use with camp\_solver.c}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00006}00006 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00007}00007 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00008}00008 \textcolor{preprocessor}{\#ifndef CAMP\_DEBUG\_H}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00009}00009 \textcolor{preprocessor}{\#define CAMP\_DEBUG\_H}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00010}00010 }
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00011}00011 \textcolor{comment}{// file name prefix}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00012}\mbox{\hyperlink{camp__debug_8h_a9de85b90ee0979bddec92adf8f0426d4}{00012}} \textcolor{keywordtype}{int} \mbox{\hyperlink{camp__debug_8h_a9de85b90ee0979bddec92adf8f0426d4}{file\_name\_prefix}} = 1;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00013}00013 }
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00014}00014 \textcolor{comment}{// Maximum size of output file names}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00015}\mbox{\hyperlink{camp__debug_8h_af43dedece15d018ffad8970492870bac}{00015}} \textcolor{preprocessor}{\#define MAX\_FILE\_NAME 256}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00016}00016 }
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00017}00017 \textcolor{comment}{// Number of points to advance state for output}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00018}\mbox{\hyperlink{camp__debug_8h_a551527c79eeba1318684b9fcc2203b98}{00018}} \textcolor{preprocessor}{\#define N\_OUTPUT\_STATES 100}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00019}00019 }
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00020}00020 \textcolor{preprocessor}{\#ifdef CAMP\_DEBUG}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00021}00021 \textcolor{preprocessor}{\#define CAMP\_DEBUG\_SPEC\_ 0}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00022}00022 \textcolor{preprocessor}{\#define CAMP\_DEBUG\_PRINT(x)                                                    \(\backslash\)}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00023}00023 \textcolor{preprocessor}{  camp\_debug\_print(sd-\/>cvode\_mem, x, false, 0, \_\_LINE\_\_, \_\_func\_\_)}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00024}00024 \textcolor{preprocessor}{\#define CAMP\_DEBUG\_PRINT\_INT(x, y)                                             \(\backslash\)}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00025}00025 \textcolor{preprocessor}{  camp\_debug\_print(sd-\/>cvode\_mem, x, false, y, \_\_LINE\_\_, \_\_func\_\_)}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00026}00026 \textcolor{preprocessor}{\#define CAMP\_DEBUG\_PRINT\_FULL(x)                                               \(\backslash\)}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00027}00027 \textcolor{preprocessor}{  camp\_debug\_print(sd-\/>cvode\_mem, x, true, 0, \_\_LINE\_\_, \_\_func\_\_)}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00028}00028 \textcolor{preprocessor}{\#define CAMP\_DEBUG\_JAC\_STRUCT(J, x)                                            \(\backslash\)}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00029}00029 \textcolor{preprocessor}{  camp\_debug\_print\_jac\_struct((void *)sd, J, x)}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00030}00030 \textcolor{preprocessor}{\#define CAMP\_DEBUG\_JAC(J, x) camp\_debug\_print\_jac((void *)sd, J, x)}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00031}00031 \textcolor{keywordtype}{void} camp\_debug\_print(\textcolor{keywordtype}{void} *cvode\_mem, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *message, \textcolor{keywordtype}{bool} do\_full,}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00032}00032                       \textcolor{keyword}{const} \textcolor{keywordtype}{int} int\_val, \textcolor{keyword}{const} \textcolor{keywordtype}{int} line, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *func) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00033}00033 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_SUNDIALS}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00034}00034   CVodeMem cv\_mem = (CVodeMem)cvode\_mem;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00035}00035   \textcolor{keywordflow}{if} (!(cv\_mem-\/>cv\_debug\_out)) \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00036}00036   printf(}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00037}00037       \textcolor{stringliteral}{"{}\(\backslash\)n[DEBUG] line \%4d in \%-\/20s(): \%-\/25s \%-\/4.0d t\_n = \%le h = \%le q = \%d "{}}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00038}00038       \textcolor{stringliteral}{"{}hin = \%le species \%d(zn[0] = \%le zn[1] = \%le tempv = \%le tempv1 = \%le "{}}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00039}00039       \textcolor{stringliteral}{"{}tempv2 = \%le acor\_init = \%le last\_yn = \%le"{}},}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00040}00040       line, func, message, int\_val, cv\_mem-\/>cv\_tn, cv\_mem-\/>cv\_h, cv\_mem-\/>cv\_q,}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00041}00041       cv\_mem-\/>cv\_hin, \mbox{\hyperlink{rxn__solver_8c_a54c6b096c8d0ad934d0d1911891830cd}{CAMP\_DEBUG\_SPEC\_}},}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00042}00042       NV\_DATA\_S(cv\_mem-\/>cv\_zn[0])[\mbox{\hyperlink{rxn__solver_8c_a54c6b096c8d0ad934d0d1911891830cd}{CAMP\_DEBUG\_SPEC\_}}],}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00043}00043       NV\_DATA\_S(cv\_mem-\/>cv\_zn[1])[\mbox{\hyperlink{rxn__solver_8c_a54c6b096c8d0ad934d0d1911891830cd}{CAMP\_DEBUG\_SPEC\_}}],}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00044}00044       NV\_DATA\_S(cv\_mem-\/>cv\_tempv)[\mbox{\hyperlink{rxn__solver_8c_a54c6b096c8d0ad934d0d1911891830cd}{CAMP\_DEBUG\_SPEC\_}}],}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00045}00045       NV\_DATA\_S(cv\_mem-\/>cv\_tempv1)[\mbox{\hyperlink{rxn__solver_8c_a54c6b096c8d0ad934d0d1911891830cd}{CAMP\_DEBUG\_SPEC\_}}],}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00046}00046       NV\_DATA\_S(cv\_mem-\/>cv\_tempv2)[\mbox{\hyperlink{rxn__solver_8c_a54c6b096c8d0ad934d0d1911891830cd}{CAMP\_DEBUG\_SPEC\_}}],}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00047}00047       NV\_DATA\_S(cv\_mem-\/>cv\_acor\_init)[\mbox{\hyperlink{rxn__solver_8c_a54c6b096c8d0ad934d0d1911891830cd}{CAMP\_DEBUG\_SPEC\_}}],}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00048}00048       NV\_DATA\_S(cv\_mem-\/>cv\_last\_yn)[\mbox{\hyperlink{rxn__solver_8c_a54c6b096c8d0ad934d0d1911891830cd}{CAMP\_DEBUG\_SPEC\_}}]);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00049}00049   \textcolor{keywordflow}{if} (do\_full) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00050}00050     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < NV\_LENGTH\_S(cv\_mem-\/>cv\_y); i++) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00051}00051       printf(}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00052}00052           \textcolor{stringliteral}{"{}\(\backslash\)n  zn[0][\%3d] = \% -\/le zn[1][\%3d] = \% -\/le tempv[\%3d] = \% -\/le "{}}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00053}00053           \textcolor{stringliteral}{"{}tempv1[\%3d] = \% -\/le tempv2[\%3d] = \% -\/le acor\_init[\%3d] = \% -\/le "{}}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00054}00054           \textcolor{stringliteral}{"{}last\_yn[\%3d] = \% -\/le"{}},}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00055}00055           i, NV\_DATA\_S(cv\_mem-\/>cv\_zn[0])[i], i, NV\_DATA\_S(cv\_mem-\/>cv\_zn[1])[i],}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00056}00056           i, NV\_DATA\_S(cv\_mem-\/>cv\_tempv)[i], i, NV\_DATA\_S(cv\_mem-\/>cv\_tempv1)[i],}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00057}00057           i, NV\_DATA\_S(cv\_mem-\/>cv\_tempv2)[i], i,}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00058}00058           NV\_DATA\_S(cv\_mem-\/>cv\_acor\_init)[i], i,}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00059}00059           NV\_DATA\_S(cv\_mem-\/>cv\_last\_yn)[i]);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00060}00060     \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00061}00061   \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00062}00062 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00063}00063 \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00064}00064 \textcolor{keywordtype}{void} camp\_debug\_print\_jac\_struct(\textcolor{keywordtype}{void} *solver\_data, SUNMatrix J,}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00065}00065                                  \textcolor{keyword}{const} \textcolor{keywordtype}{char} *message) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00066}00066 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_SUNDIALS}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00067}00067   \mbox{\hyperlink{struct_solver_data}{SolverData}} *sd = (\mbox{\hyperlink{struct_solver_data}{SolverData}} *)solver\_data;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00068}00068 }
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00069}00069   \textcolor{keywordflow}{if} (!(sd-\/>debug\_out)) \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00070}00070   \textcolor{keywordtype}{int} n\_state\_var = SM\_COLUMNS\_S(J);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00071}00071   \textcolor{keywordtype}{int} i\_elem = 0;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00072}00072   \textcolor{keywordtype}{int} next\_col = 0;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00073}00073   printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)n   Jacobian structure (↓ind →dep) -\/ \%s\(\backslash\)n     "{}}, message);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00074}00074   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_dep = 0; i\_dep < n\_state\_var; i\_dep++) printf(\textcolor{stringliteral}{"{}[\%3d]"{}}, i\_dep);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00075}00075   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_ind = 0; i\_ind < n\_state\_var; i\_ind++) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00076}00076     printf(\textcolor{stringliteral}{"{}\(\backslash\)n[\%3d]"{}}, i\_ind);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00077}00077     next\_col = SM\_INDEXPTRS\_S(J)[i\_ind + 1];}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00078}00078     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_dep = 0; i\_dep < n\_state\_var; i\_dep++) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00079}00079       \textcolor{keywordflow}{if} (i\_dep == SM\_INDEXVALS\_S(J)[i\_elem] \&\& i\_elem < next\_col) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00080}00080         printf(\textcolor{stringliteral}{"{} \%3d "{}}, i\_elem++);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00081}00081       \} \textcolor{keywordflow}{else} \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00082}00082         printf(\textcolor{stringliteral}{"{}  -\/  "{}});}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00083}00083       \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00084}00084     \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00085}00085   \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00086}00086 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00087}00087 \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00088}00088 \textcolor{keywordtype}{void} camp\_debug\_print\_jac(\textcolor{keywordtype}{void} *solver\_data, SUNMatrix J, \textcolor{keyword}{const} \textcolor{keywordtype}{char} *message) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00089}00089 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_SUNDIALS}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00090}00090   \mbox{\hyperlink{struct_solver_data}{SolverData}} *sd = (\mbox{\hyperlink{struct_solver_data}{SolverData}} *)solver\_data;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00091}00091 }
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00092}00092   \textcolor{keywordflow}{if} (!(sd-\/>debug\_out)) \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00093}00093   \textcolor{keywordtype}{int} n\_state\_var = SM\_COLUMNS\_S(J);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00094}00094   \textcolor{keywordtype}{int} i\_elem = 0;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00095}00095   \textcolor{keywordtype}{int} next\_col = 0;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00096}00096   printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)n   Jacobian (↓ind →dep) -\/ \%s\(\backslash\)n     "{}}, message);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00097}00097   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_dep = 0; i\_dep < n\_state\_var; i\_dep++)}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00098}00098     printf(\textcolor{stringliteral}{"{}      [\%3d]"{}}, i\_dep);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00099}00099   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_ind = 0; i\_ind < n\_state\_var; i\_ind++) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00100}00100     printf(\textcolor{stringliteral}{"{}\(\backslash\)n[\%3d]   "{}}, i\_ind);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00101}00101     next\_col = SM\_INDEXPTRS\_S(J)[i\_ind + 1];}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00102}00102     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_dep = 0; i\_dep < n\_state\_var; i\_dep++) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00103}00103       \textcolor{keywordflow}{if} (i\_dep == SM\_INDEXVALS\_S(J)[i\_elem] \&\& i\_elem < next\_col) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00104}00104         printf(\textcolor{stringliteral}{"{} \% -\/1.2le "{}}, SM\_DATA\_S(J)[i\_elem++]);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00105}00105       \} \textcolor{keywordflow}{else} \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00106}00106         printf(\textcolor{stringliteral}{"{}     -\/     "{}});}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00107}00107       \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00108}00108     \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00109}00109   \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00110}00110 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00111}00111 \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00112}00112 }
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00113}00113 realtype camp\_jac\_elem(SUNMatrix J, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} j, \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} i) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00114}00114   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_elem = SM\_INDEXPTRS\_S(J)[j]; i\_elem < SM\_INDEXPTRS\_S(J)[j + 1];}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00115}00115        ++i\_elem) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00116}00116     \textcolor{keywordflow}{if} (i == SM\_INDEXVALS\_S(J)[i\_elem]) \textcolor{keywordflow}{return} SM\_DATA\_S(J)[i\_elem];}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00117}00117   \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00118}00118   \textcolor{keywordflow}{return} 0.0;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00119}00119 \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00120}00120 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00121}\mbox{\hyperlink{camp__debug_8h_a0c216dd1cf5d2f5883fa131af740de03}{00121}} \textcolor{preprocessor}{\#define CAMP\_DEBUG\_PRINT(x)}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00122}\mbox{\hyperlink{camp__debug_8h_ae7c91427c0b12d2282ba60bdbfba4995}{00122}} \textcolor{preprocessor}{\#define CAMP\_DEBUG\_PRINT\_INT(x, y)}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00123}\mbox{\hyperlink{camp__debug_8h_af048b16095261faad1266d736d2760a0}{00123}} \textcolor{preprocessor}{\#define CAMP\_DEBUG\_PRINT\_FULL(x)}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00124}\mbox{\hyperlink{camp__debug_8h_a84d1682a8781c7ef14a9490c80585beb}{00124}} \textcolor{preprocessor}{\#define CAMP\_DEBUG\_JAC\_STRUCT(J, x)}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00125}\mbox{\hyperlink{camp__debug_8h_a7106635ad6a226661036c50938876736}{00125}} \textcolor{preprocessor}{\#define CAMP\_DEBUG\_JAC(J, x)}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00126}00126 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00127}00127 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00128}00128 \textcolor{comment}{/** \(\backslash\)brief Print some camp-\/chem data sizes}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00129}00129 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00130}00130 \textcolor{comment}{ * \(\backslash\)param md Pointer to the model data}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00131}00131 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00132}\mbox{\hyperlink{camp__debug_8h_adfee57a3797c09d1fb585d9f49477c32}{00132}} \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{camp__debug_8h_adfee57a3797c09d1fb585d9f49477c32}{print\_data\_sizes}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *md) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00133}00133   \textcolor{keywordtype}{int} *ptr = md-\/>\mbox{\hyperlink{struct_model_data_a8a9c65041e8df53b121da0ce7c796c62}{rxn\_int\_data}};}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00134}00134   \textcolor{keywordtype}{int} n\_rxn = ptr[0];}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00135}00135 }
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00136}00136   printf(\textcolor{stringliteral}{"{}n\_rxn: \%d "{}}, n\_rxn);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00137}00137   printf(\textcolor{stringliteral}{"{}n\_state\_var: \%d"{}}, md-\/>\mbox{\hyperlink{struct_model_data_a178342b9966d83bcd4fa78b265688440}{n\_per\_cell\_state\_var}} * md-\/>\mbox{\hyperlink{struct_model_data_a075293f1ab10cd4ba031ae1d28339173}{n\_cells}});}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00138}00138   printf(\textcolor{stringliteral}{"{}n\_dep\_var: \%d"{}}, md-\/>\mbox{\hyperlink{struct_model_data_ae961b94f71cd56344b13e006377dbc14}{n\_per\_cell\_dep\_var}} * md-\/>\mbox{\hyperlink{struct_model_data_a075293f1ab10cd4ba031ae1d28339173}{n\_cells}});}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00139}00139 \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00140}00140 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00141}00141 \textcolor{comment}{/** \(\backslash\)brief Print Jacobian matrix in format KLU SPARSE}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00142}00142 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00143}00143 \textcolor{comment}{ * \(\backslash\)param M Jacobian matrix}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00144}00144 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00145}\mbox{\hyperlink{camp__debug_8h_a5e1481fdcb1fc315878002edb9346b77}{00145}} \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{camp__debug_8h_a5e1481fdcb1fc315878002edb9346b77}{print\_jacobian}}(SUNMatrix M) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00146}00146   printf(\textcolor{stringliteral}{"{}\(\backslash\)n NNZ JAC: \%lld \(\backslash\)n"{}}, (\textcolor{keywordtype}{long} \textcolor{keywordtype}{long})SM\_NNZ\_S(M));}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00147}00147   printf(\textcolor{stringliteral}{"{}DATA | INDEXVALS:\(\backslash\)n"{}});}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00148}00148   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < SM\_NNZ\_S(M); i++) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00149}00149     printf(\textcolor{stringliteral}{"{}\% -\/le \(\backslash\)n"{}}, (SM\_DATA\_S(M))[i]);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00150}00150     printf(\textcolor{stringliteral}{"{}\%lld \(\backslash\)n"{}}, (\textcolor{keywordtype}{long} \textcolor{keywordtype}{long})((SM\_INDEXVALS\_S(M))[i]));}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00151}00151   \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00152}00152   printf(\textcolor{stringliteral}{"{}PTRS:\(\backslash\)n"{}});}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00153}00153   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i <= SM\_NP\_S(M); i++) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00154}00154     printf(\textcolor{stringliteral}{"{}\%lld \(\backslash\)n"{}}, (\textcolor{keywordtype}{long} \textcolor{keywordtype}{long})((SM\_INDEXPTRS\_S(M))[i]));}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00155}00155   \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00156}00156 \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00157}00157 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00158}00158 \textcolor{comment}{/** \(\backslash\)brief Print derivative array}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00159}00159 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00160}00160 \textcolor{comment}{ * \(\backslash\)param deriv Derivative array}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00161}00161 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00162}\mbox{\hyperlink{camp__debug_8h_a99ec22cbccaf8d6c6ab6a30f27474cfa}{00162}} \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{camp__debug_8h_a99ec22cbccaf8d6c6ab6a30f27474cfa}{print\_derivative}}(N\_Vector deriv) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00163}00163   \textcolor{comment}{// printf("{} deriv length: \%d\(\backslash\)n"{}, NV\_LENGTH\_S(deriv));}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00164}00164   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < NV\_LENGTH\_S(deriv); i++) \{  \textcolor{comment}{// NV\_LENGTH\_S(deriv)}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00165}00165     printf(\textcolor{stringliteral}{"{} deriv: \% -\/le"{}}, NV\_DATA\_S(deriv)[i]);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00166}00166     printf(\textcolor{stringliteral}{"{} index: \%d \(\backslash\)n"{}}, i);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00167}00167   \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00168}00168 \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00169}00169 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00170}00170 \textcolor{comment}{/** \(\backslash\)brief Evaluate the derivative and Jacobian near a given state}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00171}00171 \textcolor{comment}{ *         for a specified species}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00172}00172 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00173}00173 \textcolor{comment}{ * \(\backslash\)param curr\_time Current time}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00174}00174 \textcolor{comment}{ * \(\backslash\)param state State array}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00175}00175 \textcolor{comment}{ * \(\backslash\)param deriv Derivative array}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00176}00176 \textcolor{comment}{ * \(\backslash\)param solver\_data Void pointer to solver data}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00177}00177 \textcolor{comment}{ * \(\backslash\)param f Pointer to derivative function}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00178}00178 \textcolor{comment}{ * \(\backslash\)param i\_dep Dependent species index}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00179}00179 \textcolor{comment}{ * \(\backslash\)param i\_ind Independent species index}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00180}00180 \textcolor{comment}{ * \(\backslash\)param d\_rate\_d\_ind Change in rate for dependent species with change in}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00181}00181 \textcolor{comment}{ *                         independent species}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00182}00182 \textcolor{comment}{ * \(\backslash\)param d\_ind Increment to use in plot of rate\_dep vs conc\_ind}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00183}00183 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00184}\mbox{\hyperlink{camp__debug_8h_a0352ebf153678772ffbeb405834c141d}{00184}} \textcolor{keywordtype}{void} \mbox{\hyperlink{camp__debug_8h_a0352ebf153678772ffbeb405834c141d}{output\_deriv\_local\_state}}(realtype curr\_time, N\_Vector state,}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00185}00185                               N\_Vector deriv, \textcolor{keywordtype}{void} *solver\_data,}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00186}00186                               \textcolor{keywordtype}{int} (*\mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f}})(realtype, N\_Vector, N\_Vector, \textcolor{keywordtype}{void} *),}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00187}00187                               \textcolor{keywordtype}{int} i\_dep, \textcolor{keywordtype}{int} i\_ind, \textcolor{keywordtype}{double} d\_rate\_d\_ind,}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00188}00188                               \textcolor{keywordtype}{double} d\_ind) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00189}00189   realtype *deriv\_data = NV\_DATA\_S(deriv);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00190}00190   realtype *state\_data = NV\_DATA\_S(state);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00191}00191   realtype rate\_orig = deriv\_data[i\_dep];}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00192}00192   realtype ind\_orig = state\_data[i\_ind];}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00193}00193 }
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00194}00194   \mbox{\hyperlink{struct_solver_data}{SolverData}} *sd = (\mbox{\hyperlink{struct_solver_data}{SolverData}} *)solver\_data;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00195}00195   \mbox{\hyperlink{struct_model_data}{ModelData}} *md = \&(sd-\/>\mbox{\hyperlink{struct_solver_data_addacaed7357d35a1c6f521a86845121d}{model\_data}});}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00196}00196 }
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00197}00197   FILE *f\_output;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00198}00198   \textcolor{keywordtype}{char} file\_name[\mbox{\hyperlink{camp__debug_8h_af43dedece15d018ffad8970492870bac}{MAX\_FILE\_NAME}}];}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00199}00199   sprintf(file\_name, \textcolor{stringliteral}{"{}local\_\%d\_i\%d\_d\%d"{}}, \mbox{\hyperlink{camp__debug_8h_a9de85b90ee0979bddec92adf8f0426d4}{file\_name\_prefix}}++, i\_ind, i\_dep);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00200}00200   f\_output = fopen(file\_name, \textcolor{stringliteral}{"{}w"{}});}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00201}00201   printf(\textcolor{stringliteral}{"{}\(\backslash\)nOutputting deriv local state file: \%s"{}}, file\_name);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00202}00202 }
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00203}00203   \textcolor{comment}{// Output the loss of precision for all species}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00204}00204   ((\mbox{\hyperlink{struct_solver_data}{SolverData}} *)solver\_data)-\/>output\_precision = 1;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00205}00205   \textcolor{keywordflow}{if} (\mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f}}(curr\_time, state, deriv, solver\_data) != 0) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00206}00206     printf(\textcolor{stringliteral}{"{}\(\backslash\)nERROR: Derivative failure\(\backslash\)n\(\backslash\)n"{}});}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00207}00207   \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00208}00208   ((\mbox{\hyperlink{struct_solver_data}{SolverData}} *)solver\_data)-\/>output\_precision = 0;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00209}00209 }
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00210}00210   \textcolor{comment}{// Output the current state}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00211}00211   fprintf(f\_output, \textcolor{stringliteral}{"{}\#time \%1.30le"{}}, curr\_time);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00212}00212   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < NV\_LENGTH\_S(state); ++i)}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00213}00213     fprintf(f\_output, \textcolor{stringliteral}{"{} [\%3d] \%1.30le"{}}, i, state\_data[i]);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00214}00214   fprintf(f\_output, \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00215}00215 }
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00216}00216   \textcolor{comment}{// Vary the model state and recalculate the derivative directly and using}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00217}00217   \textcolor{comment}{// the partial derivative provided}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00218}00218   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < \mbox{\hyperlink{camp__debug_8h_a551527c79eeba1318684b9fcc2203b98}{N\_OUTPUT\_STATES}}; ++i) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00219}00219     state\_data[i\_ind] -\/= d\_ind;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00220}00220     \textcolor{keywordflow}{if} (state\_data[i\_ind] < 0.0) \textcolor{keywordflow}{break};}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00221}00221 }
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00222}00222     \textcolor{keywordflow}{if} (\mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f}}(curr\_time, state, deriv, solver\_data) != 0) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00223}00223       printf(\textcolor{stringliteral}{"{}\(\backslash\)nERROR: Derivative failure\(\backslash\)n\(\backslash\)n"{}});}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00224}00224       \textcolor{keywordflow}{break};}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00225}00225     \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00226}00226     fprintf(f\_output, \textcolor{stringliteral}{"{}\%d \%1.30le \%1.30le \%1.30le\(\backslash\)n"{}}, -\/i, state\_data[i\_ind],}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00227}00227             deriv\_data[i\_dep],}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00228}00228             (state\_data[i\_ind] -\/ ind\_orig) * d\_rate\_d\_ind + rate\_orig);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00229}00229   \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00230}00230   state\_data[i\_ind] = ind\_orig;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00231}00231   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < \mbox{\hyperlink{camp__debug_8h_a551527c79eeba1318684b9fcc2203b98}{N\_OUTPUT\_STATES}}; ++i) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00232}00232     state\_data[i\_ind] += d\_ind;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00233}00233     \textcolor{keywordflow}{if} (\mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f}}(curr\_time, state, deriv, solver\_data) != 0) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00234}00234       printf(\textcolor{stringliteral}{"{}\(\backslash\)nERROR: Derivative failure\(\backslash\)n\(\backslash\)n"{}});}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00235}00235       \textcolor{keywordflow}{break};}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00236}00236     \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00237}00237     fprintf(f\_output, \textcolor{stringliteral}{"{}\%d \%1.30le \%1.30le \%1.30le\(\backslash\)n"{}}, i, state\_data[i\_ind],}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00238}00238             deriv\_data[i\_dep],}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00239}00239             (state\_data[i\_ind] -\/ ind\_orig) * d\_rate\_d\_ind + rate\_orig);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00240}00240   \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00241}00241   state\_data[i\_ind] = ind\_orig;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00242}00242   \textcolor{keywordflow}{if} (\mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f}}(curr\_time, state, deriv, solver\_data) != 0) \{}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00243}00243     printf(\textcolor{stringliteral}{"{}\(\backslash\)nERROR: Derivative failure\(\backslash\)n\(\backslash\)n"{}});}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00244}00244     EXIT\_FAILURE;}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00245}00245   \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00246}00246 }
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00247}00247   printf(\textcolor{stringliteral}{"{}\(\backslash\)nEnd output deriv local state file: \%s"{}}, file\_name);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00248}00248   fclose(f\_output);}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00249}00249 \}}
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00250}00250 }
-\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00251}00251 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00001}00001\ \textcolor{comment}{/*\ Copyright\ (C)\ 2021\ Barcelona\ Supercomputing\ Center\ and\ University\ of}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00002}00002\ \textcolor{comment}{\ *\ Illinois\ at\ Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00003}00003\ \textcolor{comment}{\ *\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00004}00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00005}00005\ \textcolor{comment}{\ *\ Header\ file\ with\ some\ debugging\ functions\ for\ use\ with\ camp\_solver.c}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00006}00006\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00007}00007\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00008}00008\ \textcolor{preprocessor}{\#ifndef\ CAMP\_DEBUG\_H}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00009}00009\ \textcolor{preprocessor}{\#define\ CAMP\_DEBUG\_H}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00011}00011\ \textcolor{comment}{//\ file\ name\ prefix}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00012}\mbox{\hyperlink{camp__debug_8h_a9de85b90ee0979bddec92adf8f0426d4}{00012}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{camp__debug_8h_a9de85b90ee0979bddec92adf8f0426d4}{file\_name\_prefix}}\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00014}00014\ \textcolor{comment}{//\ Maximum\ size\ of\ output\ file\ names}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00015}\mbox{\hyperlink{camp__debug_8h_af43dedece15d018ffad8970492870bac}{00015}}\ \textcolor{preprocessor}{\#define\ MAX\_FILE\_NAME\ 256}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00017}00017\ \textcolor{comment}{//\ Number\ of\ points\ to\ advance\ state\ for\ output}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00018}\mbox{\hyperlink{camp__debug_8h_a551527c79eeba1318684b9fcc2203b98}{00018}}\ \textcolor{preprocessor}{\#define\ N\_OUTPUT\_STATES\ 100}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00020}00020\ \textcolor{preprocessor}{\#ifdef\ CAMP\_DEBUG}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00021}00021\ \textcolor{preprocessor}{\#define\ CAMP\_DEBUG\_SPEC\_\ 0}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00022}00022\ \textcolor{preprocessor}{\#define\ CAMP\_DEBUG\_PRINT(x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00023}00023\ \textcolor{preprocessor}{\ \ camp\_debug\_print(sd-\/>cvode\_mem,\ x,\ false,\ 0,\ \_\_LINE\_\_,\ \_\_func\_\_)}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00024}00024\ \textcolor{preprocessor}{\#define\ CAMP\_DEBUG\_PRINT\_INT(x,\ y)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00025}00025\ \textcolor{preprocessor}{\ \ camp\_debug\_print(sd-\/>cvode\_mem,\ x,\ false,\ y,\ \_\_LINE\_\_,\ \_\_func\_\_)}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00026}00026\ \textcolor{preprocessor}{\#define\ CAMP\_DEBUG\_PRINT\_FULL(x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00027}00027\ \textcolor{preprocessor}{\ \ camp\_debug\_print(sd-\/>cvode\_mem,\ x,\ true,\ 0,\ \_\_LINE\_\_,\ \_\_func\_\_)}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00028}00028\ \textcolor{preprocessor}{\#define\ CAMP\_DEBUG\_JAC\_STRUCT(J,\ x)\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00029}00029\ \textcolor{preprocessor}{\ \ camp\_debug\_print\_jac\_struct((void\ *)sd,\ J,\ x)}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00030}00030\ \textcolor{preprocessor}{\#define\ CAMP\_DEBUG\_JAC(J,\ x)\ camp\_debug\_print\_jac((void\ *)sd,\ J,\ x)}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00031}00031\ \textcolor{keywordtype}{void}\ camp\_debug\_print(\textcolor{keywordtype}{void}\ *cvode\_mem,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *message,\ \textcolor{keywordtype}{bool}\ do\_full,}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ int\_val,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ line,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *func)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00033}00033\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_SUNDIALS}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00034}00034\ \ \ CVodeMem\ cv\_mem\ =\ (CVodeMem)cvode\_mem;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00035}00035\ \ \ \textcolor{keywordflow}{if}\ (!(cv\_mem-\/>cv\_debug\_out))\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00036}00036\ \ \ printf(}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00037}00037\ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)n[DEBUG]\ line\ \%4d\ in\ \%-\/20s():\ \%-\/25s\ \%-\/4.0d\ t\_n\ =\ \%le\ h\ =\ \%le\ q\ =\ \%d\ "{}}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00038}00038\ \ \ \ \ \ \ \textcolor{stringliteral}{"{}hin\ =\ \%le\ species\ \%d(zn[0]\ =\ \%le\ zn[1]\ =\ \%le\ tempv\ =\ \%le\ tempv1\ =\ \%le\ "{}}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00039}00039\ \ \ \ \ \ \ \textcolor{stringliteral}{"{}tempv2\ =\ \%le\ acor\_init\ =\ \%le\ last\_yn\ =\ \%le"{}},}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00040}00040\ \ \ \ \ \ \ line,\ func,\ message,\ int\_val,\ cv\_mem-\/>cv\_tn,\ cv\_mem-\/>cv\_h,\ cv\_mem-\/>cv\_q,}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00041}00041\ \ \ \ \ \ \ cv\_mem-\/>cv\_hin,\ \mbox{\hyperlink{rxn__solver_8c_a54c6b096c8d0ad934d0d1911891830cd}{CAMP\_DEBUG\_SPEC\_}},}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00042}00042\ \ \ \ \ \ \ NV\_DATA\_S(cv\_mem-\/>cv\_zn[0])[\mbox{\hyperlink{rxn__solver_8c_a54c6b096c8d0ad934d0d1911891830cd}{CAMP\_DEBUG\_SPEC\_}}],}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00043}00043\ \ \ \ \ \ \ NV\_DATA\_S(cv\_mem-\/>cv\_zn[1])[\mbox{\hyperlink{rxn__solver_8c_a54c6b096c8d0ad934d0d1911891830cd}{CAMP\_DEBUG\_SPEC\_}}],}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00044}00044\ \ \ \ \ \ \ NV\_DATA\_S(cv\_mem-\/>cv\_tempv)[\mbox{\hyperlink{rxn__solver_8c_a54c6b096c8d0ad934d0d1911891830cd}{CAMP\_DEBUG\_SPEC\_}}],}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00045}00045\ \ \ \ \ \ \ NV\_DATA\_S(cv\_mem-\/>cv\_tempv1)[\mbox{\hyperlink{rxn__solver_8c_a54c6b096c8d0ad934d0d1911891830cd}{CAMP\_DEBUG\_SPEC\_}}],}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00046}00046\ \ \ \ \ \ \ NV\_DATA\_S(cv\_mem-\/>cv\_tempv2)[\mbox{\hyperlink{rxn__solver_8c_a54c6b096c8d0ad934d0d1911891830cd}{CAMP\_DEBUG\_SPEC\_}}],}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00047}00047\ \ \ \ \ \ \ NV\_DATA\_S(cv\_mem-\/>cv\_acor\_init)[\mbox{\hyperlink{rxn__solver_8c_a54c6b096c8d0ad934d0d1911891830cd}{CAMP\_DEBUG\_SPEC\_}}],}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00048}00048\ \ \ \ \ \ \ NV\_DATA\_S(cv\_mem-\/>cv\_last\_yn)[\mbox{\hyperlink{rxn__solver_8c_a54c6b096c8d0ad934d0d1911891830cd}{CAMP\_DEBUG\_SPEC\_}}]);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00049}00049\ \ \ \textcolor{keywordflow}{if}\ (do\_full)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00050}00050\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ NV\_LENGTH\_S(cv\_mem-\/>cv\_y);\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00051}00051\ \ \ \ \ \ \ printf(}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)n\ \ zn[0][\%3d]\ =\ \%\ -\/le\ zn[1][\%3d]\ =\ \%\ -\/le\ tempv[\%3d]\ =\ \%\ -\/le\ "{}}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}tempv1[\%3d]\ =\ \%\ -\/le\ tempv2[\%3d]\ =\ \%\ -\/le\ acor\_init[\%3d]\ =\ \%\ -\/le\ "{}}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}last\_yn[\%3d]\ =\ \%\ -\/le"{}},}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ i,\ NV\_DATA\_S(cv\_mem-\/>cv\_zn[0])[i],\ i,\ NV\_DATA\_S(cv\_mem-\/>cv\_zn[1])[i],}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ i,\ NV\_DATA\_S(cv\_mem-\/>cv\_tempv)[i],\ i,\ NV\_DATA\_S(cv\_mem-\/>cv\_tempv1)[i],}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ i,\ NV\_DATA\_S(cv\_mem-\/>cv\_tempv2)[i],\ i,}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ NV\_DATA\_S(cv\_mem-\/>cv\_acor\_init)[i],\ i,}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ NV\_DATA\_S(cv\_mem-\/>cv\_last\_yn)[i]);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00060}00060\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00061}00061\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00062}00062\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00063}00063\ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00064}00064\ \textcolor{keywordtype}{void}\ camp\_debug\_print\_jac\_struct(\textcolor{keywordtype}{void}\ *solver\_data,\ SUNMatrix\ J,}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *message)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00066}00066\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_SUNDIALS}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00067}00067\ \ \ \mbox{\hyperlink{struct_solver_data}{SolverData}}\ *sd\ =\ (\mbox{\hyperlink{struct_solver_data}{SolverData}}\ *)solver\_data;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00069}00069\ \ \ \textcolor{keywordflow}{if}\ (!(sd-\/>debug\_out))\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00070}00070\ \ \ \textcolor{keywordtype}{int}\ n\_state\_var\ =\ SM\_COLUMNS\_S(J);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00071}00071\ \ \ \textcolor{keywordtype}{int}\ i\_elem\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00072}00072\ \ \ \textcolor{keywordtype}{int}\ next\_col\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00073}00073\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)n\ \ \ Jacobian\ structure\ (↓ind\ →dep)\ -\/\ \%s\(\backslash\)n\ \ \ \ \ "{}},\ message);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00074}00074\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_dep\ =\ 0;\ i\_dep\ <\ n\_state\_var;\ i\_dep++)\ printf(\textcolor{stringliteral}{"{}[\%3d]"{}},\ i\_dep);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00075}00075\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_ind\ =\ 0;\ i\_ind\ <\ n\_state\_var;\ i\_ind++)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00076}00076\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n[\%3d]"{}},\ i\_ind);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00077}00077\ \ \ \ \ next\_col\ =\ SM\_INDEXPTRS\_S(J)[i\_ind\ +\ 1];}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00078}00078\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_dep\ =\ 0;\ i\_dep\ <\ n\_state\_var;\ i\_dep++)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00079}00079\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_dep\ ==\ SM\_INDEXVALS\_S(J)[i\_elem]\ \&\&\ i\_elem\ <\ next\_col)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00080}00080\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\ \%3d\ "{}},\ i\_elem++);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00081}00081\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00082}00082\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\ \ -\/\ \ "{}});}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00083}00083\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00084}00084\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00085}00085\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00086}00086\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00087}00087\ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00088}00088\ \textcolor{keywordtype}{void}\ camp\_debug\_print\_jac(\textcolor{keywordtype}{void}\ *solver\_data,\ SUNMatrix\ J,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *message)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00089}00089\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_SUNDIALS}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00090}00090\ \ \ \mbox{\hyperlink{struct_solver_data}{SolverData}}\ *sd\ =\ (\mbox{\hyperlink{struct_solver_data}{SolverData}}\ *)solver\_data;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00092}00092\ \ \ \textcolor{keywordflow}{if}\ (!(sd-\/>debug\_out))\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00093}00093\ \ \ \textcolor{keywordtype}{int}\ n\_state\_var\ =\ SM\_COLUMNS\_S(J);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00094}00094\ \ \ \textcolor{keywordtype}{int}\ i\_elem\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00095}00095\ \ \ \textcolor{keywordtype}{int}\ next\_col\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00096}00096\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)n\ \ \ Jacobian\ (↓ind\ →dep)\ -\/\ \%s\(\backslash\)n\ \ \ \ \ "{}},\ message);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00097}00097\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_dep\ =\ 0;\ i\_dep\ <\ n\_state\_var;\ i\_dep++)}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00098}00098\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\ \ \ \ \ \ [\%3d]"{}},\ i\_dep);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00099}00099\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_ind\ =\ 0;\ i\_ind\ <\ n\_state\_var;\ i\_ind++)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00100}00100\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n[\%3d]\ \ \ "{}},\ i\_ind);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00101}00101\ \ \ \ \ next\_col\ =\ SM\_INDEXPTRS\_S(J)[i\_ind\ +\ 1];}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00102}00102\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_dep\ =\ 0;\ i\_dep\ <\ n\_state\_var;\ i\_dep++)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00103}00103\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_dep\ ==\ SM\_INDEXVALS\_S(J)[i\_elem]\ \&\&\ i\_elem\ <\ next\_col)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00104}00104\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\ \%\ -\/1.2le\ "{}},\ SM\_DATA\_S(J)[i\_elem++]);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00105}00105\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00106}00106\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\ \ \ \ \ -\/\ \ \ \ \ "{}});}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00107}00107\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00108}00108\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00109}00109\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00110}00110\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00111}00111\ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00112}00112\ }
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00113}00113\ realtype\ camp\_jac\_elem(SUNMatrix\ J,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ j,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00114}00114\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_elem\ =\ SM\_INDEXPTRS\_S(J)[j];\ i\_elem\ <\ SM\_INDEXPTRS\_S(J)[j\ +\ 1];}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00115}00115\ \ \ \ \ \ \ \ ++i\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00116}00116\ \ \ \ \ \textcolor{keywordflow}{if}\ (i\ ==\ SM\_INDEXVALS\_S(J)[i\_elem])\ \textcolor{keywordflow}{return}\ SM\_DATA\_S(J)[i\_elem];}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00117}00117\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00118}00118\ \ \ \textcolor{keywordflow}{return}\ 0.0;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00119}00119\ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00120}00120\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00121}\mbox{\hyperlink{camp__debug_8h_a0c216dd1cf5d2f5883fa131af740de03}{00121}}\ \textcolor{preprocessor}{\#define\ CAMP\_DEBUG\_PRINT(x)}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00122}\mbox{\hyperlink{camp__debug_8h_ae7c91427c0b12d2282ba60bdbfba4995}{00122}}\ \textcolor{preprocessor}{\#define\ CAMP\_DEBUG\_PRINT\_INT(x,\ y)}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00123}\mbox{\hyperlink{camp__debug_8h_af048b16095261faad1266d736d2760a0}{00123}}\ \textcolor{preprocessor}{\#define\ CAMP\_DEBUG\_PRINT\_FULL(x)}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00124}\mbox{\hyperlink{camp__debug_8h_a84d1682a8781c7ef14a9490c80585beb}{00124}}\ \textcolor{preprocessor}{\#define\ CAMP\_DEBUG\_JAC\_STRUCT(J,\ x)}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00125}\mbox{\hyperlink{camp__debug_8h_a7106635ad6a226661036c50938876736}{00125}}\ \textcolor{preprocessor}{\#define\ CAMP\_DEBUG\_JAC(J,\ x)}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00126}00126\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00127}00127\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00128}00128\ \textcolor{comment}{/**\ \(\backslash\)brief\ Print\ some\ camp-\/chem\ data\ sizes}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00129}00129\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00130}00130\ \textcolor{comment}{\ *\ \(\backslash\)param\ md\ Pointer\ to\ the\ model\ data}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00131}00131\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00132}\mbox{\hyperlink{camp__debug_8h_adfee57a3797c09d1fb585d9f49477c32}{00132}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{camp__debug_8h_adfee57a3797c09d1fb585d9f49477c32}{print\_data\_sizes}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *md)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00133}00133\ \ \ \textcolor{keywordtype}{int}\ *ptr\ =\ md-\/>\mbox{\hyperlink{struct_model_data_a8a9c65041e8df53b121da0ce7c796c62}{rxn\_int\_data}};}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00134}00134\ \ \ \textcolor{keywordtype}{int}\ n\_rxn\ =\ ptr[0];}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00135}00135\ }
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00136}00136\ \ \ printf(\textcolor{stringliteral}{"{}n\_rxn:\ \%d\ "{}},\ n\_rxn);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00137}00137\ \ \ printf(\textcolor{stringliteral}{"{}n\_state\_var:\ \%d"{}},\ md-\/>\mbox{\hyperlink{struct_model_data_a178342b9966d83bcd4fa78b265688440}{n\_per\_cell\_state\_var}}\ *\ md-\/>\mbox{\hyperlink{struct_model_data_a075293f1ab10cd4ba031ae1d28339173}{n\_cells}});}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00138}00138\ \ \ printf(\textcolor{stringliteral}{"{}n\_dep\_var:\ \%d"{}},\ md-\/>\mbox{\hyperlink{struct_model_data_ae961b94f71cd56344b13e006377dbc14}{n\_per\_cell\_dep\_var}}\ *\ md-\/>\mbox{\hyperlink{struct_model_data_a075293f1ab10cd4ba031ae1d28339173}{n\_cells}});}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00139}00139\ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00140}00140\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00141}00141\ \textcolor{comment}{/**\ \(\backslash\)brief\ Print\ Jacobian\ matrix\ in\ format\ KLU\ SPARSE}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00142}00142\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00143}00143\ \textcolor{comment}{\ *\ \(\backslash\)param\ M\ Jacobian\ matrix}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00144}00144\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00145}\mbox{\hyperlink{camp__debug_8h_a5e1481fdcb1fc315878002edb9346b77}{00145}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{camp__debug_8h_a5e1481fdcb1fc315878002edb9346b77}{print\_jacobian}}(SUNMatrix\ M)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00146}00146\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ NNZ\ JAC:\ \%lld\ \(\backslash\)n"{}},\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})SM\_NNZ\_S(M));}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00147}00147\ \ \ printf(\textcolor{stringliteral}{"{}DATA\ |\ INDEXVALS:\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00148}00148\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ SM\_NNZ\_S(M);\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00149}00149\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%\ -\/le\ \(\backslash\)n"{}},\ (SM\_DATA\_S(M))[i]);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00150}00150\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%lld\ \(\backslash\)n"{}},\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})((SM\_INDEXVALS\_S(M))[i]));}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00151}00151\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00152}00152\ \ \ printf(\textcolor{stringliteral}{"{}PTRS:\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00153}00153\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <=\ SM\_NP\_S(M);\ i++)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00154}00154\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\%lld\ \(\backslash\)n"{}},\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{long})((SM\_INDEXPTRS\_S(M))[i]));}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00155}00155\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00156}00156\ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00157}00157\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00158}00158\ \textcolor{comment}{/**\ \(\backslash\)brief\ Print\ derivative\ array}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00159}00159\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00160}00160\ \textcolor{comment}{\ *\ \(\backslash\)param\ deriv\ Derivative\ array}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00161}00161\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00162}\mbox{\hyperlink{camp__debug_8h_a99ec22cbccaf8d6c6ab6a30f27474cfa}{00162}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{camp__debug_8h_a99ec22cbccaf8d6c6ab6a30f27474cfa}{print\_derivative}}(N\_Vector\ deriv)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00163}00163\ \ \ \textcolor{comment}{//\ printf("{}\ deriv\ length:\ \%d\(\backslash\)n"{},\ NV\_LENGTH\_S(deriv));}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00164}00164\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ NV\_LENGTH\_S(deriv);\ i++)\ \{\ \ \textcolor{comment}{//\ NV\_LENGTH\_S(deriv)}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00165}00165\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\ deriv:\ \%\ -\/le"{}},\ NV\_DATA\_S(deriv)[i]);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00166}00166\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\ index:\ \%d\ \(\backslash\)n"{}},\ i);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00167}00167\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00168}00168\ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00169}00169\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00170}00170\ \textcolor{comment}{/**\ \(\backslash\)brief\ Evaluate\ the\ derivative\ and\ Jacobian\ near\ a\ given\ state}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00171}00171\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ for\ a\ specified\ species}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00172}00172\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00173}00173\ \textcolor{comment}{\ *\ \(\backslash\)param\ curr\_time\ Current\ time}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00174}00174\ \textcolor{comment}{\ *\ \(\backslash\)param\ state\ State\ array}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00175}00175\ \textcolor{comment}{\ *\ \(\backslash\)param\ deriv\ Derivative\ array}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00176}00176\ \textcolor{comment}{\ *\ \(\backslash\)param\ solver\_data\ Void\ pointer\ to\ solver\ data}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00177}00177\ \textcolor{comment}{\ *\ \(\backslash\)param\ f\ Pointer\ to\ derivative\ function}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00178}00178\ \textcolor{comment}{\ *\ \(\backslash\)param\ i\_dep\ Dependent\ species\ index}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00179}00179\ \textcolor{comment}{\ *\ \(\backslash\)param\ i\_ind\ Independent\ species\ index}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00180}00180\ \textcolor{comment}{\ *\ \(\backslash\)param\ d\_rate\_d\_ind\ Change\ in\ rate\ for\ dependent\ species\ with\ change\ in}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00181}00181\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ independent\ species}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00182}00182\ \textcolor{comment}{\ *\ \(\backslash\)param\ d\_ind\ Increment\ to\ use\ in\ plot\ of\ rate\_dep\ vs\ conc\_ind}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00183}00183\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00184}\mbox{\hyperlink{camp__debug_8h_a0352ebf153678772ffbeb405834c141d}{00184}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{camp__debug_8h_a0352ebf153678772ffbeb405834c141d}{output\_deriv\_local\_state}}(realtype\ curr\_time,\ N\_Vector\ state,}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ N\_Vector\ deriv,\ \textcolor{keywordtype}{void}\ *solver\_data,}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ (*\mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f}})(realtype,\ N\_Vector,\ N\_Vector,\ \textcolor{keywordtype}{void}\ *),}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ i\_dep,\ \textcolor{keywordtype}{int}\ i\_ind,\ \textcolor{keywordtype}{double}\ d\_rate\_d\_ind,}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ d\_ind)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00189}00189\ \ \ realtype\ *deriv\_data\ =\ NV\_DATA\_S(deriv);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00190}00190\ \ \ realtype\ *state\_data\ =\ NV\_DATA\_S(state);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00191}00191\ \ \ realtype\ rate\_orig\ =\ deriv\_data[i\_dep];}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00192}00192\ \ \ realtype\ ind\_orig\ =\ state\_data[i\_ind];}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00193}00193\ }
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00194}00194\ \ \ \mbox{\hyperlink{struct_solver_data}{SolverData}}\ *sd\ =\ (\mbox{\hyperlink{struct_solver_data}{SolverData}}\ *)solver\_data;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00195}00195\ \ \ \mbox{\hyperlink{struct_model_data}{ModelData}}\ *md\ =\ \&(sd-\/>\mbox{\hyperlink{struct_solver_data_addacaed7357d35a1c6f521a86845121d}{model\_data}});}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00196}00196\ }
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00197}00197\ \ \ FILE\ *f\_output;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00198}00198\ \ \ \textcolor{keywordtype}{char}\ file\_name[\mbox{\hyperlink{camp__debug_8h_af43dedece15d018ffad8970492870bac}{MAX\_FILE\_NAME}}];}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00199}00199\ \ \ sprintf(file\_name,\ \textcolor{stringliteral}{"{}local\_\%d\_i\%d\_d\%d"{}},\ \mbox{\hyperlink{camp__debug_8h_a9de85b90ee0979bddec92adf8f0426d4}{file\_name\_prefix}}++,\ i\_ind,\ i\_dep);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00200}00200\ \ \ f\_output\ =\ fopen(file\_name,\ \textcolor{stringliteral}{"{}w"{}});}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00201}00201\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nOutputting\ deriv\ local\ state\ file:\ \%s"{}},\ file\_name);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00203}00203\ \ \ \textcolor{comment}{//\ Output\ the\ loss\ of\ precision\ for\ all\ species}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00204}00204\ \ \ ((\mbox{\hyperlink{struct_solver_data}{SolverData}}\ *)solver\_data)-\/>output\_precision\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00205}00205\ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f}}(curr\_time,\ state,\ deriv,\ solver\_data)\ !=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00206}00206\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nERROR:\ Derivative\ failure\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00207}00207\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00208}00208\ \ \ ((\mbox{\hyperlink{struct_solver_data}{SolverData}}\ *)solver\_data)-\/>output\_precision\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00209}00209\ }
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00210}00210\ \ \ \textcolor{comment}{//\ Output\ the\ current\ state}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00211}00211\ \ \ fprintf(f\_output,\ \textcolor{stringliteral}{"{}\#time\ \%1.30le"{}},\ curr\_time);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00212}00212\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ NV\_LENGTH\_S(state);\ ++i)}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00213}00213\ \ \ \ \ fprintf(f\_output,\ \textcolor{stringliteral}{"{}\ [\%3d]\ \%1.30le"{}},\ i,\ state\_data[i]);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00214}00214\ \ \ fprintf(f\_output,\ \textcolor{stringliteral}{"{}\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00215}00215\ }
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00216}00216\ \ \ \textcolor{comment}{//\ Vary\ the\ model\ state\ and\ recalculate\ the\ derivative\ directly\ and\ using}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00217}00217\ \ \ \textcolor{comment}{//\ the\ partial\ derivative\ provided}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00218}00218\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{camp__debug_8h_a551527c79eeba1318684b9fcc2203b98}{N\_OUTPUT\_STATES}};\ ++i)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00219}00219\ \ \ \ \ state\_data[i\_ind]\ -\/=\ d\_ind;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00220}00220\ \ \ \ \ \textcolor{keywordflow}{if}\ (state\_data[i\_ind]\ <\ 0.0)\ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00221}00221\ }
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00222}00222\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f}}(curr\_time,\ state,\ deriv,\ solver\_data)\ !=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00223}00223\ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nERROR:\ Derivative\ failure\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00224}00224\ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00225}00225\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00226}00226\ \ \ \ \ fprintf(f\_output,\ \textcolor{stringliteral}{"{}\%d\ \%1.30le\ \%1.30le\ \%1.30le\(\backslash\)n"{}},\ -\/i,\ state\_data[i\_ind],}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ deriv\_data[i\_dep],}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ (state\_data[i\_ind]\ -\/\ ind\_orig)\ *\ d\_rate\_d\_ind\ +\ rate\_orig);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00229}00229\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00230}00230\ \ \ state\_data[i\_ind]\ =\ ind\_orig;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00231}00231\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{camp__debug_8h_a551527c79eeba1318684b9fcc2203b98}{N\_OUTPUT\_STATES}};\ ++i)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00232}00232\ \ \ \ \ state\_data[i\_ind]\ +=\ d\_ind;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00233}00233\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f}}(curr\_time,\ state,\ deriv,\ solver\_data)\ !=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00234}00234\ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nERROR:\ Derivative\ failure\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00235}00235\ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00236}00236\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00237}00237\ \ \ \ \ fprintf(f\_output,\ \textcolor{stringliteral}{"{}\%d\ \%1.30le\ \%1.30le\ \%1.30le\(\backslash\)n"{}},\ i,\ state\_data[i\_ind],}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00238}00238\ \ \ \ \ \ \ \ \ \ \ \ \ deriv\_data[i\_dep],}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ (state\_data[i\_ind]\ -\/\ ind\_orig)\ *\ d\_rate\_d\_ind\ +\ rate\_orig);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00240}00240\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00241}00241\ \ \ state\_data[i\_ind]\ =\ ind\_orig;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00242}00242\ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f}}(curr\_time,\ state,\ deriv,\ solver\_data)\ !=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00243}00243\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nERROR:\ Derivative\ failure\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00244}00244\ \ \ \ \ EXIT\_FAILURE;}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00245}00245\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00246}00246\ }
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00247}00247\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nEnd\ output\ deriv\ local\ state\ file:\ \%s"{}},\ file\_name);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00248}00248\ \ \ fclose(f\_output);}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00249}00249\ \}}
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{camp__debug_8h_source_l00251}00251\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

@@ -1,4 +1,7 @@
 <map id="camp_util::interp_1d" name="camp_util::interp_1d">
-<area shape="rect" id="node1" title="1D linear interpolation." alt="" coords="5,29,143,55"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a5f0d2175aaae4112637d13f1a1c123fe" title="Find the position of a real number in an arbitrary 1D array." alt="" coords="191,29,316,55"/>
+<area shape="rect" id="Node000001" title="1D linear interpolation." alt="" coords="5,29,142,55"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="43,30,38,21,41,11,53,5,74,3,95,5,106,12,104,16,93,10,73,8,55,10,45,15,43,20,48,28"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#a5f0d2175aaae4112637d13f1a1c123fe" title="Find the position of a real number in an arbitrary 1D array." alt="" coords="190,29,314,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,40,174,40,174,45,142,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="222,30,216,21,219,11,232,5,252,3,273,5,285,12,282,16,272,10,252,8,233,10,223,15,221,20,226,28"/>
 </map>

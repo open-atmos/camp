@@ -1,0 +1,23 @@
+\doxysubsection{CAMP\+: First-\/\+Order Loss}
+\hypertarget{camp_rxn_first_order_loss}{}\label{camp_rxn_first_order_loss}\index{CAMP: First-\/Order Loss@{CAMP: First-\/Order Loss}}
+First-\/\+Order Loss reactions take the form\+:
+
+\[
+   \mbox{X} \rightarrow
+ \]
+
+where $\ce{X}$ is the species being lost.
+
+First-\/\+Order loss rate constants can be constant or set from an external module using the {\ttfamily \doxylink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t}{camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::rxn\+\_\+update\+\_\+data\+\_\+first\+\_\+order\+\_\+loss\+\_\+t}} object. External modules can use the {\ttfamily \doxylink{structcamp__rxn__first__order__loss_1_1rxn__first__order__loss__t_ab9ed20b923e1b8621e6e7150e66dd72d}{camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+t\+::get\+\_\+property\+\_\+set()}} function during initilialization to access any needed reaction parameters to identify certain first-\/order loss reactions. An {\ttfamily camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::update\+\_\+data\+\_\+first\+\_\+order\+\_\+loss\+\_\+t} object should be initialized for each reaction. These objects can then be used during solving to update the first order loss rate from an external module.
+
+Input data for first-\/order loss reactions have the following format \+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}FIRST\_ORDER\_LOSS"{},}
+\DoxyCodeLine{\ \ "{}species"{}\ :\ "{}species\_name"{},}
+\DoxyCodeLine{\ \ "{}scaling\ factor"{}\ :\ 1.2,}
+\DoxyCodeLine{\ \ ...}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ The key-\/value pairs {\bfseries{species}} is required and its value must be the name of the species being removed by the reaction. The {\bfseries{scaling}} {\bfseries{factor}} is optional, and can be used to set a constant scaling factor for the rate constant. When a {\bfseries{scaling}} {\bfseries{factor}} is not provided, it is assumed to be 1.\+0. All other data is optional and will be available to external modules during initialization. Rate constants are in units of $s^{-1}$, and must be set using a {\ttfamily rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+update\+\_\+data\+\_\+t} object. 

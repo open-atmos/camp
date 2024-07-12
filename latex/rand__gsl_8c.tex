@@ -1,13 +1,19 @@
-\hypertarget{rand__gsl_8c}{}\doxysection{rand\+\_\+gsl.\+c File Reference}
-\label{rand__gsl_8c}\index{rand\_gsl.c@{rand\_gsl.c}}
+\doxysection{rand\+\_\+gsl.\+c File Reference}
+\hypertarget{rand__gsl_8c}{}\label{rand__gsl_8c}\index{rand\_gsl.c@{rand\_gsl.c}}
 
 
 Wrapper routines for GSL random number functions.  
 
 
 Include dependency graph for rand\+\_\+gsl.\+c\+:
-% FIG 0
-\doxysubsection*{Macros}
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rand__gsl_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \mbox{\hyperlink{rand__gsl_8c_ac7fa5e4e87a14cb60ead968e517b500a}{CAMP\+\_\+\+RAND\+\_\+\+GSL\+\_\+\+SUCCESS}}~0
@@ -18,27 +24,27 @@ Include dependency graph for rand\+\_\+gsl.\+c\+:
 \begin{DoxyCompactList}\small\item\em Result code indicating the generator was not initialized when it should have been. \end{DoxyCompactList}\item 
 \#define \mbox{\hyperlink{rand__gsl_8c_a6825046dc06c16e1bd1f55828d84bf40}{CAMP\+\_\+\+RAND\+\_\+\+GSL\+\_\+\+ALREADY\+\_\+\+INIT}}~3
 \begin{DoxyCompactList}\small\item\em Result code indicating the generator was already initialized when an initialization was attempted. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Functions}
+\doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
 int \mbox{\hyperlink{rand__gsl_8c_ad7746428b015f3f2da1eadeb262237b6}{camp\+\_\+srand\+\_\+gsl}} (int seed)
 \begin{DoxyCompactList}\small\item\em Initialize the random number generator with the given seed. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{rand__gsl_8c_a1bd137bff02ae81a2261e0aca1604492}{camp\+\_\+rand\+\_\+finalize\+\_\+gsl}} ()
 \begin{DoxyCompactList}\small\item\em Cleanup and deallocate the random number generator. \end{DoxyCompactList}\item 
-int \mbox{\hyperlink{rand__gsl_8c_abd204acb91a0adebb638deae62396379}{camp\+\_\+rand\+\_\+gsl}} (double $\ast$harvest)
+int \mbox{\hyperlink{rand__gsl_8c_abd204acb91a0adebb638deae62396379}{camp\+\_\+rand\+\_\+gsl}} (double \texorpdfstring{$\ast$}{*}harvest)
 \begin{DoxyCompactList}\small\item\em Generate a uniform random number in $[0,1)$. \end{DoxyCompactList}\item 
-int \mbox{\hyperlink{rand__gsl_8c_a0ebca9079073ff12ca49babd5f49edb9}{camp\+\_\+rand\+\_\+int\+\_\+gsl}} (int n, int $\ast$harvest)
+int \mbox{\hyperlink{rand__gsl_8c_a0ebca9079073ff12ca49babd5f49edb9}{camp\+\_\+rand\+\_\+int\+\_\+gsl}} (int n, int \texorpdfstring{$\ast$}{*}harvest)
 \begin{DoxyCompactList}\small\item\em Generate a uniform random integer in $[1,n]$. \end{DoxyCompactList}\item 
-int \mbox{\hyperlink{rand__gsl_8c_a77cc930abbc556f2ff28f676d1b740bc}{camp\+\_\+rand\+\_\+normal\+\_\+gsl}} (double mean, double stddev, double $\ast$harvest)
+int \mbox{\hyperlink{rand__gsl_8c_a77cc930abbc556f2ff28f676d1b740bc}{camp\+\_\+rand\+\_\+normal\+\_\+gsl}} (double mean, double stddev, double \texorpdfstring{$\ast$}{*}harvest)
 \begin{DoxyCompactList}\small\item\em Generate a normally-\/distributed random number. \end{DoxyCompactList}\item 
-int \mbox{\hyperlink{rand__gsl_8c_a40555ee4862b906fb1a2ace9b76114a1}{camp\+\_\+rand\+\_\+poisson\+\_\+gsl}} (double mean, int $\ast$harvest)
+int \mbox{\hyperlink{rand__gsl_8c_a40555ee4862b906fb1a2ace9b76114a1}{camp\+\_\+rand\+\_\+poisson\+\_\+gsl}} (double mean, int \texorpdfstring{$\ast$}{*}harvest)
 \begin{DoxyCompactList}\small\item\em Generate a Poisson-\/distributed random integer. \end{DoxyCompactList}\item 
-int \mbox{\hyperlink{rand__gsl_8c_af73fad1b3cd91ba86a264bae77b3eee5}{camp\+\_\+rand\+\_\+binomial\+\_\+gsl}} (int n, double p, int $\ast$harvest)
+int \mbox{\hyperlink{rand__gsl_8c_af73fad1b3cd91ba86a264bae77b3eee5}{camp\+\_\+rand\+\_\+binomial\+\_\+gsl}} (int n, double p, int \texorpdfstring{$\ast$}{*}harvest)
 \begin{DoxyCompactList}\small\item\em Generate a Binomial-\/distributed random integer. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Variables}
+\doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
-static gsl\+\_\+rng $\ast$ \mbox{\hyperlink{rand__gsl_8c_a522b9e20123b1f90f53ad812e255328e}{camp\+\_\+rand\+\_\+gsl\+\_\+rng}} = NULL
+static gsl\+\_\+rng \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{rand__gsl_8c_a522b9e20123b1f90f53ad812e255328e}{camp\+\_\+rand\+\_\+gsl\+\_\+rng}} = NULL
 \begin{DoxyCompactList}\small\item\em Private internal-\/use variable to store the random number generator. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -52,7 +58,7 @@ Definition in file \mbox{\hyperlink{rand__gsl_8c_source}{rand\+\_\+gsl.\+c}}.
 
 
 \doxysubsection{Macro Definition Documentation}
-\mbox{\Hypertarget{rand__gsl_8c_a6825046dc06c16e1bd1f55828d84bf40}\label{rand__gsl_8c_a6825046dc06c16e1bd1f55828d84bf40}} 
+\Hypertarget{rand__gsl_8c_a6825046dc06c16e1bd1f55828d84bf40}\label{rand__gsl_8c_a6825046dc06c16e1bd1f55828d84bf40} 
 \index{rand\_gsl.c@{rand\_gsl.c}!CAMP\_RAND\_GSL\_ALREADY\_INIT@{CAMP\_RAND\_GSL\_ALREADY\_INIT}}
 \index{CAMP\_RAND\_GSL\_ALREADY\_INIT@{CAMP\_RAND\_GSL\_ALREADY\_INIT}!rand\_gsl.c@{rand\_gsl.c}}
 \doxysubsubsection{\texorpdfstring{CAMP\_RAND\_GSL\_ALREADY\_INIT}{CAMP\_RAND\_GSL\_ALREADY\_INIT}}
@@ -66,7 +72,7 @@ Result code indicating the generator was already initialized when an initializat
 
 Definition at line \mbox{\hyperlink{rand__gsl_8c_source_l00036}{36}} of file \mbox{\hyperlink{rand__gsl_8c_source}{rand\+\_\+gsl.\+c}}.
 
-\mbox{\Hypertarget{rand__gsl_8c_a1a43525e5694d20c50b3c0e3700a7eba}\label{rand__gsl_8c_a1a43525e5694d20c50b3c0e3700a7eba}} 
+\Hypertarget{rand__gsl_8c_a1a43525e5694d20c50b3c0e3700a7eba}\label{rand__gsl_8c_a1a43525e5694d20c50b3c0e3700a7eba} 
 \index{rand\_gsl.c@{rand\_gsl.c}!CAMP\_RAND\_GSL\_INIT\_FAIL@{CAMP\_RAND\_GSL\_INIT\_FAIL}}
 \index{CAMP\_RAND\_GSL\_INIT\_FAIL@{CAMP\_RAND\_GSL\_INIT\_FAIL}!rand\_gsl.c@{rand\_gsl.c}}
 \doxysubsubsection{\texorpdfstring{CAMP\_RAND\_GSL\_INIT\_FAIL}{CAMP\_RAND\_GSL\_INIT\_FAIL}}
@@ -80,7 +86,7 @@ Result code indicating initialization failure.
 
 Definition at line \mbox{\hyperlink{rand__gsl_8c_source_l00028}{28}} of file \mbox{\hyperlink{rand__gsl_8c_source}{rand\+\_\+gsl.\+c}}.
 
-\mbox{\Hypertarget{rand__gsl_8c_a07c25acac430e6523ba37ef50712a973}\label{rand__gsl_8c_a07c25acac430e6523ba37ef50712a973}} 
+\Hypertarget{rand__gsl_8c_a07c25acac430e6523ba37ef50712a973}\label{rand__gsl_8c_a07c25acac430e6523ba37ef50712a973} 
 \index{rand\_gsl.c@{rand\_gsl.c}!CAMP\_RAND\_GSL\_NOT\_INIT@{CAMP\_RAND\_GSL\_NOT\_INIT}}
 \index{CAMP\_RAND\_GSL\_NOT\_INIT@{CAMP\_RAND\_GSL\_NOT\_INIT}!rand\_gsl.c@{rand\_gsl.c}}
 \doxysubsubsection{\texorpdfstring{CAMP\_RAND\_GSL\_NOT\_INIT}{CAMP\_RAND\_GSL\_NOT\_INIT}}
@@ -94,7 +100,7 @@ Result code indicating the generator was not initialized when it should have bee
 
 Definition at line \mbox{\hyperlink{rand__gsl_8c_source_l00032}{32}} of file \mbox{\hyperlink{rand__gsl_8c_source}{rand\+\_\+gsl.\+c}}.
 
-\mbox{\Hypertarget{rand__gsl_8c_ac7fa5e4e87a14cb60ead968e517b500a}\label{rand__gsl_8c_ac7fa5e4e87a14cb60ead968e517b500a}} 
+\Hypertarget{rand__gsl_8c_ac7fa5e4e87a14cb60ead968e517b500a}\label{rand__gsl_8c_ac7fa5e4e87a14cb60ead968e517b500a} 
 \index{rand\_gsl.c@{rand\_gsl.c}!CAMP\_RAND\_GSL\_SUCCESS@{CAMP\_RAND\_GSL\_SUCCESS}}
 \index{CAMP\_RAND\_GSL\_SUCCESS@{CAMP\_RAND\_GSL\_SUCCESS}!rand\_gsl.c@{rand\_gsl.c}}
 \doxysubsubsection{\texorpdfstring{CAMP\_RAND\_GSL\_SUCCESS}{CAMP\_RAND\_GSL\_SUCCESS}}
@@ -111,11 +117,11 @@ Definition at line \mbox{\hyperlink{rand__gsl_8c_source_l00025}{25}} of file \mb
 
 
 \doxysubsection{Function Documentation}
-\mbox{\Hypertarget{rand__gsl_8c_af73fad1b3cd91ba86a264bae77b3eee5}\label{rand__gsl_8c_af73fad1b3cd91ba86a264bae77b3eee5}} 
+\Hypertarget{rand__gsl_8c_af73fad1b3cd91ba86a264bae77b3eee5}\label{rand__gsl_8c_af73fad1b3cd91ba86a264bae77b3eee5} 
 \index{rand\_gsl.c@{rand\_gsl.c}!camp\_rand\_binomial\_gsl@{camp\_rand\_binomial\_gsl}}
 \index{camp\_rand\_binomial\_gsl@{camp\_rand\_binomial\_gsl}!rand\_gsl.c@{rand\_gsl.c}}
 \doxysubsubsection{\texorpdfstring{camp\_rand\_binomial\_gsl()}{camp\_rand\_binomial\_gsl()}}
-{\footnotesize\ttfamily int camp\+\_\+rand\+\_\+binomial\+\_\+gsl (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{double}]{p,  }\item[{int $\ast$}]{harvest }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int camp\+\_\+rand\+\_\+binomial\+\_\+gsl (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{double}]{p,  }\item[{int \texorpdfstring{$\ast$}{*}}]{harvest }\end{DoxyParamCaption})}
 
 
 
@@ -138,8 +144,14 @@ CAMP\+\_\+\+RAND\+\_\+\+GSL\+\_\+\+SUCCESS on success, otherwise an error code.
 Definition at line \mbox{\hyperlink{rand__gsl_8c_source_l00144}{144}} of file \mbox{\hyperlink{rand__gsl_8c_source}{rand\+\_\+gsl.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 1
-\mbox{\Hypertarget{rand__gsl_8c_a1bd137bff02ae81a2261e0aca1604492}\label{rand__gsl_8c_a1bd137bff02ae81a2261e0aca1604492}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rand__gsl_8c_af73fad1b3cd91ba86a264bae77b3eee5_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rand__gsl_8c_a1bd137bff02ae81a2261e0aca1604492}\label{rand__gsl_8c_a1bd137bff02ae81a2261e0aca1604492} 
 \index{rand\_gsl.c@{rand\_gsl.c}!camp\_rand\_finalize\_gsl@{camp\_rand\_finalize\_gsl}}
 \index{camp\_rand\_finalize\_gsl@{camp\_rand\_finalize\_gsl}!rand\_gsl.c@{rand\_gsl.c}}
 \doxysubsubsection{\texorpdfstring{camp\_rand\_finalize\_gsl()}{camp\_rand\_finalize\_gsl()}}
@@ -149,7 +161,7 @@ Here is the caller graph for this function\+:
 
 Cleanup and deallocate the random number generator. 
 
-This must be called after \mbox{\hyperlink{rand__gsl_8c_ad7746428b015f3f2da1eadeb262237b6}{camp\+\_\+srand\+\_\+gsl()}}.
+This must be called after \doxylink{rand__gsl_8c_ad7746428b015f3f2da1eadeb262237b6}{camp\+\_\+srand\+\_\+gsl()}.
 
 \begin{DoxyReturn}{Returns}
 CAMP\+\_\+\+RAND\+\_\+\+GSL\+\_\+\+SUCCESS on success, otherwise an error code. 
@@ -159,12 +171,18 @@ CAMP\+\_\+\+RAND\+\_\+\+GSL\+\_\+\+SUCCESS on success, otherwise an error code.
 Definition at line \mbox{\hyperlink{rand__gsl_8c_source_l00067}{67}} of file \mbox{\hyperlink{rand__gsl_8c_source}{rand\+\_\+gsl.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 2
-\mbox{\Hypertarget{rand__gsl_8c_abd204acb91a0adebb638deae62396379}\label{rand__gsl_8c_abd204acb91a0adebb638deae62396379}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=349pt]{rand__gsl_8c_a1bd137bff02ae81a2261e0aca1604492_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rand__gsl_8c_abd204acb91a0adebb638deae62396379}\label{rand__gsl_8c_abd204acb91a0adebb638deae62396379} 
 \index{rand\_gsl.c@{rand\_gsl.c}!camp\_rand\_gsl@{camp\_rand\_gsl}}
 \index{camp\_rand\_gsl@{camp\_rand\_gsl}!rand\_gsl.c@{rand\_gsl.c}}
 \doxysubsubsection{\texorpdfstring{camp\_rand\_gsl()}{camp\_rand\_gsl()}}
-{\footnotesize\ttfamily int camp\+\_\+rand\+\_\+gsl (\begin{DoxyParamCaption}\item[{double $\ast$}]{harvest }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int camp\+\_\+rand\+\_\+gsl (\begin{DoxyParamCaption}\item[{double \texorpdfstring{$\ast$}{*}}]{harvest }\end{DoxyParamCaption})}
 
 
 
@@ -183,12 +201,18 @@ CAMP\+\_\+\+RAND\+\_\+\+GSL\+\_\+\+SUCCESS on success, otherwise an error code.
 Definition at line \mbox{\hyperlink{rand__gsl_8c_source_l00082}{82}} of file \mbox{\hyperlink{rand__gsl_8c_source}{rand\+\_\+gsl.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 3
-\mbox{\Hypertarget{rand__gsl_8c_a0ebca9079073ff12ca49babd5f49edb9}\label{rand__gsl_8c_a0ebca9079073ff12ca49babd5f49edb9}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rand__gsl_8c_abd204acb91a0adebb638deae62396379_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rand__gsl_8c_a0ebca9079073ff12ca49babd5f49edb9}\label{rand__gsl_8c_a0ebca9079073ff12ca49babd5f49edb9} 
 \index{rand\_gsl.c@{rand\_gsl.c}!camp\_rand\_int\_gsl@{camp\_rand\_int\_gsl}}
 \index{camp\_rand\_int\_gsl@{camp\_rand\_int\_gsl}!rand\_gsl.c@{rand\_gsl.c}}
 \doxysubsubsection{\texorpdfstring{camp\_rand\_int\_gsl()}{camp\_rand\_int\_gsl()}}
-{\footnotesize\ttfamily int camp\+\_\+rand\+\_\+int\+\_\+gsl (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{int $\ast$}]{harvest }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int camp\+\_\+rand\+\_\+int\+\_\+gsl (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{int \texorpdfstring{$\ast$}{*}}]{harvest }\end{DoxyParamCaption})}
 
 
 
@@ -209,12 +233,18 @@ CAMP\+\_\+\+RAND\+\_\+\+GSL\+\_\+\+SUCCESS on success, otherwise an error code.
 Definition at line \mbox{\hyperlink{rand__gsl_8c_source_l00097}{97}} of file \mbox{\hyperlink{rand__gsl_8c_source}{rand\+\_\+gsl.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 4
-\mbox{\Hypertarget{rand__gsl_8c_a77cc930abbc556f2ff28f676d1b740bc}\label{rand__gsl_8c_a77cc930abbc556f2ff28f676d1b740bc}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rand__gsl_8c_a0ebca9079073ff12ca49babd5f49edb9_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rand__gsl_8c_a77cc930abbc556f2ff28f676d1b740bc}\label{rand__gsl_8c_a77cc930abbc556f2ff28f676d1b740bc} 
 \index{rand\_gsl.c@{rand\_gsl.c}!camp\_rand\_normal\_gsl@{camp\_rand\_normal\_gsl}}
 \index{camp\_rand\_normal\_gsl@{camp\_rand\_normal\_gsl}!rand\_gsl.c@{rand\_gsl.c}}
 \doxysubsubsection{\texorpdfstring{camp\_rand\_normal\_gsl()}{camp\_rand\_normal\_gsl()}}
-{\footnotesize\ttfamily int camp\+\_\+rand\+\_\+normal\+\_\+gsl (\begin{DoxyParamCaption}\item[{double}]{mean,  }\item[{double}]{stddev,  }\item[{double $\ast$}]{harvest }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int camp\+\_\+rand\+\_\+normal\+\_\+gsl (\begin{DoxyParamCaption}\item[{double}]{mean,  }\item[{double}]{stddev,  }\item[{double \texorpdfstring{$\ast$}{*}}]{harvest }\end{DoxyParamCaption})}
 
 
 
@@ -237,12 +267,18 @@ CAMP\+\_\+\+RAND\+\_\+\+GSL\+\_\+\+SUCCESS on success, otherwise an error code.
 Definition at line \mbox{\hyperlink{rand__gsl_8c_source_l00113}{113}} of file \mbox{\hyperlink{rand__gsl_8c_source}{rand\+\_\+gsl.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 5
-\mbox{\Hypertarget{rand__gsl_8c_a40555ee4862b906fb1a2ace9b76114a1}\label{rand__gsl_8c_a40555ee4862b906fb1a2ace9b76114a1}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rand__gsl_8c_a77cc930abbc556f2ff28f676d1b740bc_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rand__gsl_8c_a40555ee4862b906fb1a2ace9b76114a1}\label{rand__gsl_8c_a40555ee4862b906fb1a2ace9b76114a1} 
 \index{rand\_gsl.c@{rand\_gsl.c}!camp\_rand\_poisson\_gsl@{camp\_rand\_poisson\_gsl}}
 \index{camp\_rand\_poisson\_gsl@{camp\_rand\_poisson\_gsl}!rand\_gsl.c@{rand\_gsl.c}}
 \doxysubsubsection{\texorpdfstring{camp\_rand\_poisson\_gsl()}{camp\_rand\_poisson\_gsl()}}
-{\footnotesize\ttfamily int camp\+\_\+rand\+\_\+poisson\+\_\+gsl (\begin{DoxyParamCaption}\item[{double}]{mean,  }\item[{int $\ast$}]{harvest }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int camp\+\_\+rand\+\_\+poisson\+\_\+gsl (\begin{DoxyParamCaption}\item[{double}]{mean,  }\item[{int \texorpdfstring{$\ast$}{*}}]{harvest }\end{DoxyParamCaption})}
 
 
 
@@ -263,8 +299,14 @@ CAMP\+\_\+\+RAND\+\_\+\+GSL\+\_\+\+SUCCESS on success, otherwise an error code.
 Definition at line \mbox{\hyperlink{rand__gsl_8c_source_l00128}{128}} of file \mbox{\hyperlink{rand__gsl_8c_source}{rand\+\_\+gsl.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 6
-\mbox{\Hypertarget{rand__gsl_8c_ad7746428b015f3f2da1eadeb262237b6}\label{rand__gsl_8c_ad7746428b015f3f2da1eadeb262237b6}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rand__gsl_8c_a40555ee4862b906fb1a2ace9b76114a1_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{rand__gsl_8c_ad7746428b015f3f2da1eadeb262237b6}\label{rand__gsl_8c_ad7746428b015f3f2da1eadeb262237b6} 
 \index{rand\_gsl.c@{rand\_gsl.c}!camp\_srand\_gsl@{camp\_srand\_gsl}}
 \index{camp\_srand\_gsl@{camp\_srand\_gsl}!rand\_gsl.c@{rand\_gsl.c}}
 \doxysubsubsection{\texorpdfstring{camp\_srand\_gsl()}{camp\_srand\_gsl()}}
@@ -285,22 +327,28 @@ This must be called before any other GSL random number functions are called.
 CAMP\+\_\+\+RAND\+\_\+\+GSL\+\_\+\+SUCCESS on success, otherwise an error code. 
 \end{DoxyReturn}
 \begin{DoxySeeAlso}{See also}
-\mbox{\hyperlink{rand__gsl_8c_a1bd137bff02ae81a2261e0aca1604492}{camp\+\_\+rand\+\_\+finalize\+\_\+gsl()}} to cleanup the generator. 
+\doxylink{rand__gsl_8c_a1bd137bff02ae81a2261e0aca1604492}{camp\+\_\+rand\+\_\+finalize\+\_\+gsl()} to cleanup the generator. 
 \end{DoxySeeAlso}
 
 
 Definition at line \mbox{\hyperlink{rand__gsl_8c_source_l00047}{47}} of file \mbox{\hyperlink{rand__gsl_8c_source}{rand\+\_\+gsl.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 7
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=325pt]{rand__gsl_8c_ad7746428b015f3f2da1eadeb262237b6_icgraph}
+\end{center}
+\end{figure}
 
 
 \doxysubsection{Variable Documentation}
-\mbox{\Hypertarget{rand__gsl_8c_a522b9e20123b1f90f53ad812e255328e}\label{rand__gsl_8c_a522b9e20123b1f90f53ad812e255328e}} 
+\Hypertarget{rand__gsl_8c_a522b9e20123b1f90f53ad812e255328e}\label{rand__gsl_8c_a522b9e20123b1f90f53ad812e255328e} 
 \index{rand\_gsl.c@{rand\_gsl.c}!camp\_rand\_gsl\_rng@{camp\_rand\_gsl\_rng}}
 \index{camp\_rand\_gsl\_rng@{camp\_rand\_gsl\_rng}!rand\_gsl.c@{rand\_gsl.c}}
 \doxysubsubsection{\texorpdfstring{camp\_rand\_gsl\_rng}{camp\_rand\_gsl\_rng}}
-{\footnotesize\ttfamily gsl\+\_\+rng$\ast$ camp\+\_\+rand\+\_\+gsl\+\_\+rng = NULL\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily gsl\+\_\+rng\texorpdfstring{$\ast$}{*} camp\+\_\+rand\+\_\+gsl\+\_\+rng = NULL\hspace{0.3cm}{\ttfamily [static]}}
 
 
 

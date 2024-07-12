@@ -1,6 +1,11 @@
 <map id="camp_camp_core::state_size_per_cell" name="camp_camp_core::state_size_per_cell">
-<area shape="rect" id="node1" title="Get the size of the state array for each grid cell." alt="" coords="5,5,165,45"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="452,13,604,38"/>
-<area shape="rect" id="node4" href="$namespacecamp__camp__core.html#a2c02881a75a5df27cae9f8c92345803c" title="Get the size of the state array." alt="" coords="213,50,404,75"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="652,5,775,45"/>
+<area shape="rect" id="Node000001" title="Get the size of the state array for each grid cell." alt="" coords="5,5,165,46"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="450,13,601,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,14,213,11,307,8,402,11,434,13,434,18,402,16,307,13,213,16,165,20"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__camp__core.html#a2c02881a75a5df27cae9f8c92345803c" title="Get the size of the state array." alt="" coords="213,50,402,76"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="165,36,212,44,211,50,165,42"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="649,5,772,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="602,23,634,23,634,28,602,28"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="386,47,434,39,435,44,387,52"/>
+<area shape="poly" id="edge5_Node000004_Node000004" title=" " alt="" coords="271,51,264,42,268,32,283,26,307,24,334,26,348,33,345,38,333,31,307,29,284,31,272,36,269,41,275,48"/>
 </map>

@@ -1,27 +1,27 @@
-\hypertarget{mechanism__data_8_f90}{}\doxysection{mechanism\+\_\+data.\+F90 File Reference}
-\label{mechanism__data_8_f90}\index{mechanism\_data.F90@{mechanism\_data.F90}}
+\doxysection{mechanism\+\_\+data.\+F90 File Reference}
+\hypertarget{mechanism__data_8_f90}{}\label{mechanism__data_8_f90}\index{mechanism\_data.F90@{mechanism\_data.F90}}
 
 
-The \mbox{\hyperlink{namespacecamp__mechanism__data}{camp\+\_\+mechanism\+\_\+data}} module.  
+The \doxylink{namespacecamp__mechanism__data}{camp\+\_\+mechanism\+\_\+data} module.  
 
 
-\doxysubsection*{Data Types}
+\doxysubsubsection*{Data Types}
 \begin{DoxyCompactItemize}
 \item 
 interface \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t}{camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t}}
 \begin{DoxyCompactList}\small\item\em A chemical mechanism. \end{DoxyCompactList}\item 
 type \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__ptr}{camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+ptr}}
 \begin{DoxyCompactList}\small\item\em Pointer type for building arrays. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Modules}
+\doxysubsubsection*{Modules}
 \begin{DoxyCompactItemize}
 \item 
 module \mbox{\hyperlink{namespacecamp__mechanism__data}{camp\+\_\+mechanism\+\_\+data}}
-\begin{DoxyCompactList}\small\item\em The \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t}} structure and associated subroutines. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Functions/\+Subroutines}
+\begin{DoxyCompactList}\small\item\em The \doxylink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t} structure and associated subroutines. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
 \item 
-type(mechanism\+\_\+data\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__mechanism__data_af970b0d8a93435848c8418ec4ff96162}{camp\+\_\+mechanism\+\_\+data\+::constructor}} (mech\+\_\+name, init\+\_\+size)
-\begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t}}. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__mechanism__data_af970b0d8a93435848c8418ec4ff96162}{camp\+\_\+mechanism\+\_\+data\+::constructor}} (mech\+\_\+name, init\+\_\+size)
+\begin{DoxyCompactList}\small\item\em Constructor for \doxylink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t}. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__mechanism__data_ab0662f5d7752a1c95a1e34d481403de6}{camp\+\_\+mechanism\+\_\+data\+::ensure\+\_\+size}} (this, num\+\_\+rxn)
 \begin{DoxyCompactList}\small\item\em Ensure there is enough room in the reaction dataset to add a specified number of reactions. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__mechanism__data_a7e606aeae7ea067149b1c4301d251536}{camp\+\_\+mechanism\+\_\+data\+::load}} (this, json, j\+\_\+obj)
@@ -30,7 +30,7 @@ subroutine \mbox{\hyperlink{namespacecamp__mechanism__data_a4fc9449724815adbd249
 \begin{DoxyCompactList}\small\item\em Initialize the mechanism. \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__mechanism__data_ac0743ed975608d96950a12106218d1f3}{camp\+\_\+mechanism\+\_\+data\+::get\+\_\+size}} (this)
 \begin{DoxyCompactList}\small\item\em Get the current size of the chemical mechanism. \end{DoxyCompactList}\item 
-class(rxn\+\_\+data\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__mechanism__data_a2b363899c2a7373f881d0e48660b6cb8}{camp\+\_\+mechanism\+\_\+data\+::get\+\_\+rxn}} (this, rxn\+\_\+id)
+class(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\+\_\+data\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__mechanism__data_a2b363899c2a7373f881d0e48660b6cb8}{camp\+\_\+mechanism\+\_\+data\+::get\+\_\+rxn}} (this, rxn\+\_\+id)
 \begin{DoxyCompactList}\small\item\em Get a reaction by its index. \end{DoxyCompactList}\item 
 character(len=\+:) function, allocatable \mbox{\hyperlink{namespacecamp__mechanism__data_a79e4b0bbc6e45ff91d24792792e548df}{camp\+\_\+mechanism\+\_\+data\+::get\+\_\+name}} (this)
 \begin{DoxyCompactList}\small\item\em Get the name of the mechanism. \end{DoxyCompactList}\item 
@@ -48,7 +48,7 @@ elemental subroutine \mbox{\hyperlink{namespacecamp__mechanism__data_ac628ddcd5d
 \begin{DoxyCompactList}\small\item\em Dereference a pointer to a mechanism. \end{DoxyCompactList}\item 
 elemental subroutine \mbox{\hyperlink{namespacecamp__mechanism__data_a489bbb2e3e203acfa091c3947c757a16}{camp\+\_\+mechanism\+\_\+data\+::ptr\+\_\+finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize a pointer to mechanism data. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Variables}
+\doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 integer(kind=i\+\_\+kind), parameter \mbox{\hyperlink{namespacecamp__mechanism__data_a069019f3f5432d5cb7c5d4ad7de04d04}{camp\+\_\+mechanism\+\_\+data\+::realloc\+\_\+inc}} = 50
@@ -58,7 +58,7 @@ integer(kind=i\+\_\+kind), parameter \mbox{\hyperlink{namespacecamp__mechanism__
 
 
 \doxysubsection{Detailed Description}
-The \mbox{\hyperlink{namespacecamp__mechanism__data}{camp\+\_\+mechanism\+\_\+data}} module. 
+The \doxylink{namespacecamp__mechanism__data}{camp\+\_\+mechanism\+\_\+data} module. 
 
 
 

@@ -1,26 +1,26 @@
-\hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{}\doxysection{camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t Type Reference}
-\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t}\index{camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}}
+\doxysection{camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t Type Reference}
+\hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t}\index{camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}}
 
 
 Factory type for aerosol representations.  
 
 
-\doxysubsection*{Public Member Functions}
+\doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_adb761a7103bfbd45ec29294afe665f75}{create}}
+procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_aa62c770c69cf67e92dd3a620f4d151d5}{create}} (this, type\+\_\+name)
 \begin{DoxyCompactList}\small\item\em Create a new aerosol representation by type name. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a2d4fa12447f5fe406aea088495aba23a}{load}}
+procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a60c7ba950d7d4b1d7b04bf991a8c60fb}{load}} (this, json, j\+\_\+obj)
 \begin{DoxyCompactList}\small\item\em Create a new aerosol representation from input data. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a8b8ac2cf143837b0483b6af555a6c7ae}{get\+\_\+type}}
+procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a76e63dd4c0b3388aee44d952f804f9cc}{get\+\_\+type}} (this, aero\+\_\+rep)
 \begin{DoxyCompactList}\small\item\em Get the aerosol representation type. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_ab68d6c66c06cef4f0b7f3be5f7ef0e59}{initialize\+\_\+update\+\_\+data}}
+procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_afe6ea629227ebe304200612eabda2ea2}{initialize\+\_\+update\+\_\+data}} (this, aero\+\_\+rep, update\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Initialize an update data object. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_acca3fa986faec3be7503c66f4064b5ce}{pack\+\_\+size}}
+procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a1c4acaddfa5e520231e51bfd565a6c7e}{pack\+\_\+size}} (this, aero\+\_\+rep, comm)
 \begin{DoxyCompactList}\small\item\em Determine the number of bytes required to pack an given aerosol representation. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a840def710afec55fb75fc7c0ba2fe312}{bin\+\_\+pack}}
+procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_af6c6a2ec3268ea0b450503cb76c8e2da}{bin\+\_\+pack}} (this, aero\+\_\+rep, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Pack a given aerosol representation to the buffer, advancing the position. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_abaab507649a4524af238459387f354f1}{bin\+\_\+unpack}}
+procedure \mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a3f750e502166fcc7b85ab05e4bcc9132}{bin\+\_\+unpack}} (this, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Unpack a aerosol representation from the buffer, advancing the position. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -34,100 +34,174 @@ Definition at line \mbox{\hyperlink{aero__rep__factory_8_f90_source_l00221}{221}
 
 
 \doxysubsection{Member Function/\+Subroutine Documentation}
-\mbox{\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a840def710afec55fb75fc7c0ba2fe312}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a840def710afec55fb75fc7c0ba2fe312}} 
+\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_af6c6a2ec3268ea0b450503cb76c8e2da}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_af6c6a2ec3268ea0b450503cb76c8e2da} 
 \index{camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}!bin\_pack@{bin\_pack}}
 \index{bin\_pack@{bin\_pack}!camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{bin\_pack()}{bin\_pack()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::bin\+\_\+pack}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::bin\+\_\+pack (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\+\_\+rep\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\+\_\+rep\+\_\+data\+\_\+t}}), intent(in)}]{aero\+\_\+rep,  }\item[{character, dimension(\+:), intent(inout)}]{buffer,  }\item[{integer, intent(inout)}]{pos,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})}
 
 
 
 Pack a given aerosol representation to the buffer, advancing the position. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation factory \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representation to pack \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em buffer} & Memory buffer \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em pos} & Current buffer position \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{aero__rep__factory_8_f90_source_l00236}{236}} of file \mbox{\hyperlink{aero__rep__factory_8_f90_source}{aero\+\_\+rep\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_abaab507649a4524af238459387f354f1}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_abaab507649a4524af238459387f354f1}} 
+\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a3f750e502166fcc7b85ab05e4bcc9132}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a3f750e502166fcc7b85ab05e4bcc9132} 
 \index{camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}!bin\_unpack@{bin\_unpack}}
 \index{bin\_unpack@{bin\_unpack}!camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{bin\_unpack()}{bin\_unpack()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::bin\+\_\+unpack}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::bin\+\_\+unpack (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\+\_\+rep\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{character, dimension(\+:), intent(inout)}]{buffer,  }\item[{integer, intent(inout)}]{pos,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})}
 
 
 
 Unpack a aerosol representation from the buffer, advancing the position. 
 
+\begin{DoxyReturn}{Returns}
+Unpacked aerosol representation 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation factory \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em buffer} & Memory buffer \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em pos} & Current buffer position \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{aero__rep__factory_8_f90_source_l00238}{238}} of file \mbox{\hyperlink{aero__rep__factory_8_f90_source}{aero\+\_\+rep\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_adb761a7103bfbd45ec29294afe665f75}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_adb761a7103bfbd45ec29294afe665f75}} 
+\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_aa62c770c69cf67e92dd3a620f4d151d5}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_aa62c770c69cf67e92dd3a620f4d151d5} 
 \index{camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}!create@{create}}
 \index{create@{create}!camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{create()}{create()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::create}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::create (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\+\_\+rep\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{type\+\_\+name }\end{DoxyParamCaption})}
 
 
 
 Create a new aerosol representation by type name. 
 
+\begin{DoxyReturn}{Returns}
+An aerosol representation 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation factory \\
+\hline
+\mbox{\texttt{ in}}  & {\em type\+\_\+name} & Name of the aerosol representation \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{aero__rep__factory_8_f90_source_l00224}{224}} of file \mbox{\hyperlink{aero__rep__factory_8_f90_source}{aero\+\_\+rep\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a8b8ac2cf143837b0483b6af555a6c7ae}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a8b8ac2cf143837b0483b6af555a6c7ae}} 
+\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a76e63dd4c0b3388aee44d952f804f9cc}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a76e63dd4c0b3388aee44d952f804f9cc} 
 \index{camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}!get\_type@{get\_type}}
 \index{get\_type@{get\_type}!camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{get\_type()}{get\_type()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::get\+\_\+type}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::get\+\_\+type (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\+\_\+rep\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\+\_\+rep\+\_\+data\+\_\+t}}), intent(in)}]{aero\+\_\+rep }\end{DoxyParamCaption})}
 
 
 
 Get the aerosol representation type. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation factory \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representation to get the type of \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{aero__rep__factory_8_f90_source_l00228}{228}} of file \mbox{\hyperlink{aero__rep__factory_8_f90_source}{aero\+\_\+rep\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_ab68d6c66c06cef4f0b7f3be5f7ef0e59}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_ab68d6c66c06cef4f0b7f3be5f7ef0e59}} 
+\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_afe6ea629227ebe304200612eabda2ea2}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_afe6ea629227ebe304200612eabda2ea2} 
 \index{camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}!initialize\_update\_data@{initialize\_update\_data}}
 \index{initialize\_update\_data@{initialize\_update\_data}!camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{initialize\_update\_data()}{initialize\_update\_data()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::initialize\+\_\+update\+\_\+data}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::initialize\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\+\_\+rep\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\+\_\+rep\+\_\+data\+\_\+t}}), intent(inout)}]{aero\+\_\+rep,  }\item[{class(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__update__data__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+t}}), intent(out)}]{update\+\_\+data }\end{DoxyParamCaption})}
 
 
 
 Initialize an update data object. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation factory \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em aero\+\_\+rep} & Aerosol representation to be updated \\
+\hline
+\mbox{\texttt{ out}}  & {\em update\+\_\+data} & Update data object \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{aero__rep__factory_8_f90_source_l00230}{230}} of file \mbox{\hyperlink{aero__rep__factory_8_f90_source}{aero\+\_\+rep\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a2d4fa12447f5fe406aea088495aba23a}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a2d4fa12447f5fe406aea088495aba23a}} 
+\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a60c7ba950d7d4b1d7b04bf991a8c60fb}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a60c7ba950d7d4b1d7b04bf991a8c60fb} 
 \index{camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}!load@{load}}
 \index{load@{load}!camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{load()}{load()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::load}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::load (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\+\_\+rep\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{type(json\+\_\+core), intent(in), pointer}]{json,  }\item[{type(json\+\_\+value), intent(in), pointer}]{j\+\_\+obj }\end{DoxyParamCaption})}
 
 
 
 Create a new aerosol representation from input data. 
 
+\begin{DoxyReturn}{Returns}
+An aerosol representation 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation factory \\
+\hline
+\mbox{\texttt{ in}}  & {\em json} & JSON core \\
+\hline
+\mbox{\texttt{ in}}  & {\em j\+\_\+obj} & JSON object \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{aero__rep__factory_8_f90_source_l00226}{226}} of file \mbox{\hyperlink{aero__rep__factory_8_f90_source}{aero\+\_\+rep\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_acca3fa986faec3be7503c66f4064b5ce}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_acca3fa986faec3be7503c66f4064b5ce}} 
+\Hypertarget{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a1c4acaddfa5e520231e51bfd565a6c7e}\label{structcamp__aero__rep__factory_1_1aero__rep__factory__t_a1c4acaddfa5e520231e51bfd565a6c7e} 
 \index{camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}!pack\_size@{pack\_size}}
 \index{pack\_size@{pack\_size}!camp\_aero\_rep\_factory::aero\_rep\_factory\_t@{camp\_aero\_rep\_factory::aero\_rep\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{pack\_size()}{pack\_size()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::pack\+\_\+size}
+{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+factory\+::aero\+\_\+rep\+\_\+factory\+\_\+t\+::pack\+\_\+size (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__factory_1_1aero__rep__factory__t}{aero\+\_\+rep\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\+\_\+rep\+\_\+data\+\_\+t}}), intent(in)}]{aero\+\_\+rep,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})}
 
 
 
 Determine the number of bytes required to pack an given aerosol representation. 
 
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation factory \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representation to pack \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{aero__rep__factory_8_f90_source_l00233}{233}} of file \mbox{\hyperlink{aero__rep__factory_8_f90_source}{aero\+\_\+rep\+\_\+factory.\+F90}}.

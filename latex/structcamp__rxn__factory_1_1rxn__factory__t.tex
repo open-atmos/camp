@@ -1,26 +1,26 @@
-\hypertarget{structcamp__rxn__factory_1_1rxn__factory__t}{}\doxysection{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t Type Reference}
-\label{structcamp__rxn__factory_1_1rxn__factory__t}\index{camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}}
+\doxysection{camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t Type Reference}
+\hypertarget{structcamp__rxn__factory_1_1rxn__factory__t}{}\label{structcamp__rxn__factory_1_1rxn__factory__t}\index{camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}}
 
 
 Factory type for chemical reactions.  
 
 
-\doxysubsection*{Public Member Functions}
+\doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_a62e02032fe55dec174fc3221cdbcb71c}{create}}
+procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_a200f25a48a96803fd0b6648352ff7334}{create}} (this, type\+\_\+name)
 \begin{DoxyCompactList}\small\item\em Create a new chemical reaction by type name. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_a137b9f38e76d1d33d977704489daaf7f}{load}}
+procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_a939e2e7cc07fa4fef0e444029edc3c58}{load}} (this, json, j\+\_\+obj)
 \begin{DoxyCompactList}\small\item\em Create a new chemical reaction from input data. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_ab69b6ca869908138b7330bf8c77ec8be}{get\+\_\+type}}
+procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_af563671c494fcefddddecb25930b8125}{get\+\_\+type}} (this, rxn)
 \begin{DoxyCompactList}\small\item\em Get the reaction type. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_a32d0d92791920273b77121c9f7525f46}{initialize\+\_\+update\+\_\+data}}
+procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_a7e05bfa9afc4ef476e61e9ba24803876}{initialize\+\_\+update\+\_\+data}} (this, rxn, update\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Get a new update data object. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_ad5e602ff17f4003dcffb2d692b664dc8}{pack\+\_\+size}}
+procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_ac254c7e3e0c5937d3ea4b31821cef18f}{pack\+\_\+size}} (this, rxn, comm)
 \begin{DoxyCompactList}\small\item\em Determine the number of bytes required to pack a given reaction. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_a146acb5f418ce420e35985c9743d948f}{bin\+\_\+pack}}
+procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_af3750a5be0732b2e609b1354fce4b280}{bin\+\_\+pack}} (this, rxn, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Pack a given reaction to the buffer, advancing the position. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_a83b58998d26db4e87f352c81ebe8f0d5}{bin\+\_\+unpack}}
+procedure \mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t_a7ec017ed859864d2d75597fa0b24a480}{bin\+\_\+unpack}} (this, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Unpack a reaction from the buffer, advancing the position. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -34,100 +34,174 @@ Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00234}{234}} of f
 
 
 \doxysubsection{Member Function/\+Subroutine Documentation}
-\mbox{\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_a146acb5f418ce420e35985c9743d948f}\label{structcamp__rxn__factory_1_1rxn__factory__t_a146acb5f418ce420e35985c9743d948f}} 
+\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_af3750a5be0732b2e609b1354fce4b280}\label{structcamp__rxn__factory_1_1rxn__factory__t_af3750a5be0732b2e609b1354fce4b280} 
 \index{camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}!bin\_pack@{bin\_pack}}
 \index{bin\_pack@{bin\_pack}!camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{bin\_pack()}{bin\_pack()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::bin\+\_\+pack}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::bin\+\_\+pack (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t}{rxn\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\+\_\+data\+\_\+t}}), intent(in)}]{rxn,  }\item[{character, dimension(\+:), intent(inout)}]{buffer,  }\item[{integer, intent(inout)}]{pos,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})}
 
 
 
 Pack a given reaction to the buffer, advancing the position. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Reaction factory \\
+\hline
+\mbox{\texttt{ in}}  & {\em rxn} & Reaction to pack \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em buffer} & Memory buffer \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em pos} & Current buffer position \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00247}{247}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_a83b58998d26db4e87f352c81ebe8f0d5}\label{structcamp__rxn__factory_1_1rxn__factory__t_a83b58998d26db4e87f352c81ebe8f0d5}} 
+\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_a7ec017ed859864d2d75597fa0b24a480}\label{structcamp__rxn__factory_1_1rxn__factory__t_a7ec017ed859864d2d75597fa0b24a480} 
 \index{camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}!bin\_unpack@{bin\_unpack}}
 \index{bin\_unpack@{bin\_unpack}!camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{bin\_unpack()}{bin\_unpack()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::bin\+\_\+unpack}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::bin\+\_\+unpack (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t}{rxn\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{character, dimension(\+:), intent(inout)}]{buffer,  }\item[{integer, intent(inout)}]{pos,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})}
 
 
 
 Unpack a reaction from the buffer, advancing the position. 
 
+\begin{DoxyReturn}{Returns}
+Unpacked reaction 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Reaction factory \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em buffer} & Memory buffer \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em pos} & Current buffer position \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00249}{249}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_a62e02032fe55dec174fc3221cdbcb71c}\label{structcamp__rxn__factory_1_1rxn__factory__t_a62e02032fe55dec174fc3221cdbcb71c}} 
+\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_a200f25a48a96803fd0b6648352ff7334}\label{structcamp__rxn__factory_1_1rxn__factory__t_a200f25a48a96803fd0b6648352ff7334} 
 \index{camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}!create@{create}}
 \index{create@{create}!camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{create()}{create()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::create}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::create (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t}{rxn\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{type\+\_\+name }\end{DoxyParamCaption})}
 
 
 
 Create a new chemical reaction by type name. 
 
+\begin{DoxyReturn}{Returns}
+A chemical reaction 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation factory \\
+\hline
+\mbox{\texttt{ in}}  & {\em type\+\_\+name} & Name of the chemical reaction \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00237}{237}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_ab69b6ca869908138b7330bf8c77ec8be}\label{structcamp__rxn__factory_1_1rxn__factory__t_ab69b6ca869908138b7330bf8c77ec8be}} 
+\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_af563671c494fcefddddecb25930b8125}\label{structcamp__rxn__factory_1_1rxn__factory__t_af563671c494fcefddddecb25930b8125} 
 \index{camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}!get\_type@{get\_type}}
 \index{get\_type@{get\_type}!camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{get\_type()}{get\_type()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::get\+\_\+type}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::get\+\_\+type (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t}{rxn\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\+\_\+data\+\_\+t}}), intent(in)}]{rxn }\end{DoxyParamCaption})}
 
 
 
 Get the reaction type. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Reaction factory \\
+\hline
+\mbox{\texttt{ in}}  & {\em rxn} & Reaction to get type of \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00241}{241}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_a32d0d92791920273b77121c9f7525f46}\label{structcamp__rxn__factory_1_1rxn__factory__t_a32d0d92791920273b77121c9f7525f46}} 
+\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_a7e05bfa9afc4ef476e61e9ba24803876}\label{structcamp__rxn__factory_1_1rxn__factory__t_a7e05bfa9afc4ef476e61e9ba24803876} 
 \index{camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}!initialize\_update\_data@{initialize\_update\_data}}
 \index{initialize\_update\_data@{initialize\_update\_data}!camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{initialize\_update\_data()}{initialize\_update\_data()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::initialize\+\_\+update\+\_\+data}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::initialize\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t}{rxn\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\+\_\+data\+\_\+t}}), intent(inout)}]{rxn,  }\item[{class(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__update__data__t}{rxn\+\_\+update\+\_\+data\+\_\+t}}), intent(out)}]{update\+\_\+data }\end{DoxyParamCaption})}
 
 
 
 Get a new update data object. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Reaction factory \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em rxn} & Reaction to be updated \\
+\hline
+\mbox{\texttt{ out}}  & {\em update\+\_\+data} & Update data object \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00243}{243}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_a137b9f38e76d1d33d977704489daaf7f}\label{structcamp__rxn__factory_1_1rxn__factory__t_a137b9f38e76d1d33d977704489daaf7f}} 
+\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_a939e2e7cc07fa4fef0e444029edc3c58}\label{structcamp__rxn__factory_1_1rxn__factory__t_a939e2e7cc07fa4fef0e444029edc3c58} 
 \index{camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}!load@{load}}
 \index{load@{load}!camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{load()}{load()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::load}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::load (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t}{rxn\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{type(json\+\_\+core), intent(in), pointer}]{json,  }\item[{type(json\+\_\+value), intent(in), pointer}]{j\+\_\+obj }\end{DoxyParamCaption})}
 
 
 
 Create a new chemical reaction from input data. 
 
+\begin{DoxyReturn}{Returns}
+A chemical reaction 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Chemical reaction factory \\
+\hline
+\mbox{\texttt{ in}}  & {\em json} & JSON core \\
+\hline
+\mbox{\texttt{ in}}  & {\em j\+\_\+obj} & JSON object \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00239}{239}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_ad5e602ff17f4003dcffb2d692b664dc8}\label{structcamp__rxn__factory_1_1rxn__factory__t_ad5e602ff17f4003dcffb2d692b664dc8}} 
+\Hypertarget{structcamp__rxn__factory_1_1rxn__factory__t_ac254c7e3e0c5937d3ea4b31821cef18f}\label{structcamp__rxn__factory_1_1rxn__factory__t_ac254c7e3e0c5937d3ea4b31821cef18f} 
 \index{camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}!pack\_size@{pack\_size}}
 \index{pack\_size@{pack\_size}!camp\_rxn\_factory::rxn\_factory\_t@{camp\_rxn\_factory::rxn\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{pack\_size()}{pack\_size()}}
-{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::pack\+\_\+size}
+{\footnotesize\ttfamily procedure camp\+\_\+rxn\+\_\+factory\+::rxn\+\_\+factory\+\_\+t\+::pack\+\_\+size (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__factory_1_1rxn__factory__t}{rxn\+\_\+factory\+\_\+t}})}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\+\_\+data\+\_\+t}}), intent(in)}]{rxn,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})}
 
 
 
 Determine the number of bytes required to pack a given reaction. 
 
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & Reaction factory \\
+\hline
+\mbox{\texttt{ in}}  & {\em rxn} & Reaction to pack \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{rxn__factory_8_f90_source_l00245}{245}} of file \mbox{\hyperlink{rxn__factory_8_f90_source}{rxn\+\_\+factory.\+F90}}.

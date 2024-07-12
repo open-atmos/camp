@@ -1,10 +1,18 @@
 <map id="rxn_surface_get_used_jac_elem" name="rxn_surface_get_used_jac_elem">
-<area shape="rect" id="node1" title="Flag Jacobian elements used by this reaction." alt="" coords="5,125,155,165"/>
-<area shape="rect" id="node2" href="$aero__rep__solver_8c.html#a020684f657e2d323f672bd5500ceae22" title="Flag Jacobian elements used to calculated mass, volume, etc." alt="" coords="203,77,393,102"/>
-<area shape="rect" id="node6" href="$_jacobian_8c.html#aac51ac6b1cf239a84899308dab229441" title="Adds an element to the sparse matrix." alt="" coords="211,133,385,158"/>
-<area shape="rect" id="node8" href="$rxn__surface_8c.html#af4d5ba66d45ee435e1451b44eda87370" title="Print the surface reaction parameters." alt="" coords="237,182,359,207"/>
-<area shape="rect" id="node3" href="$aero__rep__modal__binned__mass_8c.html#ac5a65892343b17ff334e280f4d6ae5f9" title="Flag Jacobian elements used in calcualtions of mass and volume." alt="" coords="441,5,621,45"/>
-<area shape="rect" id="node5" href="$aero__rep__single__particle_8c.html#a076423c54855479ccee0af37f2d9840a" title="Flag Jacobian elements used in calcualtions of mass and volume." alt="" coords="450,69,613,109"/>
-<area shape="rect" id="node4" href="$aero__phase__solver_8c.html#a6e5ea770a313a6eebea53e86540dd510" title="Flag Jacobian elements used in calculations of mass and volume." alt="" coords="669,37,819,77"/>
-<area shape="rect" id="node7" href="$_jacobian_8c.html#ad9cda15d66705739c9d7bdf63c4636a3" title=" " alt="" coords="442,133,621,173"/>
+<area shape="rect" id="Node000001" title="Flag Jacobian elements used by this reaction." alt="" coords="5,128,154,169"/>
+<area shape="rect" id="Node000002" href="$aero__rep__solver_8c.html#a020684f657e2d323f672bd5500ceae22" title="Flag Jacobian elements used to calculated mass, volume, etc." alt="" coords="202,78,392,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,126,230,106,232,111,155,131"/>
+<area shape="rect" id="Node000006" href="$_jacobian_8c.html#aac51ac6b1cf239a84899308dab229441" title="Adds an element to the sparse matrix." alt="" coords="211,136,383,161"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="154,146,195,146,195,151,154,151"/>
+<area shape="rect" id="Node000008" href="$rxn__surface_8c.html#af4d5ba66d45ee435e1451b44eda87370" title="Print the surface reaction parameters." alt="" coords="237,185,357,211"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="155,163,223,178,222,183,154,168"/>
+<area shape="rect" id="Node000003" href="$aero__rep__modal__binned__mass_8c.html#ac5a65892343b17ff334e280f4d6ae5f9" title="Flag Jacobian elements used in calcualtions of mass and volume." alt="" coords="440,5,619,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="345,75,439,48,441,53,346,80"/>
+<area shape="rect" id="Node000005" href="$aero__rep__single__particle_8c.html#a076423c54855479ccee0af37f2d9840a" title="Flag Jacobian elements used in calcualtions of mass and volume." alt="" coords="449,71,610,111"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="392,88,433,88,433,94,392,94"/>
+<area shape="rect" id="Node000004" href="$aero__phase__solver_8c.html#a6e5ea770a313a6eebea53e86540dd510" title="Flag Jacobian elements used in calculations of mass and volume." alt="" coords="667,39,816,79"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="620,37,653,42,652,48,619,42"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="610,76,652,70,653,75,611,81"/>
+<area shape="rect" id="Node000007" href="$_jacobian_8c.html#ad9cda15d66705739c9d7bdf63c4636a3" title=" " alt="" coords="441,136,619,177"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="383,149,425,150,425,155,383,154"/>
 </map>

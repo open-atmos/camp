@@ -1,10 +1,19 @@
 <map id="camp_rand::rand_normal_array_1d" name="camp_rand::rand_normal_array_1d">
-<area shape="rect" id="node1" title="Generates a vector of normally distributed random numbers with the given means and standard deviation..." alt="" coords="5,55,168,95"/>
-<area shape="rect" id="node2" href="$namespacecamp__rand.html#ac20e458bc43a3e432568ea44c054778e" title="Generates a normally distributed random number with the given mean and standard deviation." alt="" coords="216,62,379,87"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="454,13,574,38"/>
-<area shape="rect" id="node6" href="$rand__gsl_8c.html#a77cc930abbc556f2ff28f676d1b740bc" title="Generate a normally&#45;distributed random number." alt="" coords="436,62,592,87"/>
-<area shape="rect" id="node7" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="427,135,601,161"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="649,13,801,38"/>
-<area shape="rect" id="node5" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="849,5,972,45"/>
-<area shape="rect" id="node8" href="$rand__gsl_8c.html#abd204acb91a0adebb638deae62396379" title="Generate a uniform random number in ." alt="" coords="670,135,781,161"/>
+<area shape="rect" id="Node000001" title="Generates a vector of normally distributed random numbers with the given means and standard deviation..." alt="" coords="5,55,168,95"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__rand.html#ac20e458bc43a3e432568ea44c054778e" title="Generates a normally distributed random number with the given mean and standard deviation." alt="" coords="216,62,378,88"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,72,200,72,200,78,168,78"/>
+<area shape="poly" id="edge9_Node000002_Node000002" title=" " alt="" coords="262,63,255,54,259,44,273,38,297,36,323,38,336,45,333,50,321,43,297,41,275,43,263,48,260,53,266,60"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="453,13,572,39"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="356,59,438,40,439,45,357,64"/>
+<area shape="rect" id="Node000006" href="$rand__gsl_8c.html#a77cc930abbc556f2ff28f676d1b740bc" title="Generate a normally&#45;distributed random number." alt="" coords="435,62,590,88"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="378,72,419,72,419,78,378,78"/>
+<area shape="rect" id="Node000007" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="426,136,599,161"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="338,86,459,127,457,132,336,91"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="647,13,799,39"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="573,23,632,23,632,28,573,28"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="847,5,969,46"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="799,23,831,23,831,28,799,28"/>
+<area shape="poly" id="edge8_Node000007_Node000007" title=" " alt="" coords="478,137,471,127,475,117,489,111,513,109,538,112,552,118,549,123,537,117,513,114,490,116,479,121,476,126,482,134"/>
+<area shape="rect" id="Node000008" href="$rand__gsl_8c.html#abd204acb91a0adebb638deae62396379" title="Generate a uniform random number in ." alt="" coords="668,136,778,161"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="600,146,653,146,653,151,600,151"/>
 </map>

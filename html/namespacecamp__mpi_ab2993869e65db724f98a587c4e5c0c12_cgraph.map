@@ -1,10 +1,20 @@
 <map id="camp_mpi::camp_mpi_allreduce_average_real_array" name="camp_mpi::camp_mpi_allreduce_average_real_array">
-<area shape="rect" id="node1" title="Computes the average of val across all processes, storing the result in val_avg on all processes." alt="" coords="5,36,203,76"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="1019,21,1139,46"/>
-<area shape="rect" id="node5" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="477,43,625,83"/>
-<area shape="rect" id="node8" href="$namespacecamp__mpi.html#ac12772749475620730de7ac0fd2f88d7" title="Returns the total number of processes." alt="" coords="251,118,429,143"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1187,21,1339,46"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1387,13,1509,53"/>
-<area shape="rect" id="node6" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="673,43,821,83"/>
-<area shape="rect" id="node7" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="869,46,971,71"/>
+<area shape="rect" id="Node000001" title="Computes the average of val across all processes, storing the result in val_avg on all processes." alt="" coords="5,36,202,76"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="1014,21,1133,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="202,36,363,14,455,6,547,3,745,3,880,9,999,21,998,26,880,14,745,8,547,8,456,11,364,19,202,41"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="475,42,622,83"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="202,55,460,59,460,64,202,60"/>
+<area shape="rect" id="Node000008" href="$namespacecamp__mpi.html#ac12772749475620730de7ac0fd2f88d7" title="Returns the total number of processes." alt="" coords="250,118,427,144"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="171,74,282,110,280,115,169,80"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1181,21,1333,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1134,31,1166,31,1166,36,1134,36"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1381,13,1503,54"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1333,31,1365,31,1365,36,1333,36"/>
+<area shape="rect" id="Node000006" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="670,42,818,83"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="623,60,654,60,654,65,623,65"/>
+<area shape="rect" id="Node000007" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="866,46,966,72"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="818,58,850,58,850,63,818,64"/>
+<area shape="poly" id="edge7_Node000007_Node000002" title=" " alt="" coords="966,48,998,43,999,48,967,53"/>
+<area shape="poly" id="edge9_Node000008_Node000005" title=" " alt="" coords="380,115,468,86,470,91,382,120"/>
+<area shape="poly" id="edge10_Node000008_Node000008" title=" " alt="" coords="303,119,296,109,301,99,315,93,338,91,364,94,377,101,375,105,363,99,338,96,316,98,304,103,302,109,308,116"/>
 </map>

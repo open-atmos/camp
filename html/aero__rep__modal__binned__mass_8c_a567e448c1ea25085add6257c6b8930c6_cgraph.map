@@ -1,5 +1,7 @@
 <map id="aero_rep_modal_binned_mass_update_state" name="aero_rep_modal_binned_mass_update_state">
-<area shape="rect" id="node1" title="Update aerosol representation data for a new state." alt="" coords="5,37,164,77"/>
-<area shape="rect" id="node2" href="$aero__phase__solver_8c.html#a965e0b9fc79db694be201edd05377dd1" title="Get the mass and average MW in an aerosol phase." alt="" coords="217,5,370,45"/>
-<area shape="rect" id="node3" href="$aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="212,69,375,109"/>
+<area shape="rect" id="Node000001" title="Update aerosol representation data for a new state." alt="" coords="5,39,164,79"/>
+<area shape="rect" id="Node000002" href="$aero__phase__solver_8c.html#a965e0b9fc79db694be201edd05377dd1" title="Get the mass and average MW in an aerosol phase." alt="" coords="217,5,369,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,44,201,38,202,43,165,49"/>
+<area shape="rect" id="Node000003" href="$aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="212,71,374,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="165,69,197,74,196,79,164,74"/>
 </map>

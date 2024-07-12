@@ -1,10 +1,20 @@
 <map id="camp_rand::rand_hex_char" name="camp_rand::rand_hex_char">
-<area shape="rect" id="node1" title="Generate a random hexadecimal character." alt="" coords="5,62,181,87"/>
-<area shape="rect" id="node2" href="$namespacecamp__rand.html#a6e5ae3dc848f4f5cf5a1e4bf674ed0ce" title="Returns a random integer between 1 and n." alt="" coords="229,62,407,87"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="482,13,602,38"/>
-<area shape="rect" id="node6" href="$rand__gsl_8c.html#a0ebca9079073ff12ca49babd5f49edb9" title="Generate a uniform random integer in ." alt="" coords="477,62,607,87"/>
-<area shape="rect" id="node7" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="455,135,629,161"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="677,13,829,38"/>
-<area shape="rect" id="node5" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="877,5,1000,45"/>
-<area shape="rect" id="node8" href="$rand__gsl_8c.html#abd204acb91a0adebb638deae62396379" title="Generate a uniform random number in ." alt="" coords="698,135,809,161"/>
+<area shape="rect" id="Node000001" title="Generate a random hexadecimal character." alt="" coords="5,62,181,88"/>
+<area shape="poly" id="edge10_Node000001_Node000001" title=" " alt="" coords="56,63,49,54,53,44,68,38,93,36,120,38,134,45,132,50,119,43,93,41,69,43,57,48,54,53,60,60"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__rand.html#a6e5ae3dc848f4f5cf5a1e4bf674ed0ce" title="Returns a random integer between 1 and n." alt="" coords="229,62,405,88"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="181,72,213,72,213,78,181,78"/>
+<area shape="poly" id="edge5_Node000002_Node000002" title=" " alt="" coords="280,63,273,54,277,44,292,38,317,36,344,38,358,45,356,50,343,43,317,41,293,43,281,48,278,53,284,60"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="480,13,599,39"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="378,59,464,40,465,45,379,64"/>
+<area shape="rect" id="Node000006" href="$rand__gsl_8c.html#a0ebca9079073ff12ca49babd5f49edb9" title="Generate a uniform random integer in ." alt="" coords="475,62,605,88"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="405,72,459,72,459,78,405,78"/>
+<area shape="rect" id="Node000007" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="453,136,626,161"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="359,86,484,128,483,133,358,91"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="674,13,826,39"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="600,23,659,23,659,28,600,28"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="874,5,996,46"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="826,23,858,23,858,28,826,28"/>
+<area shape="poly" id="edge9_Node000007_Node000007" title=" " alt="" coords="505,137,498,127,502,117,516,111,540,109,565,112,579,118,576,123,564,117,540,114,517,116,506,121,503,126,509,134"/>
+<area shape="rect" id="Node000008" href="$rand__gsl_8c.html#abd204acb91a0adebb638deae62396379" title="Generate a uniform random number in ." alt="" coords="695,136,805,161"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="627,146,680,146,680,151,627,151"/>
 </map>

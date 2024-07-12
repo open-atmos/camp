@@ -1,12 +1,27 @@
 <map id="camp_property::key" name="camp_property::key">
-<area shape="rect" id="node1" title="Get the key name of a property." alt="" coords="419,207,552,232"/>
-<area shape="rect" id="node2" href="$namespacecamp__property.html#a6980a9f16e3c1a9c83783070b34d4f55" title="Find a key&#45;value pair by key name. Returns a null pointer if the key name is not found." alt="" coords="226,156,357,181"/>
-<area shape="rect" id="node3" href="$namespacecamp__property.html#aea9874a70ce05c8ae096d11c14baa707" title="Get an integer value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="9,5,161,31"/>
-<area shape="rect" id="node4" href="$namespacecamp__property.html#a00491ca01f9acc9a906c07c385dccefa" title="Get a logical value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="19,55,150,95"/>
-<area shape="rect" id="node5" href="$namespacecamp__property.html#a9f41d477ab2a3fde0b6f115a0448ad19" title="Get a property sub&#45;set. The return value is true if the key&#45;value pair was found, and false otherwise..." alt="" coords="19,121,150,161"/>
-<area shape="rect" id="node6" href="$namespacecamp__property.html#a9120f7b01448c0f2fb101ed54ba2f443" title="Get a real value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="5,188,164,213"/>
-<area shape="rect" id="node7" href="$namespacecamp__property.html#a19d4b93f821c29744eb4e9533f30d524" title="Get a string value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="19,242,150,282"/>
-<area shape="rect" id="node8" href="$namespacecamp__property.html#a58b829ab9f394256ce81e6574a378476" title="Get the key name of the element currently pointed to by the iterator. Returns true if the iterator po..." alt="" coords="212,308,371,333"/>
-<area shape="rect" id="node9" href="$namespacecamp__property.html#a2bac0cf3f0c88a40cdf50132e00dd30c" title="Constructor for property_link_t." alt="" coords="225,358,358,398"/>
-<area shape="rect" id="node10" href="$namespacecamp__property.html#a6a05a24ce71c2d8ec6d9667bcda6d675" title="Put an element in the property data set." alt="" coords="226,423,357,448"/>
+<area shape="rect" id="Node000001" title="Get the key name of a property." alt="" coords="417,207,549,232"/>
+<area shape="poly" id="edge13_Node000001_Node000001" title=" " alt="" coords="516,194,505,188,483,185,463,187,452,192,450,197,455,205,451,208,444,198,448,188,462,182,483,180,507,183,519,190"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__property.html#a6980a9f16e3c1a9c83783070b34d4f55" title="Find a key&#45;value pair by key name. Returns a null pointer if the key name is not found." alt="" coords="225,156,356,182"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="416,205,341,185,342,180,417,200"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__property.html#aea9874a70ce05c8ae096d11c14baa707" title="Get an integer value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="9,5,160,31"/>
+<area shape="poly" id="edge7_Node000001_Node000003" title=" " alt="" coords="466,195,427,136,399,107,368,82,317,57,263,40,209,29,160,23,161,18,210,24,264,35,319,52,370,77,403,103,431,133,470,192"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__property.html#a00491ca01f9acc9a906c07c385dccefa" title="Get a logical value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="19,55,150,96"/>
+<area shape="poly" id="edge9_Node000001_Node000004" title=" " alt="" coords="460,197,421,155,395,135,368,119,313,99,255,86,199,80,150,77,150,72,200,74,256,81,314,94,370,114,398,131,424,152,464,193"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__property.html#a9f41d477ab2a3fde0b6f115a0448ad19" title="Get a property sub&#45;set. The return value is true if the key&#45;value pair was found, and false otherwise..." alt="" coords="19,122,150,163"/>
+<area shape="poly" id="edge10_Node000001_Node000005" title=" " alt="" coords="455,198,416,169,368,146,312,134,254,130,199,131,150,135,150,129,198,125,254,124,313,129,370,141,419,165,458,194"/>
+<area shape="rect" id="Node000006" href="$namespacecamp__property.html#a9120f7b01448c0f2fb101ed54ba2f443" title="Get a real value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="5,188,164,214"/>
+<area shape="poly" id="edge11_Node000001_Node000006" title=" " alt="" coords="401,218,164,207,164,202,401,213"/>
+<area shape="rect" id="Node000007" href="$namespacecamp__property.html#a19d4b93f821c29744eb4e9533f30d524" title="Get a string value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="19,242,150,283"/>
+<area shape="poly" id="edge12_Node000001_Node000007" title=" " alt="" coords="402,231,150,258,150,253,401,225"/>
+<area shape="rect" id="Node000008" href="$namespacecamp__property.html#a58b829ab9f394256ce81e6574a378476" title="Get the key name of the element currently pointed to by the iterator. Returns true if the iterator po..." alt="" coords="212,308,369,334"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="451,243,370,291,329,310,327,305,368,286,448,239"/>
+<area shape="rect" id="Node000009" href="$namespacecamp__property.html#a2bac0cf3f0c88a40cdf50132e00dd30c" title="Constructor for property_link_t." alt="" coords="224,358,357,399"/>
+<area shape="poly" id="edge14_Node000001_Node000009" title=" " alt="" coords="467,247,426,297,400,324,371,348,352,360,349,355,367,344,396,320,422,294,462,243"/>
+<area shape="rect" id="Node000010" href="$namespacecamp__property.html#a6a05a24ce71c2d8ec6d9667bcda6d675" title="Put an element in the property data set." alt="" coords="225,423,356,448"/>
+<area shape="poly" id="edge15_Node000001_Node000010" title=" " alt="" coords="475,248,460,285,438,329,408,374,371,412,350,424,347,420,367,408,404,370,433,326,455,283,470,246"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="268,145,223,95,194,69,162,46,137,34,140,29,165,41,197,64,227,91,272,142"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="246,151,163,113,132,99,134,94,165,108,248,146"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="210,161,150,153,150,148,210,156"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="210,184,165,191,164,186,210,179"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="247,191,132,244,130,239,245,186"/>
 </map>

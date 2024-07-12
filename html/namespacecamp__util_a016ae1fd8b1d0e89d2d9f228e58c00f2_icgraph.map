@@ -1,4 +1,6 @@
 <map id="camp_util::string_to_real" name="camp_util::string_to_real">
-<area shape="rect" id="node1" title="Convert a string to a real." alt="" coords="176,29,339,55"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a8880473ee9de8b37a6612c3a110661df" title="Load a real array from a text file." alt="" coords="5,29,128,55"/>
+<area shape="rect" id="Node000001" title="Convert a string to a real." alt="" coords="175,29,336,55"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="288,16,277,10,255,8,235,10,225,15,223,20,228,27,223,30,217,21,221,11,234,5,255,3,278,5,290,12"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#a8880473ee9de8b37a6612c3a110661df" title="Load a real array from a text file." alt="" coords="5,29,127,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,45,127,45,127,40,159,40"/>
 </map>

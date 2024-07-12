@@ -1,4 +1,7 @@
 <map id="camp_env_state::env_state_conc_to_ppb" name="camp_env_state::env_state_conc_to_ppb">
-<area shape="rect" id="node1" title="Convert (molecules m^{&#45;3}) to (ppb)." alt="" coords="5,29,151,69"/>
-<area shape="rect" id="node2" href="$namespacecamp__env__state.html#a1f549c4ca4ea9f5209b75fec899cb0a9" title="Air molar density (mol m^{&#45;3})." alt="" coords="199,29,345,69"/>
+<area shape="rect" id="Node000001" title="Convert (molecules m^{&#45;3}) to (ppb)." alt="" coords="5,29,150,70"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="41,29,39,19,45,10,58,5,78,3,99,5,111,11,109,16,97,10,77,8,59,10,48,15,44,20,46,28"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__env__state.html#a1f549c4ca4ea9f5209b75fec899cb0a9" title="Air molar density (mol m^{&#45;3})." alt="" coords="198,29,343,70"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,47,182,47,182,52,150,52"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="234,29,232,19,238,10,251,5,270,3,291,5,304,11,301,16,290,10,270,8,252,10,241,15,237,20,239,28"/>
 </map>

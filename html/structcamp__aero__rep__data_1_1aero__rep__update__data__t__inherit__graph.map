@@ -1,6 +1,9 @@
 <map id="camp_aero_rep_data::aero_rep_update_data_t" name="camp_aero_rep_data::aero_rep_update_data_t">
-<area shape="rect" id="node1" title="Update cookie." alt="" coords="5,113,172,153"/>
-<area shape="rect" id="node2" href="$structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t.html" title="Update GMD object." alt="" coords="229,5,416,75"/>
-<area shape="rect" id="node3" href="$structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t.html" title="Update GSD object." alt="" coords="229,99,416,168"/>
-<area shape="rect" id="node4" href="$structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t.html" title="Single particle update number concentration object." alt="" coords="220,193,425,247"/>
+<area shape="rect" id="Node000001" title="Update cookie." alt="" coords="5,115,172,156"/>
+<area shape="rect" id="Node000002" href="$structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t.html" title="Update GMD object." alt="" coords="229,5,415,76"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,106,232,74,234,79,156,111"/>
+<area shape="rect" id="Node000003" href="$structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t.html" title="Update GSD object." alt="" coords="229,100,415,171"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,133,228,133,228,138,187,138"/>
+<area shape="rect" id="Node000004" href="$structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t.html" title="Single particle update number concentration object." alt="" coords="220,194,424,250"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="161,159,246,191,244,196,159,164"/>
 </map>

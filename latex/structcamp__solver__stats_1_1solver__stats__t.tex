@@ -1,20 +1,20 @@
-\hypertarget{structcamp__solver__stats_1_1solver__stats__t}{}\doxysection{camp\+\_\+solver\+\_\+stats\+::solver\+\_\+stats\+\_\+t Type Reference}
-\label{structcamp__solver__stats_1_1solver__stats__t}\index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
+\doxysection{camp\+\_\+solver\+\_\+stats\+::solver\+\_\+stats\+\_\+t Type Reference}
+\hypertarget{structcamp__solver__stats_1_1solver__stats__t}{}\label{structcamp__solver__stats_1_1solver__stats__t}\index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 
 
 Solver statistics.  
 
 
-\doxysubsection*{Public Member Functions}
+\doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-procedure \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a1216303773ff0881acc429792fb7bca1}{print}} =$>$ \mbox{\hyperlink{namespacecamp__solver__stats_a3cdc043242090d784cac1e90352137a6}{do\+\_\+print}}
+procedure \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a4c1578d2cec8c8a989892e45caca7fa6}{print}} (this, file\+\_\+unit)
 \begin{DoxyCompactList}\small\item\em Print the solver statistics. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a4a6d598cdf521d9aca03e8b9bdf5b8cf}{assignvalue}}
+procedure \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a7d80c6309f01561650f035e2c0ef321b}{assignvalue}} (this, new\+\_\+value)
 \begin{DoxyCompactList}\small\item\em Assignment. \end{DoxyCompactList}\item 
-generic \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a422eab9bfd2098bd6259b58e96d972e0}{assignment}} =$>$ \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a4a6d598cdf521d9aca03e8b9bdf5b8cf}{assignvalue}}
-\end{DoxyCompactItemize}
-\doxysubsection*{Public Attributes}
+generic \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_ab3d3db792a11038509c033128d08a16c}{assignment}} (this, new\+\_\+value)
+\begin{DoxyCompactList}\small\item\em Assignment. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
 integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_ad64d980b0066054497a5e1719bbeb4c8}{status\+\_\+code}}
@@ -38,7 +38,7 @@ integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__solver__stats_1_1solver__
 integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a1c5e55ed67bd6e234629bb9e34b908fd}{nls\+\_\+convergence\+\_\+fails}}
 \begin{DoxyCompactList}\small\item\em Non-\/\+Linear solver convergence failures. \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a6abf85497bbd233fb98cde95d9592341}{dls\+\_\+jac\+\_\+evals}}
-\begin{DoxyCompactList}\small\item\em Direct Linear Solver \mbox{\hyperlink{struct_jacobian}{Jacobian}} evaluations. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Direct Linear Solver \doxylink{struct_jacobian}{Jacobian} evaluations. \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_ade8dcc1530f70378b6e51a6a5193d53c}{dls\+\_\+rhs\+\_\+evals}}
 \begin{DoxyCompactList}\small\item\em Direct Linear Solver right-\/hand size evaluations. \end{DoxyCompactList}\item 
 real(kind=dp) \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_ae2b4d4cc2c6b4efef4a1613f1fc264ac}{last\+\_\+time\+\_\+step\+\_\+\+\_\+s}}
@@ -46,15 +46,15 @@ real(kind=dp) \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_ae2
 real(kind=dp) \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_aa6c6f90f2e081910b00b9e176f228968}{next\+\_\+time\+\_\+step\+\_\+\+\_\+s}}
 \begin{DoxyCompactList}\small\item\em Next time step \mbox{[}s\mbox{]}. \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a8c8220cd389300eb739f27056180b77c}{jac\+\_\+eval\+\_\+fails}}
-\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{struct_jacobian}{Jacobian}} evaluation failures. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em \doxylink{struct_jacobian}{Jacobian} evaluation failures. \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_aa7b39ff5a5aab23a9ff1c61aa94ffe2c}{rhs\+\_\+evals\+\_\+total}}
-\begin{DoxyCompactList}\small\item\em Total calls to {\ttfamily \mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f()}}} \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Total calls to {\ttfamily \doxylink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f()}} \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a58865c2ba90821fc8e036d846743aaf7}{jac\+\_\+evals\+\_\+total}}
-\begin{DoxyCompactList}\small\item\em Total calls to {\ttfamily \mbox{\hyperlink{camp__solver_8c_a13451d507558a61a2353adfed58db468}{Jac()}}} \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Total calls to {\ttfamily \doxylink{camp__solver_8c_a13451d507558a61a2353adfed58db468}{Jac()}} \end{DoxyCompactList}\item 
 real(kind=dp) \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_ad04e4e6b041032fce6e049554a1bbfee}{rhs\+\_\+time\+\_\+\+\_\+s}}
-\begin{DoxyCompactList}\small\item\em Compute time for calls to {\ttfamily \mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f()}}} \mbox{[}s\mbox{]}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Compute time for calls to {\ttfamily \doxylink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f()}} \mbox{[}s\mbox{]}. \end{DoxyCompactList}\item 
 real(kind=dp) \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a0952c383f87d3fbf8229c8c89c159e48}{jac\+\_\+time\+\_\+\+\_\+s}}
-\begin{DoxyCompactList}\small\item\em Compute time for calls to {\ttfamily \mbox{\hyperlink{camp__solver_8c_a13451d507558a61a2353adfed58db468}{Jac()}}} \mbox{[}s\mbox{]}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Compute time for calls to {\ttfamily \doxylink{camp__solver_8c_a13451d507558a61a2353adfed58db468}{Jac()}} \mbox{[}s\mbox{]}. \end{DoxyCompactList}\item 
 real(kind=dp) \mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t_a3d4a96d76c9c72cb52e2fd081b3295c2}{max\+\_\+loss\+\_\+precision}}
 \begin{DoxyCompactList}\small\item\em Maximum loss of precision on last deriv call. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -69,42 +69,73 @@ Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00021}{21}} of f
 
 
 \doxysubsection{Member Function/\+Subroutine Documentation}
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a422eab9bfd2098bd6259b58e96d972e0}\label{structcamp__solver__stats_1_1solver__stats__t_a422eab9bfd2098bd6259b58e96d972e0}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_ab3d3db792a11038509c033128d08a16c}\label{structcamp__solver__stats_1_1solver__stats__t_ab3d3db792a11038509c033128d08a16c} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!assignment@{assignment}}
 \index{assignment@{assignment}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{assignment()}{assignment()}}
-{\footnotesize\ttfamily generic camp\+\_\+solver\+\_\+stats\+::solver\+\_\+stats\+\_\+t\+::assignment}
-
-
-
-Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00074}{74}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
-
-Here is the call graph for this function\+:
-% FIG 0
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a4a6d598cdf521d9aca03e8b9bdf5b8cf}\label{structcamp__solver__stats_1_1solver__stats__t_a4a6d598cdf521d9aca03e8b9bdf5b8cf}} 
-\index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!assignvalue@{assignvalue}}
-\index{assignvalue@{assignvalue}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
-\doxysubsubsection{\texorpdfstring{assignvalue()}{assignvalue()}}
-{\footnotesize\ttfamily procedure camp\+\_\+solver\+\_\+stats\+::solver\+\_\+stats\+\_\+t\+::assignvalue}
+{\footnotesize\ttfamily generic camp\+\_\+solver\+\_\+stats\+::solver\+\_\+stats\+\_\+t\+::assignment (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t}{solver\+\_\+stats\+\_\+t}}), intent(inout)}]{this,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{new\+\_\+value }\end{DoxyParamCaption})}
 
 
 
 Assignment. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Solver statistics \\
+\hline
+\mbox{\texttt{ in}}  & {\em new\+\_\+value} & Value to assign \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00074}{74}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{structcamp__solver__stats_1_1solver__stats__t_ab3d3db792a11038509c033128d08a16c_cgraph}
+\end{center}
+\end{figure}
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a7d80c6309f01561650f035e2c0ef321b}\label{structcamp__solver__stats_1_1solver__stats__t_a7d80c6309f01561650f035e2c0ef321b} 
+\index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!assignvalue@{assignvalue}}
+\index{assignvalue@{assignvalue}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
+\doxysubsubsection{\texorpdfstring{assignvalue()}{assignvalue()}}
+{\footnotesize\ttfamily procedure camp\+\_\+solver\+\_\+stats\+::solver\+\_\+stats\+\_\+t\+::assignvalue (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t}{solver\+\_\+stats\+\_\+t}}), intent(inout)}]{this,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{new\+\_\+value }\end{DoxyParamCaption})}
+
+
+
+Assignment. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Solver statistics \\
+\hline
+\mbox{\texttt{ in}}  & {\em new\+\_\+value} & Value to assign \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00073}{73}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a1216303773ff0881acc429792fb7bca1}\label{structcamp__solver__stats_1_1solver__stats__t_a1216303773ff0881acc429792fb7bca1}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a4c1578d2cec8c8a989892e45caca7fa6}\label{structcamp__solver__stats_1_1solver__stats__t_a4c1578d2cec8c8a989892e45caca7fa6} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!print@{print}}
 \index{print@{print}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{print()}{print()}}
-{\footnotesize\ttfamily procedure camp\+\_\+solver\+\_\+stats\+::solver\+\_\+stats\+\_\+t\+::print}
+{\footnotesize\ttfamily procedure camp\+\_\+solver\+\_\+stats\+::solver\+\_\+stats\+\_\+t\+::print (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t}{solver\+\_\+stats\+\_\+t}}), intent(in)}]{this,  }\item[{integer(kind=i\+\_\+kind), optional}]{file\+\_\+unit }\end{DoxyParamCaption})}
 
 
 
 Print the solver statistics. 
 
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Solver statistics \\
+\hline
+ & {\em file\+\_\+unit} & File unit to output to \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00071}{71}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
@@ -112,7 +143,7 @@ Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00071}{71}} of f
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a6abf85497bbd233fb98cde95d9592341}\label{structcamp__solver__stats_1_1solver__stats__t_a6abf85497bbd233fb98cde95d9592341}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a6abf85497bbd233fb98cde95d9592341}\label{structcamp__solver__stats_1_1solver__stats__t_a6abf85497bbd233fb98cde95d9592341} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!dls\_jac\_evals@{dls\_jac\_evals}}
 \index{dls\_jac\_evals@{dls\_jac\_evals}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{dls\_jac\_evals}{dls\_jac\_evals}}
@@ -120,13 +151,13 @@ Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00071}{71}} of f
 
 
 
-Direct Linear Solver \mbox{\hyperlink{struct_jacobian}{Jacobian}} evaluations. 
+Direct Linear Solver \doxylink{struct_jacobian}{Jacobian} evaluations. 
 
 
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00043}{43}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_ade8dcc1530f70378b6e51a6a5193d53c}\label{structcamp__solver__stats_1_1solver__stats__t_ade8dcc1530f70378b6e51a6a5193d53c}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_ade8dcc1530f70378b6e51a6a5193d53c}\label{structcamp__solver__stats_1_1solver__stats__t_ade8dcc1530f70378b6e51a6a5193d53c} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!dls\_rhs\_evals@{dls\_rhs\_evals}}
 \index{dls\_rhs\_evals@{dls\_rhs\_evals}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{dls\_rhs\_evals}{dls\_rhs\_evals}}
@@ -140,7 +171,7 @@ Direct Linear Solver right-\/hand size evaluations.
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00045}{45}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a13228638e7fe72f24ccfea03608d53fc}\label{structcamp__solver__stats_1_1solver__stats__t_a13228638e7fe72f24ccfea03608d53fc}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a13228638e7fe72f24ccfea03608d53fc}\label{structcamp__solver__stats_1_1solver__stats__t_a13228638e7fe72f24ccfea03608d53fc} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!end\_time\_\_s@{end\_time\_\_s}}
 \index{end\_time\_\_s@{end\_time\_\_s}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{end\_time\_\_s}{end\_time\_\_s}}
@@ -154,7 +185,7 @@ Integration end time \mbox{[}s\mbox{]}.
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00027}{27}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a2be2767fb91d173072737847d21d79f0}\label{structcamp__solver__stats_1_1solver__stats__t_a2be2767fb91d173072737847d21d79f0}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a2be2767fb91d173072737847d21d79f0}\label{structcamp__solver__stats_1_1solver__stats__t_a2be2767fb91d173072737847d21d79f0} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!error\_test\_fails@{error\_test\_fails}}
 \index{error\_test\_fails@{error\_test\_fails}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{error\_test\_fails}{error\_test\_fails}}
@@ -168,7 +199,7 @@ Error test failures.
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00037}{37}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a8c8220cd389300eb739f27056180b77c}\label{structcamp__solver__stats_1_1solver__stats__t_a8c8220cd389300eb739f27056180b77c}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a8c8220cd389300eb739f27056180b77c}\label{structcamp__solver__stats_1_1solver__stats__t_a8c8220cd389300eb739f27056180b77c} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!jac\_eval\_fails@{jac\_eval\_fails}}
 \index{jac\_eval\_fails@{jac\_eval\_fails}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{jac\_eval\_fails}{jac\_eval\_fails}}
@@ -176,13 +207,13 @@ Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00037}{37}} of f
 
 
 
-\mbox{\hyperlink{struct_jacobian}{Jacobian}} evaluation failures. 
+\doxylink{struct_jacobian}{Jacobian} evaluation failures. 
 
 
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00051}{51}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a58865c2ba90821fc8e036d846743aaf7}\label{structcamp__solver__stats_1_1solver__stats__t_a58865c2ba90821fc8e036d846743aaf7}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a58865c2ba90821fc8e036d846743aaf7}\label{structcamp__solver__stats_1_1solver__stats__t_a58865c2ba90821fc8e036d846743aaf7} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!jac\_evals\_total@{jac\_evals\_total}}
 \index{jac\_evals\_total@{jac\_evals\_total}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{jac\_evals\_total}{jac\_evals\_total}}
@@ -190,13 +221,13 @@ Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00051}{51}} of f
 
 
 
-Total calls to {\ttfamily \mbox{\hyperlink{camp__solver_8c_a13451d507558a61a2353adfed58db468}{Jac()}}} 
+Total calls to {\ttfamily \doxylink{camp__solver_8c_a13451d507558a61a2353adfed58db468}{Jac()}} 
 
 
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00055}{55}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a0952c383f87d3fbf8229c8c89c159e48}\label{structcamp__solver__stats_1_1solver__stats__t_a0952c383f87d3fbf8229c8c89c159e48}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a0952c383f87d3fbf8229c8c89c159e48}\label{structcamp__solver__stats_1_1solver__stats__t_a0952c383f87d3fbf8229c8c89c159e48} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!jac\_time\_\_s@{jac\_time\_\_s}}
 \index{jac\_time\_\_s@{jac\_time\_\_s}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{jac\_time\_\_s}{jac\_time\_\_s}}
@@ -204,13 +235,13 @@ Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00055}{55}} of f
 
 
 
-Compute time for calls to {\ttfamily \mbox{\hyperlink{camp__solver_8c_a13451d507558a61a2353adfed58db468}{Jac()}}} \mbox{[}s\mbox{]}. 
+Compute time for calls to {\ttfamily \doxylink{camp__solver_8c_a13451d507558a61a2353adfed58db468}{Jac()}} \mbox{[}s\mbox{]}. 
 
 
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00059}{59}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_ae2b4d4cc2c6b4efef4a1613f1fc264ac}\label{structcamp__solver__stats_1_1solver__stats__t_ae2b4d4cc2c6b4efef4a1613f1fc264ac}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_ae2b4d4cc2c6b4efef4a1613f1fc264ac}\label{structcamp__solver__stats_1_1solver__stats__t_ae2b4d4cc2c6b4efef4a1613f1fc264ac} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!last\_time\_step\_\_s@{last\_time\_step\_\_s}}
 \index{last\_time\_step\_\_s@{last\_time\_step\_\_s}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{last\_time\_step\_\_s}{last\_time\_step\_\_s}}
@@ -224,7 +255,7 @@ Last time step \mbox{[}s\mbox{]}.
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00047}{47}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a6ee360b300fc190059e7b547f529a4f9}\label{structcamp__solver__stats_1_1solver__stats__t_a6ee360b300fc190059e7b547f529a4f9}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a6ee360b300fc190059e7b547f529a4f9}\label{structcamp__solver__stats_1_1solver__stats__t_a6ee360b300fc190059e7b547f529a4f9} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!ls\_setups@{ls\_setups}}
 \index{ls\_setups@{ls\_setups}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{ls\_setups}{ls\_setups}}
@@ -238,7 +269,7 @@ Linear solver setups.
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00035}{35}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a3d4a96d76c9c72cb52e2fd081b3295c2}\label{structcamp__solver__stats_1_1solver__stats__t_a3d4a96d76c9c72cb52e2fd081b3295c2}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a3d4a96d76c9c72cb52e2fd081b3295c2}\label{structcamp__solver__stats_1_1solver__stats__t_a3d4a96d76c9c72cb52e2fd081b3295c2} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!max\_loss\_precision@{max\_loss\_precision}}
 \index{max\_loss\_precision@{max\_loss\_precision}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{max\_loss\_precision}{max\_loss\_precision}}
@@ -252,7 +283,7 @@ Maximum loss of precision on last deriv call.
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00061}{61}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_aa6c6f90f2e081910b00b9e176f228968}\label{structcamp__solver__stats_1_1solver__stats__t_aa6c6f90f2e081910b00b9e176f228968}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_aa6c6f90f2e081910b00b9e176f228968}\label{structcamp__solver__stats_1_1solver__stats__t_aa6c6f90f2e081910b00b9e176f228968} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!next\_time\_step\_\_s@{next\_time\_step\_\_s}}
 \index{next\_time\_step\_\_s@{next\_time\_step\_\_s}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{next\_time\_step\_\_s}{next\_time\_step\_\_s}}
@@ -266,7 +297,7 @@ Next time step \mbox{[}s\mbox{]}.
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00049}{49}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a1c5e55ed67bd6e234629bb9e34b908fd}\label{structcamp__solver__stats_1_1solver__stats__t_a1c5e55ed67bd6e234629bb9e34b908fd}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a1c5e55ed67bd6e234629bb9e34b908fd}\label{structcamp__solver__stats_1_1solver__stats__t_a1c5e55ed67bd6e234629bb9e34b908fd} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!nls\_convergence\_fails@{nls\_convergence\_fails}}
 \index{nls\_convergence\_fails@{nls\_convergence\_fails}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{nls\_convergence\_fails}{nls\_convergence\_fails}}
@@ -280,7 +311,7 @@ Non-\/\+Linear solver convergence failures.
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00041}{41}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a8ef52c5d88c3b61e806f9fbd6faaa4bc}\label{structcamp__solver__stats_1_1solver__stats__t_a8ef52c5d88c3b61e806f9fbd6faaa4bc}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a8ef52c5d88c3b61e806f9fbd6faaa4bc}\label{structcamp__solver__stats_1_1solver__stats__t_a8ef52c5d88c3b61e806f9fbd6faaa4bc} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!nls\_iters@{nls\_iters}}
 \index{nls\_iters@{nls\_iters}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{nls\_iters}{nls\_iters}}
@@ -294,7 +325,7 @@ Non-\/\+Linear solver iterations.
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00039}{39}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a7665cc5eb98fa6088b20931a4df47418}\label{structcamp__solver__stats_1_1solver__stats__t_a7665cc5eb98fa6088b20931a4df47418}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_a7665cc5eb98fa6088b20931a4df47418}\label{structcamp__solver__stats_1_1solver__stats__t_a7665cc5eb98fa6088b20931a4df47418} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!num\_steps@{num\_steps}}
 \index{num\_steps@{num\_steps}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{num\_steps}{num\_steps}}
@@ -308,7 +339,7 @@ Number of steps.
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00031}{31}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_aca3fe5894af98bba81969c4121ae763c}\label{structcamp__solver__stats_1_1solver__stats__t_aca3fe5894af98bba81969c4121ae763c}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_aca3fe5894af98bba81969c4121ae763c}\label{structcamp__solver__stats_1_1solver__stats__t_aca3fe5894af98bba81969c4121ae763c} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!rhs\_evals@{rhs\_evals}}
 \index{rhs\_evals@{rhs\_evals}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{rhs\_evals}{rhs\_evals}}
@@ -322,7 +353,7 @@ Right-\/hand side evaluations.
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00033}{33}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_aa7b39ff5a5aab23a9ff1c61aa94ffe2c}\label{structcamp__solver__stats_1_1solver__stats__t_aa7b39ff5a5aab23a9ff1c61aa94ffe2c}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_aa7b39ff5a5aab23a9ff1c61aa94ffe2c}\label{structcamp__solver__stats_1_1solver__stats__t_aa7b39ff5a5aab23a9ff1c61aa94ffe2c} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!rhs\_evals\_total@{rhs\_evals\_total}}
 \index{rhs\_evals\_total@{rhs\_evals\_total}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{rhs\_evals\_total}{rhs\_evals\_total}}
@@ -330,13 +361,13 @@ Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00033}{33}} of f
 
 
 
-Total calls to {\ttfamily \mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f()}}} 
+Total calls to {\ttfamily \doxylink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f()}} 
 
 
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00053}{53}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_ad04e4e6b041032fce6e049554a1bbfee}\label{structcamp__solver__stats_1_1solver__stats__t_ad04e4e6b041032fce6e049554a1bbfee}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_ad04e4e6b041032fce6e049554a1bbfee}\label{structcamp__solver__stats_1_1solver__stats__t_ad04e4e6b041032fce6e049554a1bbfee} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!rhs\_time\_\_s@{rhs\_time\_\_s}}
 \index{rhs\_time\_\_s@{rhs\_time\_\_s}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{rhs\_time\_\_s}{rhs\_time\_\_s}}
@@ -344,13 +375,13 @@ Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00053}{53}} of f
 
 
 
-Compute time for calls to {\ttfamily \mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f()}}} \mbox{[}s\mbox{]}. 
+Compute time for calls to {\ttfamily \doxylink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f()}} \mbox{[}s\mbox{]}. 
 
 
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00057}{57}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_ae6048320ae5565d582f1e652b7cc339a}\label{structcamp__solver__stats_1_1solver__stats__t_ae6048320ae5565d582f1e652b7cc339a}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_ae6048320ae5565d582f1e652b7cc339a}\label{structcamp__solver__stats_1_1solver__stats__t_ae6048320ae5565d582f1e652b7cc339a} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!solver\_flag@{solver\_flag}}
 \index{solver\_flag@{solver\_flag}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{solver\_flag}{solver\_flag}}
@@ -364,7 +395,7 @@ Last flag returned by the solver.
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00029}{29}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_abfcc9f2476f0ebde555d93b8074a7234}\label{structcamp__solver__stats_1_1solver__stats__t_abfcc9f2476f0ebde555d93b8074a7234}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_abfcc9f2476f0ebde555d93b8074a7234}\label{structcamp__solver__stats_1_1solver__stats__t_abfcc9f2476f0ebde555d93b8074a7234} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!start\_time\_\_s@{start\_time\_\_s}}
 \index{start\_time\_\_s@{start\_time\_\_s}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{start\_time\_\_s}{start\_time\_\_s}}
@@ -378,7 +409,7 @@ Integration start time \mbox{[}s\mbox{]}.
 
 Definition at line \mbox{\hyperlink{solver__stats_8_f90_source_l00025}{25}} of file \mbox{\hyperlink{solver__stats_8_f90_source}{solver\+\_\+stats.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_ad64d980b0066054497a5e1719bbeb4c8}\label{structcamp__solver__stats_1_1solver__stats__t_ad64d980b0066054497a5e1719bbeb4c8}} 
+\Hypertarget{structcamp__solver__stats_1_1solver__stats__t_ad64d980b0066054497a5e1719bbeb4c8}\label{structcamp__solver__stats_1_1solver__stats__t_ad64d980b0066054497a5e1719bbeb4c8} 
 \index{camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}!status\_code@{status\_code}}
 \index{status\_code@{status\_code}!camp\_solver\_stats::solver\_stats\_t@{camp\_solver\_stats::solver\_stats\_t}}
 \doxysubsubsection{\texorpdfstring{status\_code}{status\_code}}

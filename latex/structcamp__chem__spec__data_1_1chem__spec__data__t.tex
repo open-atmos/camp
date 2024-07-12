@@ -1,40 +1,50 @@
-\hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t}{}\doxysection{camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t Interface Reference}
-\label{structcamp__chem__spec__data_1_1chem__spec__data__t}\index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
+\doxysection{camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t Interface Reference}
+\hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t}{}\label{structcamp__chem__spec__data_1_1chem__spec__data__t}\index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 
 
 Chemical species data.  
 
 
-\doxysubsection*{Public Member Functions}
+
+
+Collaboration diagram for camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{structcamp__chem__spec__data_1_1chem__spec__data__t__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a5f5baaf238ae571fb4aded5348be57e7}{load}}
+procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a7446073e96c9bfff6637c61496776d02}{load}} (this, json, j\+\_\+obj)
 \begin{DoxyCompactList}\small\item\em Load species from an input file. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ae194592050f430b3cc8f299f1dc01349}{initialize}}
+procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a2ea46dec5c63a319cb026e36c681c9df}{initialize}} (this)
 \begin{DoxyCompactList}\small\item\em Initialize the species set. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a30d8d2c47ff4cecb77adc5b3f24cc7e2}{size}} =$>$ \mbox{\hyperlink{namespacecamp__chem__spec__data_a3effac32749cc6213f4b21dda04ca7f6}{get\+\_\+size}}
+procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_af1b2155e9c1073a0eb602c216e76e3f3}{size}} (this, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a15a2c71fbbd3163b296f94f6ee1b2266}{spec\+\_\+type}}, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a58cbeb696c39fa0a0eb100c264e5448f}{spec\+\_\+phase}})
 \begin{DoxyCompactList}\small\item\em Get the number of species with specified conditions. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a94ecbe4e936ca79bbe4cb64388da7043}{exists}}
+procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_abb537f084a0099246280154a7683ba1f}{exists}} (this, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ad14817cd7e2ad6d73e19d43b8e27309e}{spec\+\_\+name}})
 \begin{DoxyCompactList}\small\item\em Check if a species name is in the set of chemical species. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a239e7dab37e52b1ee9b06fd62e6b2cb1}{get\+\_\+spec\+\_\+names}}
+procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ab18943d37caa21832c3f9f558361b70e}{get\+\_\+spec\+\_\+names}} (this, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a15a2c71fbbd3163b296f94f6ee1b2266}{spec\+\_\+type}}, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a58cbeb696c39fa0a0eb100c264e5448f}{spec\+\_\+phase}})
 \begin{DoxyCompactList}\small\item\em Get a list of species names. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ab4e4908623fa046e3ff8a9521a177a4b}{get\+\_\+property\+\_\+set}}
+procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a7b8cea3bbc2fe9f79e8d86e87cef0bfd}{get\+\_\+property\+\_\+set}} (this, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ad14817cd7e2ad6d73e19d43b8e27309e}{spec\+\_\+name}}, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a5d7cea51492360954a34affa6387358a}{property\+\_\+set}})
 \begin{DoxyCompactList}\small\item\em Get a species properties. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a3704d9d4495f144fa0310833928f17bb}{get\+\_\+type}}
+procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a70109235fb474ad9588f85af18ab8754}{get\+\_\+type}} (this, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ad14817cd7e2ad6d73e19d43b8e27309e}{spec\+\_\+name}}, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a15a2c71fbbd3163b296f94f6ee1b2266}{spec\+\_\+type}})
 \begin{DoxyCompactList}\small\item\em Get a species type. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ae7cc1f09f653158eb4440eb5a3ae7366}{get\+\_\+phase}}
+procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a4c693ef19d641ed119d3f12bc3aa2040}{get\+\_\+phase}} (this, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ad14817cd7e2ad6d73e19d43b8e27309e}{spec\+\_\+name}}, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a58cbeb696c39fa0a0eb100c264e5448f}{spec\+\_\+phase}})
 \begin{DoxyCompactList}\small\item\em Get a species phase. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a3ed77783e6a23b3b44a0ab5e4aecf80c}{get\+\_\+abs\+\_\+tol}}
+procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a036faab4e4512b0ed83f479361fbb79a}{get\+\_\+abs\+\_\+tol}} (this, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ad14817cd7e2ad6d73e19d43b8e27309e}{spec\+\_\+name}}, abs\+\_\+tol)
 \begin{DoxyCompactList}\small\item\em Get the absolute integration tolerance of a species. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a2a6f1ff91ece2f43c9b13362fd75b1ec}{gas\+\_\+state\+\_\+id}}
-\begin{DoxyCompactList}\small\item\em Get a gas-\/phase species index in the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array. Note that aerosol-\/phase species indices on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array must be accessed from {\ttfamily \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_aed385a911da724faa43ecfa61aed8aea}{camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::spec\+\_\+state\+\_\+id()}}} for a particular \mbox{\hyperlink{camp_aero_rep}{aerosol representation}}. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a5fabe5e9f1cc90066e601c5548d08397}{gas\+\_\+state\+\_\+name}}
-\begin{DoxyCompactList}\small\item\em Get the name of a gas-\/phase species in the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array. Note that aerosol-\/phase species names on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array must be accessed from {\ttfamily \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_aed385a911da724faa43ecfa61aed8aea}{camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::spec\+\_\+state\+\_\+id()}}} for a particular \mbox{\hyperlink{camp_aero_rep}{aerosol representation}}. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_aed46d848399bdd50fa0a051644a90322}{print}} =$>$ \mbox{\hyperlink{namespacecamp__chem__spec__data_a60012faea63614e1ce223e11abf1673d}{do\+\_\+print}}
+procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ab2587f2c12716a45ffbc168fbd3b9d76}{gas\+\_\+state\+\_\+id}} (this, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ad14817cd7e2ad6d73e19d43b8e27309e}{spec\+\_\+name}})
+\begin{DoxyCompactList}\small\item\em Get a gas-\/phase species index in the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}} array. Note that aerosol-\/phase species indices on the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}} array must be accessed from {\ttfamily \doxylink{structcamp__aero__rep__data_1_1aero__rep__data__t_a5bbb97f75d61ba597c724b9d46abf906}{camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::spec\+\_\+state\+\_\+id()}} for a particular \doxylink{camp_aero_rep}{aerosol representation}. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_adc62d9f57705c4b77e8ca622626e4699}{gas\+\_\+state\+\_\+name}} (this, spec\+\_\+id)
+\begin{DoxyCompactList}\small\item\em Get the name of a gas-\/phase species in the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}} array. Note that aerosol-\/phase species names on the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}} array must be accessed from {\ttfamily \doxylink{structcamp__aero__rep__data_1_1aero__rep__data__t_a5bbb97f75d61ba597c724b9d46abf906}{camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::spec\+\_\+state\+\_\+id()}} for a particular \doxylink{camp_aero_rep}{aerosol representation}. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a35c6d7fb21e3d4d46cf8db95886b297e}{print}} (this, file\+\_\+unit)
 \begin{DoxyCompactList}\small\item\em Print out the species data. \end{DoxyCompactList}\item 
-final \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_aebd886f980f383d369948746be160ca7}{finalize}}
+final \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_abf3743b860bd1602298c4540312320bd}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the chemical species data. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Public Attributes}
+\doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
 type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), dimension(\+:), pointer \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ad14817cd7e2ad6d73e19d43b8e27309e}{spec\+\_\+name}} =$>$ null()
@@ -45,16 +55,16 @@ integer(kind=i\+\_\+kind), dimension(\+:), pointer \mbox{\hyperlink{structcamp__
 \begin{DoxyCompactList}\small\item\em Species phase. \end{DoxyCompactList}\item 
 type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}), dimension(\+:), pointer \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a5d7cea51492360954a34affa6387358a}{property\+\_\+set}} =$>$ null()
 \begin{DoxyCompactList}\small\item\em Species property set. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Private Member Functions}
+\doxysubsubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-procedure, private \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_aaa252d30919d5efc5fecb5839c62e6db}{ensure\+\_\+size}}
+procedure, private \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a4b9f02e08189a9481212202624a22a34}{ensure\+\_\+size}} (this, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ae090bd191d95b8d61b333ea2ae3ad131}{num\+\_\+spec}})
 \begin{DoxyCompactList}\small\item\em Ensure there is enough room in the species dataset to add a specified number of species. \end{DoxyCompactList}\item 
-procedure, private \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a012b639a60e03082dc6b5483f87029f6}{add}}
+procedure, private \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ae3a12736b72c51a8032867e3826025df}{add}} (this, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ad14817cd7e2ad6d73e19d43b8e27309e}{spec\+\_\+name}}, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a15a2c71fbbd3163b296f94f6ee1b2266}{spec\+\_\+type}}, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a58cbeb696c39fa0a0eb100c264e5448f}{spec\+\_\+phase}}, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a5d7cea51492360954a34affa6387358a}{property\+\_\+set}})
 \begin{DoxyCompactList}\small\item\em Add a species. \end{DoxyCompactList}\item 
-procedure, private \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ae6ece70a4dca9bd1a8728c508cb1b7fc}{find}}
+procedure, private \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a5ad5665081616a7e84aed1706a0916eb}{find}} (this, \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ad14817cd7e2ad6d73e19d43b8e27309e}{spec\+\_\+name}}, spec\+\_\+id)
 \begin{DoxyCompactList}\small\item\em Find a species index by name. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Private Attributes}
+\doxysubsubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
 integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_ae090bd191d95b8d61b333ea2ae3ad131}{num\+\_\+spec}} = 0
@@ -64,235 +74,380 @@ integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__chem__spec__data_1_1chem_
 \doxysubsection{Detailed Description}
 Chemical species data. 
 
-Time-\/invariant data related to a \mbox{\hyperlink{camp_species}{chemical species}} 
+Time-\/invariant data related to a \doxylink{camp_species}{chemical species} 
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00068}{68}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
 
 
 
-\doxysubsection{Member Function/\+Subroutine Documentation}
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a012b639a60e03082dc6b5483f87029f6}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a012b639a60e03082dc6b5483f87029f6}} 
-\index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!add@{add}}
-\index{add@{add}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
-\doxysubsubsection{\texorpdfstring{add()}{add()}}
-{\footnotesize\ttfamily procedure, private camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::add\hspace{0.3cm}{\ttfamily [private]}}
-
-
-
-Add a species. 
-
-
-
-Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00123}{123}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
-
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_aaa252d30919d5efc5fecb5839c62e6db}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_aaa252d30919d5efc5fecb5839c62e6db}} 
-\index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!ensure\_size@{ensure\_size}}
-\index{ensure\_size@{ensure\_size}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
-\doxysubsubsection{\texorpdfstring{ensure\_size()}{ensure\_size()}}
-{\footnotesize\ttfamily procedure, private camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::ensure\+\_\+size\hspace{0.3cm}{\ttfamily [private]}}
-
-
-
-Ensure there is enough room in the species dataset to add a specified number of species. 
-
-
-
-Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00121}{121}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
-
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a94ecbe4e936ca79bbe4cb64388da7043}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a94ecbe4e936ca79bbe4cb64388da7043}} 
-\index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!exists@{exists}}
-\index{exists@{exists}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
-\doxysubsubsection{\texorpdfstring{exists()}{exists()}}
-{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::exists}
-
-
-
-Check if a species name is in the set of chemical species. 
-
-
-
-Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00088}{88}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
-
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_aebd886f980f383d369948746be160ca7}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_aebd886f980f383d369948746be160ca7}} 
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_abf3743b860bd1602298c4540312320bd}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_abf3743b860bd1602298c4540312320bd} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily final camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::finalize\hspace{0.3cm}{\ttfamily [final]}}
+{\footnotesize\ttfamily final camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [final]}}
 
 
 
 Finalize the chemical species data. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Species dataset \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00116}{116}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 0
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_ae6ece70a4dca9bd1a8728c508cb1b7fc}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_ae6ece70a4dca9bd1a8728c508cb1b7fc}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{structcamp__chem__spec__data_1_1chem__spec__data__t_abf3743b860bd1602298c4540312320bd_cgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_ae3a12736b72c51a8032867e3826025df}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_ae3a12736b72c51a8032867e3826025df} 
+\index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!add@{add}}
+\index{add@{add}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
+\doxysubsubsection{\texorpdfstring{add()}{add()}}
+{\footnotesize\ttfamily procedure, private camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::add (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(inout)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{spec\+\_\+name,  }\item[{integer(kind=i\+\_\+kind), intent(inout)}]{spec\+\_\+type,  }\item[{integer(kind=i\+\_\+kind), intent(inout)}]{spec\+\_\+phase,  }\item[{type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}), intent(inout), optional}]{property\+\_\+set }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Add a species. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Species dataset \\
+\hline
+\mbox{\texttt{ in}}  & {\em spec\+\_\+name} & Name of species to add \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em spec\+\_\+type} & State variable type \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em spec\+\_\+phase} & Species phase \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em property\+\_\+set} & Property set for new species \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00123}{123}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a4b9f02e08189a9481212202624a22a34}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a4b9f02e08189a9481212202624a22a34} 
+\index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!ensure\_size@{ensure\_size}}
+\index{ensure\_size@{ensure\_size}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
+\doxysubsubsection{\texorpdfstring{ensure\_size()}{ensure\_size()}}
+{\footnotesize\ttfamily procedure, private camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::ensure\+\_\+size (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(inout)}]{this,  }\item[{integer(i\+\_\+kind), intent(in)}]{num\+\_\+spec }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Ensure there is enough room in the species dataset to add a specified number of species. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Species dataset \\
+\hline
+\mbox{\texttt{ in}}  & {\em num\+\_\+spec} & Number of new species to ensure space for \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00121}{121}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_abb537f084a0099246280154a7683ba1f}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_abb537f084a0099246280154a7683ba1f} 
+\index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!exists@{exists}}
+\index{exists@{exists}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
+\doxysubsubsection{\texorpdfstring{exists()}{exists()}}
+{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::exists (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{spec\+\_\+name }\end{DoxyParamCaption})}
+
+
+
+Check if a species name is in the set of chemical species. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Species dataset \\
+\hline
+\mbox{\texttt{ in}}  & {\em spec\+\_\+name} & Species name \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00088}{88}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a5ad5665081616a7e84aed1706a0916eb}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a5ad5665081616a7e84aed1706a0916eb} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!find@{find}}
 \index{find@{find}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{find()}{find()}}
-{\footnotesize\ttfamily procedure, private camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::find\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily procedure, private camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::find (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{spec\+\_\+name,  }\item[{integer(kind=i\+\_\+kind), intent(out)}]{spec\+\_\+id }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
 Find a species index by name. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Species dataset \\
+\hline
+\mbox{\texttt{ in}}  & {\em spec\+\_\+name} & Species name \\
+\hline
+\mbox{\texttt{ out}}  & {\em spec\+\_\+id} & Species id \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00125}{125}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a2a6f1ff91ece2f43c9b13362fd75b1ec}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a2a6f1ff91ece2f43c9b13362fd75b1ec}} 
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_ab2587f2c12716a45ffbc168fbd3b9d76}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_ab2587f2c12716a45ffbc168fbd3b9d76} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!gas\_state\_id@{gas\_state\_id}}
 \index{gas\_state\_id@{gas\_state\_id}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{gas\_state\_id()}{gas\_state\_id()}}
-{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::gas\+\_\+state\+\_\+id}
+{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::gas\+\_\+state\+\_\+id (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{spec\+\_\+name }\end{DoxyParamCaption})}
 
 
 
-Get a gas-\/phase species index in the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array. Note that aerosol-\/phase species indices on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array must be accessed from {\ttfamily \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_aed385a911da724faa43ecfa61aed8aea}{camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::spec\+\_\+state\+\_\+id()}}} for a particular \mbox{\hyperlink{camp_aero_rep}{aerosol representation}}. 
+Get a gas-\/phase species index in the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}} array. Note that aerosol-\/phase species indices on the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}} array must be accessed from {\ttfamily \doxylink{structcamp__aero__rep__data_1_1aero__rep__data__t_a5bbb97f75d61ba597c724b9d46abf906}{camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::spec\+\_\+state\+\_\+id()}} for a particular \doxylink{camp_aero_rep}{aerosol representation}. 
 
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Species dataset \\
+\hline
+\mbox{\texttt{ in}}  & {\em spec\+\_\+name} & Species name \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00105}{105}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a5fabe5e9f1cc90066e601c5548d08397}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a5fabe5e9f1cc90066e601c5548d08397}} 
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_adc62d9f57705c4b77e8ca622626e4699}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_adc62d9f57705c4b77e8ca622626e4699} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!gas\_state\_name@{gas\_state\_name}}
 \index{gas\_state\_name@{gas\_state\_name}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{gas\_state\_name()}{gas\_state\_name()}}
-{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::gas\+\_\+state\+\_\+name}
+{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::gas\+\_\+state\+\_\+name (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{this,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{spec\+\_\+id }\end{DoxyParamCaption})}
 
 
 
-Get the name of a gas-\/phase species in the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array. Note that aerosol-\/phase species names on the {\ttfamily \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}}} array must be accessed from {\ttfamily \mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t_aed385a911da724faa43ecfa61aed8aea}{camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::spec\+\_\+state\+\_\+id()}}} for a particular \mbox{\hyperlink{camp_aero_rep}{aerosol representation}}. 
+Get the name of a gas-\/phase species in the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}} array. Note that aerosol-\/phase species names on the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}} array must be accessed from {\ttfamily \doxylink{structcamp__aero__rep__data_1_1aero__rep__data__t_a5bbb97f75d61ba597c724b9d46abf906}{camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t\+::spec\+\_\+state\+\_\+id()}} for a particular \doxylink{camp_aero_rep}{aerosol representation}. 
 
+\begin{DoxyReturn}{Returns}
+Species name 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Species dataset \\
+\hline
+\mbox{\texttt{ in}}  & {\em spec\+\_\+id} & Species id \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00112}{112}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a3ed77783e6a23b3b44a0ab5e4aecf80c}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a3ed77783e6a23b3b44a0ab5e4aecf80c}} 
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a036faab4e4512b0ed83f479361fbb79a}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a036faab4e4512b0ed83f479361fbb79a} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!get\_abs\_tol@{get\_abs\_tol}}
 \index{get\_abs\_tol@{get\_abs\_tol}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{get\_abs\_tol()}{get\_abs\_tol()}}
-{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::get\+\_\+abs\+\_\+tol}
+{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::get\+\_\+abs\+\_\+tol (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{spec\+\_\+name,  }\item[{real(kind=dp), intent(out)}]{abs\+\_\+tol }\end{DoxyParamCaption})}
 
 
 
 Get the absolute integration tolerance of a species. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Species dataset \\
+\hline
+\mbox{\texttt{ in}}  & {\em spec\+\_\+name} & Species name \\
+\hline
+\mbox{\texttt{ out}}  & {\em abs\+\_\+tol} & Absolute integration tolerance \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00098}{98}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_ae7cc1f09f653158eb4440eb5a3ae7366}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_ae7cc1f09f653158eb4440eb5a3ae7366}} 
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a4c693ef19d641ed119d3f12bc3aa2040}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a4c693ef19d641ed119d3f12bc3aa2040} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!get\_phase@{get\_phase}}
 \index{get\_phase@{get\_phase}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{get\_phase()}{get\_phase()}}
-{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::get\+\_\+phase}
+{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::get\+\_\+phase (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{spec\+\_\+name,  }\item[{integer(kind=i\+\_\+kind), intent(out)}]{spec\+\_\+phase }\end{DoxyParamCaption})}
 
 
 
 Get a species phase. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Species dataset \\
+\hline
+\mbox{\texttt{ in}}  & {\em spec\+\_\+name} & Species name to find properties of \\
+\hline
+\mbox{\texttt{ out}}  & {\em spec\+\_\+phase} & Species phase \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00096}{96}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_ab4e4908623fa046e3ff8a9521a177a4b}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_ab4e4908623fa046e3ff8a9521a177a4b}} 
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a7b8cea3bbc2fe9f79e8d86e87cef0bfd}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a7b8cea3bbc2fe9f79e8d86e87cef0bfd} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!get\_property\_set@{get\_property\_set}}
 \index{get\_property\_set@{get\_property\_set}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{get\_property\_set()}{get\_property\_set()}}
-{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::get\+\_\+property\+\_\+set}
+{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::get\+\_\+property\+\_\+set (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{spec\+\_\+name,  }\item[{type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}), intent(out), pointer}]{property\+\_\+set }\end{DoxyParamCaption})}
 
 
 
 Get a species properties. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Species dataset \\
+\hline
+\mbox{\texttt{ in}}  & {\em spec\+\_\+name} & Species name to find properties of \\
+\hline
+\mbox{\texttt{ out}}  & {\em property\+\_\+set} & Pointer to species properties \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00092}{92}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a239e7dab37e52b1ee9b06fd62e6b2cb1}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a239e7dab37e52b1ee9b06fd62e6b2cb1}} 
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_ab18943d37caa21832c3f9f558361b70e}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_ab18943d37caa21832c3f9f558361b70e} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!get\_spec\_names@{get\_spec\_names}}
 \index{get\_spec\_names@{get\_spec\_names}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{get\_spec\_names()}{get\_spec\_names()}}
-{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::get\+\_\+spec\+\_\+names}
+{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::get\+\_\+spec\+\_\+names (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{this,  }\item[{integer(kind=i\+\_\+kind), intent(in), optional}]{spec\+\_\+type,  }\item[{integer(kind=i\+\_\+kind), intent(in), optional}]{spec\+\_\+phase }\end{DoxyParamCaption})}
 
 
 
 Get a list of species names. 
 
+If a type or phase are specified, only species with the specified values are returned. Otherwise, all species names are returned. \begin{DoxyReturn}{Returns}
+Species names 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Species dataset \\
+\hline
+\mbox{\texttt{ in}}  & {\em spec\+\_\+type} & State variable type for the species \\
+\hline
+\mbox{\texttt{ in}}  & {\em spec\+\_\+phase} & Phase of the species \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00090}{90}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a3704d9d4495f144fa0310833928f17bb}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a3704d9d4495f144fa0310833928f17bb}} 
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a70109235fb474ad9588f85af18ab8754}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a70109235fb474ad9588f85af18ab8754} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!get\_type@{get\_type}}
 \index{get\_type@{get\_type}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{get\_type()}{get\_type()}}
-{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::get\+\_\+type}
+{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::get\+\_\+type (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{spec\+\_\+name,  }\item[{integer(kind=i\+\_\+kind), intent(out)}]{spec\+\_\+type }\end{DoxyParamCaption})}
 
 
 
 Get a species type. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Species dataset \\
+\hline
+\mbox{\texttt{ in}}  & {\em spec\+\_\+name} & Species name to find properties of \\
+\hline
+\mbox{\texttt{ out}}  & {\em spec\+\_\+type} & Species type \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00094}{94}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_ae194592050f430b3cc8f299f1dc01349}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_ae194592050f430b3cc8f299f1dc01349}} 
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a2ea46dec5c63a319cb026e36c681c9df}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a2ea46dec5c63a319cb026e36c681c9df} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::initialize}
+{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::initialize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})}
 
 
 
 Initialize the species set. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Species database \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00084}{84}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a5f5baaf238ae571fb4aded5348be57e7}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a5f5baaf238ae571fb4aded5348be57e7}} 
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a7446073e96c9bfff6637c61496776d02}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a7446073e96c9bfff6637c61496776d02} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!load@{load}}
 \index{load@{load}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{load()}{load()}}
-{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::load}
+{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::load (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(inout)}]{this,  }\item[{type(json\+\_\+core), intent(in), pointer}]{json,  }\item[{type(json\+\_\+value), intent(in), pointer}]{j\+\_\+obj }\end{DoxyParamCaption})}
 
 
 
 Load species from an input file. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Species dataset \\
+\hline
+\mbox{\texttt{ in}}  & {\em json} & JSON core \\
+\hline
+\mbox{\texttt{ in}}  & {\em j\+\_\+obj} & JSON object \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00082}{82}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_aed46d848399bdd50fa0a051644a90322}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_aed46d848399bdd50fa0a051644a90322}} 
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a35c6d7fb21e3d4d46cf8db95886b297e}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a35c6d7fb21e3d4d46cf8db95886b297e} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!print@{print}}
 \index{print@{print}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{print()}{print()}}
-{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::print}
+{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::print (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{this,  }\item[{integer(kind=i\+\_\+kind), intent(in), optional}]{file\+\_\+unit }\end{DoxyParamCaption})}
 
 
 
 Print out the species data. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Chemical species data \\
+\hline
+\mbox{\texttt{ in}}  & {\em file\+\_\+unit} & File unit for output \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00114}{114}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a30d8d2c47ff4cecb77adc5b3f24cc7e2}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a30d8d2c47ff4cecb77adc5b3f24cc7e2}} 
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_af1b2155e9c1073a0eb602c216e76e3f3}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_af1b2155e9c1073a0eb602c216e76e3f3} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!size@{size}}
 \index{size@{size}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{size()}{size()}}
-{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::size}
+{\footnotesize\ttfamily procedure camp\+\_\+chem\+\_\+spec\+\_\+data\+::chem\+\_\+spec\+\_\+data\+\_\+t\+::size (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{this,  }\item[{integer(kind=i\+\_\+kind), intent(in), optional}]{spec\+\_\+type,  }\item[{integer(kind=i\+\_\+kind), intent(in), optional}]{spec\+\_\+phase }\end{DoxyParamCaption})}
 
 
 
 Get the number of species with specified conditions. 
 
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Species database \\
+\hline
+\mbox{\texttt{ in}}  & {\em spec\+\_\+type} & State variable type for the species \\
+\hline
+\mbox{\texttt{ in}}  & {\em spec\+\_\+phase} & Phase of the species \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00086}{86}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
@@ -300,7 +455,7 @@ Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00086}{86}} o
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_ae090bd191d95b8d61b333ea2ae3ad131}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_ae090bd191d95b8d61b333ea2ae3ad131}} 
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_ae090bd191d95b8d61b333ea2ae3ad131}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_ae090bd191d95b8d61b333ea2ae3ad131} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!num\_spec@{num\_spec}}
 \index{num\_spec@{num\_spec}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{num\_spec}{num\_spec}}
@@ -314,7 +469,7 @@ Number of species.
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00071}{71}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a5d7cea51492360954a34affa6387358a}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a5d7cea51492360954a34affa6387358a}} 
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a5d7cea51492360954a34affa6387358a}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a5d7cea51492360954a34affa6387358a} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!property\_set@{property\_set}}
 \index{property\_set@{property\_set}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{property\_set}{property\_set}}
@@ -328,7 +483,7 @@ Species property set.
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00079}{79}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_ad14817cd7e2ad6d73e19d43b8e27309e}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_ad14817cd7e2ad6d73e19d43b8e27309e}} 
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_ad14817cd7e2ad6d73e19d43b8e27309e}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_ad14817cd7e2ad6d73e19d43b8e27309e} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!spec\_name@{spec\_name}}
 \index{spec\_name@{spec\_name}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{spec\_name}{spec\_name}}
@@ -342,7 +497,7 @@ Species name.
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00073}{73}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a58cbeb696c39fa0a0eb100c264e5448f}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a58cbeb696c39fa0a0eb100c264e5448f}} 
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a58cbeb696c39fa0a0eb100c264e5448f}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a58cbeb696c39fa0a0eb100c264e5448f} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!spec\_phase@{spec\_phase}}
 \index{spec\_phase@{spec\_phase}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{spec\_phase}{spec\_phase}}
@@ -356,7 +511,7 @@ Species phase.
 
 Definition at line \mbox{\hyperlink{chem__spec__data_8_f90_source_l00077}{77}} of file \mbox{\hyperlink{chem__spec__data_8_f90_source}{chem\+\_\+spec\+\_\+data.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a15a2c71fbbd3163b296f94f6ee1b2266}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a15a2c71fbbd3163b296f94f6ee1b2266}} 
+\Hypertarget{structcamp__chem__spec__data_1_1chem__spec__data__t_a15a2c71fbbd3163b296f94f6ee1b2266}\label{structcamp__chem__spec__data_1_1chem__spec__data__t_a15a2c71fbbd3163b296f94f6ee1b2266} 
 \index{camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}!spec\_type@{spec\_type}}
 \index{spec\_type@{spec\_type}!camp\_chem\_spec\_data::chem\_spec\_data\_t@{camp\_chem\_spec\_data::chem\_spec\_data\_t}}
 \doxysubsubsection{\texorpdfstring{spec\_type}{spec\_type}}

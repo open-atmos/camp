@@ -1,0 +1,37 @@
+\doxysubsection{Input JSON Object Format\+: Chemical Species}
+\hypertarget{input_format_species}{}\label{input_format_species}\index{Input JSON Object Format: Chemical Species@{Input JSON Object Format: Chemical Species}}
+A {\ttfamily json} object containing information about a \doxylink{camp_species}{chemical species} has the following format\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ "{}camp-\/data"{}\ :\ [}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ "{}name"{}\ :\ "{}my\ species\ name"{},}
+\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{\ \ \ \ "{}phase"{}\ :\ "{}SPEC\_PHASE"{},}
+\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}SPEC\_TYPE"{},}
+\DoxyCodeLine{\ \ \ \ "{}some\ property"{}\ :\ 123.34,}
+\DoxyCodeLine{\ \ \ \ "{}some\ other\ property"{}\ :\ true,}
+\DoxyCodeLine{\ \ \ \ "{}nested\ properties"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ "{}sub\ prop\ 1"{}\ :\ 12.43,}
+\DoxyCodeLine{\ \ \ \ \ \ \ "{}sub\ prop\ other"{}\ :\ "{}some\ text"{}}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ "{}name"{}\ :\ "{}my\ species\ name"{},}
+\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{\ \ \ \ "{}phase"{}\ :\ "{}SPEC\_PHASE"{},}
+\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}SPEC\_TYPE"{},}
+\DoxyCodeLine{\ \ \ \ "{}some\ property"{}\ :\ 123.34,}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ ...}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ The key-\/value pair {\bfseries{name}} is required and must contain the unique name used for this species in the \doxylink{input_format_mechanism}{mechanism object}. (The same name cannot be used for a gas-\/phase species and an aerosol-\/phase species.) The key-\/value pair {\bfseries{type}} is also required, and must be {\bfseries{CHEM\+\_\+\+SPEC}}.
+
+The key-\/value pair {\bfseries{phase}} specifies the phase in which the species exists and can be {\bfseries{GAS}} or {\bfseries{AEROSOL}}. When the {\bfseries{phase}} is not specified, it is assumed to be {\bfseries{GAS}}. The {\bfseries{type}} can be {\bfseries{VARIABLE}}, {\bfseries{CONSTANT}} or {\bfseries{PSSA}}. When a {\bfseries{type}} is not specified, it is assumed to be {\bfseries{VARIABLE}}.
+
+All remaining data are optional and may include any valid {\ttfamily json} value, including nested objects. Multilple entries with the same species name will be merged into a single species, but duplicate property names for the same species will cause an error. However, nested objects with the same key name will be merged, if possible. 

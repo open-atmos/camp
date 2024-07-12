@@ -1,4 +1,10 @@
 <map id="camp_rxn_condensed_phase_arrhenius::rxn_condensed_phase_arrhenius_t" name="camp_rxn_condensed_phase_arrhenius::rxn_condensed_phase_arrhenius_t">
-<area shape="rect" id="node1" title="Generic test reaction data type." alt="" coords="5,93,211,148"/>
-<area shape="rect" id="node2" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="41,5,175,45"/>
+<area shape="rect" id="Node000001" title="Generic test reaction data type." alt="" coords="5,318,210,373"/>
+<area shape="rect" id="Node000002" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="41,228,174,268"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,284,110,317,105,317,105,284"/>
+<area shape="rect" id="Node000003" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="23,139,192,165"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="110,180,110,227,105,227,105,180"/>
+<area shape="rect" id="Node000004" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="28,5,187,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="110,61,110,138,105,138,105,61"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="204,15,213,26,205,36,188,40,186,35,203,31,208,26,200,19"/>
 </map>

@@ -1,11 +1,11 @@
-\hypertarget{rxn__condensed__phase__photolysis_8_f90}{}\doxysection{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90 File Reference}
-\label{rxn__condensed__phase__photolysis_8_f90}\index{rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}}
+\doxysection{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90 File Reference}
+\hypertarget{rxn__condensed__phase__photolysis_8_f90}{}\label{rxn__condensed__phase__photolysis_8_f90}\index{rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}}
 
 
-The \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis}} module.  
+The \doxylink{namespacecamp__rxn__condensed__phase__photolysis}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis} module.  
 
 
-\doxysubsection*{Data Types}
+\doxysubsubsection*{Data Types}
 \begin{DoxyCompactItemize}
 \item 
 interface \mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t}}
@@ -18,12 +18,12 @@ interface \mbox{\hyperlink{interfacecamp__rxn__condensed__phase__photolysis_1_1r
 \begin{DoxyCompactList}\small\item\em Set a new photolysis rate. \end{DoxyCompactList}\item 
 interface \mbox{\hyperlink{interfacecamp__rxn__condensed__phase__photolysis_1_1rxn__free__update__data}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::rxn\+\_\+free\+\_\+update\+\_\+data}}
 \begin{DoxyCompactList}\small\item\em Free an update rate data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Modules}
+\doxysubsubsection*{Modules}
 \begin{DoxyCompactItemize}
 \item 
 module \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis}}
-\begin{DoxyCompactList}\small\item\em The \mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t}} type and associated functions. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Macros}
+\begin{DoxyCompactList}\small\item\em The \doxylink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t} type and associated functions. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}~this\%condensed\+\_\+data\+\_\+int(1)
@@ -44,26 +44,26 @@ module \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis}{camp\+
 \item 
 \#define \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_ae761e39657aac155d83eae9b338be571}{REACT\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+x)
 \item 
-\#define \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}$\ast$\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}+x)
+\#define \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}+x)
 \item 
-\#define \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_a21d22248f675f2c8aed5aa05e839290f}{WATER\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}})$\ast$\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}+x)
+\#define \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_a21d22248f675f2c8aed5aa05e839290f}{WATER\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}})\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}+x)
 \item 
-\#define \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}+1)$\ast$\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}+x)
+\#define \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}+1)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}+x)
 \item 
-\#define \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+(2$\ast$(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}})+1)$\ast$\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}+x)
+\#define \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+(2\texorpdfstring{$\ast$}{*}(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}})+1)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}+x)
 \item 
 \#define \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+x)
 \item 
 \#define \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_a32583318a6f42e1992ca6faf76d8c6bf}{KGM3\+\_\+\+TO\+\_\+\+MOLM3\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}+x)
 \end{DoxyCompactItemize}
-\doxysubsection*{Functions/\+Subroutines}
+\doxysubsubsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
 \item 
-type(rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ae18f12e4afe1a7a0e6ab3459a9c3ffff}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::constructor}} ()
+type(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ae18f12e4afe1a7a0e6ab3459a9c3ffff}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::constructor}} ()
 \begin{DoxyCompactList}\small\item\em Constructor for Condensed-\/phase Photolysis reaction. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a0f0bc449287b8404cf2baccd8a14caaa}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
-type(property\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a80ba2df3166d8cd40ef07ebcec6293db}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::get\+\_\+property\+\_\+set}} (this)
+type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a80ba2df3166d8cd40ef07ebcec6293db}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::get\+\_\+property\+\_\+set}} (this)
 \begin{DoxyCompactList}\small\item\em Get the reaction properties. (For use by external photolysis modules.) \end{DoxyCompactList}\item 
 elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_aeed920c22a56f60131e7d515275666b6}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
@@ -82,7 +82,7 @@ elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__phot
 
 
 \doxysubsection{Detailed Description}
-The \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis}} module. 
+The \doxylink{namespacecamp__rxn__condensed__phase__photolysis}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis} module. 
 
 
 
@@ -91,91 +91,91 @@ Definition in file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_sour
 
 
 \doxysubsection{Macro Definition Documentation}
-\mbox{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_af9fc34858d09e71d3cffd88cf942bdf9}\label{rxn__condensed__phase__photolysis_8_f90_af9fc34858d09e71d3cffd88cf942bdf9}} 
+\Hypertarget{rxn__condensed__phase__photolysis_8_f90_af9fc34858d09e71d3cffd88cf942bdf9}\label{rxn__condensed__phase__photolysis_8_f90_af9fc34858d09e71d3cffd88cf942bdf9} 
 \index{rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}!DERIV\_ID\_@{DERIV\_ID\_}}
 \index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}}
 \doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
-{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}+1)$\ast$\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}+x)}
+{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}+1)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}+x)}
 
-\mbox{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_ab831aae98d4453927c63a93f55ee5a86}\label{rxn__condensed__phase__photolysis_8_f90_ab831aae98d4453927c63a93f55ee5a86}} 
+\Hypertarget{rxn__condensed__phase__photolysis_8_f90_ab831aae98d4453927c63a93f55ee5a86}\label{rxn__condensed__phase__photolysis_8_f90_ab831aae98d4453927c63a93f55ee5a86} 
 \index{rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}!JAC\_ID\_@{JAC\_ID\_}}
 \index{JAC\_ID\_@{JAC\_ID\_}!rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}}
 \doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+(2$\ast$(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}})+1)$\ast$\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}+x)}
+{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+(2\texorpdfstring{$\ast$}{*}(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}})+1)\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}+x)}
 
-\mbox{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a32583318a6f42e1992ca6faf76d8c6bf}\label{rxn__condensed__phase__photolysis_8_f90_a32583318a6f42e1992ca6faf76d8c6bf}} 
+\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a32583318a6f42e1992ca6faf76d8c6bf}\label{rxn__condensed__phase__photolysis_8_f90_a32583318a6f42e1992ca6faf76d8c6bf} 
 \index{rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}!KGM3\_TO\_MOLM3\_@{KGM3\_TO\_MOLM3\_}}
 \index{KGM3\_TO\_MOLM3\_@{KGM3\_TO\_MOLM3\_}!rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}}
 \doxysubsubsection{\texorpdfstring{KGM3\_TO\_MOLM3\_}{KGM3\_TO\_MOLM3\_}}
 {\footnotesize\ttfamily \#define KGM3\+\_\+\+TO\+\_\+\+MOLM3\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}+x)}
 
-\mbox{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_adf4b84135880d5ac73ce37df877d91fb}\label{rxn__condensed__phase__photolysis_8_f90_adf4b84135880d5ac73ce37df877d91fb}} 
+\Hypertarget{rxn__condensed__phase__photolysis_8_f90_adf4b84135880d5ac73ce37df877d91fb}\label{rxn__condensed__phase__photolysis_8_f90_adf4b84135880d5ac73ce37df877d91fb} 
 \index{rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}!NUM\_AERO\_PHASE\_@{NUM\_AERO\_PHASE\_}}
 \index{NUM\_AERO\_PHASE\_@{NUM\_AERO\_PHASE\_}!rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_AERO\_PHASE\_}{NUM\_AERO\_PHASE\_}}
 {\footnotesize\ttfamily \#define NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+~this\%condensed\+\_\+data\+\_\+int(3)}
 
-\mbox{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn__condensed__phase__photolysis_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}} 
+\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn__condensed__phase__photolysis_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0} 
 \index{rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
 \index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
 {\footnotesize\ttfamily \#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~2}
 
-\mbox{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn__condensed__phase__photolysis_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn__condensed__phase__photolysis_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
 \index{rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
 \index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
 {\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~4}
 
-\mbox{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_acf951e890da75cd2d503ed6ce8211fc2}\label{rxn__condensed__phase__photolysis_8_f90_acf951e890da75cd2d503ed6ce8211fc2}} 
+\Hypertarget{rxn__condensed__phase__photolysis_8_f90_acf951e890da75cd2d503ed6ce8211fc2}\label{rxn__condensed__phase__photolysis_8_f90_acf951e890da75cd2d503ed6ce8211fc2} 
 \index{rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}!NUM\_PROD\_@{NUM\_PROD\_}}
 \index{NUM\_PROD\_@{NUM\_PROD\_}!rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_PROD\_}{NUM\_PROD\_}}
 {\footnotesize\ttfamily \#define NUM\+\_\+\+PROD\+\_\+~this\%condensed\+\_\+data\+\_\+int(2)}
 
-\mbox{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}\label{rxn__condensed__phase__photolysis_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}} 
+\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}\label{rxn__condensed__phase__photolysis_8_f90_a05ef845cf6ed7ab9a774440c42af34fa} 
 \index{rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}!NUM\_REACT\_@{NUM\_REACT\_}}
 \index{NUM\_REACT\_@{NUM\_REACT\_}!rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_REACT\_}{NUM\_REACT\_}}
 {\footnotesize\ttfamily \#define NUM\+\_\+\+REACT\+\_\+~this\%condensed\+\_\+data\+\_\+int(1)}
 
-\mbox{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}\label{rxn__condensed__phase__photolysis_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}} 
+\Hypertarget{rxn__condensed__phase__photolysis_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}\label{rxn__condensed__phase__photolysis_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b} 
 \index{rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}!NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}}
 \index{NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}!rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_REAL\_PROP\_}{NUM\_REAL\_PROP\_}}
 {\footnotesize\ttfamily \#define NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+~1}
 
-\mbox{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a9fda90058c6a41b1dda6ded03321c4da}\label{rxn__condensed__phase__photolysis_8_f90_a9fda90058c6a41b1dda6ded03321c4da}} 
+\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a9fda90058c6a41b1dda6ded03321c4da}\label{rxn__condensed__phase__photolysis_8_f90_a9fda90058c6a41b1dda6ded03321c4da} 
 \index{rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}!PROD\_@{PROD\_}}
 \index{PROD\_@{PROD\_}!rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}}
 \doxysubsubsection{\texorpdfstring{PROD\_}{PROD\_}}
-{\footnotesize\ttfamily \#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}$\ast$\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}+x)}
+{\footnotesize\ttfamily \#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}+x)}
 
-\mbox{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_ae761e39657aac155d83eae9b338be571}\label{rxn__condensed__phase__photolysis_8_f90_ae761e39657aac155d83eae9b338be571}} 
+\Hypertarget{rxn__condensed__phase__photolysis_8_f90_ae761e39657aac155d83eae9b338be571}\label{rxn__condensed__phase__photolysis_8_f90_ae761e39657aac155d83eae9b338be571} 
 \index{rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}!REACT\_@{REACT\_}}
 \index{REACT\_@{REACT\_}!rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}}
 \doxysubsubsection{\texorpdfstring{REACT\_}{REACT\_}}
 {\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+x)}
 
-\mbox{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a90cc89c1a8af0668561f9fc8cdbb9dde}\label{rxn__condensed__phase__photolysis_8_f90_a90cc89c1a8af0668561f9fc8cdbb9dde}} 
+\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a90cc89c1a8af0668561f9fc8cdbb9dde}\label{rxn__condensed__phase__photolysis_8_f90_a90cc89c1a8af0668561f9fc8cdbb9dde} 
 \index{rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}!RXN\_ID\_@{RXN\_ID\_}}
 \index{RXN\_ID\_@{RXN\_ID\_}!rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}}
 \doxysubsubsection{\texorpdfstring{RXN\_ID\_}{RXN\_ID\_}}
 {\footnotesize\ttfamily \#define RXN\+\_\+\+ID\+\_\+~this\%condensed\+\_\+data\+\_\+int(4)}
 
-\mbox{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a1757f332a0485799c2ee77edff00c38a}\label{rxn__condensed__phase__photolysis_8_f90_a1757f332a0485799c2ee77edff00c38a}} 
+\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a1757f332a0485799c2ee77edff00c38a}\label{rxn__condensed__phase__photolysis_8_f90_a1757f332a0485799c2ee77edff00c38a} 
 \index{rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}!SCALING\_@{SCALING\_}}
 \index{SCALING\_@{SCALING\_}!rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}}
 \doxysubsubsection{\texorpdfstring{SCALING\_}{SCALING\_}}
 {\footnotesize\ttfamily \#define SCALING\+\_\+~this\%condensed\+\_\+data\+\_\+real(1)}
 
-\mbox{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a21d22248f675f2c8aed5aa05e839290f}\label{rxn__condensed__phase__photolysis_8_f90_a21d22248f675f2c8aed5aa05e839290f}} 
+\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a21d22248f675f2c8aed5aa05e839290f}\label{rxn__condensed__phase__photolysis_8_f90_a21d22248f675f2c8aed5aa05e839290f} 
 \index{rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}!WATER\_@{WATER\_}}
 \index{WATER\_@{WATER\_}!rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}}
 \doxysubsubsection{\texorpdfstring{WATER\_}{WATER\_}}
-{\footnotesize\ttfamily \#define WATER\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}})$\ast$\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}+x)}
+{\footnotesize\ttfamily \#define WATER\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}}+\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}})\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}}+x)}
 
-\mbox{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a9ae244708fd9c438bf840ed319733651}\label{rxn__condensed__phase__photolysis_8_f90_a9ae244708fd9c438bf840ed319733651}} 
+\Hypertarget{rxn__condensed__phase__photolysis_8_f90_a9ae244708fd9c438bf840ed319733651}\label{rxn__condensed__phase__photolysis_8_f90_a9ae244708fd9c438bf840ed319733651} 
 \index{rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}!YIELD\_@{YIELD\_}}
 \index{YIELD\_@{YIELD\_}!rxn\_condensed\_phase\_photolysis.F90@{rxn\_condensed\_phase\_photolysis.F90}}
 \doxysubsubsection{\texorpdfstring{YIELD\_}{YIELD\_}}

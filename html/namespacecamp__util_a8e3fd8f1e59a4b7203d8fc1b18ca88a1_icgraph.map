@@ -1,4 +1,7 @@
 <map id="camp_util::real_to_string_max_len" name="camp_util::real_to_string_max_len">
-<area shape="rect" id="node1" title="Convert a real to a string format of maximum length." alt="" coords="188,29,311,69"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#af2eef6df9d8087453ddd88b19093cd4d" title="Convert an integer to a string format of maximum length." alt="" coords="5,29,140,69"/>
+<area shape="rect" id="Node000001" title="Convert a real to a string format of maximum length." alt="" coords="187,29,309,70"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="276,16,266,10,248,8,231,10,221,14,218,20,219,28,214,29,212,19,218,10,230,5,248,3,267,5,279,11"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#af2eef6df9d8087453ddd88b19093cd4d" title="Convert an integer to a string format of maximum length." alt="" coords="5,29,139,70"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,52,139,52,139,47,171,47"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="100,16,90,10,72,8,56,10,46,14,42,20,43,28,38,29,37,19,42,10,54,5,72,3,91,5,103,11"/>
 </map>

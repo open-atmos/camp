@@ -1,8 +1,14 @@
-\hypertarget{camp__debug_8h}{}\doxysection{camp\+\_\+debug.\+h File Reference}
-\label{camp__debug_8h}\index{camp\_debug.h@{camp\_debug.h}}
+\doxysection{camp\+\_\+debug.\+h File Reference}
+\hypertarget{camp__debug_8h}{}\label{camp__debug_8h}\index{camp\_debug.h@{camp\_debug.h}}
 This graph shows which files directly or indirectly include this file\+:
-% FIG 0
-\doxysubsection*{Macros}
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=159pt]{camp__debug_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \mbox{\hyperlink{camp__debug_8h_af43dedece15d018ffad8970492870bac}{MAX\+\_\+\+FILE\+\_\+\+NAME}}~256
@@ -19,18 +25,18 @@ This graph shows which files directly or indirectly include this file\+:
 \item 
 \#define \mbox{\hyperlink{camp__debug_8h_a7106635ad6a226661036c50938876736}{CAMP\+\_\+\+DEBUG\+\_\+\+JAC}}(J,  x)
 \end{DoxyCompactItemize}
-\doxysubsection*{Functions}
+\doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-static void \mbox{\hyperlink{camp__debug_8h_adfee57a3797c09d1fb585d9f49477c32}{print\+\_\+data\+\_\+sizes}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$md)
+static void \mbox{\hyperlink{camp__debug_8h_adfee57a3797c09d1fb585d9f49477c32}{print\+\_\+data\+\_\+sizes}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}md)
 \begin{DoxyCompactList}\small\item\em Print some camp-\/chem data sizes. \end{DoxyCompactList}\item 
 static void \mbox{\hyperlink{camp__debug_8h_a5e1481fdcb1fc315878002edb9346b77}{print\+\_\+jacobian}} (SUNMatrix M)
-\begin{DoxyCompactList}\small\item\em Print \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix in format KLU SPARSE. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Print \doxylink{struct_jacobian}{Jacobian} matrix in format KLU SPARSE. \end{DoxyCompactList}\item 
 static void \mbox{\hyperlink{camp__debug_8h_a99ec22cbccaf8d6c6ab6a30f27474cfa}{print\+\_\+derivative}} (N\+\_\+\+Vector deriv)
 \begin{DoxyCompactList}\small\item\em Print derivative array. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{camp__debug_8h_a0352ebf153678772ffbeb405834c141d}{output\+\_\+deriv\+\_\+local\+\_\+state}} (realtype curr\+\_\+time, N\+\_\+\+Vector state, N\+\_\+\+Vector deriv, void $\ast$solver\+\_\+data, int($\ast$\mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f}})(realtype, N\+\_\+\+Vector, N\+\_\+\+Vector, void $\ast$), int i\+\_\+dep, int i\+\_\+ind, double d\+\_\+rate\+\_\+d\+\_\+ind, double d\+\_\+ind)
-\begin{DoxyCompactList}\small\item\em Evaluate the derivative and \mbox{\hyperlink{struct_jacobian}{Jacobian}} near a given state for a specified species. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Variables}
+void \mbox{\hyperlink{camp__debug_8h_a0352ebf153678772ffbeb405834c141d}{output\+\_\+deriv\+\_\+local\+\_\+state}} (realtype curr\+\_\+time, N\+\_\+\+Vector state, N\+\_\+\+Vector deriv, void \texorpdfstring{$\ast$}{*}solver\+\_\+data, int(\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f}})(realtype, N\+\_\+\+Vector, N\+\_\+\+Vector, void \texorpdfstring{$\ast$}{*}), int i\+\_\+dep, int i\+\_\+ind, double d\+\_\+rate\+\_\+d\+\_\+ind, double d\+\_\+ind)
+\begin{DoxyCompactList}\small\item\em Evaluate the derivative and \doxylink{struct_jacobian}{Jacobian} near a given state for a specified species. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 int \mbox{\hyperlink{camp__debug_8h_a9de85b90ee0979bddec92adf8f0426d4}{file\+\_\+name\+\_\+prefix}} = 1
@@ -38,7 +44,7 @@ int \mbox{\hyperlink{camp__debug_8h_a9de85b90ee0979bddec92adf8f0426d4}{file\+\_\
 
 
 \doxysubsection{Macro Definition Documentation}
-\mbox{\Hypertarget{camp__debug_8h_a7106635ad6a226661036c50938876736}\label{camp__debug_8h_a7106635ad6a226661036c50938876736}} 
+\Hypertarget{camp__debug_8h_a7106635ad6a226661036c50938876736}\label{camp__debug_8h_a7106635ad6a226661036c50938876736} 
 \index{camp\_debug.h@{camp\_debug.h}!CAMP\_DEBUG\_JAC@{CAMP\_DEBUG\_JAC}}
 \index{CAMP\_DEBUG\_JAC@{CAMP\_DEBUG\_JAC}!camp\_debug.h@{camp\_debug.h}}
 \doxysubsubsection{\texorpdfstring{CAMP\_DEBUG\_JAC}{CAMP\_DEBUG\_JAC}}
@@ -48,7 +54,7 @@ int \mbox{\hyperlink{camp__debug_8h_a9de85b90ee0979bddec92adf8f0426d4}{file\+\_\
 
 Definition at line \mbox{\hyperlink{camp__debug_8h_source_l00125}{125}} of file \mbox{\hyperlink{camp__debug_8h_source}{camp\+\_\+debug.\+h}}.
 
-\mbox{\Hypertarget{camp__debug_8h_a84d1682a8781c7ef14a9490c80585beb}\label{camp__debug_8h_a84d1682a8781c7ef14a9490c80585beb}} 
+\Hypertarget{camp__debug_8h_a84d1682a8781c7ef14a9490c80585beb}\label{camp__debug_8h_a84d1682a8781c7ef14a9490c80585beb} 
 \index{camp\_debug.h@{camp\_debug.h}!CAMP\_DEBUG\_JAC\_STRUCT@{CAMP\_DEBUG\_JAC\_STRUCT}}
 \index{CAMP\_DEBUG\_JAC\_STRUCT@{CAMP\_DEBUG\_JAC\_STRUCT}!camp\_debug.h@{camp\_debug.h}}
 \doxysubsubsection{\texorpdfstring{CAMP\_DEBUG\_JAC\_STRUCT}{CAMP\_DEBUG\_JAC\_STRUCT}}
@@ -58,7 +64,7 @@ Definition at line \mbox{\hyperlink{camp__debug_8h_source_l00125}{125}} of file 
 
 Definition at line \mbox{\hyperlink{camp__debug_8h_source_l00124}{124}} of file \mbox{\hyperlink{camp__debug_8h_source}{camp\+\_\+debug.\+h}}.
 
-\mbox{\Hypertarget{camp__debug_8h_a0c216dd1cf5d2f5883fa131af740de03}\label{camp__debug_8h_a0c216dd1cf5d2f5883fa131af740de03}} 
+\Hypertarget{camp__debug_8h_a0c216dd1cf5d2f5883fa131af740de03}\label{camp__debug_8h_a0c216dd1cf5d2f5883fa131af740de03} 
 \index{camp\_debug.h@{camp\_debug.h}!CAMP\_DEBUG\_PRINT@{CAMP\_DEBUG\_PRINT}}
 \index{CAMP\_DEBUG\_PRINT@{CAMP\_DEBUG\_PRINT}!camp\_debug.h@{camp\_debug.h}}
 \doxysubsubsection{\texorpdfstring{CAMP\_DEBUG\_PRINT}{CAMP\_DEBUG\_PRINT}}
@@ -68,7 +74,7 @@ Definition at line \mbox{\hyperlink{camp__debug_8h_source_l00124}{124}} of file 
 
 Definition at line \mbox{\hyperlink{camp__debug_8h_source_l00121}{121}} of file \mbox{\hyperlink{camp__debug_8h_source}{camp\+\_\+debug.\+h}}.
 
-\mbox{\Hypertarget{camp__debug_8h_af048b16095261faad1266d736d2760a0}\label{camp__debug_8h_af048b16095261faad1266d736d2760a0}} 
+\Hypertarget{camp__debug_8h_af048b16095261faad1266d736d2760a0}\label{camp__debug_8h_af048b16095261faad1266d736d2760a0} 
 \index{camp\_debug.h@{camp\_debug.h}!CAMP\_DEBUG\_PRINT\_FULL@{CAMP\_DEBUG\_PRINT\_FULL}}
 \index{CAMP\_DEBUG\_PRINT\_FULL@{CAMP\_DEBUG\_PRINT\_FULL}!camp\_debug.h@{camp\_debug.h}}
 \doxysubsubsection{\texorpdfstring{CAMP\_DEBUG\_PRINT\_FULL}{CAMP\_DEBUG\_PRINT\_FULL}}
@@ -78,7 +84,7 @@ Definition at line \mbox{\hyperlink{camp__debug_8h_source_l00121}{121}} of file 
 
 Definition at line \mbox{\hyperlink{camp__debug_8h_source_l00123}{123}} of file \mbox{\hyperlink{camp__debug_8h_source}{camp\+\_\+debug.\+h}}.
 
-\mbox{\Hypertarget{camp__debug_8h_ae7c91427c0b12d2282ba60bdbfba4995}\label{camp__debug_8h_ae7c91427c0b12d2282ba60bdbfba4995}} 
+\Hypertarget{camp__debug_8h_ae7c91427c0b12d2282ba60bdbfba4995}\label{camp__debug_8h_ae7c91427c0b12d2282ba60bdbfba4995} 
 \index{camp\_debug.h@{camp\_debug.h}!CAMP\_DEBUG\_PRINT\_INT@{CAMP\_DEBUG\_PRINT\_INT}}
 \index{CAMP\_DEBUG\_PRINT\_INT@{CAMP\_DEBUG\_PRINT\_INT}!camp\_debug.h@{camp\_debug.h}}
 \doxysubsubsection{\texorpdfstring{CAMP\_DEBUG\_PRINT\_INT}{CAMP\_DEBUG\_PRINT\_INT}}
@@ -88,7 +94,7 @@ Definition at line \mbox{\hyperlink{camp__debug_8h_source_l00123}{123}} of file 
 
 Definition at line \mbox{\hyperlink{camp__debug_8h_source_l00122}{122}} of file \mbox{\hyperlink{camp__debug_8h_source}{camp\+\_\+debug.\+h}}.
 
-\mbox{\Hypertarget{camp__debug_8h_af43dedece15d018ffad8970492870bac}\label{camp__debug_8h_af43dedece15d018ffad8970492870bac}} 
+\Hypertarget{camp__debug_8h_af43dedece15d018ffad8970492870bac}\label{camp__debug_8h_af43dedece15d018ffad8970492870bac} 
 \index{camp\_debug.h@{camp\_debug.h}!MAX\_FILE\_NAME@{MAX\_FILE\_NAME}}
 \index{MAX\_FILE\_NAME@{MAX\_FILE\_NAME}!camp\_debug.h@{camp\_debug.h}}
 \doxysubsubsection{\texorpdfstring{MAX\_FILE\_NAME}{MAX\_FILE\_NAME}}
@@ -98,7 +104,7 @@ Definition at line \mbox{\hyperlink{camp__debug_8h_source_l00122}{122}} of file 
 
 Definition at line \mbox{\hyperlink{camp__debug_8h_source_l00015}{15}} of file \mbox{\hyperlink{camp__debug_8h_source}{camp\+\_\+debug.\+h}}.
 
-\mbox{\Hypertarget{camp__debug_8h_a551527c79eeba1318684b9fcc2203b98}\label{camp__debug_8h_a551527c79eeba1318684b9fcc2203b98}} 
+\Hypertarget{camp__debug_8h_a551527c79eeba1318684b9fcc2203b98}\label{camp__debug_8h_a551527c79eeba1318684b9fcc2203b98} 
 \index{camp\_debug.h@{camp\_debug.h}!N\_OUTPUT\_STATES@{N\_OUTPUT\_STATES}}
 \index{N\_OUTPUT\_STATES@{N\_OUTPUT\_STATES}!camp\_debug.h@{camp\_debug.h}}
 \doxysubsubsection{\texorpdfstring{N\_OUTPUT\_STATES}{N\_OUTPUT\_STATES}}
@@ -111,15 +117,15 @@ Definition at line \mbox{\hyperlink{camp__debug_8h_source_l00018}{18}} of file \
 
 
 \doxysubsection{Function Documentation}
-\mbox{\Hypertarget{camp__debug_8h_a0352ebf153678772ffbeb405834c141d}\label{camp__debug_8h_a0352ebf153678772ffbeb405834c141d}} 
+\Hypertarget{camp__debug_8h_a0352ebf153678772ffbeb405834c141d}\label{camp__debug_8h_a0352ebf153678772ffbeb405834c141d} 
 \index{camp\_debug.h@{camp\_debug.h}!output\_deriv\_local\_state@{output\_deriv\_local\_state}}
 \index{output\_deriv\_local\_state@{output\_deriv\_local\_state}!camp\_debug.h@{camp\_debug.h}}
 \doxysubsubsection{\texorpdfstring{output\_deriv\_local\_state()}{output\_deriv\_local\_state()}}
-{\footnotesize\ttfamily void output\+\_\+deriv\+\_\+local\+\_\+state (\begin{DoxyParamCaption}\item[{realtype}]{curr\+\_\+time,  }\item[{N\+\_\+\+Vector}]{state,  }\item[{N\+\_\+\+Vector}]{deriv,  }\item[{void $\ast$}]{solver\+\_\+data,  }\item[{int($\ast$)(realtype, N\+\_\+\+Vector, N\+\_\+\+Vector, void $\ast$)}]{f,  }\item[{int}]{i\+\_\+dep,  }\item[{int}]{i\+\_\+ind,  }\item[{double}]{d\+\_\+rate\+\_\+d\+\_\+ind,  }\item[{double}]{d\+\_\+ind }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void output\+\_\+deriv\+\_\+local\+\_\+state (\begin{DoxyParamCaption}\item[{realtype}]{curr\+\_\+time,  }\item[{N\+\_\+\+Vector}]{state,  }\item[{N\+\_\+\+Vector}]{deriv,  }\item[{void \texorpdfstring{$\ast$}{*}}]{solver\+\_\+data,  }\item[{int(\texorpdfstring{$\ast$}{*})(realtype, N\+\_\+\+Vector, N\+\_\+\+Vector, void \texorpdfstring{$\ast$}{*})}]{f,  }\item[{int}]{i\+\_\+dep,  }\item[{int}]{i\+\_\+ind,  }\item[{double}]{d\+\_\+rate\+\_\+d\+\_\+ind,  }\item[{double}]{d\+\_\+ind }\end{DoxyParamCaption})}
 
 
 
-Evaluate the derivative and \mbox{\hyperlink{struct_jacobian}{Jacobian}} near a given state for a specified species. 
+Evaluate the derivative and \doxylink{struct_jacobian}{Jacobian} near a given state for a specified species. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -147,14 +153,26 @@ Evaluate the derivative and \mbox{\hyperlink{struct_jacobian}{Jacobian}} near a 
 Definition at line \mbox{\hyperlink{camp__debug_8h_source_l00184}{184}} of file \mbox{\hyperlink{camp__debug_8h_source}{camp\+\_\+debug.\+h}}.
 
 Here is the call graph for this function\+:
-% FIG 1
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{camp__debug_8h_a0352ebf153678772ffbeb405834c141d_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 2
-\mbox{\Hypertarget{camp__debug_8h_adfee57a3797c09d1fb585d9f49477c32}\label{camp__debug_8h_adfee57a3797c09d1fb585d9f49477c32}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{camp__debug_8h_a0352ebf153678772ffbeb405834c141d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{camp__debug_8h_adfee57a3797c09d1fb585d9f49477c32}\label{camp__debug_8h_adfee57a3797c09d1fb585d9f49477c32} 
 \index{camp\_debug.h@{camp\_debug.h}!print\_data\_sizes@{print\_data\_sizes}}
 \index{print\_data\_sizes@{print\_data\_sizes}!camp\_debug.h@{camp\_debug.h}}
 \doxysubsubsection{\texorpdfstring{print\_data\_sizes()}{print\_data\_sizes()}}
-{\footnotesize\ttfamily static void print\+\_\+data\+\_\+sizes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{md }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily static void print\+\_\+data\+\_\+sizes (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{md }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
 
 
@@ -170,8 +188,14 @@ Print some camp-\/chem data sizes.
 Definition at line \mbox{\hyperlink{camp__debug_8h_source_l00132}{132}} of file \mbox{\hyperlink{camp__debug_8h_source}{camp\+\_\+debug.\+h}}.
 
 Here is the caller graph for this function\+:
-% FIG 3
-\mbox{\Hypertarget{camp__debug_8h_a99ec22cbccaf8d6c6ab6a30f27474cfa}\label{camp__debug_8h_a99ec22cbccaf8d6c6ab6a30f27474cfa}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=268pt]{camp__debug_8h_adfee57a3797c09d1fb585d9f49477c32_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{camp__debug_8h_a99ec22cbccaf8d6c6ab6a30f27474cfa}\label{camp__debug_8h_a99ec22cbccaf8d6c6ab6a30f27474cfa} 
 \index{camp\_debug.h@{camp\_debug.h}!print\_derivative@{print\_derivative}}
 \index{print\_derivative@{print\_derivative}!camp\_debug.h@{camp\_debug.h}}
 \doxysubsubsection{\texorpdfstring{print\_derivative()}{print\_derivative()}}
@@ -190,7 +214,7 @@ Print derivative array.
 
 Definition at line \mbox{\hyperlink{camp__debug_8h_source_l00162}{162}} of file \mbox{\hyperlink{camp__debug_8h_source}{camp\+\_\+debug.\+h}}.
 
-\mbox{\Hypertarget{camp__debug_8h_a5e1481fdcb1fc315878002edb9346b77}\label{camp__debug_8h_a5e1481fdcb1fc315878002edb9346b77}} 
+\Hypertarget{camp__debug_8h_a5e1481fdcb1fc315878002edb9346b77}\label{camp__debug_8h_a5e1481fdcb1fc315878002edb9346b77} 
 \index{camp\_debug.h@{camp\_debug.h}!print\_jacobian@{print\_jacobian}}
 \index{print\_jacobian@{print\_jacobian}!camp\_debug.h@{camp\_debug.h}}
 \doxysubsubsection{\texorpdfstring{print\_jacobian()}{print\_jacobian()}}
@@ -198,11 +222,11 @@ Definition at line \mbox{\hyperlink{camp__debug_8h_source_l00162}{162}} of file 
 
 
 
-Print \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix in format KLU SPARSE. 
+Print \doxylink{struct_jacobian}{Jacobian} matrix in format KLU SPARSE. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em M} & \mbox{\hyperlink{struct_jacobian}{Jacobian}} matrix \\
+{\em M} & \doxylink{struct_jacobian}{Jacobian} matrix \\
 \hline
 \end{DoxyParams}
 
@@ -212,7 +236,7 @@ Definition at line \mbox{\hyperlink{camp__debug_8h_source_l00145}{145}} of file 
 
 
 \doxysubsection{Variable Documentation}
-\mbox{\Hypertarget{camp__debug_8h_a9de85b90ee0979bddec92adf8f0426d4}\label{camp__debug_8h_a9de85b90ee0979bddec92adf8f0426d4}} 
+\Hypertarget{camp__debug_8h_a9de85b90ee0979bddec92adf8f0426d4}\label{camp__debug_8h_a9de85b90ee0979bddec92adf8f0426d4} 
 \index{camp\_debug.h@{camp\_debug.h}!file\_name\_prefix@{file\_name\_prefix}}
 \index{file\_name\_prefix@{file\_name\_prefix}!camp\_debug.h@{camp\_debug.h}}
 \doxysubsubsection{\texorpdfstring{file\_name\_prefix}{file\_name\_prefix}}

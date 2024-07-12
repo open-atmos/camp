@@ -1,419 +1,419 @@
-\hypertarget{env__state_8_f90_source}{}\doxysection{env\+\_\+state.\+F90}
-\label{env__state_8_f90_source}\index{env\_state.F90@{env\_state.F90}}
+\doxysection{env\+\_\+state.\+F90}
+\hypertarget{env__state_8_f90_source}{}\label{env__state_8_f90_source}\index{env\_state.F90@{env\_state.F90}}
 \mbox{\hyperlink{env__state_8_f90}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2005-\/2021 Barcelona Supercomputing Center and University of}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00002}00002 \textcolor{comment}{! Illinois at Urbana-\/Champaign}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00003}00003 \textcolor{comment}{! SPDX-\/License-\/Identifier: MIT}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00004}00004 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00005}00005 \textcolor{comment}{!> \(\backslash\)file}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00006}00006 \textcolor{comment}{!> The camp\_env\_state module.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00007}00007 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00008}00008 \textcolor{comment}{!> The env\_state\_t structure and associated subroutines.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00009}\mbox{\hyperlink{namespacecamp__env__state}{00009}} \textcolor{keyword}{module} \mbox{\hyperlink{namespacecamp__env__state}{camp\_env\_state}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00010}00010 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00011}00011   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00012}00012   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__util}{camp\_util}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00013}00013   \textcolor{keywordtype}{use }\mbox{\hyperlink{namespacecamp__mpi}{camp\_mpi}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00014}00014 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00015}00015 \textcolor{preprocessor}{}  \textcolor{keywordtype}{use }mpi}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00016}00016 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00017}00017 \textcolor{preprocessor}{}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00018}00018 \textcolor{comment}{  !> Current environment state.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00019}00019 \textcolor{comment}{  !!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00020}00020 \textcolor{comment}{  !! All quantities are instantaneous, describing the state at a}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00021}00021 \textcolor{comment}{  !! particular instant of time. Constant data and other data not}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00022}00022 \textcolor{comment}{  !! associated with the current environment state is stored in}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00023}00023 \textcolor{comment}{  !! scenario\_t.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00024}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{00024}}   \textcolor{keyword}{type} \mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00025}00025 \textcolor{comment}{     !> Temperature (K).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00026}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_ab766238aac190245bb73074cb269b378}{00026}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: temp\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00027}00027 \textcolor{comment}{     !> Relative humidity (1).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00028}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_ae71cc08388573c887cc3f67f3cda406e}{00028}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: rel\_humid\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00029}00029 \textcolor{comment}{     !> Ambient pressure (Pa).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00030}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_aa3f3078d2066ad2f7143efbbee20ddfb}{00030}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: pressure\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00031}00031 \textcolor{comment}{     !> Longitude (degrees).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00032}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_adc00d18a25c0905cc11a5ba4aa8df7fb}{00032}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: longitude\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00033}00033 \textcolor{comment}{     !> Latitude (degrees).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00034}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a357d82c4ca631409c335527bca279f5f}{00034}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: latitude\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00035}00035 \textcolor{comment}{     !> Altitude (m).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00036}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a92f51bf0e013c04ebd7fe55734cb44c2}{00036}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: altitude\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00037}00037 \textcolor{comment}{     !> Start time (s since 00:00 UTC on \(\backslash\)c start\_day).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00038}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a7b7266b7c48acede3ab20f09537c2788}{00038}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: start\_time\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00039}00039 \textcolor{comment}{     !> Start day of year (UTC).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00040}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a27cd136f032fa4c984d677c6323909ef}{00040}}      \textcolor{keywordtype}{integer} :: start\_day\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00041}00041 \textcolor{comment}{     !> Time since \(\backslash\)c start\_time (s).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00042}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a8efda7294538ce47a514153242b50351}{00042}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: elapsed\_time\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00043}00043 \textcolor{comment}{     !> Solar zenith angle (radians from zenith).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00044}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a8b6deb032c56c1177f570b3430b3903b}{00044}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: solar\_zenith\_angle\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00045}00045 \textcolor{comment}{     !> Box height (m).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00046}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a6c3eec631db6dca646d9a9172ac440c8}{00046}} \textcolor{keywordtype}{     real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) :: height}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00047}00047   \textcolor{keyword}{contains}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00048}00048 \textcolor{comment}{     !> Determine the number of bytes required to pack the given value}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00049}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a1763131b0a065bc7ff6fc39fd5e96668}{00049}}      \textcolor{keywordtype}{procedure}, pass(val) :: pack\_size => \mbox{\hyperlink{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}{camp\_mpi\_pack\_size\_env\_state}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00050}00050 \textcolor{comment}{     !> Pack the given value to a buffer, advancing position}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00051}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a4756fb80beeca8607be2ea949b387e82}{00051}}      \textcolor{keywordtype}{procedure}, pass(val) :: bin\_pack => \mbox{\hyperlink{namespacecamp__env__state_a151aed99a15531066bb5ef8b25d4b94e}{camp\_mpi\_pack\_env\_state}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00052}00052 \textcolor{comment}{     !> Unpack the given value from a buffer, advancing position}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00053}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a2f8d608c7e6b124f94aad6c67144d3ca}{00053}}      \textcolor{keywordtype}{procedure}, pass(val) :: bin\_unpack => \mbox{\hyperlink{namespacecamp__env__state_a80c14bca3257629238c18686269a4084}{camp\_mpi\_unpack\_env\_state}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00054}00054   \textcolor{keyword}{end type }\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00055}00055 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00056}00056 \textcolor{comment}{  !> Pointer for env\_state\_t}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00057}\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{00057}}   \textcolor{keyword}{type} \mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{env\_state\_ptr}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00058}\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr_aace5f29ac55866f9a8a947b0179d734b}{00058}}     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{pointer} :: val => null()}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00059}00059   \textcolor{keyword}{contains}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00060}00060 \textcolor{comment}{    !> Set the temperature (K)}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00061}\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr_a6af61b5b24b0baca592f255030eea1d5}{00061}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__env__state_a980571eae0b75e18ea08f03d0ab9d3d7}{set\_temperature\_k}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00062}00062 \textcolor{comment}{    !> Set the pressure (Pa)}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00063}\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr_a725eb9503f67de835bcae9e63cc251bf}{00063}}     \textcolor{keywordtype}{procedure} :: \mbox{\hyperlink{namespacecamp__env__state_a8ec95b192896c36ea9c1b39add39e65a}{set\_pressure\_pa}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00064}00064   \textcolor{keyword}{end type }\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{env\_state\_ptr}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00065}00065 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00066}00066 \textcolor{keyword}{contains}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00067}00067 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00068}00068 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00069}00069 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00070}00070 \textcolor{comment}{  !> env\_state += env\_state\_delta}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00071}\mbox{\hyperlink{namespacecamp__env__state_ac51ba858506da25f49bbd32320bbeb75}{00071}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__env__state_ac51ba858506da25f49bbd32320bbeb75}{env\_state\_add}}(env\_state, env\_state\_delta)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00072}00072 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00073}00073 \textcolor{comment}{    !> Environment.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00074}00074     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{intent(inout)} :: env\_state\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00075}00075 \textcolor{comment}{    !> Increment.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00076}00076     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: env\_state\_delta}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00077}00077 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00078}00078     env\_state\%temp = env\_state\%temp + env\_state\_delta\%temp}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00079}00079     env\_state\%rel\_humid = env\_state\%rel\_humid + env\_state\_delta\%rel\_humid}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00080}00080     env\_state\%pressure = env\_state\%pressure + env\_state\_delta\%pressure}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00081}00081     env\_state\%longitude = env\_state\%longitude + env\_state\_delta\%longitude}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00082}00082     env\_state\%latitude = env\_state\%latitude + env\_state\_delta\%latitude}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00083}00083     env\_state\%altitude = env\_state\%altitude + env\_state\_delta\%altitude}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00084}00084     env\_state\%start\_time = env\_state\%start\_time + env\_state\_delta\%start\_time}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00085}00085     env\_state\%start\_day = env\_state\%start\_day + env\_state\_delta\%start\_day}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00086}00086     env\_state\%elapsed\_time = env\_state\%elapsed\_time \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00087}00087          + env\_state\_delta\%elapsed\_time}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00088}00088     env\_state\%solar\_zenith\_angle = env\_state\%solar\_zenith\_angle \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00089}00089          + env\_state\_delta\%solar\_zenith\_angle}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00090}00090     env\_state\%height = env\_state\%height + env\_state\_delta\%height}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00091}00091 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00092}00092   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__env__state_ac51ba858506da25f49bbd32320bbeb75}{env\_state\_add}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00093}00093 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00094}00094 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00095}00095 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00096}00096 \textcolor{comment}{  !> env\_state *= alpha}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00097}\mbox{\hyperlink{namespacecamp__env__state_a85f6d9d704e9949d321b51d97965d276}{00097}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__env__state_a85f6d9d704e9949d321b51d97965d276}{env\_state\_scale}}(env\_state, alpha)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00098}00098 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00099}00099 \textcolor{comment}{    !> Environment.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00100}00100     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{intent(inout)} :: env\_state\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00101}00101 \textcolor{comment}{    !> Scale factor.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00102}00102 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), \textcolor{keywordtype}{intent(in)} :: alpha}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00103}00103 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00104}00104     env\_state\%temp = env\_state\%temp * alpha}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00105}00105     env\_state\%rel\_humid = env\_state\%rel\_humid * alpha}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00106}00106     env\_state\%pressure = env\_state\%pressure * alpha}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00107}00107     env\_state\%longitude = env\_state\%longitude * alpha}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00108}00108     env\_state\%latitude = env\_state\%latitude * alpha}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00109}00109     env\_state\%altitude = env\_state\%altitude * alpha}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00110}00110     env\_state\%start\_time = env\_state\%start\_time * alpha}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00111}00111     env\_state\%start\_day = nint(real(env\_state\%start\_day, kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) * alpha)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00112}00112     env\_state\%elapsed\_time = env\_state\%elapsed\_time * alpha}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00113}00113     env\_state\%solar\_zenith\_angle = env\_state\%solar\_zenith\_angle * alpha}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00114}00114     env\_state\%height = env\_state\%height * alpha}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00115}00115 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00116}00116   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__env__state_a85f6d9d704e9949d321b51d97965d276}{env\_state\_scale}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00117}00117 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00118}00118 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00119}00119 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00120}00120 \textcolor{comment}{  !> Adds the given water volume to the water vapor and updates all}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00121}00121 \textcolor{comment}{  !> environment quantities.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00122}\mbox{\hyperlink{namespacecamp__env__state_aed371f10382a89dce6a108a550cc94e7}{00122}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__env__state_aed371f10382a89dce6a108a550cc94e7}{env\_state\_change\_water\_volume}}(env\_state, dv)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00123}00123 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00124}00124 \textcolor{comment}{    !> Environment state to update.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00125}00125     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{intent(inout)} :: env\_state\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00126}00126 \textcolor{comment}{    !> Volume concentration of water added (m\string^3/m\string^3).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00127}00127 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), \textcolor{keywordtype}{intent(in)} :: dv}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00128}00128 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00129}00129 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) pmv     \textcolor{comment}{! ambient water vapor pressure (Pa)}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00130}00130 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) mv      \textcolor{comment}{! ambient water vapor density (kg m\string^\{-\/3\})}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00131}00131                    \textcolor{comment}{! pmv and mv are related by the factor molec\_weight/(R*T)}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00132}00132 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) dmv     \textcolor{comment}{! change of water density (kg m\string^\{-\/3\})}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00133}00133 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00134}00134     dmv = dv * \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%water\_density}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00135}00135     pmv = \mbox{\hyperlink{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457}{env\_state\_sat\_vapor\_pressure}}(env\_state) * env\_state\%rel\_humid}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00136}00136     mv = \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%water\_molec\_weight / (\mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%univ\_gas\_const*env\_state\%temp) * pmv}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00137}00137     mv = mv -\/ dmv}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00138}00138     \textcolor{keywordflow}{if} (mv < 0d0) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00139}00139        \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_ab72bff2627c9468e4c352118b8dc7046}{warn\_msg}}(980320483, \textcolor{stringliteral}{"{}relative humidity tried to go negative"{}})}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00140}00140        mv = 0d0}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00141}00141 \textcolor{keywordflow}{    end if}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00142}00142     env\_state\%rel\_humid = \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%univ\_gas\_const * env\_state\%temp \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00143}00143          / \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%water\_molec\_weight * mv \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00144}00144          / \mbox{\hyperlink{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457}{env\_state\_sat\_vapor\_pressure}}(env\_state)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00145}00145 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00146}00146   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__env__state_aed371f10382a89dce6a108a550cc94e7}{env\_state\_change\_water\_volume}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00147}00147 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00148}00148 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00149}00149 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00150}00150 \textcolor{comment}{  !> Computes the current saturation vapor pressure (Pa).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00151}\mbox{\hyperlink{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457}{00151}} \textcolor{keywordtype}{  real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457}{env\_state\_sat\_vapor\_pressure}}(env\_state)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00152}00152 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00153}00153 \textcolor{comment}{    !> Environment state.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00154}00154     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: env\_state}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00155}00155 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00156}00156     \mbox{\hyperlink{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457}{env\_state\_sat\_vapor\_pressure}} = \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%water\_eq\_vap\_press \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00157}00157          * 10d0**(7.45d0 * (env\_state\%temp -\/ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%water\_freeze\_temp) \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00158}00158          / (env\_state\%temp -\/ 38d0))}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00159}00159 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00160}00160   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457}{env\_state\_sat\_vapor\_pressure}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00161}00161 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00162}00162 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00163}00163 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00164}00164 \textcolor{comment}{  !> Air density (kg m\string^\{-\/3\}).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00165}\mbox{\hyperlink{namespacecamp__env__state_af8f56c1aae7d482b1a9a62b342edd85d}{00165}} \textcolor{keywordtype}{  real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__env__state_af8f56c1aae7d482b1a9a62b342edd85d}{env\_state\_air\_den}}(env\_state)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00166}00166 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00167}00167 \textcolor{comment}{    !> Environment state.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00168}00168     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: env\_state}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00169}00169 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00170}00170     \mbox{\hyperlink{namespacecamp__env__state_af8f56c1aae7d482b1a9a62b342edd85d}{env\_state\_air\_den}} = \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%air\_molec\_weight \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00171}00171          * \mbox{\hyperlink{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}{env\_state\_air\_molar\_den}}(env\_state)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00172}00172 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00173}00173   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__env__state_af8f56c1aae7d482b1a9a62b342edd85d}{env\_state\_air\_den}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00174}00174 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00175}00175 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00176}00176 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00177}00177 \textcolor{comment}{  !> Air molar density (mol m\string^\{-\/3\}).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00178}\mbox{\hyperlink{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}{00178}} \textcolor{keywordtype}{  real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}{env\_state\_air\_molar\_den}}(env\_state)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00179}00179 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00180}00180 \textcolor{comment}{    !> Environment state.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00181}00181     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: env\_state}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00182}00182 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00183}00183     \mbox{\hyperlink{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}{env\_state\_air\_molar\_den}} = env\_state\%pressure \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00184}00184          / (\mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%univ\_gas\_const * env\_state\%temp)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00185}00185 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00186}00186   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}{env\_state\_air\_molar\_den}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00187}00187 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00188}00188 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00189}00189 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00190}00190 \textcolor{comment}{  !> Condensation \(\backslash\)f\$A\(\backslash\)f\$ parameter.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00191}\mbox{\hyperlink{namespacecamp__env__state_a510247c52aff804a61315f2d12ae9ae2}{00191}} \textcolor{keywordtype}{  real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__env__state_a510247c52aff804a61315f2d12ae9ae2}{env\_state\_a}}(env\_state)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00192}00192 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00193}00193 \textcolor{comment}{    !> Environment state.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00194}00194     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: env\_state}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00195}00195 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00196}00196     \mbox{\hyperlink{namespacecamp__env__state_a510247c52aff804a61315f2d12ae9ae2}{env\_state\_a}} = 4d0 * \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%water\_surf\_eng * \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%water\_molec\_weight \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00197}00197          / (\mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%univ\_gas\_const * env\_state\%temp * \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%water\_density)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00198}00198 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00199}00199   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__env__state_a510247c52aff804a61315f2d12ae9ae2}{env\_state\_a}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00200}00200 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00201}00201 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00202}00202 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00203}00203 \textcolor{comment}{  !> Convert (ppb) to (molecules m\string^\{-\/3\}).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00204}\mbox{\hyperlink{namespacecamp__env__state_a4706a3e61a7f2fe4554b57b126192754}{00204}} \textcolor{keywordtype}{  real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__env__state_a4706a3e61a7f2fe4554b57b126192754}{env\_state\_ppb\_to\_conc}}(env\_state, ppb)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00205}00205 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00206}00206 \textcolor{comment}{    !> Environment state.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00207}00207     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: env\_state\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00208}00208 \textcolor{comment}{    !> Mixing ratio (ppb).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00209}00209 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), \textcolor{keywordtype}{intent(in)} :: ppb}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00210}00210 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00211}00211     \mbox{\hyperlink{namespacecamp__env__state_a4706a3e61a7f2fe4554b57b126192754}{env\_state\_ppb\_to\_conc}} = ppb / 1d9 * \mbox{\hyperlink{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}{env\_state\_air\_molar\_den}}(env\_state) \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00212}00212          * \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%avagadro}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00213}00213 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00214}00214   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__env__state_a4706a3e61a7f2fe4554b57b126192754}{env\_state\_ppb\_to\_conc}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00215}00215 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00216}00216 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00217}00217 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00218}00218 \textcolor{comment}{  !> Convert (molecules m\string^\{-\/3\}) to (ppb).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00219}\mbox{\hyperlink{namespacecamp__env__state_a71497d9ef664a1d08bd507da56b1d077}{00219}} \textcolor{keywordtype}{  real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}) \textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__env__state_a71497d9ef664a1d08bd507da56b1d077}{env\_state\_conc\_to\_ppb}}(env\_state, conc)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00220}00220 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00221}00221 \textcolor{comment}{    !> Environment state.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00222}00222     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: env\_state\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00223}00223 \textcolor{comment}{    !> Concentration (molecules m\string^\{-\/3\}).}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00224}00224 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), \textcolor{keywordtype}{intent(in)} :: conc}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00225}00225 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00226}00226     \mbox{\hyperlink{namespacecamp__env__state_a71497d9ef664a1d08bd507da56b1d077}{env\_state\_conc\_to\_ppb}} = conc * 1d9 / \mbox{\hyperlink{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}{env\_state\_air\_molar\_den}}(env\_state) \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00227}00227          / \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%avagadro}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00228}00228 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00229}00229   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__env__state_a71497d9ef664a1d08bd507da56b1d077}{env\_state\_conc\_to\_ppb}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00230}00230 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00231}00231 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00232}00232 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00233}00233 \textcolor{comment}{  !> Average val over all processes.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00234}\mbox{\hyperlink{namespacecamp__env__state_acd71d6143a8e08e77473bf24f1752af6}{00234}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__env__state_acd71d6143a8e08e77473bf24f1752af6}{env\_state\_mix}}(val)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00235}00235 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00236}00236 \textcolor{comment}{    !> Value to average.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00237}00237     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{intent(inout)} :: val}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00238}00238 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00239}00239 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00240}00240 \textcolor{preprocessor}{}    \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}) :: val\_avg}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00241}00241 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00242}00242     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_ac17a70c1409131f3634aaed71894ea68}{camp\_mpi\_allreduce\_average\_real}}(val\%temp, val\_avg\%temp)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00243}00243     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_ac17a70c1409131f3634aaed71894ea68}{camp\_mpi\_allreduce\_average\_real}}(val\%rel\_humid, val\_avg\%rel\_humid)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00244}00244     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_ac17a70c1409131f3634aaed71894ea68}{camp\_mpi\_allreduce\_average\_real}}(val\%pressure, val\_avg\%pressure)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00245}00245     val\%temp = val\_avg\%temp}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00246}00246     val\%rel\_humid = val\_avg\%rel\_humid}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00247}00247     val\%pressure = val\_avg\%pressure}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00248}00248 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00249}00249 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00250}00250   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__env__state_acd71d6143a8e08e77473bf24f1752af6}{env\_state\_mix}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00251}00251 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00252}00252 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00253}00253 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00254}00254 \textcolor{comment}{  !> Average val over all processes, with the result only on the root}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00255}00255 \textcolor{comment}{  !> process.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00256}\mbox{\hyperlink{namespacecamp__env__state_aa8f8e6e85adf7327d31a2f64324d49a4}{00256}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__env__state_aa8f8e6e85adf7327d31a2f64324d49a4}{env\_state\_reduce\_avg}}(val)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00257}00257 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00258}00258 \textcolor{comment}{    !> Value to average.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00259}00259     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{intent(inout)} :: val}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00260}00260 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00261}00261 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00262}00262 \textcolor{preprocessor}{}    \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}) :: val\_avg}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00263}00263 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00264}00264     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a96549d22ee106f1fa29af89dcaa0ab71}{camp\_mpi\_reduce\_avg\_real}}(val\%temp, val\_avg\%temp)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00265}00265     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a96549d22ee106f1fa29af89dcaa0ab71}{camp\_mpi\_reduce\_avg\_real}}(val\%rel\_humid, val\_avg\%rel\_humid)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00266}00266     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a96549d22ee106f1fa29af89dcaa0ab71}{camp\_mpi\_reduce\_avg\_real}}(val\%pressure, val\_avg\%pressure)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00267}00267     \textcolor{keywordflow}{if} (\mbox{\hyperlink{namespacecamp__mpi_a071b987e3ccab55010a23029249b73a4}{camp\_mpi\_rank}}() == 0) \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00268}00268        val\%temp = val\_avg\%temp}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00269}00269        val\%rel\_humid = val\_avg\%rel\_humid}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00270}00270        val\%pressure = val\_avg\%pressure}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00271}00271 \textcolor{keywordflow}{    end if}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00272}00272 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00273}00273 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00274}00274   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__env__state_aa8f8e6e85adf7327d31a2f64324d49a4}{env\_state\_reduce\_avg}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00275}00275 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00276}00276 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00277}00277 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00278}00278 \textcolor{comment}{  !> Determines the number of bytes required to pack the given value.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00279}\mbox{\hyperlink{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}{00279}}   \textcolor{keyword}{integer }\textcolor{keyword}{function }\mbox{\hyperlink{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}{camp\_mpi\_pack\_size\_env\_state}}(val)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00280}00280 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00281}00281 \textcolor{comment}{    !> Value to pack.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00282}00282     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: val}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00283}00283 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00284}00284     \mbox{\hyperlink{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}{camp\_mpi\_pack\_size\_env\_state}} = \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00285}00285          \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%temp) \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00286}00286          + \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%rel\_humid) \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00287}00287          + \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%pressure) \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00288}00288          + \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%longitude) \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00289}00289          + \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%latitude) \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00290}00290          + \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%altitude) \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00291}00291          + \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%start\_time) \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00292}00292          + \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(val\%start\_day) \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00293}00293          + \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%elapsed\_time) \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00294}00294          + \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%solar\_zenith\_angle) \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00295}00295          + \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%height)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00296}00296 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00297}00297   \textcolor{keyword}{end function }\mbox{\hyperlink{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}{camp\_mpi\_pack\_size\_env\_state}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00298}00298 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00299}00299 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00300}00300 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00301}00301 \textcolor{comment}{  !> Packs the given value into the buffer, advancing position.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00302}\mbox{\hyperlink{namespacecamp__env__state_a151aed99a15531066bb5ef8b25d4b94e}{00302}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__env__state_a151aed99a15531066bb5ef8b25d4b94e}{camp\_mpi\_pack\_env\_state}}(buffer, position, val)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00303}00303 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00304}00304 \textcolor{comment}{    !> Memory buffer.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00305}00305     \textcolor{keywordtype}{character}, \textcolor{keywordtype}{intent(inout)} :: buffer(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00306}00306 \textcolor{comment}{    !> Current buffer position.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00307}00307     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(inout)} :: position\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00308}00308 \textcolor{comment}{    !> Value to pack.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00309}00309     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: val}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00310}00310 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00311}00311 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00312}00312 \textcolor{preprocessor}{}    \textcolor{keywordtype}{integer} :: prev\_position}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00313}00313 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00314}00314     prev\_position = position}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00315}00315     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer, position, val\%temp)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00316}00316     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer, position, val\%rel\_humid)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00317}00317     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer, position, val\%pressure)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00318}00318     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer, position, val\%longitude)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00319}00319     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer, position, val\%latitude)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00320}00320     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer, position, val\%altitude)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00321}00321     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer, position, val\%start\_time)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00322}00322     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer, position, val\%start\_day)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00323}00323     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer, position, val\%elapsed\_time)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00324}00324     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer, position, val\%solar\_zenith\_angle)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00325}00325     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer, position, val\%height)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00326}00326     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(464101191, \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00327}00327          position -\/ prev\_position <= \mbox{\hyperlink{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}{camp\_mpi\_pack\_size\_env\_state}}(val))}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00328}00328 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00329}00329 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00330}00330   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__env__state_a151aed99a15531066bb5ef8b25d4b94e}{camp\_mpi\_pack\_env\_state}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00331}00331 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00332}00332 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00333}00333 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00334}00334 \textcolor{comment}{  !> Unpacks the given value from the buffer, advancing position.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00335}\mbox{\hyperlink{namespacecamp__env__state_a80c14bca3257629238c18686269a4084}{00335}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__env__state_a80c14bca3257629238c18686269a4084}{camp\_mpi\_unpack\_env\_state}}(buffer, position, val)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00336}00336 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00337}00337 \textcolor{comment}{    !> Memory buffer.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00338}00338     \textcolor{keywordtype}{character}, \textcolor{keywordtype}{intent(inout)} :: buffer(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00339}00339 \textcolor{comment}{    !> Current buffer position.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00340}00340     \textcolor{keywordtype}{integer}, \textcolor{keywordtype}{intent(inout)} :: position\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00341}00341 \textcolor{comment}{    !> Value to pack.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00342}00342     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{intent(inout)} :: val}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00343}00343 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00344}00344 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00345}00345 \textcolor{preprocessor}{}    \textcolor{keywordtype}{integer} :: prev\_position}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00346}00346 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00347}00347     prev\_position = position}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00348}00348     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer, position, val\%temp)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00349}00349     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer, position, val\%rel\_humid)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00350}00350     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer, position, val\%pressure)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00351}00351     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer, position, val\%longitude)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00352}00352     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer, position, val\%latitude)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00353}00353     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer, position, val\%altitude)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00354}00354     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer, position, val\%start\_time)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00355}00355     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer, position, val\%start\_day)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00356}00356     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer, position, val\%elapsed\_time)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00357}00357     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer, position, val\%solar\_zenith\_angle)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00358}00358     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer, position, val\%height)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00359}00359     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(205696745, \&}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00360}00360          position -\/ prev\_position <= \mbox{\hyperlink{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}{camp\_mpi\_pack\_size\_env\_state}}(val))}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00361}00361 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00362}00362 \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00363}00363   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__env__state_a80c14bca3257629238c18686269a4084}{camp\_mpi\_unpack\_env\_state}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00364}00364 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00365}00365 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00366}00366 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00367}00367 \textcolor{comment}{  !> Computes the average of val across all processes, storing the}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00368}00368 \textcolor{comment}{  !> result in val\_avg on the root process.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00369}\mbox{\hyperlink{namespacecamp__env__state_af55024977aafd912d718d87887a5b114}{00369}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__env__state_af55024977aafd912d718d87887a5b114}{camp\_mpi\_reduce\_avg\_env\_state}}(val, val\_avg)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00370}00370 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00371}00371 \textcolor{comment}{    !> Value to average.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00372}00372     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{intent(in)} :: val\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00373}00373 \textcolor{comment}{    !> Result.}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00374}00374     \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}), \textcolor{keywordtype}{intent(inout)} :: val\_avg}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00375}00375 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00376}00376     val\_avg = val}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00377}00377     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a96549d22ee106f1fa29af89dcaa0ab71}{camp\_mpi\_reduce\_avg\_real}}(val\%temp, val\_avg\%temp)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00378}00378     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a96549d22ee106f1fa29af89dcaa0ab71}{camp\_mpi\_reduce\_avg\_real}}(val\%rel\_humid, val\_avg\%rel\_humid)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00379}00379     \textcolor{keyword}{call }\mbox{\hyperlink{namespacecamp__mpi_a96549d22ee106f1fa29af89dcaa0ab71}{camp\_mpi\_reduce\_avg\_real}}(val\%pressure, val\_avg\%pressure)}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00380}00380 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00381}00381   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__env__state_af55024977aafd912d718d87887a5b114}{camp\_mpi\_reduce\_avg\_env\_state}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00382}00382 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00383}00383 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00384}00384 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00385}00385 \textcolor{comment}{  !> Set the temperature (K)}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00386}\mbox{\hyperlink{namespacecamp__env__state_a980571eae0b75e18ea08f03d0ab9d3d7}{00386}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__env__state_a980571eae0b75e18ea08f03d0ab9d3d7}{set\_temperature\_k}}( this, temperature )}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00387}00387 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00388}00388 \textcolor{comment}{    !> Environmental state pointer}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00389}00389     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{env\_state\_ptr}}), \textcolor{keywordtype}{intent(inout)} :: this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00390}00390 \textcolor{comment}{    !> New temperature (K)}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00391}00391 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), \textcolor{keywordtype}{intent(in)} :: temperature}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00392}00392 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00393}00393     this\%val\%temp = temperature}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00394}00394 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00395}00395   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__env__state_a980571eae0b75e18ea08f03d0ab9d3d7}{set\_temperature\_k}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00396}00396 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00397}00397 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00398}00398 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00399}00399 \textcolor{comment}{  !> Set the pressure (Pa)}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00400}\mbox{\hyperlink{namespacecamp__env__state_a8ec95b192896c36ea9c1b39add39e65a}{00400}}   \textcolor{keyword}{subroutine }\mbox{\hyperlink{namespacecamp__env__state_a8ec95b192896c36ea9c1b39add39e65a}{set\_pressure\_pa}}( this, pressure )}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00401}00401 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00402}00402 \textcolor{comment}{    !> Environmental state pointer}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00403}00403     \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{env\_state\_ptr}}), \textcolor{keywordtype}{intent(inout)} :: this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00404}00404 \textcolor{comment}{    !> New pressure (Pa)}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00405}00405 \textcolor{keywordtype}{    real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), \textcolor{keywordtype}{intent(in)} :: pressure}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00406}00406 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00407}00407     this\%val\%pressure = pressure}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00408}00408 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00409}00409   \textcolor{keyword}{end subroutine }\mbox{\hyperlink{namespacecamp__env__state_a8ec95b192896c36ea9c1b39add39e65a}{set\_pressure\_pa}}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00410}00410 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00411}00411 \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00412}00412 }
-\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00413}00413 \textcolor{keyword}{end module }\mbox{\hyperlink{namespacecamp__env__state}{camp\_env\_state}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00001}00001\ \textcolor{comment}{!\ Copyright\ (C)\ 2005-\/2021\ Barcelona\ Supercomputing\ Center\ and\ University\ of}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00002}00002\ \textcolor{comment}{!\ Illinois\ at\ Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00003}00003\ \textcolor{comment}{!\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00004}00004\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00005}00005\ \textcolor{comment}{!>\ \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00006}00006\ \textcolor{comment}{!>\ The\ camp\_env\_state\ module.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00007}00007\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00008}00008\ \textcolor{comment}{!>\ The\ env\_state\_t\ structure\ and\ associated\ subroutines.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00009}\mbox{\hyperlink{namespacecamp__env__state}{00009}}\ \textcolor{keyword}{module}\ \mbox{\hyperlink{namespacecamp__env__state}{camp\_env\_state}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00011}00011\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00012}00012\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__util}{camp\_util}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00013}00013\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__mpi}{camp\_mpi}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00014}00014\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00015}00015\ \textcolor{preprocessor}{}\ \ \textcolor{keywordtype}{use\ }mpi}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00016}00016\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00017}00017\ \textcolor{preprocessor}{}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00018}00018\ \textcolor{comment}{\ \ !>\ Current\ environment\ state.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00019}00019\ \textcolor{comment}{\ \ !!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00020}00020\ \textcolor{comment}{\ \ !!\ All\ quantities\ are\ instantaneous,\ describing\ the\ state\ at\ a}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00021}00021\ \textcolor{comment}{\ \ !!\ particular\ instant\ of\ time.\ Constant\ data\ and\ other\ data\ not}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00022}00022\ \textcolor{comment}{\ \ !!\ associated\ with\ the\ current\ environment\ state\ is\ stored\ in}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00023}00023\ \textcolor{comment}{\ \ !!\ scenario\_t.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00024}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{00024}}\ \ \ \textcolor{keyword}{type}\ \mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00025}00025\ \textcolor{comment}{\ \ \ \ \ !>\ Temperature\ (K).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00026}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_ab766238aac190245bb73074cb269b378}{00026}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ temp\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00027}00027\ \textcolor{comment}{\ \ \ \ \ !>\ Relative\ humidity\ (1).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00028}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_ae71cc08388573c887cc3f67f3cda406e}{00028}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ rel\_humid\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00029}00029\ \textcolor{comment}{\ \ \ \ \ !>\ Ambient\ pressure\ (Pa).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00030}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_aa3f3078d2066ad2f7143efbbee20ddfb}{00030}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ pressure\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00031}00031\ \textcolor{comment}{\ \ \ \ \ !>\ Longitude\ (degrees).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00032}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_adc00d18a25c0905cc11a5ba4aa8df7fb}{00032}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ longitude\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00033}00033\ \textcolor{comment}{\ \ \ \ \ !>\ Latitude\ (degrees).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00034}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a357d82c4ca631409c335527bca279f5f}{00034}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ latitude\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00035}00035\ \textcolor{comment}{\ \ \ \ \ !>\ Altitude\ (m).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00036}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a92f51bf0e013c04ebd7fe55734cb44c2}{00036}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ altitude\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00037}00037\ \textcolor{comment}{\ \ \ \ \ !>\ Start\ time\ (s\ since\ 00:00\ UTC\ on\ \(\backslash\)c\ start\_day).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00038}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a7b7266b7c48acede3ab20f09537c2788}{00038}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ start\_time\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00039}00039\ \textcolor{comment}{\ \ \ \ \ !>\ Start\ day\ of\ year\ (UTC).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00040}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a27cd136f032fa4c984d677c6323909ef}{00040}}\ \ \ \ \ \ \textcolor{keywordtype}{integer}\ ::\ start\_day\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00041}00041\ \textcolor{comment}{\ \ \ \ \ !>\ Time\ since\ \(\backslash\)c\ start\_time\ (s).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00042}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a8efda7294538ce47a514153242b50351}{00042}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ elapsed\_time\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00043}00043\ \textcolor{comment}{\ \ \ \ \ !>\ Solar\ zenith\ angle\ (radians\ from\ zenith).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00044}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a8b6deb032c56c1177f570b3430b3903b}{00044}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ solar\_zenith\_angle\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00045}00045\ \textcolor{comment}{\ \ \ \ \ !>\ Box\ height\ (m).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00046}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a6c3eec631db6dca646d9a9172ac440c8}{00046}}\ \textcolor{keywordtype}{\ \ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ height}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00047}00047\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00048}00048\ \textcolor{comment}{\ \ \ \ \ !>\ Determine\ the\ number\ of\ bytes\ required\ to\ pack\ the\ given\ value}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00049}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a040e2395c664ee5937b29b0108f8ce63}{00049}}\ \ \ \ \ \ \textcolor{keywordtype}{procedure},\ pass(val)\ ::\ pack\_size\ =>\ \mbox{\hyperlink{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}{camp\_mpi\_pack\_size\_env\_state}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00050}00050\ \textcolor{comment}{\ \ \ \ \ !>\ Pack\ the\ given\ value\ to\ a\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00051}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a29c19e6b75ffcbf3fb3c0008cd437df0}{00051}}\ \ \ \ \ \ \textcolor{keywordtype}{procedure},\ pass(val)\ ::\ bin\_pack\ =>\ \mbox{\hyperlink{namespacecamp__env__state_a151aed99a15531066bb5ef8b25d4b94e}{camp\_mpi\_pack\_env\_state}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00052}00052\ \textcolor{comment}{\ \ \ \ \ !>\ Unpack\ the\ given\ value\ from\ a\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00053}\mbox{\hyperlink{structcamp__env__state_1_1env__state__t_a29a18d80537dd855136cc006deb0ada4}{00053}}\ \ \ \ \ \ \textcolor{keywordtype}{procedure},\ pass(val)\ ::\ bin\_unpack\ =>\ \mbox{\hyperlink{namespacecamp__env__state_a80c14bca3257629238c18686269a4084}{camp\_mpi\_unpack\_env\_state}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00054}00054\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00055}00055\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00056}00056\ \textcolor{comment}{\ \ !>\ Pointer\ for\ env\_state\_t}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00057}\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{00057}}\ \ \ \textcolor{keyword}{type}\ \mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{env\_state\_ptr}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00058}\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr_aace5f29ac55866f9a8a947b0179d734b}{00058}}\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ val\ =>\ null()}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00059}00059\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00060}00060\ \textcolor{comment}{\ \ \ \ !>\ Set\ the\ temperature\ (K)}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00061}\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr_a8d506fca918691fbea1f451de38416f3}{00061}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__env__state_a980571eae0b75e18ea08f03d0ab9d3d7}{set\_temperature\_k}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00062}00062\ \textcolor{comment}{\ \ \ \ !>\ Set\ the\ pressure\ (Pa)}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00063}\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr_a26f6a200a7b6beea730a66d087bcdc7d}{00063}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__env__state_a8ec95b192896c36ea9c1b39add39e65a}{set\_pressure\_pa}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00064}00064\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{env\_state\_ptr}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00066}00066\ \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00068}00068\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00069}00069\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00070}00070\ \textcolor{comment}{\ \ !>\ env\_state\ +=\ env\_state\_delta}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00071}\mbox{\hyperlink{namespacecamp__env__state_ac51ba858506da25f49bbd32320bbeb75}{00071}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_ac51ba858506da25f49bbd32320bbeb75}{env\_state\_add}}(env\_state,\ env\_state\_delta)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00072}00072\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00073}00073\ \textcolor{comment}{\ \ \ \ !>\ Environment.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00074}00074\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ env\_state\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00075}00075\ \textcolor{comment}{\ \ \ \ !>\ Increment.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00076}00076\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ env\_state\_delta}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00078}00078\ \ \ \ \ env\_state\%temp\ =\ env\_state\%temp\ +\ env\_state\_delta\%temp}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00079}00079\ \ \ \ \ env\_state\%rel\_humid\ =\ env\_state\%rel\_humid\ +\ env\_state\_delta\%rel\_humid}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00080}00080\ \ \ \ \ env\_state\%pressure\ =\ env\_state\%pressure\ +\ env\_state\_delta\%pressure}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00081}00081\ \ \ \ \ env\_state\%longitude\ =\ env\_state\%longitude\ +\ env\_state\_delta\%longitude}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00082}00082\ \ \ \ \ env\_state\%latitude\ =\ env\_state\%latitude\ +\ env\_state\_delta\%latitude}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00083}00083\ \ \ \ \ env\_state\%altitude\ =\ env\_state\%altitude\ +\ env\_state\_delta\%altitude}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00084}00084\ \ \ \ \ env\_state\%start\_time\ =\ env\_state\%start\_time\ +\ env\_state\_delta\%start\_time}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00085}00085\ \ \ \ \ env\_state\%start\_day\ =\ env\_state\%start\_day\ +\ env\_state\_delta\%start\_day}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00086}00086\ \ \ \ \ env\_state\%elapsed\_time\ =\ env\_state\%elapsed\_time\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00087}00087\ \ \ \ \ \ \ \ \ \ +\ env\_state\_delta\%elapsed\_time}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00088}00088\ \ \ \ \ env\_state\%solar\_zenith\_angle\ =\ env\_state\%solar\_zenith\_angle\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00089}00089\ \ \ \ \ \ \ \ \ \ +\ env\_state\_delta\%solar\_zenith\_angle}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00090}00090\ \ \ \ \ env\_state\%height\ =\ env\_state\%height\ +\ env\_state\_delta\%height}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00092}00092\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_ac51ba858506da25f49bbd32320bbeb75}{env\_state\_add}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00094}00094\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00095}00095\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00096}00096\ \textcolor{comment}{\ \ !>\ env\_state\ *=\ alpha}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00097}\mbox{\hyperlink{namespacecamp__env__state_a85f6d9d704e9949d321b51d97965d276}{00097}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_a85f6d9d704e9949d321b51d97965d276}{env\_state\_scale}}(env\_state,\ alpha)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00098}00098\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00099}00099\ \textcolor{comment}{\ \ \ \ !>\ Environment.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00100}00100\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ env\_state\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00101}00101\ \textcolor{comment}{\ \ \ \ !>\ Scale\ factor.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00102}00102\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ alpha}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00103}00103\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00104}00104\ \ \ \ \ env\_state\%temp\ =\ env\_state\%temp\ *\ alpha}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00105}00105\ \ \ \ \ env\_state\%rel\_humid\ =\ env\_state\%rel\_humid\ *\ alpha}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00106}00106\ \ \ \ \ env\_state\%pressure\ =\ env\_state\%pressure\ *\ alpha}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00107}00107\ \ \ \ \ env\_state\%longitude\ =\ env\_state\%longitude\ *\ alpha}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00108}00108\ \ \ \ \ env\_state\%latitude\ =\ env\_state\%latitude\ *\ alpha}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00109}00109\ \ \ \ \ env\_state\%altitude\ =\ env\_state\%altitude\ *\ alpha}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00110}00110\ \ \ \ \ env\_state\%start\_time\ =\ env\_state\%start\_time\ *\ alpha}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00111}00111\ \ \ \ \ env\_state\%start\_day\ =\ nint(real(env\_state\%start\_day,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ *\ alpha)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00112}00112\ \ \ \ \ env\_state\%elapsed\_time\ =\ env\_state\%elapsed\_time\ *\ alpha}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00113}00113\ \ \ \ \ env\_state\%solar\_zenith\_angle\ =\ env\_state\%solar\_zenith\_angle\ *\ alpha}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00114}00114\ \ \ \ \ env\_state\%height\ =\ env\_state\%height\ *\ alpha}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00116}00116\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_a85f6d9d704e9949d321b51d97965d276}{env\_state\_scale}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00117}00117\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00118}00118\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00119}00119\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00120}00120\ \textcolor{comment}{\ \ !>\ Adds\ the\ given\ water\ volume\ to\ the\ water\ vapor\ and\ updates\ all}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00121}00121\ \textcolor{comment}{\ \ !>\ environment\ quantities.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00122}\mbox{\hyperlink{namespacecamp__env__state_aed371f10382a89dce6a108a550cc94e7}{00122}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_aed371f10382a89dce6a108a550cc94e7}{env\_state\_change\_water\_volume}}(env\_state,\ dv)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00123}00123\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00124}00124\ \textcolor{comment}{\ \ \ \ !>\ Environment\ state\ to\ update.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00125}00125\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ env\_state\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00126}00126\ \textcolor{comment}{\ \ \ \ !>\ Volume\ concentration\ of\ water\ added\ (m\string^3/m\string^3).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00127}00127\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ dv}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00129}00129\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ pmv\ \ \ \ \ \textcolor{comment}{!\ ambient\ water\ vapor\ pressure\ (Pa)}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00130}00130\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ mv\ \ \ \ \ \ \textcolor{comment}{!\ ambient\ water\ vapor\ density\ (kg\ m\string^\{-\/3\})}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ pmv\ and\ mv\ are\ related\ by\ the\ factor\ molec\_weight/(R*T)}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00132}00132\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ dmv\ \ \ \ \ \textcolor{comment}{!\ change\ of\ water\ density\ (kg\ m\string^\{-\/3\})}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00133}00133\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00134}00134\ \ \ \ \ dmv\ =\ dv\ *\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%water\_density}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00135}00135\ \ \ \ \ pmv\ =\ \mbox{\hyperlink{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457}{env\_state\_sat\_vapor\_pressure}}(env\_state)\ *\ env\_state\%rel\_humid}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00136}00136\ \ \ \ \ mv\ =\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%water\_molec\_weight\ /\ (\mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%univ\_gas\_const*env\_state\%temp)\ *\ pmv}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00137}00137\ \ \ \ \ mv\ =\ mv\ -\/\ dmv}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00138}00138\ \ \ \ \ \textcolor{keywordflow}{if}\ (mv\ <\ 0d0)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00139}00139\ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab72bff2627c9468e4c352118b8dc7046}{warn\_msg}}(980320483,\ \textcolor{stringliteral}{"{}relative\ humidity\ tried\ to\ go\ negative"{}})}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00140}00140\ \ \ \ \ \ \ \ mv\ =\ 0d0}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00141}00141\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00142}00142\ \ \ \ \ env\_state\%rel\_humid\ =\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%univ\_gas\_const\ *\ env\_state\%temp\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00143}00143\ \ \ \ \ \ \ \ \ \ /\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%water\_molec\_weight\ *\ mv\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00144}00144\ \ \ \ \ \ \ \ \ \ /\ \mbox{\hyperlink{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457}{env\_state\_sat\_vapor\_pressure}}(env\_state)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00145}00145\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00146}00146\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_aed371f10382a89dce6a108a550cc94e7}{env\_state\_change\_water\_volume}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00148}00148\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00149}00149\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00150}00150\ \textcolor{comment}{\ \ !>\ Computes\ the\ current\ saturation\ vapor\ pressure\ (Pa).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00151}\mbox{\hyperlink{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457}{00151}}\ \textcolor{keywordtype}{\ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457}{env\_state\_sat\_vapor\_pressure}}(env\_state)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00152}00152\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00153}00153\ \textcolor{comment}{\ \ \ \ !>\ Environment\ state.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00154}00154\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ env\_state}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00156}00156\ \ \ \ \ \mbox{\hyperlink{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457}{env\_state\_sat\_vapor\_pressure}}\ =\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%water\_eq\_vap\_press\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00157}00157\ \ \ \ \ \ \ \ \ \ *\ 10d0**(7.45d0\ *\ (env\_state\%temp\ -\/\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%water\_freeze\_temp)\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00158}00158\ \ \ \ \ \ \ \ \ \ /\ (env\_state\%temp\ -\/\ 38d0))}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00159}00159\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00160}00160\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__env__state_a5c1fd43043590c45470606847d0cd457}{env\_state\_sat\_vapor\_pressure}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00162}00162\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00163}00163\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00164}00164\ \textcolor{comment}{\ \ !>\ Air\ density\ (kg\ m\string^\{-\/3\}).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00165}\mbox{\hyperlink{namespacecamp__env__state_af8f56c1aae7d482b1a9a62b342edd85d}{00165}}\ \textcolor{keywordtype}{\ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__env__state_af8f56c1aae7d482b1a9a62b342edd85d}{env\_state\_air\_den}}(env\_state)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00166}00166\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00167}00167\ \textcolor{comment}{\ \ \ \ !>\ Environment\ state.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00168}00168\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ env\_state}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00169}00169\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00170}00170\ \ \ \ \ \mbox{\hyperlink{namespacecamp__env__state_af8f56c1aae7d482b1a9a62b342edd85d}{env\_state\_air\_den}}\ =\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%air\_molec\_weight\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00171}00171\ \ \ \ \ \ \ \ \ \ *\ \mbox{\hyperlink{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}{env\_state\_air\_molar\_den}}(env\_state)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00172}00172\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00173}00173\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__env__state_af8f56c1aae7d482b1a9a62b342edd85d}{env\_state\_air\_den}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00175}00175\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00176}00176\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00177}00177\ \textcolor{comment}{\ \ !>\ Air\ molar\ density\ (mol\ m\string^\{-\/3\}).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00178}\mbox{\hyperlink{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}{00178}}\ \textcolor{keywordtype}{\ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}{env\_state\_air\_molar\_den}}(env\_state)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00179}00179\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00180}00180\ \textcolor{comment}{\ \ \ \ !>\ Environment\ state.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00181}00181\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ env\_state}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00183}00183\ \ \ \ \ \mbox{\hyperlink{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}{env\_state\_air\_molar\_den}}\ =\ env\_state\%pressure\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00184}00184\ \ \ \ \ \ \ \ \ \ /\ (\mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%univ\_gas\_const\ *\ env\_state\%temp)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00186}00186\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}{env\_state\_air\_molar\_den}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00187}00187\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00188}00188\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00189}00189\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00190}00190\ \textcolor{comment}{\ \ !>\ Condensation\ \(\backslash\)f\$A\(\backslash\)f\$\ parameter.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00191}\mbox{\hyperlink{namespacecamp__env__state_a510247c52aff804a61315f2d12ae9ae2}{00191}}\ \textcolor{keywordtype}{\ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__env__state_a510247c52aff804a61315f2d12ae9ae2}{env\_state\_a}}(env\_state)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00192}00192\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00193}00193\ \textcolor{comment}{\ \ \ \ !>\ Environment\ state.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00194}00194\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ env\_state}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00195}00195\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00196}00196\ \ \ \ \ \mbox{\hyperlink{namespacecamp__env__state_a510247c52aff804a61315f2d12ae9ae2}{env\_state\_a}}\ =\ 4d0\ *\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%water\_surf\_eng\ *\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%water\_molec\_weight\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00197}00197\ \ \ \ \ \ \ \ \ \ /\ (\mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%univ\_gas\_const\ *\ env\_state\%temp\ *\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%water\_density)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00199}00199\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__env__state_a510247c52aff804a61315f2d12ae9ae2}{env\_state\_a}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00201}00201\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00202}00202\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00203}00203\ \textcolor{comment}{\ \ !>\ Convert\ (ppb)\ to\ (molecules\ m\string^\{-\/3\}).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00204}\mbox{\hyperlink{namespacecamp__env__state_a4706a3e61a7f2fe4554b57b126192754}{00204}}\ \textcolor{keywordtype}{\ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__env__state_a4706a3e61a7f2fe4554b57b126192754}{env\_state\_ppb\_to\_conc}}(env\_state,\ ppb)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00205}00205\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00206}00206\ \textcolor{comment}{\ \ \ \ !>\ Environment\ state.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00207}00207\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ env\_state\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00208}00208\ \textcolor{comment}{\ \ \ \ !>\ Mixing\ ratio\ (ppb).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00209}00209\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ ppb}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00211}00211\ \ \ \ \ \mbox{\hyperlink{namespacecamp__env__state_a4706a3e61a7f2fe4554b57b126192754}{env\_state\_ppb\_to\_conc}}\ =\ ppb\ /\ 1d9\ *\ \mbox{\hyperlink{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}{env\_state\_air\_molar\_den}}(env\_state)\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00212}00212\ \ \ \ \ \ \ \ \ \ *\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%avagadro}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00213}00213\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00214}00214\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__env__state_a4706a3e61a7f2fe4554b57b126192754}{env\_state\_ppb\_to\_conc}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00215}00215\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00216}00216\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00217}00217\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00218}00218\ \textcolor{comment}{\ \ !>\ Convert\ (molecules\ m\string^\{-\/3\})\ to\ (ppb).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00219}\mbox{\hyperlink{namespacecamp__env__state_a71497d9ef664a1d08bd507da56b1d077}{00219}}\ \textcolor{keywordtype}{\ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__env__state_a71497d9ef664a1d08bd507da56b1d077}{env\_state\_conc\_to\_ppb}}(env\_state,\ conc)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00220}00220\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00221}00221\ \textcolor{comment}{\ \ \ \ !>\ Environment\ state.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00222}00222\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ env\_state\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00223}00223\ \textcolor{comment}{\ \ \ \ !>\ Concentration\ (molecules\ m\string^\{-\/3\}).}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00224}00224\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ conc}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00225}00225\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00226}00226\ \ \ \ \ \mbox{\hyperlink{namespacecamp__env__state_a71497d9ef664a1d08bd507da56b1d077}{env\_state\_conc\_to\_ppb}}\ =\ conc\ *\ 1d9\ /\ \mbox{\hyperlink{namespacecamp__env__state_a1f549c4ca4ea9f5209b75fec899cb0a9}{env\_state\_air\_molar\_den}}(env\_state)\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00227}00227\ \ \ \ \ \ \ \ \ \ /\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%avagadro}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00228}00228\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00229}00229\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__env__state_a71497d9ef664a1d08bd507da56b1d077}{env\_state\_conc\_to\_ppb}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00231}00231\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00232}00232\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00233}00233\ \textcolor{comment}{\ \ !>\ Average\ val\ over\ all\ processes.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00234}\mbox{\hyperlink{namespacecamp__env__state_acd71d6143a8e08e77473bf24f1752af6}{00234}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_acd71d6143a8e08e77473bf24f1752af6}{env\_state\_mix}}(val)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00235}00235\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00236}00236\ \textcolor{comment}{\ \ \ \ !>\ Value\ to\ average.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00237}00237\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ val}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00238}00238\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00239}00239\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00240}00240\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}})\ ::\ val\_avg}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00241}00241\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00242}00242\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ac17a70c1409131f3634aaed71894ea68}{camp\_mpi\_allreduce\_average\_real}}(val\%temp,\ val\_avg\%temp)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00243}00243\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ac17a70c1409131f3634aaed71894ea68}{camp\_mpi\_allreduce\_average\_real}}(val\%rel\_humid,\ val\_avg\%rel\_humid)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00244}00244\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ac17a70c1409131f3634aaed71894ea68}{camp\_mpi\_allreduce\_average\_real}}(val\%pressure,\ val\_avg\%pressure)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00245}00245\ \ \ \ \ val\%temp\ =\ val\_avg\%temp}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00246}00246\ \ \ \ \ val\%rel\_humid\ =\ val\_avg\%rel\_humid}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00247}00247\ \ \ \ \ val\%pressure\ =\ val\_avg\%pressure}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00248}00248\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00249}00249\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00250}00250\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_acd71d6143a8e08e77473bf24f1752af6}{env\_state\_mix}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00251}00251\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00252}00252\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00253}00253\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00254}00254\ \textcolor{comment}{\ \ !>\ Average\ val\ over\ all\ processes,\ with\ the\ result\ only\ on\ the\ root}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00255}00255\ \textcolor{comment}{\ \ !>\ process.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00256}\mbox{\hyperlink{namespacecamp__env__state_aa8f8e6e85adf7327d31a2f64324d49a4}{00256}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_aa8f8e6e85adf7327d31a2f64324d49a4}{env\_state\_reduce\_avg}}(val)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00257}00257\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00258}00258\ \textcolor{comment}{\ \ \ \ !>\ Value\ to\ average.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00259}00259\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ val}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00260}00260\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00261}00261\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00262}00262\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}})\ ::\ val\_avg}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00263}00263\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00264}00264\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a96549d22ee106f1fa29af89dcaa0ab71}{camp\_mpi\_reduce\_avg\_real}}(val\%temp,\ val\_avg\%temp)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00265}00265\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a96549d22ee106f1fa29af89dcaa0ab71}{camp\_mpi\_reduce\_avg\_real}}(val\%rel\_humid,\ val\_avg\%rel\_humid)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00266}00266\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a96549d22ee106f1fa29af89dcaa0ab71}{camp\_mpi\_reduce\_avg\_real}}(val\%pressure,\ val\_avg\%pressure)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00267}00267\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespacecamp__mpi_a071b987e3ccab55010a23029249b73a4}{camp\_mpi\_rank}}()\ ==\ 0)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00268}00268\ \ \ \ \ \ \ \ val\%temp\ =\ val\_avg\%temp}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00269}00269\ \ \ \ \ \ \ \ val\%rel\_humid\ =\ val\_avg\%rel\_humid}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00270}00270\ \ \ \ \ \ \ \ val\%pressure\ =\ val\_avg\%pressure}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00271}00271\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00272}00272\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00273}00273\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00274}00274\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_aa8f8e6e85adf7327d31a2f64324d49a4}{env\_state\_reduce\_avg}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00275}00275\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00276}00276\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00277}00277\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00278}00278\ \textcolor{comment}{\ \ !>\ Determines\ the\ number\ of\ bytes\ required\ to\ pack\ the\ given\ value.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00279}\mbox{\hyperlink{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}{00279}}\ \ \ \textcolor{keyword}{integer\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}{camp\_mpi\_pack\_size\_env\_state}}(val)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00280}00280\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00281}00281\ \textcolor{comment}{\ \ \ \ !>\ Value\ to\ pack.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00282}00282\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ val}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00283}00283\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00284}00284\ \ \ \ \ \mbox{\hyperlink{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}{camp\_mpi\_pack\_size\_env\_state}}\ =\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00285}00285\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%temp)\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00286}00286\ \ \ \ \ \ \ \ \ \ +\ \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%rel\_humid)\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00287}00287\ \ \ \ \ \ \ \ \ \ +\ \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%pressure)\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00288}00288\ \ \ \ \ \ \ \ \ \ +\ \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%longitude)\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00289}00289\ \ \ \ \ \ \ \ \ \ +\ \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%latitude)\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00290}00290\ \ \ \ \ \ \ \ \ \ +\ \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%altitude)\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00291}00291\ \ \ \ \ \ \ \ \ \ +\ \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%start\_time)\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00292}00292\ \ \ \ \ \ \ \ \ \ +\ \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(val\%start\_day)\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00293}00293\ \ \ \ \ \ \ \ \ \ +\ \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%elapsed\_time)\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00294}00294\ \ \ \ \ \ \ \ \ \ +\ \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%solar\_zenith\_angle)\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00295}00295\ \ \ \ \ \ \ \ \ \ +\ \mbox{\hyperlink{namespacecamp__mpi_ae392f982ac26c341bc44f829e5e12d61}{camp\_mpi\_pack\_size\_real}}(val\%height)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00297}00297\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}{camp\_mpi\_pack\_size\_env\_state}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00298}00298\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00299}00299\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00300}00300\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00301}00301\ \textcolor{comment}{\ \ !>\ Packs\ the\ given\ value\ into\ the\ buffer,\ advancing\ position.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00302}\mbox{\hyperlink{namespacecamp__env__state_a151aed99a15531066bb5ef8b25d4b94e}{00302}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_a151aed99a15531066bb5ef8b25d4b94e}{camp\_mpi\_pack\_env\_state}}(buffer,\ position,\ val)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00303}00303\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00304}00304\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00305}00305\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00306}00306\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00307}00307\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ position\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00308}00308\ \textcolor{comment}{\ \ \ \ !>\ Value\ to\ pack.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00309}00309\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ val}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00310}00310\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00311}00311\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00312}00312\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00313}00313\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00314}00314\ \ \ \ \ prev\_position\ =\ position}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00315}00315\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer,\ position,\ val\%temp)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00316}00316\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer,\ position,\ val\%rel\_humid)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00317}00317\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer,\ position,\ val\%pressure)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00318}00318\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer,\ position,\ val\%longitude)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00319}00319\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer,\ position,\ val\%latitude)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00320}00320\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer,\ position,\ val\%altitude)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00321}00321\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer,\ position,\ val\%start\_time)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00322}00322\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer,\ position,\ val\%start\_day)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00323}00323\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer,\ position,\ val\%elapsed\_time)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00324}00324\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer,\ position,\ val\%solar\_zenith\_angle)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00325}00325\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a0bd441b56242352455d607a27f863a90}{camp\_mpi\_pack\_real}}(buffer,\ position,\ val\%height)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00326}00326\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(464101191,\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00327}00327\ \ \ \ \ \ \ \ \ \ position\ -\/\ prev\_position\ <=\ \mbox{\hyperlink{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}{camp\_mpi\_pack\_size\_env\_state}}(val))}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00328}00328\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00329}00329\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00330}00330\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_a151aed99a15531066bb5ef8b25d4b94e}{camp\_mpi\_pack\_env\_state}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00331}00331\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00332}00332\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00333}00333\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00334}00334\ \textcolor{comment}{\ \ !>\ Unpacks\ the\ given\ value\ from\ the\ buffer,\ advancing\ position.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00335}\mbox{\hyperlink{namespacecamp__env__state_a80c14bca3257629238c18686269a4084}{00335}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_a80c14bca3257629238c18686269a4084}{camp\_mpi\_unpack\_env\_state}}(buffer,\ position,\ val)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00336}00336\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00337}00337\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00338}00338\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00339}00339\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00340}00340\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ position\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00341}00341\ \textcolor{comment}{\ \ \ \ !>\ Value\ to\ pack.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00342}00342\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ val}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00343}00343\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00344}00344\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00345}00345\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00346}00346\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00347}00347\ \ \ \ \ prev\_position\ =\ position}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00348}00348\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer,\ position,\ val\%temp)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00349}00349\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer,\ position,\ val\%rel\_humid)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00350}00350\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer,\ position,\ val\%pressure)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00351}00351\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer,\ position,\ val\%longitude)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00352}00352\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer,\ position,\ val\%latitude)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00353}00353\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer,\ position,\ val\%altitude)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00354}00354\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer,\ position,\ val\%start\_time)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00355}00355\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer,\ position,\ val\%start\_day)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00356}00356\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer,\ position,\ val\%elapsed\_time)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00357}00357\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer,\ position,\ val\%solar\_zenith\_angle)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00358}00358\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ad1bf276334a50ba9c4e928d848d9fe4a}{camp\_mpi\_unpack\_real}}(buffer,\ position,\ val\%height)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00359}00359\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(205696745,\ \&}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00360}00360\ \ \ \ \ \ \ \ \ \ position\ -\/\ prev\_position\ <=\ \mbox{\hyperlink{namespacecamp__env__state_a5da3d709cc454440a04dba470052ef77}{camp\_mpi\_pack\_size\_env\_state}}(val))}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00361}00361\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00362}00362\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00363}00363\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_a80c14bca3257629238c18686269a4084}{camp\_mpi\_unpack\_env\_state}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00364}00364\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00365}00365\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00366}00366\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00367}00367\ \textcolor{comment}{\ \ !>\ Computes\ the\ average\ of\ val\ across\ all\ processes,\ storing\ the}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00368}00368\ \textcolor{comment}{\ \ !>\ result\ in\ val\_avg\ on\ the\ root\ process.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00369}\mbox{\hyperlink{namespacecamp__env__state_af55024977aafd912d718d87887a5b114}{00369}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_af55024977aafd912d718d87887a5b114}{camp\_mpi\_reduce\_avg\_env\_state}}(val,\ val\_avg)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00370}00370\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00371}00371\ \textcolor{comment}{\ \ \ \ !>\ Value\ to\ average.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00372}00372\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ val\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00373}00373\ \textcolor{comment}{\ \ \ \ !>\ Result.}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00374}00374\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__t}{env\_state\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ val\_avg}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00375}00375\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00376}00376\ \ \ \ \ val\_avg\ =\ val}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00377}00377\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a96549d22ee106f1fa29af89dcaa0ab71}{camp\_mpi\_reduce\_avg\_real}}(val\%temp,\ val\_avg\%temp)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00378}00378\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a96549d22ee106f1fa29af89dcaa0ab71}{camp\_mpi\_reduce\_avg\_real}}(val\%rel\_humid,\ val\_avg\%rel\_humid)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00379}00379\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a96549d22ee106f1fa29af89dcaa0ab71}{camp\_mpi\_reduce\_avg\_real}}(val\%pressure,\ val\_avg\%pressure)}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00380}00380\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00381}00381\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_af55024977aafd912d718d87887a5b114}{camp\_mpi\_reduce\_avg\_env\_state}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00382}00382\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00383}00383\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00384}00384\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00385}00385\ \textcolor{comment}{\ \ !>\ Set\ the\ temperature\ (K)}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00386}\mbox{\hyperlink{namespacecamp__env__state_a980571eae0b75e18ea08f03d0ab9d3d7}{00386}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_a980571eae0b75e18ea08f03d0ab9d3d7}{set\_temperature\_k}}(\ this,\ temperature\ )}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00387}00387\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00388}00388\ \textcolor{comment}{\ \ \ \ !>\ Environmental\ state\ pointer}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00389}00389\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{env\_state\_ptr}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00390}00390\ \textcolor{comment}{\ \ \ \ !>\ New\ temperature\ (K)}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00391}00391\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ temperature}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00392}00392\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00393}00393\ \ \ \ \ this\%val\%temp\ =\ temperature}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00394}00394\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00395}00395\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_a980571eae0b75e18ea08f03d0ab9d3d7}{set\_temperature\_k}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00396}00396\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00397}00397\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00398}00398\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00399}00399\ \textcolor{comment}{\ \ !>\ Set\ the\ pressure\ (Pa)}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00400}\mbox{\hyperlink{namespacecamp__env__state_a8ec95b192896c36ea9c1b39add39e65a}{00400}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_a8ec95b192896c36ea9c1b39add39e65a}{set\_pressure\_pa}}(\ this,\ pressure\ )}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00401}00401\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00402}00402\ \textcolor{comment}{\ \ \ \ !>\ Environmental\ state\ pointer}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00403}00403\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{env\_state\_ptr}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00404}00404\ \textcolor{comment}{\ \ \ \ !>\ New\ pressure\ (Pa)}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00405}00405\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ pressure}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00406}00406\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00407}00407\ \ \ \ \ this\%val\%pressure\ =\ pressure}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00408}00408\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00409}00409\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__env__state_a8ec95b192896c36ea9c1b39add39e65a}{set\_pressure\_pa}}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00410}00410\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00411}00411\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00412}00412\ }
+\DoxyCodeLine{\Hypertarget{env__state_8_f90_source_l00413}00413\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__env__state}{camp\_env\_state}}}
 
 \end{DoxyCode}

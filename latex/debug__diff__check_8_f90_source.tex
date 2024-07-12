@@ -1,46 +1,46 @@
-\hypertarget{debug__diff__check_8_f90_source}{}\doxysection{debug\+\_\+diff\+\_\+check.\+F90}
-\label{debug__diff__check_8_f90_source}\index{debug\_diff\_check.F90@{debug\_diff\_check.F90}}
+\doxysection{debug\+\_\+diff\+\_\+check.\+F90}
+\hypertarget{debug__diff__check_8_f90_source}{}\label{debug__diff__check_8_f90_source}\index{debug\_diff\_check.F90@{debug\_diff\_check.F90}}
 \mbox{\hyperlink{debug__diff__check_8_f90}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00001}00001 \textcolor{comment}{! Copyright (C) 2021 Barcelona Supercomputing Center and University of}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00002}00002 \textcolor{comment}{! Illinois at Urbana-\/Champaign}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00003}00003 \textcolor{comment}{! SPDX-\/License-\/Identifier: MIT}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00004}00004 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00005}00005 \textcolor{comment}{!> \(\backslash\)file}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00006}00006 \textcolor{comment}{!> The camp\_debug\_diff\_check module}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00007}00007 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00008}00008 \textcolor{comment}{!> Interfaces to the debug\_diff\_check c functions -\/ NOT THREAD SAFE!}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00009}\mbox{\hyperlink{namespacecamp__debug__diff__check}{00009}} \textcolor{keyword}{module} \mbox{\hyperlink{namespacecamp__debug__diff__check}{camp\_debug\_diff\_check}}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00010}00010 }
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00011}00011   \textcolor{keywordtype}{use }iso\_c\_binding}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00012}00012 }
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00013}00013   \textcolor{keywordtype}{implicit none}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00014}00014   \textcolor{keywordtype}{private}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00015}00015 }
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00016}00016   \textcolor{keywordtype}{public} :: \mbox{\hyperlink{interfacecamp__debug__diff__check_1_1diff__check}{diff\_check}}, \mbox{\hyperlink{interfacecamp__debug__diff__check_1_1diff__check__update__only}{diff\_check\_update\_only}}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00017}00017 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00018}00018 \textcolor{comment}{  !> Interface to c functions for diff checker}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00019}00019   \textcolor{keyword}{interface}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00020}00020 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00021}00021 \textcolor{comment}{    !> Do a difference check on the int, float, and env model data}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00022}\mbox{\hyperlink{interfacecamp__debug__diff__check_1_1diff__check_a2703176e0d90acd0355bae9b08c4efa3}{00022}}     \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__debug__diff__check_1_1diff__check}{diff\_check}}( message ) \textcolor{keyword}{bind (c)}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00023}00023       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00024}00024 \textcolor{comment}{      !> Message to print along with difference check}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00025}00025       \textcolor{keywordtype}{character(kind=c\_char)} :: message(*)}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00026}00026     \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__debug__diff__check_1_1diff__check}{diff\_check}}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00027}00027 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00028}00028 \textcolor{comment}{    !> Check the dimensions of the data and update the saved}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00029}00029 \textcolor{comment}{    !! values, but do not compare data}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00030}\mbox{\hyperlink{interfacecamp__debug__diff__check_1_1diff__check__update__only_a81585fd6f6088412bae50c58fa78ba4d}{00030}}     \textcolor{keyword}{subroutine }\mbox{\hyperlink{interfacecamp__debug__diff__check_1_1diff__check__update__only}{diff\_check\_update\_only}}( message ) \textcolor{keyword}{bind (c)}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00031}00031       \textcolor{keywordtype}{use }iso\_c\_binding\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00032}00032 \textcolor{comment}{      !> Message to print along with the update}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00033}00033       \textcolor{keywordtype}{character(kind=c\_char)} :: message(*)}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00034}00034     \textcolor{keyword}{end subroutine }\mbox{\hyperlink{interfacecamp__debug__diff__check_1_1diff__check__update__only}{diff\_check\_update\_only}}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00035}00035 }
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00036}00036   \textcolor{keyword}{end interface}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00037}00037 }
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00038}00038 \textcolor{keyword}{contains}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00039}00039 }
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00040}00040 \textcolor{keyword}{end module }\mbox{\hyperlink{namespacecamp__debug__diff__check}{camp\_debug\_diff\_check}}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00001}00001\ \textcolor{comment}{!\ Copyright\ (C)\ 2021\ Barcelona\ Supercomputing\ Center\ and\ University\ of}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00002}00002\ \textcolor{comment}{!\ Illinois\ at\ Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00003}00003\ \textcolor{comment}{!\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00004}00004\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00005}00005\ \textcolor{comment}{!>\ \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00006}00006\ \textcolor{comment}{!>\ The\ camp\_debug\_diff\_check\ module}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00007}00007\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00008}00008\ \textcolor{comment}{!>\ Interfaces\ to\ the\ debug\_diff\_check\ c\ functions\ -\/\ NOT\ THREAD\ SAFE!}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00009}\mbox{\hyperlink{namespacecamp__debug__diff__check}{00009}}\ \textcolor{keyword}{module}\ \mbox{\hyperlink{namespacecamp__debug__diff__check}{camp\_debug\_diff\_check}}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00011}00011\ \ \ \textcolor{keywordtype}{use\ }iso\_c\_binding}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00013}00013\ \ \ \textcolor{keywordtype}{implicit\ none}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00014}00014\ \ \ \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00016}00016\ \ \ \textcolor{keywordtype}{public}\ ::\ \mbox{\hyperlink{interfacecamp__debug__diff__check_1_1diff__check}{diff\_check}},\ \mbox{\hyperlink{interfacecamp__debug__diff__check_1_1diff__check__update__only}{diff\_check\_update\_only}}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00017}00017\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00018}00018\ \textcolor{comment}{\ \ !>\ Interface\ to\ c\ functions\ for\ diff\ checker}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00019}00019\ \ \ \textcolor{keyword}{interface}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00020}00020\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00021}00021\ \textcolor{comment}{\ \ \ \ !>\ Do\ a\ difference\ check\ on\ the\ int,\ float,\ and\ env\ model\ data}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00022}\mbox{\hyperlink{interfacecamp__debug__diff__check_1_1diff__check_a2703176e0d90acd0355bae9b08c4efa3}{00022}}\ \ \ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{interfacecamp__debug__diff__check_1_1diff__check}{diff\_check}}(\ message\ )\ \textcolor{keyword}{bind\ (c)}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00023}00023\ \ \ \ \ \ \ \textcolor{keywordtype}{use\ }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00024}00024\ \textcolor{comment}{\ \ \ \ \ \ !>\ Message\ to\ print\ along\ with\ difference\ check}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00025}00025\ \ \ \ \ \ \ \textcolor{keywordtype}{character(kind=c\_char)}\ ::\ message(*)}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00026}00026\ \ \ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__debug__diff__check_1_1diff__check}{diff\_check}}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00027}00027\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00028}00028\ \textcolor{comment}{\ \ \ \ !>\ Check\ the\ dimensions\ of\ the\ data\ and\ update\ the\ saved}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00029}00029\ \textcolor{comment}{\ \ \ \ !!\ values,\ but\ do\ not\ compare\ data}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00030}\mbox{\hyperlink{interfacecamp__debug__diff__check_1_1diff__check__update__only_a81585fd6f6088412bae50c58fa78ba4d}{00030}}\ \ \ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{interfacecamp__debug__diff__check_1_1diff__check__update__only}{diff\_check\_update\_only}}(\ message\ )\ \textcolor{keyword}{bind\ (c)}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00031}00031\ \ \ \ \ \ \ \textcolor{keywordtype}{use\ }iso\_c\_binding\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00032}00032\ \textcolor{comment}{\ \ \ \ \ \ !>\ Message\ to\ print\ along\ with\ the\ update}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00033}00033\ \ \ \ \ \ \ \textcolor{keywordtype}{character(kind=c\_char)}\ ::\ message(*)}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00034}00034\ \ \ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__debug__diff__check_1_1diff__check__update__only}{diff\_check\_update\_only}}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00036}00036\ \ \ \textcolor{keyword}{end\ interface}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00038}00038\ \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8_f90_source_l00040}00040\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__debug__diff__check}{camp\_debug\_diff\_check}}}
 
 \end{DoxyCode}

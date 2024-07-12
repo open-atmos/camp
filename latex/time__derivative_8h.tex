@@ -1,37 +1,49 @@
-\hypertarget{time__derivative_8h}{}\doxysection{time\+\_\+derivative.\+h File Reference}
-\label{time__derivative_8h}\index{time\_derivative.h@{time\_derivative.h}}
+\doxysection{time\+\_\+derivative.\+h File Reference}
+\hypertarget{time__derivative_8h}{}\label{time__derivative_8h}\index{time\_derivative.h@{time\_derivative.h}}
 
 
 Header for the time derivative structure and related functions.  
 
 
 Include dependency graph for time\+\_\+derivative.\+h\+:
-% FIG 0
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=190pt]{time__derivative_8h__incl}
+\end{center}
+\end{figure}
 This graph shows which files directly or indirectly include this file\+:
-% FIG 1
-\doxysubsection*{Classes}
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{time__derivative_8h__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
 struct \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}
 \end{DoxyCompactItemize}
-\doxysubsection*{Macros}
+\doxysubsubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \mbox{\hyperlink{time__derivative_8h_a57ebf21fd3d346b7d46d50880d7c6e17}{MAX\+\_\+\+PRECISION\+\_\+\+LOSS}}~1.\+0e-\/14
 \end{DoxyCompactItemize}
-\doxysubsection*{Functions}
+\doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-int \mbox{\hyperlink{time__derivative_8h_a5580eaa480804f34c307349e33d3b100}{time\+\_\+derivative\+\_\+initialize}} (\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} $\ast$time\+\_\+deriv, unsigned int num\+\_\+spec)
+int \mbox{\hyperlink{time__derivative_8h_a5580eaa480804f34c307349e33d3b100}{time\+\_\+derivative\+\_\+initialize}} (\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} \texorpdfstring{$\ast$}{*}time\+\_\+deriv, unsigned int num\+\_\+spec)
 \begin{DoxyCompactList}\small\item\em Initialize the derivative. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{time__derivative_8h_a72dd19ea5bc2be11ace50e82bbd7857f}{time\+\_\+derivative\+\_\+reset}} (\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv)
 \begin{DoxyCompactList}\small\item\em Reset the derivative. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{time__derivative_8h_ae2c31a72134750c12f2f5d8e32c3a99d}{time\+\_\+derivative\+\_\+output}} (\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, double $\ast$dest\+\_\+array, double $\ast$deriv\+\_\+est, unsigned int output\+\_\+precision)
+void \mbox{\hyperlink{time__derivative_8h_ae2c31a72134750c12f2f5d8e32c3a99d}{time\+\_\+derivative\+\_\+output}} (\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, double \texorpdfstring{$\ast$}{*}dest\+\_\+array, double \texorpdfstring{$\ast$}{*}deriv\+\_\+est, unsigned int output\+\_\+precision)
 \begin{DoxyCompactList}\small\item\em Output the current derivative array. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{time__derivative_8h_af4c9ab5040b544a8ec4b63a1c75922e2}{time\+\_\+derivative\+\_\+add\+\_\+value}} (\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, unsigned int spec\+\_\+id, long double rate\+\_\+contribution)
 \begin{DoxyCompactList}\small\item\em Add a contribution to the time derivative. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{time__derivative_8h_a1193647828d9df2f5bb391b508a2a2c1}{time\+\_\+derivative\+\_\+free}} (\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv)
-\begin{DoxyCompactList}\small\item\em Free memory associated with a \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Free memory associated with a \doxylink{struct_time_derivative}{Time\+Derivative}. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -44,7 +56,7 @@ Definition in file \mbox{\hyperlink{time__derivative_8h_source}{time\+\_\+deriva
 
 
 \doxysubsection{Macro Definition Documentation}
-\mbox{\Hypertarget{time__derivative_8h_a57ebf21fd3d346b7d46d50880d7c6e17}\label{time__derivative_8h_a57ebf21fd3d346b7d46d50880d7c6e17}} 
+\Hypertarget{time__derivative_8h_a57ebf21fd3d346b7d46d50880d7c6e17}\label{time__derivative_8h_a57ebf21fd3d346b7d46d50880d7c6e17} 
 \index{time\_derivative.h@{time\_derivative.h}!MAX\_PRECISION\_LOSS@{MAX\_PRECISION\_LOSS}}
 \index{MAX\_PRECISION\_LOSS@{MAX\_PRECISION\_LOSS}!time\_derivative.h@{time\_derivative.h}}
 \doxysubsubsection{\texorpdfstring{MAX\_PRECISION\_LOSS}{MAX\_PRECISION\_LOSS}}
@@ -57,7 +69,7 @@ Definition at line \mbox{\hyperlink{time__derivative_8h_source_l00018}{18}} of f
 
 
 \doxysubsection{Function Documentation}
-\mbox{\Hypertarget{time__derivative_8h_af4c9ab5040b544a8ec4b63a1c75922e2}\label{time__derivative_8h_af4c9ab5040b544a8ec4b63a1c75922e2}} 
+\Hypertarget{time__derivative_8h_af4c9ab5040b544a8ec4b63a1c75922e2}\label{time__derivative_8h_af4c9ab5040b544a8ec4b63a1c75922e2} 
 \index{time\_derivative.h@{time\_derivative.h}!time\_derivative\_add\_value@{time\_derivative\_add\_value}}
 \index{time\_derivative\_add\_value@{time\_derivative\_add\_value}!time\_derivative.h@{time\_derivative.h}}
 \doxysubsubsection{\texorpdfstring{time\_derivative\_add\_value()}{time\_derivative\_add\_value()}}
@@ -69,7 +81,7 @@ Add a contribution to the time derivative.
 
 
 \begin{DoxyParams}{Parameters}
-{\em time\+\_\+deriv} & \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} object \\
+{\em time\+\_\+deriv} & \doxylink{struct_time_derivative}{Time\+Derivative} object \\
 \hline
 {\em spec\+\_\+id} & Index of the species to update rates for \\
 \hline
@@ -81,8 +93,14 @@ Add a contribution to the time derivative.
 Definition at line \mbox{\hyperlink{time__derivative_8c_source_l00090}{90}} of file \mbox{\hyperlink{time__derivative_8c_source}{time\+\_\+derivative.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 2
-\mbox{\Hypertarget{time__derivative_8h_a1193647828d9df2f5bb391b508a2a2c1}\label{time__derivative_8h_a1193647828d9df2f5bb391b508a2a2c1}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{time__derivative_8h_af4c9ab5040b544a8ec4b63a1c75922e2_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{time__derivative_8h_a1193647828d9df2f5bb391b508a2a2c1}\label{time__derivative_8h_a1193647828d9df2f5bb391b508a2a2c1} 
 \index{time\_derivative.h@{time\_derivative.h}!time\_derivative\_free@{time\_derivative\_free}}
 \index{time\_derivative\_free@{time\_derivative\_free}!time\_derivative.h@{time\_derivative.h}}
 \doxysubsubsection{\texorpdfstring{time\_derivative\_free()}{time\_derivative\_free()}}
@@ -90,11 +108,11 @@ Here is the caller graph for this function\+:
 
 
 
-Free memory associated with a \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}. 
+Free memory associated with a \doxylink{struct_time_derivative}{Time\+Derivative}. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em time\+\_\+deriv} & \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} object \\
+{\em time\+\_\+deriv} & \doxylink{struct_time_derivative}{Time\+Derivative} object \\
 \hline
 \end{DoxyParams}
 
@@ -102,12 +120,18 @@ Free memory associated with a \mbox{\hyperlink{struct_time_derivative}{Time\+Der
 Definition at line \mbox{\hyperlink{time__derivative_8c_source_l00105}{105}} of file \mbox{\hyperlink{time__derivative_8c_source}{time\+\_\+derivative.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 3
-\mbox{\Hypertarget{time__derivative_8h_a5580eaa480804f34c307349e33d3b100}\label{time__derivative_8h_a5580eaa480804f34c307349e33d3b100}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=284pt]{time__derivative_8h_a1193647828d9df2f5bb391b508a2a2c1_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{time__derivative_8h_a5580eaa480804f34c307349e33d3b100}\label{time__derivative_8h_a5580eaa480804f34c307349e33d3b100} 
 \index{time\_derivative.h@{time\_derivative.h}!time\_derivative\_initialize@{time\_derivative\_initialize}}
 \index{time\_derivative\_initialize@{time\_derivative\_initialize}!time\_derivative.h@{time\_derivative.h}}
 \doxysubsubsection{\texorpdfstring{time\_derivative\_initialize()}{time\_derivative\_initialize()}}
-{\footnotesize\ttfamily int time\+\_\+derivative\+\_\+initialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} $\ast$}]{time\+\_\+deriv,  }\item[{unsigned int}]{num\+\_\+spec }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int time\+\_\+derivative\+\_\+initialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} \texorpdfstring{$\ast$}{*}}]{time\+\_\+deriv,  }\item[{unsigned int}]{num\+\_\+spec }\end{DoxyParamCaption})}
 
 
 
@@ -115,7 +139,7 @@ Initialize the derivative.
 
 
 \begin{DoxyParams}{Parameters}
-{\em time\+\_\+deriv} & Pointer to the \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} object \\
+{\em time\+\_\+deriv} & Pointer to the \doxylink{struct_time_derivative}{Time\+Derivative} object \\
 \hline
 {\em num\+\_\+spec} & Number of species to include in the derivative \\
 \hline
@@ -128,12 +152,18 @@ Flag indicating whether the derivative was sucessfully initialized (0 = false; 1
 Definition at line \mbox{\hyperlink{time__derivative_8c_source_l00015}{15}} of file \mbox{\hyperlink{time__derivative_8c_source}{time\+\_\+derivative.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 4
-\mbox{\Hypertarget{time__derivative_8h_ae2c31a72134750c12f2f5d8e32c3a99d}\label{time__derivative_8h_ae2c31a72134750c12f2f5d8e32c3a99d}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=303pt]{time__derivative_8h_a5580eaa480804f34c307349e33d3b100_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{time__derivative_8h_ae2c31a72134750c12f2f5d8e32c3a99d}\label{time__derivative_8h_ae2c31a72134750c12f2f5d8e32c3a99d} 
 \index{time\_derivative.h@{time\_derivative.h}!time\_derivative\_output@{time\_derivative\_output}}
 \index{time\_derivative\_output@{time\_derivative\_output}!time\_derivative.h@{time\_derivative.h}}
 \doxysubsubsection{\texorpdfstring{time\_derivative\_output()}{time\_derivative\_output()}}
-{\footnotesize\ttfamily void time\+\_\+derivative\+\_\+output (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{double $\ast$}]{dest\+\_\+array,  }\item[{double $\ast$}]{deriv\+\_\+est,  }\item[{unsigned int}]{output\+\_\+precision }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void time\+\_\+derivative\+\_\+output (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{double \texorpdfstring{$\ast$}{*}}]{dest\+\_\+array,  }\item[{double \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+est,  }\item[{unsigned int}]{output\+\_\+precision }\end{DoxyParamCaption})}
 
 
 
@@ -141,7 +171,7 @@ Output the current derivative array.
 
 
 \begin{DoxyParams}{Parameters}
-{\em time\+\_\+deriv} & \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} object \\
+{\em time\+\_\+deriv} & \doxylink{struct_time_derivative}{Time\+Derivative} object \\
 \hline
 {\em dest\+\_\+array} & Pointer to the destination array \\
 \hline
@@ -155,8 +185,14 @@ Output the current derivative array.
 Definition at line \mbox{\hyperlink{time__derivative_8c_source_l00046}{46}} of file \mbox{\hyperlink{time__derivative_8c_source}{time\+\_\+derivative.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 5
-\mbox{\Hypertarget{time__derivative_8h_a72dd19ea5bc2be11ace50e82bbd7857f}\label{time__derivative_8h_a72dd19ea5bc2be11ace50e82bbd7857f}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{time__derivative_8h_ae2c31a72134750c12f2f5d8e32c3a99d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{time__derivative_8h_a72dd19ea5bc2be11ace50e82bbd7857f}\label{time__derivative_8h_a72dd19ea5bc2be11ace50e82bbd7857f} 
 \index{time\_derivative.h@{time\_derivative.h}!time\_derivative\_reset@{time\_derivative\_reset}}
 \index{time\_derivative\_reset@{time\_derivative\_reset}!time\_derivative.h@{time\_derivative.h}}
 \doxysubsubsection{\texorpdfstring{time\_derivative\_reset()}{time\_derivative\_reset()}}
@@ -168,7 +204,7 @@ Reset the derivative.
 
 
 \begin{DoxyParams}{Parameters}
-{\em time\+\_\+deriv} & \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} object \\
+{\em time\+\_\+deriv} & \doxylink{struct_time_derivative}{Time\+Derivative} object \\
 \hline
 \end{DoxyParams}
 
@@ -176,4 +212,10 @@ Reset the derivative.
 Definition at line \mbox{\hyperlink{time__derivative_8c_source_l00039}{39}} of file \mbox{\hyperlink{time__derivative_8c_source}{time\+\_\+derivative.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 6
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{time__derivative_8h_a72dd19ea5bc2be11ace50e82bbd7857f_icgraph}
+\end{center}
+\end{figure}

@@ -1,13 +1,19 @@
-\hypertarget{aero__rep__modal__binned__mass_8c}{}\doxysection{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c File Reference}
-\label{aero__rep__modal__binned__mass_8c}\index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
+\doxysection{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c File Reference}
+\hypertarget{aero__rep__modal__binned__mass_8c}{}\label{aero__rep__modal__binned__mass_8c}\index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 
 
 Modal mass aerosol representation functions.  
 
 
 Include dependency graph for aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c\+:
-% FIG 0
-\doxysubsection*{Macros}
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__modal__binned__mass_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{TEMPERATURE\+\_\+\+K\+\_\+}}~env\+\_\+data\mbox{[}0\mbox{]}
@@ -46,58 +52,58 @@ Include dependency graph for aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c\
 \item 
 \#define \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a585bf55299f2d71372c7f9bc903b91b2}{MODE\+\_\+\+INT\+\_\+\+PROP\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]})
 \item 
-\#define \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a25f6ec1483e499d98449daade14006d0}{PHASE\+\_\+\+STATE\+\_\+\+ID\+\_\+}}(x,  y,  b)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a585bf55299f2d71372c7f9bc903b91b2}{MODE\+\_\+\+INT\+\_\+\+PROP\+\_\+\+LOC\+\_\+}}(x) + 3 + b $\ast$ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}(x) + y\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a25f6ec1483e499d98449daade14006d0}{PHASE\+\_\+\+STATE\+\_\+\+ID\+\_\+}}(x,  y,  b)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a585bf55299f2d71372c7f9bc903b91b2}{MODE\+\_\+\+INT\+\_\+\+PROP\+\_\+\+LOC\+\_\+}}(x) + 3 + b \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}(x) + y\mbox{]} -\/ 1)
 \item 
 \#define \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a3099f066dfc88d15de5e507d2ff9348e}{PHASE\+\_\+\+MODEL\+\_\+\+DATA\+\_\+\+ID\+\_\+}}(x,  y,  b)
 \item 
 \#define \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae916e42526ab9cc51b8a5ef7a8a6b015}{PHASE\+\_\+\+NUM\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x,  y,  b)
 \item 
-\#define \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ad4bc2b2dfb9f2b8b2a94fa8f8bf048da}{BIN\+\_\+\+DP\+\_\+}}(x,  b)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}{MODE\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+\+LOC\+\_\+}}(x) + b $\ast$ 3\mbox{]})
+\#define \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ad4bc2b2dfb9f2b8b2a94fa8f8bf048da}{BIN\+\_\+\+DP\+\_\+}}(x,  b)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}{MODE\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+\+LOC\+\_\+}}(x) + b \texorpdfstring{$\ast$}{*} 3\mbox{]})
 \item 
 \#define \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aa155edd72e3fef10fdf04e07fea6fa4e}{GMD\+\_\+}}(x)~(aero\+\_\+rep\+\_\+env\+\_\+data\mbox{[}x\mbox{]})
 \item 
 \#define \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_affffad0341081ad284a7f191f7688297}{GSD\+\_\+}}(x)~(aero\+\_\+rep\+\_\+env\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2bbf59e5f8e339a8a3ef9f64af23c0be}{NUM\+\_\+\+SECTION\+\_\+}} + x\mbox{]})
 \item 
-\#define \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a97a5067d0d0de83f7d685a2147931b56}{NUMBER\+\_\+\+CONC\+\_\+}}(x,  b)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}{MODE\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+\+LOC\+\_\+}}(x) + b $\ast$ 3 + 1\mbox{]})
+\#define \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a97a5067d0d0de83f7d685a2147931b56}{NUMBER\+\_\+\+CONC\+\_\+}}(x,  b)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}{MODE\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+\+LOC\+\_\+}}(x) + b \texorpdfstring{$\ast$}{*} 3 + 1\mbox{]})
 \item 
-\#define \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_af90cc695d8ca7bff1de52f2648a1ea1f}{EFFECTIVE\+\_\+\+RADIUS\+\_\+}}(x,  b)~  (float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}{MODE\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+\+LOC\+\_\+}}(x) + b $\ast$ 3 + 2\mbox{]})
+\#define \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_af90cc695d8ca7bff1de52f2648a1ea1f}{EFFECTIVE\+\_\+\+RADIUS\+\_\+}}(x,  b)~  (float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}{MODE\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+\+LOC\+\_\+}}(x) + b \texorpdfstring{$\ast$}{*} 3 + 2\mbox{]})
 \item 
 \#define \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aed11d52678d2b6369215eea0a0533a84}{PHASE\+\_\+\+MASS\+\_\+}}(x,  y,  b)
 \item 
 \#define \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_adcbbdc8b57268939e9ac1317011526be}{PHASE\+\_\+\+AVG\+\_\+\+MW\+\_\+}}(x,  y,  b)
 \end{DoxyCompactItemize}
-\doxysubsection*{Functions}
+\doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-int \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ac5a65892343b17ff334e280f4d6ae5f9}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$jac\+\_\+struct)
-\begin{DoxyCompactList}\small\item\em Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calcualtions of mass and volume. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a8e10757d85c3a844a6c76141dbeb2350}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+dependencies}} (int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$state\+\_\+flags)
+int \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ac5a65892343b17ff334e280f4d6ae5f9}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \texorpdfstring{$\ast$}{*}jac\+\_\+struct)
+\begin{DoxyCompactList}\small\item\em Flag \doxylink{struct_jacobian}{Jacobian} elements used in calcualtions of mass and volume. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a8e10757d85c3a844a6c76141dbeb2350}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+dependencies}} (int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \texorpdfstring{$\ast$}{*}state\+\_\+flags)
 \begin{DoxyCompactList}\small\item\em Flag elements on the state array used by this aerosol representation. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a643ed1219181994b7427b80b71e0ce23}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a643ed1219181994b7427b80b71e0ce23}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update aerosol representation data for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a567e448c1ea25085add6257c6b8930c6}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a567e448c1ea25085add6257c6b8930c6}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update aerosol representation data for a new state. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a8d5bf734337581d90c2280ab858ccf96}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$radius, double $\ast$partial\+\_\+deriv, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a8d5bf734337581d90c2280ab858ccf96}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}radius, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Get the effective particle radius $r_{eff}$ (m) \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2e585253c19aa48dec8c55b963999e9d}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$number\+\_\+conc, double $\ast$partial\+\_\+deriv, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2e585253c19aa48dec8c55b963999e9d}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}number\+\_\+conc, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Get the particle number concentration $n$ ( $\mbox{\si{\#\per\cubic\metre}}$) \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a5806fae1fe7d70369bfb7a0d9c54d12f}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type}} (int aero\+\_\+phase\+\_\+idx, int $\ast$aero\+\_\+conc\+\_\+type, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a5806fae1fe7d70369bfb7a0d9c54d12f}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type}} (int aero\+\_\+phase\+\_\+idx, int \texorpdfstring{$\ast$}{*}aero\+\_\+conc\+\_\+type, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Get the type of aerosol concentration used. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aa84e95ce69656ab640edfdb32cc71d4c}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+phase\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$aero\+\_\+phase\+\_\+mass, double $\ast$partial\+\_\+deriv, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aa84e95ce69656ab640edfdb32cc71d4c}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+phase\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}aero\+\_\+phase\+\_\+mass, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Get the total mass in an aerosol phase $m$ ( $\mbox{\si{\kilogram\per\cubic\metre}}$) \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2c1fd8badaa6ebffd2b45ab5314c1279}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+phase\+\_\+avg\+\_\+\+MW\+\_\+\+\_\+kg\+\_\+mol}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double $\ast$aero\+\_\+phase\+\_\+avg\+\_\+\+MW, double $\ast$partial\+\_\+deriv, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2c1fd8badaa6ebffd2b45ab5314c1279}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+phase\+\_\+avg\+\_\+\+MW\+\_\+\+\_\+kg\+\_\+mol}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}aero\+\_\+phase\+\_\+avg\+\_\+\+MW, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Get the average molecular weight in an aerosol phase $m$ ( $\mbox{\si{\kilogram\per\mole}}$) \end{DoxyCompactList}\item 
-\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a1af186a816b0a6be0f3ee39f126351f1}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+data}} (void $\ast$update\+\_\+data, int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+env\+\_\+data)
+\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a1af186a816b0a6be0f3ee39f126351f1}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+data}} (void \texorpdfstring{$\ast$}{*}update\+\_\+data, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update the aerosol representation data. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a720cd5bdec5b2338509109814f0f94c6}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+print}} (int $\ast$aero\+\_\+rep\+\_\+int\+\_\+data, double $\ast$aero\+\_\+rep\+\_\+float\+\_\+data)
+void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a720cd5bdec5b2338509109814f0f94c6}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+print}} (int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the mass-\/only modal/binned reaction parameters. \end{DoxyCompactList}\item 
-void $\ast$ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aaf5da9bfa677ccfbbe2e5d9154ddce44}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+create\+\_\+gmd\+\_\+update\+\_\+data}} ()
+void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aaf5da9bfa677ccfbbe2e5d9154ddce44}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+create\+\_\+gmd\+\_\+update\+\_\+data}} ()
 \begin{DoxyCompactList}\small\item\em Create update data for new GMD. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2ef81a778d8aba9feaef36188a545f45}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+set\+\_\+gmd\+\_\+update\+\_\+data}} (void $\ast$update\+\_\+data, int aero\+\_\+rep\+\_\+id, int section\+\_\+id, double gmd)
+void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2ef81a778d8aba9feaef36188a545f45}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+set\+\_\+gmd\+\_\+update\+\_\+data}} (void \texorpdfstring{$\ast$}{*}update\+\_\+data, int aero\+\_\+rep\+\_\+id, int section\+\_\+id, double gmd)
 \begin{DoxyCompactList}\small\item\em Set GMD update data. \end{DoxyCompactList}\item 
-void $\ast$ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_af0d3a3c6cbefde94669a1af1ac9e2937}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+create\+\_\+gsd\+\_\+update\+\_\+data}} ()
+void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_af0d3a3c6cbefde94669a1af1ac9e2937}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+create\+\_\+gsd\+\_\+update\+\_\+data}} ()
 \begin{DoxyCompactList}\small\item\em Create update data for new GSD. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a1ac1087396c082ed4ebc7ddf43e7802f}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+set\+\_\+gsd\+\_\+update\+\_\+data}} (void $\ast$update\+\_\+data, int aero\+\_\+rep\+\_\+id, int section\+\_\+id, double gsd)
+void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a1ac1087396c082ed4ebc7ddf43e7802f}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+set\+\_\+gsd\+\_\+update\+\_\+data}} (void \texorpdfstring{$\ast$}{*}update\+\_\+data, int aero\+\_\+rep\+\_\+id, int section\+\_\+id, double gsd)
 \begin{DoxyCompactList}\small\item\em Set GSD update data. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -111,7 +117,7 @@ Definition in file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{ae
 
 
 \doxysubsection{Macro Definition Documentation}
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a7f41adc102bb4117dcf37be9d4580b0a}\label{aero__rep__modal__binned__mass_8c_a7f41adc102bb4117dcf37be9d4580b0a}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a7f41adc102bb4117dcf37be9d4580b0a}\label{aero__rep__modal__binned__mass_8c_a7f41adc102bb4117dcf37be9d4580b0a} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!AERO\_REP\_ID\_@{AERO\_REP\_ID\_}}
 \index{AERO\_REP\_ID\_@{AERO\_REP\_ID\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{AERO\_REP\_ID\_}{AERO\_REP\_ID\_}}
@@ -121,17 +127,17 @@ Definition in file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{ae
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00031}{31}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_ad4bc2b2dfb9f2b8b2a94fa8f8bf048da}\label{aero__rep__modal__binned__mass_8c_ad4bc2b2dfb9f2b8b2a94fa8f8bf048da}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_ad4bc2b2dfb9f2b8b2a94fa8f8bf048da}\label{aero__rep__modal__binned__mass_8c_ad4bc2b2dfb9f2b8b2a94fa8f8bf048da} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!BIN\_DP\_@{BIN\_DP\_}}
 \index{BIN\_DP\_@{BIN\_DP\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{BIN\_DP\_}{BIN\_DP\_}}
-{\footnotesize\ttfamily \#define BIN\+\_\+\+DP\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{b }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}{MODE\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+\+LOC\+\_\+}}(x) + b $\ast$ 3\mbox{]})}
+{\footnotesize\ttfamily \#define BIN\+\_\+\+DP\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{b }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}{MODE\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+\+LOC\+\_\+}}(x) + b \texorpdfstring{$\ast$}{*} 3\mbox{]})}
 
 
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00059}{59}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a1c40fbd8643dc7cec0ed57056faf021c}\label{aero__rep__modal__binned__mass_8c_a1c40fbd8643dc7cec0ed57056faf021c}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a1c40fbd8643dc7cec0ed57056faf021c}\label{aero__rep__modal__binned__mass_8c_a1c40fbd8643dc7cec0ed57056faf021c} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!BINNED@{BINNED}}
 \index{BINNED@{BINNED}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{BINNED}{BINNED}}
@@ -141,17 +147,17 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00025}{25}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_af90cc695d8ca7bff1de52f2648a1ea1f}\label{aero__rep__modal__binned__mass_8c_af90cc695d8ca7bff1de52f2648a1ea1f}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_af90cc695d8ca7bff1de52f2648a1ea1f}\label{aero__rep__modal__binned__mass_8c_af90cc695d8ca7bff1de52f2648a1ea1f} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!EFFECTIVE\_RADIUS\_@{EFFECTIVE\_RADIUS\_}}
 \index{EFFECTIVE\_RADIUS\_@{EFFECTIVE\_RADIUS\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{EFFECTIVE\_RADIUS\_}{EFFECTIVE\_RADIUS\_}}
-{\footnotesize\ttfamily \#define EFFECTIVE\+\_\+\+RADIUS\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{b }\end{DoxyParamCaption})~  (float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}{MODE\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+\+LOC\+\_\+}}(x) + b $\ast$ 3 + 2\mbox{]})}
+{\footnotesize\ttfamily \#define EFFECTIVE\+\_\+\+RADIUS\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{b }\end{DoxyParamCaption})~  (float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}{MODE\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+\+LOC\+\_\+}}(x) + b \texorpdfstring{$\ast$}{*} 3 + 2\mbox{]})}
 
 
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00069}{69}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a4c9e4c5f3ca6b19f4eb79ae59cc281eb}\label{aero__rep__modal__binned__mass_8c_a4c9e4c5f3ca6b19f4eb79ae59cc281eb}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a4c9e4c5f3ca6b19f4eb79ae59cc281eb}\label{aero__rep__modal__binned__mass_8c_a4c9e4c5f3ca6b19f4eb79ae59cc281eb} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!FLOAT\_DATA\_SIZE\_@{FLOAT\_DATA\_SIZE\_}}
 \index{FLOAT\_DATA\_SIZE\_@{FLOAT\_DATA\_SIZE\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{FLOAT\_DATA\_SIZE\_}{FLOAT\_DATA\_SIZE\_}}
@@ -161,7 +167,7 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00030}{30}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_aa155edd72e3fef10fdf04e07fea6fa4e}\label{aero__rep__modal__binned__mass_8c_aa155edd72e3fef10fdf04e07fea6fa4e}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_aa155edd72e3fef10fdf04e07fea6fa4e}\label{aero__rep__modal__binned__mass_8c_aa155edd72e3fef10fdf04e07fea6fa4e} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!GMD\_@{GMD\_}}
 \index{GMD\_@{GMD\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{GMD\_}{GMD\_}}
@@ -171,7 +177,7 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00062}{62}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_affffad0341081ad284a7f191f7688297}\label{aero__rep__modal__binned__mass_8c_affffad0341081ad284a7f191f7688297}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_affffad0341081ad284a7f191f7688297}\label{aero__rep__modal__binned__mass_8c_affffad0341081ad284a7f191f7688297} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!GSD\_@{GSD\_}}
 \index{GSD\_@{GSD\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{GSD\_}{GSD\_}}
@@ -181,7 +187,7 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00063}{63}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_aa0dffbf9b27f4705b9462d86376d1506}\label{aero__rep__modal__binned__mass_8c_aa0dffbf9b27f4705b9462d86376d1506}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_aa0dffbf9b27f4705b9462d86376d1506}\label{aero__rep__modal__binned__mass_8c_aa0dffbf9b27f4705b9462d86376d1506} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!INT\_DATA\_SIZE\_@{INT\_DATA\_SIZE\_}}
 \index{INT\_DATA\_SIZE\_@{INT\_DATA\_SIZE\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{INT\_DATA\_SIZE\_}{INT\_DATA\_SIZE\_}}
@@ -191,7 +197,7 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00029}{29}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_acdc340df3f65455d5b957345be3a6eff}\label{aero__rep__modal__binned__mass_8c_acdc340df3f65455d5b957345be3a6eff}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_acdc340df3f65455d5b957345be3a6eff}\label{aero__rep__modal__binned__mass_8c_acdc340df3f65455d5b957345be3a6eff} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!MODAL@{MODAL}}
 \index{MODAL@{MODAL}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{MODAL}{MODAL}}
@@ -201,7 +207,7 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00026}{26}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}\label{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}\label{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!MODE\_FLOAT\_PROP\_LOC\_@{MODE\_FLOAT\_PROP\_LOC\_}}
 \index{MODE\_FLOAT\_PROP\_LOC\_@{MODE\_FLOAT\_PROP\_LOC\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{MODE\_FLOAT\_PROP\_LOC\_}{MODE\_FLOAT\_PROP\_LOC\_}}
@@ -211,7 +217,7 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00036}{36}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a585bf55299f2d71372c7f9bc903b91b2}\label{aero__rep__modal__binned__mass_8c_a585bf55299f2d71372c7f9bc903b91b2}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a585bf55299f2d71372c7f9bc903b91b2}\label{aero__rep__modal__binned__mass_8c_a585bf55299f2d71372c7f9bc903b91b2} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!MODE\_INT\_PROP\_LOC\_@{MODE\_INT\_PROP\_LOC\_}}
 \index{MODE\_INT\_PROP\_LOC\_@{MODE\_INT\_PROP\_LOC\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{MODE\_INT\_PROP\_LOC\_}{MODE\_INT\_PROP\_LOC\_}}
@@ -221,7 +227,7 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00035}{35}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc}\label{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc}\label{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!NUM\_BINS\_@{NUM\_BINS\_}}
 \index{NUM\_BINS\_@{NUM\_BINS\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_BINS\_}{NUM\_BINS\_}}
@@ -231,7 +237,7 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00040}{40}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{aero__rep__modal__binned__mass_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{aero__rep__modal__binned__mass_8c_a1f68a3544ae39a7815cbb5c09dfdeff0} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
 \index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
@@ -241,7 +247,7 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00034}{34}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{aero__rep__modal__binned__mass_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{aero__rep__modal__binned__mass_8c_a0e9ae6000e4ed18f5938bddaddb13d1b} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
 \index{NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_FLOAT\_PROP\_}{NUM\_FLOAT\_PROP\_}}
@@ -251,7 +257,7 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00033}{33}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{aero__rep__modal__binned__mass_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{aero__rep__modal__binned__mass_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
 \index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
@@ -261,7 +267,7 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00032}{32}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}\label{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}\label{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!NUM\_PHASE\_@{NUM\_PHASE\_}}
 \index{NUM\_PHASE\_@{NUM\_PHASE\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_PHASE\_}{NUM\_PHASE\_}}
@@ -271,7 +277,7 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00043}{43}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a2bbf59e5f8e339a8a3ef9f64af23c0be}\label{aero__rep__modal__binned__mass_8c_a2bbf59e5f8e339a8a3ef9f64af23c0be}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a2bbf59e5f8e339a8a3ef9f64af23c0be}\label{aero__rep__modal__binned__mass_8c_a2bbf59e5f8e339a8a3ef9f64af23c0be} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!NUM\_SECTION\_@{NUM\_SECTION\_}}
 \index{NUM\_SECTION\_@{NUM\_SECTION\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_SECTION\_}{NUM\_SECTION\_}}
@@ -281,17 +287,17 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00028}{28}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a97a5067d0d0de83f7d685a2147931b56}\label{aero__rep__modal__binned__mass_8c_a97a5067d0d0de83f7d685a2147931b56}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a97a5067d0d0de83f7d685a2147931b56}\label{aero__rep__modal__binned__mass_8c_a97a5067d0d0de83f7d685a2147931b56} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!NUMBER\_CONC\_@{NUMBER\_CONC\_}}
 \index{NUMBER\_CONC\_@{NUMBER\_CONC\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{NUMBER\_CONC\_}{NUMBER\_CONC\_}}
-{\footnotesize\ttfamily \#define NUMBER\+\_\+\+CONC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{b }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}{MODE\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+\+LOC\+\_\+}}(x) + b $\ast$ 3 + 1\mbox{]})}
+{\footnotesize\ttfamily \#define NUMBER\+\_\+\+CONC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{b }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}{MODE\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+\+LOC\+\_\+}}(x) + b \texorpdfstring{$\ast$}{*} 3 + 1\mbox{]})}
 
 
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00066}{66}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_adcbbdc8b57268939e9ac1317011526be}\label{aero__rep__modal__binned__mass_8c_adcbbdc8b57268939e9ac1317011526be}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_adcbbdc8b57268939e9ac1317011526be}\label{aero__rep__modal__binned__mass_8c_adcbbdc8b57268939e9ac1317011526be} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!PHASE\_AVG\_MW\_@{PHASE\_AVG\_MW\_}}
 \index{PHASE\_AVG\_MW\_@{PHASE\_AVG\_MW\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_AVG\_MW\_}{PHASE\_AVG\_MW\_}}
@@ -299,15 +305,15 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 {\bfseries Value\+:}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{  (float\_data[\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}{MODE\_FLOAT\_PROP\_LOC\_}}(x) + (3 + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(x)) * \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc}{NUM\_BINS\_}}(x) + \(\backslash\)}
-\DoxyCodeLine{              b * \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(x) + y])}
+\DoxyCodeLine{\ \ (float\_data[\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}{MODE\_FLOAT\_PROP\_LOC\_}}(x)\ +\ (3\ +\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(x))\ *\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc}{NUM\_BINS\_}}(x)\ +\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ b\ *\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(x)\ +\ y])}
 
 \end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00079}{79}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_aed11d52678d2b6369215eea0a0533a84}\label{aero__rep__modal__binned__mass_8c_aed11d52678d2b6369215eea0a0533a84}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_aed11d52678d2b6369215eea0a0533a84}\label{aero__rep__modal__binned__mass_8c_aed11d52678d2b6369215eea0a0533a84} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!PHASE\_MASS\_@{PHASE\_MASS\_}}
 \index{PHASE\_MASS\_@{PHASE\_MASS\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_MASS\_}{PHASE\_MASS\_}}
@@ -315,15 +321,15 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 {\bfseries Value\+:}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{  (float\_data[\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}{MODE\_FLOAT\_PROP\_LOC\_}}(x) + 3 * \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc}{NUM\_BINS\_}}(x) + b * \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(x) + \(\backslash\)}
-\DoxyCodeLine{              y])}
+\DoxyCodeLine{\ \ (float\_data[\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a95528215350c134d23cc2af730cedd2e}{MODE\_FLOAT\_PROP\_LOC\_}}(x)\ +\ 3\ *\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc}{NUM\_BINS\_}}(x)\ +\ b\ *\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(x)\ +\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ y])}
 
 \end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00073}{73}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a3099f066dfc88d15de5e507d2ff9348e}\label{aero__rep__modal__binned__mass_8c_a3099f066dfc88d15de5e507d2ff9348e}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a3099f066dfc88d15de5e507d2ff9348e}\label{aero__rep__modal__binned__mass_8c_a3099f066dfc88d15de5e507d2ff9348e} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!PHASE\_MODEL\_DATA\_ID\_@{PHASE\_MODEL\_DATA\_ID\_}}
 \index{PHASE\_MODEL\_DATA\_ID\_@{PHASE\_MODEL\_DATA\_ID\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_MODEL\_DATA\_ID\_}{PHASE\_MODEL\_DATA\_ID\_}}
@@ -331,16 +337,16 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 {\bfseries Value\+:}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{  (int\_data[\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a585bf55299f2d71372c7f9bc903b91b2}{MODE\_INT\_PROP\_LOC\_}}(x) + 3 + \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc}{NUM\_BINS\_}}(x) * \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(x) + \(\backslash\)}
-\DoxyCodeLine{            b * \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(x) + y] -\/                                   \(\backslash\)}
-\DoxyCodeLine{   1)}
+\DoxyCodeLine{\ \ (int\_data[\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a585bf55299f2d71372c7f9bc903b91b2}{MODE\_INT\_PROP\_LOC\_}}(x)\ +\ 3\ +\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc}{NUM\_BINS\_}}(x)\ *\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(x)\ +\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ b\ *\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(x)\ +\ y]\ -\/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \(\backslash\)}
+\DoxyCodeLine{\ \ \ 1)}
 
 \end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00048}{48}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_ae916e42526ab9cc51b8a5ef7a8a6b015}\label{aero__rep__modal__binned__mass_8c_ae916e42526ab9cc51b8a5ef7a8a6b015}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_ae916e42526ab9cc51b8a5ef7a8a6b015}\label{aero__rep__modal__binned__mass_8c_ae916e42526ab9cc51b8a5ef7a8a6b015} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!PHASE\_NUM\_JAC\_ELEM\_@{PHASE\_NUM\_JAC\_ELEM\_}}
 \index{PHASE\_NUM\_JAC\_ELEM\_@{PHASE\_NUM\_JAC\_ELEM\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_NUM\_JAC\_ELEM\_}{PHASE\_NUM\_JAC\_ELEM\_}}
@@ -348,25 +354,25 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 {\bfseries Value\+:}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{  int\_data[\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a585bf55299f2d71372c7f9bc903b91b2}{MODE\_INT\_PROP\_LOC\_}}(x) + 3 + 2 * \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc}{NUM\_BINS\_}}(x) * \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(x) + \(\backslash\)}
-\DoxyCodeLine{           b * \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(x) + y]}
+\DoxyCodeLine{\ \ int\_data[\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a585bf55299f2d71372c7f9bc903b91b2}{MODE\_INT\_PROP\_LOC\_}}(x)\ +\ 3\ +\ 2\ *\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc}{NUM\_BINS\_}}(x)\ *\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(x)\ +\ \(\backslash\)}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ b\ *\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(x)\ +\ y]}
 
 \end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00054}{54}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a25f6ec1483e499d98449daade14006d0}\label{aero__rep__modal__binned__mass_8c_a25f6ec1483e499d98449daade14006d0}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a25f6ec1483e499d98449daade14006d0}\label{aero__rep__modal__binned__mass_8c_a25f6ec1483e499d98449daade14006d0} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!PHASE\_STATE\_ID\_@{PHASE\_STATE\_ID\_}}
 \index{PHASE\_STATE\_ID\_@{PHASE\_STATE\_ID\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_STATE\_ID\_}{PHASE\_STATE\_ID\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+STATE\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y,  }\item[{}]{b }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a585bf55299f2d71372c7f9bc903b91b2}{MODE\+\_\+\+INT\+\_\+\+PROP\+\_\+\+LOC\+\_\+}}(x) + 3 + b $\ast$ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}(x) + y\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \#define PHASE\+\_\+\+STATE\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{y,  }\item[{}]{b }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a585bf55299f2d71372c7f9bc903b91b2}{MODE\+\_\+\+INT\+\_\+\+PROP\+\_\+\+LOC\+\_\+}}(x) + 3 + b \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\+\_\+\+PHASE\+\_\+}}(x) + y\mbox{]} -\/ 1)}
 
 
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00046}{46}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{aero__rep__modal__binned__mass_8c_a32cc078fd8ca9ad0684c48ae0aad7135}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{aero__rep__modal__binned__mass_8c_a32cc078fd8ca9ad0684c48ae0aad7135} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!PRESSURE\_PA\_@{PRESSURE\_PA\_}}
 \index{PRESSURE\_PA\_@{PRESSURE\_PA\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{PRESSURE\_PA\_}{PRESSURE\_PA\_}}
@@ -376,7 +382,7 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00020}{20}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a5990ecb35a15458808481d3e89b1d221}\label{aero__rep__modal__binned__mass_8c_a5990ecb35a15458808481d3e89b1d221}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a5990ecb35a15458808481d3e89b1d221}\label{aero__rep__modal__binned__mass_8c_a5990ecb35a15458808481d3e89b1d221} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!SECTION\_TYPE\_@{SECTION\_TYPE\_}}
 \index{SECTION\_TYPE\_@{SECTION\_TYPE\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{SECTION\_TYPE\_}{SECTION\_TYPE\_}}
@@ -386,7 +392,7 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00037}{37}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{aero__rep__modal__binned__mass_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{aero__rep__modal__binned__mass_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!TEMPERATURE\_K\_@{TEMPERATURE\_K\_}}
 \index{TEMPERATURE\_K\_@{TEMPERATURE\_K\_}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{TEMPERATURE\_K\_}{TEMPERATURE\_K\_}}
@@ -396,7 +402,7 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00019}{19}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a88bceb7cf5756b6b0b1a1e2b9d4960c7}\label{aero__rep__modal__binned__mass_8c_a88bceb7cf5756b6b0b1a1e2b9d4960c7}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a88bceb7cf5756b6b0b1a1e2b9d4960c7}\label{aero__rep__modal__binned__mass_8c_a88bceb7cf5756b6b0b1a1e2b9d4960c7} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!UPDATE\_GMD@{UPDATE\_GMD}}
 \index{UPDATE\_GMD@{UPDATE\_GMD}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{UPDATE\_GMD}{UPDATE\_GMD}}
@@ -406,7 +412,7 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00022}{22}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_ae4f3303c913ec32f350d9e45d27debaa}\label{aero__rep__modal__binned__mass_8c_ae4f3303c913ec32f350d9e45d27debaa}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_ae4f3303c913ec32f350d9e45d27debaa}\label{aero__rep__modal__binned__mass_8c_ae4f3303c913ec32f350d9e45d27debaa} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!UPDATE\_GSD@{UPDATE\_GSD}}
 \index{UPDATE\_GSD@{UPDATE\_GSD}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{UPDATE\_GSD}{UPDATE\_GSD}}
@@ -419,11 +425,11 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00
 
 
 \doxysubsection{Function Documentation}
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_aaf5da9bfa677ccfbbe2e5d9154ddce44}\label{aero__rep__modal__binned__mass_8c_aaf5da9bfa677ccfbbe2e5d9154ddce44}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_aaf5da9bfa677ccfbbe2e5d9154ddce44}\label{aero__rep__modal__binned__mass_8c_aaf5da9bfa677ccfbbe2e5d9154ddce44} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_create\_gmd\_update\_data@{aero\_rep\_modal\_binned\_mass\_create\_gmd\_update\_data}}
 \index{aero\_rep\_modal\_binned\_mass\_create\_gmd\_update\_data@{aero\_rep\_modal\_binned\_mass\_create\_gmd\_update\_data}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_create\_gmd\_update\_data()}{aero\_rep\_modal\_binned\_mass\_create\_gmd\_update\_data()}}
-{\footnotesize\ttfamily void $\ast$ aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+create\+\_\+gmd\+\_\+update\+\_\+data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void \texorpdfstring{$\ast$}{*} aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+create\+\_\+gmd\+\_\+update\+\_\+data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
 
 
@@ -436,11 +442,11 @@ Pointer to a new GMD update data object
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00677}{677}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_af0d3a3c6cbefde94669a1af1ac9e2937}\label{aero__rep__modal__binned__mass_8c_af0d3a3c6cbefde94669a1af1ac9e2937}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_af0d3a3c6cbefde94669a1af1ac9e2937}\label{aero__rep__modal__binned__mass_8c_af0d3a3c6cbefde94669a1af1ac9e2937} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data@{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data}}
 \index{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data@{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data()}{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data()}}
-{\footnotesize\ttfamily void $\ast$ aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+create\+\_\+gsd\+\_\+update\+\_\+data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void \texorpdfstring{$\ast$}{*} aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+create\+\_\+gsd\+\_\+update\+\_\+data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
 
 
@@ -453,11 +459,11 @@ Pointer to a new GSD update data object
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00711}{711}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a5806fae1fe7d70369bfb7a0d9c54d12f}\label{aero__rep__modal__binned__mass_8c_a5806fae1fe7d70369bfb7a0d9c54d12f}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a5806fae1fe7d70369bfb7a0d9c54d12f}\label{aero__rep__modal__binned__mass_8c_a5806fae1fe7d70369bfb7a0d9c54d12f} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type@{aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type}}
 \index{aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type@{aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type()}{aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type (\begin{DoxyParamCaption}\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{int $\ast$}]{aero\+\_\+conc\+\_\+type,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type (\begin{DoxyParamCaption}\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+conc\+\_\+type,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -483,12 +489,18 @@ Modal mass concentrations are per-\/mode or per-\/bin.
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00434}{434}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 1
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a2c1fd8badaa6ebffd2b45ab5314c1279}\label{aero__rep__modal__binned__mass_8c_a2c1fd8badaa6ebffd2b45ab5314c1279}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__modal__binned__mass_8c_a5806fae1fe7d70369bfb7a0d9c54d12f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__modal__binned__mass_8c_a2c1fd8badaa6ebffd2b45ab5314c1279}\label{aero__rep__modal__binned__mass_8c_a2c1fd8badaa6ebffd2b45ab5314c1279} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_avg\_MW\_\_kg\_mol@{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}}
 \index{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_avg\_MW\_\_kg\_mol@{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_avg\_MW\_\_kg\_mol()}{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_avg\_MW\_\_kg\_mol()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+phase\+\_\+avg\+\_\+\+MW\+\_\+\+\_\+kg\+\_\+mol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{aero\+\_\+phase\+\_\+avg\+\_\+\+MW,  }\item[{double $\ast$}]{partial\+\_\+deriv,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+phase\+\_\+avg\+\_\+\+MW\+\_\+\+\_\+kg\+\_\+mol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+phase\+\_\+avg\+\_\+\+MW,  }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -516,14 +528,26 @@ Get the average molecular weight in an aerosol phase $m$ ( $\mbox{\si{\kilogram\
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00525}{525}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 2
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__modal__binned__mass_8c_a2c1fd8badaa6ebffd2b45ab5314c1279_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 3
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_aa84e95ce69656ab640edfdb32cc71d4c}\label{aero__rep__modal__binned__mass_8c_aa84e95ce69656ab640edfdb32cc71d4c}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__modal__binned__mass_8c_a2c1fd8badaa6ebffd2b45ab5314c1279_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__modal__binned__mass_8c_aa84e95ce69656ab640edfdb32cc71d4c}\label{aero__rep__modal__binned__mass_8c_aa84e95ce69656ab640edfdb32cc71d4c} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_mass\_\_kg\_m3@{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_mass\_\_kg\_m3}}
 \index{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_mass\_\_kg\_m3@{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_mass\_\_kg\_m3}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_mass\_\_kg\_m3()}{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_mass\_\_kg\_m3()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+phase\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{aero\+\_\+phase\+\_\+mass,  }\item[{double $\ast$}]{partial\+\_\+deriv,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+phase\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+phase\+\_\+mass,  }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -551,14 +575,26 @@ Get the total mass in an aerosol phase $m$ ( $\mbox{\si{\kilogram\per\cubic\metr
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00462}{462}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 4
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__modal__binned__mass_8c_aa84e95ce69656ab640edfdb32cc71d4c_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 5
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a8e10757d85c3a844a6c76141dbeb2350}\label{aero__rep__modal__binned__mass_8c_a8e10757d85c3a844a6c76141dbeb2350}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__modal__binned__mass_8c_aa84e95ce69656ab640edfdb32cc71d4c_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__modal__binned__mass_8c_a8e10757d85c3a844a6c76141dbeb2350}\label{aero__rep__modal__binned__mass_8c_a8e10757d85c3a844a6c76141dbeb2350} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_get\_dependencies@{aero\_rep\_modal\_binned\_mass\_get\_dependencies}}
 \index{aero\_rep\_modal\_binned\_mass\_get\_dependencies@{aero\_rep\_modal\_binned\_mass\_get\_dependencies}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_get\_dependencies()}{aero\_rep\_modal\_binned\_mass\_get\_dependencies()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+dependencies (\begin{DoxyParamCaption}\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$}]{state\+\_\+flags }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+dependencies (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \texorpdfstring{$\ast$}{*}}]{state\+\_\+flags }\end{DoxyParamCaption})}
 
 
 
@@ -580,12 +616,18 @@ The modal mass aerosol representation functions do not use state array values
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00139}{139}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 6
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a8d5bf734337581d90c2280ab858ccf96}\label{aero__rep__modal__binned__mass_8c_a8d5bf734337581d90c2280ab858ccf96}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__modal__binned__mass_8c_a8e10757d85c3a844a6c76141dbeb2350_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__modal__binned__mass_8c_a8d5bf734337581d90c2280ab858ccf96}\label{aero__rep__modal__binned__mass_8c_a8d5bf734337581d90c2280ab858ccf96} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_get\_effective\_radius\_\_m@{aero\_rep\_modal\_binned\_mass\_get\_effective\_radius\_\_m}}
 \index{aero\_rep\_modal\_binned\_mass\_get\_effective\_radius\_\_m@{aero\_rep\_modal\_binned\_mass\_get\_effective\_radius\_\_m}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_get\_effective\_radius\_\_m()}{aero\_rep\_modal\_binned\_mass\_get\_effective\_radius\_\_m()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{radius,  }\item[{double $\ast$}]{partial\+\_\+deriv,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double \texorpdfstring{$\ast$}{*}}]{radius,  }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -625,12 +667,18 @@ For bins, $r_{eff}$ is assumed to be the bin radius.
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00300}{300}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 7
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a2e585253c19aa48dec8c55b963999e9d}\label{aero__rep__modal__binned__mass_8c_a2e585253c19aa48dec8c55b963999e9d}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__modal__binned__mass_8c_a8d5bf734337581d90c2280ab858ccf96_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__modal__binned__mass_8c_a2e585253c19aa48dec8c55b963999e9d}\label{aero__rep__modal__binned__mass_8c_a2e585253c19aa48dec8c55b963999e9d} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3@{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3}}
 \index{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3@{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3()}{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double $\ast$}]{number\+\_\+conc,  }\item[{double $\ast$}]{partial\+\_\+deriv,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{double \texorpdfstring{$\ast$}{*}}]{number\+\_\+conc,  }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -668,18 +716,30 @@ The binned number concentration is calculated according to\+:  \[
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00368}{368}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 8
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__modal__binned__mass_8c_a2e585253c19aa48dec8c55b963999e9d_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 9
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_ac5a65892343b17ff334e280f4d6ae5f9}\label{aero__rep__modal__binned__mass_8c_ac5a65892343b17ff334e280f4d6ae5f9}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__modal__binned__mass_8c_a2e585253c19aa48dec8c55b963999e9d_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__modal__binned__mass_8c_ac5a65892343b17ff334e280f4d6ae5f9}\label{aero__rep__modal__binned__mass_8c_ac5a65892343b17ff334e280f4d6ae5f9} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_get\_used\_jac\_elem@{aero\_rep\_modal\_binned\_mass\_get\_used\_jac\_elem}}
 \index{aero\_rep\_modal\_binned\_mass\_get\_used\_jac\_elem@{aero\_rep\_modal\_binned\_mass\_get\_used\_jac\_elem}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_get\_used\_jac\_elem()}{aero\_rep\_modal\_binned\_mass\_get\_used\_jac\_elem()}}
-{\footnotesize\ttfamily int aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} $\ast$}]{jac\+\_\+struct }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \texorpdfstring{$\ast$}{*}}]{jac\+\_\+struct }\end{DoxyParamCaption})}
 
 
 
-Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calcualtions of mass and volume. 
+Flag \doxylink{struct_jacobian}{Jacobian} elements used in calcualtions of mass and volume. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -691,25 +751,37 @@ Flag \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements used in calcualtions 
 \hline
 {\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase to find elements for \\
 \hline
-{\em jac\+\_\+struct} & 1D array of flags indicating potentially non-\/zero \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements. (The dependent variable should have been chosen by the calling function.) \\
+{\em jac\+\_\+struct} & 1D array of flags indicating potentially non-\/zero \doxylink{struct_jacobian}{Jacobian} elements. (The dependent variable should have been chosen by the calling function.) \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} elements flagged 
+Number of \doxylink{struct_jacobian}{Jacobian} elements flagged 
 \end{DoxyReturn}
 
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00095}{95}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 10
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__modal__binned__mass_8c_ac5a65892343b17ff334e280f4d6ae5f9_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 11
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a720cd5bdec5b2338509109814f0f94c6}\label{aero__rep__modal__binned__mass_8c_a720cd5bdec5b2338509109814f0f94c6}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__modal__binned__mass_8c_ac5a65892343b17ff334e280f4d6ae5f9_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__modal__binned__mass_8c_a720cd5bdec5b2338509109814f0f94c6}\label{aero__rep__modal__binned__mass_8c_a720cd5bdec5b2338509109814f0f94c6} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_print@{aero\_rep\_modal\_binned\_mass\_print}}
 \index{aero\_rep\_modal\_binned\_mass\_print@{aero\_rep\_modal\_binned\_mass\_print}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_print()}{aero\_rep\_modal\_binned\_mass\_print()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+print (\begin{DoxyParamCaption}\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+print (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -727,12 +799,18 @@ Print the mass-\/only modal/binned reaction parameters.
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00663}{663}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 12
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a2ef81a778d8aba9feaef36188a545f45}\label{aero__rep__modal__binned__mass_8c_a2ef81a778d8aba9feaef36188a545f45}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=336pt]{aero__rep__modal__binned__mass_8c_a720cd5bdec5b2338509109814f0f94c6_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__modal__binned__mass_8c_a2ef81a778d8aba9feaef36188a545f45}\label{aero__rep__modal__binned__mass_8c_a2ef81a778d8aba9feaef36188a545f45} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_set\_gmd\_update\_data@{aero\_rep\_modal\_binned\_mass\_set\_gmd\_update\_data}}
 \index{aero\_rep\_modal\_binned\_mass\_set\_gmd\_update\_data@{aero\_rep\_modal\_binned\_mass\_set\_gmd\_update\_data}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_set\_gmd\_update\_data()}{aero\_rep\_modal\_binned\_mass\_set\_gmd\_update\_data()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+set\+\_\+gmd\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data,  }\item[{int}]{aero\+\_\+rep\+\_\+id,  }\item[{int}]{section\+\_\+id,  }\item[{double}]{gmd }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+set\+\_\+gmd\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{update\+\_\+data,  }\item[{int}]{aero\+\_\+rep\+\_\+id,  }\item[{int}]{section\+\_\+id,  }\item[{double}]{gmd }\end{DoxyParamCaption})}
 
 
 
@@ -753,11 +831,11 @@ Set GMD update data.
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00693}{693}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a1ac1087396c082ed4ebc7ddf43e7802f}\label{aero__rep__modal__binned__mass_8c_a1ac1087396c082ed4ebc7ddf43e7802f}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a1ac1087396c082ed4ebc7ddf43e7802f}\label{aero__rep__modal__binned__mass_8c_a1ac1087396c082ed4ebc7ddf43e7802f} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data@{aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data}}
 \index{aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data@{aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data()}{aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+set\+\_\+gsd\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data,  }\item[{int}]{aero\+\_\+rep\+\_\+id,  }\item[{int}]{section\+\_\+id,  }\item[{double}]{gsd }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+set\+\_\+gsd\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{update\+\_\+data,  }\item[{int}]{aero\+\_\+rep\+\_\+id,  }\item[{int}]{section\+\_\+id,  }\item[{double}]{gsd }\end{DoxyParamCaption})}
 
 
 
@@ -778,11 +856,11 @@ Set GSD update data.
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00727}{727}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a1af186a816b0a6be0f3ee39f126351f1}\label{aero__rep__modal__binned__mass_8c_a1af186a816b0a6be0f3ee39f126351f1}} 
+\Hypertarget{aero__rep__modal__binned__mass_8c_a1af186a816b0a6be0f3ee39f126351f1}\label{aero__rep__modal__binned__mass_8c_a1af186a816b0a6be0f3ee39f126351f1} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_update\_data@{aero\_rep\_modal\_binned\_mass\_update\_data}}
 \index{aero\_rep\_modal\_binned\_mass\_update\_data@{aero\_rep\_modal\_binned\_mass\_update\_data}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_update\_data()}{aero\_rep\_modal\_binned\_mass\_update\_data()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void $\ast$}]{update\+\_\+data,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{update\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -825,12 +903,18 @@ r_{eff} = \frac{D_{eff}}{2}
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00594}{594}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 13
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a643ed1219181994b7427b80b71e0ce23}\label{aero__rep__modal__binned__mass_8c_a643ed1219181994b7427b80b71e0ce23}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=347pt]{aero__rep__modal__binned__mass_8c_a1af186a816b0a6be0f3ee39f126351f1_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__modal__binned__mass_8c_a643ed1219181994b7427b80b71e0ce23}\label{aero__rep__modal__binned__mass_8c_a643ed1219181994b7427b80b71e0ce23} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_update\_env\_state@{aero\_rep\_modal\_binned\_mass\_update\_env\_state}}
 \index{aero\_rep\_modal\_binned\_mass\_update\_env\_state@{aero\_rep\_modal\_binned\_mass\_update\_env\_state}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_update\_env\_state()}{aero\_rep\_modal\_binned\_mass\_update\_env\_state()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -854,12 +938,18 @@ The modal mass aerosol representation is not updated for new environmental condi
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00160}{160}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 Here is the caller graph for this function\+:
-% FIG 14
-\mbox{\Hypertarget{aero__rep__modal__binned__mass_8c_a567e448c1ea25085add6257c6b8930c6}\label{aero__rep__modal__binned__mass_8c_a567e448c1ea25085add6257c6b8930c6}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__modal__binned__mass_8c_a643ed1219181994b7427b80b71e0ce23_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__modal__binned__mass_8c_a567e448c1ea25085add6257c6b8930c6}\label{aero__rep__modal__binned__mass_8c_a567e448c1ea25085add6257c6b8930c6} 
 \index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_update\_state@{aero\_rep\_modal\_binned\_mass\_update\_state}}
 \index{aero\_rep\_modal\_binned\_mass\_update\_state@{aero\_rep\_modal\_binned\_mass\_update\_state}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_update\_state()}{aero\_rep\_modal\_binned\_mass\_update\_state()}}
-{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} $\ast$}]{model\+\_\+data,  }\item[{int $\ast$}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double $\ast$}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+update\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -883,6 +973,18 @@ The modal mass aerosol representation recalculates effective radius and number c
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00183}{183}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 Here is the call graph for this function\+:
-% FIG 15
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__modal__binned__mass_8c_a567e448c1ea25085add6257c6b8930c6_cgraph}
+\end{center}
+\end{figure}
 Here is the caller graph for this function\+:
-% FIG 16
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__modal__binned__mass_8c_a567e448c1ea25085add6257c6b8930c6_icgraph}
+\end{center}
+\end{figure}

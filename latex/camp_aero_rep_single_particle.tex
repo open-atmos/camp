@@ -1,0 +1,18 @@
+\doxysubsubsection{CAMP\+: Single Particle Aerosol Representation}
+\hypertarget{camp_aero_rep_single_particle}{}\label{camp_aero_rep_single_particle}\index{CAMP: Single Particle Aerosol Representation@{CAMP: Single Particle Aerosol Representation}}
+The single particle aerosol representation is for use with a Part\+MC particle-\/resolved run. The {\ttfamily json} object for this \doxylink{camp_aero_rep}{aerosol representation} has the following format\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ "{}camp-\/data"{}\ :\ [}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ "{}name"{}\ :\ "{}my\ single\ particle\ aero\ rep"{},}
+\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}AERO\_REP\_SINGLE\_PARTICLE"{}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ ...}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ The key-\/value pair {\bfseries{type}} is required and must be {\bfseries{AERO\+\_\+\+REP\+\_\+\+SINGLE\+\_\+\+PARTICLE}}. This representation assumes that every \doxylink{input_format_aero_phase}{aerosol phase} available will be present once in each particle.
+
+The number concentration for each particle must be set from an external model using {\ttfamily \doxylink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t}} objects. 

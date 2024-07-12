@@ -1,4 +1,5 @@
 <map id="camp_util::close_file" name="camp_util::close_file">
-<area shape="rect" id="node1" title="Close a file and de&#45;assign the unit." alt="" coords="5,5,144,31"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a3a68d4a7d1b28dd132909a12c83d3c21" title="Frees a unit number returned by get_unit()." alt="" coords="192,5,327,31"/>
+<area shape="rect" id="Node000001" title="Close a file and de&#45;assign the unit." alt="" coords="5,5,143,31"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#a3a68d4a7d1b28dd132909a12c83d3c21" title="Frees a unit number returned by get_unit()." alt="" coords="191,5,324,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,16,175,16,175,21,143,21"/>
 </map>

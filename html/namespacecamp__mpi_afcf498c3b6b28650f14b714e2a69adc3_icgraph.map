@@ -1,11 +1,25 @@
 <map id="camp_mpi::camp_mpi_pack_size_string" name="camp_mpi::camp_mpi_pack_size_string">
-<area shape="rect" id="node1" title="Determines the number of bytes required to pack the given value." alt="" coords="792,125,940,165"/>
-<area shape="rect" id="node2" href="$namespacecamp__mpi.html#abed687a3059915c41dc4fe41574f016e" title="Determines the number of bytes required to pack the given value." alt="" coords="583,29,744,69"/>
-<area shape="rect" id="node5" href="$namespacecamp__mpi.html#aff8d4edb35bc3ce3b4dc0b02bbe65546" title="Packs the given value into the buffer, advancing position." alt="" coords="589,93,737,133"/>
-<area shape="rect" id="node6" href="$namespacecamp__mpi.html#a3a40947a78223499aaa9b9a2c5e32c89" title="Perform basic sanity checks on send/receive." alt="" coords="357,165,535,190"/>
-<area shape="rect" id="node9" href="$namespacecamp__mpi.html#ac8e3e6898ad6d5826792476730fcc253" title="Unpacks the given value from the buffer, advancing position." alt="" coords="589,157,737,197"/>
-<area shape="rect" id="node3" href="$namespacecamp__mpi.html#a34ebf62e438a0c46fd37cd9ecd374a40" title="Packs the given value into the buffer, advancing position." alt="" coords="372,32,520,72"/>
-<area shape="rect" id="node4" href="$namespacecamp__mpi.html#aabe38fe6e30b6e0c150c6c3ff1491b7d" title="Unpacks the given value from the buffer, advancing position." alt="" coords="372,97,520,137"/>
-<area shape="rect" id="node7" href="$namespacecamp__mpi.html#a013fae7f812d8d9bd22dc73db714e115" title="Initialize MPI." alt="" coords="137,165,309,190"/>
-<area shape="rect" id="node8" href="$part__3__code_2box__model_8_f90.html#a3f8c0234515cc17b2f3e366868b8646b" title=" " alt="" coords="5,165,89,190"/>
+<area shape="rect" id="Node000001" title="Determines the number of bytes required to pack the given value." alt="" coords="789,128,936,169"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="895,115,883,109,862,107,843,109,832,113,827,119,829,127,824,128,822,118,828,109,842,103,862,101,884,104,897,110"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__mpi.html#abed687a3059915c41dc4fe41574f016e" title="Determines the number of bytes required to pack the given value." alt="" coords="580,29,741,70"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="811,123,739,85,712,73,715,68,742,81,813,118"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__mpi.html#aff8d4edb35bc3ce3b4dc0b02bbe65546" title="Packs the given value into the buffer, advancing position." alt="" coords="587,95,734,135"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="773,136,734,130,735,125,774,131"/>
+<area shape="rect" id="Node000006" href="$namespacecamp__mpi.html#a3a40947a78223499aaa9b9a2c5e32c89" title="Perform basic sanity checks on send/receive." alt="" coords="356,168,532,193"/>
+<area shape="poly" id="edge11_Node000001_Node000006" title=" " alt="" coords="820,180,783,200,741,215,707,221,672,224,602,220,538,209,486,196,487,191,539,204,602,215,672,218,706,216,740,210,781,195,817,175"/>
+<area shape="rect" id="Node000009" href="$namespacecamp__mpi.html#ac8e3e6898ad6d5826792476730fcc253" title="Unpacks the given value from the buffer, advancing position." alt="" coords="587,160,734,201"/>
+<area shape="poly" id="edge12_Node000001_Node000009" title=" " alt="" coords="774,165,735,171,734,166,773,160"/>
+<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="693,16,681,10,660,8,641,10,630,15,625,20,627,28,622,29,620,19,627,10,640,5,661,3,682,5,696,11"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__mpi.html#a34ebf62e438a0c46fd37cd9ecd374a40" title="Packs the given value into the buffer, advancing position." alt="" coords="371,32,518,73"/>
+<area shape="poly" id="edge4_Node000002_Node000003" title=" " alt="" coords="565,54,519,54,518,49,565,48"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__mpi.html#aabe38fe6e30b6e0c150c6c3ff1491b7d" title="Unpacks the given value from the buffer, advancing position." alt="" coords="371,99,518,139"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="581,78,511,101,509,96,580,73"/>
+<area shape="poly" id="edge7_Node000005_Node000003" title=" " alt="" coords="573,92,516,76,518,71,574,87"/>
+<area shape="poly" id="edge8_Node000005_Node000006" title=" " alt="" coords="577,143,490,169,489,164,576,138"/>
+<area shape="rect" id="Node000007" href="$namespacecamp__mpi.html#a013fae7f812d8d9bd22dc73db714e115" title="Initialize MPI." alt="" coords="137,168,308,193"/>
+<area shape="poly" id="edge9_Node000006_Node000007" title=" " alt="" coords="341,183,308,183,308,178,341,178"/>
+<area shape="rect" id="Node000008" href="$part__3__code_2box__model_8_f90.html#a3f8c0234515cc17b2f3e366868b8646b" title=" " alt="" coords="5,168,89,193"/>
+<area shape="poly" id="edge10_Node000007_Node000008" title=" " alt="" coords="121,183,89,183,89,178,121,178"/>
+<area shape="poly" id="edge14_Node000009_Node000004" title=" " alt="" coords="571,158,518,143,519,137,572,153"/>
+<area shape="poly" id="edge13_Node000009_Node000006" title=" " alt="" coords="571,183,533,183,533,178,571,178"/>
 </map>

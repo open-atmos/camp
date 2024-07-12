@@ -1,6 +1,13 @@
 <map id="camp_env_state::env_state_air_molar_den" name="camp_env_state::env_state_air_molar_den">
-<area shape="rect" id="node1" title="Air molar density (mol m^{&#45;3})." alt="" coords="199,117,345,157"/>
-<area shape="rect" id="node2" href="$namespacecamp__env__state.html#af8f56c1aae7d482b1a9a62b342edd85d" title="Air density (kg m^{&#45;3})." alt="" coords="5,29,151,69"/>
-<area shape="rect" id="node3" href="$namespacecamp__env__state.html#a71497d9ef664a1d08bd507da56b1d077" title="Convert (molecules m^{&#45;3}) to (ppb)." alt="" coords="5,117,151,157"/>
-<area shape="rect" id="node4" href="$namespacecamp__env__state.html#a4706a3e61a7f2fe4554b57b126192754" title="Convert (ppb) to (molecules m^{&#45;3})." alt="" coords="5,205,151,245"/>
+<area shape="rect" id="Node000001" title="Air molar density (mol m^{&#45;3})." alt="" coords="198,119,343,159"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="301,105,290,100,270,97,252,99,241,104,237,110,239,117,234,119,232,109,238,100,251,94,270,92,291,94,304,101"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__env__state.html#af8f56c1aae7d482b1a9a62b342edd85d" title="Air density (kg m^{&#45;3})." alt="" coords="5,29,150,70"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,114,122,73,124,68,212,109"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__env__state.html#a71497d9ef664a1d08bd507da56b1d077" title="Convert (molecules m^{&#45;3}) to (ppb)." alt="" coords="5,119,150,159"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="182,142,150,142,150,136,182,136"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__env__state.html#a4706a3e61a7f2fe4554b57b126192754" title="Convert (ppb) to (molecules m^{&#45;3})." alt="" coords="5,208,150,249"/>
+<area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="212,169,124,210,122,205,209,164"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="109,16,97,10,77,8,59,10,48,15,44,20,46,28,41,29,39,19,45,10,58,5,78,3,99,5,111,11"/>
+<area shape="poly" id="edge5_Node000003_Node000003" title=" " alt="" coords="109,105,97,100,77,97,59,99,48,104,44,110,46,117,41,119,39,109,45,100,58,94,78,92,99,94,111,101"/>
+<area shape="poly" id="edge7_Node000004_Node000004" title=" " alt="" coords="109,195,97,189,77,187,59,189,48,193,44,199,46,207,41,208,39,198,45,189,58,183,78,181,99,184,111,190"/>
 </map>

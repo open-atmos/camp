@@ -1,5 +1,9 @@
 <map id="camp_property::get_int" name="camp_property::get_int">
-<area shape="rect" id="node1" title="Get an integer value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="5,31,157,56"/>
-<area shape="rect" id="node2" href="$namespacecamp__property.html#a6980a9f16e3c1a9c83783070b34d4f55" title="Find a key&#45;value pair by key name. Returns a null pointer if the key name is not found." alt="" coords="205,5,336,31"/>
-<area shape="rect" id="node3" href="$namespacecamp__property.html#a52abce158c4eccd039de4f875d697869" title="Get the key name of a property." alt="" coords="384,31,517,56"/>
+<area shape="rect" id="Node000001" title="Get an integer value. The return value is true if the key&#45;value pair was found, and false otherwise...." alt="" coords="5,31,157,56"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__property.html#a6980a9f16e3c1a9c83783070b34d4f55" title="Find a key&#45;value pair by key name. Returns a null pointer if the key name is not found." alt="" coords="205,5,335,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="157,31,189,26,190,32,157,36"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__property.html#a52abce158c4eccd039de4f875d697869" title="Get the key name of a property." alt="" coords="383,31,515,56"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="157,41,368,41,368,46,157,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="336,25,368,29,367,35,335,30"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="419,32,413,22,417,12,429,6,449,4,471,7,482,13,480,18,469,12,449,9,430,11,420,16,418,21,423,29"/>
 </map>

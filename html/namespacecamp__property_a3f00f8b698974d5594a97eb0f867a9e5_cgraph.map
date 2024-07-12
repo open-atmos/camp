@@ -1,5 +1,7 @@
 <map id="camp_property::load" name="camp_property::load">
-<area shape="rect" id="node1" title="Load a property set from input data." alt="" coords="5,13,143,38"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#ab72bff2627c9468e4c352118b8dc7046" title="Prints a warning message." alt="" coords="191,13,335,38"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="383,5,505,45"/>
+<area shape="rect" id="Node000001" title="Load a property set from input data." alt="" coords="5,13,142,39"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#ab72bff2627c9468e4c352118b8dc7046" title="Prints a warning message." alt="" coords="190,13,333,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,23,174,23,174,28,142,28"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="381,5,503,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="334,23,365,23,365,28,334,28"/>
 </map>

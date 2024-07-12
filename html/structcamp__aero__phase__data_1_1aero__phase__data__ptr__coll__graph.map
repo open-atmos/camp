@@ -1,4 +1,16 @@
 <map id="camp_aero_phase_data::aero_phase_data_ptr" name="camp_aero_phase_data::aero_phase_data_ptr">
-<area shape="rect" id="node1" title="Pointer type for building arrays." alt="" coords="5,108,165,148"/>
-<area shape="rect" id="node2" href="$structcamp__aero__phase__data_1_1aero__phase__data__t.html" title="Aerosol phase data type." alt="" coords="5,5,165,45"/>
+<area shape="rect" id="Node000001" title="Pointer type for building arrays." alt="" coords="1092,47,1251,87"/>
+<area shape="rect" id="Node000002" href="$structcamp__aero__phase__data_1_1aero__phase__data__t.html" title="Aerosol phase data type." alt="" coords="864,47,1024,87"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1039,64,1091,64,1091,70,1039,70"/>
+<area shape="rect" id="Node000003" href="$structcamp__util_1_1string__t.html" title="String type for building arrays of string of various size." alt="" coords="285,10,412,36"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="427,18,457,18,565,17,650,21,841,44,864,48,864,53,840,50,649,26,565,23,457,23,427,24"/>
+<area shape="rect" id="Node000006" href="$structcamp__chem__spec__data_1_1chem__spec__data__t.html" title="Chemical species data." alt="" coords="555,47,714,87"/>
+<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="427,32,555,52,554,57,426,38"/>
+<area shape="rect" id="Node000004" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="264,81,433,107"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="449,103,555,111,635,115,714,111,791,100,863,85,865,90,792,105,715,117,635,121,555,117,448,108"/>
+<area shape="poly" id="edge8_Node000006_Node000004" title=" " alt="" coords="448,84,531,77,554,74,555,79,531,82,449,89"/>
+<area shape="rect" id="Node000005" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="5,73,164,114"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="180,91,263,91,263,96,180,96"/>
+<area shape="poly" id="edge5_Node000005_Node000005" title=" " alt="" coords="61,56,70,49,84,47,98,49,107,55,111,64,110,73,105,72,106,64,103,58,96,54,85,52,72,54,64,60"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="730,64,864,64,864,70,730,70"/>
 </map>

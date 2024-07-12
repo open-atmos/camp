@@ -1,4 +1,5 @@
 <map id="rxn_first_order_loss_update_data" name="rxn_first_order_loss_update_data">
-<area shape="rect" id="node1" title="Update reaction data." alt="" coords="171,5,305,45"/>
-<area shape="rect" id="node2" href="$rxn__solver_8c.html#ae35bddd1d3cc8d012789600176c7595b" title="Update reaction data." alt="" coords="5,13,123,38"/>
+<area shape="rect" id="Node000001" title="Update reaction data." alt="" coords="170,5,303,46"/>
+<area shape="rect" id="Node000002" href="$rxn__solver_8c.html#ae35bddd1d3cc8d012789600176c7595b" title="Update reaction data." alt="" coords="5,13,122,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,28,122,28,122,23,154,23"/>
 </map>

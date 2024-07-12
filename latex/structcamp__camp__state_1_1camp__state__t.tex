@@ -1,18 +1,28 @@
-\hypertarget{structcamp__camp__state_1_1camp__state__t}{}\doxysection{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t Interface Reference}
-\label{structcamp__camp__state_1_1camp__state__t}\index{camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}}
+\doxysection{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t Interface Reference}
+\hypertarget{structcamp__camp__state_1_1camp__state__t}{}\label{structcamp__camp__state_1_1camp__state__t}\index{camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}}
 
 
-\mbox{\hyperlink{struct_model}{Model}} state.  
+\doxylink{struct_model}{Model} state.  
 
 
-\doxysubsection*{Public Member Functions}
+
+
+Collaboration diagram for camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=205pt]{structcamp__camp__state_1_1camp__state__t__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-procedure \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a462a3a8567f71663b53a92722b451746}{update\+\_\+env\+\_\+state}}
+procedure \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_acc166d5563ca1b48e027711bd856c2b3}{update\+\_\+env\+\_\+state}} (this)
 \begin{DoxyCompactList}\small\item\em Update the environmental state array. \end{DoxyCompactList}\item 
-final \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a45806e0832a3c886ad505b40920b6886}{finalize}}
+final \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a024224979d2aad1a32eb541641d74971}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the state. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Public Attributes}
+\doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
 real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}), dimension(\+:), allocatable \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_ab61ab8a23f61585ad1a6dbd5d8e94d92}{env\+\_\+var}}
@@ -21,7 +31,7 @@ real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5e
 \begin{DoxyCompactList}\small\item\em State variable array. This array includes one entry for each variable whose state will be solved for during the mechanism integration. units are ppm (gases) or kg m-\/3 (aerosol species) \end{DoxyCompactList}\item 
 type(\mbox{\hyperlink{structcamp__env__state_1_1env__state__ptr}{env\+\_\+state\+\_\+ptr}}), dimension(\+:), pointer \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_aeabc5f63f0a72b13911d2261ffa6b8ee}{env\+\_\+states}}
 \begin{DoxyCompactList}\small\item\em Environmental conditions. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Private Attributes}
+\doxysubsubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
 logical, private \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a42447972ea18f2d14b0ff5c0e96ba359}{owns\+\_\+env\+\_\+states}} = .false.
@@ -29,7 +39,7 @@ logical, private \mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t_a424
 
 
 \doxysubsection{Detailed Description}
-\mbox{\hyperlink{struct_model}{Model}} state. 
+\doxylink{struct_model}{Model} state. 
 
 Temporal state of the model 
 
@@ -37,33 +47,52 @@ Definition at line \mbox{\hyperlink{camp__state_8_f90_source_l00029}{29}} of fil
 
 
 
-\doxysubsection{Member Function/\+Subroutine Documentation}
-\mbox{\Hypertarget{structcamp__camp__state_1_1camp__state__t_a45806e0832a3c886ad505b40920b6886}\label{structcamp__camp__state_1_1camp__state__t_a45806e0832a3c886ad505b40920b6886}} 
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structcamp__camp__state_1_1camp__state__t_a024224979d2aad1a32eb541641d74971}\label{structcamp__camp__state_1_1camp__state__t_a024224979d2aad1a32eb541641d74971} 
 \index{camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily final camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::finalize\hspace{0.3cm}{\ttfamily [final]}}
+{\footnotesize\ttfamily final camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+state\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [final]}}
 
 
 
 Finalize the state. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & CAMP model state \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{camp__state_8_f90_source_l00048}{48}} of file \mbox{\hyperlink{camp__state_8_f90_source}{camp\+\_\+state.\+F90}}.
 
 Here is the call graph for this function\+:
-% FIG 0
-\mbox{\Hypertarget{structcamp__camp__state_1_1camp__state__t_a462a3a8567f71663b53a92722b451746}\label{structcamp__camp__state_1_1camp__state__t_a462a3a8567f71663b53a92722b451746}} 
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{structcamp__camp__state_1_1camp__state__t_a024224979d2aad1a32eb541641d74971_cgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\Hypertarget{structcamp__camp__state_1_1camp__state__t_acc166d5563ca1b48e027711bd856c2b3}\label{structcamp__camp__state_1_1camp__state__t_acc166d5563ca1b48e027711bd856c2b3} 
 \index{camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}!update\_env\_state@{update\_env\_state}}
 \index{update\_env\_state@{update\_env\_state}!camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}}
 \doxysubsubsection{\texorpdfstring{update\_env\_state()}{update\_env\_state()}}
-{\footnotesize\ttfamily procedure camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::update\+\_\+env\+\_\+state}
+{\footnotesize\ttfamily procedure camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+state\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})}
 
 
 
 Update the environmental state array. 
 
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & \doxylink{struct_model}{Model} state \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{camp__state_8_f90_source_l00046}{46}} of file \mbox{\hyperlink{camp__state_8_f90_source}{camp\+\_\+state.\+F90}}.
@@ -71,7 +100,7 @@ Definition at line \mbox{\hyperlink{camp__state_8_f90_source_l00046}{46}} of fil
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{structcamp__camp__state_1_1camp__state__t_aeabc5f63f0a72b13911d2261ffa6b8ee}\label{structcamp__camp__state_1_1camp__state__t_aeabc5f63f0a72b13911d2261ffa6b8ee}} 
+\Hypertarget{structcamp__camp__state_1_1camp__state__t_aeabc5f63f0a72b13911d2261ffa6b8ee}\label{structcamp__camp__state_1_1camp__state__t_aeabc5f63f0a72b13911d2261ffa6b8ee} 
 \index{camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}!env\_states@{env\_states}}
 \index{env\_states@{env\_states}!camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}}
 \doxysubsubsection{\texorpdfstring{env\_states}{env\_states}}
@@ -85,7 +114,7 @@ Environmental conditions.
 
 Definition at line \mbox{\hyperlink{camp__state_8_f90_source_l00040}{40}} of file \mbox{\hyperlink{camp__state_8_f90_source}{camp\+\_\+state.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__camp__state_1_1camp__state__t_ab61ab8a23f61585ad1a6dbd5d8e94d92}\label{structcamp__camp__state_1_1camp__state__t_ab61ab8a23f61585ad1a6dbd5d8e94d92}} 
+\Hypertarget{structcamp__camp__state_1_1camp__state__t_ab61ab8a23f61585ad1a6dbd5d8e94d92}\label{structcamp__camp__state_1_1camp__state__t_ab61ab8a23f61585ad1a6dbd5d8e94d92} 
 \index{camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}!env\_var@{env\_var}}
 \index{env\_var@{env\_var}!camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}}
 \doxysubsubsection{\texorpdfstring{env\_var}{env\_var}}
@@ -99,7 +128,7 @@ Environmental state array. This array will include one entry for every environme
 
 Definition at line \mbox{\hyperlink{camp__state_8_f90_source_l00033}{33}} of file \mbox{\hyperlink{camp__state_8_f90_source}{camp\+\_\+state.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__camp__state_1_1camp__state__t_a42447972ea18f2d14b0ff5c0e96ba359}\label{structcamp__camp__state_1_1camp__state__t_a42447972ea18f2d14b0ff5c0e96ba359}} 
+\Hypertarget{structcamp__camp__state_1_1camp__state__t_a42447972ea18f2d14b0ff5c0e96ba359}\label{structcamp__camp__state_1_1camp__state__t_a42447972ea18f2d14b0ff5c0e96ba359} 
 \index{camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}!owns\_env\_states@{owns\_env\_states}}
 \index{owns\_env\_states@{owns\_env\_states}!camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}}
 \doxysubsubsection{\texorpdfstring{owns\_env\_states}{owns\_env\_states}}
@@ -113,7 +142,7 @@ Flag indicating whether the env\+\_\+state object is owned by the state object.
 
 Definition at line \mbox{\hyperlink{camp__state_8_f90_source_l00043}{43}} of file \mbox{\hyperlink{camp__state_8_f90_source}{camp\+\_\+state.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}\label{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}} 
+\Hypertarget{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}\label{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67} 
 \index{camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}!state\_var@{state\_var}}
 \index{state\_var@{state\_var}!camp\_camp\_state::camp\_state\_t@{camp\_camp\_state::camp\_state\_t}}
 \doxysubsubsection{\texorpdfstring{state\_var}{state\_var}}

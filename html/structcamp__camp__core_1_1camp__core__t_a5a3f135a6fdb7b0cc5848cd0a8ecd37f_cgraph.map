@@ -1,0 +1,15 @@
+<map id="camp_camp_core::camp_core_t::initialize_update_object" name="camp_camp_core::camp_core_t::initialize_update_object">
+<area shape="rect" id="Node000001" title="Initialize an update_data object." alt="" coords="5,63,168,119"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__camp__core.html#a048e8aa3d620f11cc977a7633c5ca7e3" title="Initialize an update data object for an aerosol representation." alt="" coords="217,5,394,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,64,219,48,221,54,169,69"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__camp__core.html#a94f34a7d8629869fcebd9dfcf036cdb8" title="Initialize an update data object for a reaction." alt="" coords="217,71,394,111"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="168,88,201,88,201,94,168,94"/>
+<area shape="rect" id="Node000006" href="$namespacecamp__camp__core.html#af184d87f847c14093e3378711dd86f63" title="Initialize an update data object for a sub model." alt="" coords="216,136,395,177"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="169,113,221,128,219,134,168,118"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="443,78,594,104"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="375,44,460,70,459,76,373,49"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="642,71,765,111"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="595,88,627,88,627,94,595,94"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="394,88,428,88,428,94,394,94"/>
+<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="373,133,459,106,460,112,375,138"/>
+</map>

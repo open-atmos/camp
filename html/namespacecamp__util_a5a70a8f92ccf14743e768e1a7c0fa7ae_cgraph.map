@@ -1,4 +1,6 @@
 <map id="camp_util::time_to_string_max_len" name="camp_util::time_to_string_max_len">
-<area shape="rect" id="node1" title="Convert a time to a string format of maximum length." alt="" coords="5,29,132,69"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="180,29,303,69"/>
+<area shape="rect" id="Node000001" title="Convert a time to a string format of maximum length." alt="" coords="5,29,132,70"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="35,29,34,19,39,10,51,5,69,3,87,5,99,11,96,16,86,10,68,8,52,10,43,14,39,20,41,28"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="180,29,302,70"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,47,164,47,164,52,132,52"/>
 </map>

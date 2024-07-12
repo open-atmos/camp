@@ -1,31 +1,31 @@
-\hypertarget{debug__diff__check_8h_source}{}\doxysection{debug\+\_\+diff\+\_\+check.\+h}
-\label{debug__diff__check_8h_source}\index{debug\_diff\_check.h@{debug\_diff\_check.h}}
+\doxysection{debug\+\_\+diff\+\_\+check.\+h}
+\hypertarget{debug__diff__check_8h_source}{}\label{debug__diff__check_8h_source}\index{debug\_diff\_check.h@{debug\_diff\_check.h}}
 \mbox{\hyperlink{debug__diff__check_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00001}00001 \textcolor{comment}{/* Copyright (C) 2021 Barcelona Supercomputing Center and University of}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00002}00002 \textcolor{comment}{ * Illinois at Urbana-\/Champaign}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00003}00003 \textcolor{comment}{ * SPDX-\/License-\/Identifier: MIT}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00004}00004 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00005}00005 \textcolor{comment}{ * Difference checker for int\_data, float\_data, env\_data (until we can get}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00006}00006 \textcolor{comment}{ * rid of these entirely in version 2.0!)}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00007}00007 \textcolor{comment}{ */}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00008}00008 \textcolor{comment}{/** \(\backslash\)file}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00009}00009 \textcolor{comment}{ * \(\backslash\)brief model element data difference checker -\/ NOT THREAD SAFE!}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00010}00010 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00011}00011 \textcolor{preprocessor}{\#ifndef DEBUG\_DIFF\_CHECK\_H\_}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00012}00012 \textcolor{preprocessor}{\#define DEBUG\_DIFF\_CHECK\_H\_}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00013}00013 }
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00014}00014 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{camp__common_8h}{camp\_common.h}}"{}}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00015}00015 }
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00016}00016 \textcolor{comment}{// Initialize the difference checker data}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00017}00017 \textcolor{keywordtype}{void} \mbox{\hyperlink{debug__diff__check_8h_af74a08152ac8485ed2dcb710431366f0}{diff\_check\_init}}(\mbox{\hyperlink{struct_model_data}{ModelData}} model\_data);}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00018}00018 }
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00019}00019 \textcolor{comment}{// Do a model data difference check}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00020}00020 \textcolor{keywordtype}{void} \mbox{\hyperlink{debug__diff__check_8h_a99401326e8d53d4681bbd406a5dcfe06}{diff\_check}}(\textcolor{keywordtype}{char}* message);}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00021}00021 }
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00022}00022 \textcolor{comment}{// Update the last checked state without checking for differences}}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00023}00023 \textcolor{keywordtype}{void} \mbox{\hyperlink{debug__diff__check_8h_ad45026ff55d837c84b7c9171346048ab}{diff\_check\_update\_only}}(\textcolor{keywordtype}{char}* message);}
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00024}00024 }
-\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00025}00025 \textcolor{preprocessor}{\#endif  }\textcolor{comment}{// DEBUG\_DIFF\_CHECK\_H\_}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00001}00001\ \textcolor{comment}{/*\ Copyright\ (C)\ 2021\ Barcelona\ Supercomputing\ Center\ and\ University\ of}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00002}00002\ \textcolor{comment}{\ *\ Illinois\ at\ Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00003}00003\ \textcolor{comment}{\ *\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00004}00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00005}00005\ \textcolor{comment}{\ *\ Difference\ checker\ for\ int\_data,\ float\_data,\ env\_data\ (until\ we\ can\ get}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00006}00006\ \textcolor{comment}{\ *\ rid\ of\ these\ entirely\ in\ version\ 2.0!)}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00007}00007\ \textcolor{comment}{\ */}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00008}00008\ \textcolor{comment}{/**\ \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00009}00009\ \textcolor{comment}{\ *\ \(\backslash\)brief\ model\ element\ data\ difference\ checker\ -\/\ NOT\ THREAD\ SAFE!}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00010}00010\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00011}00011\ \textcolor{preprocessor}{\#ifndef\ DEBUG\_DIFF\_CHECK\_H\_}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00012}00012\ \textcolor{preprocessor}{\#define\ DEBUG\_DIFF\_CHECK\_H\_}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{camp__common_8h}{camp\_common.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00016}00016\ \textcolor{comment}{//\ Initialize\ the\ difference\ checker\ data}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00017}00017\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{debug__diff__check_8h_af74a08152ac8485ed2dcb710431366f0}{diff\_check\_init}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ model\_data);}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00019}00019\ \textcolor{comment}{//\ Do\ a\ model\ data\ difference\ check}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00020}00020\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{debug__diff__check_8h_a99401326e8d53d4681bbd406a5dcfe06}{diff\_check}}(\textcolor{keywordtype}{char}*\ message);}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00022}00022\ \textcolor{comment}{//\ Update\ the\ last\ checked\ state\ without\ checking\ for\ differences}}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00023}00023\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{debug__diff__check_8h_ad45026ff55d837c84b7c9171346048ab}{diff\_check\_update\_only}}(\textcolor{keywordtype}{char}*\ message);}
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{debug__diff__check_8h_source_l00025}00025\ \textcolor{preprocessor}{\#endif\ \ }\textcolor{comment}{//\ DEBUG\_DIFF\_CHECK\_H\_}}
 
 \end{DoxyCode}

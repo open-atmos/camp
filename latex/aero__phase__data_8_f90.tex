@@ -1,23 +1,23 @@
-\hypertarget{aero__phase__data_8_f90}{}\doxysection{aero\+\_\+phase\+\_\+data.\+F90 File Reference}
-\label{aero__phase__data_8_f90}\index{aero\_phase\_data.F90@{aero\_phase\_data.F90}}
+\doxysection{aero\+\_\+phase\+\_\+data.\+F90 File Reference}
+\hypertarget{aero__phase__data_8_f90}{}\label{aero__phase__data_8_f90}\index{aero\_phase\_data.F90@{aero\_phase\_data.F90}}
 
 
-The \mbox{\hyperlink{namespacecamp__aero__phase__data}{camp\+\_\+aero\+\_\+phase\+\_\+data}} module.  
+The \doxylink{namespacecamp__aero__phase__data}{camp\+\_\+aero\+\_\+phase\+\_\+data} module.  
 
 
-\doxysubsection*{Data Types}
+\doxysubsubsection*{Data Types}
 \begin{DoxyCompactItemize}
 \item 
 interface \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t}}
 \begin{DoxyCompactList}\small\item\em Aerosol phase data type. \end{DoxyCompactList}\item 
 type \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+ptr}}
 \begin{DoxyCompactList}\small\item\em Pointer type for building arrays. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Modules}
+\doxysubsubsection*{Modules}
 \begin{DoxyCompactItemize}
 \item 
 module \mbox{\hyperlink{namespacecamp__aero__phase__data}{camp\+\_\+aero\+\_\+phase\+\_\+data}}
-\begin{DoxyCompactList}\small\item\em The abstract \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}} structure and associated subroutines. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Macros}
+\begin{DoxyCompactList}\small\item\em The abstract \doxylink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t} structure and associated subroutines. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Macros}
 \begin{DoxyCompactItemize}
 \item 
 \#define \mbox{\hyperlink{aero__phase__data_8_f90_a5b96d96acf980c9d12118897b1cf8585}{NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+}}~this\%condensed\+\_\+data\+\_\+int(1)
@@ -32,11 +32,11 @@ module \mbox{\hyperlink{namespacecamp__aero__phase__data}{camp\+\_\+aero\+\_\+ph
 \item 
 \#define \mbox{\hyperlink{aero__phase__data_8_f90_a43a841814e566347ca15f79747286d39}{DENSITY\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{aero__phase__data_8_f90_a5b96d96acf980c9d12118897b1cf8585}{NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+}}+x)
 \end{DoxyCompactItemize}
-\doxysubsection*{Functions/\+Subroutines}
+\doxysubsubsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
 \item 
-type(aero\+\_\+phase\+\_\+data\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::constructor}} (phase\+\_\+name, init\+\_\+size)
-\begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}}. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::constructor}} (phase\+\_\+name, init\+\_\+size)
+\begin{DoxyCompactList}\small\item\em Constructor for \doxylink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__phase__data_a7e16fabf0efef62b446e6f7c98e4ea70}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::load}} (this, json, j\+\_\+obj)
 \begin{DoxyCompactList}\small\item\em Load species from an input file. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__phase__data_a408fc2dbd4214ae958b98296176e71cb}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::initialize}} (this, chem\+\_\+spec\+\_\+data)
@@ -46,10 +46,10 @@ character(len=\+:) function, allocatable \mbox{\hyperlink{namespacecamp__aero__p
 integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__phase__data_a3f1fce7eed369d2c40aa6ec071f85c17}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::get\+\_\+size}} (this)
 \begin{DoxyCompactList}\small\item\em Get the number of species in the phase. \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__phase__data_a851caa6eba1fdf804498930649377d66}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::num\+\_\+jac\+\_\+elem}} (this)
-\begin{DoxyCompactList}\small\item\em Get the number of \mbox{\hyperlink{struct_jacobian}{Jacobian}} row elements needed during solving. \end{DoxyCompactList}\item 
-class(property\+\_\+t) function, pointer \mbox{\hyperlink{namespacecamp__aero__phase__data_a50c5c02187f8f075971e71bf4e1654e5}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::get\+\_\+property\+\_\+set}} (this)
+\begin{DoxyCompactList}\small\item\em Get the number of \doxylink{struct_jacobian}{Jacobian} row elements needed during solving. \end{DoxyCompactList}\item 
+class(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__aero__phase__data_a50c5c02187f8f075971e71bf4e1654e5}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::get\+\_\+property\+\_\+set}} (this)
 \begin{DoxyCompactList}\small\item\em Get the aerosol phase property set. \end{DoxyCompactList}\item 
-type(string\+\_\+t) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__aero__phase__data_a6b0e912f6d52db60cc06554c869c4d50}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::get\+\_\+species\+\_\+names}} (this)
+type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__aero__phase__data_a6b0e912f6d52db60cc06554c869c4d50}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::get\+\_\+species\+\_\+names}} (this)
 \begin{DoxyCompactList}\small\item\em Get an aerosol phase species name. \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__phase__data_ada739b156bc12eee77fe968408b8afc5}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::get\+\_\+species\+\_\+type}} (this, spec\+\_\+name)
 \begin{DoxyCompactList}\small\item\em Get an aerosol phase species type. \end{DoxyCompactList}\item 
@@ -73,7 +73,7 @@ elemental subroutine \mbox{\hyperlink{namespacecamp__aero__phase__data_af443ab1c
 \begin{DoxyCompactList}\small\item\em Dereference a pointer to aerosol phase data. \end{DoxyCompactList}\item 
 elemental subroutine \mbox{\hyperlink{namespacecamp__aero__phase__data_ac4f198fb9d35e624894d640491ddc3e3}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::ptr\+\_\+finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize a pointer to aerosol phase data. \end{DoxyCompactList}\end{DoxyCompactItemize}
-\doxysubsection*{Variables}
+\doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
 integer(kind=i\+\_\+kind), parameter \mbox{\hyperlink{namespacecamp__aero__phase__data_a006dfd258bfd3e15760e11cd09710421}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::realloc\+\_\+inc}} = 50
@@ -81,7 +81,7 @@ integer(kind=i\+\_\+kind), parameter \mbox{\hyperlink{namespacecamp__aero__phase
 
 
 \doxysubsection{Detailed Description}
-The \mbox{\hyperlink{namespacecamp__aero__phase__data}{camp\+\_\+aero\+\_\+phase\+\_\+data}} module. 
+The \doxylink{namespacecamp__aero__phase__data}{camp\+\_\+aero\+\_\+phase\+\_\+data} module. 
 
 
 
@@ -90,37 +90,37 @@ Definition in file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+ph
 
 
 \doxysubsection{Macro Definition Documentation}
-\mbox{\Hypertarget{aero__phase__data_8_f90_a43a841814e566347ca15f79747286d39}\label{aero__phase__data_8_f90_a43a841814e566347ca15f79747286d39}} 
+\Hypertarget{aero__phase__data_8_f90_a43a841814e566347ca15f79747286d39}\label{aero__phase__data_8_f90_a43a841814e566347ca15f79747286d39} 
 \index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!DENSITY\_@{DENSITY\_}}
 \index{DENSITY\_@{DENSITY\_}!aero\_phase\_data.F90@{aero\_phase\_data.F90}}
 \doxysubsubsection{\texorpdfstring{DENSITY\_}{DENSITY\_}}
 {\footnotesize\ttfamily \#define DENSITY\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{aero__phase__data_8_f90_a5b96d96acf980c9d12118897b1cf8585}{NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+}}+x)}
 
-\mbox{\Hypertarget{aero__phase__data_8_f90_a533cad7ef28f4059577d632870ed98d7}\label{aero__phase__data_8_f90_a533cad7ef28f4059577d632870ed98d7}} 
+\Hypertarget{aero__phase__data_8_f90_a533cad7ef28f4059577d632870ed98d7}\label{aero__phase__data_8_f90_a533cad7ef28f4059577d632870ed98d7} 
 \index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!MW\_@{MW\_}}
 \index{MW\_@{MW\_}!aero\_phase\_data.F90@{aero\_phase\_data.F90}}
 \doxysubsubsection{\texorpdfstring{MW\_}{MW\_}}
 {\footnotesize\ttfamily \#define MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+x)}
 
-\mbox{\Hypertarget{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}} 
+\Hypertarget{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
 \index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
 \index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!aero\_phase\_data.F90@{aero\_phase\_data.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
 {\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~1}
 
-\mbox{\Hypertarget{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}\label{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}} 
+\Hypertarget{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}\label{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b} 
 \index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}}
 \index{NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}!aero\_phase\_data.F90@{aero\_phase\_data.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_REAL\_PROP\_}{NUM\_REAL\_PROP\_}}
 {\footnotesize\ttfamily \#define NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+~0}
 
-\mbox{\Hypertarget{aero__phase__data_8_f90_a5b96d96acf980c9d12118897b1cf8585}\label{aero__phase__data_8_f90_a5b96d96acf980c9d12118897b1cf8585}} 
+\Hypertarget{aero__phase__data_8_f90_a5b96d96acf980c9d12118897b1cf8585}\label{aero__phase__data_8_f90_a5b96d96acf980c9d12118897b1cf8585} 
 \index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!NUM\_STATE\_VAR\_@{NUM\_STATE\_VAR\_}}
 \index{NUM\_STATE\_VAR\_@{NUM\_STATE\_VAR\_}!aero\_phase\_data.F90@{aero\_phase\_data.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_STATE\_VAR\_}{NUM\_STATE\_VAR\_}}
 {\footnotesize\ttfamily \#define NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+~this\%condensed\+\_\+data\+\_\+int(1)}
 
-\mbox{\Hypertarget{aero__phase__data_8_f90_a5abfc86c868793576be1eb6acec4d966}\label{aero__phase__data_8_f90_a5abfc86c868793576be1eb6acec4d966}} 
+\Hypertarget{aero__phase__data_8_f90_a5abfc86c868793576be1eb6acec4d966}\label{aero__phase__data_8_f90_a5abfc86c868793576be1eb6acec4d966} 
 \index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!SPEC\_TYPE\_@{SPEC\_TYPE\_}}
 \index{SPEC\_TYPE\_@{SPEC\_TYPE\_}!aero\_phase\_data.F90@{aero\_phase\_data.F90}}
 \doxysubsubsection{\texorpdfstring{SPEC\_TYPE\_}{SPEC\_TYPE\_}}

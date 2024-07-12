@@ -1,411 +1,411 @@
-\hypertarget{rxn__surface_8c_source}{}\doxysection{rxn\+\_\+surface.\+c}
-\label{rxn__surface_8c_source}\index{rxn\_surface.c@{rxn\_surface.c}}
+\doxysection{rxn\+\_\+surface.\+c}
+\hypertarget{rxn__surface_8c_source}{}\label{rxn__surface_8c_source}\index{rxn\_surface.c@{rxn\_surface.c}}
 \mbox{\hyperlink{rxn__surface_8c}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00001}00001 \textcolor{comment}{/* Copyright (C) 2023 Barcelona Supercomputing Center, University of}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00002}00002 \textcolor{comment}{ * Illinois at Urbana-\/Champaign, and National Center for Atmospheric Research}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00003}00003 \textcolor{comment}{ * SPDX-\/License-\/Identifier: MIT}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00004}00004 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00005}00005 \textcolor{comment}{ * Surface reaction solver functions}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00006}00006 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00007}00007 \textcolor{comment}{ */}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00008}00008 \textcolor{comment}{/** \(\backslash\)file}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00009}00009 \textcolor{comment}{ * \(\backslash\)brief Surface reaction solver functions}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00010}00010 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00011}00011 \textcolor{preprocessor}{\#include <math.h>}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00012}00012 \textcolor{preprocessor}{\#include <stdio.h>}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00013}00013 \textcolor{preprocessor}{\#include <stdlib.h>}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00014}00014 \textcolor{preprocessor}{\#include "{}../aero\_rep\_solver.h"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00015}00015 \textcolor{preprocessor}{\#include "{}../rxns.h"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00016}00016 \textcolor{preprocessor}{\#include "{}../util.h"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00017}00017 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00018}00018 \textcolor{comment}{// TODO Lookup environmental indices during initialization}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00019}\mbox{\hyperlink{rxn__surface_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{00019}} \textcolor{preprocessor}{\#define TEMPERATURE\_K\_ env\_data[0]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00020}\mbox{\hyperlink{rxn__surface_8c_a32cc078fd8ca9ad0684c48ae0aad7135}{00020}} \textcolor{preprocessor}{\#define PRESSURE\_PA\_ env\_data[1]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00021}00021 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00022}\mbox{\hyperlink{rxn__surface_8c_ad2592ccc6a86c367ee03ea636d62396e}{00022}} \textcolor{preprocessor}{\#define DIFF\_COEFF\_ float\_data[0]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00023}\mbox{\hyperlink{rxn__surface_8c_a700f40aaab66ccabd1677141cfc3c7c1}{00023}} \textcolor{preprocessor}{\#define GAMMA\_ float\_data[1]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00024}\mbox{\hyperlink{rxn__surface_8c_a0d46bfe32dd963cb15caf2ff1f2892a1}{00024}} \textcolor{preprocessor}{\#define MW\_ float\_data[2]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00025}\mbox{\hyperlink{rxn__surface_8c_adf4b84135880d5ac73ce37df877d91fb}{00025}} \textcolor{preprocessor}{\#define NUM\_AERO\_PHASE\_ int\_data[0]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00026}\mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{00026}} \textcolor{preprocessor}{\#define REACT\_ID\_ (int\_data[1] -\/ 1)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00027}\mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{00027}} \textcolor{preprocessor}{\#define NUM\_PROD\_ int\_data[2]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00028}\mbox{\hyperlink{rxn__surface_8c_a3fe8d809492c91e6ef3daf46a5f13f29}{00028}} \textcolor{preprocessor}{\#define MEAN\_SPEED\_MS\_ rxn\_env\_data[0]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00029}\mbox{\hyperlink{rxn__surface_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{00029}} \textcolor{preprocessor}{\#define NUM\_INT\_PROP\_ 3}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00030}\mbox{\hyperlink{rxn__surface_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{00030}} \textcolor{preprocessor}{\#define NUM\_FLOAT\_PROP\_ 3}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00031}\mbox{\hyperlink{rxn__surface_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{00031}} \textcolor{preprocessor}{\#define NUM\_ENV\_PARAM\_ 1}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00032}\mbox{\hyperlink{rxn__surface_8c_ad8d1cff5c83805f1b18a79e39cf683b2}{00032}} \textcolor{preprocessor}{\#define PROD\_ID\_(x) (int\_data[NUM\_INT\_PROP\_ + x] -\/ 1)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00033}\mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{00033}} \textcolor{preprocessor}{\#define DERIV\_ID\_(x) int\_data[NUM\_INT\_PROP\_ + NUM\_PROD\_ + x]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00034}\mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{00034}} \textcolor{preprocessor}{\#define JAC\_ID\_(x) int\_data[NUM\_INT\_PROP\_ + 1 + 2 * NUM\_PROD\_ + x]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00035}\mbox{\hyperlink{rxn__surface_8c_a04869ea36d5403968bd6f5e6fd4bf329}{00035}} \textcolor{preprocessor}{\#define PHASE\_INT\_LOC\_(x) \(\backslash\)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00036}00036 \textcolor{preprocessor}{  (int\_data[NUM\_INT\_PROP\_ + 2 + 3 * NUM\_PROD\_ + x] -\/ 1)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00037}\mbox{\hyperlink{rxn__surface_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{00037}} \textcolor{preprocessor}{\#define PHASE\_FLOAT\_LOC\_(x) \(\backslash\)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00038}00038 \textcolor{preprocessor}{  (int\_data[NUM\_INT\_PROP\_ + 2 + 3 * NUM\_PROD\_ + NUM\_AERO\_PHASE\_ + x] -\/ 1)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00039}\mbox{\hyperlink{rxn__surface_8c_a491372e10f325a8f35f58fcd969f3f37}{00039}} \textcolor{preprocessor}{\#define AERO\_PHASE\_ID\_(x) (int\_data[PHASE\_INT\_LOC\_(x)] -\/ 1)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00040}\mbox{\hyperlink{rxn__surface_8c_ae0d4c34a858d8d08096ddba79e3e394d}{00040}} \textcolor{preprocessor}{\#define AERO\_REP\_ID\_(x) (int\_data[PHASE\_INT\_LOC\_(x) + 1] -\/ 1)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00041}\mbox{\hyperlink{rxn__surface_8c_ace9066b2ec147811e0f1206738cc2adf}{00041}} \textcolor{preprocessor}{\#define NUM\_AERO\_PHASE\_JAC\_ELEM\_(x) (int\_data[PHASE\_INT\_LOC\_(x) + 2])}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00042}\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{00042}} \textcolor{preprocessor}{\#define PHASE\_JAC\_ID\_(x, s, e) \(\backslash\)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00043}00043 \textcolor{preprocessor}{  int\_data[PHASE\_INT\_LOC\_(x) + 3 + (s) * NUM\_AERO\_PHASE\_JAC\_ELEM\_(x) + e]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00044}\mbox{\hyperlink{rxn__surface_8c_a9ae244708fd9c438bf840ed319733651}{00044}} \textcolor{preprocessor}{\#define YIELD\_(x) float\_data[NUM\_FLOAT\_PROP\_ + x]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00045}\mbox{\hyperlink{rxn__surface_8c_ae144b859674c9147443a7cf505ddac6a}{00045}} \textcolor{preprocessor}{\#define EFF\_RAD\_JAC\_ELEM\_(x, e) float\_data[PHASE\_FLOAT\_LOC\_(x) + e]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00046}\mbox{\hyperlink{rxn__surface_8c_af1b210da8b9553848904995262873236}{00046}} \textcolor{preprocessor}{\#define NUM\_CONC\_JAC\_ELEM\_(x, e) \(\backslash\)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00047}00047 \textcolor{preprocessor}{  float\_data[PHASE\_FLOAT\_LOC\_(x) + NUM\_AERO\_PHASE\_JAC\_ELEM\_(x) + e]}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00048}00048 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00049}00049 \textcolor{comment}{/** \(\backslash\)brief Flag Jacobian elements used by this reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00050}00050 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00051}00051 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00052}00052 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00053}00053 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00054}00054 \textcolor{comment}{ * \(\backslash\)param jac Jacobian}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00055}00055 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00056}\mbox{\hyperlink{rxns_8h_a172e0e483115d10f868a1a68f7a664da}{00056}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__surface_8c_a172e0e483115d10f868a1a68f7a664da}{rxn\_surface\_get\_used\_jac\_elem}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data,}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00057}00057                                              \textcolor{keywordtype}{int} *rxn\_int\_data,}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00058}00058                                              \textcolor{keywordtype}{double} *rxn\_float\_data,}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00059}00059                                              \mbox{\hyperlink{struct_jacobian}{Jacobian}} *jac) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00060}00060   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00061}00061   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00062}00062 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00063}00063   \textcolor{keywordtype}{bool} *aero\_jac\_elem =}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00064}00064       (\textcolor{keywordtype}{bool} *)malloc(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{bool}) * model\_data-\/>\mbox{\hyperlink{struct_model_data_a178342b9966d83bcd4fa78b265688440}{n\_per\_cell\_state\_var}});}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00065}00065   \textcolor{keywordflow}{if} (aero\_jac\_elem == NULL) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00066}00066     printf(}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00067}00067         \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR allocating space for 1D jacobian structure array for "{}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00068}00068         \textcolor{stringliteral}{"{}surface reaction\(\backslash\)n\(\backslash\)n"{}});}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00069}00069     exit(1);}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00070}00070   \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00071}00071 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00072}00072   \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac, \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}}, \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}});}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00073}00073   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod = 0; i\_prod < \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; ++i\_prod) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00074}00074     \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac, \mbox{\hyperlink{rxn__surface_8c_ad8d1cff5c83805f1b18a79e39cf683b2}{PROD\_ID\_}}(i\_prod), \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}});}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00075}00075   \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00076}00076 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00077}00077   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_aero\_phase = 0; i\_aero\_phase < \mbox{\hyperlink{rxn__surface_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}}; ++i\_aero\_phase) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00078}00078     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_elem = 0; i\_elem < model\_data-\/>\mbox{\hyperlink{struct_model_data_a178342b9966d83bcd4fa78b265688440}{n\_per\_cell\_state\_var}}; ++i\_elem) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00079}00079       aero\_jac\_elem[i\_elem] = \textcolor{keyword}{false};}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00080}00080     \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00081}00081     \textcolor{keywordtype}{int} n\_jac\_elem =}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00082}00082         \mbox{\hyperlink{aero__rep__solver_8c_a020684f657e2d323f672bd5500ceae22}{aero\_rep\_get\_used\_jac\_elem}}(model\_data, \mbox{\hyperlink{rxn__surface_8c_ae0d4c34a858d8d08096ddba79e3e394d}{AERO\_REP\_ID\_}}(i\_aero\_phase),}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00083}00083                                    \mbox{\hyperlink{rxn__surface_8c_a491372e10f325a8f35f58fcd969f3f37}{AERO\_PHASE\_ID\_}}(i\_aero\_phase), aero\_jac\_elem);}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00084}00084     \textcolor{keywordflow}{if} (n\_jac\_elem > \mbox{\hyperlink{rxn__surface_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}(i\_aero\_phase)) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00085}00085       printf(}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00086}00086           \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR Received more Jacobian elements than expected for surface "{}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00087}00087           \textcolor{stringliteral}{"{}reaction. Got \%d, expected <= \%d"{}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00088}00088           n\_jac\_elem, \mbox{\hyperlink{rxn__surface_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}(i\_aero\_phase));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00089}00089       exit(1);}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00090}00090     \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00091}00091     \textcolor{keywordtype}{int} i\_used\_elem = 0;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00092}00092     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_elem = 0; i\_elem < model\_data-\/>\mbox{\hyperlink{struct_model_data_a178342b9966d83bcd4fa78b265688440}{n\_per\_cell\_state\_var}}; ++i\_elem) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00093}00093       \textcolor{keywordflow}{if} (aero\_jac\_elem[i\_elem] == \textcolor{keyword}{true}) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00094}00094         \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac, \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}}, i\_elem);}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00095}00095         \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase, 0, i\_used\_elem) = i\_elem;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00096}00096         \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod = 0; i\_prod < \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; ++i\_prod) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00097}00097           \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac, \mbox{\hyperlink{rxn__surface_8c_ad8d1cff5c83805f1b18a79e39cf683b2}{PROD\_ID\_}}(i\_prod), i\_elem);}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00098}00098           \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase, i\_prod + 1, i\_used\_elem) = i\_elem;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00099}00099         \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00100}00100         ++i\_used\_elem;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00101}00101       \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00102}00102     \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00103}00103     \textcolor{keywordflow}{for} (; i\_used\_elem < \mbox{\hyperlink{rxn__surface_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}(i\_aero\_phase);}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00104}00104          ++i\_used\_elem) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00105}00105       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_spec = 0; i\_spec < \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}} + 1; ++i\_spec) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00106}00106         \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase, i\_spec, i\_used\_elem) = -\/1;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00107}00107       \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00108}00108     \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00109}00109     \textcolor{keywordflow}{if} (i\_used\_elem != n\_jac\_elem) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00110}00110       printf(}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00111}00111           \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR Error setting used Jacobian elements in surface "{}}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00112}00112           \textcolor{stringliteral}{"{}reaction \%d \%d\(\backslash\)n\(\backslash\)n"{}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00113}00113           i\_used\_elem, n\_jac\_elem);}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00114}00114       \mbox{\hyperlink{rxn__surface_8c_af4d5ba66d45ee435e1451b44eda87370}{rxn\_surface\_print}}(rxn\_int\_data, rxn\_float\_data);}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00115}00115       exit(1);}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00116}00116     \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00117}00117   \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00118}00118 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00119}00119   free(aero\_jac\_elem);}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00120}00120 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00121}00121   \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00122}00122 \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00123}00123 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00124}00124 \textcolor{comment}{/** \(\backslash\)brief Update the time derivative and Jacbobian array indices}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00125}00125 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00126}00126 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00127}00127 \textcolor{comment}{ * \(\backslash\)param deriv\_ids Id of each state variable in the derivative array}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00128}00128 \textcolor{comment}{ * \(\backslash\)param jac Jacobian}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00129}00129 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00130}00130 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00131}00131 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00132}\mbox{\hyperlink{rxns_8h_a61c79d96744201b051a10a6b891a7ea9}{00132}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__surface_8c_a61c79d96744201b051a10a6b891a7ea9}{rxn\_surface\_update\_ids}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \textcolor{keywordtype}{int} *deriv\_ids,}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00133}00133                                       \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, \textcolor{keywordtype}{int} *rxn\_int\_data,}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00134}00134                                       \textcolor{keywordtype}{double} *rxn\_float\_data) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00135}00135   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00136}00136   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00137}00137 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00138}00138   \textcolor{comment}{// Update the time derivative ids}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00139}00139   \mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(0) = deriv\_ids[\mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}}];}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00140}00140   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod = 0; i\_prod < \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; ++i\_prod) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00141}00141     \mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_prod + 1) = deriv\_ids[\mbox{\hyperlink{rxn__surface_8c_ad8d1cff5c83805f1b18a79e39cf683b2}{PROD\_ID\_}}(i\_prod)];}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00142}00142   \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00143}00143 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00144}00144   \textcolor{comment}{// Update the Jacobian element ids}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00145}00145   \textcolor{keywordtype}{int} i\_jac = 0;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00146}00146   \mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++) = \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac, \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}}, \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}});}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00147}00147   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod = 0; i\_prod < \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; ++i\_prod) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00148}00148     \mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++) = \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac, \mbox{\hyperlink{rxn__surface_8c_ad8d1cff5c83805f1b18a79e39cf683b2}{PROD\_ID\_}}(i\_prod), \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}});}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00149}00149   \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00150}00150   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_aero\_phase = 0; i\_aero\_phase < \mbox{\hyperlink{rxn__surface_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}}; ++i\_aero\_phase) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00151}00151     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_elem = 0; i\_elem < \mbox{\hyperlink{rxn__surface_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}(i\_aero\_phase); ++i\_elem) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00152}00152       \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase, 0, i\_elem) > 0) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00153}00153         \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase, 0, i\_elem) = \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00154}00154             jac, \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}}, \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase, 0, i\_elem));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00155}00155       \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00156}00156       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod = 0; i\_prod < \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; ++i\_prod) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00157}00157         \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase, i\_prod + 1, i\_elem) > 0) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00158}00158           \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase, i\_prod + 1, i\_elem) =}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00159}00159               \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac, \mbox{\hyperlink{rxn__surface_8c_ad8d1cff5c83805f1b18a79e39cf683b2}{PROD\_ID\_}}(i\_prod),}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00160}00160                                       \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase, i\_prod + 1, i\_elem));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00161}00161         \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00162}00162       \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00163}00163     \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00164}00164   \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00165}00165   \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00166}00166 \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00167}00167 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00168}00168 \textcolor{comment}{/** \(\backslash\)brief Update reaction data for new environmental conditions}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00169}00169 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00170}00170 \textcolor{comment}{ * For surface reactions this only involves calculating the mean}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00171}00171 \textcolor{comment}{ * speed of the reacting species}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00172}00172 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00173}00173 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00174}00174 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00175}00175 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00176}00176 \textcolor{comment}{ * \(\backslash\)param rxn\_env\_data Pointer to the environment-\/dependent parameters}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00177}00177 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00178}\mbox{\hyperlink{rxns_8h_a1f0c4bf256b37b3b7b054514a997deae}{00178}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__surface_8c_a1f0c4bf256b37b3b7b054514a997deae}{rxn\_surface\_update\_env\_state}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data,}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00179}00179                                             \textcolor{keywordtype}{int} *rxn\_int\_data,}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00180}00180                                             \textcolor{keywordtype}{double} *rxn\_float\_data,}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00181}00181                                             \textcolor{keywordtype}{double} *rxn\_env\_data) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00182}00182   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00183}00183   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00184}00184   \textcolor{keywordtype}{double} *env\_data = model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00185}00185 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00186}00186   \textcolor{comment}{// save the mean speed [m s-\/1] for calculating condensation rates}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00187}00187   \mbox{\hyperlink{rxn__surface_8c_a3fe8d809492c91e6ef3daf46a5f13f29}{MEAN\_SPEED\_MS\_}} = \mbox{\hyperlink{util_8h_a77fbb355dc943308c5632fe698e81363}{mean\_speed\_\_m\_s}}(\mbox{\hyperlink{rxn__surface_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{TEMPERATURE\_K\_}}, \mbox{\hyperlink{rxn__surface_8c_a0d46bfe32dd963cb15caf2ff1f2892a1}{MW\_}});}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00188}00188 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00189}00189   \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00190}00190 \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00191}00191 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00192}00192 \textcolor{comment}{/** \(\backslash\)brief Calculate contributions to the time derivative \(\backslash\)f\$f(t,y)\(\backslash\)f\$ from}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00193}00193 \textcolor{comment}{ * this reaction.}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00194}00194 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00195}00195 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data, including the state array}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00196}00196 \textcolor{comment}{ * \(\backslash\)param time\_deriv TimeDerivative object}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00197}00197 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00198}00198 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00199}00199 \textcolor{comment}{ * \(\backslash\)param rxn\_env\_data Pointer to the environment-\/dependent parameters}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00200}00200 \textcolor{comment}{ * \(\backslash\)param time\_step Current time step being computed (s)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00201}00201 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00202}00202 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_SUNDIALS}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00203}\mbox{\hyperlink{rxns_8h_a5bb30760087399bd04a9f9e16f0fab1f}{00203}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__surface_8c_a5bb30760087399bd04a9f9e16f0fab1f}{rxn\_surface\_calc\_deriv\_contrib}}(}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00204}00204     \mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \mbox{\hyperlink{struct_time_derivative}{TimeDerivative}} time\_deriv, \textcolor{keywordtype}{int} *rxn\_int\_data,}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00205}00205     \textcolor{keywordtype}{double} *rxn\_float\_data, \textcolor{keywordtype}{double} *rxn\_env\_data, realtype time\_step) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00206}00206   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00207}00207   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00208}00208   \textcolor{keywordtype}{double} *state = model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00209}00209   \textcolor{keywordtype}{double} *env\_data = model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00210}00210 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00211}00211   \textcolor{comment}{// Calculate derivative contributions for each aerosol phase}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00212}00212   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_phase = 0; i\_phase < \mbox{\hyperlink{rxn__surface_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}}; i\_phase++) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00213}00213     \textcolor{comment}{// Get the particle effective radius (m)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00214}00214     realtype radius;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00215}00215     \mbox{\hyperlink{aero__rep__solver_8c_aab8fc9de2c9bfe5d012e80322a5b653b}{aero\_rep\_get\_effective\_radius\_\_m}}(}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00216}00216         model\_data,               \textcolor{comment}{// model data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00217}00217         \mbox{\hyperlink{rxn__surface_8c_ae0d4c34a858d8d08096ddba79e3e394d}{AERO\_REP\_ID\_}}(i\_phase),    \textcolor{comment}{// aerosol representation index}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00218}00218         \mbox{\hyperlink{rxn__surface_8c_a491372e10f325a8f35f58fcd969f3f37}{AERO\_PHASE\_ID\_}}(i\_phase),  \textcolor{comment}{// aerosol phase index}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00219}00219         \&radius,                  \textcolor{comment}{// particle effective radius (m)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00220}00220         NULL);                    \textcolor{comment}{// partial derivative}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00221}00221 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00222}00222     \textcolor{comment}{// Get the particle number concentration (\#/m3)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00223}00223     realtype number\_conc;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00224}00224     \mbox{\hyperlink{aero__rep__solver_8c_aa56870eb4fe20532461b1634d7688210}{aero\_rep\_get\_number\_conc\_\_n\_m3}}(}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00225}00225         model\_data,               \textcolor{comment}{// model data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00226}00226         \mbox{\hyperlink{rxn__surface_8c_ae0d4c34a858d8d08096ddba79e3e394d}{AERO\_REP\_ID\_}}(i\_phase),    \textcolor{comment}{// aerosol representation index}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00227}00227         \mbox{\hyperlink{rxn__surface_8c_a491372e10f325a8f35f58fcd969f3f37}{AERO\_PHASE\_ID\_}}(i\_phase),  \textcolor{comment}{// aerosol phase index}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00228}00228         \&number\_conc,             \textcolor{comment}{// particle number concentration}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00229}00229                                   \textcolor{comment}{// (\#/m3)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00230}00230         NULL);                    \textcolor{comment}{// partial derivative}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00231}00231 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00232}00232     \textcolor{comment}{// Calculate the rate constant for diffusion limited mass transfer to the}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00233}00233     \textcolor{comment}{// aerosol phase (1/s)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00234}00234     \textcolor{keywordtype}{double} cond\_rate = state[\mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}}] * number\_conc *}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00235}00235         \mbox{\hyperlink{util_8h_afde219af97ef99e021d59c7ca18b9277}{gas\_aerosol\_continuum\_rxn\_rate\_constant}}(\mbox{\hyperlink{rxn__surface_8c_ad2592ccc6a86c367ee03ea636d62396e}{DIFF\_COEFF\_}}, \mbox{\hyperlink{rxn__surface_8c_a3fe8d809492c91e6ef3daf46a5f13f29}{MEAN\_SPEED\_MS\_}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00236}00236                                                 radius, \mbox{\hyperlink{rxn__surface_8c_a700f40aaab66ccabd1677141cfc3c7c1}{GAMMA\_}});}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00237}00237 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00238}00238     \textcolor{comment}{// Loss of the reactant}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00239}00239     \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(0) >= 0) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00240}00240       \mbox{\hyperlink{time__derivative_8c_af4c9ab5040b544a8ec4b63a1c75922e2}{time\_derivative\_add\_value}}(time\_deriv, \mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(0), -\/cond\_rate);}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00241}00241     \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00242}00242     \textcolor{comment}{// Gain of each product}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00243}00243     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod = 0; i\_prod < \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; ++i\_prod) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00244}00244       \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_prod + 1) >= 0) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00245}00245         \mbox{\hyperlink{time__derivative_8c_af4c9ab5040b544a8ec4b63a1c75922e2}{time\_derivative\_add\_value}}(time\_deriv, \mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_prod + 1),}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00246}00246                                   \mbox{\hyperlink{rxn__surface_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\_}}(i\_prod) * cond\_rate);}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00247}00247       \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00248}00248     \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00249}00249   \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00250}00250   \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00251}00251 \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00252}00252 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00253}00253 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00254}00254 \textcolor{comment}{/** \(\backslash\)brief Calculate contributions to the Jacobian from this reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00255}00255 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00256}00256 \textcolor{comment}{ * \(\backslash\)param model\_data Pointer to the model data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00257}00257 \textcolor{comment}{ * \(\backslash\)param jac Reaction Jacobian}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00258}00258 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00259}00259 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00260}00260 \textcolor{comment}{ * \(\backslash\)param rxn\_env\_data Pointer to the environment-\/dependent parameters}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00261}00261 \textcolor{comment}{ * \(\backslash\)param time\_step Current time step being calculated (s)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00262}00262 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00263}00263 \textcolor{preprocessor}{\#ifdef CAMP\_USE\_SUNDIALS}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00264}\mbox{\hyperlink{rxns_8h_a8de73dc2a00c1bc5b91747cbb50086ad}{00264}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__surface_8c_a8de73dc2a00c1bc5b91747cbb50086ad}{rxn\_surface\_calc\_jac\_contrib}}(\mbox{\hyperlink{struct_model_data}{ModelData}} *model\_data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac,}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00265}00265                                             \textcolor{keywordtype}{int} *rxn\_int\_data,}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00266}00266                                             \textcolor{keywordtype}{double} *rxn\_float\_data,}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00267}00267                                             \textcolor{keywordtype}{double} *rxn\_env\_data,}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00268}00268                                             realtype time\_step) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00269}00269   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00270}00270   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00271}00271   \textcolor{keywordtype}{double} *state = model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00272}00272   \textcolor{keywordtype}{double} *env\_data = model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00273}00273 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00274}00274   \textcolor{comment}{// Calculate derivative contributions for each aerosol phase}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00275}00275   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_phase = 0; i\_phase < \mbox{\hyperlink{rxn__surface_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}}; i\_phase++) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00276}00276     \textcolor{comment}{// Get the particle effective radius (m)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00277}00277     realtype radius;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00278}00278     \mbox{\hyperlink{aero__rep__solver_8c_aab8fc9de2c9bfe5d012e80322a5b653b}{aero\_rep\_get\_effective\_radius\_\_m}}(}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00279}00279         model\_data,                         \textcolor{comment}{// model data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00280}00280         \mbox{\hyperlink{rxn__surface_8c_ae0d4c34a858d8d08096ddba79e3e394d}{AERO\_REP\_ID\_}}(i\_phase),              \textcolor{comment}{// aerosol representation index}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00281}00281         \mbox{\hyperlink{rxn__surface_8c_a491372e10f325a8f35f58fcd969f3f37}{AERO\_PHASE\_ID\_}}(i\_phase),            \textcolor{comment}{// aerosol phase index}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00282}00282         \&radius,                            \textcolor{comment}{// particle effective radius (m)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00283}00283         \&(\mbox{\hyperlink{rxn__surface_8c_ae144b859674c9147443a7cf505ddac6a}{EFF\_RAD\_JAC\_ELEM\_}}(i\_phase, 0)));  \textcolor{comment}{// partial derivative}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00284}00284 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00285}00285     \textcolor{comment}{// Get the particle number concentration (\#/m3)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00286}00286     realtype number\_conc;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00287}00287     \mbox{\hyperlink{aero__rep__solver_8c_aa56870eb4fe20532461b1634d7688210}{aero\_rep\_get\_number\_conc\_\_n\_m3}}(}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00288}00288         model\_data,                          \textcolor{comment}{// model data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00289}00289         \mbox{\hyperlink{rxn__surface_8c_ae0d4c34a858d8d08096ddba79e3e394d}{AERO\_REP\_ID\_}}(i\_phase),               \textcolor{comment}{// aerosol representation index}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00290}00290         \mbox{\hyperlink{rxn__surface_8c_a491372e10f325a8f35f58fcd969f3f37}{AERO\_PHASE\_ID\_}}(i\_phase),             \textcolor{comment}{// aerosol phase index}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00291}00291         \&number\_conc,                        \textcolor{comment}{// particle number concentration}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00292}00292                                              \textcolor{comment}{// (\#/m3)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00293}00293         \&(\mbox{\hyperlink{rxn__surface_8c_af1b210da8b9553848904995262873236}{NUM\_CONC\_JAC\_ELEM\_}}(i\_phase, 0)));  \textcolor{comment}{// partial derivative}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00294}00294 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00295}00295     \textcolor{comment}{// Calculate the rate constant for diffusion limited mass transfer to the}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00296}00296     \textcolor{comment}{// aerosol phase (1/s)}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00297}00297     \textcolor{keywordtype}{double} rate\_const =}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00298}00298         \mbox{\hyperlink{util_8h_afde219af97ef99e021d59c7ca18b9277}{gas\_aerosol\_continuum\_rxn\_rate\_constant}}(\mbox{\hyperlink{rxn__surface_8c_ad2592ccc6a86c367ee03ea636d62396e}{DIFF\_COEFF\_}}, \mbox{\hyperlink{rxn__surface_8c_a3fe8d809492c91e6ef3daf46a5f13f29}{MEAN\_SPEED\_MS\_}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00299}00299                                                 radius, \mbox{\hyperlink{rxn__surface_8c_a700f40aaab66ccabd1677141cfc3c7c1}{GAMMA\_}});}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00300}00300     \textcolor{keywordtype}{double} cond\_rate = state[\mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}}] * number\_conc * rate\_const;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00301}00301 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00302}00302     \textcolor{comment}{// Dependence on the reactant}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00303}00303     \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(0) >=0) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00304}00304       \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(0), \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00305}00305                          number\_conc * rate\_const);}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00306}00306     \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00307}00307     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod = 0; i\_prod < \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; ++i\_prod) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00308}00308       \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_prod + 1) >= 0) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00309}00309         \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_prod + 1), \mbox{\hyperlink{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}{JACOBIAN\_PRODUCTION}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00310}00310                            \mbox{\hyperlink{rxn__surface_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\_}}(i\_prod) * number\_conc * rate\_const);}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00311}00311       \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00312}00312     \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00313}00313 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00314}00314     \textcolor{comment}{// Calculate d\_rate/d\_effective\_radius and d\_rate/d\_number\_concentration}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00315}00315     \textcolor{keywordtype}{double} d\_rate\_d\_radius = state[\mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}}] * number\_conc *}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00316}00316         \mbox{\hyperlink{util_8h_aa2190a3abb8648804ae74bb1c2d09b36}{d\_gas\_aerosol\_continuum\_rxn\_rate\_constant\_d\_radius}}(\mbox{\hyperlink{rxn__surface_8c_ad2592ccc6a86c367ee03ea636d62396e}{DIFF\_COEFF\_}}, \mbox{\hyperlink{rxn__surface_8c_a3fe8d809492c91e6ef3daf46a5f13f29}{MEAN\_SPEED\_MS\_}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00317}00317                                                            radius, \mbox{\hyperlink{rxn__surface_8c_a700f40aaab66ccabd1677141cfc3c7c1}{GAMMA\_}});}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00318}00318     \textcolor{keywordtype}{double} d\_rate\_d\_number = state[\mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}}] * rate\_const;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00319}00319 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00320}00320     \textcolor{comment}{// Loop through aerosol dependencies}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00321}00321     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_elem = 0; i\_elem < \mbox{\hyperlink{rxn__surface_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}(i\_phase); ++i\_elem) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00322}00322       \textcolor{comment}{// Reactant dependencies}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00323}00323       \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_phase, 0, i\_elem) > 0) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00324}00324         \textcolor{comment}{// Dependence on effective radius}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00325}00325         \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00326}00326             jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_phase, 0, i\_elem),}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00327}00327             \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00328}00328             d\_rate\_d\_radius * \mbox{\hyperlink{rxn__surface_8c_ae144b859674c9147443a7cf505ddac6a}{EFF\_RAD\_JAC\_ELEM\_}}(i\_phase, i\_elem));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00329}00329         \textcolor{comment}{// Dependence on number concentration}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00330}00330         \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00331}00331             jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_phase, 0, i\_elem),}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00332}00332             \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00333}00333             d\_rate\_d\_number * \mbox{\hyperlink{rxn__surface_8c_af1b210da8b9553848904995262873236}{NUM\_CONC\_JAC\_ELEM\_}}(i\_phase, i\_elem));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00334}00334       \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00335}00335       \textcolor{comment}{// Product dependencies}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00336}00336       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod = 0; i\_prod < \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; ++i\_prod) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00337}00337         \textcolor{keywordflow}{if} (\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_phase, i\_prod + 1, i\_elem) > 0) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00338}00338           \textcolor{comment}{// Dependence on effective radius}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00339}00339           \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00340}00340               jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_phase, i\_prod + 1, i\_elem),}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00341}00341               \mbox{\hyperlink{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}{JACOBIAN\_PRODUCTION}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00342}00342               \mbox{\hyperlink{rxn__surface_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\_}}(i\_prod) * d\_rate\_d\_radius *}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00343}00343                   \mbox{\hyperlink{rxn__surface_8c_ae144b859674c9147443a7cf505ddac6a}{EFF\_RAD\_JAC\_ELEM\_}}(i\_phase, i\_elem));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00344}00344           \textcolor{comment}{// Dependence on number concentration}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00345}00345           \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00346}00346               jac, (\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_phase, i\_prod + 1, i\_elem),}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00347}00347               \mbox{\hyperlink{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}{JACOBIAN\_PRODUCTION}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00348}00348               \mbox{\hyperlink{rxn__surface_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\_}}(i\_prod) * d\_rate\_d\_number *}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00349}00349                   \mbox{\hyperlink{rxn__surface_8c_af1b210da8b9553848904995262873236}{NUM\_CONC\_JAC\_ELEM\_}}(i\_phase, i\_elem));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00350}00350         \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00351}00351       \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00352}00352     \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00353}00353   \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00354}00354   \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00355}00355 \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00356}00356 \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00357}00357 \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00358}00358 \textcolor{comment}{/** \(\backslash\)brief Print the surface reaction parameters}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00359}00359 \textcolor{comment}{ *}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00360}00360 \textcolor{comment}{ * \(\backslash\)param rxn\_int\_data Pointer to the reaction integer data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00361}00361 \textcolor{comment}{ * \(\backslash\)param rxn\_float\_data Pointer to the reaction floating-\/point data}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00362}00362 \textcolor{comment}{ */}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00363}\mbox{\hyperlink{rxns_8h_af4d5ba66d45ee435e1451b44eda87370}{00363}} \textcolor{keywordtype}{void} \mbox{\hyperlink{rxn__surface_8c_af4d5ba66d45ee435e1451b44eda87370}{rxn\_surface\_print}}(\textcolor{keywordtype}{int} *rxn\_int\_data, \textcolor{keywordtype}{double} *rxn\_float\_data) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00364}00364   \textcolor{keywordtype}{int} *int\_data = rxn\_int\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00365}00365   \textcolor{keywordtype}{double} *float\_data = rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00366}00366 }
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00367}00367   printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nSurface reaction\(\backslash\)n"{}});}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00368}00368   printf(\textcolor{stringliteral}{"{}\(\backslash\)ndiffusion coefficient: \%lg gamma: \%lg, MW: \%lg"{}}, \mbox{\hyperlink{rxn__surface_8c_ad2592ccc6a86c367ee03ea636d62396e}{DIFF\_COEFF\_}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00369}00369          \mbox{\hyperlink{rxn__surface_8c_a700f40aaab66ccabd1677141cfc3c7c1}{GAMMA\_}}, \mbox{\hyperlink{rxn__surface_8c_a0d46bfe32dd963cb15caf2ff1f2892a1}{MW\_}});}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00370}00370   printf(\textcolor{stringliteral}{"{}\(\backslash\)nnumber of aerosol phases: \%d"{}}, \mbox{\hyperlink{rxn__surface_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}});}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00371}00371   printf(\textcolor{stringliteral}{"{}\(\backslash\)nreactant state id: \%d"{}}, \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}});}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00372}00372   printf(\textcolor{stringliteral}{"{}\(\backslash\)nnumber of products: \%d"{}}, \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}});}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00373}00373   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod = 0; i\_prod < \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; ++i\_prod) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00374}00374     printf(\textcolor{stringliteral}{"{}\(\backslash\)n  product \%d id: \%d"{}}, i\_prod, \mbox{\hyperlink{rxn__surface_8c_ad8d1cff5c83805f1b18a79e39cf683b2}{PROD\_ID\_}}(i\_prod));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00375}00375   \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00376}00376   printf(\textcolor{stringliteral}{"{}\(\backslash\)nreactant derivative id: \%d"{}}, \mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(0));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00377}00377   printf(\textcolor{stringliteral}{"{}\(\backslash\)nd\_reactant/d\_reactant Jacobian id \%d"{}}, \mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(0));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00378}00378   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod = 0; i\_prod < \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; ++i\_prod) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00379}00379     printf(\textcolor{stringliteral}{"{}\(\backslash\)n  product \%d derivative id: \%d"{}}, i\_prod, \mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_prod+1));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00380}00380     printf(\textcolor{stringliteral}{"{}\(\backslash\)n  d\_product\_\%d/d\_reactant Jacobian id: \%d"{}}, i\_prod,}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00381}00381            \mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_prod+1));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00382}00382   \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00383}00383   \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_phase = 0; i\_phase < \mbox{\hyperlink{rxn__surface_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}}; ++i\_phase) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00384}00384     printf(\textcolor{stringliteral}{"{}\(\backslash\)nPhase \%d start indices int: \%d float: \%d"{}}, i\_phase,}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00385}00385            \mbox{\hyperlink{rxn__surface_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\_INT\_LOC\_}}(i\_phase), \mbox{\hyperlink{rxn__surface_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\_FLOAT\_LOC\_}}(i\_phase));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00386}00386     printf(\textcolor{stringliteral}{"{}\(\backslash\)n  phase id \%d; aerosol representation id \%d"{}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00387}00387            \mbox{\hyperlink{rxn__surface_8c_a491372e10f325a8f35f58fcd969f3f37}{AERO\_PHASE\_ID\_}}(i\_phase), \mbox{\hyperlink{rxn__surface_8c_ae0d4c34a858d8d08096ddba79e3e394d}{AERO\_REP\_ID\_}}(i\_phase));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00388}00388     printf(\textcolor{stringliteral}{"{}\(\backslash\)n  number of Jacobian elements: \%d"{}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00389}00389            \mbox{\hyperlink{rxn__surface_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}(i\_phase));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00390}00390     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_elem = 0; i\_elem < \mbox{\hyperlink{rxn__surface_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}(i\_phase); ++i\_elem) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00391}00391       printf(\textcolor{stringliteral}{"{}\(\backslash\)n  -\/ d\_reactant/d\_phase\_species\_\%d Jacobian id \%d"{}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00392}00392              i\_elem, \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_phase,0,i\_elem));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00393}00393       \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i\_prod = 0; i\_prod < \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}; ++i\_prod) \{}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00394}00394         printf(\textcolor{stringliteral}{"{}\(\backslash\)n  -\/ d\_product\_\%d/d\_phase\_species\_\%d Jacobian id \%d"{}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00395}00395                i\_prod, i\_elem, \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_phase,i\_prod+1,i\_elem));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00396}00396       \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00397}00397       printf(\textcolor{stringliteral}{"{}\(\backslash\)n  -\/ d\_radius/d\_phase\_species\_\%d = \%le"{}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00398}00398              i\_elem, \mbox{\hyperlink{rxn__surface_8c_ae144b859674c9147443a7cf505ddac6a}{EFF\_RAD\_JAC\_ELEM\_}}(i\_phase,i\_elem));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00399}00399       printf(\textcolor{stringliteral}{"{}\(\backslash\)n  -\/ d\_number/d\_phase\_species\_\%d = \%le"{}},}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00400}00400              i\_elem, \mbox{\hyperlink{rxn__surface_8c_ae144b859674c9147443a7cf505ddac6a}{EFF\_RAD\_JAC\_ELEM\_}}(i\_phase,i\_elem));}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00401}00401     \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00402}00402   \}}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00403}00403   printf(\textcolor{stringliteral}{"{}\(\backslash\)n *** end surface reaction ***\(\backslash\)n\(\backslash\)n"{}});}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00404}00404   \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00405}00405 \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00001}00001\ \textcolor{comment}{/*\ Copyright\ (C)\ 2023\ Barcelona\ Supercomputing\ Center,\ University\ of}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00002}00002\ \textcolor{comment}{\ *\ Illinois\ at\ Urbana-\/Champaign,\ and\ National\ Center\ for\ Atmospheric\ Research}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00003}00003\ \textcolor{comment}{\ *\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00004}00004\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00005}00005\ \textcolor{comment}{\ *\ Surface\ reaction\ solver\ functions}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00006}00006\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00007}00007\ \textcolor{comment}{\ */}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00008}00008\ \textcolor{comment}{/**\ \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00009}00009\ \textcolor{comment}{\ *\ \(\backslash\)brief\ Surface\ reaction\ solver\ functions}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00010}00010\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}../aero\_rep\_solver.h"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}../rxns.h"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00016}00016\ \textcolor{preprocessor}{\#include\ "{}../util.h"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00018}00018\ \textcolor{comment}{//\ TODO\ Lookup\ environmental\ indices\ during\ initialization}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00019}\mbox{\hyperlink{rxn__surface_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{00019}}\ \textcolor{preprocessor}{\#define\ TEMPERATURE\_K\_\ env\_data[0]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00020}\mbox{\hyperlink{rxn__surface_8c_a32cc078fd8ca9ad0684c48ae0aad7135}{00020}}\ \textcolor{preprocessor}{\#define\ PRESSURE\_PA\_\ env\_data[1]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00022}\mbox{\hyperlink{rxn__surface_8c_ad2592ccc6a86c367ee03ea636d62396e}{00022}}\ \textcolor{preprocessor}{\#define\ DIFF\_COEFF\_\ float\_data[0]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00023}\mbox{\hyperlink{rxn__surface_8c_a700f40aaab66ccabd1677141cfc3c7c1}{00023}}\ \textcolor{preprocessor}{\#define\ GAMMA\_\ float\_data[1]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00024}\mbox{\hyperlink{rxn__surface_8c_a0d46bfe32dd963cb15caf2ff1f2892a1}{00024}}\ \textcolor{preprocessor}{\#define\ MW\_\ float\_data[2]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00025}\mbox{\hyperlink{rxn__surface_8c_adf4b84135880d5ac73ce37df877d91fb}{00025}}\ \textcolor{preprocessor}{\#define\ NUM\_AERO\_PHASE\_\ int\_data[0]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00026}\mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{00026}}\ \textcolor{preprocessor}{\#define\ REACT\_ID\_\ (int\_data[1]\ -\/\ 1)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00027}\mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{00027}}\ \textcolor{preprocessor}{\#define\ NUM\_PROD\_\ int\_data[2]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00028}\mbox{\hyperlink{rxn__surface_8c_a3fe8d809492c91e6ef3daf46a5f13f29}{00028}}\ \textcolor{preprocessor}{\#define\ MEAN\_SPEED\_MS\_\ rxn\_env\_data[0]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00029}\mbox{\hyperlink{rxn__surface_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{00029}}\ \textcolor{preprocessor}{\#define\ NUM\_INT\_PROP\_\ 3}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00030}\mbox{\hyperlink{rxn__surface_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{00030}}\ \textcolor{preprocessor}{\#define\ NUM\_FLOAT\_PROP\_\ 3}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00031}\mbox{\hyperlink{rxn__surface_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{00031}}\ \textcolor{preprocessor}{\#define\ NUM\_ENV\_PARAM\_\ 1}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00032}\mbox{\hyperlink{rxn__surface_8c_ad8d1cff5c83805f1b18a79e39cf683b2}{00032}}\ \textcolor{preprocessor}{\#define\ PROD\_ID\_(x)\ (int\_data[NUM\_INT\_PROP\_\ +\ x]\ -\/\ 1)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00033}\mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{00033}}\ \textcolor{preprocessor}{\#define\ DERIV\_ID\_(x)\ int\_data[NUM\_INT\_PROP\_\ +\ NUM\_PROD\_\ +\ x]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00034}\mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{00034}}\ \textcolor{preprocessor}{\#define\ JAC\_ID\_(x)\ int\_data[NUM\_INT\_PROP\_\ +\ 1\ +\ 2\ *\ NUM\_PROD\_\ +\ x]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00035}\mbox{\hyperlink{rxn__surface_8c_a04869ea36d5403968bd6f5e6fd4bf329}{00035}}\ \textcolor{preprocessor}{\#define\ PHASE\_INT\_LOC\_(x)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00036}00036\ \textcolor{preprocessor}{\ \ (int\_data[NUM\_INT\_PROP\_\ +\ 2\ +\ 3\ *\ NUM\_PROD\_\ +\ x]\ -\/\ 1)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00037}\mbox{\hyperlink{rxn__surface_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{00037}}\ \textcolor{preprocessor}{\#define\ PHASE\_FLOAT\_LOC\_(x)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00038}00038\ \textcolor{preprocessor}{\ \ (int\_data[NUM\_INT\_PROP\_\ +\ 2\ +\ 3\ *\ NUM\_PROD\_\ +\ NUM\_AERO\_PHASE\_\ +\ x]\ -\/\ 1)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00039}\mbox{\hyperlink{rxn__surface_8c_a491372e10f325a8f35f58fcd969f3f37}{00039}}\ \textcolor{preprocessor}{\#define\ AERO\_PHASE\_ID\_(x)\ (int\_data[PHASE\_INT\_LOC\_(x)]\ -\/\ 1)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00040}\mbox{\hyperlink{rxn__surface_8c_ae0d4c34a858d8d08096ddba79e3e394d}{00040}}\ \textcolor{preprocessor}{\#define\ AERO\_REP\_ID\_(x)\ (int\_data[PHASE\_INT\_LOC\_(x)\ +\ 1]\ -\/\ 1)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00041}\mbox{\hyperlink{rxn__surface_8c_ace9066b2ec147811e0f1206738cc2adf}{00041}}\ \textcolor{preprocessor}{\#define\ NUM\_AERO\_PHASE\_JAC\_ELEM\_(x)\ (int\_data[PHASE\_INT\_LOC\_(x)\ +\ 2])}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00042}\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{00042}}\ \textcolor{preprocessor}{\#define\ PHASE\_JAC\_ID\_(x,\ s,\ e)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00043}00043\ \textcolor{preprocessor}{\ \ int\_data[PHASE\_INT\_LOC\_(x)\ +\ 3\ +\ (s)\ *\ NUM\_AERO\_PHASE\_JAC\_ELEM\_(x)\ +\ e]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00044}\mbox{\hyperlink{rxn__surface_8c_a9ae244708fd9c438bf840ed319733651}{00044}}\ \textcolor{preprocessor}{\#define\ YIELD\_(x)\ float\_data[NUM\_FLOAT\_PROP\_\ +\ x]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00045}\mbox{\hyperlink{rxn__surface_8c_ae144b859674c9147443a7cf505ddac6a}{00045}}\ \textcolor{preprocessor}{\#define\ EFF\_RAD\_JAC\_ELEM\_(x,\ e)\ float\_data[PHASE\_FLOAT\_LOC\_(x)\ +\ e]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00046}\mbox{\hyperlink{rxn__surface_8c_af1b210da8b9553848904995262873236}{00046}}\ \textcolor{preprocessor}{\#define\ NUM\_CONC\_JAC\_ELEM\_(x,\ e)\ \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00047}00047\ \textcolor{preprocessor}{\ \ float\_data[PHASE\_FLOAT\_LOC\_(x)\ +\ NUM\_AERO\_PHASE\_JAC\_ELEM\_(x)\ +\ e]}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00048}00048\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00049}00049\ \textcolor{comment}{/**\ \(\backslash\)brief\ Flag\ Jacobian\ elements\ used\ by\ this\ reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00050}00050\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00051}00051\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00052}00052\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_int\_data\ Pointer\ to\ the\ reaction\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00053}00053\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00054}00054\ \textcolor{comment}{\ *\ \(\backslash\)param\ jac\ Jacobian}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00055}00055\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00056}\mbox{\hyperlink{rxns_8h_a172e0e483115d10f868a1a68f7a664da}{00056}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__surface_8c_a172e0e483115d10f868a1a68f7a664da}{rxn\_surface\_get\_used\_jac\_elem}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ *jac)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00060}00060\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00061}00061\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00063}00063\ \ \ \textcolor{keywordtype}{bool}\ *aero\_jac\_elem\ =}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00064}00064\ \ \ \ \ \ \ (\textcolor{keywordtype}{bool}\ *)malloc(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{bool})\ *\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a178342b9966d83bcd4fa78b265688440}{n\_per\_cell\_state\_var}});}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00065}00065\ \ \ \textcolor{keywordflow}{if}\ (aero\_jac\_elem\ ==\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00066}00066\ \ \ \ \ printf(}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00067}00067\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ 1D\ jacobian\ structure\ array\ for\ "{}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}surface\ reaction\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00069}00069\ \ \ \ \ exit(1);}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00070}00070\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00072}00072\ \ \ \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac,\ \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}},\ \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}});}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00073}00073\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_prod\ =\ 0;\ i\_prod\ <\ \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};\ ++i\_prod)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00074}00074\ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac,\ \mbox{\hyperlink{rxn__surface_8c_ad8d1cff5c83805f1b18a79e39cf683b2}{PROD\_ID\_}}(i\_prod),\ \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}});}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00075}00075\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00077}00077\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_aero\_phase\ =\ 0;\ i\_aero\_phase\ <\ \mbox{\hyperlink{rxn__surface_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}};\ ++i\_aero\_phase)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00078}00078\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_elem\ =\ 0;\ i\_elem\ <\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a178342b9966d83bcd4fa78b265688440}{n\_per\_cell\_state\_var}};\ ++i\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00079}00079\ \ \ \ \ \ \ aero\_jac\_elem[i\_elem]\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00080}00080\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00081}00081\ \ \ \ \ \textcolor{keywordtype}{int}\ n\_jac\_elem\ =}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00082}00082\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__rep__solver_8c_a020684f657e2d323f672bd5500ceae22}{aero\_rep\_get\_used\_jac\_elem}}(model\_data,\ \mbox{\hyperlink{rxn__surface_8c_ae0d4c34a858d8d08096ddba79e3e394d}{AERO\_REP\_ID\_}}(i\_aero\_phase),}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_a491372e10f325a8f35f58fcd969f3f37}{AERO\_PHASE\_ID\_}}(i\_aero\_phase),\ aero\_jac\_elem);}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00084}00084\ \ \ \ \ \textcolor{keywordflow}{if}\ (n\_jac\_elem\ >\ \mbox{\hyperlink{rxn__surface_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}(i\_aero\_phase))\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00085}00085\ \ \ \ \ \ \ printf(}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ Received\ more\ Jacobian\ elements\ than\ expected\ for\ surface\ "{}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00087}00087\ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}reaction.\ Got\ \%d,\ expected\ <=\ \%d"{}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00088}00088\ \ \ \ \ \ \ \ \ \ \ n\_jac\_elem,\ \mbox{\hyperlink{rxn__surface_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}(i\_aero\_phase));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00089}00089\ \ \ \ \ \ \ exit(1);}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00090}00090\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00091}00091\ \ \ \ \ \textcolor{keywordtype}{int}\ i\_used\_elem\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00092}00092\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_elem\ =\ 0;\ i\_elem\ <\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a178342b9966d83bcd4fa78b265688440}{n\_per\_cell\_state\_var}};\ ++i\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00093}00093\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (aero\_jac\_elem[i\_elem]\ ==\ \textcolor{keyword}{true})\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00094}00094\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac,\ \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}},\ i\_elem);}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00095}00095\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase,\ 0,\ i\_used\_elem)\ =\ i\_elem;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_prod\ =\ 0;\ i\_prod\ <\ \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};\ ++i\_prod)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(jac,\ \mbox{\hyperlink{rxn__surface_8c_ad8d1cff5c83805f1b18a79e39cf683b2}{PROD\_ID\_}}(i\_prod),\ i\_elem);}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase,\ i\_prod\ +\ 1,\ i\_used\_elem)\ =\ i\_elem;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00099}00099\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00100}00100\ \ \ \ \ \ \ \ \ ++i\_used\_elem;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00101}00101\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00102}00102\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00103}00103\ \ \ \ \ \textcolor{keywordflow}{for}\ (;\ i\_used\_elem\ <\ \mbox{\hyperlink{rxn__surface_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}(i\_aero\_phase);}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00104}00104\ \ \ \ \ \ \ \ \ \ ++i\_used\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00105}00105\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_spec\ =\ 0;\ i\_spec\ <\ \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}\ +\ 1;\ ++i\_spec)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00106}00106\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase,\ i\_spec,\ i\_used\_elem)\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00107}00107\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00108}00108\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00109}00109\ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_used\_elem\ !=\ n\_jac\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00110}00110\ \ \ \ \ \ \ printf(}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ Error\ setting\ used\ Jacobian\ elements\ in\ surface\ "{}}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}reaction\ \%d\ \%d\(\backslash\)n\(\backslash\)n"{}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ i\_used\_elem,\ n\_jac\_elem);}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00114}00114\ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_af4d5ba66d45ee435e1451b44eda87370}{rxn\_surface\_print}}(rxn\_int\_data,\ rxn\_float\_data);}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00115}00115\ \ \ \ \ \ \ exit(1);}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00116}00116\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00117}00117\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00119}00119\ \ \ free(aero\_jac\_elem);}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00121}00121\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00122}00122\ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00123}00123\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00124}00124\ \textcolor{comment}{/**\ \(\backslash\)brief\ Update\ the\ time\ derivative\ and\ Jacbobian\ array\ indices}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00125}00125\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00126}00126\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00127}00127\ \textcolor{comment}{\ *\ \(\backslash\)param\ deriv\_ids\ Id\ of\ each\ state\ variable\ in\ the\ derivative\ array}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00128}00128\ \textcolor{comment}{\ *\ \(\backslash\)param\ jac\ Jacobian}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00129}00129\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_int\_data\ Pointer\ to\ the\ reaction\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00130}00130\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00131}00131\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00132}\mbox{\hyperlink{rxns_8h_a61c79d96744201b051a10a6b891a7ea9}{00132}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__surface_8c_a61c79d96744201b051a10a6b891a7ea9}{rxn\_surface\_update\_ids}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ \textcolor{keywordtype}{int}\ *deriv\_ids,}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00133}00133\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00135}00135\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00136}00136\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00137}00137\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00138}00138\ \ \ \textcolor{comment}{//\ Update\ the\ time\ derivative\ ids}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00139}00139\ \ \ \mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(0)\ =\ deriv\_ids[\mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}}];}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00140}00140\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_prod\ =\ 0;\ i\_prod\ <\ \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};\ ++i\_prod)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00141}00141\ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_prod\ +\ 1)\ =\ deriv\_ids[\mbox{\hyperlink{rxn__surface_8c_ad8d1cff5c83805f1b18a79e39cf683b2}{PROD\_ID\_}}(i\_prod)];}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00142}00142\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00144}00144\ \ \ \textcolor{comment}{//\ Update\ the\ Jacobian\ element\ ids}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00145}00145\ \ \ \textcolor{keywordtype}{int}\ i\_jac\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00146}00146\ \ \ \mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++)\ =\ \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac,\ \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}},\ \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}});}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00147}00147\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_prod\ =\ 0;\ i\_prod\ <\ \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};\ ++i\_prod)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00148}00148\ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++)\ =\ \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac,\ \mbox{\hyperlink{rxn__surface_8c_ad8d1cff5c83805f1b18a79e39cf683b2}{PROD\_ID\_}}(i\_prod),\ \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}});}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00149}00149\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00150}00150\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_aero\_phase\ =\ 0;\ i\_aero\_phase\ <\ \mbox{\hyperlink{rxn__surface_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}};\ ++i\_aero\_phase)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00151}00151\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_elem\ =\ 0;\ i\_elem\ <\ \mbox{\hyperlink{rxn__surface_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}(i\_aero\_phase);\ ++i\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00152}00152\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase,\ 0,\ i\_elem)\ >\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00153}00153\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase,\ 0,\ i\_elem)\ =\ \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ jac,\ \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}},\ \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase,\ 0,\ i\_elem));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00155}00155\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00156}00156\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_prod\ =\ 0;\ i\_prod\ <\ \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};\ ++i\_prod)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00157}00157\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase,\ i\_prod\ +\ 1,\ i\_elem)\ >\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase,\ i\_prod\ +\ 1,\ i\_elem)\ =}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(jac,\ \mbox{\hyperlink{rxn__surface_8c_ad8d1cff5c83805f1b18a79e39cf683b2}{PROD\_ID\_}}(i\_prod),}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_aero\_phase,\ i\_prod\ +\ 1,\ i\_elem));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00161}00161\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00162}00162\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00163}00163\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00164}00164\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00165}00165\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00166}00166\ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00167}00167\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00168}00168\ \textcolor{comment}{/**\ \(\backslash\)brief\ Update\ reaction\ data\ for\ new\ environmental\ conditions}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00169}00169\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00170}00170\ \textcolor{comment}{\ *\ For\ surface\ reactions\ this\ only\ involves\ calculating\ the\ mean}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00171}00171\ \textcolor{comment}{\ *\ speed\ of\ the\ reacting\ species}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00172}00172\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00173}00173\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00174}00174\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_int\_data\ Pointer\ to\ the\ reaction\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00175}00175\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00176}00176\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_env\_data\ Pointer\ to\ the\ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00177}00177\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00178}\mbox{\hyperlink{rxns_8h_a1f0c4bf256b37b3b7b054514a997deae}{00178}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__surface_8c_a1f0c4bf256b37b3b7b054514a997deae}{rxn\_surface\_update\_env\_state}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_env\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00182}00182\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00183}00183\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00184}00184\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00186}00186\ \ \ \textcolor{comment}{//\ save\ the\ mean\ speed\ [m\ s-\/1]\ for\ calculating\ condensation\ rates}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00187}00187\ \ \ \mbox{\hyperlink{rxn__surface_8c_a3fe8d809492c91e6ef3daf46a5f13f29}{MEAN\_SPEED\_MS\_}}\ =\ \mbox{\hyperlink{util_8h_a77fbb355dc943308c5632fe698e81363}{mean\_speed\_\_m\_s}}(\mbox{\hyperlink{rxn__surface_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{TEMPERATURE\_K\_}},\ \mbox{\hyperlink{rxn__surface_8c_a0d46bfe32dd963cb15caf2ff1f2892a1}{MW\_}});}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00188}00188\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00189}00189\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00190}00190\ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00191}00191\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00192}00192\ \textcolor{comment}{/**\ \(\backslash\)brief\ Calculate\ contributions\ to\ the\ time\ derivative\ \(\backslash\)f\$f(t,y)\(\backslash\)f\$\ from}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00193}00193\ \textcolor{comment}{\ *\ this\ reaction.}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00194}00194\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00195}00195\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00196}00196\ \textcolor{comment}{\ *\ \(\backslash\)param\ time\_deriv\ TimeDerivative\ object}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00197}00197\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_int\_data\ Pointer\ to\ the\ reaction\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00198}00198\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00199}00199\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_env\_data\ Pointer\ to\ the\ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00200}00200\ \textcolor{comment}{\ *\ \(\backslash\)param\ time\_step\ Current\ time\ step\ being\ computed\ (s)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00201}00201\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00202}00202\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_SUNDIALS}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00203}\mbox{\hyperlink{rxns_8h_a5bb30760087399bd04a9f9e16f0fab1f}{00203}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__surface_8c_a5bb30760087399bd04a9f9e16f0fab1f}{rxn\_surface\_calc\_deriv\_contrib}}(}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00204}00204\ \ \ \ \ \mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ \mbox{\hyperlink{struct_time_derivative}{TimeDerivative}}\ time\_deriv,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00205}00205\ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,\ \textcolor{keywordtype}{double}\ *rxn\_env\_data,\ realtype\ time\_step)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00206}00206\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00207}00207\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00208}00208\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00209}00209\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00211}00211\ \ \ \textcolor{comment}{//\ Calculate\ derivative\ contributions\ for\ each\ aerosol\ phase}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00212}00212\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{rxn__surface_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}};\ i\_phase++)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00213}00213\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ particle\ effective\ radius\ (m)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00214}00214\ \ \ \ \ realtype\ radius;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00215}00215\ \ \ \ \ \mbox{\hyperlink{aero__rep__solver_8c_aab8fc9de2c9bfe5d012e80322a5b653b}{aero\_rep\_get\_effective\_radius\_\_m}}(}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00216}00216\ \ \ \ \ \ \ \ \ model\_data,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ model\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00217}00217\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_ae0d4c34a858d8d08096ddba79e3e394d}{AERO\_REP\_ID\_}}(i\_phase),\ \ \ \ \textcolor{comment}{//\ aerosol\ representation\ index}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00218}00218\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_a491372e10f325a8f35f58fcd969f3f37}{AERO\_PHASE\_ID\_}}(i\_phase),\ \ \textcolor{comment}{//\ aerosol\ phase\ index}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00219}00219\ \ \ \ \ \ \ \ \ \&radius,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ particle\ effective\ radius\ (m)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00220}00220\ \ \ \ \ \ \ \ \ NULL);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ partial\ derivative}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00221}00221\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00222}00222\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ particle\ number\ concentration\ (\#/m3)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00223}00223\ \ \ \ \ realtype\ number\_conc;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00224}00224\ \ \ \ \ \mbox{\hyperlink{aero__rep__solver_8c_aa56870eb4fe20532461b1634d7688210}{aero\_rep\_get\_number\_conc\_\_n\_m3}}(}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00225}00225\ \ \ \ \ \ \ \ \ model\_data,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ model\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00226}00226\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_ae0d4c34a858d8d08096ddba79e3e394d}{AERO\_REP\_ID\_}}(i\_phase),\ \ \ \ \textcolor{comment}{//\ aerosol\ representation\ index}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00227}00227\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_a491372e10f325a8f35f58fcd969f3f37}{AERO\_PHASE\_ID\_}}(i\_phase),\ \ \textcolor{comment}{//\ aerosol\ phase\ index}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00228}00228\ \ \ \ \ \ \ \ \ \&number\_conc,\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ particle\ number\ concentration}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (\#/m3)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00230}00230\ \ \ \ \ \ \ \ \ NULL);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ partial\ derivative}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00231}00231\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00232}00232\ \ \ \ \ \textcolor{comment}{//\ Calculate\ the\ rate\ constant\ for\ diffusion\ limited\ mass\ transfer\ to\ the}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00233}00233\ \ \ \ \ \textcolor{comment}{//\ aerosol\ phase\ (1/s)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00234}00234\ \ \ \ \ \textcolor{keywordtype}{double}\ cond\_rate\ =\ state[\mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}}]\ *\ number\_conc\ *}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00235}00235\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{util_8h_afde219af97ef99e021d59c7ca18b9277}{gas\_aerosol\_continuum\_rxn\_rate\_constant}}(\mbox{\hyperlink{rxn__surface_8c_ad2592ccc6a86c367ee03ea636d62396e}{DIFF\_COEFF\_}},\ \mbox{\hyperlink{rxn__surface_8c_a3fe8d809492c91e6ef3daf46a5f13f29}{MEAN\_SPEED\_MS\_}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ radius,\ \mbox{\hyperlink{rxn__surface_8c_a700f40aaab66ccabd1677141cfc3c7c1}{GAMMA\_}});}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00237}00237\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00238}00238\ \ \ \ \ \textcolor{comment}{//\ Loss\ of\ the\ reactant}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00239}00239\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(0)\ >=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00240}00240\ \ \ \ \ \ \ \mbox{\hyperlink{time__derivative_8c_af4c9ab5040b544a8ec4b63a1c75922e2}{time\_derivative\_add\_value}}(time\_deriv,\ \mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(0),\ -\/cond\_rate);}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00241}00241\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00242}00242\ \ \ \ \ \textcolor{comment}{//\ Gain\ of\ each\ product}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00243}00243\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_prod\ =\ 0;\ i\_prod\ <\ \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};\ ++i\_prod)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00244}00244\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_prod\ +\ 1)\ >=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00245}00245\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{time__derivative_8c_af4c9ab5040b544a8ec4b63a1c75922e2}{time\_derivative\_add\_value}}(time\_deriv,\ \mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_prod\ +\ 1),}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\_}}(i\_prod)\ *\ cond\_rate);}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00247}00247\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00248}00248\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00249}00249\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00250}00250\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00251}00251\ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00252}00252\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00253}00253\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00254}00254\ \textcolor{comment}{/**\ \(\backslash\)brief\ Calculate\ contributions\ to\ the\ Jacobian\ from\ this\ reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00255}00255\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00256}00256\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00257}00257\ \textcolor{comment}{\ *\ \(\backslash\)param\ jac\ Reaction\ Jacobian}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00258}00258\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_int\_data\ Pointer\ to\ the\ reaction\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00259}00259\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00260}00260\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_env\_data\ Pointer\ to\ the\ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00261}00261\ \textcolor{comment}{\ *\ \(\backslash\)param\ time\_step\ Current\ time\ step\ being\ calculated\ (s)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00262}00262\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00263}00263\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_SUNDIALS}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00264}\mbox{\hyperlink{rxns_8h_a8de73dc2a00c1bc5b91747cbb50086ad}{00264}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__surface_8c_a8de73dc2a00c1bc5b91747cbb50086ad}{rxn\_surface\_calc\_jac\_contrib}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac,}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00265}00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00266}00266\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_env\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ realtype\ time\_step)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00269}00269\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00270}00270\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00271}00271\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00272}00272\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00273}00273\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00274}00274\ \ \ \textcolor{comment}{//\ Calculate\ derivative\ contributions\ for\ each\ aerosol\ phase}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00275}00275\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{rxn__surface_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}};\ i\_phase++)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00276}00276\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ particle\ effective\ radius\ (m)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00277}00277\ \ \ \ \ realtype\ radius;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00278}00278\ \ \ \ \ \mbox{\hyperlink{aero__rep__solver_8c_aab8fc9de2c9bfe5d012e80322a5b653b}{aero\_rep\_get\_effective\_radius\_\_m}}(}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00279}00279\ \ \ \ \ \ \ \ \ model\_data,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ model\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00280}00280\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_ae0d4c34a858d8d08096ddba79e3e394d}{AERO\_REP\_ID\_}}(i\_phase),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ aerosol\ representation\ index}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00281}00281\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_a491372e10f325a8f35f58fcd969f3f37}{AERO\_PHASE\_ID\_}}(i\_phase),\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ aerosol\ phase\ index}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00282}00282\ \ \ \ \ \ \ \ \ \&radius,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ particle\ effective\ radius\ (m)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00283}00283\ \ \ \ \ \ \ \ \ \&(\mbox{\hyperlink{rxn__surface_8c_ae144b859674c9147443a7cf505ddac6a}{EFF\_RAD\_JAC\_ELEM\_}}(i\_phase,\ 0)));\ \ \textcolor{comment}{//\ partial\ derivative}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00284}00284\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00285}00285\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ particle\ number\ concentration\ (\#/m3)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00286}00286\ \ \ \ \ realtype\ number\_conc;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00287}00287\ \ \ \ \ \mbox{\hyperlink{aero__rep__solver_8c_aa56870eb4fe20532461b1634d7688210}{aero\_rep\_get\_number\_conc\_\_n\_m3}}(}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00288}00288\ \ \ \ \ \ \ \ \ model\_data,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ model\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00289}00289\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_ae0d4c34a858d8d08096ddba79e3e394d}{AERO\_REP\_ID\_}}(i\_phase),\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ aerosol\ representation\ index}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00290}00290\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_a491372e10f325a8f35f58fcd969f3f37}{AERO\_PHASE\_ID\_}}(i\_phase),\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ aerosol\ phase\ index}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00291}00291\ \ \ \ \ \ \ \ \ \&number\_conc,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ particle\ number\ concentration}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ (\#/m3)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00293}00293\ \ \ \ \ \ \ \ \ \&(\mbox{\hyperlink{rxn__surface_8c_af1b210da8b9553848904995262873236}{NUM\_CONC\_JAC\_ELEM\_}}(i\_phase,\ 0)));\ \ \textcolor{comment}{//\ partial\ derivative}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00294}00294\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00295}00295\ \ \ \ \ \textcolor{comment}{//\ Calculate\ the\ rate\ constant\ for\ diffusion\ limited\ mass\ transfer\ to\ the}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00296}00296\ \ \ \ \ \textcolor{comment}{//\ aerosol\ phase\ (1/s)}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00297}00297\ \ \ \ \ \textcolor{keywordtype}{double}\ rate\_const\ =}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00298}00298\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{util_8h_afde219af97ef99e021d59c7ca18b9277}{gas\_aerosol\_continuum\_rxn\_rate\_constant}}(\mbox{\hyperlink{rxn__surface_8c_ad2592ccc6a86c367ee03ea636d62396e}{DIFF\_COEFF\_}},\ \mbox{\hyperlink{rxn__surface_8c_a3fe8d809492c91e6ef3daf46a5f13f29}{MEAN\_SPEED\_MS\_}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ radius,\ \mbox{\hyperlink{rxn__surface_8c_a700f40aaab66ccabd1677141cfc3c7c1}{GAMMA\_}});}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00300}00300\ \ \ \ \ \textcolor{keywordtype}{double}\ cond\_rate\ =\ state[\mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}}]\ *\ number\_conc\ *\ rate\_const;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00301}00301\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00302}00302\ \ \ \ \ \textcolor{comment}{//\ Dependence\ on\ the\ reactant}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00303}00303\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(0)\ >=0)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00304}00304\ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(0),\ \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00305}00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ number\_conc\ *\ rate\_const);}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00306}00306\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00307}00307\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_prod\ =\ 0;\ i\_prod\ <\ \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};\ ++i\_prod)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00308}00308\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_prod\ +\ 1)\ >=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00309}00309\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_prod\ +\ 1),\ \mbox{\hyperlink{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}{JACOBIAN\_PRODUCTION}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\_}}(i\_prod)\ *\ number\_conc\ *\ rate\_const);}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00311}00311\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00312}00312\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00313}00313\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00314}00314\ \ \ \ \ \textcolor{comment}{//\ Calculate\ d\_rate/d\_effective\_radius\ and\ d\_rate/d\_number\_concentration}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00315}00315\ \ \ \ \ \textcolor{keywordtype}{double}\ d\_rate\_d\_radius\ =\ state[\mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}}]\ *\ number\_conc\ *}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00316}00316\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{util_8h_aa2190a3abb8648804ae74bb1c2d09b36}{d\_gas\_aerosol\_continuum\_rxn\_rate\_constant\_d\_radius}}(\mbox{\hyperlink{rxn__surface_8c_ad2592ccc6a86c367ee03ea636d62396e}{DIFF\_COEFF\_}},\ \mbox{\hyperlink{rxn__surface_8c_a3fe8d809492c91e6ef3daf46a5f13f29}{MEAN\_SPEED\_MS\_}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ radius,\ \mbox{\hyperlink{rxn__surface_8c_a700f40aaab66ccabd1677141cfc3c7c1}{GAMMA\_}});}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00318}00318\ \ \ \ \ \textcolor{keywordtype}{double}\ d\_rate\_d\_number\ =\ state[\mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}}]\ *\ rate\_const;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00319}00319\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00320}00320\ \ \ \ \ \textcolor{comment}{//\ Loop\ through\ aerosol\ dependencies}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00321}00321\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_elem\ =\ 0;\ i\_elem\ <\ \mbox{\hyperlink{rxn__surface_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}(i\_phase);\ ++i\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00322}00322\ \ \ \ \ \ \ \textcolor{comment}{//\ Reactant\ dependencies}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00323}00323\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_phase,\ 0,\ i\_elem)\ >\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00324}00324\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dependence\ on\ effective\ radius}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00325}00325\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_phase,\ 0,\ i\_elem),}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ d\_rate\_d\_radius\ *\ \mbox{\hyperlink{rxn__surface_8c_ae144b859674c9147443a7cf505ddac6a}{EFF\_RAD\_JAC\_ELEM\_}}(i\_phase,\ i\_elem));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00329}00329\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dependence\ on\ number\ concentration}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00330}00330\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00331}00331\ \ \ \ \ \ \ \ \ \ \ \ \ jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_phase,\ 0,\ i\_elem),}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ d\_rate\_d\_number\ *\ \mbox{\hyperlink{rxn__surface_8c_af1b210da8b9553848904995262873236}{NUM\_CONC\_JAC\_ELEM\_}}(i\_phase,\ i\_elem));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00334}00334\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00335}00335\ \ \ \ \ \ \ \textcolor{comment}{//\ Product\ dependencies}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00336}00336\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_prod\ =\ 0;\ i\_prod\ <\ \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};\ ++i\_prod)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00337}00337\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_phase,\ i\_prod\ +\ 1,\ i\_elem)\ >\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00338}00338\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dependence\ on\ effective\ radius}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00339}00339\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00340}00340\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_phase,\ i\_prod\ +\ 1,\ i\_elem),}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00341}00341\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}{JACOBIAN\_PRODUCTION}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\_}}(i\_prod)\ *\ d\_rate\_d\_radius\ *}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_ae144b859674c9147443a7cf505ddac6a}{EFF\_RAD\_JAC\_ELEM\_}}(i\_phase,\ i\_elem));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dependence\ on\ number\ concentration}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00346}00346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_phase,\ i\_prod\ +\ 1,\ i\_elem),}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}{JACOBIAN\_PRODUCTION}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\_}}(i\_prod)\ *\ d\_rate\_d\_number\ *}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_af1b210da8b9553848904995262873236}{NUM\_CONC\_JAC\_ELEM\_}}(i\_phase,\ i\_elem));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00350}00350\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00351}00351\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00352}00352\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00353}00353\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00354}00354\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00355}00355\ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00356}00356\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00357}00357\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00358}00358\ \textcolor{comment}{/**\ \(\backslash\)brief\ Print\ the\ surface\ reaction\ parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00359}00359\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00360}00360\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_int\_data\ Pointer\ to\ the\ reaction\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00361}00361\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00362}00362\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00363}\mbox{\hyperlink{rxns_8h_af4d5ba66d45ee435e1451b44eda87370}{00363}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__surface_8c_af4d5ba66d45ee435e1451b44eda87370}{rxn\_surface\_print}}(\textcolor{keywordtype}{int}\ *rxn\_int\_data,\ \textcolor{keywordtype}{double}\ *rxn\_float\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00364}00364\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00365}00365\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00366}00366\ }
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00367}00367\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nSurface\ reaction\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00368}00368\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)ndiffusion\ coefficient:\ \%lg\ gamma:\ \%lg,\ MW:\ \%lg"{}},\ \mbox{\hyperlink{rxn__surface_8c_ad2592ccc6a86c367ee03ea636d62396e}{DIFF\_COEFF\_}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_a700f40aaab66ccabd1677141cfc3c7c1}{GAMMA\_}},\ \mbox{\hyperlink{rxn__surface_8c_a0d46bfe32dd963cb15caf2ff1f2892a1}{MW\_}});}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00370}00370\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nnumber\ of\ aerosol\ phases:\ \%d"{}},\ \mbox{\hyperlink{rxn__surface_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}});}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00371}00371\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nreactant\ state\ id:\ \%d"{}},\ \mbox{\hyperlink{rxn__surface_8c_ad2e8070e43fedd69ba2a0e0192829673}{REACT\_ID\_}});}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00372}00372\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nnumber\ of\ products:\ \%d"{}},\ \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}});}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00373}00373\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_prod\ =\ 0;\ i\_prod\ <\ \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};\ ++i\_prod)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00374}00374\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ product\ \%d\ id:\ \%d"{}},\ i\_prod,\ \mbox{\hyperlink{rxn__surface_8c_ad8d1cff5c83805f1b18a79e39cf683b2}{PROD\_ID\_}}(i\_prod));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00375}00375\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00376}00376\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nreactant\ derivative\ id:\ \%d"{}},\ \mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(0));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00377}00377\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nd\_reactant/d\_reactant\ Jacobian\ id\ \%d"{}},\ \mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(0));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00378}00378\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_prod\ =\ 0;\ i\_prod\ <\ \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};\ ++i\_prod)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00379}00379\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ product\ \%d\ derivative\ id:\ \%d"{}},\ i\_prod,\ \mbox{\hyperlink{rxn__surface_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_prod+1));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00380}00380\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ d\_product\_\%d/d\_reactant\ Jacobian\ id:\ \%d"{}},\ i\_prod,}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_prod+1));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00382}00382\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00383}00383\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{rxn__surface_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}};\ ++i\_phase)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00384}00384\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nPhase\ \%d\ start\ indices\ int:\ \%d\ float:\ \%d"{}},\ i\_phase,}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\_INT\_LOC\_}}(i\_phase),\ \mbox{\hyperlink{rxn__surface_8c_afafc66d3ae86f3d36a8b142d3eff1f6d}{PHASE\_FLOAT\_LOC\_}}(i\_phase));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00386}00386\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ phase\ id\ \%d;\ aerosol\ representation\ id\ \%d"{}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00387}00387\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_a491372e10f325a8f35f58fcd969f3f37}{AERO\_PHASE\_ID\_}}(i\_phase),\ \mbox{\hyperlink{rxn__surface_8c_ae0d4c34a858d8d08096ddba79e3e394d}{AERO\_REP\_ID\_}}(i\_phase));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00388}00388\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ number\ of\ Jacobian\ elements:\ \%d"{}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__surface_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}(i\_phase));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00390}00390\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_elem\ =\ 0;\ i\_elem\ <\ \mbox{\hyperlink{rxn__surface_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}(i\_phase);\ ++i\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00391}00391\ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ -\/\ d\_reactant/d\_phase\_species\_\%d\ Jacobian\ id\ \%d"{}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00392}00392\ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_elem,\ \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_phase,0,i\_elem));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00393}00393\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_prod\ =\ 0;\ i\_prod\ <\ \mbox{\hyperlink{rxn__surface_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};\ ++i\_prod)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00394}00394\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ -\/\ d\_product\_\%d/d\_phase\_species\_\%d\ Jacobian\ id\ \%d"{}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00395}00395\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_prod,\ i\_elem,\ \mbox{\hyperlink{rxn__surface_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\_JAC\_ID\_}}(i\_phase,i\_prod+1,i\_elem));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00396}00396\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00397}00397\ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ -\/\ d\_radius/d\_phase\_species\_\%d\ =\ \%le"{}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00398}00398\ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_elem,\ \mbox{\hyperlink{rxn__surface_8c_ae144b859674c9147443a7cf505ddac6a}{EFF\_RAD\_JAC\_ELEM\_}}(i\_phase,i\_elem));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00399}00399\ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ -\/\ d\_number/d\_phase\_species\_\%d\ =\ \%le"{}},}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00400}00400\ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_elem,\ \mbox{\hyperlink{rxn__surface_8c_ae144b859674c9147443a7cf505ddac6a}{EFF\_RAD\_JAC\_ELEM\_}}(i\_phase,i\_elem));}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00401}00401\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00402}00402\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00403}00403\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ ***\ end\ surface\ reaction\ ***\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00404}00404\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8c_source_l00405}00405\ \}}
 
 \end{DoxyCode}

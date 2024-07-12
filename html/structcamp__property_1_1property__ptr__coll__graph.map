@@ -1,0 +1,8 @@
+<map id="camp_property::property_ptr" name="camp_property::property_ptr">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,228,186,253"/>
+<area shape="rect" id="Node000002" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="11,139,180,165"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,180,98,227,93,227,93,180"/>
+<area shape="rect" id="Node000003" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="16,5,175,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="98,61,98,138,93,138,93,61"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="192,15,201,26,193,36,176,40,174,35,191,31,196,26,188,19"/>
+</map>

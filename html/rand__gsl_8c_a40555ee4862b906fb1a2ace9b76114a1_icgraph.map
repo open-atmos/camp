@@ -1,4 +1,6 @@
 <map id="camp_rand_poisson_gsl" name="camp_rand_poisson_gsl">
-<area shape="rect" id="node1" title="Generate a Poisson&#45;distributed random integer." alt="" coords="223,29,385,55"/>
-<area shape="rect" id="node2" href="$namespacecamp__rand.html#afeef7ff3370b9d984897647d64070725" title="Generate a Poisson&#45;distributed random number with the given mean." alt="" coords="5,29,175,55"/>
+<area shape="rect" id="Node000001" title="Generate a Poisson&#45;distributed random integer." alt="" coords="222,29,383,55"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__rand.html#afeef7ff3370b9d984897647d64070725" title="Generate a Poisson&#45;distributed random number with the given mean." alt="" coords="5,29,174,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="206,45,174,45,174,40,206,40"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="126,17,114,10,89,8,67,10,55,15,52,20,58,27,54,31,47,21,51,11,66,5,90,3,116,5,129,12"/>
 </map>

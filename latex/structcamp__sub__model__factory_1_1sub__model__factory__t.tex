@@ -1,26 +1,26 @@
-\hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t}{}\doxysection{camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t Type Reference}
-\label{structcamp__sub__model__factory_1_1sub__model__factory__t}\index{camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}}
+\doxysection{camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t Type Reference}
+\hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t}{}\label{structcamp__sub__model__factory_1_1sub__model__factory__t}\index{camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}}
 
 
 Factory type for sub-\/models.  
 
 
-\doxysubsection*{Public Member Functions}
+\doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a0b07ebb4ef850b1bf2aec73df3edcf4c}{create}}
+procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a41b820cbaf26b489a976495f525cf8d3}{create}} (this, type\+\_\+name)
 \begin{DoxyCompactList}\small\item\em Create a new sub-\/model by type name. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a92f591aa0a296fd7de983f05998b1f40}{load}}
+procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_aa6be2995fcd7755f780264b5bc303f0a}{load}} (this, json, j\+\_\+obj)
 \begin{DoxyCompactList}\small\item\em Create a new aerosol representation from input data. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_ae1f149819c453319a2718367a89fe316}{get\+\_\+type}}
+procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a4890ddb80612450e0a79db38f39448f8}{get\+\_\+type}} (this, sub\+\_\+model)
 \begin{DoxyCompactList}\small\item\em Get the aerosol representation type. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a71292303a96b3c04bbcbc02bebe70c43}{initialize\+\_\+update\+\_\+data}}
+procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a732bd8ef8505d28db3d5ed5e623319cd}{initialize\+\_\+update\+\_\+data}} (this, sub\+\_\+model, update\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Get a new update data object. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a2ece82b9ae1e34598ced790d827ad5ca}{pack\+\_\+size}}
+procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a3da081446e688cba14fc27a4e1a4d15a}{pack\+\_\+size}} (this, sub\+\_\+model, comm)
 \begin{DoxyCompactList}\small\item\em Determine the number of bytes required to pack a given sub-\/model. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_ad24208b07750a3ad2807590ffde70bee}{bin\+\_\+pack}}
+procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_aa27641d64c20ce473ad0ee2447e4dfc5}{bin\+\_\+pack}} (this, sub\+\_\+model, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Pack a given sub-\/model onto the buffer, advancing position. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a3d938bec3fea4a764dce18a9a5b732df}{bin\+\_\+unpack}}
+procedure \mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t_a5d2586b818773d5c3dc328f8abcb0891}{bin\+\_\+unpack}} (this, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Unpack a sub-\/model from the buffer, advancing position. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -34,100 +34,174 @@ Definition at line \mbox{\hyperlink{sub__model__factory_8_f90_source_l00047}{47}
 
 
 \doxysubsection{Member Function/\+Subroutine Documentation}
-\mbox{\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_ad24208b07750a3ad2807590ffde70bee}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_ad24208b07750a3ad2807590ffde70bee}} 
+\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_aa27641d64c20ce473ad0ee2447e4dfc5}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_aa27641d64c20ce473ad0ee2447e4dfc5} 
 \index{camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}!bin\_pack@{bin\_pack}}
 \index{bin\_pack@{bin\_pack}!camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{bin\_pack()}{bin\_pack()}}
-{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::bin\+\_\+pack}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::bin\+\_\+pack (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\+\_\+model\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\+\_\+model\+\_\+data\+\_\+t}}), intent(in)}]{sub\+\_\+model,  }\item[{character, dimension(\+:), intent(inout)}]{buffer,  }\item[{integer, intent(inout)}]{pos,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})}
 
 
 
 Pack a given sub-\/model onto the buffer, advancing position. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Sub-\/model factory \\
+\hline
+\mbox{\texttt{ in}}  & {\em sub\+\_\+model} & Sub-\/model to pack \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em buffer} & Memory buffer \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em pos} & Current buffer position \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{sub__model__factory_8_f90_source_l00060}{60}} of file \mbox{\hyperlink{sub__model__factory_8_f90_source}{sub\+\_\+model\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_a3d938bec3fea4a764dce18a9a5b732df}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_a3d938bec3fea4a764dce18a9a5b732df}} 
+\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_a5d2586b818773d5c3dc328f8abcb0891}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_a5d2586b818773d5c3dc328f8abcb0891} 
 \index{camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}!bin\_unpack@{bin\_unpack}}
 \index{bin\_unpack@{bin\_unpack}!camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{bin\_unpack()}{bin\_unpack()}}
-{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::bin\+\_\+unpack}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::bin\+\_\+unpack (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\+\_\+model\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{character, dimension(\+:), intent(inout)}]{buffer,  }\item[{integer, intent(inout)}]{pos,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})}
 
 
 
 Unpack a sub-\/model from the buffer, advancing position. 
 
+\begin{DoxyReturn}{Returns}
+Unpacked sub-\/model 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Sub-\/model factory \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em buffer} & Memory buffer \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em pos} & Current buffer position \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{sub__model__factory_8_f90_source_l00062}{62}} of file \mbox{\hyperlink{sub__model__factory_8_f90_source}{sub\+\_\+model\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_a0b07ebb4ef850b1bf2aec73df3edcf4c}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_a0b07ebb4ef850b1bf2aec73df3edcf4c}} 
+\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_a41b820cbaf26b489a976495f525cf8d3}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_a41b820cbaf26b489a976495f525cf8d3} 
 \index{camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}!create@{create}}
 \index{create@{create}!camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{create()}{create()}}
-{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::create}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::create (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\+\_\+model\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{type\+\_\+name }\end{DoxyParamCaption})}
 
 
 
 Create a new sub-\/model by type name. 
 
+\begin{DoxyReturn}{Returns}
+A new sub-\/model 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Sub-\/model factory \\
+\hline
+\mbox{\texttt{ in}}  & {\em type\+\_\+name} & Type of the sub-\/model \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{sub__model__factory_8_f90_source_l00050}{50}} of file \mbox{\hyperlink{sub__model__factory_8_f90_source}{sub\+\_\+model\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_ae1f149819c453319a2718367a89fe316}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_ae1f149819c453319a2718367a89fe316}} 
+\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_a4890ddb80612450e0a79db38f39448f8}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_a4890ddb80612450e0a79db38f39448f8} 
 \index{camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}!get\_type@{get\_type}}
 \index{get\_type@{get\_type}!camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{get\_type()}{get\_type()}}
-{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::get\+\_\+type}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::get\+\_\+type (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\+\_\+model\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\+\_\+model\+\_\+data\+\_\+t}}), intent(in)}]{sub\+\_\+model }\end{DoxyParamCaption})}
 
 
 
 Get the aerosol representation type. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Sub-\/model factory \\
+\hline
+\mbox{\texttt{ in}}  & {\em sub\+\_\+model} & Sub-\/model to get type of \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{sub__model__factory_8_f90_source_l00054}{54}} of file \mbox{\hyperlink{sub__model__factory_8_f90_source}{sub\+\_\+model\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_a71292303a96b3c04bbcbc02bebe70c43}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_a71292303a96b3c04bbcbc02bebe70c43}} 
+\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_a732bd8ef8505d28db3d5ed5e623319cd}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_a732bd8ef8505d28db3d5ed5e623319cd} 
 \index{camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}!initialize\_update\_data@{initialize\_update\_data}}
 \index{initialize\_update\_data@{initialize\_update\_data}!camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{initialize\_update\_data()}{initialize\_update\_data()}}
-{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::initialize\+\_\+update\+\_\+data}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::initialize\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\+\_\+model\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\+\_\+model\+\_\+data\+\_\+t}}), intent(inout)}]{sub\+\_\+model,  }\item[{class(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\+\_\+model\+\_\+update\+\_\+data\+\_\+t}}), intent(out)}]{update\+\_\+data }\end{DoxyParamCaption})}
 
 
 
 Get a new update data object. 
 
 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Sub-\/model factory \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em sub\+\_\+model} & Sub-\/model to be updated \\
+\hline
+\mbox{\texttt{ out}}  & {\em update\+\_\+data} & Update data object \\
+\hline
+\end{DoxyParams}
+
 
 Definition at line \mbox{\hyperlink{sub__model__factory_8_f90_source_l00056}{56}} of file \mbox{\hyperlink{sub__model__factory_8_f90_source}{sub\+\_\+model\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_a92f591aa0a296fd7de983f05998b1f40}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_a92f591aa0a296fd7de983f05998b1f40}} 
+\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_aa6be2995fcd7755f780264b5bc303f0a}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_aa6be2995fcd7755f780264b5bc303f0a} 
 \index{camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}!load@{load}}
 \index{load@{load}!camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{load()}{load()}}
-{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::load}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::load (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\+\_\+model\+\_\+factory\+\_\+t}}), intent(in)}]{this,  }\item[{type(json\+\_\+core), intent(in), pointer}]{json,  }\item[{type(json\+\_\+value), intent(in), pointer}]{j\+\_\+obj }\end{DoxyParamCaption})}
 
 
 
 Create a new aerosol representation from input data. 
 
+\begin{DoxyReturn}{Returns}
+A new sub-\/model 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Sub-\/model factory \\
+\hline
+\mbox{\texttt{ in}}  & {\em json} & JSON core \\
+\hline
+\mbox{\texttt{ in}}  & {\em j\+\_\+obj} & JSON object \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{sub__model__factory_8_f90_source_l00052}{52}} of file \mbox{\hyperlink{sub__model__factory_8_f90_source}{sub\+\_\+model\+\_\+factory.\+F90}}.
 
-\mbox{\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_a2ece82b9ae1e34598ced790d827ad5ca}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_a2ece82b9ae1e34598ced790d827ad5ca}} 
+\Hypertarget{structcamp__sub__model__factory_1_1sub__model__factory__t_a3da081446e688cba14fc27a4e1a4d15a}\label{structcamp__sub__model__factory_1_1sub__model__factory__t_a3da081446e688cba14fc27a4e1a4d15a} 
 \index{camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}!pack\_size@{pack\_size}}
 \index{pack\_size@{pack\_size}!camp\_sub\_model\_factory::sub\_model\_factory\_t@{camp\_sub\_model\_factory::sub\_model\_factory\_t}}
 \doxysubsubsection{\texorpdfstring{pack\_size()}{pack\_size()}}
-{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::pack\+\_\+size}
+{\footnotesize\ttfamily procedure camp\+\_\+sub\+\_\+model\+\_\+factory\+::sub\+\_\+model\+\_\+factory\+\_\+t\+::pack\+\_\+size (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__sub__model__factory_1_1sub__model__factory__t}{sub\+\_\+model\+\_\+factory\+\_\+t}})}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{sub\+\_\+model\+\_\+data\+\_\+t}}), intent(in)}]{sub\+\_\+model,  }\item[{integer, intent(in)}]{comm }\end{DoxyParamCaption})}
 
 
 
 Determine the number of bytes required to pack a given sub-\/model. 
 
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & Sub-\/model factory \\
+\hline
+\mbox{\texttt{ in}}  & {\em sub\+\_\+model} & Sub-\/model to pack \\
+\hline
+\mbox{\texttt{ in}}  & {\em comm} & MPI communicator \\
+\hline
+\end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{sub__model__factory_8_f90_source_l00058}{58}} of file \mbox{\hyperlink{sub__model__factory_8_f90_source}{sub\+\_\+model\+\_\+factory.\+F90}}.

@@ -1,14 +1,38 @@
 <map id="camp_rxn_first_order_loss::internal_pack_size" name="camp_rxn_first_order_loss::internal_pack_size">
-<area shape="rect" id="node1" title="Determine the size of a binary required to pack the reaction data." alt="" coords="5,142,172,182"/>
-<area shape="rect" id="node2" href="$namespacecamp__mpi.html#abfca35b6c1f158dcb853326861d7e558" title="Determines the number of bytes required to pack the given value." alt="" coords="627,199,775,239"/>
-<area shape="rect" id="node9" href="$namespacecamp__mpi.html#a91e386d6f20f660ab0762c32bb55e3a7" title="Determines the number of bytes required to pack the given value." alt="" coords="627,61,775,101"/>
-<area shape="rect" id="node10" href="$namespacecamp__aero__rep__data.html#a4a1d35f1a4f0f3a24aae257c90eb7d7b" title="Determine the size of a binary required to pack the aerosol representation data." alt="" coords="220,142,363,182"/>
-<area shape="rect" id="node3" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="823,90,971,130"/>
-<area shape="rect" id="node4" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="1019,90,1167,130"/>
-<area shape="rect" id="node5" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="1215,97,1316,123"/>
-<area shape="rect" id="node6" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="1364,97,1484,123"/>
-<area shape="rect" id="node7" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1532,97,1684,123"/>
-<area shape="rect" id="node8" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1732,90,1855,130"/>
-<area shape="rect" id="node11" href="$namespacecamp__mpi.html#a8ad192802e37c5dcaa41d053909318ab" title="Determines the number of bytes required to pack the given value." alt="" coords="411,142,579,182"/>
-<area shape="rect" id="node12" href="$namespacecamp__mpi.html#a7d5bd45d25af1d118c3f36eb507aca3f" title="Determines the number of bytes required to pack the given value." alt="" coords="419,54,570,94"/>
+<area shape="rect" id="Node000001" title="Determine the size of a binary required to pack the reaction data." alt="" coords="5,143,171,184"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__mpi.html#abfca35b6c1f158dcb853326861d7e558" title="Determines the number of bytes required to pack the given value." alt="" coords="624,200,772,241"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,182,219,193,314,209,409,217,513,221,609,220,609,226,513,226,409,222,313,214,218,198,167,187"/>
+<area shape="rect" id="Node000009" href="$namespacecamp__mpi.html#a91e386d6f20f660ab0762c32bb55e3a7" title="Determines the number of bytes required to pack the given value." alt="" coords="624,62,772,102"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="121,140,174,110,244,74,324,40,408,16,455,6,493,3,530,6,577,16,618,31,656,51,653,55,616,36,576,21,530,11,493,8,456,12,410,21,326,45,246,79,177,114,124,145"/>
+<area shape="rect" id="Node000010" href="$namespacecamp__aero__rep__data.html#a4a1d35f1a4f0f3a24aae257c90eb7d7b" title="Determine the size of a binary required to pack the aerosol representation data." alt="" coords="219,143,361,184"/>
+<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="171,161,203,161,203,166,171,166"/>
+<area shape="poly" id="edge8_Node000002_Node000002" title=" " alt="" coords="661,200,659,191,665,182,678,176,698,174,719,176,732,182,730,187,718,181,698,179,680,181,668,186,664,192,666,199"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="820,91,967,132"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="735,198,841,137,844,142,737,202"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="1015,91,1162,132"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="968,109,999,109,999,114,968,114"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="1210,99,1311,124"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1163,109,1195,109,1195,114,1163,114"/>
+<area shape="rect" id="Node000006" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="1359,99,1478,124"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1311,109,1343,109,1343,114,1311,114"/>
+<area shape="rect" id="Node000007" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1526,99,1677,124"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1478,109,1510,109,1510,114,1478,114"/>
+<area shape="rect" id="Node000008" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1725,91,1848,132"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="1678,109,1710,109,1710,114,1678,114"/>
+<area shape="poly" id="edge10_Node000009_Node000003" title=" " alt="" coords="773,91,805,95,804,101,772,96"/>
+<area shape="poly" id="edge11_Node000009_Node000009" title=" " alt="" coords="661,62,659,52,665,43,678,37,698,35,719,38,732,44,730,49,718,43,698,40,680,42,668,47,664,53,666,61"/>
+<area shape="poly" id="edge13_Node000010_Node000002" title=" " alt="" coords="360,182,409,193,513,207,609,214,609,220,512,212,409,198,359,187"/>
+<area shape="poly" id="edge24_Node000010_Node000010" title=" " alt="" coords="251,143,250,133,256,124,269,118,290,116,312,119,325,125,323,130,310,124,290,122,271,124,259,128,255,134,257,142"/>
+<area shape="rect" id="Node000011" href="$namespacecamp__mpi.html#a8ad192802e37c5dcaa41d053909318ab" title="Determines the number of bytes required to pack the given value." alt="" coords="409,143,576,184"/>
+<area shape="poly" id="edge14_Node000010_Node000011" title=" " alt="" coords="361,161,393,161,393,166,361,166"/>
+<area shape="rect" id="Node000012" href="$namespacecamp__mpi.html#a7d5bd45d25af1d118c3f36eb507aca3f" title="Determines the number of bytes required to pack the given value." alt="" coords="418,54,567,94"/>
+<area shape="poly" id="edge19_Node000010_Node000012" title=" " alt="" coords="332,140,408,105,423,98,426,103,410,110,335,145"/>
+<area shape="poly" id="edge16_Node000011_Node000002" title=" " alt="" coords="568,182,610,194,609,199,567,187"/>
+<area shape="poly" id="edge15_Node000011_Node000003" title=" " alt="" coords="577,150,804,120,805,126,577,155"/>
+<area shape="poly" id="edge18_Node000011_Node000009" title=" " alt="" coords="545,140,630,106,632,111,547,145"/>
+<area shape="poly" id="edge17_Node000011_Node000011" title=" " alt="" coords="454,143,452,133,459,124,472,118,493,116,515,119,528,125,526,130,513,124,493,122,473,124,462,128,457,134,459,142"/>
+<area shape="poly" id="edge21_Node000012_Node000002" title=" " alt="" coords="555,93,578,105,629,145,671,187,667,190,625,149,575,110,552,97"/>
+<area shape="poly" id="edge20_Node000012_Node000003" title=" " alt="" coords="538,51,579,35,624,24,699,12,732,13,773,24,822,48,862,78,859,83,819,52,771,29,731,19,699,17,625,29,581,40,540,56"/>
+<area shape="poly" id="edge22_Node000012_Node000009" title=" " alt="" coords="568,74,609,76,609,81,568,80"/>
+<area shape="poly" id="edge23_Node000012_Node000012" title=" " alt="" coords="454,54,452,44,459,35,472,29,493,27,515,30,528,36,526,41,513,35,493,32,473,34,462,39,457,45,459,53"/>
 </map>

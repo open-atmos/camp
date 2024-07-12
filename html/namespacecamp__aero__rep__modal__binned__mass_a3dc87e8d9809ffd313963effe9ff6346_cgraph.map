@@ -1,6 +1,9 @@
 <map id="camp_aero_rep_modal_binned_mass::spec_state_id" name="camp_aero_rep_modal_binned_mass::spec_state_id">
-<area shape="rect" id="node1" title="Get a species id on the camp_camp_state::camp_state_t::state_var array by its unique name...." alt="" coords="5,5,199,45"/>
-<area shape="rect" id="node2" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="247,13,380,38"/>
-<area shape="rect" id="node3" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="428,13,580,38"/>
-<area shape="rect" id="node4" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="628,5,751,45"/>
+<area shape="rect" id="Node000001" title="Get a species id on the camp_camp_state::camp_state_t::state_var array by its unique name...." alt="" coords="5,5,198,46"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="246,13,378,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="198,23,230,23,230,28,198,28"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="426,13,577,39"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="379,23,411,23,411,28,379,28"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="625,5,748,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="578,23,610,23,610,28,578,28"/>
 </map>

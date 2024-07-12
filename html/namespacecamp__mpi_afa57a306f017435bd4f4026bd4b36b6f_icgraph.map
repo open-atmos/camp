@@ -1,5 +1,8 @@
 <map id="camp_mpi::camp_mpi_pack_size_real_array_2d" name="camp_mpi::camp_mpi_pack_size_real_array_2d">
-<area shape="rect" id="node1" title="Determines the number of bytes required to pack the given value." alt="" coords="208,37,379,77"/>
-<area shape="rect" id="node2" href="$namespacecamp__mpi.html#a34a7b84e681070b6170d10699e8875ac" title="Packs the given value into the buffer, advancing position." alt="" coords="9,5,157,45"/>
-<area shape="rect" id="node3" href="$namespacecamp__mpi.html#a342bca6c68c2c9b8c59002e6e8c78475" title="Unpacks the given value from the buffer, advancing position." alt="" coords="5,69,160,109"/>
+<area shape="rect" id="Node000001" title="Determines the number of bytes required to pack the given value." alt="" coords="208,39,378,79"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="327,25,314,20,293,17,273,19,261,24,256,30,258,37,253,39,251,29,258,20,272,14,293,12,316,14,329,21"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__mpi.html#a34a7b84e681070b6170d10699e8875ac" title="Packs the given value into the buffer, advancing position." alt="" coords="9,5,156,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,46,156,40,157,35,192,40"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__mpi.html#a342bca6c68c2c9b8c59002e6e8c78475" title="Unpacks the given value from the buffer, advancing position." alt="" coords="5,71,160,111"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="192,77,161,82,160,77,192,72"/>
 </map>

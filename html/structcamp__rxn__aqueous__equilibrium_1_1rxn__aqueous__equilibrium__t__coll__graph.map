@@ -1,4 +1,10 @@
 <map id="camp_rxn_aqueous_equilibrium::rxn_aqueous_equilibrium_t" name="camp_rxn_aqueous_equilibrium::rxn_aqueous_equilibrium_t">
-<area shape="rect" id="node1" title="Generic test reaction data type." alt="" coords="5,93,208,133"/>
-<area shape="rect" id="node2" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="40,5,173,45"/>
+<area shape="rect" id="Node000001" title="Generic test reaction data type." alt="" coords="5,318,208,358"/>
+<area shape="rect" id="Node000002" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="40,228,173,268"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,284,109,317,104,317,104,284"/>
+<area shape="rect" id="Node000003" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="22,139,191,165"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="109,180,109,227,104,227,104,180"/>
+<area shape="rect" id="Node000004" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="27,5,186,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="109,61,109,138,104,138,104,61"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="203,15,212,26,204,36,187,40,185,35,202,31,207,26,199,19"/>
 </map>

@@ -1,5 +1,5 @@
-\hypertarget{struct_jacobian}{}\doxysection{Jacobian Struct Reference}
-\label{struct_jacobian}\index{Jacobian@{Jacobian}}
+\doxysection{Jacobian Struct Reference}
+\hypertarget{struct_jacobian}{}\label{struct_jacobian}\index{Jacobian@{Jacobian}}
 
 
 {\ttfamily \#include $<$Jacobian.\+h$>$}
@@ -7,23 +7,29 @@
 
 
 Collaboration diagram for Jacobian\+:
-% FIG 0
-\doxysubsection*{Public Attributes}
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=209pt]{struct_jacobian__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
 unsigned int \mbox{\hyperlink{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}{num\+\_\+spec}}
 \item 
 unsigned int \mbox{\hyperlink{struct_jacobian_a3577814faff1b9ab50d0f08df9a4c736}{num\+\_\+elem}}
 \item 
-unsigned int $\ast$ \mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\+\_\+ptrs}}
+unsigned int \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\+\_\+ptrs}}
 \item 
-unsigned int $\ast$ \mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\+\_\+ids}}
+unsigned int \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\+\_\+ids}}
 \item 
-long double $\ast$ \mbox{\hyperlink{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}{production\+\_\+partials}}
+long double \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}{production\+\_\+partials}}
 \item 
-long double $\ast$ \mbox{\hyperlink{struct_jacobian_af0f149e4515991698c959c8484202a79}{loss\+\_\+partials}}
+long double \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{struct_jacobian_af0f149e4515991698c959c8484202a79}{loss\+\_\+partials}}
 \item 
-\mbox{\hyperlink{struct_jacobian_column_elements}{Jacobian\+Column\+Elements}} $\ast$ \mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}
+\mbox{\hyperlink{struct_jacobian_column_elements}{Jacobian\+Column\+Elements}} \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}
 \end{DoxyCompactItemize}
 
 
@@ -35,37 +41,37 @@ Definition at line \mbox{\hyperlink{_jacobian_8h_source_l00031}{31}} of file \mb
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}\label{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}} 
+\Hypertarget{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}\label{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61} 
 \index{Jacobian@{Jacobian}!col\_ptrs@{col\_ptrs}}
 \index{col\_ptrs@{col\_ptrs}!Jacobian@{Jacobian}}
 \doxysubsubsection{\texorpdfstring{col\_ptrs}{col\_ptrs}}
-{\footnotesize\ttfamily unsigned int$\ast$ Jacobian\+::col\+\_\+ptrs}
+{\footnotesize\ttfamily unsigned int\texorpdfstring{$\ast$}{*} Jacobian\+::col\+\_\+ptrs}
 
 
 
 Definition at line \mbox{\hyperlink{_jacobian_8h_source_l00034}{34}} of file \mbox{\hyperlink{_jacobian_8h_source}{Jacobian.\+h}}.
 
-\mbox{\Hypertarget{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}\label{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}} 
+\Hypertarget{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}\label{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3} 
 \index{Jacobian@{Jacobian}!elements@{elements}}
 \index{elements@{elements}!Jacobian@{Jacobian}}
 \doxysubsubsection{\texorpdfstring{elements}{elements}}
-{\footnotesize\ttfamily \mbox{\hyperlink{struct_jacobian_column_elements}{Jacobian\+Column\+Elements}}$\ast$ Jacobian\+::elements}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_jacobian_column_elements}{Jacobian\+Column\+Elements}}\texorpdfstring{$\ast$}{*} Jacobian\+::elements}
 
 
 
 Definition at line \mbox{\hyperlink{_jacobian_8h_source_l00039}{39}} of file \mbox{\hyperlink{_jacobian_8h_source}{Jacobian.\+h}}.
 
-\mbox{\Hypertarget{struct_jacobian_af0f149e4515991698c959c8484202a79}\label{struct_jacobian_af0f149e4515991698c959c8484202a79}} 
+\Hypertarget{struct_jacobian_af0f149e4515991698c959c8484202a79}\label{struct_jacobian_af0f149e4515991698c959c8484202a79} 
 \index{Jacobian@{Jacobian}!loss\_partials@{loss\_partials}}
 \index{loss\_partials@{loss\_partials}!Jacobian@{Jacobian}}
 \doxysubsubsection{\texorpdfstring{loss\_partials}{loss\_partials}}
-{\footnotesize\ttfamily long double$\ast$ Jacobian\+::loss\+\_\+partials}
+{\footnotesize\ttfamily long double\texorpdfstring{$\ast$}{*} Jacobian\+::loss\+\_\+partials}
 
 
 
 Definition at line \mbox{\hyperlink{_jacobian_8h_source_l00038}{38}} of file \mbox{\hyperlink{_jacobian_8h_source}{Jacobian.\+h}}.
 
-\mbox{\Hypertarget{struct_jacobian_a3577814faff1b9ab50d0f08df9a4c736}\label{struct_jacobian_a3577814faff1b9ab50d0f08df9a4c736}} 
+\Hypertarget{struct_jacobian_a3577814faff1b9ab50d0f08df9a4c736}\label{struct_jacobian_a3577814faff1b9ab50d0f08df9a4c736} 
 \index{Jacobian@{Jacobian}!num\_elem@{num\_elem}}
 \index{num\_elem@{num\_elem}!Jacobian@{Jacobian}}
 \doxysubsubsection{\texorpdfstring{num\_elem}{num\_elem}}
@@ -75,7 +81,7 @@ Definition at line \mbox{\hyperlink{_jacobian_8h_source_l00038}{38}} of file \mb
 
 Definition at line \mbox{\hyperlink{_jacobian_8h_source_l00033}{33}} of file \mbox{\hyperlink{_jacobian_8h_source}{Jacobian.\+h}}.
 
-\mbox{\Hypertarget{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}\label{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}} 
+\Hypertarget{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}\label{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c} 
 \index{Jacobian@{Jacobian}!num\_spec@{num\_spec}}
 \index{num\_spec@{num\_spec}!Jacobian@{Jacobian}}
 \doxysubsubsection{\texorpdfstring{num\_spec}{num\_spec}}
@@ -85,21 +91,21 @@ Definition at line \mbox{\hyperlink{_jacobian_8h_source_l00033}{33}} of file \mb
 
 Definition at line \mbox{\hyperlink{_jacobian_8h_source_l00032}{32}} of file \mbox{\hyperlink{_jacobian_8h_source}{Jacobian.\+h}}.
 
-\mbox{\Hypertarget{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}\label{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}} 
+\Hypertarget{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}\label{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e} 
 \index{Jacobian@{Jacobian}!production\_partials@{production\_partials}}
 \index{production\_partials@{production\_partials}!Jacobian@{Jacobian}}
 \doxysubsubsection{\texorpdfstring{production\_partials}{production\_partials}}
-{\footnotesize\ttfamily long double$\ast$ Jacobian\+::production\+\_\+partials}
+{\footnotesize\ttfamily long double\texorpdfstring{$\ast$}{*} Jacobian\+::production\+\_\+partials}
 
 
 
 Definition at line \mbox{\hyperlink{_jacobian_8h_source_l00037}{37}} of file \mbox{\hyperlink{_jacobian_8h_source}{Jacobian.\+h}}.
 
-\mbox{\Hypertarget{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}\label{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}} 
+\Hypertarget{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}\label{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b} 
 \index{Jacobian@{Jacobian}!row\_ids@{row\_ids}}
 \index{row\_ids@{row\_ids}!Jacobian@{Jacobian}}
 \doxysubsubsection{\texorpdfstring{row\_ids}{row\_ids}}
-{\footnotesize\ttfamily unsigned int$\ast$ Jacobian\+::row\+\_\+ids}
+{\footnotesize\ttfamily unsigned int\texorpdfstring{$\ast$}{*} Jacobian\+::row\+\_\+ids}
 
 
 

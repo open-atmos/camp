@@ -1,3 +1,4 @@
 <map id="camp_util::sphere_vol2rad" name="camp_util::sphere_vol2rad">
-<area shape="rect" id="node1" title="Convert mass&#45;equivalent volume &#160;(m^3) to geometric radius &#160;(m) for spherical particles." alt="" coords="5,29,177,55"/>
+<area shape="rect" id="Node000001" title="Convert mass&#45;equivalent volume &#160;(m^3) to geometric radius &#160;(m) for spherical particles." alt="" coords="5,29,177,55"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="120,16,110,10,91,8,73,10,64,15,62,20,66,28,62,30,56,21,60,11,72,5,91,3,112,5,123,12"/>
 </map>

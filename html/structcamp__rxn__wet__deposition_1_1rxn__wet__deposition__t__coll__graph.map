@@ -1,4 +1,10 @@
 <map id="camp_rxn_wet_deposition::rxn_wet_deposition_t" name="camp_rxn_wet_deposition::rxn_wet_deposition_t">
-<area shape="rect" id="node1" title="Generic test reaction data type." alt="" coords="5,93,177,133"/>
-<area shape="rect" id="node2" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="25,5,158,45"/>
+<area shape="rect" id="Node000001" title="Generic test reaction data type." alt="" coords="5,318,177,358"/>
+<area shape="rect" id="Node000002" href="$structcamp__rxn__data_1_1rxn__data__t.html" title="Abstract reaction data type." alt="" coords="25,228,157,268"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,284,94,317,88,317,88,284"/>
+<area shape="rect" id="Node000003" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="6,139,176,165"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,180,94,227,88,227,88,180"/>
+<area shape="rect" id="Node000004" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="12,5,170,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="94,61,94,138,88,138,88,61"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="187,15,197,26,189,36,171,40,170,35,186,31,192,26,184,19"/>
 </map>

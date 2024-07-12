@@ -1,4 +1,5 @@
 <map id="camp_util::string_t_finalize" name="camp_util::string_t_finalize">
-<area shape="rect" id="node1" title="Finalize a string." alt="" coords="180,5,307,45"/>
-<area shape="rect" id="node2" href="$structcamp__util_1_1string__t.html#a64da18bf3ad0df6f852c1d57fa73092e" title="Finalize the string." alt="" coords="5,5,132,45"/>
+<area shape="rect" id="Node000001" title="Finalize a string." alt="" coords="180,5,306,46"/>
+<area shape="rect" id="Node000002" href="$structcamp__util_1_1string__t.html#aedff23f28339f2bdca7f78de2eab6a89" title="Finalize the string." alt="" coords="5,5,132,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,28,132,28,132,23,164,23"/>
 </map>

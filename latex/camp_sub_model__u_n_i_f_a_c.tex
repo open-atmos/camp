@@ -1,0 +1,100 @@
+\doxysubsubsection{CAMP\+: UNIFAC Activity Coefficients}
+\hypertarget{camp_sub_model__u_n_i_f_a_c}{}\label{camp_sub_model__u_n_i_f_a_c}\index{CAMP: UNIFAC Activity Coefficients@{CAMP: UNIFAC Activity Coefficients}}
+The UNIFAC activity coefficient sub model calculates activity coefficients for species in an aerosol phase based on the current aerosol phase composition {\bfseries [Marcolli2005]}. The {\ttfamily json} object for this \doxylink{camp_sub_model}{sub model} has the following format \+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ "{}camp-\/data"{}\ :\ [}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ "{}name"{}\ :\ "{}my\ UNIFAC\ activity"{},}
+\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}SUB\_MODEL\_UNIFAC"{},}
+\DoxyCodeLine{\ \ \ \ "{}phases"{}\ :\ [}
+\DoxyCodeLine{\ \ \ \ \ \ "{}some\ phase"{},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}some\ other\ phase"{}}
+\DoxyCodeLine{\ \ \ \ ],}
+\DoxyCodeLine{\ \ \ \ "{}functional\ groups"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}CH3"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}main\ group"{}\ :\ "{}CH2"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}volume\ param"{}\ :\ 0.9011,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}surface\ param"{}\ :\ 0.8480}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}CH2"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}main\ group"{}\ :\ "{}CH2"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}volume\ param"{}\ :\ 0.6744,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}surface\ param"{}\ :\ 0.5400}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}CH=CH"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}main\ group"{}\ :\ "{}C=C"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}volume\ param"{}\ :\ 1.1167,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}suface\ param"{}\ :\ 0.8670}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ "{}main\ groups"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}CH2"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}interactions\ with"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}C=C"{}\ :\ -\/35.36}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}C=C"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}interactions\ with"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ "{}CH2"{}\ :\ 86.02}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ ...}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ The key-\/value pair {\bfseries{type}} is required and must be {\bfseries{SUB\+\_\+\+MODEL\+\_\+\+UNIFAC}}. The key-\/value pair {\bfseries{phases}} is also required, and its value must be an array of strings that correspond to valid \doxylink{camp_aero_phase}{aerosol phases}. The key-\/value pair {\bfseries{functional}} {\bfseries{groups}} is also required, and must contain a set of key-\/value pairs whose keys are the names of UNIFAC functions groups, and whose values are a set of key value pairs that contain, at minimum\+:
+\begin{DoxyItemize}
+\item {\bfseries{main}} {\bfseries{group}} \+: a string that corresponds to a key in the {\bfseries{main}} {\bfseries{groups}} set.
+\item {\bfseries{volume}} {\bfseries{param}} \+: the floating-\/point volume parameter for this functional group.
+\item {\bfseries{surface}} {\bfseries{param}} \+: this floating-\/point surface parameter for this functional group. The last required key-\/value pair is {\bfseries{main}} {\bfseries{groups}} whose value must be a set of key-\/value pairs whose keys are the names of the UNIFAC main groups and whose values are a set key-\/pairs that contain, at minimum, {\bfseries{interaction}} {\bfseries{with}} whose value is a set of key-\/value pairs whose keys are the names of the other {\bfseries{main}} {\bfseries{groups}} and whose values are the floating-\/point interation parameters for that interaction. Each main group may contain up to one interaction with each other main group, and may not contain an interaction with itself. Missing interactions are assumed to be 0.\+0.
+\end{DoxyItemize}
+
+Species in the specified phase for whom acitivity coefficients will be calculated must contain a key-\/value pair {\bfseries{UNIFAC}} {\bfseries{groups}} whose value is a set of key value pairs that correspond with members of the {\bfseries{functional}} {\bfseries{groups}} set and whose values are the integer number of instances of a particular functional group in this species. There must also be a {\bfseries{CHEM\+\_\+\+SPEC\+\_\+\+ACTIVITY\+\_\+\+COEFF}} species with a key value pair {\bfseries{chemical}} {\bfseries{species}} whose value is the name of the chemical species. Both the chemical species and the activity coefficient must be included in any aerosol phase for which activities are being calculated. For the above example UNIFAC model, the following species would be valid and included in activity coefficient calculations\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ "{}camp-\/data"{}\ :\ [}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ "{}name"{}\ :\ "{}my\ species"{},}
+\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{\ \ \ \ "{}phase"{}\ :\ "{}AEROSOL"{},}
+\DoxyCodeLine{\ \ \ \ "{}UNIFAC\ groups"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}CH3"{}\ :\ 4,}
+\DoxyCodeLine{\ \ \ \ \ \ "{}C=C"{}\ :\ 1}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ "{}name"{}\ :\ "{}gamma\ my\ species"{},}
+\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{\ \ \ \ "{}phase"{}\ :\ "{}AEROSOL"{},}
+\DoxyCodeLine{\ \ \ \ "{}tracer\ type"{}\ :\ "{}ACTIVITY\_COEFF"{},}
+\DoxyCodeLine{\ \ \ \ "{}chemical\ species"{}\ :\ "{}my\ species"{}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ "{}name"{}\ :\ "{}my\ other\ species"{},}
+\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{\ \ \ \ "{}phase"{}\ :\ "{}AEROSOL"{},}
+\DoxyCodeLine{\ \ \ \ "{}UNIFAC\ groups"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}CH3"{}\ :\ 2,}
+\DoxyCodeLine{\ \ \ \ \ \ "{}CH2"{}\ :\ 4}
+\DoxyCodeLine{\ \ \ \ \},}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ "{}name"{}\ :\ "{}gamma\ my\ other\ species"{},}
+\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}CHEM\_SPEC"{},}
+\DoxyCodeLine{\ \ \ \ "{}phase"{}\ :\ "{}AEROSOL"{},}
+\DoxyCodeLine{\ \ \ \ "{}tracer\ type"{}\ :\ "{}ACTIVITY\_COEFF"{}}
+\DoxyCodeLine{\ \ \ \ "{}chemical\ species"{}\ :\ "{}my\ other\ species"{}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ "{}name"{}\ :\ "{}some\ phase"{},}
+\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}AERO\_PHASE"{},}
+\DoxyCodeLine{\ \ \ \ "{}species"{}\ :\ \{\ "{}my\ species"{},\ "{}gamma\ my\ species"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "{}my\ other\ species"{},\ gamma\ my\ other\ species"{}\}}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ 

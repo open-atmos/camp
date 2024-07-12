@@ -1,0 +1,48 @@
+\doxysubsubsection{CAMP\+: Special CMAQ Reaction for OH+\+HNO3}
+\hypertarget{camp_rxn__c_m_a_q__o_h__h_n_o3}{}\label{camp_rxn__c_m_a_q__o_h__h_n_o3}\index{CAMP: Special CMAQ Reaction for OH+HNO3@{CAMP: Special CMAQ Reaction for OH+HNO3}}
+For the reaction\+:
+
+\[\ce{
+   OH + HNO3 ->[k] NO3 + H2O
+ }\]
+
+CMAQ rate constants are calculated as\+:
+
+\[
+   k=k_0+(\frac{k_3[\mbox{M}]}{1+k_3[\mbox{M}]/k_2})
+ \]
+
+where $k_0$, $k_2$ and $k_3$ are \doxylink{camp_rxn_arrhenius}{Arrhenius} rate constants with $D=300$ and $E=0$, and $[\mbox{M}]$ is the concentration of air {\bfseries [Gipson]}.
+
+Input data for CMAQ $\ce{OH + HNO3}$ reactions have the following format\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}CMAQ\_OH\_HNO3"{},}
+\DoxyCodeLine{\ \ "{}k0\_A"{}\ :\ 5.6E-\/12,}
+\DoxyCodeLine{\ \ "{}k0\_B"{}\ :\ -\/1.8,}
+\DoxyCodeLine{\ \ "{}k0\_C"{}\ :\ 180.0,}
+\DoxyCodeLine{\ \ "{}k2\_A"{}\ :\ 3.4E-\/12,}
+\DoxyCodeLine{\ \ "{}k2\_B"{}\ :\ -\/1.6,}
+\DoxyCodeLine{\ \ "{}k2\_C"{}\ :\ 104.1,}
+\DoxyCodeLine{\ \ "{}k3\_A"{}\ :\ 3.2E-\/11,}
+\DoxyCodeLine{\ \ "{}k3\_B"{}\ :\ -\/1.5,}
+\DoxyCodeLine{\ \ "{}k3\_C"{}\ :\ 92.0,}
+\DoxyCodeLine{\ \ "{}time\ unit"{}\ :\ "{}MIN"{},}
+\DoxyCodeLine{\ \ "{}reactants"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ "{}spec1"{}\ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ "{}spec2"{}\ :\ \{\ "{}qty"{}\ :\ 2\ \},}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ "{}products"{}\ :\ \{}
+\DoxyCodeLine{\ \ \ \ "{}spec3"{}\ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ "{}spec4"{}\ :\ \{\ "{}yield"{}\ :\ 0.65\ \},}
+\DoxyCodeLine{\ \ \ \ ...}
+\DoxyCodeLine{\ \ \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ The key-\/value pairs {\bfseries{reactants}}, and {\bfseries{products}} are required. Reactants without a {\bfseries{qty}} value are assumed to appear once in the reaction equation. Products without a specified {\bfseries{yield}} are assumed to have a {\bfseries{yield}} of 1.\+0.
+
+The three sets of parameters beginning with {\bfseries{k0\+\_\+}}, {\bfseries{k2\+\_\+}}, and {\bfseries{k3\+\_\+}}, are the \doxylink{camp_rxn_arrhenius}{Arrhenius} parameters for the $k_0$, $k_2$ and $k_3$ rate constants, respectively. When not present, {\bfseries{\+\_\+A}} parameters are assumed to be 1.\+0, {\bfseries{\+\_\+B}} to be 0.\+0, and {\bfseries{\+\_\+C}} to be 0.\+0.
+
+The unit for time is assumed to be s, but inclusion of the optional key-\/value pair {\bfseries{time}} {\bfseries{unit}} = {\bfseries{MIN}} can be used to indicate a rate with min as the time unit. 

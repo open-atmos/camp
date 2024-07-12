@@ -1,4 +1,6 @@
 <map id="camp_camp_core::state_size" name="camp_camp_core::state_size">
-<area shape="rect" id="node1" title="Get the size of the state array." alt="" coords="213,29,404,55"/>
-<area shape="rect" id="node2" href="$namespacecamp__camp__core.html#afb6c4595458a836ddd6d59d96f89aab1" title="Get the size of the state array for each grid cell." alt="" coords="5,22,165,62"/>
+<area shape="rect" id="Node000001" title="Get the size of the state array." alt="" coords="213,29,402,55"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="346,17,333,10,307,8,284,10,271,15,268,20,275,27,270,31,263,21,267,11,283,5,307,3,335,5,348,12"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__camp__core.html#afb6c4595458a836ddd6d59d96f89aab1" title="Get the size of the state array for each grid cell." alt="" coords="5,22,165,63"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="197,45,165,45,165,40,197,40"/>
 </map>

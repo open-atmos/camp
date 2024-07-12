@@ -1,0 +1,40 @@
+\doxysubsubsection{CAMP\+: Modal/\+Binned Mass Aerosol Representation}
+\hypertarget{camp_aero_rep_modal_binned_mass}{}\label{camp_aero_rep_modal_binned_mass}\index{CAMP: Modal/Binned Mass Aerosol Representation@{CAMP: Modal/Binned Mass Aerosol Representation}}
+The modal/binned mass aerosol representation includes a set of sections/bins that are made up of one or more \doxylink{camp_aero_phase}{aerosol phases.} The {\ttfamily json} object for this \doxylink{camp_aero_rep}{aerosol representation} has the following format\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{\ "{}camp-\/data"{}\ :\ [}
+\DoxyCodeLine{\ \ \{}
+\DoxyCodeLine{\ \ \ \ "{}name"{}\ :\ "{}my\ modal/binned\ aero\ rep"{},}
+\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}AERO\_REP\_MODAL\_BINNED\_MASS"{},}
+\DoxyCodeLine{\ \ \ \ "{}modes/bins"{}\ :}
+\DoxyCodeLine{\ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ "{}dust"{}\ :}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}type"{}\ :\ "{}BINNED"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}phases"{}\ :\ [\ "{}insoluble"{},\ "{}organic"{},\ "{}aqueous"{}\ ],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}bins"{}\ :\ 8,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}minimum\ diameter\ [m]"{}\ :\ 0.8e-\/9,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}maximum\ diameter\ [m]"{}\ :\ 1.0e-\/6,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}scale"{}\ :\ "{}LOG"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \},}
+\DoxyCodeLine{\ \ \ \ \ \ "{}depeche"{}\ :}
+\DoxyCodeLine{\ \ \ \ \ \ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}type"{}\ :\ "{}MODAL"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}phases"{}\ :\ [\ "{}moody"{},\ "{}listless"{}\ ],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}shape"{}\ :\ "{}LOG\_NORMAL"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \}}
+\DoxyCodeLine{\ \ \ \ \}}
+\DoxyCodeLine{\ \ \},}
+\DoxyCodeLine{\ \ ...}
+\DoxyCodeLine{]\}}
+
+\end{DoxyCode}
+ The key-\/value pair {\bfseries{type}} is required and must be {\bfseries{AERO\+\_\+\+REP\+\_\+\+MODAL\+\_\+\+BINNED\+\_\+\+MASS}}. The key-\/value pair {\bfseries{modes/bins}} is also required and must contain a set of at least one uniquely named mode or bin-\/set key-\/value pair whose value(s) specify a {\bfseries{type}} that must be either {\bfseries{MODAL}} or {\bfseries{BINNED}} and an array of {\bfseries{phases}} that correspond to existing \doxylink{camp_aero_phase}{aerosol phase} objects. Each phase will be present once within a mode or once within each bin in a bin-\/set.
+
+Modes must also specify a distribution {\bfseries{shape}} which must be {\bfseries{LOG\+\_\+\+NORMAL}} (the available shapes may be expanded in the future). Log-\/normal sections have {\bfseries{geometric}} {\bfseries{mean}} {\bfseries{diameter}} (m) and a {\bfseries{geometric}} {\bfseries{standard}} {\bfseries{deviation}} (unitless) properties that must be set using an {\ttfamily aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+\+GMD\+\_\+t} or and {\ttfamily aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+\+GSD\+\_\+t} object and will be used along with the mass concentration of species in each phase and their densities to calculate a lognormal distribution for each mode at runtime.
+
+Bin sets must specify the number of {\bfseries{bins}}, a {\bfseries{minimum}} {\bfseries{diameter}} (m), a {\bfseries{maximum}} {\bfseries{diameter}} (m) and a {\bfseries{scale}}, which must be {\bfseries{LOG}} or {\bfseries{LINEAR}}. The number concentration will be calculated at run-\/time based on the total mass of each bin, the species densities and the diameter of particles in that bin.
+
+The GMD and GSD for each mode must be set from an external model using {\ttfamily camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+\+GMD\+\_\+t} and {\ttfamily camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+\+GSD\+\_\+t} objects. 

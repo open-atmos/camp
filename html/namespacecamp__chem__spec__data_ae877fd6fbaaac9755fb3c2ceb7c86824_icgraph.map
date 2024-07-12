@@ -1,4 +1,6 @@
 <map id="camp_chem_spec_data::gas_state_id" name="camp_chem_spec_data::gas_state_id">
-<area shape="rect" id="node1" title="Get a gas&#45;phase species index in the camp_camp_state::camp_state_t::state_var array...." alt="" coords="213,29,373,69"/>
-<area shape="rect" id="node2" href="$namespacecamp__chem__spec__data.html#a909fdf4aab2bd2d9ab7353b546d06b2f" title="Get a gas&#45;phase species name in the camp_camp_state::camp_state_t::state_var array...." alt="" coords="5,29,165,69"/>
+<area shape="rect" id="Node000001" title="Get a gas&#45;phase species index in the camp_camp_state::camp_state_t::state_var array...." alt="" coords="213,29,372,70"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="326,16,313,10,292,8,273,10,261,15,256,20,258,28,253,29,251,19,258,10,271,5,292,3,315,5,328,11"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__chem__spec__data.html#a909fdf4aab2bd2d9ab7353b546d06b2f" title="Get a gas&#45;phase species name in the camp_camp_state::camp_state_t::state_var array...." alt="" coords="5,29,165,70"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="197,52,165,52,165,47,197,47"/>
 </map>
