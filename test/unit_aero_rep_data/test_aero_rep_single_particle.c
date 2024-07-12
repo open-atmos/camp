@@ -29,7 +29,7 @@
 #define AERO_PHASE_IDX ((TEST_PARTICLE-1)*NUM_AERO_PHASE+1)
 
 // number of Jacobian elements used for the test phase
-#define N_JAC_ELEM 12 
+#define N_JAC_ELEM 12
 
 // Test concentrations (kg/m3)
 #define CONC_wheat 1.0

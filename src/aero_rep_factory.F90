@@ -211,8 +211,8 @@ module camp_aero_rep_factory
 
   !> Identifiers for aerosol representations - used by binary
   !! packing/unpacking functions
-  integer(kind=i_kind), parameter :: AERO_REP_SINGLE_PARTICLE        = 1
-  integer(kind=i_kind), parameter :: AERO_REP_MODAL_BINNED_MASS      = 2
+  integer(kind=i_kind), parameter :: AERO_REP_SINGLE_PARTICLE   = 1
+  integer(kind=i_kind), parameter :: AERO_REP_MODAL_BINNED_MASS = 2
 
   !> Factory type for aerosol representations
   !!
