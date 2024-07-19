@@ -4,7 +4,7 @@
     "timeSteps": 5,
     "timeStepsDt": 2,
     "case": "GPU BDF",
-    "nCells": 1250,
+    "nCells": 12,
     "caseGpuCpu": "GPU",
     "caseMulticellsOnecell": "BDF",
     "mpiProcesses": 80,
@@ -16,7 +16,7 @@
         80
     ],
     "cells": [
-        100000
+        1000
     ],
     "profileCuda": "",
     "caseBase": "CPU One-cell",
@@ -30,11 +30,10 @@
     "sbatch_job_id": "",
     "exportPath": "exports",
     "results_file": "_solver_stats.csv",
-    "nCellsProcesses": 100000,
+    "nCellsProcesses": 1000,
     "campConf": "settings/config_variables_c_solver.txt",
     "gpu_percentages": [
-        98,
-        99
+        98
     ],
-    "gpu_percentage": 99
+    "gpu_percentage": 98
 }

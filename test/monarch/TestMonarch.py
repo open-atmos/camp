@@ -11,8 +11,8 @@ def all_timesteps():
   conf = TestMonarch()
   conf.casesOptim = []
   conf.timeSteps = 5
-  conf.gpu_percentages = [98,99]
-  conf.cells = [100000]
+  conf.gpu_percentages = [98]
+  conf.cells = [1000]
   conf.mpiProcessesCaseBase = 80
   conf.caseBase = "CPU One-cell"
   #conf.caseBase = "GPU BDF"
