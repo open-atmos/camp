@@ -19,13 +19,6 @@ if [ "${BSC_MACHINE}" == "mn5" ]; then
     module load python/3.12.1-gcc
   else
     if module --raw --redirect show cuda 2>/dev/null | grep -q cuda ; then
-      #module load nvidia-hpc-sdk
-      #module load intel
-      #module load impi
-      #module load mkl
-      #module load hdf5
-      #module load pnetcdf
-      #module load nvidia-hpc-sdk
       module load intel/2023.2.0
       module load impi/2021.10.0
       module load mkl/2023.2.0
