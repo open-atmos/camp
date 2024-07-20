@@ -2,7 +2,7 @@
 
 if [ "${BSC_MACHINE}" == "mn5" ]; then
   module load bsc
-  if module list 2>&1 | grep -q "\<gcc\>"; then
+  if [ "$1" == "gcc" ]; then
     module load gcc
     module load openmpi/4.1.5-gcc
     module load mkl

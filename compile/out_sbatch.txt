@@ -1,2 +1,0 @@
-/gpfs/scratch/bsc32/bsc032815/gpupartmc/camp/compile
-hi

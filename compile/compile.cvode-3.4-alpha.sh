@@ -10,7 +10,7 @@ camp_suite_dir=`cd ${camp_suite_dir} ; pwd`
 initial_dir=$(pwd)
 case "${BSC_MACHINE}-loadmodules" in
   "mn5-loadmodules")
-  if module list 2>&1 | grep -q "\<gcc\>"; then
+  if [ "$1" == "gcc" ]; then
     module load gcc
     module load openmpi/4.1.5-gcc
   else
