@@ -73,13 +73,14 @@ contains
 
 
   function constructor(camp_config_file, output_file_title, &
-   starting_id, ending_id, n_cells) result (this)
+   starting_id, ending_id, n_cells, gpu_percentage) result (this)
     type(camp_monarch_interface_t), pointer :: this
     character(len=:), allocatable, optional :: camp_config_file
     character(len=*), intent(in):: output_file_title
     integer :: starting_id
     integer :: ending_id
     integer :: n_cells
+    integer, intent(in) :: gpu_percentage
     type(camp_solver_data_t), pointer :: camp_solver_data
     character, allocatable :: buffer(:)
     integer(kind=i_kind) :: pos, pack_size, size
@@ -94,7 +95,7 @@ contains
     type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
     real(kind=dp) :: comp_start, comp_end
     character(len=128) :: i_str
-    integer :: gpu_percentage,is_reset_jac
+    integer :: is_reset_jac
 
     MONARCH_PROCESS = camp_mpi_rank()
     allocate(this)
@@ -219,12 +220,6 @@ contains
       call camp_mpi_unpack_real_array(buffer, pos, this%specs_emi)
     end if
     deallocate(buffer)
-    gpu_percentage=0
-    if(this%solve_multiple_cells) then
-      open(unit=32, file='settings/config_variables_c_solver.txt', status='old')
-      read(32, *) gpu_percentage
-      close(32)
-    end if
     is_reset_jac=1 ! Set to 1 to compare correctly with the GPU, otherwise the error is too high, because GPU can not
     ! use values from previous cell.
     !By default is_reset_jac is set to 0 because it accelerates MONARCH case

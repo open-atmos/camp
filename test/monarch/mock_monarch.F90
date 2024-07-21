@@ -41,7 +41,7 @@ program mock_monarch_t
   real :: curr_time = START_TIME
   type(camp_monarch_interface_t), pointer :: camp_interface
   character(len=:), allocatable :: camp_input_file, chemFile,&
-  caseMulticellsOnecell, diffCells,caseGpuCpu
+  diffCells,caseGpuCpu
   character(len=:), allocatable :: output_path, output_file_title, str_to_int_aux
   character(len=:), allocatable :: str
   character, allocatable :: buffer(:)
@@ -53,7 +53,7 @@ program mock_monarch_t
   type(json_core) :: json
   character(len=:), allocatable :: export_path
   character(len=128) :: i_str
-  integer :: id, n_cells_monarch
+  integer :: id, n_cells_monarch, gpu_percentage
 
   call camp_mpi_init()
   I_W=1
@@ -69,10 +69,12 @@ program mock_monarch_t
   camp_input_file = "settings/"//output_file_title//"/config.json"
   output_path = "out/"//output_file_title
   call jfile%get('nCells',NUM_VERT_CELLS)
-  call jfile%get('caseMulticellsOnecell',caseMulticellsOnecell)
-  output_path = output_path//"_"//caseMulticellsOnecell
   n_cells_monarch = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
-  if(caseMulticellsOnecell=="One-cell") then
+  gpu_percentage=0
+  open(unit=32, file='settings/config_variables_c_solver.txt', status='old')
+  read(32, *) gpu_percentage
+  close(32)
+  if(gpu_percentage == 0) then
     n_cells = 1
   else
     n_cells = n_cells_monarch
@@ -89,7 +91,7 @@ program mock_monarch_t
   if (camp_mpi_rank()==0) then
     write(*,*) "Time-steps:", NUM_TIME_STEP, "Cells:",&
         NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS, &
-            diffCells,  caseMulticellsOnecell,caseGpuCpu, "MPI processes",camp_mpi_size()
+            diffCells,caseGpuCpu, "MPI processes",camp_mpi_size()
 
   end if
   allocate(temperature(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
@@ -100,7 +102,7 @@ program mock_monarch_t
   allocate(conv(NUM_WE_CELLS, NUM_SN_CELLS, NUM_VERT_CELLS))
 
   camp_interface => camp_monarch_interface_t(camp_input_file, output_file_title, &
-          START_CAMP_ID, END_CAMP_ID, n_cells)
+          START_CAMP_ID, END_CAMP_ID, n_cells, gpu_percentage)
 
   camp_interface%camp_state%state_var(:) = 0.0
   species_conc(:,:,:,:) = 0.0
