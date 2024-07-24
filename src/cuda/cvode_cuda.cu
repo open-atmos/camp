@@ -1507,43 +1507,6 @@ int cudaDevicecvEwtSetSV(ModelDataGPU *md, ModelDataVariable *sc,double *weight)
 }
 
 __device__
-static void cudaDevicecvHandleFailure(int flag){
-  if(threadIdx.x==0){
-    switch (flag) {
-    case CV_ERR_FAILURE:
-      printf("CVODE ERROR: %s at cell %d\n",MSGCV_ERR_FAILS,blockIdx.x);
-      break;
-    case CV_CONV_FAILURE:
-      printf("CVODE ERROR: %s at cell %d\n",MSGCV_CONV_FAILS,blockIdx.x);
-      break;
-    case CV_LSETUP_FAIL:
-      printf("CVODE ERROR: %s at cell %d\n",MSGCV_SETUP_FAILED,blockIdx.x);
-      break;
-    case CV_LSOLVE_FAIL:
-      printf("CVODE ERROR: %s at cell %d\n",MSGCV_SOLVE_FAILED,blockIdx.x);
-      break;
-    case CV_RHSFUNC_FAIL:
-      printf("CVODE ERROR: %s at cell %d\n",MSGCV_RHSFUNC_FAILED,blockIdx.x);
-      break;
-    case CV_UNREC_RHSFUNC_ERR:
-      printf("CVODE ERROR: %s at cell %d\n",MSGCV_RHSFUNC_UNREC,blockIdx.x);
-      break;
-    case CV_REPTD_RHSFUNC_ERR:
-      printf("CVODE ERROR: %s at cell %d\n",MSGCV_RHSFUNC_REPTD,blockIdx.x);
-      break;
-    case CV_RTFUNC_FAIL:
-      printf("CVODE ERROR: %s at cell %d\n",MSGCV_RTFUNC_FAILED,blockIdx.x);
-      break;
-    case CV_TOO_CLOSE:
-      printf("CVODE ERROR: %s at cell %d\n",MSGCV_TOO_CLOSE,blockIdx.x);
-      break;
-    default:
-      printf("CVODE ERROR: Unknown at cell %d\n",blockIdx.x);
-    }
-  }
-}
-
-__device__
 int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -1594,7 +1557,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
       if (ewtsetOK != 0) {
         md->yout[i] = md->dzn[0][i];
         if(i==0) printf("ERROR: ewtsetOK\n");
-        cudaDevicecvHandleFailure(CV_ILL_INPUT);
         return CV_ILL_INPUT;
       }
     }
@@ -1604,7 +1566,6 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
       if(i==0) printf("ERROR: CAMP_SOLVER_DEFAULT_MAX_STEPS reached "
         "nstloc %d CAMP_SOLVER_DEFAULT_MAX_STEPS %d\n",
         nstloc,CAMP_SOLVER_DEFAULT_MAX_STEPS);
-      cudaDevicecvHandleFailure(CV_TOO_MUCH_WORK);
       return CV_TOO_MUCH_WORK;
     }
     double nrm;
@@ -1613,14 +1574,12 @@ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
     if (UNIT_ROUNDOFF * nrm > 1.) {
       md->yout[i] = md->dzn[0][i];
       if(i==0) printf("ERROR: cv_tolsf > 1\n");
-      cudaDevicecvHandleFailure(CV_TOO_MUCH_ACC);
       return CV_TOO_MUCH_ACC;
     }
     kflag2 = cudaDevicecvStep(md, sc);
     if (kflag2 != CV_SUCCESS) {
       md->yout[i] = md->dzn[0][i];
       if(i==0) printf("ERROR: kflag != CV_SUCCESS\n");
-      cudaDevicecvHandleFailure(kflag2);
       return kflag2;
     }
     nstloc++;
