@@ -41,7 +41,7 @@ program mock_monarch_t
   real :: curr_time = START_TIME
   type(camp_monarch_interface_t), pointer :: camp_interface
   character(len=:), allocatable :: camp_input_file, chemFile,&
-  diffCells,caseGpuCpu
+    diffCells,caseGpuCpu
   character(len=:), allocatable :: output_path, output_file_title, str_to_int_aux
   character(len=:), allocatable :: str
   character, allocatable :: buffer(:)
