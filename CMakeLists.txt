@@ -114,6 +114,7 @@ if(ENABLE_MPI)
   add_definitions(-DCAMP_USE_MPI)
   if(ENABLE_PROFILE_SOLVING)
     add_definitions(-DPROFILE_SOLVING)
+    add_definitions(-DCAMP_PROFILE_SOLVING) #Debug GPU only
   endif()
 endif()
 
