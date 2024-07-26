@@ -104,6 +104,7 @@ typedef struct {
   int n_per_cell_solver_jac_elem;  // number of potentially non-zero
                                    // solver Jacobian elements
   int n_cells;                     // number of cells to compute simultaneously
+  int n_cells_cpu;
   int n_cells_gpu;
   double *abs_tol;  // pointer to array of state variable absolute
                     // integration tolerances
@@ -132,6 +133,7 @@ typedef struct {
   int n_mapped_values;     // Number of Jacobian map elements
   int n_mapped_params;     // Number of Jacobian map elements for sub models
 
+  int grid_cell_id;         // Index of the current grid cell
   double *grid_cell_state;  // Pointer to the current grid cell being solved
                             // on the total_state array
   double *total_state;      // Total (multi-cell) state array
@@ -229,7 +231,10 @@ typedef struct {
   SUNMatrix J;         // Jacobian matrix
   SUNMatrix J_guess;   // Jacobian matrix for improving guesses sent to linear
                        // solver
+  bool curr_J_guess;   // Flag indicating the Jacobian used by the guess helper
+                       // is current
   realtype J_guess_t;  // Last time (t) for which J_guess was calculated
+  int Jac_eval_fails;  // Number of Jacobian evaluation failures
   int solver_flag;     // Last flag returned by a call to CVode()
   int output_precision;  // Flag indicating whether to output precision loss
   int use_deriv_est;     // Flag indicating whether to use an estimated
@@ -242,18 +247,14 @@ typedef struct {
       max_loss_precision;  // Maximum loss of precision during last call to f()
 #endif
 
-//GPU only
-#ifdef CAMP_PROFILE_SOLVING
-#ifdef CAMP_USE_GPU
-  cudaEvent_t startcvStep;
-  cudaEvent_t stopcvStep;
-#endif
-#endif
-
+  double t_initial;
+  double t_final;
 
 #ifdef PROFILE_SOLVING
   double timeCVode;
 #ifdef CAMP_USE_GPU
+  cudaEvent_t startcvStep;
+  cudaEvent_t stopcvStep;
   cudaEvent_t startGPU;
   cudaEvent_t stopGPU;
   cudaEvent_t startGPUSync;
@@ -267,13 +268,18 @@ typedef struct {
   ModelDataCPU mCPU;
   ModelDataGPU *mGPU;
   double **dzn;
-  int *flagCells;//GPU only
+  int *flagCells;
+  float rate_cells_gpu;
 #endif
+  int use_cpu;
+
   int gpu_percentage;
   int is_reset_jac;
 
   void *cvode_mem;       // CVodeMem object
   ModelData model_data;  // Model data (used during initialization and solving)
+  bool no_solve;  // Flag to indicate whether to run the solver needs to be
+                  // run. Set to true when no reactions are present.
   double init_time_step;  // Initial time step (s)
   char **spec_names;      // Species names
 } SolverData;

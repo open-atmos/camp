@@ -59,7 +59,7 @@ def process_variable(dataset1, dataset2, var_name):
 
 src_path="/gpfs/scratch/bsc32/bsc032815/monarch_out/"
 file1_path_header = "cpu_80coresTstep6/"
-file2_path_header = "gpu_80coresTstep6_commit24_05/"
+file2_path_header = "gpu_80coresTstep6_commit15_07/"
 
 file1 = src_path + file1_path_header + "out/stats.csv"
 file2 = src_path + file2_path_header + "out/stats.csv"
@@ -67,7 +67,7 @@ speedup = calculate_speedup(file1, file2)
 print("Speedup:", speedup)
 
 file1 = src_path + file1_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
-file2 = src_path + file2_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"for: cpu_80coresTstep6/ vs gpu_80coresTstep6_commit24_05/
+file2 = src_path + file2_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
 dataset1 = nc.Dataset(file1)
 dataset2 = nc.Dataset(file2)
 variable_names = dataset1.variables.keys()
@@ -100,7 +100,7 @@ worst_variables = worst_variables.drop('Relative Error', axis=1)
 highest_nrmse_row = worst_variables.iloc[0]
 highest_nrmse_variable = highest_nrmse_row['Variable']
 highest_nrmse = highest_nrmse_row['NRMSE[%]']
-print("worst_variables for:",file1_path_header,"vs",file2_path_header)
+print("worst_variables:")
 print(worst_variables)
 print("Config:",file1_path_header,"vs",file2_path_header)
 print(f"Highest NRMSE[%]: {highest_nrmse:.2f}")
