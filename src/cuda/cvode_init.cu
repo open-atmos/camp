@@ -210,7 +210,7 @@ void constructor_cvode_gpu(SolverData *sd){
   for (int i = 0; i < n_cells; i++){
     cudaMemcpyAsync(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice,stream);
   }
-#ifdef IS_DEBUG_MODE_CSR_ODE_GPU
+#ifndef IS_DEBUG_MODE_CSR_ODE_GPU
   int n_row=nrows/n_cells;
   int* Ap=iA;
   int* Aj=jA;
@@ -241,9 +241,9 @@ void constructor_cvode_gpu(SolverData *sd){
     }
   }
   for(int col = 0, last = 0; col <= n_row; col++){
-    int temp  = Bp[col];
+    int temp = Bp[col];
     Bp[col] = last;
-    last    = temp;
+    last = temp;
   }
   nnz=md->n_mapped_values;
   int *aux_solver_id= (int *)malloc(nnz * sizeof(int));
@@ -252,20 +252,23 @@ void constructor_cvode_gpu(SolverData *sd){
   }
   free(mapJSPMV);
   int *jac_solver_id= (int *)malloc(nnz * sizeof(int));
+  JacMap *jac_map = (JacMap *)malloc(nnz*sizeof(JacMap));
   for (int i = 0; i < nnz; i++){
     jac_solver_id[i]=aux_solver_id[i];
     aux_solver_id[i]=md->jac_map[i].solver_id;
-    md->jac_map[i].solver_id=jac_solver_id[i];
+    jac_map[i].solver_id=jac_solver_id[i];
+    jac_map[i].rxn_id=md->jac_map[i].rxn_id;
+    jac_map[i].param_id=md->jac_map[i].param_id;
   }
-  cudaMemcpy(mGPU->diA, Bp, (n_row + 1) * sizeof(int), cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->djA, Bi, nnz * sizeof(int), cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->dA, Bx, nnz * sizeof(double), cudaMemcpyHostToDevice);
-  cudaMemcpy(mGPU->jac_map, md->jac_map, sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice);
+  cudaMemcpyAsync(mGPU->diA, Bp, (n_row + 1) * sizeof(int), cudaMemcpyHostToDevice, stream);
+  cudaMemcpyAsync(mGPU->djA, Bi, nnz * sizeof(int), cudaMemcpyHostToDevice, stream);
+  cudaMemcpyAsync(mGPU->jac_map, jac_map, nnz * sizeof(JacMap), cudaMemcpyHostToDevice, stream);
   free(Bp);
   free(Bi);
   free(Bx);
   free(jac_solver_id);
   free(aux_solver_id);
+  free(jac_map);
 #endif
 }
 

@@ -59,7 +59,7 @@ def process_variable(dataset1, dataset2, var_name):
 
 src_path="/gpfs/scratch/bsc32/bsc032815/monarch_out/"
 file1_path_header = "cpu_80coresTstep6/"
-file2_path_header = "gpu_80coresTstep6_commit15_07/"
+file2_path_header = "gpu_80coresTstep6/"
 
 file1 = src_path + file1_path_header + "out/stats.csv"
 file2 = src_path + file2_path_header + "out/stats.csv"

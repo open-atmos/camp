@@ -402,7 +402,7 @@ __device__ void cudaDeviceSpmv_2CSC_block(double* dx, double* db, double* dA, in
 }
 
 __device__ void cudaDeviceSpmv_2(double* dx, double* db, double* dA, int* djA, int* diA){
-#ifdef IS_DEBUG_MODE_CSR_ODE_GPU
+#ifndef IS_DEBUG_MODE_CSR_ODE_GPU
   cudaDeviceSpmv_2CSR(dx,db,dA,djA,diA);
 #else
   cudaDeviceSpmv_2CSC_block(dx,db,dA,djA,diA);
