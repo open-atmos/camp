@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ "${BSC_MACHINE}" == "mn5" ]; then
-  module use /apps/GPP/modulefiles/applications /apps/GPP/modulefiles/compilers /apps/GPP/modulefiles/tools /apps/GPP/modulefiles/libraries /apps/GPP/modulefiles/environment /apps/GPP/modulefiles/libs #It use an utility non-existent in default modules: NetCDF-Python
+  #module use /apps/GPP/modulefiles/applications /apps/GPP/modulefiles/compilers /apps/GPP/modulefiles/tools /apps/GPP/modulefiles/libraries /apps/GPP/modulefiles/environment /apps/GPP/modulefiles/libs #It use an utility non-existent in default modules: NetCDF-Python
   module load bsc
   if [ "$1" == "gcc" ]; then
     module load gcc

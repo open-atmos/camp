@@ -305,7 +305,7 @@ endif()
 
 set(STD_C_FLAGS "-std=c99")
 #-lnvToolsExt for nsys profiling
-set(STD_CUDA_FLAGS "-g -O3 --default-stream per-thread -lnvToolsExt") #-G for assembly code nsight
+set(STD_CUDA_FLAGS "-g -O3") #-G for assembly code nsight
 
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
   if(${CMAKE_Fortran_COMPILER_VERSION} GREATER_EQUAL 2021.10.0)

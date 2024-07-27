@@ -210,7 +210,7 @@ void constructor_cvode_gpu(SolverData *sd){
   for (int i = 0; i < n_cells; i++){
     cudaMemcpyAsync(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice,stream);
   }
-#ifndef IS_DEBUG_MODE_CSR_ODE_GPU
+#ifdef IS_DEBUG_MODE_CSR_ODE_GPU
   int n_row=nrows/n_cells;
   int* Ap=iA;
   int* Aj=jA;

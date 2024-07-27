@@ -134,7 +134,6 @@ void rxn_HL_phase_transfer_get_used_jac_elem(ModelData *model_data,
   }
 
   free(aero_jac_elem);
-
   return;
 }
 

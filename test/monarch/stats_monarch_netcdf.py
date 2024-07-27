@@ -93,7 +93,6 @@ summary_table = pd.DataFrame(summary_data, columns=[
     'Quantile 95','Max','Relative Error'])
 
 worst_variables = summary_table.nlargest(10, 'NRMSE[%]')
-plt.figure()
 data = [row['Relative Error'].reshape(-1) for _, row in worst_variables.iterrows()]
 variable_names = [row['Variable'] for _, row in worst_variables.iterrows()]
 worst_variables = worst_variables.drop('Relative Error', axis=1)
@@ -105,8 +104,11 @@ print(worst_variables)
 print("Config:",file1_path_header,"vs",file2_path_header)
 print(f"Highest NRMSE[%]: {highest_nrmse:.2f}")
 print("Speedup:", speedup)
-sns.boxplot(data=data, orient='v', showfliers=False)
-plt.ylabel("Relative Error [%]")
-plt.xticks(range(len(variable_names)), variable_names, rotation=90)
-plt.title("Species with highest NRMSE for MONARCH-CAMP") #4 GPUs 480 time-steps
-#plt.show()
+plot_nrmse = False
+if plot_nrmse:
+    plt.figure()
+    sns.boxplot(data=data, orient='v', showfliers=False)
+    plt.ylabel("Relative Error [%]")
+    plt.xticks(range(len(variable_names)), variable_names, rotation=90)
+    plt.title("Species with highest NRMSE for MONARCH-CAMP") #4 GPUs 480 time-steps
+    plt.show()
