@@ -10,8 +10,8 @@
 #include "../camp_common.h"
 
 void constructor_cvode_gpu(SolverData *sd);
-int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
-               realtype *tret, SolverData *sd);
+int cudaCVode(void *cvode_mem, double tout, N_Vector yout,
+               double *tret, SolverData *sd, double t_initial);
 void solver_get_statistics_gpu(SolverData *sd);
 void free_gpu_cu(SolverData *sd);
 

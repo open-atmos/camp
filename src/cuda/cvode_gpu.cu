@@ -81,15 +81,15 @@ static realtype cvUpperBoundH0_gpu(CVodeMem cv_mem, realtype tdist){
   return(hub);
 }
 
-static int cvHin_gpu(CVodeMem cv_mem, realtype tout){
+static int cvHin_gpu(CVodeMem cv_mem, realtype t_final){
   int retval, sign, count1, count2;
   realtype tdiff, tdist, tround, hlb, hub;
   realtype hg, hgs, hs, hnew, hrat, h0, yddnrm;
   booleantype hgOK, hnewOK;
-  if ((tdiff = tout-cv_mem->cv_tn) == ZERO) return(CV_TOO_CLOSE);
+  if ((tdiff = t_final-cv_mem->cv_tn) == ZERO) return(CV_TOO_CLOSE);
   sign = (tdiff > ZERO) ? 1 : -1;
   tdist = SUNRabs(tdiff);
-  tround = cv_mem->cv_uround * SUNMAX(SUNRabs(cv_mem->cv_tn), SUNRabs(tout));
+  tround = cv_mem->cv_uround * SUNMAX(SUNRabs(cv_mem->cv_tn), SUNRabs(t_final));
   if (tdist < TWO*tround) return(CV_TOO_CLOSE);
   hlb = HLB_FACTOR * tround;
   hub = cvUpperBoundH0_gpu(cv_mem, tdist);
@@ -373,8 +373,8 @@ static int cvRcheck3_gpu(CVodeMem cv_mem){
   return(RTFOUND);
 }
 
-int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
-               realtype *tret, SolverData *sd){
+int cudaCVode(void *cvode_mem, realtype t_final, N_Vector yout,
+              realtype *tret, SolverData *sd, double t_initial){
   CVodeMem cv_mem;
   int retval, hflag, istate, ier;
   realtype troundoff, tout_hin, rh;
@@ -383,10 +383,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   ModelData *md = &(sd->model_data);
   cudaStream_t stream;
   cudaStreamCreate(&stream);
-#ifdef DEV_CPU_GPU
-#else
-  int n_cells = md->n_cells;
-#endif
+  int n_cells=md->n_cells;
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->rxn_env_data,md->rxn_env_data,md->n_rxn_env_data * mGPU->n_cells * sizeof(double),cudaMemcpyHostToDevice,stream));
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->env,md->total_env,CAMP_NUM_ENV_PARAM_ * n_cells * sizeof(double),cudaMemcpyHostToDevice,stream));
   /*
@@ -405,7 +402,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   HANDLE_ERROR(cudaMemcpyAsync(mGPU->dA, A, jac_size, cudaMemcpyHostToDevice, stream));
   cv_mem = (CVodeMem) cvode_mem;
   cv_mem->cv_y = yout;
-  cv_mem->cv_toutc = tout;
+  cv_mem->cv_toutc = t_final;
   //Initializations performed only at the first step (nst=0):
   if (cv_mem->cv_nst == 0) {
     cv_mem->cv_tretlast = *tret = cv_mem->cv_tn;
@@ -426,20 +423,20 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
       return(CV_FIRST_RHSFUNC_ERR);
     }
     if (cv_mem->cv_tstopset) {
-      if ( (cv_mem->cv_tstop - cv_mem->cv_tn)*(tout - cv_mem->cv_tn) <= ZERO ) {
+      if ( (cv_mem->cv_tstop - cv_mem->cv_tn)*(t_final - cv_mem->cv_tn) <= ZERO ) {
         cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
                        MSGCV_BAD_TSTOP, cv_mem->cv_tstop, cv_mem->cv_tn);
         return(CV_ILL_INPUT);
       }
     }
     cv_mem->cv_h = cv_mem->cv_hin;
-    if ( (cv_mem->cv_h != ZERO) && ((tout-cv_mem->cv_tn)*cv_mem->cv_h < ZERO) ) {
+    if ( (cv_mem->cv_h != ZERO) && ((t_final-cv_mem->cv_tn)*cv_mem->cv_h < ZERO) ) {
       cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode", MSGCV_BAD_H0);
       return(CV_ILL_INPUT);
     }
     if (cv_mem->cv_h == ZERO) {
-      tout_hin = tout;
-      if ( cv_mem->cv_tstopset && (tout-cv_mem->cv_tn)*(tout-cv_mem->cv_tstop) > ZERO )
+      tout_hin = t_final;
+      if ( cv_mem->cv_tstopset && (t_final-cv_mem->cv_tn)*(t_final-cv_mem->cv_tstop) > ZERO )
         tout_hin = cv_mem->cv_tstop;
       hflag = cvHin_gpu(cv_mem, tout_hin);
       if (hflag != CV_SUCCESS) {
@@ -506,12 +503,12 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
         }
       }
     }
-    if ((cv_mem->cv_tn-tout)*cv_mem->cv_h >= ZERO) {
-      cv_mem->cv_tretlast = *tret = tout;
-      ier =  CVodeGetDky(cv_mem, tout, 0, yout);
+    if ((cv_mem->cv_tn-t_final)*cv_mem->cv_h >= ZERO) {
+      cv_mem->cv_tretlast = *tret = t_final;
+      ier =  CVodeGetDky(cv_mem, t_final, 0, yout);
       if (ier != CV_SUCCESS) {
         cvProcessError(cv_mem, CV_ILL_INPUT, "CVODE", "CVode",
-                       MSGCV_BAD_TOUT, tout);
+                       MSGCV_BAD_TOUT, t_final);
         return(CV_ILL_INPUT);
       }
       return(CV_SUCCESS);
@@ -540,9 +537,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 #endif
   for (int i = 0; i < mGPU->n_cells; i++)
     sd->flagCells[i] = 99;
-#ifdef ODE_WARNING
-  mCPU->mdvCPU.cv_nhnil = cv_mem->cv_nhnil;
-#endif
   mCPU->mdvCPU.tret = *tret;
   mCPU->mdvCPU.cv_tretlast = cv_mem->cv_tretlast;
   mCPU->mdvCPU.cv_etaqm1 = cv_mem->cv_etaqm1;
@@ -550,7 +544,6 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   mCPU->mdvCPU.cv_etaqp1 = cv_mem->cv_etaqp1;
   mCPU->mdvCPU.cv_saved_tq5 = cv_mem->cv_saved_tq5;
   mCPU->mdvCPU.cv_tolsf = cv_mem->cv_tolsf;
-  mCPU->mdvCPU.cv_indx_acor = cv_mem->cv_indx_acor;
   mCPU->mdvCPU.cv_hu = cv_mem->cv_hu;
   mCPU->mdvCPU.cv_jcur = cv_mem->cv_jcur;
   mCPU->mdvCPU.cv_nstlp = cv_mem->cv_nstlp;
@@ -607,16 +600,13 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
   mGPU->cv_tstop = cv_mem->cv_tstop;
   mGPU->cv_tstopset = cv_mem->cv_tstopset;
   mGPU->use_deriv_est = sd->use_deriv_est;
-  mGPU->cv_nlscoef = cv_mem->cv_nlscoef;
-  mGPU->init_time_step = sd->init_time_step;
   mGPU->cv_mxstep = cv_mem->cv_mxstep;
   mGPU->cv_uround = cv_mem->cv_uround;
   mGPU->cv_hmax_inv = cv_mem->cv_hmax_inv;
-  mGPU->cv_reltol = cv_mem->cv_reltol;
   mGPU->cv_maxcor = cv_mem->cv_maxcor;
-  mGPU->cv_qmax = cv_mem->cv_qmax;
   mGPU->cv_maxnef = cv_mem->cv_maxnef;
-  mGPU->tout = tout;
+  mGPU->init_time_step = sd->init_time_step;
+  mGPU->tout = t_final;
   for (int i = 0; i < mGPU->n_cells; i++) {
     cudaMemcpyAsync(mGPU->cv_l + i * L_MAX, cv_mem->cv_l, L_MAX * sizeof(double), cudaMemcpyHostToDevice, stream);
     cudaMemcpyAsync(mGPU->cv_tau + i * (L_MAX + 1), cv_mem->cv_tau, (L_MAX + 1) * sizeof(double),
@@ -626,12 +616,7 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
     cudaMemcpyAsync(&mGPU->sCells[i], &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice, stream);
   }
 
-  cvodeRun(mGPU,stream); //Asynchronous
-#ifdef DEV_CPU_GPU
-  CVODE_CPU();
-  WaitForGPU();
-  Read_data_From_GPU();
-#endif
+  cvodeRun(t_initial, mGPU, n_cells, md->n_per_cell_dep_var, stream);
 
   cudaMemcpyAsync(cv_acor_init, mGPU->cv_acor_init, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
   cudaMemcpyAsync(youtArray, mGPU->yout, mGPU->nrows * sizeof(double), cudaMemcpyDeviceToHost, stream);
@@ -665,7 +650,9 @@ int cudaCVode(void *cvode_mem, realtype tout, N_Vector yout,
 }
 
 void solver_get_statistics_gpu(SolverData *sd){
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   ModelDataGPU *mGPU = sd->mGPU;
   ModelDataCPU *mCPU = &(sd->mCPU);
   cudaMemcpy(&mCPU->mdvCPU,mGPU->mdvo,sizeof(ModelDataVariable),cudaMemcpyDeviceToHost);
+#endif
 }

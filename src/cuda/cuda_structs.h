@@ -39,7 +39,6 @@ typedef struct {
     double cv_etaqp1;      /* ratio of new to old h for order q+1             */
     double cv_saved_tq5;       /* saved value of tq[5]                        */
     double cv_tolsf;           /* tolerance scale factor                      */
-    int cv_indx_acor;            /* index of the zn vector with saved acor      */
     double cv_hu;
     int cv_jcur;
     int cv_nstlp;
@@ -65,9 +64,6 @@ typedef struct {
     double *grid_cell_state;
     int nstlj;
     int cv_nst;
-#ifdef ODE_WARNING
-    int cv_nhnil;            /* number of messages issued to the user that t + h == t for the next iternal step            */
-#endif
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int countercvStep;
     int counterBCGInternal;
@@ -101,7 +97,7 @@ typedef struct {
     double *state;
     double *env;
     double *rxn_env_data;
-    int *rxn_env_data_idx;
+    int *rxn_env_idx;
     double *production_rates;
     double *loss_rates;
     int *rxn_int_indices;
@@ -146,8 +142,7 @@ typedef struct {
     double* dzn;
     double* dewt;
     double* dsavedJ;
-    ModelDataVariable *mdv;  
-    ModelDataVariable *mdvo;
+    ModelDataVariable *mdv;
     ModelDataVariable *sCells;
     double init_time_step;
     int cv_mxstep;
@@ -156,16 +151,15 @@ typedef struct {
     double cv_hmax_inv;
     double cv_reltol;
     int cv_maxcor;
-    int cv_qmax;
     int cv_maxnef;
     double cv_tstop;
     int cv_tstopset; //Used as bool
-    double cv_nlscoef;
     int use_deriv_est; //Used as bool
 //ODE stats
 #ifdef PROFILE_SOLVING
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz;
+    ModelDataVariable *mdvo; //out device
 #endif
 #endif
 } ModelDataGPU;
