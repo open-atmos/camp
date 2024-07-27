@@ -134,6 +134,7 @@ void rxn_HL_phase_transfer_get_used_jac_elem(ModelData *model_data,
   }
 
   free(aero_jac_elem);
+
   return;
 }
 
@@ -412,8 +413,6 @@ void rxn_HL_phase_transfer_calc_jac_contrib(ModelData *model_data, Jacobian jac,
       jacobian_add_value(
           jac, (unsigned int)JAC_ID_(1 + i_phase * 5 + 2), JACOBIAN_LOSS,
           evap_rate / state[AERO_WATER_(i_phase)] / KGM3_TO_PPM_);
-        if(KGM3_TO_PPM_==0.)
-
     if (JAC_ID_(1 + i_phase * 5 + 4) >= 0)
       jacobian_add_value(
           jac, (unsigned int)JAC_ID_(1 + i_phase * 5 + 4), JACOBIAN_LOSS,
