@@ -69,7 +69,6 @@ void cvodeRun(double t_initial, ModelDataGPU *mGPU, int blocks, int threads_bloc
 #define BIAS3  RCONST(10.0)
 #define ONEPSM RCONST(1.000001)
 #define SMALL_NST    10
-#define MXNCF        10
 #define MXNEF         7
 #define MXNEF1        3
 #define SMALL_NEF     2
