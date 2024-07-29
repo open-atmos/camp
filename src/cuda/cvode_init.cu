@@ -63,7 +63,6 @@ void constructor_cvode_gpu(SolverData *sd){
   cudaEventCreate(&sd->stopGPU);
   cudaEventCreate(&sd->startGPUSync);
   cudaEventCreate(&sd->stopGPUSync);
-  sd->occupancyCPUGPU=0;
 #endif
   cudaStream_t stream;
   cudaStreamCreate(&stream);

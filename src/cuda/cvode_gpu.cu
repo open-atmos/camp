@@ -117,15 +117,14 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   MPI_Barrier(MPI_COMM_WORLD);
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  double occupancyCPUGPU=100;
+  double load_balance=100;
   double min=fmin(timeGPU,timeCPU);
   double max=fmax(timeGPU,timeCPU);
-  if(min!=max) occupancyCPUGPU=100*min/max;
-  //todo change sign for a count of number of times CPU and GPU is shorter,
-  // since otherwise the sign difficults averaging
-  if(timeCPU>timeGPU) occupancyCPUGPU*=-1;
-  if(rank==0)printf("Occupancy CPU-GPU (CPU:+,GPU:-): %.2f%\n",occupancyCPUGPU);
-  //sd->occupancyCPUGPU+=occupancyCPUGPU;
+  if(min!=max) load_balance=100*min/max;
+  double weight_gpu=timeCPU/(timeCPU+timeGPU);
+  md->n_cells_gpu=md->n_cells*weight_gpu;
+  if(rank==0)printf("timeCPU %lf timeGPU %lf Weight GPU %lf md->n_cells_gpu %d\n",timeCPU, timeGPU, weight_gpu, md->n_cells_gpu);
+  if(rank==0)printf("Load balance: %.2lf%%\n",load_balance);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   printf("DEBUG: CAMP_PROFILE_DEVICE_FUNCTIONS\n");
   cudaMemcpyAsync(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost, stream);

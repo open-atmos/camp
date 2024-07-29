@@ -252,7 +252,6 @@ typedef struct {
   cudaEvent_t stopGPU;
   cudaEvent_t startGPUSync;
   cudaEvent_t stopGPUSync;
-  double occupancyCPUGPU;
 #endif
 #endif
 #endif
