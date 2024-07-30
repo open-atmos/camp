@@ -4,6 +4,8 @@
  */
 #include "cvode_cuda.h"
 
+//#define PROFILE_GPU_SOLVING
+
 extern "C" {
 #include "cvode_gpu.h"
 }
@@ -117,14 +119,22 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   MPI_Barrier(MPI_COMM_WORLD);
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  double load_balance=100;
+  double concurrency=100;
   double min=fmin(timeGPU,timeCPU);
   double max=fmax(timeGPU,timeCPU);
-  if(min!=max) load_balance=100*min/max;
-  double weight_gpu=timeCPU/(timeCPU+timeGPU);
-  md->n_cells_gpu=md->n_cells*weight_gpu;
-  if(rank==0)printf("timeCPU %lf timeGPU %lf Weight GPU %lf md->n_cells_gpu %d\n",timeCPU, timeGPU, weight_gpu, md->n_cells_gpu);
-  if(rank==0)printf("Load balance: %.2lf%%\n",load_balance);
+  if(min!=max) concurrency=min/max;
+  if(rank==0)printf("Concurrency: %.2lf%% weight_gpu: %.2lf%%\n",concurrency,sd->weight_gpu);
+  //for example: [ W ] weight_gpu = 90% -> [ C ] concurrency = 50%, prev_w=100%, prev_c=0% -> df = -10%
+  //W = 80% , C = 20% , df = -20% -> best_c= 100%, df = df * (best_c/concurrency) = -10+10*(100/50)=-20%, weight_gpu = 100+df = 80%
+  //Another example: [ W ] weight_gpu = 90% -> [ C ] concurrency = 60%,
+  //W = 80% , C = 20% , df = -10% -> best_c= 100%, df = df * (best_c/concurrency) = -10*(100/60)=-16.67%, weight_gpu = 100+df = 83.33%
+  //first df : sd->df = sd->weight_gpu-100;
+  //sd->df = (int)sd->df * (100/concurrency);
+  //printf("next sd->df %d 100/conc %lf\n",sd->df, 100/concurrency);
+  //sd->weight_gpu = 100+sd->df;
+  //md->n_cells_gpu = (int)(n_cells*sd->weight_gpu/100);
+
+  //The plan is to use a delta_factor that sums to the current weight_gpu, and multiply by a perc this delta factor
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   printf("DEBUG: CAMP_PROFILE_DEVICE_FUNCTIONS\n");
   cudaMemcpyAsync(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost, stream);

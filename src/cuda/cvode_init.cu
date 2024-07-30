@@ -24,9 +24,8 @@ void constructor_cvode_gpu(SolverData *sd){
   CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
   sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
   ModelDataGPU *mGPU = sd->mGPU;
-  float rate_cells_gpu = sd->gpu_percentage/100.;
-  md->n_cells_gpu = md->n_cells * rate_cells_gpu;
-  int n_cells = md->n_cells_gpu;
+  md->n_cells_gpu = md->n_cells * sd->weight_gpu/100.;
+  int n_cells = md->n_cells; //Load balance can differ up to n_cells size
   int nrows = n_dep_var * n_cells;
   int n_state_var = md->n_per_cell_state_var;
   mGPU->n_per_cell_state_var = md->n_per_cell_state_var;
@@ -35,7 +34,7 @@ void constructor_cvode_gpu(SolverData *sd){
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if(rank==0){
-    printf("Cells to GPU: %.d %\n",sd->gpu_percentage);
+    printf("Cells to GPU: %.d %\n",sd->weight_gpu);
   }
   int iDevice = rank % nGPUs;
   double startTime = MPI_Wtime();

@@ -261,7 +261,7 @@ typedef struct {
   ModelDataGPU *mGPU;
   double **dzn;
 #endif
-  int gpu_percentage;
+  int weight_gpu;
   int is_reset_jac;
 
   void *cvode_mem;       // CVodeMem object

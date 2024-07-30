@@ -90,7 +90,7 @@ def run(conf):
   try:
     file1 = open(conf.campConf, "w")
     if conf.caseGpuCpu == "GPU":
-      file1.write(str(conf.gpu_percentage)+"\n")
+      file1.write(str(conf.weight_gpu)+"\n")
     else:
       file1.write("0\n")
     file1.close()
@@ -101,7 +101,7 @@ def run(conf):
         conf.caseGpuCpu,
         conf.caseMulticellsOnecell, 
         "ncellsPerMPIProcess:", conf.nCells,
-        "Cells to GPU:",str(conf.gpu_percentage) + "%")
+        "Cells to GPU:",str(conf.weight_gpu) + "%")
   conf_name = "settings/TestMonarch.json"
   with open(conf_name, 'w', encoding='utf-8') as jsonFile:
     json.dump(conf.__dict__, jsonFile, indent=4,
@@ -112,7 +112,7 @@ def run(conf):
   caseGpuCpuName=conf.caseGpuCpu+str(conf.mpiProcesses) + "cores"
   out = 0
   is_import = False
-  data_path = ("out/stats" + str(conf.gpu_percentage) + 
+  data_path = ("out/stats" + str(conf.weight_gpu) + 
                caseGpuCpuName + nCellsStr +
                "cells" + str(conf.timeSteps) + 
                "tsteps.csv")
@@ -216,10 +216,10 @@ def run_cells(conf):
   return data
 
 
-def run_gpu_percentages(conf):
+def run_weights_gpu(conf):
   data = []
-  for i, item in enumerate(conf.gpu_percentages):
-    conf.gpu_percentage = item
+  for i, item in enumerate(conf.weights_gpu):
+    conf.weight_gpu = item
     data += run_cells(conf)
   return data
 
@@ -228,7 +228,7 @@ def run_diffCells(conf):
   data = []
   for i, item in enumerate(conf.diffCellsL):
     conf.diffCells = item
-    data += run_gpu_percentages(conf)
+    data += run_weights_gpu(conf)
   return data
 
 
@@ -316,9 +316,9 @@ def plot_cases(conf, datay):
     datax = nGPUsOptim
     if len(conf.cells) > 1:
       plotTitle += ", Cells: " + str(conf.cells[0])
-  elif len(conf.gpu_percentages) > 1:
+  elif len(conf.weights_gpu) > 1:
     namex = "Percentage of cells to GPU"
-    datax = conf.gpu_percentages
+    datax = conf.weights_gpu
     plotTitle += "," + str(conf.cells[0]) + " Cells"
   else:
     plotTitle += ", Cells: " + str(conf.cells[0])
