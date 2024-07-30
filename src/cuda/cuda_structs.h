@@ -121,7 +121,7 @@ typedef struct {
     double* dtempv1;
     int n_per_cell_state_var;
     double* cv_acor;
-    double* dzn;
+    double** dzn;
     double* dewt;
     double* dsavedJ;
     ModelDataVariable *sCells;

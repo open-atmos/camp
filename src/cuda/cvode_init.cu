@@ -138,10 +138,6 @@ void constructor_cvode_gpu(SolverData *sd){
   cudaMalloc((void **) &mGPU->cv_acor, nrows * sizeof(double));
   cudaMalloc((void **) &mGPU->dtempv, nrows * sizeof(double));
   cudaMalloc((void **) &mGPU->dtempv1, nrows * sizeof(double));
-  cudaMalloc((void **) &mGPU->dzn, nrows * (BDF_Q_MAX + 1) * sizeof(double));
-  cudaMemset(mGPU->dzn, 0, (BDF_Q_MAX+1)*nrows * sizeof(double));
-    //cudaMemcpyAsync((mGPU->dzn + i * mGPU->nrows), zn, mGPU->nrows * sizeof(double), cudaMemcpyHostToDevice, stream);
-  /*
   sd->dzn=(double**)malloc((BDF_Q_MAX + 1)*sizeof(double*));
   for(int i=0;i<=BDF_Q_MAX;i++){
     cudaMalloc(&sd->dzn[i], nrows * sizeof(double));
@@ -151,7 +147,6 @@ void constructor_cvode_gpu(SolverData *sd){
   for (int i = 2; i <= BDF_Q_MAX; i++) {
     cudaMemset(sd->dzn[i], 0, nrows * sizeof(double));
   }
-  */
   cudaMalloc((void **) &mGPU->dcv_y, nrows * sizeof(double));
   cudaMalloc((void **) &mGPU->dx, nrows * sizeof(double));
   cudaMalloc((void **) &mGPU->cv_last_yn, nrows * sizeof(double));
@@ -296,7 +291,11 @@ void free_gpu_cu(SolverData *sd) {
   cudaFree(mGPU->dcv_y);
   cudaFree(mGPU->dtempv1);
   cudaFree(mGPU->cv_acor);
+  for(int i=0;i<=BDF_Q_MAX;i++){
+    cudaFree(&sd->dzn[i]);
+  }
   cudaFree(mGPU->dzn);
+  free(sd->dzn);
   cudaFree(mGPU->dewt);
   cudaFree(mGPU->dsavedJ);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
