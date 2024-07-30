@@ -81,7 +81,8 @@ def run(conf):
     #gui: /apps/ACC/NVIDIA-HPC-SDK/24.3/Linux_x86_64/2024/profilers/Nsight_Compute/ncu-ui
     exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/23.9/Linux_x86_64/23.9/profilers/Nsight_Compute/ncu ")
     pathNsight = ("../../compile/profile")
-    exec_str += "--target-processes=application-only --set full -f -o " + pathNsight + " "
+    exec_str += "--target-processes application-only --set full -f -o " + pathNsight + " "
+    #exec_str += "./wrap.sh " #not works, let imagine that the other implementation is fine
     print("Saving nsight file in ",
           os.path.abspath(os.getcwd())
           + "/" + pathNsight + ".ncu-rep")

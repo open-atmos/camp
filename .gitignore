@@ -96,3 +96,4 @@ compile/err_sbatch.txt
 compile/out_sbatch.txt
 test/monarch/settings/config_variables_c_solver.txt
 test/monarch/settings/TestMonarch.json
+compile/profile.ncu-rep
