@@ -29,6 +29,8 @@ class TestMonarch:
     self.profileCuda = ""
     #self.profileCuda = "ncu"
     #self.profileCuda = "nsys"
+    self.profileExtrae = None
+    self.profileValgrind = None
     self.caseBase = "CPU One-cell"
     self.plotYKey = "Speedup timeCVode"
     self.casesOptim = []
@@ -86,6 +88,10 @@ def run(conf):
     print("Saving nsight file in ",
           os.path.abspath(os.getcwd())
           + "/" + pathNsight + ".ncu-rep")
+  if conf.profileExtrae is not None:
+    exec_str += "./trace_f.sh "
+  if conf.profileValgrind is not None:
+    exec_str += "valgrind --tool=cachegrind " 
   path_exec = "../../build/mock_monarch"
   exec_str += path_exec
   try:
