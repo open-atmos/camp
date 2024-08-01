@@ -31,7 +31,7 @@ void constructor_cvode_gpu(SolverData *sd){
   mGPU->n_per_cell_state_var = md->n_per_cell_state_var;
   sd->last_load_balance=0;
   sd->last_load_gpu=100;
-  sd->short_gpu=false;
+  sd->short_gpu=0;
   int nGPUs;
   HANDLE_ERROR(cudaGetDeviceCount(&nGPUs));
   int rank;

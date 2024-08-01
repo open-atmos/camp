@@ -4,7 +4,7 @@
  */
 #include "cvode_cuda.h"
 
-//#define PROFILE_GPU_SOLVING
+#define PROFILE_GPU_SOLVING
 
 extern "C" {
 #include "cvode_gpu.h"
@@ -32,7 +32,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   mGPU->init_time_step = sd->init_time_step;
   mGPU->tout = t_final;
   cvodeRun(t_initial, mGPU, n_cells, md->n_per_cell_dep_var, stream); //Asynchronous
-  cudaMemcpyAsync(md->total_state, mGPU->state, md->n_per_cell_state_var*md->n_cells_gpu * sizeof(double), cudaMemcpyDeviceToHost, stream);
+  cudaMemcpyAsync(md->total_state, mGPU->state, md->n_per_cell_state_var*n_cells*sizeof(double), cudaMemcpyDeviceToHost, stream);
 #ifdef PROFILE_GPU_SOLVING
   cudaEventRecord(sd->stopGPU,stream);
 #endif
@@ -119,32 +119,32 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   MPI_Barrier(MPI_COMM_WORLD);
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  double load_balance=1;
+  double load_balance=100;
   double min=fmin(timeGPU,timeCPU);
   double max=fmax(timeGPU,timeCPU);
-  if(min!=max) load_balance=min/max;
-  if(timeGPU<timeCPU) {
-    sd->short_gpu=true;
-    printf("short_gpu yes\n");
-  }else{
-    sd->short_gpu=false;
-    printf("short_gpu no\n");
+  load_balance=100*min/max;
+  int short_gpu=0;
+  if(timeGPU<timeCPU) short_gpu=1;
+  double increase_in_load_gpu=sd->load_gpu-sd->last_load_gpu;
+  if(rank==0)printf("load_gpu: %.2lf%% Load balance: %.2lf%%  short_gpu %d\n",
+    sd->load_gpu,load_balance,short_gpu);
+  double last_short_gpu=sd->short_gpu;
+  double diff_load_balance=load_balance-sd->last_load_balance; //e.g. 80-20=60; 20-80=-60;
+  if(short_gpu != last_short_gpu){
+    diff_load_balance=100-sd->last_load_balance+100-load_balance; //e.g. 100-20+100-60=140;
+    increase_in_load_gpu*=-1;
   }
-  if(rank==0)printf(sd->short_gpu ? "true" : "false");
-  if(rank==0)printf("Load balance: %.2lf%% load_gpu: %.2lf%% short_gpu \n",load_balance,sd->load_gpu,sd->short_gpu ? "true" : "false");
-  if(rank==0)printf("Load balance: %.2lf%% load_gpu: %.2lf%% short_gpu %d\n",load_balance,sd->load_gpu,sd->short_gpu);
+  double remaining_load_balance=100-load_balance;
+  if(remaining_load_balance > diff_load_balance) increase_in_load_gpu*=1;
+  else increase_in_load_gpu/=2;
+  sd->last_load_balance=load_balance;
+  sd->last_load_gpu=sd->load_gpu;
+  if(load_balance!=100) sd->load_gpu+=increase_in_load_gpu;
+  sd->short_gpu=short_gpu;
+  md->n_cells_gpu=md->n_cells*sd->load_gpu/100;
+  if(rank==0)printf("remaining_load_balance %.2lf diff_load_balance %.2lf "
+  "increase_in_load_gpu %.2lf\n",remaining_load_balance,diff_load_balance,increase_in_load_gpu);
 
-  
-
-  //for example: [ W ] load_gpu = 90% -> [ C ] concurrency = 50%, prev_w=100%, prev_c=0% -> df = -10%
-  //W = 80% , C = 20% , df = -20% -> best_c= 100%, df = df * (best_c/concurrency) = -10+10*(100/50)=-20%, load_gpu = 100+df = 80%
-  //Another example: [ W ] load_gpu = 90% -> [ C ] concurrency = 60%,
-  //W = 80% , C = 20% , df = -10% -> best_c= 100%, df = df * (best_c/concurrency) = -10*(100/60)=-16.67%, load_gpu = 100+df = 83.33%
-  //first df : sd->df = sd->load_gpu-100;
-  //sd->df = (int)sd->df * (100/concurrency);
-  //printf("next sd->df %d 100/conc %lf\n",sd->df, 100/concurrency);
-  //sd->load_gpu = 100+sd->df;
-  //md->n_cells_gpu = (int)(n_cells*sd->load_gpu/100);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   printf("DEBUG: CAMP_PROFILE_DEVICE_FUNCTIONS\n");
   cudaMemcpyAsync(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost, stream);

@@ -255,9 +255,9 @@ typedef struct {
   double **dzn;
   double last_load_balance;
   double last_load_gpu;
-  booleantype short_gpu;
+  int short_gpu;
 #endif
-  int load_gpu;
+  double load_gpu;
   int is_reset_jac;
 
   void *cvode_mem;       // CVodeMem object

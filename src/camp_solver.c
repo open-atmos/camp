@@ -126,7 +126,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   // Save the number of state variables per grid cell
   sd->model_data.n_per_cell_state_var = n_state_var;
 
-  sd->load_gpu = load_gpu;
+  sd->load_gpu = (double)load_gpu;
   sd->is_reset_jac = is_reset_jac;
   sd->model_data.n_cells = n_cells;
 
