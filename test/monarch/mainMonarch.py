@@ -119,13 +119,15 @@ def run(conf):
   caseGpuCpuName=conf.caseGpuCpu+str(conf.mpiProcesses) + "cores"
   out = 0
   is_import = False
-  data_path = ("out/stats" + str(conf.load_gpu) + 
-               caseGpuCpuName + nCellsStr +
-               "cells" + str(conf.timeSteps) + 
-               "tsteps.csv")
+  data_path = "out/stats"
+  if conf.caseGpuCpu == "GPU":
+    data_path += str(conf.load_gpu)
+  data_path += caseGpuCpuName + nCellsStr + "cells" + str(conf.timeSteps) + "tsteps.csv"
   print("data_path", data_path)
-  data_path2 = ("out/state" + caseGpuCpuName + nCellsStr +
-                "cells" + str(conf.timeSteps) + "tsteps.csv")
+  data_path2 = "out/state"
+  if conf.caseGpuCpu == "GPU":
+    data_path2 += str(conf.load_gpu)
+  data_path2 += caseGpuCpuName + nCellsStr + "cells" + str(conf.timeSteps) + "tsteps.csv"
   if conf.is_import and os.path.exists(data_path):
     nRows_csv = (conf.timeSteps * conf.nCells *conf.mpiProcesses)
     df = pd_read_csv(data_path, nrows=nRows_csv)

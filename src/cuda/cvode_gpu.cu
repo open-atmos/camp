@@ -32,7 +32,6 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   mGPU->init_time_step = sd->init_time_step;
   mGPU->tout = t_final;
   cvodeRun(t_initial, mGPU, n_cells, md->n_per_cell_dep_var, stream); //Asynchronous
-  cudaMemcpyAsync(md->total_state, mGPU->state, md->n_per_cell_state_var*n_cells*sizeof(double), cudaMemcpyDeviceToHost, stream);
 #ifdef PROFILE_GPU_SOLVING
   cudaEventRecord(sd->stopGPU,stream);
 #endif
@@ -105,6 +104,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
 #ifdef PROFILE_GPU_SOLVING
   cudaEventRecord(sd->startGPUSync,stream);
 #endif
+  cudaMemcpyAsync(md->total_state, mGPU->state, md->n_per_cell_state_var*md->n_cells_gpu*sizeof(double), cudaMemcpyDeviceToHost, stream);
   cudaStreamSynchronize(stream);
   cudaDeviceSynchronize();
 #ifdef PROFILE_GPU_SOLVING
@@ -139,11 +139,13 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   sd->last_load_gpu=sd->load_gpu;
   if(load_balance!=100) sd->load_gpu+=increase_in_load_gpu;
   sd->short_gpu=short_gpu;
+  //sd->acc_load_balance+=load_balance;
   md->n_cells_gpu=md->n_cells*sd->load_gpu/100;
   //if(rank==0)printf("load_gpu: %.2lf%% Load balance: %.2lf%%  short_gpu %d\n",sd->last_load_gpu,load_balance,sd->short_gpu);
   //if(rank==0)printf("remaining_load_balance %.2lf diff_load_balance %.2lf "
   //"increase_in_load_gpu %.2lf\n",remaining_load_balance,diff_load_balance,increase_in_load_gpu);
-  //if(rank==0)printf("Load balance: %.2lf%% load_gpu %.2lf%%\n",load_balance,sd->load_gpu);
+  if(rank==0)printf("Load balance: %.2lf%% load_gpu %.2lf%%\n",sd->last_load_balance,sd->last_load_gpu);
+  if(rank==0)printf("Time CPU: %lf Time GPU: %lf\n",timeCPU,timeGPU);
 
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   printf("DEBUG: CAMP_PROFILE_DEVICE_FUNCTIONS\n");
