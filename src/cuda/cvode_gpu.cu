@@ -126,11 +126,10 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   int short_gpu=0;
   if(timeGPU<timeCPU) short_gpu=1;
   double increase_in_load_gpu=sd->load_gpu-sd->last_load_gpu;
-  //if(rank==0)printf("load_gpu: %.2lf%% Load balance: %.2lf%%  short_gpu %d\n",sd->load_gpu,load_balance,short_gpu);
   double last_short_gpu=sd->short_gpu;
-  double diff_load_balance=load_balance-sd->last_load_balance; //e.g. 80-20=60; 20-80=-60;
+  double diff_load_balance=load_balance-sd->last_load_balance;
   if(short_gpu != last_short_gpu){
-    diff_load_balance=100-sd->last_load_balance+100-load_balance; //e.g. 100-20+100-60=140;
+    diff_load_balance=100-sd->last_load_balance+100-load_balance;
     increase_in_load_gpu*=-1;
   }
   double remaining_load_balance=100-load_balance;
@@ -141,9 +140,10 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   if(load_balance!=100) sd->load_gpu+=increase_in_load_gpu;
   sd->short_gpu=short_gpu;
   md->n_cells_gpu=md->n_cells*sd->load_gpu/100;
+  //if(rank==0)printf("load_gpu: %.2lf%% Load balance: %.2lf%%  short_gpu %d\n",sd->last_load_gpu,load_balance,sd->short_gpu);
   //if(rank==0)printf("remaining_load_balance %.2lf diff_load_balance %.2lf "
   //"increase_in_load_gpu %.2lf\n",remaining_load_balance,diff_load_balance,increase_in_load_gpu);
-  if(rank==0)printf("Load balance: %.2lf%% load_gpu %.2lf%%\n",load_balance,sd->load_gpu);
+  //if(rank==0)printf("Load balance: %.2lf%% load_gpu %.2lf%%\n",load_balance,sd->load_gpu);
 
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   printf("DEBUG: CAMP_PROFILE_DEVICE_FUNCTIONS\n");

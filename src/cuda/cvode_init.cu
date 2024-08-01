@@ -37,7 +37,7 @@ void constructor_cvode_gpu(SolverData *sd){
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if(rank==0){
-    printf("Cells to GPU: %.d %\n",sd->load_gpu);
+    printf("Cells to GPU: %.lf%%\n",sd->load_gpu);
   }
   int iDevice = rank % nGPUs;
   double startTime = MPI_Wtime();
