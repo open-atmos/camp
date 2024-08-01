@@ -73,12 +73,8 @@
 // CUDA/C++ already has bool definition: Avoid issues disabling it for GPU
 #ifndef CAMP_GPU_SOLVER_H_
 #ifndef CVODE_gpu_SOLVER_H_
-#ifndef CVODE_gpu_d2_H_
-#ifndef ITSOLVERGPU_H
 #ifndef CVODE_CUDA_H_
 typedef enum { false, true } bool;
-#endif
-#endif
 #endif
 #endif
 #endif
@@ -242,9 +238,6 @@ typedef struct {
       max_loss_precision;  // Maximum loss of precision during last call to f()
 #endif
 
-
-
-
 #ifdef PROFILE_SOLVING
   double timeCVode;
 #ifdef CAMP_USE_GPU
@@ -260,8 +253,11 @@ typedef struct {
   ModelDataCPU mCPU;
   ModelDataGPU *mGPU;
   double **dzn;
+  double last_load_balance;
+  double last_load_gpu;
+  booleantype short_gpu;
 #endif
-  int weight_gpu;
+  int load_gpu;
   int is_reset_jac;
 
   void *cvode_mem;       // CVodeMem object

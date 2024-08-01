@@ -1156,17 +1156,17 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize the solver
-  subroutine solver_initialize(this, weight_gpu, is_reset_jac)
+  subroutine solver_initialize(this, load_gpu, is_reset_jac)
     class(camp_core_t), intent(inout) :: this
-    integer, intent(in), optional :: weight_gpu, is_reset_jac
+    integer, intent(in), optional :: load_gpu, is_reset_jac
     type(string_t), allocatable :: spec_names(:)
-    integer :: i_spec, n_gas_spec, weight_gpu1, is_reset_jac1
+    integer :: i_spec, n_gas_spec, load_gpu1, is_reset_jac1
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
 
-    weight_gpu1=0
-    if (present(weight_gpu)) then
-      weight_gpu1=weight_gpu
+    load_gpu1=0
+    if (present(load_gpu)) then
+      load_gpu1=load_gpu
     end if
     is_reset_jac1=0
     if (present(is_reset_jac)) then
@@ -1197,7 +1197,7 @@ contains
                 GAS_RXN,         & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                weight_gpu1, is_reset_jac1 &
+                load_gpu1, is_reset_jac1 &
       )
       call this%solver_data_aero%initialize( &
                 this%var_type,   & ! State array variable types
@@ -1209,7 +1209,7 @@ contains
                 AERO_RXN,        & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                weight_gpu1, is_reset_jac1 &
+                load_gpu1, is_reset_jac1 &
               )
     else
 
@@ -1232,7 +1232,7 @@ contains
                 GAS_AERO_RXN,    & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                weight_gpu1, is_reset_jac1 &
+                load_gpu1, is_reset_jac1 &
                 )
     end if
 

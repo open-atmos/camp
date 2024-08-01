@@ -24,17 +24,20 @@ void constructor_cvode_gpu(SolverData *sd){
   CVDlsMem cvdls_mem = (CVDlsMem) cv_mem->cv_lmem;
   sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
   ModelDataGPU *mGPU = sd->mGPU;
-  md->n_cells_gpu = md->n_cells * sd->weight_gpu/100.;
+  md->n_cells_gpu = md->n_cells * sd->load_gpu/100.;
   int n_cells = md->n_cells; //Load balance can differ up to n_cells size
   int nrows = n_dep_var * n_cells;
   int n_state_var = md->n_per_cell_state_var;
   mGPU->n_per_cell_state_var = md->n_per_cell_state_var;
+  sd->last_load_balance=0;
+  sd->last_load_gpu=100;
+  sd->short_gpu=false;
   int nGPUs;
   HANDLE_ERROR(cudaGetDeviceCount(&nGPUs));
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if(rank==0){
-    printf("Cells to GPU: %.d %\n",sd->weight_gpu);
+    printf("Cells to GPU: %.d %\n",sd->load_gpu);
   }
   int iDevice = rank % nGPUs;
   double startTime = MPI_Wtime();

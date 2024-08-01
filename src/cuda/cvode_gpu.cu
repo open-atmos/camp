@@ -119,22 +119,32 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   MPI_Barrier(MPI_COMM_WORLD);
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  double concurrency=100;
+  double load_balance=1;
   double min=fmin(timeGPU,timeCPU);
   double max=fmax(timeGPU,timeCPU);
-  if(min!=max) concurrency=min/max;
-  if(rank==0)printf("Concurrency: %.2lf%% weight_gpu: %.2lf%%\n",concurrency,sd->weight_gpu);
-  //for example: [ W ] weight_gpu = 90% -> [ C ] concurrency = 50%, prev_w=100%, prev_c=0% -> df = -10%
-  //W = 80% , C = 20% , df = -20% -> best_c= 100%, df = df * (best_c/concurrency) = -10+10*(100/50)=-20%, weight_gpu = 100+df = 80%
-  //Another example: [ W ] weight_gpu = 90% -> [ C ] concurrency = 60%,
-  //W = 80% , C = 20% , df = -10% -> best_c= 100%, df = df * (best_c/concurrency) = -10*(100/60)=-16.67%, weight_gpu = 100+df = 83.33%
-  //first df : sd->df = sd->weight_gpu-100;
+  if(min!=max) load_balance=min/max;
+  if(timeGPU<timeCPU) {
+    sd->short_gpu=true;
+    printf("short_gpu yes\n");
+  }else{
+    sd->short_gpu=false;
+    printf("short_gpu no\n");
+  }
+  if(rank==0)printf(sd->short_gpu ? "true" : "false");
+  if(rank==0)printf("Load balance: %.2lf%% load_gpu: %.2lf%% short_gpu \n",load_balance,sd->load_gpu,sd->short_gpu ? "true" : "false");
+  if(rank==0)printf("Load balance: %.2lf%% load_gpu: %.2lf%% short_gpu %d\n",load_balance,sd->load_gpu,sd->short_gpu);
+
+  
+
+  //for example: [ W ] load_gpu = 90% -> [ C ] concurrency = 50%, prev_w=100%, prev_c=0% -> df = -10%
+  //W = 80% , C = 20% , df = -20% -> best_c= 100%, df = df * (best_c/concurrency) = -10+10*(100/50)=-20%, load_gpu = 100+df = 80%
+  //Another example: [ W ] load_gpu = 90% -> [ C ] concurrency = 60%,
+  //W = 80% , C = 20% , df = -10% -> best_c= 100%, df = df * (best_c/concurrency) = -10*(100/60)=-16.67%, load_gpu = 100+df = 83.33%
+  //first df : sd->df = sd->load_gpu-100;
   //sd->df = (int)sd->df * (100/concurrency);
   //printf("next sd->df %d 100/conc %lf\n",sd->df, 100/concurrency);
-  //sd->weight_gpu = 100+sd->df;
-  //md->n_cells_gpu = (int)(n_cells*sd->weight_gpu/100);
-
-  //The plan is to use a delta_factor that sums to the current weight_gpu, and multiply by a perc this delta factor
+  //sd->load_gpu = 100+sd->df;
+  //md->n_cells_gpu = (int)(n_cells*sd->load_gpu/100);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   printf("DEBUG: CAMP_PROFILE_DEVICE_FUNCTIONS\n");
   cudaMemcpyAsync(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost, stream);
