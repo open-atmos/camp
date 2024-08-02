@@ -116,7 +116,6 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   double timeGPU=msDevice/1000;
   cudaEventElapsedTime(&msDevice, sd->startGPUSync, sd->stopGPUSync);
   timeGPU+=msDevice/1000;
-  MPI_Barrier(MPI_COMM_WORLD);
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   double load_balance=100;
