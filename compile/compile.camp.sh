@@ -35,6 +35,9 @@ cd ${camp_suite_dir}/camp
 rm -rf build
 mkdir build
 cd build
+#if extrae:
+#  -D CMAKE_C_FLAGS_DEBUG="-O3 -g -finstrument-functions -rdynamic" \
+#  -D CMAKE_Fortran_FLAGS_DEBUG="-g -O3 -finstrument-functions -rdynamic" \
 cmake -D CMAKE_C_COMPILER=$(which mpicc) \
   -D CMAKE_BUILD_TYPE=debug \
   -D CMAKE_C_FLAGS_DEBUG="-O3 -g" \

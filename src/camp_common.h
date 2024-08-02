@@ -256,6 +256,7 @@ typedef struct {
   double last_load_balance;
   double last_load_gpu;
   double acc_load_balance;
+  int iters_load_balance;
   int short_gpu;
 #endif
   double load_gpu;

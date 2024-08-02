@@ -30,7 +30,7 @@
     <syscall enabled="no">1-3</syscall>
   </callers>
 
-  <user-functions enabled="no" list="/home/bsc41/bsc41273/user-functions.dat" exclude-automatic-functions="no">
+  <user-functions enabled="yes" list="user_functions.dat" exclude-automatic-functions="no">
     <counters enabled="yes" />
   </user-functions>
 

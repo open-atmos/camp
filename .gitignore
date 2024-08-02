@@ -105,3 +105,4 @@ test/monarch/TRACE.sym
 test/monarch/mock_monarch.row
 test/monarch/mock_monarch.pcf
 test/monarch/mock_monarch.prv
+compile/a.txt

@@ -139,7 +139,8 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   sd->last_load_gpu=sd->load_gpu;
   if(load_balance!=100) sd->load_gpu+=increase_in_load_gpu;
   sd->short_gpu=short_gpu;
-  //sd->acc_load_balance+=load_balance;
+  sd->acc_load_balance+=load_balance;
+  sd->iters_load_balance++;
   md->n_cells_gpu=md->n_cells*sd->load_gpu/100;
   //if(rank==0)printf("load_gpu: %.2lf%% Load balance: %.2lf%%  short_gpu %d\n",sd->last_load_gpu,load_balance,sd->short_gpu);
   //if(rank==0)printf("remaining_load_balance %.2lf diff_load_balance %.2lf "
