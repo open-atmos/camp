@@ -116,8 +116,6 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   double timeGPU=msDevice/1000;
   cudaEventElapsedTime(&msDevice, sd->startGPUSync, sd->stopGPUSync);
   timeGPU+=msDevice/1000;
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   double load_balance=100;
   double min=fmin(timeGPU,timeCPU);
   double max=fmax(timeGPU,timeCPU);
@@ -141,6 +139,8 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   sd->acc_load_balance+=load_balance;
   sd->iters_load_balance++;
   md->n_cells_gpu=md->n_cells*sd->load_gpu/100; //Set automatic load balance
+  //int rank;
+  //MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   //if(rank==0)printf("load_gpu: %.2lf%% Load balance: %.2lf%%  short_gpu %d\n",sd->last_load_gpu,load_balance,sd->short_gpu);
   //if(rank==0)printf("remaining_load_balance %.2lf diff_load_balance %.2lf "
   //"increase_in_load_gpu %.2lf\n",remaining_load_balance,diff_load_balance,increase_in_load_gpu);
