@@ -97,7 +97,7 @@ void export_stats(SolverData *sd){
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if (rank == 0) {
     FILE *fptr;
-    sd->iters_load_balance--;
+    if(sd->iters_load_balance==0) sd->iters_load_balance=1; //avoid division by 0
     printf("export_stats: avg_load_balance %.2lf%%\n",sd->acc_load_balance/sd->iters_load_balance);
     if ((fptr = fopen("out/stats.csv", "w")) != NULL) {
       fprintf(fptr, "timeCVode,avg_load_balance\n");

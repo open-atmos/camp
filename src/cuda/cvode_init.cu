@@ -32,7 +32,7 @@ void constructor_cvode_gpu(SolverData *sd){
   sd->last_load_balance=0;
   sd->last_load_gpu=100;
   sd->acc_load_balance=0;
-  sd->iters_load_balance=1;
+  sd->iters_load_balance=0;
   sd->short_gpu=0;
   int nGPUs;
   HANDLE_ERROR(cudaGetDeviceCount(&nGPUs));
