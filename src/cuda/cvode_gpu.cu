@@ -145,8 +145,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   //if(rank==0)printf("load_gpu: %.2lf%% Load balance: %.2lf%%  short_gpu %d\n",sd->last_load_gpu,load_balance,sd->short_gpu);
   //if(rank==0)printf("remaining_load_balance %.2lf diff_load_balance %.2lf "
   //"increase_in_load_gpu %.2lf\n",remaining_load_balance,diff_load_balance,increase_in_load_gpu);
-  if(rank==0)printf("Load balance: %.2lf%% load_gpu %.2lf%%\n",sd->last_load_balance,sd->last_load_gpu);
-  if(rank==0)printf("Time CPU: %lf Time GPU: %lf\n",timeCPU,timeGPU);
+  //if(rank==0)printf("Load balance: %.2lf%% load_gpu %.2lf%%\n",sd->last_load_balance,sd->last_load_gpu);
 
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   printf("DEBUG: CAMP_PROFILE_DEVICE_FUNCTIONS\n");
