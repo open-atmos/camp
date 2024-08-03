@@ -132,20 +132,22 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   double remaining_load_balance=100-load_balance;
   if(remaining_load_balance > diff_load_balance) increase_in_load_gpu*=1.5;
   else increase_in_load_gpu/=2;
+  sd->short_gpu=short_gpu;
   sd->last_load_balance=load_balance;
   sd->last_load_gpu=sd->load_gpu;
   if(load_balance!=100) sd->load_gpu+=increase_in_load_gpu;
-  sd->short_gpu=short_gpu;
+  if(sd->load_gpu>99) sd->load_gpu=99;
+  if(sd->load_gpu<1) sd->load_gpu=1;
   sd->acc_load_balance+=load_balance;
   sd->iters_load_balance++;
-  md->n_cells_gpu=md->n_cells*sd->load_gpu/100; //Set automatic load balance
+  md->n_cells_gpu=md->n_cells*sd->load_gpu/100; // Error with 50 time-steps
   //int rank;
   //MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  //if(rank==0)printf("load_gpu: %.2lf%% Load balance: %.2lf%%  short_gpu %d\n",sd->last_load_gpu,load_balance,sd->short_gpu);
+  //if(rank==0)printf("load_gpu: %.2lf%% Load balance: %.2lf%% short_gpu %d increase_in_load_gpu %.2lf\n",sd->last_load_gpu,load_balance,sd->short_gpu,increase_in_load_gpu);
   //if(rank==0)printf("remaining_load_balance %.2lf diff_load_balance %.2lf "
   //"increase_in_load_gpu %.2lf\n",remaining_load_balance,diff_load_balance,increase_in_load_gpu);
+  //if(rank==0)printf("timeGPU %lf timeCPU %lf\n",timeGPU,timeCPU);
   //if(rank==0)printf("Load balance: %.2lf%% load_gpu %.2lf%%\n",sd->last_load_balance,sd->last_load_gpu);
-
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   printf("DEBUG: CAMP_PROFILE_DEVICE_FUNCTIONS\n");
   cudaMemcpyAsync(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable), cudaMemcpyDeviceToHost, stream);

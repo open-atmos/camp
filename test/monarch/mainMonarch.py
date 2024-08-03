@@ -330,7 +330,8 @@ def plot_cases(conf, datay):
     datax = conf.loads_gpu
     plotTitle += "," + str(conf.cells[0]) + " Cells"
   else:
-    plotTitle += ", Cells: " + str(conf.cells[0])
+    plotTitle += ", Cells: " + str(conf.cells[0])\
+     + " Load GPU: " + str(conf.loads_gpu[0])
     datax = list(range(1, conf.timeSteps + 1, 1))
     namex = "Time-steps"
   print(namex + ":", datax[0], "to", datax[-1])
