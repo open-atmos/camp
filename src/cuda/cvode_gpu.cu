@@ -4,7 +4,7 @@
  */
 #include "cvode_cuda.h"
 
-#define PROFILE_GPU_SOLVING
+//#define PROFILE_GPU_SOLVING
 
 extern "C" {
 #include "cvode_gpu.h"
@@ -17,16 +17,18 @@ extern "C" {
 #include <mpi.h>
 #endif
 
+#include <unistd.h>
+
 int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
                SolverData *sd, double t_initial){
   ModelDataGPU *mGPU = sd->mGPU;
   ModelData *md = &(sd->model_data);
+  int n_cells=md->n_cells_gpu;
   cudaStream_t stream;
   cudaStreamCreate(&stream);
 #ifdef PROFILE_GPU_SOLVING
   cudaEventRecord(sd->startGPU,stream);
 #endif
-  int n_cells=md->n_cells_gpu;
   cudaMemcpyAsync(mGPU->rxn_env_data,md->rxn_env_data,md->n_rxn_env_data * n_cells * sizeof(double),cudaMemcpyHostToDevice,stream);
   cudaMemcpyAsync(mGPU->state,md->total_state,md->n_per_cell_state_var*n_cells*sizeof(double),cudaMemcpyHostToDevice,stream);
   mGPU->init_time_step = sd->init_time_step;
@@ -140,7 +142,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   if(sd->load_gpu<1) sd->load_gpu=1;
   sd->acc_load_balance+=load_balance;
   sd->iters_load_balance++;
-  md->n_cells_gpu=md->n_cells*sd->load_gpu/100; // Error with 50 time-steps
+  md->n_cells_gpu=md->n_cells*sd->load_gpu/100; //  Automatic load balance
   //int rank;
   //MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   //if(rank==0)printf("load_gpu: %.2lf%% Load balance: %.2lf%% short_gpu %d increase_in_load_gpu %.2lf\n",sd->last_load_gpu,load_balance,sd->short_gpu,increase_in_load_gpu);

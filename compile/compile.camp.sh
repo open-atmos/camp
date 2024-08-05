@@ -39,11 +39,12 @@ cd build
 #- salloc a node with -C perfparanoid
 #  -D CMAKE_C_FLAGS_DEBUG="-O3 -g -finstrument-functions -rdynamic" \
 #  -D CMAKE_Fortran_FLAGS_DEBUG="-g -O3 -finstrument-functions -rdynamic" \
-#do not use normally becuase it slow downs the code by 25%
+#do not use normally because it slow downs the code by 25%
+#Warning: code crashes with -O0 in cpu
 cmake -D CMAKE_C_COMPILER=$(which mpicc) \
   -D CMAKE_BUILD_TYPE=debug \
-  -D CMAKE_C_FLAGS_DEBUG="-O3 -g" \
-  -D CMAKE_Fortran_FLAGS_DEBUG="-g -O3" \
+  -D CMAKE_C_FLAGS_DEBUG="-O3 -g -finstrument-functions -rdynamic" \
+  -D CMAKE_Fortran_FLAGS_DEBUG="-g -O3 -finstrument-functions -rdynamic" \
   -D CMAKE_C_FLAGS_RELEASE="-O3" \
   -D CMAKE_Fortran_FLAGS_RELEASE="" \
   -D CMAKE_Fortran_COMPILER=$mpifort \

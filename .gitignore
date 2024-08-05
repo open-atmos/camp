@@ -106,3 +106,6 @@ test/monarch/mock_monarch.row
 test/monarch/mock_monarch.pcf
 test/monarch/mock_monarch.prv
 compile/a.txt
+test/monarch/extrae_module.o
+test/monarch/extrae_module.mod
+test/monarch/a.txt
