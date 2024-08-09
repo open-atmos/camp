@@ -12,16 +12,16 @@ def all_timesteps():
   conf.timeSteps = 1
   conf.loads_gpu = [1]
   conf.cells = [10000]
-  conf.mpiProcessesCaseBase = 2
-  #conf.caseBase = "CPU One-cell"
-  conf.caseBase = "GPU BDF"
+  conf.mpiProcessesCaseBase = 80
+  conf.caseBase = "CPU One-cell"
+  #conf.caseBase = "GPU BDF"
   conf.mpiProcessesCaseOptimList = [80]
-  #conf.casesOptim = ["GPU BDF"]
+  conf.casesOptim = ["GPU BDF"]
   #conf.is_import = True
   #conf.is_import_base = True
   #conf.profileCuda = "ncu"
   #conf.profileCuda = "nsys"
-  conf.profileExtrae = True
+  #conf.profileExtrae = True
   datay = run_main(conf)
   plot_cases(conf, datay)
 

@@ -43,8 +43,8 @@ cd build
 #Warning: code crashes with -O0 in cpu
 cmake -D CMAKE_C_COMPILER=$(which mpicc) \
   -D CMAKE_BUILD_TYPE=debug \
-  -D CMAKE_C_FLAGS_DEBUG="-O3 -g -finstrument-functions -rdynamic" \
-  -D CMAKE_Fortran_FLAGS_DEBUG="-g -O3 -finstrument-functions -rdynamic" \
+  -D CMAKE_C_FLAGS_DEBUG="-O3 -g" \
+  -D CMAKE_Fortran_FLAGS_DEBUG="-g -O3" \
   -D CMAKE_C_FLAGS_RELEASE="-O3" \
   -D CMAKE_Fortran_FLAGS_RELEASE="" \
   -D CMAKE_Fortran_COMPILER=$mpifort \

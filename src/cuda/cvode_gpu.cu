@@ -4,7 +4,7 @@
  */
 #include "cvode_cuda.h"
 
-//#define PROFILE_GPU_SOLVING
+#define PROFILE_GPU_SOLVING
 
 extern "C" {
 #include "cvode_gpu.h"
