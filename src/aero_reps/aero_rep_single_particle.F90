@@ -700,7 +700,7 @@ contains
 
     integer(kind=i_kind) :: i_phase
 
-    call assert_msg(927040495, phase_id .ge. 1 .and. &
+    call assert_msg(927040495, phase_id .ge. 0 .and. &
                                 phase_id .le. size( this%aero_phase ), &
                      "Aerosol phase index out of range. Got "// &
                      trim( integer_to_string( phase_id ) )//", expected 1:"// &
