@@ -654,22 +654,22 @@ contains
     phase_index = 0
     if (present(phase_is_at_surface)) then
       if (phase_is_at_surface) then
-        do i_layer = 1, NUM_LAYERS_
-          do i_phase = LAYER_PHASE_START_(i_layer), LAYER_PHASE_END_(i_layer)
-            if (this%aero_phase(i_phase)%val%name() .eq. phase_name .and. &
-              this%aero_phase_is_at_surface(i_phase)) then
-              phase_index = phase_index + 1
-            end if
-          end do
+        do i_phase = 1, size(this%aero_phase)
+        !do i_layer = 1, NUM_LAYERS_
+          !do i_phase = LAYER_PHASE_START_(i_layer), LAYER_PHASE_END_(i_layer)
+          if (this%aero_phase(i_phase)%val%name() .eq. phase_name .and. &
+            this%aero_phase_is_at_surface(i_phase)) then
+            phase_index = phase_index + 1
+          end if
         end do
       else
-        do i_layer = 1, NUM_LAYERS_
-          do i_phase = LAYER_PHASE_START_(i_layer), LAYER_PHASE_END_(i_layer)
-            if (this%aero_phase(i_phase)%val%name() .eq. phase_name .and. &
-              .not. this%aero_phase_is_at_surface(i_phase)) then
-              phase_index = phase_index + 1
-            end if
-          end do
+        do i_phase = 1, size(this%aero_phase)
+        !do i_layer = 1, NUM_LAYERS_
+          !do i_phase = LAYER_PHASE_START_(i_layer), LAYER_PHASE_END_(i_layer)
+          if (this%aero_phase(i_phase)%val%name() .eq. phase_name .and. &
+            .not. this%aero_phase_is_at_surface(i_phase)) then
+            phase_index = phase_index + 1
+          end if
         end do
       end if  
     else
