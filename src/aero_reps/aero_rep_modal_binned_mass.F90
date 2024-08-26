@@ -954,9 +954,9 @@ contains
 
     integer(kind=i_kind) :: i_phase
 
-    num_phase_instances = 0
     if (present(phase_is_at_surface)) then
       if (phase_is_at_surface) then
+        num_phase_instances = 0
         do i_phase = 1, size(this%aero_phase)
           if (this%aero_phase(i_phase)%val%name().eq.phase_name .and. &
               this%aero_phase_is_at_surface(i_phase)) then
@@ -964,6 +964,7 @@ contains
           end if
         end do
       else
+        num_phase_instances = 0
         do i_phase = 1, size(this%aero_phase)
           if (this%aero_phase(i_phase)%val%name().eq.phase_name .and. &
               .not. this%aero_phase_is_at_surface(i_phase)) then
@@ -974,6 +975,7 @@ contains
         end do 
       end if
     else
+      num_phase_instances = 0
       do i_phase = 1, size(this%aero_phase)
         if (this%aero_phase(i_phase)%val%name().eq.phase_name) then
           num_phase_instances = num_phase_instances + 1

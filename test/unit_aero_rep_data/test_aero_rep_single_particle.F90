@@ -209,13 +209,16 @@ contains
         call assert(768528274, aero_rep%phase_state_size(layer=3,phase=1) .eq. 3)
         ! test num_phase_instances funtion
         phase_name_test = "bread"
-        num_bread = 2
+        num_bread = 1
         max_part = aero_rep%maximum_computational_particles()
+        print *, max_part
         bread_phase_instance = num_bread * max_part
         !check value
         call assert(417730478, 3 .eq. max_part)
-        call assert(734138496, bread_phase_instance .eq. aero_rep%num_phase_instances(phase_name_test))
- 
+        print *, aero_rep%num_phase_instances(phase_name_test, phase_is_at_surface = .true.)
+        call assert(734138496, bread_phase_instance .eq. aero_rep%num_phase_instances(phase_name_test, &
+                                                         phase_is_at_surface = .true.))
+
       class default
         call die_msg(519535557, rep_name)
     end select
