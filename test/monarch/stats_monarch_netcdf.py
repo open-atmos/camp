@@ -8,6 +8,7 @@ import pandas as pd
 import time
 import seaborn as sns
 import matplotlib.pyplot as plt
+import os
 
 
 def calculate_speedup(file1_path, file2_path):
@@ -30,19 +31,21 @@ def calculate_nrmse(data1, data2):
 
 
 def process_variable(dataset1, dataset2, var_name):
-    print(f"Processing variable: {var_name}")
+    #print(f"Processing variable: {var_name}")
     array1 = np.ma.getdata(dataset1.variables[var_name][-1, ...])
     array2 = np.ma.getdata(dataset2.variables[var_name][-1, ...])
 
     abs_diff = np.abs(array1 - array2)
     max_array = np.maximum(np.abs(array1), np.abs(array2))
-    relative_error = np.where(max_array == 0, 0, abs_diff*100 / max_array)
+    non_zero_mask = max_array != 0
+    relative_error = np.zeros_like(abs_diff)
+    relative_error[non_zero_mask] = (abs_diff[non_zero_mask] * 100) / max_array[non_zero_mask]
 
     mean = np.mean(relative_error)
-    print(mean)
+    #print(mean)
     if np.isnan(mean) or mean == 0.:
-        if mean == 0:
-            print(f"Variable difference mean: {var_name} is 0")
+        #if mean == 0:
+            #print(f"Variable difference mean: {var_name} is 0")
         return False
     else:
         nrmse = calculate_nrmse(array1, array2)
@@ -57,58 +60,74 @@ def process_variable(dataset1, dataset2, var_name):
     return var_name, nrmse, std_dev,mean, median, quantile25, quantile50,\
     quantile75, quantile95, max_error, relative_error
 
-src_path="/gpfs/scratch/bsc32/bsc032815/monarch_out/"
-file1_path_header = "cpu_80coresTstep6/"
-file2_path_header = "gpu_80coresTstep6_gpuPerc98/"
+def get_error(day):
+    src_path="/gpfs/scratch/bsc32/bsc032815/"
+    file1_path_header = "a5hl/nmmb-monarch/ARCHIVE/000/"+day+"/"
+    file2_path_header = "a591/nmmb-monarch/ARCHIVE/000/"+day+"/"
 
-file1 = src_path + file1_path_header + "out/stats.csv"
-file2 = src_path + file2_path_header + "out/stats.csv"
-speedup = calculate_speedup(file1, file2)
-print("Speedup:", speedup)
+    file1 = src_path + file1_path_header + "out/stats.csv"
+    file2 = src_path + file2_path_header + "out/stats.csv"
+    speedup = calculate_speedup(file1, file2)
+    #print("Speedup:", speedup)
 
-file1 = src_path + file1_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
-file2 = src_path + file2_path_header + "nmmb_hst_01_nc4_0000h_00m_00.00s.nc"
-dataset1 = nc.Dataset(file1)
-dataset2 = nc.Dataset(file2)
-variable_names = dataset1.variables.keys()
-summary_data = []
-start_time = time.time()
+    file1 = src_path + file1_path_header + "MONARCH_d01_"+day+".nc"
+    file2 = src_path + file2_path_header + "MONARCH_d01_"+day+".nc"
+    dataset1 = nc.Dataset(file1)
+    dataset2 = nc.Dataset(file2)
+    variable_names = dataset1.variables.keys()
+    summary_data = []
+    start_time = time.time()
+    print("file1", file1)
+    print("file2", file2)
 
-for var_name in variable_names:
-    variable = dataset1.variables[var_name]
-    if len(variable.dimensions) == 4:
-        result = process_variable(dataset1, dataset2, var_name)
-        if result:
-            summary_data.append(result)
+    for var_name in variable_names:
+        variable = dataset1.variables[var_name]
+        if len(variable.dimensions) == 4:
+            result = process_variable(dataset1, dataset2, var_name)
+            if result:
+                summary_data.append(result)
 
-print(f"Execution time: {time.time()-start_time:.2f} seconds")
-dataset1.close()
-dataset2.close()
-if not summary_data:
-    print("summary_data is empty")
-    exit(1)
+    #print(f"Execution time: {time.time()-start_time:.2f} seconds")
+    dataset1.close()
+    dataset2.close()
+    if not summary_data:
+        print("summary_data is empty")
+        return -1
 
-summary_table = pd.DataFrame(summary_data, columns=[
-    'Variable','NRMSE[%]','Std Dev','Mean','Median','Quantiles 25', 'Quantile 50','Quantile 75',
-    'Quantile 95','Max','Relative Error'])
+    summary_table = pd.DataFrame(summary_data, columns=[
+        'Variable','NRMSE[%]','Std Dev','Mean','Median','Quantiles 25', 'Quantile 50','Quantile 75',
+        'Quantile 95','Max','Relative Error'])
 
-worst_variables = summary_table.nlargest(10, 'NRMSE[%]')
-data = [row['Relative Error'].reshape(-1) for _, row in worst_variables.iterrows()]
-variable_names = [row['Variable'] for _, row in worst_variables.iterrows()]
-worst_variables = worst_variables.drop('Relative Error', axis=1)
-highest_nrmse_row = worst_variables.iloc[0]
-highest_nrmse_variable = highest_nrmse_row['Variable']
-highest_nrmse = highest_nrmse_row['NRMSE[%]']
-print("worst_variables:")
-print(worst_variables)
-print("Config:",file1_path_header,"vs",file2_path_header)
-print(f"Highest NRMSE[%]: {highest_nrmse:.2f}")
-print("Speedup:", speedup)
-plot_nrmse = False
-if plot_nrmse:
-    plt.figure()
-    sns.boxplot(data=data, orient='v', showfliers=False)
-    plt.ylabel("Relative Error [%]")
-    plt.xticks(range(len(variable_names)), variable_names, rotation=90)
-    plt.title("Species with highest NRMSE for MONARCH-CAMP") #4 GPUs 480 time-steps
-    plt.show()
+    worst_variables = summary_table.nlargest(10, 'NRMSE[%]')
+    data = [row['Relative Error'].reshape(-1) for _, row in worst_variables.iterrows()]
+    variable_names = [row['Variable'] for _, row in worst_variables.iterrows()]
+    worst_variables = worst_variables.drop('Relative Error', axis=1)
+    highest_nrmse_row = worst_variables.iloc[0]
+    highest_nrmse = highest_nrmse_row['NRMSE[%]']
+    print("worst_variables:")
+    print(worst_variables)
+    #print("Config:",file1_path_header,"vs",file2_path_header)
+    #print(f"Highest NRMSE[%]: {highest_nrmse:.2f}")
+    #print("Speedup:", speedup)
+    plot_nrmse = False
+    if plot_nrmse:
+        plt.figure()
+        sns.boxplot(data=data, orient='v', showfliers=False)
+        plt.ylabel("Relative Error [%]")
+        plt.xticks(range(len(variable_names)), variable_names, rotation=90)
+        plt.title("Species with highest NRMSE for MONARCH-CAMP") #4 GPUs 480 time-steps
+        plt.show()
+    return highest_nrmse
+
+def get_errors():
+    folder_path = "/gpfs/scratch/bsc32/bsc032815/a5hl/nmmb-monarch/ARCHIVE/000"
+    folders = sorted(os.listdir(folder_path))
+    folder="2016073112"
+    #for folder in folders:
+    error = get_error(folder)
+    print("folder:",folder,"error:", error)
+
+get_errors()
+#a591 vs a5hl (gpu20days vs cpu20days)
+errors=[0.29,0.18,0.05,1,22,0.56,1.14,0.91,1.44,0.95,2.07] #todo fix runtimewarning
+days = [i for i in range(1, len(errors))]
