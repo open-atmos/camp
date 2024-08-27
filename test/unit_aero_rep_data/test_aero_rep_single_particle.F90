@@ -208,12 +208,14 @@ contains
         call assert(008760891, aero_rep%aero_phase_is_at_surface(12) .eqv. .true.)
 
         call assert(768528274, aero_rep%phase_state_size(layer=3,phase=1) .eq. 3)
+
         ! test num_phase_instances funtion
         phase_name_test = "jam"
-        num_jam = 1
+        num_jam = 0
         max_part = aero_rep%maximum_computational_particles()
-        jam_phase_instance = num_bread * max_part
+        jam_phase_instance = num_jam * max_part
         !check value
+        print *, aero_rep%num_phase_instances(phase_name_test, is_at_surface = .false.)
         call assert(417730478, 3 .eq. max_part)
         call assert(493602373, jam_phase_instance .eq. aero_rep%num_phase_instances(phase_name_test, &
                                                          is_at_surface = .true.))
