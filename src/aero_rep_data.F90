@@ -342,7 +342,7 @@ interface
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get the number of instances of a specified aerosol phase
-  function num_phase_instances(this, phase_name, phase_is_at_surface)
+  function num_phase_instances(this, phase_name, is_at_surface)
     use camp_util,                                       only : i_kind
     import :: aero_rep_data_t
 
@@ -353,7 +353,7 @@ interface
     !> Aerosol phase name
     character(len=*), intent(in) :: phase_name
     !> Indicates if aerosol phase is at the surface of particle
-    logical, intent(in), optional :: phase_is_at_surface
+    logical, intent(in), optional :: is_at_surface
 
   end function num_phase_instances
 
@@ -509,7 +509,7 @@ contains
     integer(kind=i_kind) :: num_instances, i_instance, i_phase
 
     num_instances = this%num_phase_instances(phase_name, &
-                         phase_is_at_surface = .true.)
+                         is_at_surface = .true.)
     allocate(phase_ids(num_instances))
     if (present(is_at_surface)) then
       if (is_at_surface) then

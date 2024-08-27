@@ -639,20 +639,20 @@ contains
   !! particle representation with layers, a phase can exist in multiple layers
   !! in one particle.  
   integer(kind=i_kind) function num_phase_instances(this, phase_name, &
-                                                    phase_is_at_surface)
+                                                    is_at_surface)
   
     !> Aerosol representation data
     class(aero_rep_single_particle_t), intent(in) :: this
     !> Aerosol phase name
     character(len=*), intent(in) :: phase_name
     !> Indicates if aerosol phase is at the surface of particle
-    logical, intent(in), optional :: phase_is_at_surface
+    logical, intent(in), optional :: is_at_surface
 
     integer(kind=i_kind) ::  i_phase, i_layer, phase_index
 
     num_phase_instances = 0
-    if (present(phase_is_at_surface)) then
-      if (phase_is_at_surface) then
+    if (present(is_at_surface)) then
+      if (is_at_surface) then
         phase_index = 0
         do i_layer = 1, NUM_LAYERS_
           do i_phase = LAYER_PHASE_START_(i_layer), LAYER_PHASE_END_(i_layer)
@@ -702,7 +702,7 @@ contains
 
     integer(kind=i_kind) :: i_phase
 
-    call assert_msg(927040495, phase_id .ge. 0 .and. &
+    call assert_msg(927040495, phase_id .ge. 1 .and. &
                                 phase_id .le. size( this%aero_phase ), &
                      "Aerosol phase index out of range. Got "// &
                      trim( integer_to_string( phase_id ) )//", expected 1:"// &
