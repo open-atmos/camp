@@ -11,6 +11,7 @@
 #ifndef CAMP_COMMON_H
 #define CAMP_COMMON_H
 
+#include <stdbool.h>
 #include <time.h>
 #include "Jacobian.h"
 #include "time_derivative.h"
@@ -49,12 +50,6 @@
 
 /* Number of environmental parameters */
 #define CAMP_NUM_ENV_PARAM_ 2 // !!! Must match the value in camp_state.f90 !!!
-
-/* boolean definition */
-// CUDA/C++ already has bool definition: Avoid issues disabling it for GPU
-#ifndef CAMP_GPU_SOLVER_H_
-typedef enum { false, true } bool;
-#endif
 
 /* Jacobian map */
 typedef struct {
