@@ -51,12 +51,6 @@ Required dependencies:
    * SuiteSparse - <http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.1.0.tar.gz>
    * A modified version of CVODE 3.1.2 - provided here in `cvode-3.4-alpha.tar.gz`
 
-Optional dependencies:
-
-   * GSL for Jacobian evaluation and random number generators -
-     <http://www.gnu.org/software/gsl/>
-
-
 Installation
 ============
 
@@ -84,7 +78,6 @@ Installation
         export JSON_FORTRAN_HOME=${HOME}/opt
         export SUITE_SPARSE_HOME=${HOME}/opt
         export SUNDIALS_HOME=${HOME}/opt
-        export GSL_HOME=${HOME}/opt
 
    Of course the exact directories will depend on where the libraries
    are installed. You only need to set variables for libraries

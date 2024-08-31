@@ -23,11 +23,6 @@
 #ifdef CAMP_USE_GPU
 #include "cuda/camp_gpu_solver.h"
 #endif
-#ifdef CAMP_USE_GSL
-#include <gsl/gsl_deriv.h>
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_roots.h>
-#endif
 #include "camp_debug.h"
 
 // Default solver initial time step relative to total integration time
@@ -35,11 +30,6 @@
 // State advancement factor for Jacobian element evaluation
 #define JAC_CHECK_ADV_MAX 1.0E-00
 #define JAC_CHECK_ADV_MIN 1.0E-12
-// Relative tolerance for Jacobian element evaluation against GSL absolute
-// errors
-#define JAC_CHECK_GSL_REL_TOL 1.0e-4
-// Absolute Jacobian error tolerance
-#define JAC_CHECK_GSL_ABS_TOL 1.0e-9
 // Set MAX_TIMESTEP_WARNINGS to a negative number to prevent output
 #define MAX_TIMESTEP_WARNINGS -1
 // Maximum number of steps in discreet addition guess helper
@@ -1149,143 +1139,14 @@ bool check_Jac(realtype t, N_Vector y, SUNMatrix J, N_Vector deriv,
   realtype *d_deriv = NV_DATA_S(deriv);
   bool retval = true;
 
-#ifdef CAMP_USE_GSL
-  GSLParam gsl_param;
-  gsl_function gsl_func;
-
-  // Set up gsl parameters needed during numerical differentiation
-  gsl_param.t = t;
-  gsl_param.y = tmp;
-  gsl_param.deriv = tmp1;
-  gsl_param.solver_data = (SolverData *)solver_data;
-
-  // Set up the gsl function
-  gsl_func.function = &gsl_f;
-  gsl_func.params = &gsl_param;
-#endif
-
   // Calculate the the derivative for the current state y
   if (f(t, y, deriv, solver_data) != 0) {
     printf("\n Derivative calculation failed.\n");
     return false;
   }
 
-  // Loop through the independent variables, numerically calculating
-  // the partial derivatives d_fy/d_x
-  for (int i_ind = 0; i_ind < NV_LENGTH_S(y); ++i_ind) {
-    // If GSL is available, use their numerical differentiation to
-    // calculate the partial derivatives. Otherwise, estimate them by
-    // advancing the state.
-#ifdef CAMP_USE_GSL
-
-    // Reset tmp to the initial state
-    N_VScale(ONE, y, tmp);
-
-    // Save the independent species concentration and index
-    double x = d_state[i_ind];
-    gsl_param.ind_var = i_ind;
-
-    // Skip small concentrations
-    if (x < SMALL) continue;
-
-    // Do the numerical differentiation for each potentially non-zero
-    // Jacobian element
-    for (int i_elem = SM_INDEXPTRS_S(J)[i_ind];
-         i_elem < SM_INDEXPTRS_S(J)[i_ind + 1]; ++i_elem) {
-      int i_dep = SM_INDEXVALS_S(J)[i_elem];
-
-      double abs_err;
-      double partial_deriv;
-
-      gsl_param.dep_var = i_dep;
-
-      bool test_pass = false;
-      double h, abs_tol, rel_diff, scaling;
-
-      // Evaluate the Jacobian element over a range of initial step sizes
-      for (scaling = JAC_CHECK_ADV_MIN;
-           scaling <= JAC_CHECK_ADV_MAX && test_pass == false;
-           scaling *= 10.0) {
-        // Get the current initial step size
-        h = x * scaling;
-
-        // Get the partial derivative d_fy/dx
-        if (gsl_deriv_forward(&gsl_func, x, h, &partial_deriv, &abs_err) == 1) {
-          printf("\nERROR in numerical differentiation for J[%d][%d]", i_ind,
-                 i_dep);
-        }
-
-        // Evaluate the results
-        abs_tol = 1.2 * fabs(abs_err);
-        abs_tol =
-            abs_tol > JAC_CHECK_GSL_ABS_TOL ? abs_tol : JAC_CHECK_GSL_ABS_TOL;
-        rel_diff = 1.0;
-        if (partial_deriv != 0.0)
-          rel_diff =
-              fabs((SM_DATA_S(J)[i_elem] - partial_deriv) / partial_deriv);
-        if (fabs(SM_DATA_S(J)[i_elem] - partial_deriv) < abs_tol ||
-            rel_diff < JAC_CHECK_GSL_REL_TOL)
-          test_pass = true;
-      }
-
-      // If the test does not pass with any initial step size, print out the
-      // failure, output the local derivative state and return false
-      if (test_pass == false) {
-        printf(
-            "\nError in Jacobian[%d][%d]: Got %le; expected %le"
-            "\n  difference %le is greater than error %le",
-            i_ind, i_dep, SM_DATA_S(J)[i_elem], partial_deriv,
-            fabs(SM_DATA_S(J)[i_elem] - partial_deriv), abs_tol);
-        printf("\n  relative error %le intial step size %le", rel_diff, h);
-        printf("\n  initial rate %le initial state %le", d_deriv[i_dep],
-               d_state[i_ind]);
-        printf(" scaling %le", scaling);
-        ModelData *md = &(((SolverData *)solver_data)->model_data);
-        for (int i_cell = 0; i_cell < md->n_cells; ++i_cell)
-          for (int i_spec = 0; i_spec < md->n_per_cell_state_var; ++i_spec)
-            printf("\n cell: %d species %d state_id %d conc: %le", i_cell,
-                   i_spec, i_cell * md->n_per_cell_state_var + i_spec,
-                   md->total_state[i_cell * md->n_per_cell_state_var + i_spec]);
-        retval = false;
-        output_deriv_local_state(t, y, deriv, solver_data, &f, i_dep, i_ind,
-                                 SM_DATA_S(J)[i_elem], h / 10.0);
-      }
-    }
-#endif
-  }
   return retval;
 }
-
-#ifdef CAMP_USE_GSL
-/** \brief Wrapper function for derivative calculations for numerical solving
- *
- * Wraps the f(t,y) function for use by the GSL numerical differentiation
- * functions.
- *
- * \param x Independent variable \f$x\f$ for calculations of \f$df_y/dx\f$
- * \param param Differentiation parameters
- * \return Partial derivative \f$df_y/dx\f$
- */
-double gsl_f(double x, void *param) {
-  GSLParam *gsl_param = (GSLParam *)param;
-  N_Vector y = gsl_param->y;
-  N_Vector deriv = gsl_param->deriv;
-
-  // Set the independent variable
-  NV_DATA_S(y)[gsl_param->ind_var] = x;
-
-  // Calculate the derivative
-  if (f(gsl_param->t, y, deriv, (void *)gsl_param->solver_data) != 0) {
-    printf("\nDerivative calculation failed!");
-    for (int i_spec = 0; i_spec < NV_LENGTH_S(y); ++i_spec)
-      printf("\n species %d conc: %le", i_spec, NV_DATA_S(y)[i_spec]);
-    return 0.0 / 0.0;
-  }
-
-  // Return the calculated derivative for the dependent variable
-  return NV_DATA_S(deriv)[gsl_param->dep_var];
-}
-#endif
 
 /** \brief Try to improve guesses of y sent to the linear solver
  *

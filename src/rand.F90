@@ -11,55 +11,14 @@ module camp_rand
   use camp_util
   use camp_constants
   use camp_mpi
-#ifdef CAMP_USE_GSL
-  use iso_c_binding
-#endif
 
   !> Length of a UUID string.
   integer, parameter :: CAMP_UUID_LEN = 36
-
-  !> Result code indicating successful completion.
-  integer, parameter :: CAMP_RAND_GSL_SUCCESS      = 0
-  !> Result code indicating initialization failure.
-  integer, parameter :: CAMP_RAND_GSL_INIT_FAIL    = 1
-  !> Result code indicating the generator was not initialized when it
-  !> should have been.
-  integer, parameter :: CAMP_RAND_GSL_NOT_INIT     = 2
-  !> Result code indicating the generator was already initialized when
-  !> an initialization was attempted.
-  integer, parameter :: CAMP_RAND_GSL_ALREADY_INIT = 3
 
   !> Next sequential id
   integer, private :: next_id = 100
 
 contains
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-#ifdef CAMP_USE_GSL
-  !> Check the return value of a call to one of the GSL RNG functions.
-  subroutine rand_check_gsl(code, value)
-
-    !> Error code.
-    integer :: code
-    !> Return value.
-    integer(kind=c_int) :: value
-
-    if (value == CAMP_RAND_GSL_SUCCESS) then
-       return
-    elseif (value == CAMP_RAND_GSL_INIT_FAIL) then
-       call die_msg(code, "GSL RNG initialization failed")
-    elseif (value == CAMP_RAND_GSL_NOT_INIT) then
-       call die_msg(code, "GSL RNG has not been successfully initialized")
-    elseif (value == CAMP_RAND_GSL_ALREADY_INIT) then
-       call die_msg(code, "GSL RNG was already initialized")
-    else
-       call die_msg(code, "Unknown GSL RNG interface return value: " &
-            // trim(integer_to_string(value)))
-    end if
-
-  end subroutine rand_check_gsl
-#endif
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -75,20 +34,6 @@ contains
 
     integer :: i, n, clock
     integer, allocatable :: seed_vec(:)
-#ifdef CAMP_USE_GSL
-    integer(kind=c_int) :: c_clock
-#endif
-
-#ifdef CAMP_USE_GSL
-#ifndef DOXYGEN_SKIP_DOC
-    interface
-       integer(kind=c_int) function camp_srand_gsl(seed) bind(c)
-         use iso_c_binding
-         integer(kind=c_int), value :: seed
-       end function camp_srand_gsl
-    end interface
-#endif
-#endif
 
     if (seed == 0) then
        if (camp_mpi_rank() == 0) then
@@ -101,17 +46,12 @@ contains
        clock = seed
     end if
     clock = clock + 67 * offset
-#ifdef CAMP_USE_GSL
-    c_clock = int(clock, kind=c_int)
-    call rand_check_gsl(100489590, camp_srand_gsl(c_clock))
-#else
     call random_seed(size = n)
     allocate(seed_vec(n))
     i = 0 ! HACK to shut up gfortran warning
     seed_vec = clock + 37 * (/ (i - 1, i = 1, n) /)
     call random_seed(put = seed_vec)
     deallocate(seed_vec)
-#endif
 
   end subroutine camp_srand
 
@@ -119,20 +59,6 @@ contains
 
   !> Cleanup the random number generator.
   subroutine camp_rand_finalize()
-
-#ifdef CAMP_USE_GSL
-
-#ifndef DOXYGEN_SKIP_DOC
-    interface
-       integer(kind=c_int) function camp_rand_finalize_gsl() bind(c)
-         use iso_c_binding
-       end function camp_rand_finalize_gsl
-    end interface
-#endif
-
-    call rand_check_gsl(489538382, camp_rand_finalize_gsl())
-#endif
-
   end subroutine camp_rand_finalize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -140,32 +66,10 @@ contains
   !> Returns a random number between 0 and 1.
   real(kind=dp) function camp_random()
 
-#ifdef CAMP_USE_GSL
-    real(kind=c_double), target :: rnd
-    type(c_ptr) :: rnd_ptr
-#else
     real(kind=dp) :: rnd
-#endif
 
-#ifdef CAMP_USE_GSL
-#ifndef DOXYGEN_SKIP_DOC
-    interface
-       integer(kind=c_int) function camp_rand_gsl(harvest) bind(c)
-         use iso_c_binding
-         type(c_ptr), value :: harvest
-       end function camp_rand_gsl
-    end interface
-#endif
-#endif
-
-#ifdef CAMP_USE_GSL
-    rnd_ptr = c_loc(rnd)
-    call rand_check_gsl(843777138, camp_rand_gsl(rnd_ptr))
-    camp_random = real(rnd, kind=dp)
-#else
     call random_number(rnd)
     camp_random = rnd
-#endif
 
   end function camp_random
 
@@ -177,33 +81,8 @@ contains
     !> Maximum random number to generate.
     integer, intent(in) :: n
 
-#ifdef CAMP_USE_GSL
-    integer(kind=c_int) :: n_c
-    integer(kind=c_int), target :: harvest
-    type(c_ptr) :: harvest_ptr
-#endif
-
-#ifdef CAMP_USE_GSL
-#ifndef DOXYGEN_SKIP_DOC
-    interface
-       integer(kind=c_int) function camp_rand_int_gsl(n, harvest) bind(c)
-         use iso_c_binding
-         integer(kind=c_int), value :: n
-         type(c_ptr), value :: harvest
-       end function camp_rand_int_gsl
-    end interface
-#endif
-#endif
-
     call assert(669532625, n >= 1)
-#ifdef CAMP_USE_GSL
-    n_c = int(n, kind=c_int)
-    harvest_ptr = c_loc(harvest)
-    call rand_check_gsl(388234845, camp_rand_int_gsl(n_c, harvest_ptr))
-    camp_rand_int = int(harvest)
-#else
     camp_rand_int = mod(int(camp_random() * real(n, kind=dp)), n) + 1
-#endif
     call assert(515838689, camp_rand_int >= 1)
     call assert(802560153, camp_rand_int <= n)
 
@@ -256,37 +135,10 @@ contains
 
     !> Mean of the distribution.
     real(kind=dp), intent(in) :: mean
-
-#ifdef CAMP_USE_GSL
-    real(kind=c_double) :: mean_c
-    integer(kind=c_int), target :: harvest
-    type(c_ptr) :: harvest_ptr
-#else
     real(kind=dp) :: L, p
     integer :: k
-#endif
-
-#ifdef CAMP_USE_GSL
-#ifndef DOXYGEN_SKIP_DOC
-    interface
-       integer(kind=c_int) function camp_rand_poisson_gsl(mean, harvest) &
-            bind(c)
-         use iso_c_binding
-         real(kind=c_double), value :: mean
-         type(c_ptr), value :: harvest
-       end function camp_rand_poisson_gsl
-    end interface
-#endif
-#endif
 
     call assert(368397056, mean >= 0d0)
-#ifdef CAMP_USE_GSL
-    mean_c = real(mean, kind=c_double)
-    harvest_ptr = c_loc(harvest)
-    call rand_check_gsl(353483140, &
-         camp_rand_poisson_gsl(mean_c, harvest_ptr))
-    rand_poisson = int(harvest)
-#else
     if (mean <= 10d0) then
        ! exact method due to Knuth
        L = exp(-mean)
@@ -303,7 +155,6 @@ contains
        k = nint(rand_normal(mean, sqrt(mean)))
        rand_poisson = max(k, 0)
     end if
-#endif
 
   end function rand_poisson
 
@@ -325,42 +176,12 @@ contains
     integer, intent(in) :: n
     !> Sample probability.
     real(kind=dp), intent(in) :: p
-
-#ifdef CAMP_USE_GSL
-    integer(kind=c_int) :: n_c
-    real(kind=c_double) :: p_c
-    integer(kind=c_int), target :: harvest
-    type(c_ptr) :: harvest_ptr
-#else
     real(kind=dp) :: np, nomp, q, G_real
     integer :: k, G, sum
-#endif
-
-#ifdef CAMP_USE_GSL
-#ifndef DOXYGEN_SKIP_DOC
-    interface
-       integer(kind=c_int) function camp_rand_binomial_gsl(n, p, harvest) &
-            bind(c)
-         use iso_c_binding
-         integer(kind=c_int), value :: n
-         real(kind=c_double), value :: p
-         type(c_ptr), value :: harvest
-       end function camp_rand_binomial_gsl
-    end interface
-#endif
-#endif
 
     call assert(130699849, n >= 0)
     call assert(754379796, p >= 0d0)
     call assert(678506029, p <= 1d0)
-#ifdef CAMP_USE_GSL
-    n_c = int(n, kind=c_int)
-    p_c = real(p, kind=c_double)
-    harvest_ptr = c_loc(harvest)
-    call rand_check_gsl(208869397, &
-         camp_rand_binomial_gsl(n_c, p_c, harvest_ptr))
-    rand_binomial = int(harvest)
-#else
     np = real(n, kind=dp) * p
     nomp = real(n, kind=dp) * (1d0 - p)
     if ((np >= 10d0) .and. (nomp >= 10d0)) then
@@ -399,7 +220,6 @@ contains
        end if
        call assert(359087410, rand_binomial <= n)
     end if
-#endif
 
   end function rand_binomial
 
@@ -413,38 +233,9 @@ contains
     real(kind=dp), intent(in) :: mean
     !> Standard deviation of distribution.
     real(kind=dp), intent(in) :: stddev
-
-#ifdef CAMP_USE_GSL
-    real(kind=c_double) :: mean_c, stddev_c
-    real(kind=c_double), target :: harvest
-    type(c_ptr) :: harvest_ptr
-#else
     real(kind=dp) :: u1, u2, r, theta, z0, z1
-#endif
-
-#ifdef CAMP_USE_GSL
-#ifndef DOXYGEN_SKIP_DOC
-    interface
-       integer(kind=c_int) function camp_rand_normal_gsl(mean, stddev, &
-            harvest) bind(c)
-         use iso_c_binding
-         real(kind=c_double), value :: mean
-         real(kind=c_double), value :: stddev
-         type(c_ptr), value :: harvest
-       end function camp_rand_normal_gsl
-    end interface
-#endif
-#endif
 
     call assert(898978929, stddev >= 0d0)
-#ifdef CAMP_USE_GSL
-    mean_c = real(mean, kind=c_double)
-    stddev_c = real(stddev, kind=c_double)
-    harvest_ptr = c_loc(harvest)
-    call rand_check_gsl(102078576, &
-         camp_rand_normal_gsl(mean_c, stddev_c, harvest_ptr))
-    rand_normal = real(harvest, kind=dp)
-#else
     ! Uses the Box-Muller transform
     ! http://en.wikipedia.org/wiki/Box-Muller_transform
     u1 = camp_random()
@@ -457,7 +248,6 @@ contains
     ! We throw away z1, but we could use a SAVE variable to only do
     ! the computation on every second call of this function.
     rand_normal = stddev * z0 + mean
-#endif
 
   end function rand_normal
 

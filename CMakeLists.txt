@@ -27,7 +27,6 @@ endif ()
 ######################################################################
 # options
 
-option(ENABLE_GSL "Enable GSL library for Jacobian evaluation" OFF)
 option(ENABLE_MPI "Enable MPI parallel support" OFF)
 option(ENABLE_DEBUG "Compile debugging functions" OFF)
 option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
@@ -44,27 +43,6 @@ SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${PACKAGE_TARNAME}-${PACKAGE_VERSION}")
 set(CPACK_SOURCE_IGNORE_FILES "${CPACK_SOURCE_IGNORE_FILES};/.*~$;/[.].*/;/build/;/figures/;/scenarios/[^1234].*/;/old/;/tool/;/TODO")
 
 include(CPack)
-
-######################################################################
-# GSL
-
-if(ENABLE_GSL)
-  find_path(GSL_INCLUDE_DIR gsl/gsl_math.h
-    DOC "GSL include directory (must have gsl/ subdir)"
-    PATHS $ENV{GSL_HOME}/include /opt/local/include)
-  find_library(GSL_LIB gsl
-    DOC "GSL library"
-    PATHS $ENV{GSL_HOME}/lib /opt/local/lib)
-  find_library(GSL_CBLAS_LIB gslcblas
-    DOC "GSL CBLAS library"
-    PATHS $ENV{GSL_HOME}/lib /opt/local/lib)
-  find_library(M_LIB m
-    DOC "standard C math library")
-  set(GSL_SRC src/rand_gsl.c)
-  set(GSL_LIBS ${GSL_LIB} ${GSL_CBLAS_LIB} ${M_LIB})
-  include_directories(${GSL_INCLUDE_DIR})
-  add_definitions(-DCAMP_USE_GSL)
-endif()
 
 ######################################################################
 # MPI
@@ -381,13 +359,13 @@ set(CAMP_LIB_SRC
   src/solver_stats.F90
   src/debug_diff_check.F90
   ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC} ${REACTIONS_SRC}
-  ${CAMP_CUDA_SRC} ${GSL_SRC} ${CAMP_CXX_SRC} )
+  ${CAMP_CUDA_SRC} ${CAMP_CXX_SRC} )
 
 add_library(camplib SHARED ${CAMP_LIB_SRC})
 add_library(camplib-static STATIC ${CAMP_LIB_SRC})
 
-target_link_libraries(camplib ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
-target_link_libraries(camplib-static ${SUNDIALS_LIBS} ${GSL_LIBS} ${JSON_LIB})
+target_link_libraries(camplib ${SUNDIALS_LIBS} ${JSON_LIB})
+target_link_libraries(camplib-static ${SUNDIALS_LIBS} ${JSON_LIB})
 
 set(MODULE_DIR "${CMAKE_BINARY_DIR}/include")
 

@@ -13,7 +13,6 @@ RUN sudo dnf -y install \
         openmpi-devel \
         gcc-gfortran \
         gcc-c++ \
-        gsl-devel \
         metis-devel \
         lapack-devel \
         openblas-devel \

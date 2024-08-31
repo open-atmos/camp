@@ -4,7 +4,6 @@ RUN dnf -y update \
     && dnf -y install \
         gcc-gfortran \
         gcc-c++ \
-        gsl-devel \
         metis-devel \
         lapack-devel \
         openblas-devel \
@@ -63,7 +62,6 @@ ENV PATH="${PATH}:/usr/local/jsonfortran-gnu-6.1.0/lib"
              -D CMAKE_C_FLAGS_DEBUG="-pg" \
              -D CMAKE_Fortran_FLAGS_DEBUG="-pg" \
              -D CMAKE_MODULE_LINKER_FLAGS="-pg" \
-             -D ENABLE_GSL:BOOL=TRUE \
              /camp \
     && make install
 
