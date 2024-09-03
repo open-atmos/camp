@@ -160,7 +160,7 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00157}00157\ \ \ \textcolor{keywordtype}{private}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00158}00158\ \textcolor{comment}{\ \ \ \ !>\ Flag\ indicating\ whether\ the\ update\ data\ is\ allocated}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00159}\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_a3f217d2abc81ceda249031cb487fbb8d}{00159}}\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ is\_malloced\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00159}\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_a3f217d2abc81ceda249031cb487fbb8d}{00159}}\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ is\_malloced\ =\ .false.\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00160}00160\ \textcolor{comment}{\ \ \ \ !>\ Unique\ id\ for\ finding\ aerosol\ representations\ during\ initialization}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00161}\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t_a2a8853c8b9103098f53dad73b0233faf}{00161}}\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ aero\_rep\_unique\_id\ =\ 0\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00162}00162\ \textcolor{comment}{\ \ \ \ !>\ Maximum\ number\ of\ computational\ particles}}
@@ -393,19 +393,19 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%rep\_name//\textcolor{stringliteral}{"{}'"{}})}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00390}00390\ \ \ }
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00391}00391\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ find\ phase\ and\ set\ pointer\ and\ indices}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00392}00392\ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00392}00392\ \ \ \ \ \ \ \ \ found\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00393}00393\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ j\_phase\ =\ 1,\ \textcolor{keyword}{size}(aero\_phase\_set)}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00394}00394\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (aero\_phase\_set(j\_phase)\%val\%name()\ .eq.\ phase\_name)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00395}00395\ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00395}00395\ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00396}00396\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_particle\ =\ 0,\ num\_particles-\/1}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00397}00397\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%aero\_phase(i\_particle*num\_phases\ +\ curr\_phase)\ =\ \&}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00398}00398\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aero\_phase\_set(j\_phase)}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00399}00399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_layer\ .eq.\ num\_layers\_)\ \textcolor{keywordflow}{then}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00400}00400\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%aero\_phase\_is\_at\_surface(i\_particle*num\_phases\ +\ curr\_phase)\ =\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00401}00401\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00401}00401\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .true.}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00402}00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00403}00403\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%aero\_phase\_is\_at\_surface(i\_particle*num\_phases\ +\ curr\_phase)\ =\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00404}00404\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00404}00404\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .false.}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00405}00405\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00406}00406\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ end\ do}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00407}00407\ \ \ \ \ \ \ \ \ \ \ \ \ phase\_state\_id\_(i\_layer,i\_phase)\ =\ curr\_id}
@@ -814,7 +814,7 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00810}00810\ \ \ \ \ update\_data\%aero\_rep\_type\ =\ int(aero\_rep\_type,\ kind=c\_int)}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00811}00811\ \ \ \ \ update\_data\%update\_data\ =\ \&}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00812}00812\ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__single__particle_1_1aero__rep__single__particle__create__number__update__data}{aero\_rep\_single\_particle\_create\_number\_update\_data}}()}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00813}00813\ \ \ \ \ update\_data\%is\_malloced\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00813}00813\ \ \ \ \ update\_data\%is\_malloced\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00814}00814\ }
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00815}00815\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a0cf95e9e46b97393e5654f5f65e417eb}{update\_data\_init\_number}}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00816}00816\ }

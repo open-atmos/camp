@@ -259,7 +259,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    n_aero_jac_elem = 0</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    n_aero_phase = 0</div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>    <span class="keywordflow">do</span> i_aero_rep = 1, <span class="keyword">size</span>(aero_rep)</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>      phase_ids = aero_rep(i_aero_rep)%val%phase_ids(phase_name, is_at_surface=.<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b">true</a>.)</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>      phase_ids = aero_rep(i_aero_rep)%val%phase_ids(phase_name, is_at_surface=.true.)</div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>      n_aero_phase = n_aero_phase + <span class="keyword">size</span>(phase_ids)</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>      <span class="keywordflow">do</span> i_phase = 1, <span class="keyword">size</span>(phase_ids)</div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        n_aero_jac_elem = n_aero_jac_elem + &amp;</div>
@@ -325,7 +325,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>                                2 * num_aero_phase_ + 1</div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    phase_real_loc_(i_aero_id) = num_real_prop_ + num_prod_ + 1</div>
 <div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    <span class="keywordflow">do</span> i_aero_rep = 1, <span class="keyword">size</span>(aero_rep)</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>      phase_ids = aero_rep(i_aero_rep)%val%phase_ids(phase_name, is_at_surface=.<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b">true</a>.)</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>      phase_ids = aero_rep(i_aero_rep)%val%phase_ids(phase_name, is_at_surface=.true.)</div>
 <div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>      <span class="keywordflow">do</span> i_phase = 1, <span class="keyword">size</span>(phase_ids)</div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        num_aero_phase_jac_elem_(i_aero_id) = &amp;</div>
 <div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>            aero_rep(i_aero_rep)%val%num_jac_elem(phase_ids(i_phase))</div>
@@ -367,7 +367,6 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="comment">!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</span></div>
 <div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span> </div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span><span class="keyword">end module </span><a class="code hl_namespace" href="namespacecamp__rxn__surface.html">camp_rxn_surface</a></div>
-<div class="ttc" id="acamp__common_8h_html_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b"><div class="ttname"><a href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b">true</a></div><div class="ttdeci">@ true</div><div class="ttdef"><b>Definition</b> <a href="camp__common_8h_source.html#l00056">camp_common.h:56</a></div></div>
 <div class="ttc" id="ainterfacecamp__aero__rep__data_1_1initialize_html"><div class="ttname"><a href="interfacecamp__aero__rep__data_1_1initialize.html">camp_aero_rep_data::initialize</a></div><div class="ttdoc">Initialize the aerosol representation data, validating component data and loading any required inform...</div><div class="ttdef"><b>Definition</b> <a href="aero__rep__data_8_f90_source.html#l00193">aero_rep_data.F90:193</a></div></div>
 <div class="ttc" id="ainterfacecamp__util_1_1to__string_html"><div class="ttname"><a href="interfacecamp__util_1_1to__string.html">camp_util::to_string</a></div><div class="ttdoc">Interface for to_string functions.</div><div class="ttdef"><b>Definition</b> <a href="util_8_f90_source.html#l00032">util.F90:32</a></div></div>
 <div class="ttc" id="anamespacecamp__aero__phase__data_html"><div class="ttname"><a href="namespacecamp__aero__phase__data.html">camp_aero_phase_data</a></div><div class="ttdoc">The abstract aero_phase_data_t structure and associated subroutines.</div><div class="ttdef"><b>Definition</b> <a href="aero__phase__data_8_f90_source.html#l00045">aero_phase_data.F90:45</a></div></div>

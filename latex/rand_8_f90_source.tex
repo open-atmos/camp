@@ -300,11 +300,11 @@
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00296}00296\ \ \ \ \ \textcolor{keywordflow}{if}\ (pdf\_max\ <=\ 0d0)\ \textcolor{keywordflow}{then}}
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00297}00297\ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(119208863,\ \textcolor{stringliteral}{'pdf\ is\ not\ positive'})}
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00298}00298\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00299}00299\ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00299}00299\ \ \ \ \ found\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00300}00300\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (.not.\ found)}
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00301}00301\ \ \ \ \ \ \ \ k\ =\ \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}(\textcolor{keyword}{size}(pdf))}
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00302}00302\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}()\ <\ pdf(k)\ /\ pdf\_max)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00303}00303\ \ \ \ \ \ \ \ \ \ \ found\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00304}00304\ \textcolor{keywordflow}{\ \ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00305}00305\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00306}00306\ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_a1f91bce93606a8f03711ca24653ea3a4}{sample\_cts\_pdf}}\ =\ k}
@@ -333,11 +333,11 @@
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00329}00329\ \ \ \ \ \textcolor{keywordflow}{if}\ (pdf\_max\ <=\ 0)\ \textcolor{keywordflow}{then}}
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00330}00330\ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(109961454,\ \textcolor{stringliteral}{'pdf\ is\ not\ positive'})}
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00331}00331\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00332}00332\ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00332}00332\ \ \ \ \ found\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00333}00333\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (.not.\ found)}
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00334}00334\ \ \ \ \ \ \ \ k\ =\ \mbox{\hyperlink{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}{camp\_rand\_int}}(\textcolor{keyword}{size}(pdf))}
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00335}00335\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc}{camp\_random}}()\ <\ real(pdf(k),\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ /\ real(pdf\_max,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ found\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00337}00337\ \textcolor{keywordflow}{\ \ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00338}00338\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
 \DoxyCodeLine{\Hypertarget{rand_8_f90_source_l00339}00339\ \ \ \ \ \mbox{\hyperlink{namespacecamp__rand_a8317841f695b0c19583c216170857572}{sample\_disc\_pdf}}\ =\ k}

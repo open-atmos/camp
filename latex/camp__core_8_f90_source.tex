@@ -144,7 +144,7 @@
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00140}\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t_a618d6e0b36e3dd9679d22450c58dc93f}{00140}}\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{allocatable}\ ::\ init\_state(:)\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00141}00141\ \textcolor{comment}{\ \ \ \ !>\ Flag\ to\ split\ gas-\/\ and\ aerosol-\/phase\ reactions}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00142}00142\ \textcolor{comment}{\ \ \ \ !!\ (for\ large\ aerosol\ representations,\ like\ single-\/particle)}}
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00143}\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t_aaa9a0a1b2f343b92ad116870e41a61c6}{00143}}\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ split\_gas\_aero\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00143}\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t_aaa9a0a1b2f343b92ad116870e41a61c6}{00143}}\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ split\_gas\_aero\ =\ .false.\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00144}00144\ \textcolor{comment}{\ \ \ \ !>\ Relative\ integration\ tolerance}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00145}\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t_ae7299b08a0a18ff2e536853ef926057f}{00145}}\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ rel\_tol\ =\ 0.0}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00146}00146\ \ \ \ \ \textcolor{comment}{!\ Absolute\ integration\ tolerances}}
@@ -159,9 +159,9 @@
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00155}00155\ \textcolor{comment}{\ \ \ \ !>\ Solver\ data\ (mixed\ gas-\/\ and\ aerosol-\/phase\ reactions)}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00156}\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t_adaf05ae0a7e42b87671f75a25f11f175}{00156}}\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}),\ \textcolor{keywordtype}{pointer},\ \textcolor{keywordtype}{public}\ ::\ solver\_data\_gas\_aero\ =>\ null()\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00157}00157\ \textcolor{comment}{\ \ \ \ !>\ Flag\ indicating\ the\ model\ data\ has\ been\ initialized}}
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00158}\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t_af9086194e3bbedfa324df477e1d27df1}{00158}}\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ core\_is\_initialized\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00158}\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t_af9086194e3bbedfa324df477e1d27df1}{00158}}\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ core\_is\_initialized\ =\ .false.\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00159}00159\ \textcolor{comment}{\ \ \ \ !>\ Flag\ indicating\ the\ solver\ has\ been\ initialized}}
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00160}\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t_ab0d933862be292fcf8ce15a8a01b8d8d}{00160}}\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ solver\_is\_initialized\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00160}\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t_ab0d933862be292fcf8ce15a8a01b8d8d}{00160}}\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ solver\_is\_initialized\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00161}00161\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00162}00162\ \textcolor{comment}{\ \ \ \ !>\ Load\ a\ set\ of\ configuration\ files}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00163}\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t_a56e1c9e5c9aad13017ef74ab44865484}{00163}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__camp__core_af682baa176c26d19ebab96fa2a9f891a}{load\_files}}\textcolor{comment}{}}
@@ -584,14 +584,14 @@
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00580}00580\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(sub\_model\_ptr\%val)}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00581}00581\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }existing\_sub\_model\_ptr\%load(json,\ j\_obj)}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00582}00582\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00583}00583\ \ \ \ \ \ \ \ \ \ \ \ \ sub\_model\_placed\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00583}00583\ \ \ \ \ \ \ \ \ \ \ \ \ sub\_model\_placed\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00584}00584\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{allocate}(new\_sub\_model(\textcolor{keyword}{size}(this\%sub\_model)+1))}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00585}00585\ \ \ \ \ \ \ \ \ \ \ \ \ j\_sub\_model\ =\ 1}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00586}00586\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_sub\_model\ =\ 1,\ \textcolor{keyword}{size}(this\%sub\_model)}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00587}00587\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.sub\_model\_placed\ .and.\ \&}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00588}00588\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sub\_model\_ptr\%val\%priority()\ <\ \&}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00589}00589\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%sub\_model(i\_sub\_model)\%val\%priority())\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00590}00590\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sub\_model\_placed\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00590}00590\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ sub\_model\_placed\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00591}00591\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_sub\_model(j\_sub\_model)\%val\ =>\ sub\_model\_ptr\%val}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00592}00592\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ j\_sub\_model\ =\ j\_sub\_model\ +\ 1}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00593}00593\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ end\ if}}
@@ -624,7 +624,7 @@
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00620}00620\ \ \ \ \ \ \ \ \ \textcolor{comment}{!!!\ set\ whether\ to\ solve\ gas\ and\ aerosol\ phases\ separately\ !!!}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00621}00621\ \ \ \ \ \ \ \ \ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00622}00622\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (str\_val.eq.\textcolor{stringliteral}{'SPLIT\_GAS\_AERO'})\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00623}00623\ \ \ \ \ \ \ \ \ \ \ this\%split\_gas\_aero\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00623}00623\ \ \ \ \ \ \ \ \ \ \ this\%split\_gas\_aero\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00624}00624\ }
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00625}00625\ \ \ \ \ \ \ \ \ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00626}00626\ \ \ \ \ \ \ \ \ \textcolor{comment}{!!!\ fail\ on\ invalid\ object\ type\ !!!}}
@@ -766,7 +766,7 @@
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00762}00762\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\ of\ "{}}//trim(\mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}(this\%size\_state\_per\_cell))//\ \&}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00763}00763\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\ elements\ of\ absolute\ tolerance\ and\ variable\ type\ arrays"{}})}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00764}00764\ }
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00765}00765\ \ \ \ \ this\%core\_is\_initialized\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00765}00765\ \ \ \ \ this\%core\_is\_initialized\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00766}00766\ }
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00767}00767\ \ \ \ \ \textcolor{comment}{!\ Set\ the\ initial\ state\ values}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00768}00768\ \ \ \ \ \textcolor{keyword}{allocate}(this\%init\_state(this\%size\_state\_per\_cell\ *\ this\%n\_cells))}
@@ -836,12 +836,12 @@
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00832}00832\ }
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00833}00833\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_aero\_phase}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00834}00834\ }
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00835}00835\ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00835}00835\ \ \ \ \ found\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00836}00836\ \ \ \ \ aero\_phase\ =>\ null()}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00837}00837\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\textcolor{keyword}{associated}(this\%aero\_phase))\ \textcolor{keywordflow}{return}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00838}00838\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_aero\_phase\ =\ 1,\ \textcolor{keyword}{size}(this\%aero\_phase)}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00839}00839\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%aero\_phase(i\_aero\_phase)\%val\%name().eq.aero\_phase\_name)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00840}00840\ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00840}00840\ \ \ \ \ \ \ \ \ found\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00841}00841\ \ \ \ \ \ \ \ \ aero\_phase\ =>\ this\%aero\_phase(i\_aero\_phase)\%val}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00842}00842\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00843}00843\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
@@ -863,13 +863,13 @@
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00859}00859\ }
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00860}00860\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_aero\_rep}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00861}00861\ }
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00862}00862\ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00862}00862\ \ \ \ \ found\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00863}00863\ \ \ \ \ aero\_rep\ =>\ null()}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00864}00864\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\textcolor{keyword}{associated}(this\%aero\_rep))\ \textcolor{keywordflow}{return}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00865}00865\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_aero\_rep\ =\ 1,\ \textcolor{keyword}{size}(this\%aero\_rep)}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00866}00866\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%aero\_rep(i\_aero\_rep)\%val\%name().eq.trim(aero\_rep\_name))\ \textcolor{keywordflow}{then}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00867}00867\ \ \ \ \ \ \ \ \ aero\_rep\ =>\ this\%aero\_rep(i\_aero\_rep)\%val}
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00868}00868\ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00868}00868\ \ \ \ \ \ \ \ \ found\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00869}00869\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00870}00870\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00871}00871\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
@@ -886,9 +886,9 @@
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00882}00882\ \textcolor{comment}{\ \ \ \ !>\ Pointer\ to\ the\ chemical\ species\ data}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00883}00883\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ chem\_spec\_data}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00884}00884\ }
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00885}00885\ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00885}00885\ \ \ \ \ found\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00886}00886\ \ \ \ \ chem\_spec\_data\ =>\ this\%chem\_spec\_data}
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00887}00887\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{associated}(chem\_spec\_data))\ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00887}00887\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{associated}(chem\_spec\_data))\ found\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00888}00888\ }
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00889}00889\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__camp__core_ae000de658559072d5e2e0e5407a43934}{get\_chem\_spec\_data}}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00890}00890\ }
@@ -906,12 +906,12 @@
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00902}00902\ }
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00903}00903\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_mech}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00904}00904\ }
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00905}00905\ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00905}00905\ \ \ \ \ found\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00906}00906\ \ \ \ \ mechanism\ =>\ null()}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00907}00907\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\textcolor{keyword}{associated}(this\%mechanism))\ \textcolor{keywordflow}{return}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00908}00908\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_mech\ =\ 1,\ \textcolor{keyword}{size}(this\%mechanism)}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00909}00909\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%mechanism(i\_mech)\%val\%name().eq.mech\_name)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00910}00910\ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00910}00910\ \ \ \ \ \ \ \ \ found\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00911}00911\ \ \ \ \ \ \ \ \ mechanism\ =>\ this\%mechanism(i\_mech)\%val}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00912}00912\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00913}00913\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
@@ -934,13 +934,13 @@
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00930}00930\ }
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00931}00931\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_sub\_model}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00932}00932\ }
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00933}00933\ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00933}00933\ \ \ \ \ found\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00934}00934\ \ \ \ \ sub\_model\ =>\ null()}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00935}00935\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\textcolor{keyword}{associated}(this\%sub\_model))\ \textcolor{keywordflow}{return}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00936}00936\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_sub\_model\ =\ 1,\ \textcolor{keyword}{size}(this\%sub\_model)}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00937}00937\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%sub\_model(i\_sub\_model)\%val\%name().eq.sub\_model\_name)\ \textcolor{keywordflow}{then}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00938}00938\ \ \ \ \ \ \ \ \ sub\_model\ =>\ this\%sub\_model(i\_sub\_model)\%val}
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00939}00939\ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00939}00939\ \ \ \ \ \ \ \ \ found\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00940}00940\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00941}00941\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l00942}00942\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
@@ -1119,7 +1119,7 @@
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01115}01115\ }
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01116}01116\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_spec,\ i\_aero\_rep}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01117}01117\ }
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01118}01118\ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01118}01118\ \ \ \ \ found\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01119}01119\ \ \ \ \ i\_spec\ =\ this\%chem\_spec\_data\%gas\_state\_id(\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}\ )}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01120}01120\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_aero\_rep\ =\ 1,\ \textcolor{keyword}{size}(\ this\%aero\_rep\ )}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01121}01121\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ i\_spec\ .eq.\ 0\ )\ \&}
@@ -1128,7 +1128,7 @@
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01124}01124\ }
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01125}01125\ \ \ \ \ \textcolor{keywordflow}{if}(\ i\_spec\ .gt.\ 0\ )\ \textcolor{keywordflow}{then}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01126}01126\ \ \ \ \ \ \ state\_id\ =\ i\_spec}
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01127}01127\ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01127}01127\ \ \ \ \ \ \ found\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01128}01128\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01129}01129\ }
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01130}01130\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__state__id}{spec\_state\_id}}}
@@ -1202,7 +1202,7 @@
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01198}01198\ }
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01199}01199\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01200}01200\ }
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01201}01201\ \ \ \ \ this\%solver\_is\_initialized\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01201}01201\ \ \ \ \ this\%solver\_is\_initialized\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01202}01202\ }
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01203}01203\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__camp__solver__data_1_1solver__initialize}{solver\_initialize}}}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01204}01204\ }
@@ -1601,7 +1601,7 @@
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01597}01597\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_aeca685c68939372a57f9c9dae80b8936}{camp\_mpi\_unpack\_real\_array}}(buffer,\ pos,\ this\%abs\_tol,\ l\_comm)}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01598}01598\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a3b9e1ec6bb02bc828b8a1790a8299349}{camp\_mpi\_unpack\_integer\_array}}(buffer,\ pos,\ this\%var\_type,\ l\_comm)}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01599}01599\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_aeca685c68939372a57f9c9dae80b8936}{camp\_mpi\_unpack\_real\_array}}(buffer,\ pos,\ this\%init\_state,\ l\_comm)}
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01600}01600\ \ \ \ \ this\%core\_is\_initialized\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01600}01600\ \ \ \ \ this\%core\_is\_initialized\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01601}01601\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(291557168,\ \&}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01602}01602\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(l\_comm))}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01603}01603\ \textcolor{preprocessor}{\#endif}}
@@ -1627,7 +1627,7 @@
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01623}01623\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ sd\_only}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01624}01624\ }
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01625}01625\ \ \ \ \ f\_unit\ =\ 6}
-\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01626}01626\ \ \ \ \ sd\_only\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01626}01626\ \ \ \ \ sd\_only\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01627}01627\ }
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01628}01628\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{present}(file\_unit))\ f\_unit\ =\ file\_unit}
 \DoxyCodeLine{\Hypertarget{camp__core_8_f90_source_l01629}01629\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{present}(solver\_data\_only))\ sd\_only\ =\ solver\_data\_only}

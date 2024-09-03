@@ -48,7 +48,7 @@ int \mbox{\hyperlink{camp__solver_8h_a21373e1f8bad206f6437deeea571f51c}{camp\+\_
 \begin{DoxyCompactList}\small\item\em Update the model state from the current solver state. \end{DoxyCompactList}\item 
 SUNMatrix \mbox{\hyperlink{camp__solver_8h_a5b485fa25356197023889f3795888e98}{get\+\_\+jac\+\_\+init}} (\mbox{\hyperlink{struct_solver_data}{Solver\+Data}} \texorpdfstring{$\ast$}{*}solver\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Try to improve guesses of y sent to the linear solver. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \mbox{\hyperlink{camp__solver_8h_ad45be595da1a1d6fd40179d9743a9a65}{check\+\_\+\+Jac}} (realtype t, N\+\_\+\+Vector y, SUNMatrix J, N\+\_\+\+Vector deriv, N\+\_\+\+Vector tmp, N\+\_\+\+Vector tmp1, void \texorpdfstring{$\ast$}{*}solver\+\_\+data)
+bool \mbox{\hyperlink{camp__solver_8h_ad45be595da1a1d6fd40179d9743a9a65}{check\+\_\+\+Jac}} (realtype t, N\+\_\+\+Vector y, SUNMatrix J, N\+\_\+\+Vector deriv, N\+\_\+\+Vector tmp, N\+\_\+\+Vector tmp1, void \texorpdfstring{$\ast$}{*}solver\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Check a \doxylink{struct_jacobian}{Jacobian} for accuracy. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{camp__solver_8h_a08519bb4526ffd3db7f49b33ba7600aa}{check\+\_\+flag}} (void \texorpdfstring{$\ast$}{*}flag\+\_\+value, char \texorpdfstring{$\ast$}{*}func\+\_\+name, int opt)
 \begin{DoxyCompactList}\small\item\em Check the return value of a SUNDIALS function. \end{DoxyCompactList}\item 
@@ -64,7 +64,7 @@ static void \mbox{\hyperlink{camp__solver_8h_a5e1481fdcb1fc315878002edb9346b77}{
 \item 
 static void \mbox{\hyperlink{camp__solver_8h_a99ec22cbccaf8d6c6ab6a30f27474cfa}{print\+\_\+derivative}} (N\+\_\+\+Vector deriv)
 \item 
-\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \mbox{\hyperlink{camp__solver_8h_a51bc2a16028d4c72dd39669c31f6fc17}{is\+\_\+anything\+\_\+going\+\_\+on\+\_\+here}} (\mbox{\hyperlink{struct_solver_data}{Solver\+Data}} \texorpdfstring{$\ast$}{*}sd, realtype t\+\_\+initial, realtype t\+\_\+final)
+bool \mbox{\hyperlink{camp__solver_8h_a51bc2a16028d4c72dd39669c31f6fc17}{is\+\_\+anything\+\_\+going\+\_\+on\+\_\+here}} (\mbox{\hyperlink{struct_solver_data}{Solver\+Data}} \texorpdfstring{$\ast$}{*}sd, realtype t\+\_\+initial, realtype t\+\_\+final)
 \begin{DoxyCompactList}\small\item\em Determine if there is anything to solve. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
@@ -191,7 +191,7 @@ Here is the caller graph for this function\+:
 \index{camp\_solver.h@{camp\_solver.h}!check\_Jac@{check\_Jac}}
 \index{check\_Jac@{check\_Jac}!camp\_solver.h@{camp\_solver.h}}
 \doxysubsubsection{\texorpdfstring{check\_Jac()}{check\_Jac()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} check\+\_\+\+Jac (\begin{DoxyParamCaption}\item[{realtype}]{t,  }\item[{N\+\_\+\+Vector}]{y,  }\item[{SUNMatrix}]{J,  }\item[{N\+\_\+\+Vector}]{deriv,  }\item[{N\+\_\+\+Vector}]{tmp,  }\item[{N\+\_\+\+Vector}]{tmp1,  }\item[{void \texorpdfstring{$\ast$}{*}}]{solver\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily bool check\+\_\+\+Jac (\begin{DoxyParamCaption}\item[{realtype}]{t,  }\item[{N\+\_\+\+Vector}]{y,  }\item[{SUNMatrix}]{J,  }\item[{N\+\_\+\+Vector}]{deriv,  }\item[{N\+\_\+\+Vector}]{tmp,  }\item[{N\+\_\+\+Vector}]{tmp1,  }\item[{void \texorpdfstring{$\ast$}{*}}]{solver\+\_\+data }\end{DoxyParamCaption})}
 
 
 
@@ -397,7 +397,7 @@ Here is the caller graph for this function\+:
 \index{camp\_solver.h@{camp\_solver.h}!is\_anything\_going\_on\_here@{is\_anything\_going\_on\_here}}
 \index{is\_anything\_going\_on\_here@{is\_anything\_going\_on\_here}!camp\_solver.h@{camp\_solver.h}}
 \doxysubsubsection{\texorpdfstring{is\_anything\_going\_on\_here()}{is\_anything\_going\_on\_here()}}
-{\footnotesize\ttfamily \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} is\+\_\+anything\+\_\+going\+\_\+on\+\_\+here (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solver_data}{Solver\+Data}} \texorpdfstring{$\ast$}{*}}]{sd,  }\item[{realtype}]{t\+\_\+initial,  }\item[{realtype}]{t\+\_\+final }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily bool is\+\_\+anything\+\_\+going\+\_\+on\+\_\+here (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solver_data}{Solver\+Data}} \texorpdfstring{$\ast$}{*}}]{sd,  }\item[{realtype}]{t\+\_\+initial,  }\item[{realtype}]{t\+\_\+final }\end{DoxyParamCaption})}
 
 
 

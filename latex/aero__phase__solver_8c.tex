@@ -47,7 +47,7 @@ Include dependency graph for aero\+\_\+phase\+\_\+solver.\+c\+:
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-int \mbox{\hyperlink{aero__phase__solver_8c_a6e5ea770a313a6eebea53e86540dd510}{aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, int state\+\_\+var\+\_\+id, \mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \texorpdfstring{$\ast$}{*}jac\+\_\+struct)
+int \mbox{\hyperlink{aero__phase__solver_8c_a6e5ea770a313a6eebea53e86540dd510}{aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, int state\+\_\+var\+\_\+id, bool \texorpdfstring{$\ast$}{*}jac\+\_\+struct)
 \begin{DoxyCompactList}\small\item\em Flag \doxylink{struct_jacobian}{Jacobian} elements used in calculations of mass and volume. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}{aero\+\_\+phase\+\_\+get\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}state\+\_\+var, double \texorpdfstring{$\ast$}{*}mass, double \texorpdfstring{$\ast$}{*}MW, double \texorpdfstring{$\ast$}{*}jac\+\_\+elem\+\_\+mass, double \texorpdfstring{$\ast$}{*}jac\+\_\+elem\+\_\+\+MW)
 \begin{DoxyCompactList}\small\item\em Get the mass and average MW in an aerosol phase. \end{DoxyCompactList}\item 
@@ -294,7 +294,7 @@ Here is the caller graph for this function\+:
 \index{aero\_phase\_solver.c@{aero\_phase\_solver.c}!aero\_phase\_get\_used\_jac\_elem@{aero\_phase\_get\_used\_jac\_elem}}
 \index{aero\_phase\_get\_used\_jac\_elem@{aero\_phase\_get\_used\_jac\_elem}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
 \doxysubsubsection{\texorpdfstring{aero\_phase\_get\_used\_jac\_elem()}{aero\_phase\_get\_used\_jac\_elem()}}
-{\footnotesize\ttfamily int aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{int}]{state\+\_\+var\+\_\+id,  }\item[{\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1}{bool}} \texorpdfstring{$\ast$}{*}}]{jac\+\_\+struct }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily int aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int}]{aero\+\_\+phase\+\_\+idx,  }\item[{int}]{state\+\_\+var\+\_\+id,  }\item[{bool \texorpdfstring{$\ast$}{*}}]{jac\+\_\+struct }\end{DoxyParamCaption})}
 
 
 

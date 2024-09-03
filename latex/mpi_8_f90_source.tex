@@ -32,9 +32,9 @@
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00028}\mbox{\hyperlink{namespacecamp__mpi_a28e2a390929a3cff5d5788b79d5a3a18}{00028}}\ \ \ \textcolor{keyword}{logical\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__mpi_a28e2a390929a3cff5d5788b79d5a3a18}{camp\_mpi\_support}}()}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00029}00029\ }
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00030}00030\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00031}00031\ \textcolor{preprocessor}{}\ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_a28e2a390929a3cff5d5788b79d5a3a18}{camp\_mpi\_support}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00031}00031\ \textcolor{preprocessor}{}\ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_a28e2a390929a3cff5d5788b79d5a3a18}{camp\_mpi\_support}}\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00032}00032\ \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00033}00033\ \textcolor{preprocessor}{}\ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_a28e2a390929a3cff5d5788b79d5a3a18}{camp\_mpi\_support}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00033}00033\ \textcolor{preprocessor}{}\ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_a28e2a390929a3cff5d5788b79d5a3a18}{camp\_mpi\_support}}\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00034}00034\ \textcolor{preprocessor}{\#endif}}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00035}00035\ \textcolor{preprocessor}{}}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00036}00036\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__mpi_a28e2a390929a3cff5d5788b79d5a3a18}{camp\_mpi\_support}}}
@@ -186,7 +186,7 @@
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00182}00182\ \textcolor{preprocessor}{}\textcolor{keywordtype}{\ \ \ \ real}(kind=dp),\ \textcolor{keywordtype}{parameter}\ ::\ test\_real\ =\ 2.718281828459d0}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00183}00183\ \ \ \ \ \textcolor{keywordtype}{complex(kind=dc)},\ \textcolor{keywordtype}{parameter}\ ::\ test\_complex\ \&}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00184}00184\ \ \ \ \ \ \ \ \ \ =\ (0.707106781187d0,\ 1.4142135624d0)}
-\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00185}00185\ \ \ \ \ \textcolor{keywordtype}{logical},\ \textcolor{keywordtype}{parameter}\ ::\ test\_logical\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00185}00185\ \ \ \ \ \textcolor{keywordtype}{logical},\ \textcolor{keywordtype}{parameter}\ ::\ test\_logical\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00186}00186\ \ \ \ \ \textcolor{keywordtype}{character(len=100)},\ \textcolor{keywordtype}{parameter}\ ::\ test\_string\ \&}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00187}00187\ \ \ \ \ \ \ \ \ \ =\ \textcolor{stringliteral}{"{}a\ truth\ universally\ acknowledged"{}}}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l00188}00188\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{parameter}\ ::\ test\_integer\ =\ 314159}
@@ -1158,7 +1158,7 @@
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01154}01154\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(694750528,\ \&}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01155}01155\ \ \ \ \ \ \ \ \ \ position\ -\/\ prev\_position\ <=\ \mbox{\hyperlink{namespacecamp__mpi_a91e386d6f20f660ab0762c32bb55e3a7}{camp\_mpi\_pack\_size\_logical}}(val,\ l\_comm))}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01156}01156\ \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01157}01157\ \textcolor{preprocessor}{}\ \ \ \ val\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01157}01157\ \textcolor{preprocessor}{}\ \ \ \ val\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01158}01158\ \textcolor{preprocessor}{\#endif}}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01159}01159\ \textcolor{preprocessor}{}}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01160}01160\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__mpi_a6280c3d9ec2de483b881f0ab7280ddbb}{camp\_mpi\_unpack\_logical}}}
@@ -1722,12 +1722,12 @@
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01718}01718\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a15b9ff05c0c07284139bcdb991416d1e}{camp\_mpi\_allreduce\_min\_integer}}(val,\ min\_val)}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01719}01719\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ab37aad21478f091075eec8c9dfd0ae8b}{camp\_mpi\_allreduce\_max\_integer}}(val,\ max\_val)}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01720}01720\ \ \ \ \ \textcolor{keywordflow}{if}\ (min\_val\ ==\ max\_val)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01721}01721\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_a674d1494035941591fecccc3210bb5e3}{camp\_mpi\_allequal\_integer}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01721}01721\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_a674d1494035941591fecccc3210bb5e3}{camp\_mpi\_allequal\_integer}}\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01722}01722\ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01723}01723\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_a674d1494035941591fecccc3210bb5e3}{camp\_mpi\_allequal\_integer}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01723}01723\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_a674d1494035941591fecccc3210bb5e3}{camp\_mpi\_allequal\_integer}}\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01724}01724\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01725}01725\ \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01726}01726\ \textcolor{preprocessor}{}\ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_a674d1494035941591fecccc3210bb5e3}{camp\_mpi\_allequal\_integer}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01726}01726\ \textcolor{preprocessor}{}\ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_a674d1494035941591fecccc3210bb5e3}{camp\_mpi\_allequal\_integer}}\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01727}01727\ \textcolor{preprocessor}{\#endif}}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01728}01728\ \textcolor{preprocessor}{}}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01729}01729\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__mpi_a674d1494035941591fecccc3210bb5e3}{camp\_mpi\_allequal\_integer}}}
@@ -1746,12 +1746,12 @@
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01742}01742\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ad8a12dc8d547d496fc0ba69d9f17397c}{camp\_mpi\_allreduce\_min\_real}}(val,\ min\_val)}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01743}01743\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a93e9a58cb81562d5ef35c94c04432438}{camp\_mpi\_allreduce\_max\_real}}(val,\ max\_val)}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01744}01744\ \ \ \ \ \textcolor{keywordflow}{if}\ (min\_val\ ==\ max\_val)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01745}01745\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_aeb7df553b3ec4fefd77e840696225869}{camp\_mpi\_allequal\_real}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01745}01745\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_aeb7df553b3ec4fefd77e840696225869}{camp\_mpi\_allequal\_real}}\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01746}01746\ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01747}01747\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_aeb7df553b3ec4fefd77e840696225869}{camp\_mpi\_allequal\_real}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01747}01747\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_aeb7df553b3ec4fefd77e840696225869}{camp\_mpi\_allequal\_real}}\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01748}01748\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01749}01749\ \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01750}01750\ \textcolor{preprocessor}{}\ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_aeb7df553b3ec4fefd77e840696225869}{camp\_mpi\_allequal\_real}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01750}01750\ \textcolor{preprocessor}{}\ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_aeb7df553b3ec4fefd77e840696225869}{camp\_mpi\_allequal\_real}}\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01751}01751\ \textcolor{preprocessor}{\#endif}}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01752}01752\ \textcolor{preprocessor}{}}
 \DoxyCodeLine{\Hypertarget{mpi_8_f90_source_l01753}01753\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__mpi_aeb7df553b3ec4fefd77e840696225869}{camp\_mpi\_allequal\_real}}}

@@ -326,10 +326,10 @@
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00322}00322\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(112836027,\ phases\%get\_string(val\ =\ phase\_name),\ \&}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Received\ non-\/string\ phase\ name\ in\ UNIFAC\ model."{}})}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00324}00324\ \ \ \ \ \ \ phase\_names(i\_unifac\_phase)\%string\ =\ phase\_name}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00325}00325\ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00325}00325\ \ \ \ \ \ \ found\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00326}00326\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\ =\ 1,\ \textcolor{keyword}{size}(aero\_phase\_set)}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00327}00327\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (aero\_phase\_set(i\_phase)\%val\%name().eq.phase\_name)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ found\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00329}00329\ \ \ \ \ \ \ \ \ \ \ unique\_phase\_set\_id(i\_unifac\_phase)\ =\ i\_phase}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00330}00330\ \ \ \ \ \ \ \ \ \ \ num\_phase\_spec(i\_unifac\_phase)\ =\ 0}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00331}00331\ \ \ \ \ \ \ \ \ \ \ spec\_names\ =\ aero\_phase\_set(i\_phase)\%val\%get\_species\_names()}
@@ -478,11 +478,11 @@
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00474}00474\ }
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00475}00475\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Set\ the\ interaction\ parameter}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00476}00476\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_inter\_group\ =\ 1,\ \textcolor{keyword}{size}(main\_group\_names)}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00477}00477\ \ \ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00477}00477\ \ \ \ \ \ \ \ \ \ \ found\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00478}00478\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (main\_group\_names(i\_inter\_group)\%string\ .eq.\ \&}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ inter\_group\_name)\ \textcolor{keywordflow}{then}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00480}00480\ \ \ \ \ \ \ \ \ \ \ \ \ main\_group\_interactions(i\_main\_group,\ i\_inter\_group)\ =\ inter\_param}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00481}00481\ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00481}00481\ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00482}00482\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{exit}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00483}00483\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00484}00484\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
@@ -533,10 +533,10 @@
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00529}00529\ }
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00530}00530\ \ \ \ \ \ \ \textcolor{comment}{!\ Set\ the\ main\ group\ id}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00531}00531\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_main\_group\ =\ 1,\ num\_main\_group}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00532}00532\ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00532}00532\ \ \ \ \ \ \ \ \ found\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00533}00533\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (main\_group\_names(i\_main\_group)\%string.eq.main\_group\_name)\ \textcolor{keywordflow}{then}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00534}00534\ \ \ \ \ \ \ \ \ \ \ main\_group\_id(i\_group)\ =\ i\_main\_group}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00535}00535\ \ \ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00535}00535\ \ \ \ \ \ \ \ \ \ \ found\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00536}00536\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{exit}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00537}00537\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00538}00538\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
@@ -562,7 +562,7 @@
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00558}00558\ }
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00559}00559\ \ \ \ \ \ \ \textcolor{comment}{!\ Set\ the\ properties\ for\ each\ species\ in\ the\ phase}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00560}00560\ \ \ \ \ \ \ curr\_spec\_id\ =\ 0}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00561}00561\ \ \ \ \ \ \ phase\_ids\_set\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00561}00561\ \ \ \ \ \ \ phase\_ids\_set\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00562}00562\ \ \ \ \ \ \ spec\_names\ =\ aero\_phase\_set(i\_phase)\%val\%get\_species\_names()}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00563}00563\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_spec\ =\ 1,\ \textcolor{keyword}{size}(spec\_names)}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00564}00564\ }
@@ -609,10 +609,10 @@
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00605}00605\ }
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00606}00606\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Locate\ the\ group\ in\ the\ set\ of\ functional\ groups}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00607}00607\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ and\ set\ the\ v\_ik\ parameter}}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00608}00608\ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00608}00608\ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00609}00609\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_group\ =\ 1,\ \textcolor{keyword}{size}(group\_names)}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00610}00610\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (group\_names(i\_group)\%string.eq.spec\_group\_name)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00611}00611\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00611}00611\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00612}00612\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\_ik\_(i\_unifac\_phase,\ curr\_spec\_id,i\_group)\ =\ num\_spec\_group}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00613}00613\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{exit}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00614}00614\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ end\ if}}
@@ -659,7 +659,7 @@
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00655}00655\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ end\ do}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00656}00656\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ end\ do}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00657}00657\ \ \ \ \ \ \ \ \ \ \ \ \ spec\_id\_(i\_unifac\_phase,\ curr\_spec\_id)\ =\ 0}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00658}00658\ \ \ \ \ \ \ \ \ \ \ \ \ phase\_ids\_set\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00658}00658\ \ \ \ \ \ \ \ \ \ \ \ \ phase\_ids\_set\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00659}00659\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00660}00660\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_rep\ =\ 1,\ \textcolor{keyword}{size}(aero\_rep\_set)}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00661}00661\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}\ =\ aero\_rep\_set(i\_rep)\%val\%unique\_names(\ \&}
@@ -677,7 +677,7 @@
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00673}00673\ }
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00674}00674\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Set\ the\ activity\ coefficient\ ids}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00675}00675\ \ \ \ \ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}chemical\ species"{}}}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00676}00676\ \ \ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00676}00676\ \ \ \ \ \ \ \ \ \ \ found\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00677}00677\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ j\_spec\ =\ 1,\ \textcolor{keyword}{size}(spec\_names)}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00678}00678\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(739328266,\ chem\_spec\_data\%get\_type(\ \&}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00679}00679\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ spec\_names(j\_spec)\%string,\ spec\_type))}
@@ -695,7 +695,7 @@
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00691}00691\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aero\_rep\_set(i\_rep)\%val\%spec\_state\_id(\ \&}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00692}00692\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}(1)\%string)\ -\/\ \&}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00693}00693\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ phase\_inst\_id\_(i\_unifac\_phase,\ 1)}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00694}00694\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00694}00694\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00695}00695\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{exit}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00696}00696\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ end\ do}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8_f90_source_l00697}00697\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ end\ if}}

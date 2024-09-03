@@ -177,7 +177,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00173}00173\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ temp\_real}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00174}00174\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ is\_aqueous}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00175}00175\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00176}00176\ \ \ \ \ is\_aqueous\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00176}00176\ \ \ \ \ is\_aqueous\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00177}00177\ }
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00178}00178\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ property\ set}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00179}00179\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(852163263,\ \textcolor{keyword}{associated}(this\%property\_set),\ \&}
@@ -379,7 +379,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00375}00375\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_string(key\_name,\ temp\_string),\ \&}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00376}00376\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ units\ for\ condensed-\/phase\ Arrhenius\ reaction."{}})}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00377}00377\ \ \ \ \ \textcolor{keywordflow}{if}\ (trim(temp\_string).eq.\textcolor{stringliteral}{"{}mol\ m-\/3"{}})\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00378}00378\ \ \ \ \ \ \ is\_aqueous\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00378}00378\ \ \ \ \ \ \ is\_aqueous\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00379}00379\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}aerosol-\/phase\ water"{}}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00380}00380\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(767767240,\ \&}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .not.this\%property\_set\%get\_string(key\_name,\ temp\_string),\ \&}
@@ -387,7 +387,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00383}00383\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}phase\ Arrhenius\ reaction.\ Change\ units\ to\ 'M'\ or\ remove\ "{}}//\ \&}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}aerosol-\/phase\ water"{}})}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00385}00385\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (trim(temp\_string).eq.\textcolor{stringliteral}{"{}M"{}})\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00386}00386\ \ \ \ \ \ \ is\_aqueous\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00386}00386\ \ \ \ \ \ \ is\_aqueous\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00387}00387\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}aerosol-\/phase\ water"{}}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00388}00388\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(199910264,\ \&}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_string(key\_name,\ water\_name),\ \&}

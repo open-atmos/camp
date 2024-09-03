@@ -384,7 +384,7 @@
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00380}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a739f0eb1ee8791bb35da72e831a8b414}{00380}}\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{public}\ ::\ max\_conv\_fails\ =\ \&}
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__camp__solver__data_ad7cc6d74aeef337af13d5809432d6580}{camp\_solver\_default\_max\_conv\_fails}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00382}00382\ \textcolor{comment}{\ \ \ \ !>\ Flag\ indicating\ whether\ the\ solver\ was\ intialized}}
-\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00383}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a0a0d6edcc997f9c33c267323ac7e16f3}{00383}}\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ initialized\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00383}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a0a0d6edcc997f9c33c267323ac7e16f3}{00383}}\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ initialized\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00384}00384\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00385}00385\ \textcolor{comment}{\ \ \ \ !>\ Initialize\ the\ solver}}
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00386}\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t_a61c4f2c4aa88655bded69e744b4f11cd}{00386}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__camp__solver__data_abf81c7a12d2d007b6b2925b53b1c3579}{initialize}}\textcolor{comment}{}}
@@ -782,7 +782,7 @@
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00778}00778\ \ \ \ \ \ \ \ \ \ \ \ \ )}
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00779}00779\ }
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00780}00780\ \ \ \ \ \textcolor{comment}{!\ Flag\ the\ solver\ as\ initialized}}
-\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00781}00781\ \ \ \ \ this\%initialized\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00781}00781\ \ \ \ \ this\%initialized\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00782}00782\ }
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00783}00783\ \ \ \ \ \textcolor{comment}{!\ Free\ memory\ allocated\ for\ solver\ initialization}}
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00784}00784\ \ \ \ \ \textcolor{keyword}{deallocate}(abs\_tol\_c)}
@@ -975,9 +975,9 @@
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00971}00971\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__solver__data_1_1camp__solver__data__t}{camp\_solver\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00972}00972\ }
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00973}00973\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_SUNDIALS}}
-\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00974}00974\ \textcolor{preprocessor}{}\ \ \ \ \mbox{\hyperlink{namespacecamp__camp__solver__data_a99614bacadbc849ac1dad41b05fc0686}{is\_solver\_available}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00974}00974\ \textcolor{preprocessor}{}\ \ \ \ \mbox{\hyperlink{namespacecamp__camp__solver__data_a99614bacadbc849ac1dad41b05fc0686}{is\_solver\_available}}\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00975}00975\ \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00976}00976\ \textcolor{preprocessor}{}\ \ \ \ \mbox{\hyperlink{namespacecamp__camp__solver__data_a99614bacadbc849ac1dad41b05fc0686}{is\_solver\_available}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00976}00976\ \textcolor{preprocessor}{}\ \ \ \ \mbox{\hyperlink{namespacecamp__camp__solver__data_a99614bacadbc849ac1dad41b05fc0686}{is\_solver\_available}}\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00977}00977\ \textcolor{preprocessor}{\#endif}}
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00978}00978\ \textcolor{preprocessor}{}}
 \DoxyCodeLine{\Hypertarget{camp__solver__data_8_f90_source_l00979}00979\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__camp__solver__data_a99614bacadbc849ac1dad41b05fc0686}{is\_solver\_available}}}

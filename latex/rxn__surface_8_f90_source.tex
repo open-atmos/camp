@@ -194,7 +194,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00190}00190\ \ \ \ \ n\_aero\_jac\_elem\ =\ 0}
 \DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00191}00191\ \ \ \ \ n\_aero\_phase\ =\ 0}
 \DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00192}00192\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_aero\_rep\ =\ 1,\ \textcolor{keyword}{size}(aero\_rep)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00193}00193\ \ \ \ \ \ \ phase\_ids\ =\ aero\_rep(i\_aero\_rep)\%val\%phase\_ids(phase\_name,\ is\_at\_surface=.\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00193}00193\ \ \ \ \ \ \ phase\_ids\ =\ aero\_rep(i\_aero\_rep)\%val\%phase\_ids(phase\_name,\ is\_at\_surface=.true.)}
 \DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00194}00194\ \ \ \ \ \ \ n\_aero\_phase\ =\ n\_aero\_phase\ +\ \textcolor{keyword}{size}(phase\_ids)}
 \DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00195}00195\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\ =\ 1,\ \textcolor{keyword}{size}(phase\_ids)}
 \DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00196}00196\ \ \ \ \ \ \ \ \ n\_aero\_jac\_elem\ =\ n\_aero\_jac\_elem\ +\ \&}
@@ -260,7 +260,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2\ *\ num\_aero\_phase\_\ +\ 1}
 \DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00257}00257\ \ \ \ \ phase\_real\_loc\_(i\_aero\_id)\ =\ num\_real\_prop\_\ +\ num\_prod\_\ +\ 1}
 \DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00258}00258\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_aero\_rep\ =\ 1,\ \textcolor{keyword}{size}(aero\_rep)}
-\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00259}00259\ \ \ \ \ \ \ phase\_ids\ =\ aero\_rep(i\_aero\_rep)\%val\%phase\_ids(phase\_name,\ is\_at\_surface=.\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.)}
+\DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00259}00259\ \ \ \ \ \ \ phase\_ids\ =\ aero\_rep(i\_aero\_rep)\%val\%phase\_ids(phase\_name,\ is\_at\_surface=.true.)}
 \DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00260}00260\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\ =\ 1,\ \textcolor{keyword}{size}(phase\_ids)}
 \DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00261}00261\ \ \ \ \ \ \ \ \ num\_aero\_phase\_jac\_elem\_(i\_aero\_id)\ =\ \&}
 \DoxyCodeLine{\Hypertarget{rxn__surface_8_f90_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ aero\_rep(i\_aero\_rep)\%val\%num\_jac\_elem(phase\_ids(i\_phase))}

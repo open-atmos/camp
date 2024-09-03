@@ -441,7 +441,7 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00437}00437\ }
 \DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00438}00438\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\textcolor{keyword}{allocated}(this\%rep\_name))\ \&}
 \DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00439}00439\ \ \ \ \ \ \ this\%rep\_name\ =\ \textcolor{stringliteral}{"{}unknown\ aerosol\ representation"{}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00440}00440\ \ \ \ \ found\_name\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00440}00440\ \ \ \ \ found\_name\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00441}00441\ }
 \DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00442}00442\ \ \ \ \ \textcolor{comment}{!\ cycle\ through\ the\ aerosol\ representation\ properties\ to\ find\ the\ name\ and}}
 \DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00443}00443\ \ \ \ \ \textcolor{comment}{!\ load\ the\ remaining\ data\ into\ the\ aerosol\ representation\ property\ set}}
@@ -456,11 +456,11 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00452}00452\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Received\ non-\/string\ value\ for\ aerosol\ rep\ name"{}})}
 \DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00453}00453\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get(child,\ unicode\_str\_val)}
 \DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00454}00454\ \ \ \ \ \ \ \ \ this\%rep\_name\ =\ unicode\_str\_val}
-\DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00455}00455\ \ \ \ \ \ \ \ \ found\_name\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00455}00455\ \ \ \ \ \ \ \ \ found\_name\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00456}00456\ }
 \DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00457}00457\ \ \ \ \ \ \ \textcolor{comment}{!\ load\ remaining\ data\ tinto\ the\ property\ set}}
 \DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00458}00458\ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (key.ne.\textcolor{stringliteral}{"{}type"{}})\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00459}00459\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%property\_set\%load(json,\ child,\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.,\ this\%rep\_name)}
+\DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00459}00459\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%property\_set\%load(json,\ child,\ .false.,\ this\%rep\_name)}
 \DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00460}00460\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00461}00461\ }
 \DoxyCodeLine{\Hypertarget{aero__rep__data_8_f90_source_l00462}00462\ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_next(child,\ next)}

@@ -218,7 +218,7 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t}{aero\_rep\_update\_data\_modal\_binned\_mass\_gmd\_t}}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00215}00215\ \ \ \textcolor{keywordtype}{private}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00216}00216\ \textcolor{comment}{\ \ \ \ !>\ Flag\ indicating\ whether\ the\ update\ data\ has\ been\ allocated}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00217}\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t_a80fd5e532395034e858f0d09c3273356}{00217}}\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ is\_malloced\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00217}\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t_a80fd5e532395034e858f0d09c3273356}{00217}}\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ is\_malloced\ =\ .false.\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00218}00218\ \textcolor{comment}{\ \ \ \ !>\ Unique\ id\ for\ finding\ aerosol\ representations\ during\ initialization}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00219}\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t_a4debeb600304077498faacd13f7f6616}{00219}}\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ aero\_rep\_unique\_id\ =\ 0}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00220}00220\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
@@ -239,7 +239,7 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}{aero\_rep\_update\_data\_modal\_binned\_mass\_gsd\_t}}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00236}00236\ \ \ \textcolor{keywordtype}{private}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00237}00237\ \textcolor{comment}{\ \ \ \ !>\ Flag\ indicating\ whether\ the\ update\ data\ has\ been\ allocated}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00238}\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t_a7e45c6cb2afaccd26412c589a880cb9e}{00238}}\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ is\_malloced\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00238}\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t_a7e45c6cb2afaccd26412c589a880cb9e}{00238}}\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ is\_malloced\ =\ .false.\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00239}00239\ \textcolor{comment}{\ \ \ \ !>\ Unique\ id\ for\ finding\ aerosol\ representations\ during\ initialization}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00240}\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t_ab18c0abe6c759a7aa90674a2aa50d907}{00240}}\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ aero\_rep\_unique\_id\ =\ 0}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00241}00241\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
@@ -623,7 +623,7 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00619}00619\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%aero\_phase(i\_phase)\ =\ aero\_phase\_set(k\_phase)}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00620}00620\ \ \ \ \ \ \ \ \ \ \ }
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00621}00621\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ No\ species\ exist\ at\ surface\ }}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00622}00622\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%aero\_phase\_is\_at\_surface(i\_phase)\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00622}00622\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%aero\_phase\_is\_at\_surface(i\_phase)\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00623}00623\ }
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00624}00624\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ starting\ id\ for\ this\ phase\ on\ the\ state\ array}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00625}00625\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%phase\_state\_id(i\_phase)\ =\ curr\_spec\_state\_id}
@@ -689,10 +689,10 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00685}00685\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Trying\ to\ get\ section\ id\ of\ unnamed\ aerosol\ "{}}//\ \&}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00686}00686\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}representation."{}})}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00687}00687\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00688}00688\ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00688}00688\ \ \ \ \ found\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00689}00689\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_section\ =\ 1,\ \textcolor{keyword}{size}(this\%section\_name)}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00690}00690\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%section\_name(i\_section)\%string.eq.trim(section\_name))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00691}00691\ \ \ \ \ \ \ \ \ found\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00691}00691\ \ \ \ \ \ \ \ \ found\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00692}00692\ \ \ \ \ \ \ \ \ section\_id\ =\ i\_section}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00693}00693\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l00694}00694\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
@@ -1051,7 +1051,7 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l01047}01047\ \ \ \ \ update\_data\%aero\_rep\_unique\_id\ =\ aero\_rep\_id\_}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l01048}01048\ \ \ \ \ update\_data\%aero\_rep\_type\ =\ int(aero\_rep\_type,\ kind=c\_int)}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l01049}01049\ \ \ \ \ update\_data\%update\_data\ =\ \mbox{\hyperlink{interfacecamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__create__gmd__update__data}{aero\_rep\_modal\_binned\_mass\_create\_gmd\_update\_data}}()}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l01050}01050\ \ \ \ \ update\_data\%is\_malloced\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l01050}01050\ \ \ \ \ update\_data\%is\_malloced\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l01051}01051\ }
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l01052}01052\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_afccea8b1865d3f94a32c1bb856d516ba}{update\_data\_init\_gmd}}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l01053}01053\ }
@@ -1178,7 +1178,7 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l01174}01174\ \ \ \ \ update\_data\%aero\_rep\_unique\_id\ =\ aero\_rep\_id\_}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l01175}01175\ \ \ \ \ update\_data\%aero\_rep\_type\ =\ int(aero\_rep\_type,\ kind=c\_int)}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l01176}01176\ \ \ \ \ update\_data\%update\_data\ =\ \mbox{\hyperlink{interfacecamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__create__gsd__update__data}{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data}}()}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l01177}01177\ \ \ \ \ update\_data\%is\_malloced\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l01177}01177\ \ \ \ \ update\_data\%is\_malloced\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l01178}01178\ }
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l01179}01179\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a009d8b27783a5659ec7d8a5cc8fbaeea}{update\_data\_init\_gsd}}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8_f90_source_l01180}01180\ }

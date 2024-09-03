@@ -312,7 +312,7 @@
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00308}00308\ \ \ \ \ this\%property\_set\ =>\ \mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}()}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00309}00309\ }
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00310}00310\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\textcolor{keyword}{allocated}(this\%model\_name))\ this\%model\_name\ =\ \textcolor{stringliteral}{"{}unknown\ model"{}}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00311}00311\ \ \ \ \ found\_name\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00311}00311\ \ \ \ \ found\_name\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00312}00312\ }
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00313}00313\ \ \ \ \ next\ =>\ null()}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00314}00314\ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_child(j\_obj,\ child)}
@@ -323,9 +323,9 @@
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Received\ non-\/string\ value\ for\ sub-\/model\ name"{}})}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00320}00320\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get(child,\ unicode\_str\_val)}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00321}00321\ \ \ \ \ \ \ \ \ this\%model\_name\ =\ unicode\_str\_val}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00322}00322\ \ \ \ \ \ \ \ \ found\_name\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00322}00322\ \ \ \ \ \ \ \ \ found\_name\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00323}00323\ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (key.ne.\textcolor{stringliteral}{"{}type"{}})\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00324}00324\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%property\_set\%load(json,\ child,\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.,\ this\%model\_name)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00324}00324\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%property\_set\%load(json,\ child,\ .false.,\ this\%model\_name)}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00325}00325\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00326}00326\ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_next(child,\ next)}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00327}00327\ \ \ \ \ \ \ child\ =>\ next}

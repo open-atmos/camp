@@ -370,7 +370,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00366}00366\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{associated}(child))}
 \DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00367}00367\ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%info(child,\ name=key)}
 \DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00368}00368\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (key.ne.\textcolor{stringliteral}{"{}rxn\ type"{}})\ \textcolor{keyword}{call\ }this\%property\_set\%load(json,\ child,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.,\ owner\_name)}
+\DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .false.,\ owner\_name)}
 \DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00370}00370\ }
 \DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00371}00371\ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_next(child,\ next)}
 \DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00372}00372\ \ \ \ \ \ \ child\ =>\ next}
@@ -403,9 +403,9 @@
 \DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00399}00399\ \ \ \ \ \textcolor{keywordflow}{if}\ (rxn\_phase.eq.\mbox{\hyperlink{namespacecamp__rxn__data_a39217b10bc26fd976daa1f1b8eedb589}{gas\_aero\_rxn}}\ .or.\ \&}
 \DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00400}00400\ \ \ \ \ \ \ \ \ rxn\_phase.eq.this\%rxn\_phase\ .or.\ \&}
 \DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00401}00401\ \ \ \ \ \ \ \ \ (rxn\_phase.eq.\mbox{\hyperlink{namespacecamp__rxn__data_a5af1c18da3738674ca3911fe3acf3102}{aero\_rxn}}\ .and.\ this\%rxn\_phase.eq.\mbox{\hyperlink{namespacecamp__rxn__data_a39217b10bc26fd976daa1f1b8eedb589}{gas\_aero\_rxn}}))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00402}00402\ \ \ \ \ \ \ \ \ valid\_rxn\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00402}00402\ \ \ \ \ \ \ \ \ valid\_rxn\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00403}00403\ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00404}00404\ \ \ \ \ \ \ valid\_rxn\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00404}00404\ \ \ \ \ \ \ valid\_rxn\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00405}00405\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00406}00406\ }
 \DoxyCodeLine{\Hypertarget{rxn__data_8_f90_source_l00407}00407\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__rxn__data_addbf2edc3675a1065b440cf4290dd560}{check\_phase}}}

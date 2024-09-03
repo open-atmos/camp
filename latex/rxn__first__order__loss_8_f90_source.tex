@@ -102,7 +102,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8_f90_source_l00098}\mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t}{00098}}\ \ \ \textcolor{keyword}{type},\ \textcolor{keyword}{extends}(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__update__data__t}{rxn\_update\_data\_t}})\ ::\ \mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t}{rxn\_update\_data\_first\_order\_loss\_t}}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8_f90_source_l00099}00099\ \ \ \textcolor{keywordtype}{private}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8_f90_source_l00100}00100\ \textcolor{comment}{\ \ \ \ !>\ Flag\ indicating\ whether\ the\ update\ data\ as\ been\ allocated}}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8_f90_source_l00101}\mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_a261a2a482932f0eaccce94e4ccec5996}{00101}}\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ is\_malloced\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8_f90_source_l00101}\mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_a261a2a482932f0eaccce94e4ccec5996}{00101}}\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ is\_malloced\ =\ .false.\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8_f90_source_l00102}00102\ \textcolor{comment}{\ \ \ \ !>\ Unique\ id\ for\ finding\ reactions\ during\ model\ initialization}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8_f90_source_l00103}\mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_a2cb400a7ff09c83c53e7aec245f2e1b0}{00103}}\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ rxn\_unique\_id\ =\ 0}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8_f90_source_l00104}00104\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
@@ -291,7 +291,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8_f90_source_l00287}00287\ \ \ \ \ update\_data\%rxn\_unique\_id\ =\ rxn\_id\_}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8_f90_source_l00288}00288\ \ \ \ \ update\_data\%rxn\_type\ =\ int(rxn\_type,\ kind=c\_int)}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8_f90_source_l00289}00289\ \ \ \ \ update\_data\%update\_data\ =\ \mbox{\hyperlink{interfacecamp__rxn__first__order__loss_1_1rxn__first__order__loss__create__rate__update__data}{rxn\_first\_order\_loss\_create\_rate\_update\_data}}()}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8_f90_source_l00290}00290\ \ \ \ \ update\_data\%is\_malloced\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8_f90_source_l00290}00290\ \ \ \ \ update\_data\%is\_malloced\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8_f90_source_l00291}00291\ }
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8_f90_source_l00292}00292\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__first__order__loss_a395cee7c241345c057290f66376b3b22}{update\_data\_initialize}}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8_f90_source_l00293}00293\ }

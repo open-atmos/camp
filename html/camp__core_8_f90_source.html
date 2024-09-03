@@ -204,7 +204,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno"><a class="line" href="structcamp__camp__core_1_1camp__core__t.html#a618d6e0b36e3dd9679d22450c58dc93f">  140</a></span><span class="keywordtype">    real</span>(kind=<a class="code hl_variable" href="namespacecamp__constants.html#a0119047cbd11c89a02f10be5c5edf7ab">dp</a>), <span class="keywordtype">allocatable</span> :: init_state(:)<span class="comment"></span></div>
 <div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span><span class="comment">    !&gt; Flag to split gas- and aerosol-phase reactions</span></div>
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="comment">    !! (for large aerosol representations, like single-particle)</span></div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno"><a class="line" href="structcamp__camp__core_1_1camp__core__t.html#aaa9a0a1b2f343b92ad116870e41a61c6">  143</a></span>    <span class="keywordtype">logical</span> :: split_gas_aero = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c">false</a>.<span class="comment"></span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno"><a class="line" href="structcamp__camp__core_1_1camp__core__t.html#aaa9a0a1b2f343b92ad116870e41a61c6">  143</a></span>    <span class="keywordtype">logical</span> :: split_gas_aero = .false.<span class="comment"></span></div>
 <div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span><span class="comment">    !&gt; Relative integration tolerance</span></div>
 <div class="line"><a id="l00145" name="l00145"></a><span class="lineno"><a class="line" href="structcamp__camp__core_1_1camp__core__t.html#ae7299b08a0a18ff2e536853ef926057f">  145</a></span><span class="keywordtype">    real</span>(kind=<a class="code hl_variable" href="namespacecamp__constants.html#a0119047cbd11c89a02f10be5c5edf7ab">dp</a>) :: rel_tol = 0.0</div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="comment">! Absolute integration tolerances</span></div>
@@ -219,9 +219,9 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span><span class="comment">    !&gt; Solver data (mixed gas- and aerosol-phase reactions)</span></div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno"><a class="line" href="structcamp__camp__core_1_1camp__core__t.html#adaf05ae0a7e42b87671f75a25f11f175">  156</a></span>    <span class="keywordtype">type</span>(<a class="code hl_interface" href="structcamp__camp__solver__data_1_1camp__solver__data__t.html">camp_solver_data_t</a>), <span class="keywordtype">pointer</span>, <span class="keywordtype">public</span> :: solver_data_gas_aero =&gt; null()<span class="comment"></span></div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span><span class="comment">    !&gt; Flag indicating the model data has been initialized</span></div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno"><a class="line" href="structcamp__camp__core_1_1camp__core__t.html#af9086194e3bbedfa324df477e1d27df1">  158</a></span>    <span class="keywordtype">logical</span> :: core_is_initialized = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c">false</a>.<span class="comment"></span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno"><a class="line" href="structcamp__camp__core_1_1camp__core__t.html#af9086194e3bbedfa324df477e1d27df1">  158</a></span>    <span class="keywordtype">logical</span> :: core_is_initialized = .false.<span class="comment"></span></div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="comment">    !&gt; Flag indicating the solver has been initialized</span></div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="structcamp__camp__core_1_1camp__core__t.html#ab0d933862be292fcf8ce15a8a01b8d8d">  160</a></span>    <span class="keywordtype">logical</span> :: solver_is_initialized = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c">false</a>.</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="structcamp__camp__core_1_1camp__core__t.html#ab0d933862be292fcf8ce15a8a01b8d8d">  160</a></span>    <span class="keywordtype">logical</span> :: solver_is_initialized = .false.</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <span class="keyword">contains</span><span class="comment"></span></div>
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span><span class="comment">    !&gt; Load a set of configuration files</span></div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno"><a class="line" href="structcamp__camp__core_1_1camp__core__t.html#a56e1c9e5c9aad13017ef74ab44865484">  163</a></span>    <span class="keywordtype">procedure</span> :: <a class="code hl_function" href="namespacecamp__camp__core.html#af682baa176c26d19ebab96fa2a9f891a">load_files</a><span class="comment"></span></div>
@@ -651,14 +651,14 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>            <span class="keyword">deallocate</span>(sub_model_ptr%val)</div>
 <div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>            <span class="keyword">call </span>existing_sub_model_ptr%load(json, j_obj)</div>
 <div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>          <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>            sub_model_placed = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c">false</a>.</div>
+<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>            sub_model_placed = .false.</div>
 <div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>            <span class="keyword">allocate</span>(new_sub_model(<span class="keyword">size</span>(this%sub_model)+1))</div>
 <div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>            j_sub_model = 1</div>
 <div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>            <span class="keywordflow">do</span> i_sub_model = 1, <span class="keyword">size</span>(this%sub_model)</div>
 <div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>              <span class="keywordflow">if</span> (.not.sub_model_placed .and. &amp;</div>
 <div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>                  sub_model_ptr%val%priority() &lt; &amp;</div>
 <div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>                  this%sub_model(i_sub_model)%val%priority()) <span class="keywordflow">then</span></div>
-<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>                    sub_model_placed = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b">true</a>.</div>
+<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>                    sub_model_placed = .true.</div>
 <div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>                    new_sub_model(j_sub_model)%val =&gt; sub_model_ptr%val</div>
 <div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>                    j_sub_model = j_sub_model + 1</div>
 <div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span><span class="keywordflow">              end if</span></div>
@@ -691,7 +691,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>        <span class="comment">!!! set whether to solve gas and aerosol phases separately !!!</span></div>
 <div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>        <span class="comment">!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</span></div>
 <div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (str_val.eq.<span class="stringliteral">&#39;SPLIT_GAS_AERO&#39;</span>) <span class="keywordflow">then</span></div>
-<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>          this%split_gas_aero = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b">true</a>.</div>
+<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>          this%split_gas_aero = .true.</div>
 <div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span> </div>
 <div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span>        <span class="comment">!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</span></div>
 <div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span>        <span class="comment">!!! fail on invalid object type !!!</span></div>
@@ -835,7 +835,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00762" name="l00762"></a><span class="lineno">  762</span>            <span class="stringliteral">&quot; of &quot;</span>//trim(<a class="code hl_interface" href="interfacecamp__util_1_1to__string.html">to_string</a>(this%size_state_per_cell))// &amp;</div>
 <div class="line"><a id="l00763" name="l00763"></a><span class="lineno">  763</span>            <span class="stringliteral">&quot; elements of absolute tolerance and variable type arrays&quot;</span>)</div>
 <div class="line"><a id="l00764" name="l00764"></a><span class="lineno">  764</span> </div>
-<div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span>    this%core_is_initialized = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b">true</a>.</div>
+<div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span>    this%core_is_initialized = .true.</div>
 <div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span> </div>
 <div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span>    <span class="comment">! Set the initial state values</span></div>
 <div class="line"><a id="l00768" name="l00768"></a><span class="lineno">  768</span>    <span class="keyword">allocate</span>(this%init_state(this%size_state_per_cell * this%n_cells))</div>
@@ -911,12 +911,12 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00832" name="l00832"></a><span class="lineno">  832</span> </div>
 <div class="line"><a id="l00833" name="l00833"></a><span class="lineno">  833</span>    <span class="keywordtype">integer(kind=i_kind)</span> :: i_aero_phase</div>
 <div class="line"><a id="l00834" name="l00834"></a><span class="lineno">  834</span> </div>
-<div class="line"><a id="l00835" name="l00835"></a><span class="lineno">  835</span>    found = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c">false</a>.</div>
+<div class="line"><a id="l00835" name="l00835"></a><span class="lineno">  835</span>    found = .false.</div>
 <div class="line"><a id="l00836" name="l00836"></a><span class="lineno">  836</span>    aero_phase =&gt; null()</div>
 <div class="line"><a id="l00837" name="l00837"></a><span class="lineno">  837</span>    <span class="keywordflow">if</span> (.not.<span class="keyword">associated</span>(this%aero_phase)) <span class="keywordflow">return</span></div>
 <div class="line"><a id="l00838" name="l00838"></a><span class="lineno">  838</span>    <span class="keywordflow">do</span> i_aero_phase = 1, <span class="keyword">size</span>(this%aero_phase)</div>
 <div class="line"><a id="l00839" name="l00839"></a><span class="lineno">  839</span>      <span class="keywordflow">if</span> (this%aero_phase(i_aero_phase)%val%name().eq.aero_phase_name) <span class="keywordflow">then</span></div>
-<div class="line"><a id="l00840" name="l00840"></a><span class="lineno">  840</span>        found = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b">true</a>.</div>
+<div class="line"><a id="l00840" name="l00840"></a><span class="lineno">  840</span>        found = .true.</div>
 <div class="line"><a id="l00841" name="l00841"></a><span class="lineno">  841</span>        aero_phase =&gt; this%aero_phase(i_aero_phase)%val</div>
 <div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span>        <span class="keywordflow">return</span></div>
 <div class="line"><a id="l00843" name="l00843"></a><span class="lineno">  843</span><span class="keywordflow">      end if</span></div>
@@ -940,13 +940,13 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00859" name="l00859"></a><span class="lineno">  859</span> </div>
 <div class="line"><a id="l00860" name="l00860"></a><span class="lineno">  860</span>    <span class="keywordtype">integer(kind=i_kind)</span> :: i_aero_rep</div>
 <div class="line"><a id="l00861" name="l00861"></a><span class="lineno">  861</span> </div>
-<div class="line"><a id="l00862" name="l00862"></a><span class="lineno">  862</span>    found = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c">false</a>.</div>
+<div class="line"><a id="l00862" name="l00862"></a><span class="lineno">  862</span>    found = .false.</div>
 <div class="line"><a id="l00863" name="l00863"></a><span class="lineno">  863</span>    aero_rep =&gt; null()</div>
 <div class="line"><a id="l00864" name="l00864"></a><span class="lineno">  864</span>    <span class="keywordflow">if</span> (.not.<span class="keyword">associated</span>(this%aero_rep)) <span class="keywordflow">return</span></div>
 <div class="line"><a id="l00865" name="l00865"></a><span class="lineno">  865</span>    <span class="keywordflow">do</span> i_aero_rep = 1, <span class="keyword">size</span>(this%aero_rep)</div>
 <div class="line"><a id="l00866" name="l00866"></a><span class="lineno">  866</span>      <span class="keywordflow">if</span> (this%aero_rep(i_aero_rep)%val%name().eq.trim(aero_rep_name)) <span class="keywordflow">then</span></div>
 <div class="line"><a id="l00867" name="l00867"></a><span class="lineno">  867</span>        aero_rep =&gt; this%aero_rep(i_aero_rep)%val</div>
-<div class="line"><a id="l00868" name="l00868"></a><span class="lineno">  868</span>        found = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b">true</a>.</div>
+<div class="line"><a id="l00868" name="l00868"></a><span class="lineno">  868</span>        found = .true.</div>
 <div class="line"><a id="l00869" name="l00869"></a><span class="lineno">  869</span>        <span class="keywordflow">return</span></div>
 <div class="line"><a id="l00870" name="l00870"></a><span class="lineno">  870</span><span class="keywordflow">      end if</span></div>
 <div class="line"><a id="l00871" name="l00871"></a><span class="lineno">  871</span><span class="keywordflow">    end do</span></div>
@@ -965,9 +965,9 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00882" name="l00882"></a><span class="lineno">  882</span><span class="comment">    !&gt; Pointer to the chemical species data</span></div>
 <div class="line"><a id="l00883" name="l00883"></a><span class="lineno">  883</span>    <span class="keywordtype">type</span>(<a class="code hl_interface" href="structcamp__chem__spec__data_1_1chem__spec__data__t.html">chem_spec_data_t</a>), <span class="keywordtype">pointer</span> :: chem_spec_data</div>
 <div class="line"><a id="l00884" name="l00884"></a><span class="lineno">  884</span> </div>
-<div class="line"><a id="l00885" name="l00885"></a><span class="lineno">  885</span>    found = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c">false</a>.</div>
+<div class="line"><a id="l00885" name="l00885"></a><span class="lineno">  885</span>    found = .false.</div>
 <div class="line"><a id="l00886" name="l00886"></a><span class="lineno">  886</span>    chem_spec_data =&gt; this%chem_spec_data</div>
-<div class="line"><a id="l00887" name="l00887"></a><span class="lineno">  887</span>    <span class="keywordflow">if</span> (<span class="keyword">associated</span>(chem_spec_data)) found = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b">true</a>.</div>
+<div class="line"><a id="l00887" name="l00887"></a><span class="lineno">  887</span>    <span class="keywordflow">if</span> (<span class="keyword">associated</span>(chem_spec_data)) found = .true.</div>
 <div class="line"><a id="l00888" name="l00888"></a><span class="lineno">  888</span> </div>
 </div>
 <div class="line"><a id="l00889" name="l00889"></a><span class="lineno">  889</span>  <span class="keyword">end function </span><a class="code hl_function" href="namespacecamp__camp__core.html#ae000de658559072d5e2e0e5407a43934">get_chem_spec_data</a></div>
@@ -987,12 +987,12 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00902" name="l00902"></a><span class="lineno">  902</span> </div>
 <div class="line"><a id="l00903" name="l00903"></a><span class="lineno">  903</span>    <span class="keywordtype">integer(kind=i_kind)</span> :: i_mech</div>
 <div class="line"><a id="l00904" name="l00904"></a><span class="lineno">  904</span> </div>
-<div class="line"><a id="l00905" name="l00905"></a><span class="lineno">  905</span>    found = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c">false</a>.</div>
+<div class="line"><a id="l00905" name="l00905"></a><span class="lineno">  905</span>    found = .false.</div>
 <div class="line"><a id="l00906" name="l00906"></a><span class="lineno">  906</span>    mechanism =&gt; null()</div>
 <div class="line"><a id="l00907" name="l00907"></a><span class="lineno">  907</span>    <span class="keywordflow">if</span> (.not.<span class="keyword">associated</span>(this%mechanism)) <span class="keywordflow">return</span></div>
 <div class="line"><a id="l00908" name="l00908"></a><span class="lineno">  908</span>    <span class="keywordflow">do</span> i_mech = 1, <span class="keyword">size</span>(this%mechanism)</div>
 <div class="line"><a id="l00909" name="l00909"></a><span class="lineno">  909</span>      <span class="keywordflow">if</span> (this%mechanism(i_mech)%val%name().eq.mech_name) <span class="keywordflow">then</span></div>
-<div class="line"><a id="l00910" name="l00910"></a><span class="lineno">  910</span>        found = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b">true</a>.</div>
+<div class="line"><a id="l00910" name="l00910"></a><span class="lineno">  910</span>        found = .true.</div>
 <div class="line"><a id="l00911" name="l00911"></a><span class="lineno">  911</span>        mechanism =&gt; this%mechanism(i_mech)%val</div>
 <div class="line"><a id="l00912" name="l00912"></a><span class="lineno">  912</span>        <span class="keywordflow">return</span></div>
 <div class="line"><a id="l00913" name="l00913"></a><span class="lineno">  913</span><span class="keywordflow">      end if</span></div>
@@ -1017,13 +1017,13 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00930" name="l00930"></a><span class="lineno">  930</span> </div>
 <div class="line"><a id="l00931" name="l00931"></a><span class="lineno">  931</span>    <span class="keywordtype">integer(kind=i_kind)</span> :: i_sub_model</div>
 <div class="line"><a id="l00932" name="l00932"></a><span class="lineno">  932</span> </div>
-<div class="line"><a id="l00933" name="l00933"></a><span class="lineno">  933</span>    found = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c">false</a>.</div>
+<div class="line"><a id="l00933" name="l00933"></a><span class="lineno">  933</span>    found = .false.</div>
 <div class="line"><a id="l00934" name="l00934"></a><span class="lineno">  934</span>    sub_model =&gt; null()</div>
 <div class="line"><a id="l00935" name="l00935"></a><span class="lineno">  935</span>    <span class="keywordflow">if</span> (.not.<span class="keyword">associated</span>(this%sub_model)) <span class="keywordflow">return</span></div>
 <div class="line"><a id="l00936" name="l00936"></a><span class="lineno">  936</span>    <span class="keywordflow">do</span> i_sub_model = 1, <span class="keyword">size</span>(this%sub_model)</div>
 <div class="line"><a id="l00937" name="l00937"></a><span class="lineno">  937</span>      <span class="keywordflow">if</span> (this%sub_model(i_sub_model)%val%name().eq.sub_model_name) <span class="keywordflow">then</span></div>
 <div class="line"><a id="l00938" name="l00938"></a><span class="lineno">  938</span>        sub_model =&gt; this%sub_model(i_sub_model)%val</div>
-<div class="line"><a id="l00939" name="l00939"></a><span class="lineno">  939</span>        found = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b">true</a>.</div>
+<div class="line"><a id="l00939" name="l00939"></a><span class="lineno">  939</span>        found = .true.</div>
 <div class="line"><a id="l00940" name="l00940"></a><span class="lineno">  940</span>        <span class="keywordflow">return</span></div>
 <div class="line"><a id="l00941" name="l00941"></a><span class="lineno">  941</span><span class="keywordflow">      end if</span></div>
 <div class="line"><a id="l00942" name="l00942"></a><span class="lineno">  942</span><span class="keywordflow">    end do</span></div>
@@ -1218,7 +1218,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l01115" name="l01115"></a><span class="lineno"> 1115</span> </div>
 <div class="line"><a id="l01116" name="l01116"></a><span class="lineno"> 1116</span>    <span class="keywordtype">integer(kind=i_kind)</span> :: i_spec, i_aero_rep</div>
 <div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span> </div>
-<div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span>    found = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c">false</a>.</div>
+<div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span>    found = .false.</div>
 <div class="line"><a id="l01119" name="l01119"></a><span class="lineno"> 1119</span>    i_spec = this%chem_spec_data%gas_state_id( <a class="code hl_interface" href="interfacecamp__aero__rep__data_1_1spec__name.html">spec_name</a> )</div>
 <div class="line"><a id="l01120" name="l01120"></a><span class="lineno"> 1120</span>    <span class="keywordflow">do</span> i_aero_rep = 1, <span class="keyword">size</span>( this%aero_rep )</div>
 <div class="line"><a id="l01121" name="l01121"></a><span class="lineno"> 1121</span>      <span class="keywordflow">if</span>( i_spec .eq. 0 ) &amp;</div>
@@ -1227,7 +1227,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l01124" name="l01124"></a><span class="lineno"> 1124</span> </div>
 <div class="line"><a id="l01125" name="l01125"></a><span class="lineno"> 1125</span>    <span class="keywordflow">if</span>( i_spec .gt. 0 ) <span class="keywordflow">then</span></div>
 <div class="line"><a id="l01126" name="l01126"></a><span class="lineno"> 1126</span>      state_id = i_spec</div>
-<div class="line"><a id="l01127" name="l01127"></a><span class="lineno"> 1127</span>      found = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b">true</a>.</div>
+<div class="line"><a id="l01127" name="l01127"></a><span class="lineno"> 1127</span>      found = .true.</div>
 <div class="line"><a id="l01128" name="l01128"></a><span class="lineno"> 1128</span><span class="keywordflow">    end if</span></div>
 <div class="line"><a id="l01129" name="l01129"></a><span class="lineno"> 1129</span> </div>
 </div>
@@ -1303,7 +1303,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l01198" name="l01198"></a><span class="lineno"> 1198</span> </div>
 <div class="line"><a id="l01199" name="l01199"></a><span class="lineno"> 1199</span><span class="keywordflow">    end if</span></div>
 <div class="line"><a id="l01200" name="l01200"></a><span class="lineno"> 1200</span> </div>
-<div class="line"><a id="l01201" name="l01201"></a><span class="lineno"> 1201</span>    this%solver_is_initialized = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b">true</a>.</div>
+<div class="line"><a id="l01201" name="l01201"></a><span class="lineno"> 1201</span>    this%solver_is_initialized = .true.</div>
 <div class="line"><a id="l01202" name="l01202"></a><span class="lineno"> 1202</span> </div>
 </div>
 <div class="line"><a id="l01203" name="l01203"></a><span class="lineno"> 1203</span>  <span class="keyword">end subroutine </span><a class="code hl_interface" href="interfacecamp__camp__solver__data_1_1solver__initialize.html">solver_initialize</a></div>
@@ -1724,7 +1724,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l01597" name="l01597"></a><span class="lineno"> 1597</span>    <span class="keyword">call </span><a class="code hl_function" href="namespacecamp__mpi.html#aeca685c68939372a57f9c9dae80b8936">camp_mpi_unpack_real_array</a>(buffer, pos, this%abs_tol, l_comm)</div>
 <div class="line"><a id="l01598" name="l01598"></a><span class="lineno"> 1598</span>    <span class="keyword">call </span><a class="code hl_function" href="namespacecamp__mpi.html#a3b9e1ec6bb02bc828b8a1790a8299349">camp_mpi_unpack_integer_array</a>(buffer, pos, this%var_type, l_comm)</div>
 <div class="line"><a id="l01599" name="l01599"></a><span class="lineno"> 1599</span>    <span class="keyword">call </span><a class="code hl_function" href="namespacecamp__mpi.html#aeca685c68939372a57f9c9dae80b8936">camp_mpi_unpack_real_array</a>(buffer, pos, this%init_state, l_comm)</div>
-<div class="line"><a id="l01600" name="l01600"></a><span class="lineno"> 1600</span>    this%core_is_initialized = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b">true</a>.</div>
+<div class="line"><a id="l01600" name="l01600"></a><span class="lineno"> 1600</span>    this%core_is_initialized = .true.</div>
 <div class="line"><a id="l01601" name="l01601"></a><span class="lineno"> 1601</span>    <span class="keyword">call </span><a class="code hl_function" href="namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2">assert</a>(291557168, &amp;</div>
 <div class="line"><a id="l01602" name="l01602"></a><span class="lineno"> 1602</span>         pos - prev_position &lt;= this%pack_size(l_comm))</div>
 <div class="line"><a id="l01603" name="l01603"></a><span class="lineno"> 1603</span><span class="preprocessor">#endif</span></div>
@@ -1752,7 +1752,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l01623" name="l01623"></a><span class="lineno"> 1623</span>    <span class="keywordtype">logical</span> :: sd_only</div>
 <div class="line"><a id="l01624" name="l01624"></a><span class="lineno"> 1624</span> </div>
 <div class="line"><a id="l01625" name="l01625"></a><span class="lineno"> 1625</span>    f_unit = 6</div>
-<div class="line"><a id="l01626" name="l01626"></a><span class="lineno"> 1626</span>    sd_only = .<a class="code hl_enumvalue" href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c">false</a>.</div>
+<div class="line"><a id="l01626" name="l01626"></a><span class="lineno"> 1626</span>    sd_only = .false.</div>
 <div class="line"><a id="l01627" name="l01627"></a><span class="lineno"> 1627</span> </div>
 <div class="line"><a id="l01628" name="l01628"></a><span class="lineno"> 1628</span>    <span class="keywordflow">if</span> (<span class="keyword">present</span>(file_unit)) f_unit = file_unit</div>
 <div class="line"><a id="l01629" name="l01629"></a><span class="lineno"> 1629</span>    <span class="keywordflow">if</span> (<span class="keyword">present</span>(solver_data_only)) sd_only = solver_data_only</div>
@@ -1985,8 +1985,6 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l01845" name="l01845"></a><span class="lineno"> 1845</span><span class="comment">!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!</span></div>
 <div class="line"><a id="l01846" name="l01846"></a><span class="lineno"> 1846</span> </div>
 <div class="line"><a id="l01847" name="l01847"></a><span class="lineno"> 1847</span><span class="keyword">end module </span><a class="code hl_namespace" href="namespacecamp__camp__core.html">camp_camp_core</a></div>
-<div class="ttc" id="acamp__common_8h_html_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b"><div class="ttname"><a href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b">true</a></div><div class="ttdeci">@ true</div><div class="ttdef"><b>Definition</b> <a href="camp__common_8h_source.html#l00056">camp_common.h:56</a></div></div>
-<div class="ttc" id="acamp__common_8h_html_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c"><div class="ttname"><a href="camp__common_8h.html#af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c">false</a></div><div class="ttdeci">@ false</div><div class="ttdef"><b>Definition</b> <a href="camp__common_8h_source.html#l00056">camp_common.h:56</a></div></div>
 <div class="ttc" id="ainterfacecamp__aero__rep__data_1_1initialize_html"><div class="ttname"><a href="interfacecamp__aero__rep__data_1_1initialize.html">camp_aero_rep_data::initialize</a></div><div class="ttdoc">Initialize the aerosol representation data, validating component data and loading any required inform...</div><div class="ttdef"><b>Definition</b> <a href="aero__rep__data_8_f90_source.html#l00193">aero_rep_data.F90:193</a></div></div>
 <div class="ttc" id="ainterfacecamp__aero__rep__data_1_1spec__name_html"><div class="ttname"><a href="interfacecamp__aero__rep__data_1_1spec__name.html">camp_aero_rep_data::spec_name</a></div><div class="ttdoc">Get the non-unique name of a chemical species by its unique name.</div><div class="ttdef"><b>Definition</b> <a href="aero__rep__data_8_f90_source.html#l00329">aero_rep_data.F90:329</a></div></div>
 <div class="ttc" id="ainterfacecamp__aero__rep__data_1_1spec__state__id_html"><div class="ttname"><a href="interfacecamp__aero__rep__data_1_1spec__state__id.html">camp_aero_rep_data::spec_state_id</a></div><div class="ttdoc">Get a species id on the camp_camp_state::camp_state_t::state_var array by unique name....</div><div class="ttdef"><b>Definition</b> <a href="aero__rep__data_8_f90_source.html#l00313">aero_rep_data.F90:313</a></div></div>

@@ -261,7 +261,7 @@
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00257}00257\ }
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00258}00258\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ the\ number\ of\ Jacobian\ elements\ for\ calculations\ of\ mass,\ volume,}}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00259}00259\ \ \ \ \ \ \ \textcolor{comment}{!\ number,\ etc.\ for\ this\ partitioning\ into\ this\ phase}}
-\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00260}00260\ \ \ \ \ \ \ phase\_ids\ =\ aero\_rep(i\_aero\_rep)\%val\%phase\_ids(phase\_name,\ is\_at\_surface=.\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.)}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00260}00260\ \ \ \ \ \ \ phase\_ids\ =\ aero\_rep(i\_aero\_rep)\%val\%phase\_ids(phase\_name,\ is\_at\_surface=.true.)}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00261}00261\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\ =\ 1,\ \textcolor{keyword}{size}(phase\_ids)}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00262}00262\ \ \ \ \ \ \ \ \ n\_aero\_jac\_elem\ =\ n\_aero\_jac\_elem\ +\ \&}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aero\_rep(i\_aero\_rep)\%val\%num\_jac\_elem(phase\_ids(i\_phase))}
@@ -320,7 +320,7 @@
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ phase\_name\ =\ phase\_name,\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}\ =\ water\_name)}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00317}00317\ }
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00318}00318\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ the\ phase\ ids\ for\ this\ aerosol\ phase}}
-\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00319}00319\ \ \ \ \ \ \ phase\_ids\ =\ aero\_rep(i\_aero\_rep)\%val\%phase\_ids(phase\_name,\ is\_at\_surface=.\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.)}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00319}00319\ \ \ \ \ \ \ phase\_ids\ =\ aero\_rep(i\_aero\_rep)\%val\%phase\_ids(phase\_name,\ is\_at\_surface=.true.)}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00320}00320\ }
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00321}00321\ \ \ \ \ \ \ \textcolor{comment}{!\ Add\ the\ species\ concentration\ and\ activity\ coefficient\ ids\ to}}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00322}00322\ \ \ \ \ \ \ \textcolor{comment}{!\ the\ condensed\ data,\ and\ set\ the\ number\ of\ jacobian\ elements\ for}}

@@ -25,7 +25,7 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00021}00021\ \textcolor{comment}{\ \ !>\ Minimum\ unit\ number\ to\ allocate.}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00022}\mbox{\hyperlink{namespacecamp__util_a4f7f7ae3bfdb8c1429e119e372b4db39}{00022}}\ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{parameter}\ ::\ \mbox{\hyperlink{namespacecamp__util_a4f7f7ae3bfdb8c1429e119e372b4db39}{unit\_offset}}\ =\ 10\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00023}00023\ \textcolor{comment}{\ \ !>\ Table\ of\ unit\ numbers\ storing\ allocation\ status.}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00024}\mbox{\hyperlink{namespacecamp__util_ab38103b342e907ecd4a0e56245e19807}{00024}}\ \ \ \textcolor{keywordtype}{logical},\ \textcolor{keywordtype}{save}\ ::\ \mbox{\hyperlink{namespacecamp__util_ab38103b342e907ecd4a0e56245e19807}{unit\_used}}(\mbox{\hyperlink{namespacecamp__util_a6515dd3d6435f00e9e12a740524cffb2}{max\_units}})\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00024}\mbox{\hyperlink{namespacecamp__util_ab38103b342e907ecd4a0e56245e19807}{00024}}\ \ \ \textcolor{keywordtype}{logical},\ \textcolor{keywordtype}{save}\ ::\ \mbox{\hyperlink{namespacecamp__util_ab38103b342e907ecd4a0e56245e19807}{unit\_used}}(\mbox{\hyperlink{namespacecamp__util_a6515dd3d6435f00e9e12a740524cffb2}{max\_units}})\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00025}00025\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00026}00026\ \textcolor{comment}{\ \ !>\ Length\ of\ string\ for\ converting\ numbers.}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00027}\mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{00027}}\ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{parameter}\ ::\ \mbox{\hyperlink{namespacecamp__util_a77def4b411d48f628e7ac65eb8e1c555}{camp\_util\_convert\_string\_len}}\ =\ 100\textcolor{comment}{}}
@@ -102,7 +102,7 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00098}00098\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{present}(already\_warned))\ \textcolor{keywordflow}{then}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00099}00099\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (already\_warned)\ \textcolor{keywordflow}{return}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00100}00100\ \ \ \ \ \ \ \ \textcolor{comment}{!\ set\ already\_warned\ so\ next\ time\ we\ will\ immediately\ return}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00101}00101\ \ \ \ \ \ \ \ already\_warned\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00101}00101\ \ \ \ \ \ \ \ already\_warned\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00102}00102\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00103}00103\ \ \ \ \ \textcolor{keyword}{write}(0,\textcolor{stringliteral}{'(a)'})\ \textcolor{stringliteral}{'WARNING\ (CAMP-\/'}\ //\ trim(\mbox{\hyperlink{namespacecamp__util_acd72e4626dcfefffaa08c42cfa7949bc}{integer\_to\_string}}(code))\ \&}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00104}00104\ \ \ \ \ \ \ \ \ \ //\ \textcolor{stringliteral}{'):\ '}\ //\ trim(warning\_msg)}
@@ -189,7 +189,7 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00185}00185\ \textcolor{comment}{\ \ \ \ !>\ Status\ code\ to\ use\ if\ assertion\ fails.}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00186}00186\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ code}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00187}00187\ }
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00188}00188\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(code,\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.)}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00188}00188\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(code,\ .false.)}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00189}00189\ }
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00190}00190\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__util_aa942add404bf8b611e5b4b8c777ca7f6}{die}}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00191}00191\ }
@@ -203,7 +203,7 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00199}00199\ \textcolor{comment}{\ \ \ \ !>\ Msg\ if\ assertion\ fails.}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00200}00200\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{intent(in)}\ ::\ error\_msg}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00201}00201\ }
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00202}00202\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(code,\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.,\ error\_msg)}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00202}00202\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(code,\ .false.,\ error\_msg)}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00203}00203\ }
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00204}00204\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00205}00205\ }
@@ -215,10 +215,10 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00211}00211\ \ \ \ \ \textcolor{keywordtype}{integer}\ i}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00212}00212\ \ \ \ \ \textcolor{keywordtype}{logical}\ found\_unit}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00213}00213\ }
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00214}00214\ \ \ \ \ found\_unit\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00214}00214\ \ \ \ \ found\_unit\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00215}00215\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,\mbox{\hyperlink{namespacecamp__util_a6515dd3d6435f00e9e12a740524cffb2}{max\_units}}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00216}00216\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ \mbox{\hyperlink{namespacecamp__util_ab38103b342e907ecd4a0e56245e19807}{unit\_used}}(i))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ found\_unit\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ found\_unit\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{exit}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00219}00219\ \textcolor{keywordflow}{\ \ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00220}00220\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
@@ -226,7 +226,7 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00222}00222\ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(690355443,\ \&}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{'no\ more\ units\ available\ -\/\ need\ to\ free\_unit()'})}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00224}00224\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00225}00225\ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_ab38103b342e907ecd4a0e56245e19807}{unit\_used}}(i)\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00225}00225\ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_ab38103b342e907ecd4a0e56245e19807}{unit\_used}}(i)\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00226}00226\ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a43662260b71cb7e4b72fe49ccb8cee94}{get\_unit}}\ =\ i\ +\ \mbox{\hyperlink{namespacecamp__util_a4f7f7ae3bfdb8c1429e119e372b4db39}{unit\_offset}}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00227}00227\ }
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00228}00228\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__util_a43662260b71cb7e4b72fe49ccb8cee94}{get\_unit}}}
@@ -238,7 +238,7 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00234}00234\ }
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00235}00235\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ unit}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00236}00236\ }
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00237}00237\ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_ab38103b342e907ecd4a0e56245e19807}{unit\_used}}(unit\ -\/\ \mbox{\hyperlink{namespacecamp__util_a4f7f7ae3bfdb8c1429e119e372b4db39}{unit\_offset}})\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00237}00237\ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_ab38103b342e907ecd4a0e56245e19807}{unit\_used}}(unit\ -\/\ \mbox{\hyperlink{namespacecamp__util_a4f7f7ae3bfdb8c1429e119e372b4db39}{unit\_offset}})\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00238}00238\ }
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00239}00239\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__util_a3a68d4a7d1b28dd132909a12c83d3c21}{free\_unit}}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00240}00240\ }
@@ -403,16 +403,16 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00399}00399\ }
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00400}00400\ \ \ \ \ \textcolor{comment}{!\ handle\ the\ 0.0\ case}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00401}00401\ \ \ \ \ \textcolor{keywordflow}{if}\ (d1\ .eq.\ d2)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00402}00402\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a1edccf652ba0788ede6a9fb6117e2a16}{almost\_equal}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00402}00402\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a1edccf652ba0788ede6a9fb6117e2a16}{almost\_equal}}\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00403}00403\ \ \ \ \ \textcolor{keywordflow}{else}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00404}00404\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (abs(d1\ -\/\ d2)\ /\ (abs(d1)\ +\ abs(d2))\ .lt.\ eps)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00405}00405\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a1edccf652ba0788ede6a9fb6117e2a16}{almost\_equal}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00405}00405\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a1edccf652ba0788ede6a9fb6117e2a16}{almost\_equal}}\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00406}00406\ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00407}00407\ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (abs(d1\ -\/\ d2)\ .le.\ at)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00408}00408\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a1edccf652ba0788ede6a9fb6117e2a16}{almost\_equal}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00408}00408\ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a1edccf652ba0788ede6a9fb6117e2a16}{almost\_equal}}\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00409}00409\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00410}00410\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00411}00411\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a1edccf652ba0788ede6a9fb6117e2a16}{almost\_equal}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00411}00411\ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a1edccf652ba0788ede6a9fb6117e2a16}{almost\_equal}}\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00412}00412\ \textcolor{keywordflow}{\ \ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00413}00413\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00414}00414\ }
@@ -436,13 +436,13 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00432}00432\ }
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00433}00433\ \ \ \ \ \textcolor{comment}{!\ handle\ the\ 0.0\ case}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00434}00434\ \ \ \ \ \textcolor{keywordflow}{if}\ (d1\ .eq.\ d2)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00435}00435\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_afc02eee0a91214d05a47a38abc500559}{almost\_equal\_abs}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00435}00435\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_afc02eee0a91214d05a47a38abc500559}{almost\_equal\_abs}}\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00436}00436\ \ \ \ \ \textcolor{keywordflow}{else}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00437}00437\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((abs(d1\ -\/\ d2)\ .lt.\ abs\_tol)\ .or.\ \&}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00438}00438\ \ \ \ \ \ \ \ \ \ \ \ \ (abs(d1\ -\/\ d2)\ /\ (abs(d1)\ +\ abs(d2))\ .lt.\ eps))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00439}00439\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_afc02eee0a91214d05a47a38abc500559}{almost\_equal\_abs}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00439}00439\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_afc02eee0a91214d05a47a38abc500559}{almost\_equal\_abs}}\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00440}00440\ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00441}00441\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_afc02eee0a91214d05a47a38abc500559}{almost\_equal\_abs}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00441}00441\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_afc02eee0a91214d05a47a38abc500559}{almost\_equal\_abs}}\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00442}00442\ \textcolor{keywordflow}{\ \ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00443}00443\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00444}00444\ }
@@ -504,15 +504,15 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00500}00500\ }
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00501}00501\ \ \ \ \ \textcolor{comment}{!\ if\ we\ are\ at\ time\ 0\ then\ do\ the\ event\ unconditionally}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00502}00502\ \ \ \ \ \textcolor{keywordflow}{if}\ (time\ .eq.\ 0d0)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00503}00503\ \ \ \ \ \ \ \ do\_event\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00503}00503\ \ \ \ \ \ \ \ do\_event\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00504}00504\ \ \ \ \ \textcolor{keywordflow}{else}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00505}00505\ \ \ \ \ \ \ \ \textcolor{comment}{!\ if\ we\ are\ too\ close\ to\ the\ last\ time\ then\ don't\ do\ it}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00506}00506\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((time\ -\/\ last\_time)\ .lt.\ interval\ *\ (1d0\ -\/\ tolerance))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00507}00507\ \ \ \ \ \ \ \ \ \ \ do\_event\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00507}00507\ \ \ \ \ \ \ \ \ \ \ do\_event\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00508}00508\ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00509}00509\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ if\ it's\ been\ too\ long\ since\ the\ last\ time\ then\ do\ it}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00510}00510\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ ((time\ -\/\ last\_time)\ .ge.\ interval)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00511}00511\ \ \ \ \ \ \ \ \ \ \ \ \ \ do\_event\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00511}00511\ \ \ \ \ \ \ \ \ \ \ \ \ \ do\_event\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00512}00512\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00513}00513\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ gray\ area\ -\/-\/\ if\ we\ are\ closer\ than\ we\ will\ be\ next}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00514}00514\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ time\ then\ do\ it}}
@@ -520,9 +520,9 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00516}00516\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (abs(time\ -\/\ closest\_interval\_time)\ \&}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00517}00517\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .lt.\ abs(time\ +\ timestep\ -\/\ closest\_interval\_time))\ \&}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00518}00518\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00519}00519\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ do\_event\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00519}00519\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ do\_event\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00520}00520\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00521}00521\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ do\_event\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00521}00521\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ do\_event\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00522}00522\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00523}00523\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00524}00524\ \textcolor{keywordflow}{\ \ \ \ \ \ \ end\ if}}
@@ -815,19 +815,19 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00811}00811\ }
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00812}00812\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ val}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00813}00813\ }
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00814}00814\ \ \ \ \ val\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00814}00814\ \ \ \ \ val\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00815}00815\ \ \ \ \ \textcolor{keywordflow}{if}\ ((trim(string)\ ==\ \textcolor{stringliteral}{'yes'})\ \&}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00816}00816\ \ \ \ \ \ \ \ \ \ .or.\ (trim(string)\ ==\ \textcolor{stringliteral}{'y'})\ \&}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00817}00817\ \ \ \ \ \ \ \ \ \ .or.\ (trim(string)\ ==\ \textcolor{stringliteral}{'true'})\ \&}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00818}00818\ \ \ \ \ \ \ \ \ \ .or.\ (trim(string)\ ==\ \textcolor{stringliteral}{'t'})\ \&}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00819}00819\ \ \ \ \ \ \ \ \ \ .or.\ (trim(string)\ ==\ \textcolor{stringliteral}{'1'}))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00820}00820\ \ \ \ \ \ \ \ val\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00820}00820\ \ \ \ \ \ \ \ val\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00821}00821\ \ \ \ \ \textcolor{keywordflow}{elseif}\ ((trim(string)\ ==\ \textcolor{stringliteral}{'no'})\ \&}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00822}00822\ \ \ \ \ \ \ \ \ \ .or.\ (trim(string)\ ==\ \textcolor{stringliteral}{'n'})\ \&}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00823}00823\ \ \ \ \ \ \ \ \ \ .or.\ (trim(string)\ ==\ \textcolor{stringliteral}{'false'})\ \&}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00824}00824\ \ \ \ \ \ \ \ \ \ .or.\ (trim(string)\ ==\ \textcolor{stringliteral}{'f'})\ \&}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00825}00825\ \ \ \ \ \ \ \ \ \ .or.\ (trim(string)\ ==\ \textcolor{stringliteral}{'0'}))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00826}00826\ \ \ \ \ \ \ \ val\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l00826}00826\ \ \ \ \ \ \ \ val\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00827}00827\ \ \ \ \ \textcolor{keywordflow}{else}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00828}00828\ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(985010153,\ \textcolor{stringliteral}{'error\ converting\ "{}'}\ //\ trim(string)\ \&}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l00829}00829\ \ \ \ \ \ \ \ \ \ \ \ \ //\ \textcolor{stringliteral}{'"{}\ to\ logical'})}
@@ -1017,12 +1017,12 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01013}01013\ \textcolor{keywordtype}{\ \ \ \ real}(kind=dp)\ ::\ scaled\_time}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01014}01014\ }
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01015}01015\ \ \ \ \ scaled\_time\ =\ time}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01016}01016\ \ \ \ \ len\_ok\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01016}01016\ \ \ \ \ len\_ok\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01017}01017\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,4}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01018}01018\ \ \ \ \ \ \ \ scaled\_time\ =\ scaled\_time\ /\ real(scale(i),\ kind=dp)}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01019}01019\ \ \ \ \ \ \ \ ret\_val\ =\ trim(\mbox{\hyperlink{namespacecamp__util_acd72e4626dcfefffaa08c42cfa7949bc}{integer\_to\_string}}(nint(scaled\_time)))\ //\ unit(i)}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01020}01020\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (len\_trim(ret\_val)\ <=\ max\_len)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01021}01021\ \ \ \ \ \ \ \ \ \ \ len\_ok\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01021}01021\ \ \ \ \ \ \ \ \ \ \ len\_ok\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01022}01022\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{exit}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01023}01023\ \textcolor{keywordflow}{\ \ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01024}01024\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
@@ -1091,7 +1091,7 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01087}01087\ \ \ \ \ \textcolor{keywordflow}{if}(\ \textcolor{keyword}{present}(\ compress\ )\ )\ \textcolor{keywordflow}{then}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01088}01088\ \ \ \ \ \ \ l\_comp\ =\ compress}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01089}01089\ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01090}01090\ \ \ \ \ \ \ l\_comp\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01090}01090\ \ \ \ \ \ \ l\_comp\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01091}01091\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01092}01092\ }
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01093}01093\ \ \ \ \ sl\ \ \ \ \ \ \ \ =\ len(\ splitter\ )}
@@ -1114,7 +1114,7 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01110}01110\ \ \ \ \ \ \ \ \ is\_string\ =\ .not.\ l\_comp}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01111}01111\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01112}01112\ \ \ \ \ \ \ \ \ i\ =\ i\ +\ 1}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01113}01113\ \ \ \ \ \ \ \ \ is\_string\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01113}01113\ \ \ \ \ \ \ \ \ is\_string\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01114}01114\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01115}01115\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01116}01116\ \ \ \ \ \textcolor{keywordflow}{if}(\ is\_string\ )\ count\ =\ count\ +\ 1}
@@ -1140,7 +1140,7 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01136}01136\ \ \ \ \ \ \ \ \ is\_string\ =\ .not.\ l\_comp}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01137}01137\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01138}01138\ \ \ \ \ \ \ \ \ i\ =\ i\ +\ 1}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01139}01139\ \ \ \ \ \ \ \ \ is\_string\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01139}01139\ \ \ \ \ \ \ \ \ is\_string\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01140}01140\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01141}01141\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01142}01142\ }
@@ -1459,14 +1459,14 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01455}01455\ }
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01456}01456\ \ \ \ \ basename\ =\ filename}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01457}01457\ \ \ \ \ i\ =\ len\_trim(basename)}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01458}01458\ \ \ \ \ found\_period\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01458}01458\ \ \ \ \ found\_period\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01459}01459\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ ((i\ >\ 0)\ .and.\ (.not.\ found\_period))}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01460}01460\ \ \ \ \ \ \ \ \textcolor{comment}{!\ Fortran\ .and.\ does\ not\ short-\/circuit,\ so\ we\ can't\ do\ the}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01461}01461\ \ \ \ \ \ \ \ \textcolor{comment}{!\ obvious\ do\ while\ ((i\ >\ 0)\ .and.\ (basename(i:i)\ /=\ "{}."{})),}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01462}01462\ \ \ \ \ \ \ \ \textcolor{comment}{!\ instead\ we\ have\ to\ use\ this\ hack\ with\ the\ found\_period}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01463}01463\ \ \ \ \ \ \ \ \textcolor{comment}{!\ logical\ variable.}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01464}01464\ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (basename(i:i)\ ==\ \textcolor{stringliteral}{"{}."{}})\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01465}01465\ \ \ \ \ \ \ \ \ \ \ found\_period\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01465}01465\ \ \ \ \ \ \ \ \ \ \ found\_period\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01466}01466\ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01467}01467\ \ \ \ \ \ \ \ \ \ \ i\ =\ i\ -\/\ 1}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01468}01468\ \textcolor{keywordflow}{\ \ \ \ \ \ \ end\ if}}
@@ -1583,7 +1583,7 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01579}01579\ \ \ \ \ \textcolor{keyword}{allocate}(\textcolor{keyword}{data}(1,0))}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01580}01580\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_aa871934a2e528c6b844a9ba1a761a317}{open\_file\_read}}(filename,\ unit)}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01581}01581\ }
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01582}01582\ \ \ \ \ eof\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01582}01582\ \ \ \ \ eof\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01583}01583\ \ \ \ \ row\ =\ 1}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01584}01584\ \ \ \ \ col\ =\ 1}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01585}01585\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (.not.\ eof)}
@@ -1737,8 +1737,8 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01733}01733\ \ \ \ \ \textcolor{keywordtype}{integer}\ ::\ ios}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01734}01734\ \ \ \ \ \textcolor{keywordtype}{character(len=1)}\ ::\ read\_char}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01735}01735\ }
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01736}01736\ \ \ \ \ eol\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01737}01737\ \ \ \ \ eof\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01736}01736\ \ \ \ \ eol\ =\ .false.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01737}01737\ \ \ \ \ eof\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01738}01738\ \ \ \ \ char\ =\ \textcolor{stringliteral}{"{}\ "{}}\ \textcolor{comment}{!\ shut\ up\ uninitialized\ variable\ warnings}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01739}01739\ \ \ \ \ read\_char\ =\ \textcolor{stringliteral}{"{}"{}}\ \textcolor{comment}{!\ needed\ for\ pgf95\ for\ reading\ blank\ lines}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01740}01740\ \ \ \ \ \textcolor{keyword}{read}(unit=unit,\ fmt=\textcolor{stringliteral}{'(a)'},\ advance=\textcolor{stringliteral}{'no'},\ \textcolor{keyword}{end}=100,\ eor=110,\ \&}
@@ -1752,10 +1752,10 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01748}01748\ \ \ \ \ char\ =\ read\_char}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01749}01749\ \ \ \ \ \textcolor{keywordflow}{goto}\ 120}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01750}01750\ }
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01751}01751\ 100\ eof\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.\ \textcolor{comment}{!\ goto\ here\ if\ end-\/of-\/file\ was\ encountered\ immediately}}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01751}01751\ 100\ eof\ =\ .true.\ \textcolor{comment}{!\ goto\ here\ if\ end-\/of-\/file\ was\ encountered\ immediately}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01752}01752\ \ \ \ \ \textcolor{keywordflow}{goto}\ 120}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01753}01753\ }
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01754}01754\ 110\ eol\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.\ \textcolor{comment}{!\ goto\ here\ if\ end-\/of-\/record,\ meaning\ end-\/of-\/line}}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01754}01754\ 110\ eol\ =\ .true.\ \textcolor{comment}{!\ goto\ here\ if\ end-\/of-\/record,\ meaning\ end-\/of-\/line}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01755}01755\ }
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01756}01756\ 120\ \textcolor{keywordflow}{return}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01757}01757\ }
@@ -1820,13 +1820,13 @@
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01816}01816\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{intent(in)}\ ::\ start\_string}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01817}01817\ }
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01818}01818\ \ \ \ \ \textcolor{keywordflow}{if}\ (len(string)\ <\ len(start\_string))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01819}01819\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a1f9b38953a4476e513e34cb8e8a50688}{starts\_with}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01819}01819\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a1f9b38953a4476e513e34cb8e8a50688}{starts\_with}}\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01820}01820\ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01821}01821\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01822}01822\ \ \ \ \ \textcolor{keywordflow}{if}\ (string(1:len(start\_string))\ ==\ start\_string)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01823}01823\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a1f9b38953a4476e513e34cb8e8a50688}{starts\_with}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1a08f175a5505a10b9ed657defeb050e4b}{true}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01823}01823\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a1f9b38953a4476e513e34cb8e8a50688}{starts\_with}}\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01824}01824\ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01825}01825\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a1f9b38953a4476e513e34cb8e8a50688}{starts\_with}}\ =\ .\mbox{\hyperlink{camp__common_8h_af6a258d8f3ee5206d682d799316314b1ae9de385ef6fe9bf3360d1038396b884c}{false}}.}
+\DoxyCodeLine{\Hypertarget{util_8_f90_source_l01825}01825\ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a1f9b38953a4476e513e34cb8e8a50688}{starts\_with}}\ =\ .false.}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01826}01826\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01827}01827\ }
 \DoxyCodeLine{\Hypertarget{util_8_f90_source_l01828}01828\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__util_a1f9b38953a4476e513e34cb8e8a50688}{starts\_with}}}
