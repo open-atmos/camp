@@ -41,7 +41,6 @@
 !! |--------------|---------|-----------------------------------------------|
 !! | SUNDIALS     | custom  | camp/cvode-3.4-alpha.tar.gz                   |
 !! | SuiteSparse  | 5.1.0   | http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-5.1.0.tar.gz |
-!! | GSL          |         | https://www.gnu.org/software/gsl/             |
 !! | json-fortran | 6.1.0   | https://github.com/jacobwilliams/json-fortran/archive/6.1.0.tar.gz |
 !!
 !! The SUNDIALS library must be built with the `ENABLE_KLU` flag set to `ON`

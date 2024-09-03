@@ -68,17 +68,6 @@ static void print_jacobian(SUNMatrix M);
 static void print_derivative(N_Vector deriv);
 bool is_anything_going_on_here(SolverData *sd, realtype t_initial,
                                realtype t_final);
-#ifdef CAMP_USE_GSL
-double gsl_f(double x, void *param);
-typedef struct {
-  int ind_var;              // independent variable index
-  int dep_var;              // dependent variable index
-  realtype t;               // current model time (s)
-  N_Vector y;               // dependent variable array
-  N_Vector deriv;           // time derivative vector f(t,y)
-  SolverData *solver_data;  // solver data
-} GSLParam;
-#endif
 #endif
 
 #endif
