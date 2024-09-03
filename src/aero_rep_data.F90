@@ -508,24 +508,40 @@ contains
 
     integer(kind=i_kind) :: num_instances, i_instance, i_phase
 
-    num_instances = this%num_phase_instances(phase_name, &
-                         is_at_surface = .true.)
+    if (present(is_at_surface)) then
+      if (is_at_surface) then
+        num_instances = this%num_phase_instances(phase_name, &
+                 is_at_surface = .true.)
+      else
+        num_instances = this%num_phase_instances(phase_name, &
+                 is_at_surface = .false.)
+      end if
+    else
+      num_instances = this%num_phase_instances(phase_name)
+    end if
+
     allocate(phase_ids(num_instances))
     if (present(is_at_surface)) then
       if (is_at_surface) then
         i_instance = 1
+        num_instances = 0
         do i_phase = 1, size(this%aero_phase)
           if (this%aero_phase(i_phase)%val%name().eq. phase_name .and. &
               this%aero_phase_is_at_surface(i_phase)) then
+            num_instances = this%num_phase_instances(phase_name, &
+                     is_at_surface = .true.)
             phase_ids(i_instance) = i_phase
             i_instance = i_instance + 1
           end if
         end do
       else
         i_instance = 1
+        num_instances = 0
         do i_phase = 1, size(this%aero_phase)
           if (this%aero_phase(i_phase)%val%name().eq. phase_name .and. &
               .not. this%aero_phase_is_at_surface(i_phase)) then
+            num_instances = this%num_phase_instances(phase_name, &
+                     is_at_surface = .false.)
             phase_ids(i_instance) = i_phase
             i_instance = i_instance + 1
           end if
@@ -533,8 +549,10 @@ contains
       end if
     else
       i_instance = 1
+      num_instances = 0
       do i_phase = 1, size(this%aero_phase)
         if (this%aero_phase(i_phase)%val%name().eq.phase_name) then
+          num_instances = this%num_phase_instances(phase_name)
           phase_ids(i_instance) = i_phase
           i_instance = i_instance + 1
         end if

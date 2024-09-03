@@ -346,7 +346,7 @@ contains
 
       model_conc(0,:) = true_conc(0,:)
 
-      ! Update the aerosol representation (single partile only)
+      ! Update the aerosol representation (single particle only)
       if (scenario.eq.1) then
         call number_update%set_number__n_m3(1, number_conc)
         call camp_core%update_data(number_update)
@@ -476,7 +476,7 @@ contains
 
       ! Analyze the results
       !
-      ! The particle radius changes as ethanol condenses/evaporates, so an
+      ! The particle radius changes as ethanol condenses/evaporates, so 
       ! an exact solution is not calculated. The tolerances on the comparison
       ! with "true" values are higher to account for this.
       do i_time = 1, NUM_TIME_STEP
