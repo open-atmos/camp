@@ -1,5 +1,0 @@
-<map id="camp_srand_gsl" name="camp_srand_gsl">
-<area shape="rect" id="Node000001" title="Initialize the random number generator with the given seed." alt="" coords="216,5,332,31"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__rand.html#a90d79e868de55c0438ab39ab7c4dcf76" title="Initializes the random number generator to the state defined by the given seed plus offset...." alt="" coords="5,5,168,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,21,168,21,168,16,200,16"/>
-</map>

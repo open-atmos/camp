@@ -7,7 +7,7 @@
 \DoxyCodeLine{\Hypertarget{_dockerfile_source_l00004}00004\ \ \ \ \ \&\&\ dnf\ -\/y\ install\ \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_source_l00005}00005\ \ \ \ \ \ \ \ \ gcc-\/gfortran\ \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_source_l00006}00006\ \ \ \ \ \ \ \ \ gcc-\/c++\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00007}00007\ \ \ \ \ \ \ \ \ gsl-\/devel\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00007}00007\ \ \ \ \ \ \ \ \ make\ \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_source_l00008}00008\ \ \ \ \ \ \ \ \ metis-\/devel\ \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_source_l00009}00009\ \ \ \ \ \ \ \ \ lapack-\/devel\ \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_source_l00010}00010\ \ \ \ \ \ \ \ \ openblas-\/devel\ \(\backslash\)}
@@ -66,10 +66,9 @@
 \DoxyCodeLine{\Hypertarget{_dockerfile_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_C\_FLAGS\_DEBUG="{}-\/pg"{}\ \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_Fortran\_FLAGS\_DEBUG="{}-\/pg"{}\ \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_MODULE\_LINKER\_FLAGS="{}-\/pg"{}\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ ENABLE\_GSL:BOOL=TRUE\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ /camp\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00068}00068\ \ \ \ \ \&\&\ make\ install}
-\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00069}00069\ }
-\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00070}00070\ WORKDIR\ /build}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ /camp\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00067}00067\ \ \ \ \ \&\&\ make\ install}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00069}00069\ WORKDIR\ /build}
 
 \end{DoxyCode}

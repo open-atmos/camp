@@ -1,6 +1,4 @@
 <map id="camp_rand::camp_random" name="camp_rand::camp_random">
 <area shape="rect" id="Node000001" title="Returns a random number between 0 and 1." alt="" coords="5,29,179,55"/>
-<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="60,30,54,21,58,11,71,5,92,3,115,5,127,12,124,16,113,10,92,8,72,10,62,15,59,20,65,27"/>
-<area shape="rect" id="Node000002" href="$rand__gsl_8c.html#abd204acb91a0adebb638deae62396379" title="Generate a uniform random number in ." alt="" coords="227,29,336,55"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,40,211,40,211,45,179,45"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="63,30,57,21,60,11,72,5,92,3,113,5,124,12,121,16,111,10,92,8,74,10,64,15,62,20,67,28"/>
 </map>

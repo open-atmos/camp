@@ -72,19 +72,8 @@
 \DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00068}\mbox{\hyperlink{camp__solver_8h_a99ec22cbccaf8d6c6ab6a30f27474cfa}{00068}}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{camp__solver_8h_a99ec22cbccaf8d6c6ab6a30f27474cfa}{print\_derivative}}(N\_Vector\ deriv);}
 \DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00069}00069\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{camp__solver_8h_a51bc2a16028d4c72dd39669c31f6fc17}{is\_anything\_going\_on\_here}}(\mbox{\hyperlink{struct_solver_data}{SolverData}}\ *sd,\ realtype\ t\_initial,}
 \DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ realtype\ t\_final);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00071}00071\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_GSL}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00072}00072\ \textcolor{keywordtype}{double}\ gsl\_f(\textcolor{keywordtype}{double}\ x,\ \textcolor{keywordtype}{void}\ *param);}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00073}00073\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\{}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00074}00074\ \ \ \textcolor{keywordtype}{int}\ ind\_var;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ independent\ variable\ index}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00075}00075\ \ \ \textcolor{keywordtype}{int}\ dep\_var;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ dependent\ variable\ index}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00076}00076\ \ \ realtype\ t;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ current\ model\ time\ (s)}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00077}00077\ \ \ N\_Vector\ y;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ dependent\ variable\ array}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00078}00078\ \ \ N\_Vector\ deriv;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ time\ derivative\ vector\ f(t,y)}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00079}00079\ \ \ \mbox{\hyperlink{struct_solver_data}{SolverData}}\ *solver\_data;\ \ \textcolor{comment}{//\ solver\ data}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00080}00080\ \}\ GSLParam;}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00081}00081\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00082}00082\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00083}00083\ }
-\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00084}00084\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00071}00071\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{camp__solver_8h_source_l00073}00073\ \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

@@ -43,14 +43,6 @@ integer(kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea4
 \item 
 integer, parameter \mbox{\hyperlink{namespacecamp__rand_a5114dab7a95ed6892f3b745ed4f6305d}{camp\+\_\+uuid\+\_\+len}} = 36
 \begin{DoxyCompactList}\small\item\em Length of a UUID string. \end{DoxyCompactList}\item 
-integer, parameter \mbox{\hyperlink{namespacecamp__rand_a9a4c4d38959ee17ef78d086dacb27808}{camp\+\_\+rand\+\_\+gsl\+\_\+success}} = 0
-\begin{DoxyCompactList}\small\item\em Result code indicating successful completion. \end{DoxyCompactList}\item 
-integer, parameter \mbox{\hyperlink{namespacecamp__rand_a58d88e6213ec230b2c8ff9b274337eda}{camp\+\_\+rand\+\_\+gsl\+\_\+init\+\_\+fail}} = 1
-\begin{DoxyCompactList}\small\item\em Result code indicating initialization failure. \end{DoxyCompactList}\item 
-integer, parameter \mbox{\hyperlink{namespacecamp__rand_af7602a6c71a449ebcec1b2d63481d9f1}{camp\+\_\+rand\+\_\+gsl\+\_\+not\+\_\+init}} = 2
-\begin{DoxyCompactList}\small\item\em Result code indicating the generator was not initialized when it should have been. \end{DoxyCompactList}\item 
-integer, parameter \mbox{\hyperlink{namespacecamp__rand_a72a5ddc7d711cc3345c3e49c127da02d}{camp\+\_\+rand\+\_\+gsl\+\_\+already\+\_\+init}} = 3
-\begin{DoxyCompactList}\small\item\em Result code indicating the generator was already initialized when an initialization was attempted. \end{DoxyCompactList}\item 
 integer, private \mbox{\hyperlink{namespacecamp__rand_aa2faf6c17ce9681e2d85009cd8876616}{next\+\_\+id}} = 100
 \begin{DoxyCompactList}\small\item\em Next sequential id. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -71,16 +63,8 @@ Cleanup the random number generator.
 
 
 
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00121}{121}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
+Definition at line \mbox{\hyperlink{rand_8_f90_source_l00061}{61}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
 
-Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=349pt]{namespacecamp__rand_a67fe9351306f38d3024e6aea4220e3c8_cgraph}
-\end{center}
-\end{figure}
 \Hypertarget{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce}\label{namespacecamp__rand_a6e5ae3dc848f4f5cf5a1e4bf674ed0ce} 
 \index{camp\_rand@{camp\_rand}!camp\_rand\_int@{camp\_rand\_int}}
 \index{camp\_rand\_int@{camp\_rand\_int}!camp\_rand@{camp\_rand}}
@@ -98,7 +82,7 @@ Returns a random integer between 1 and n.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00175}{175}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
+Definition at line \mbox{\hyperlink{rand_8_f90_source_l00079}{79}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -128,14 +112,14 @@ Returns a random number between 0 and 1.
 
 
 
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00141}{141}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
+Definition at line \mbox{\hyperlink{rand_8_f90_source_l00067}{67}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=328pt]{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc_cgraph}
+\includegraphics[width=210pt]{namespacecamp__rand_aff7aed70c1739a48a1a771e6fd9f97bc_cgraph}
 \end{center}
 \end{figure}
 Here is the caller graph for this function\+:
@@ -165,7 +149,7 @@ Initializes the random number generator to the state defined by the given seed p
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00069}{69}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
+Definition at line \mbox{\hyperlink{rand_8_f90_source_l00028}{28}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -190,7 +174,7 @@ The generated id
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00644}{644}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
+Definition at line \mbox{\hyperlink{rand_8_f90_source_l00434}{434}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -225,7 +209,7 @@ Round val to {\ttfamily floor(val)} or {\ttfamily ceiling(val)} with probability
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00217}{217}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
+Definition at line \mbox{\hyperlink{rand_8_f90_source_l00096}{96}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -264,7 +248,7 @@ For better methods, see L. Devroye, "{}\+Non-\/\+Uniform Random Variate  Generat
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00322}{322}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
+Definition at line \mbox{\hyperlink{rand_8_f90_source_l00173}{173}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -294,7 +278,7 @@ Generate a random hexadecimal character.
 
 
 
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00583}{583}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
+Definition at line \mbox{\hyperlink{rand_8_f90_source_l00373}{373}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -331,7 +315,7 @@ Generates a normally distributed random number with the given mean and standard 
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00410}{410}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
+Definition at line \mbox{\hyperlink{rand_8_f90_source_l00230}{230}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -370,7 +354,7 @@ Generates a vector of normally distributed random numbers with the given means a
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00469}{469}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
+Definition at line \mbox{\hyperlink{rand_8_f90_source_l00259}{259}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -412,7 +396,7 @@ For other reasonable methods see L. Devroye, "{}\+Non-\/\+Uniform Random  Variat
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00255}{255}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
+Definition at line \mbox{\hyperlink{rand_8_f90_source_l00134}{134}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -447,7 +431,7 @@ That is, return a number k = 1,...,n such that prob(k) = pdf(k) / sum(pdf). Uses
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00492}{492}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
+Definition at line \mbox{\hyperlink{rand_8_f90_source_l00282}{282}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -482,7 +466,7 @@ That is, return a number k = 1,...,n such that prob(k) = pdf(k) / sum(pdf). Uses
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00526}{526}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
+Definition at line \mbox{\hyperlink{rand_8_f90_source_l00316}{316}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -521,7 +505,7 @@ Use n\+\_\+samp samples. Each discrete entry is sampled with a PDF given by vec\
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00560}{560}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
+Definition at line \mbox{\hyperlink{rand_8_f90_source_l00350}{350}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -548,7 +532,7 @@ See \href{http://en.wikipedia.org/wiki/Universally_Unique_Identifier}{\texttt{ h
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00602}{602}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
+Definition at line \mbox{\hyperlink{rand_8_f90_source_l00392}{392}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -561,62 +545,6 @@ Here is the call graph for this function\+:
 
 
 \doxysubsection{Variable Documentation}
-\Hypertarget{namespacecamp__rand_a72a5ddc7d711cc3345c3e49c127da02d}\label{namespacecamp__rand_a72a5ddc7d711cc3345c3e49c127da02d} 
-\index{camp\_rand@{camp\_rand}!camp\_rand\_gsl\_already\_init@{camp\_rand\_gsl\_already\_init}}
-\index{camp\_rand\_gsl\_already\_init@{camp\_rand\_gsl\_already\_init}!camp\_rand@{camp\_rand}}
-\doxysubsubsection{\texorpdfstring{camp\_rand\_gsl\_already\_init}{camp\_rand\_gsl\_already\_init}}
-{\footnotesize\ttfamily integer, parameter camp\+\_\+rand\+::camp\+\_\+rand\+\_\+gsl\+\_\+already\+\_\+init = 3}
-
-
-
-Result code indicating the generator was already initialized when an initialization was attempted. 
-
-
-
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00030}{30}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
-
-\Hypertarget{namespacecamp__rand_a58d88e6213ec230b2c8ff9b274337eda}\label{namespacecamp__rand_a58d88e6213ec230b2c8ff9b274337eda} 
-\index{camp\_rand@{camp\_rand}!camp\_rand\_gsl\_init\_fail@{camp\_rand\_gsl\_init\_fail}}
-\index{camp\_rand\_gsl\_init\_fail@{camp\_rand\_gsl\_init\_fail}!camp\_rand@{camp\_rand}}
-\doxysubsubsection{\texorpdfstring{camp\_rand\_gsl\_init\_fail}{camp\_rand\_gsl\_init\_fail}}
-{\footnotesize\ttfamily integer, parameter camp\+\_\+rand\+::camp\+\_\+rand\+\_\+gsl\+\_\+init\+\_\+fail = 1}
-
-
-
-Result code indicating initialization failure. 
-
-
-
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00024}{24}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
-
-\Hypertarget{namespacecamp__rand_af7602a6c71a449ebcec1b2d63481d9f1}\label{namespacecamp__rand_af7602a6c71a449ebcec1b2d63481d9f1} 
-\index{camp\_rand@{camp\_rand}!camp\_rand\_gsl\_not\_init@{camp\_rand\_gsl\_not\_init}}
-\index{camp\_rand\_gsl\_not\_init@{camp\_rand\_gsl\_not\_init}!camp\_rand@{camp\_rand}}
-\doxysubsubsection{\texorpdfstring{camp\_rand\_gsl\_not\_init}{camp\_rand\_gsl\_not\_init}}
-{\footnotesize\ttfamily integer, parameter camp\+\_\+rand\+::camp\+\_\+rand\+\_\+gsl\+\_\+not\+\_\+init = 2}
-
-
-
-Result code indicating the generator was not initialized when it should have been. 
-
-
-
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00027}{27}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
-
-\Hypertarget{namespacecamp__rand_a9a4c4d38959ee17ef78d086dacb27808}\label{namespacecamp__rand_a9a4c4d38959ee17ef78d086dacb27808} 
-\index{camp\_rand@{camp\_rand}!camp\_rand\_gsl\_success@{camp\_rand\_gsl\_success}}
-\index{camp\_rand\_gsl\_success@{camp\_rand\_gsl\_success}!camp\_rand@{camp\_rand}}
-\doxysubsubsection{\texorpdfstring{camp\_rand\_gsl\_success}{camp\_rand\_gsl\_success}}
-{\footnotesize\ttfamily integer, parameter camp\+\_\+rand\+::camp\+\_\+rand\+\_\+gsl\+\_\+success = 0}
-
-
-
-Result code indicating successful completion. 
-
-
-
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00022}{22}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
-
 \Hypertarget{namespacecamp__rand_a5114dab7a95ed6892f3b745ed4f6305d}\label{namespacecamp__rand_a5114dab7a95ed6892f3b745ed4f6305d} 
 \index{camp\_rand@{camp\_rand}!camp\_uuid\_len@{camp\_uuid\_len}}
 \index{camp\_uuid\_len@{camp\_uuid\_len}!camp\_rand@{camp\_rand}}
@@ -629,7 +557,7 @@ Length of a UUID string.
 
 
 
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00019}{19}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
+Definition at line \mbox{\hyperlink{rand_8_f90_source_l00016}{16}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
 
 \Hypertarget{namespacecamp__rand_aa2faf6c17ce9681e2d85009cd8876616}\label{namespacecamp__rand_aa2faf6c17ce9681e2d85009cd8876616} 
 \index{camp\_rand@{camp\_rand}!next\_id@{next\_id}}
@@ -643,5 +571,5 @@ Next sequential id.
 
 
 
-Definition at line \mbox{\hyperlink{rand_8_f90_source_l00033}{33}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
+Definition at line \mbox{\hyperlink{rand_8_f90_source_l00019}{19}} of file \mbox{\hyperlink{rand_8_f90_source}{rand.\+F90}}.
 
