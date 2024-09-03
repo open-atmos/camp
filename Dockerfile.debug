@@ -4,6 +4,7 @@ RUN dnf -y update \
     && dnf -y install \
         gcc-gfortran \
         gcc-c++ \
+        make \
         metis-devel \
         lapack-devel \
         openblas-devel \
