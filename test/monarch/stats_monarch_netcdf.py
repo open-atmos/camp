@@ -122,12 +122,13 @@ def get_error(day):
 def get_errors():
     folder_path = "/gpfs/scratch/bsc32/bsc032815/a5hl/nmmb-monarch/ARCHIVE/000"
     folders = sorted(os.listdir(folder_path))
-    folder="2016073112"
+    folder="2016072712"
     #for folder in folders:
+    print("folder:",folder)
     error = get_error(folder)
     print("folder:",folder,"error:", error)
 
 get_errors()
 #a591 vs a5hl (gpu20days vs cpu20days)
-errors=[0.29,0.18,0.05,1,22,0.56,1.14,0.91,1.44,0.95,2.07] #todo fix runtimewarning
-days = [i for i in range(1, len(errors))]
+#errors=[0.29,0.18,0.05,1,22,0.56,1.14,0.91,1.44,0.95,2.07] #this is old_exps #todo fix runtimewarning
+#days = [i for i in range(1, len(errors))]
