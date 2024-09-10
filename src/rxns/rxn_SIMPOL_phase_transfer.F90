@@ -420,6 +420,10 @@ contains
     ! Check the sizes of the data arrays
     tmp_size = PHASE_INT_LOC_(i_aero_id - 1) + 1 + &
                2*NUM_AERO_PHASE_JAC_ELEM_(i_aero_id - 1) - 1
+    print *, "PHASE_INT_LOC_", PHASE_INT_LOC_(i_aero_id - 1)
+    print *, "NUM_AERO_PHASE_JAC_ELEM_", NUM_AERO_PHASE_JAC_ELEM_(i_aero_id - 1)
+    print *, "tmp_size", tmp_size
+    print *, "size condensed data int",size(this%condensed_data_int)
     call assert_msg(625802519, size(this%condensed_data_int) .eq. tmp_size, &
                     "int array size mismatch"//error_msg)
     tmp_size = PHASE_REAL_LOC_(i_aero_id - 1) + &
