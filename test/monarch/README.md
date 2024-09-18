@@ -1,11 +1,26 @@
-CAMP GPU : Instructions for [CTE-POWER](https://www.bsc.es/user-support/power.php) cluster
+CAMP GPU : Instructions for Marenostrum cluster
 ======
 
-Run `run.sh `for developing the GPU test.
+*If you previously run another branch, run `compile.sh `.*
+
+Run `compile.sh ` and `run.sh ` for developing the GPU test.
 
 We recommend to modify the file `TestMonarch.py` for testing
-the GPU version. It includes multiple configuration variables, 
-such as number of cells, case, MPI processes, etc.
+the GPU version. It includes multiple configuration variables, such as number of cells, case, MPI processes, etc.
+
+The intended behaviour of `TestMonarch.py` is to compare the CPU and GPU versions. It runs both versions, saving the output concentrations and execution times, and using that data to calculate the accuracy error and speedup. 
+
+# Re-use simulation data
+
+You can set:
+
+`conf.is_import = True`
+
+To read previous experiments data. This is useful to develop the python interface, since it does not need to run the CPU or GPU case.
+
+`conf.is_import_base = True`
+
+To read just the base case data. This is useful to develop the GPU version since it avoids the execution of the CPU case.
 
 # Profiling CPU
 
@@ -49,7 +64,7 @@ daylight and night, where the chemical reactions change.
 Where x may be `CPU One-cell` for CPU execution and
 `GPU BDF` for GPU execution.
 
-## Using a profiling tool
+## Adding a profiling tool
 
 You can add a profiling tool in a similar way than
 it is implemented for the GPU profiling.

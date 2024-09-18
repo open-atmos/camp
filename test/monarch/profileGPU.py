@@ -12,7 +12,7 @@ def all_timesteps():
   conf.mpiProcessesCaseBase = 1
   conf.cells = [10000]
   conf.timeSteps = 1
-  conf.profileCuda = "nsight"
+  conf.profileCuda = "ncu"
   conf.caseBase = "GPU BDF"
   run_main(conf)
 

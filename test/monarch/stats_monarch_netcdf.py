@@ -68,7 +68,6 @@ def get_error(day):
     file1 = src_path + file1_path_header + "out/stats.csv"
     file2 = src_path + file2_path_header + "out/stats.csv"
     speedup = calculate_speedup(file1, file2)
-    #print("Speedup:", speedup)
 
     file1 = src_path + file1_path_header + "MONARCH_d01_"+day+".nc"
     file2 = src_path + file2_path_header + "MONARCH_d01_"+day+".nc"
@@ -108,7 +107,6 @@ def get_error(day):
     print(worst_variables)
     #print("Config:",file1_path_header,"vs",file2_path_header)
     #print(f"Highest NRMSE[%]: {highest_nrmse:.2f}")
-    #print("Speedup:", speedup)
     plot_nrmse = False
     if plot_nrmse:
         plt.figure()
@@ -117,7 +115,7 @@ def get_error(day):
         plt.xticks(range(len(variable_names)), variable_names, rotation=90)
         plt.title("Species with highest NRMSE for MONARCH-CAMP") #4 GPUs 480 time-steps
         plt.show()
-    return highest_nrmse
+    return highest_nrmse,speedup
 
 def get_errors():
     folder_path = "/gpfs/scratch/bsc32/bsc032815/a5hl/nmmb-monarch/ARCHIVE/000"
@@ -125,8 +123,8 @@ def get_errors():
     folder="2016072712"
     #for folder in folders:
     print("folder:",folder)
-    error = get_error(folder)
-    print("folder:",folder,"error:", error)
+    error,speedup = get_error(folder)
+    print("folder:",folder,"error:", error,"speedup:",speedup)
 
 get_errors()
 #a591 vs a5hl (gpu20days vs cpu20days)
