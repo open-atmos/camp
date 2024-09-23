@@ -941,7 +941,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get the number of instances of a specified aerosol phase.
-  function num_phase_instances(this, phase_name, is_at_surface)
+  function num_phase_instances(this, phase_name, num_is_at_surface)
 
     !> Number of instances of the aerosol phase
     integer(kind=i_kind) :: num_phase_instances
@@ -950,12 +950,12 @@ contains
     !> Aerosol phase name
     character(len=*), intent(in) :: phase_name
     !> Indicates if aerosol phase is at the surface of particle
-    logical, intent(in), optional :: is_at_surface
+    logical, intent(in), optional :: num_is_at_surface
 
     integer(kind=i_kind) :: i_phase
 
-    if (present(is_at_surface)) then
-      if (is_at_surface) then
+    if (present(num_is_at_surface)) then
+      if (num_is_at_surface) then
         num_phase_instances = 0
         do i_phase = 1, size(this%aero_phase)
           if (this%aero_phase(i_phase)%val%name().eq.phase_name .and. &

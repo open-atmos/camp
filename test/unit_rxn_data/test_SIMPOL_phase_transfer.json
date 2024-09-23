@@ -73,6 +73,13 @@
                                "aqueous aerosol"
                     ],
                     "covers": "none"
+            },
+            {
+                    "name": "two layer",
+                    "phases": [
+                               "aqueous aerosol"
+                    ],
+                    "covers": "one layer"
             }
        ]
   },
