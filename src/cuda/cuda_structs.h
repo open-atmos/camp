@@ -96,7 +96,6 @@ typedef struct {
   double
       *state;  // Concentrations of species, including constant and non-constant
                // values. Used as input and output of the ODE solver
-  int n_per_cell_state_var;  // number of state variables per cell
   // Derivatives = Concentrations of non-constant species. The ODE solver works
   // around this array, using auxiliary arrays of the same size.
   int *map_state_deriv;  // Map of state variables to derivatives
@@ -121,9 +120,10 @@ typedef struct {
                      // parameters that are affected by environemntal variables
   int *rxn_env_idx;  // Mapping of the environment-dependent data and reaction
                      // types
-  int n_rxn_env_data;        // Number of reaction environmental parameters
   double *production_rates;  // Production rates of species
   double *loss_rates;        // Loss rates of species
+  int n_per_cell_state_var;  // number of state variables per cell
+  int n_rxn_env_data;        // Number of reaction environmental parameters
   int n_rxn;                 // Number of reactions
   double init_time_step;     // Initial time step (s)
   // Parameters for the ODE solver, extracted from CVODE library
