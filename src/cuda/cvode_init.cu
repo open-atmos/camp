@@ -174,6 +174,7 @@ void init_solve_gpu(SolverData *sd) {
 
   cudaMalloc((void **)&mGPU->dcv_y, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->yout, nrows * sizeof(double));
+  cudaMalloc((void **)&mGPU->dsavedJ, nnz * sizeof(double));
 
   // Parameters for the ODE solver, extracted from CVODE library
   mGPU->cv_reltol = cv_mem->cv_reltol;
@@ -188,6 +189,19 @@ void init_solve_gpu(SolverData *sd) {
   for (int i = 0; i <= BDF_Q_MAX; i++)
     cudaMalloc(&dzn[i], nrows * sizeof(double));
   cudaMalloc(&mGPU->dzn, (BDF_Q_MAX + 1) * sizeof(double *));
+
+  cudaMemcpyAsync(mGPU->cv_Vabstol, N_VGetArrayPointer(cv_mem->cv_Vabstol),
+                  n_dep_var * sizeof(double), cudaMemcpyHostToDevice, stream);
+  for (int i = 0; i < n_cells; i++) {
+    cudaMemcpyAsync(mGPU->cv_l + i * L_MAX, cv_mem->cv_l,
+                    L_MAX * sizeof(double), cudaMemcpyHostToDevice, stream);
+    cudaMemcpyAsync(mGPU->cv_tau + i * (L_MAX + 1), cv_mem->cv_tau,
+                    (L_MAX + 1) * sizeof(double), cudaMemcpyHostToDevice,
+                    stream);
+    cudaMemcpyAsync(mGPU->cv_tq + i * (NUM_TESTS + 1), cv_mem->cv_tq,
+                    (NUM_TESTS + 1) * sizeof(double), cudaMemcpyHostToDevice,
+                    stream);
+  }
   for (int i = 2; i <= BDF_Q_MAX; i++)
     cudaMemsetAsync(dzn[i], 0, nrows * sizeof(double), stream);
   cudaMemcpy(
@@ -199,27 +213,6 @@ void init_solve_gpu(SolverData *sd) {
   }
   free(dzn);
 
-  cudaMalloc((void **)&mGPU->dsavedJ, nnz * sizeof(double));
-
-  double *cv_Vabstol = N_VGetArrayPointer(cv_mem->cv_Vabstol);
-  cudaMemcpyAsync(mGPU->cv_Vabstol, cv_Vabstol, n_dep_var * sizeof(double),
-                  cudaMemcpyHostToDevice, stream);
-
-  mCPU->mdvCPU.cv_saved_tq5 = 0.;
-  mCPU->mdvCPU.cv_acnrm = 0.;
-  mCPU->mdvCPU.cv_eta = 1.;
-  mCPU->mdvCPU.cv_hmin = 0;
-  for (int i = 0; i < n_cells; i++) {
-    cudaMemcpyAsync(mGPU->cv_l + i * L_MAX, cv_mem->cv_l,
-                    L_MAX * sizeof(double), cudaMemcpyHostToDevice, stream);
-    cudaMemcpyAsync(mGPU->cv_tau + i * (L_MAX + 1), cv_mem->cv_tau,
-                    (L_MAX + 1) * sizeof(double), cudaMemcpyHostToDevice,
-                    stream);
-    cudaMemcpyAsync(mGPU->cv_tq + i * (NUM_TESTS + 1), cv_mem->cv_tq,
-                    (NUM_TESTS + 1) * sizeof(double), cudaMemcpyHostToDevice,
-                    stream);
-  }
-
   // Parameters for the BCG solver
   cudaMalloc((void **)&mGPU->dx, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->ddiag, nrows * sizeof(double));
@@ -230,7 +223,12 @@ void init_solve_gpu(SolverData *sd) {
   cudaMalloc((void **)&mGPU->dt, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->ds, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->dy, nrows * sizeof(double));
-  // GPU parameters
+
+  // Variables for each cell (struct ModelDataVariable)
+  mCPU->mdvCPU.cv_saved_tq5 = 0.;
+  mCPU->mdvCPU.cv_acnrm = 0.;
+  mCPU->mdvCPU.cv_eta = 1.;
+  mCPU->mdvCPU.cv_hmin = 0;
   cudaMalloc((void **)&mGPU->sCells, sizeof(ModelDataVariable));
   cudaMemcpyAsync(&mGPU->sCells, &mCPU->mdvCPU, sizeof(ModelDataVariable),
                   cudaMemcpyHostToDevice, stream);
