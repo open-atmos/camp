@@ -3,8 +3,14 @@
  * SPDX-License-Identifier: MIT
  */
 
+// Equivalent to CPU solver using CAMP and CVODE library. Both components has
+// comments around the equivalent code. The function names are equivalent to the
+// CVODE library by adding the prefix "cudaDevice", e.g. cvNewtonIteration ->
+// cudaDeviceNewtonIteration
+
 #include "cvode_cuda.h"
 
+// Auxiliar methods
 __device__ double dSUNRpowerR(double base, double exponent) {
   if (base <= ZERO) return (ZERO);
 #ifdef EQUALLIZE_CPU_CUDA_POW
@@ -25,6 +31,8 @@ __device__ double dSUNRpowerI(double base, int exponent) {
   return (prod);
 }
 
+// Solving chemical reactions for a specific time (f(y,t) and Jacobian(y,t))
+
 #ifdef IS_DEBUG_MODE_removeAtomic
 
 __device__ void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv,
@@ -42,7 +50,7 @@ __device__ void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
                                        double jac_contribution) {
   if (prod_or_loss == JACOBIAN_PRODUCTION) {
     jac.production_partials[elem_id] += jac_contribution;
-  } else {  //(prod_or_loss == JACOBIAN_LOSS){
+  } else {
     jac.loss_partials[elem_id] += jac_contribution;
   }
 }
@@ -52,10 +60,9 @@ __device__ void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
 __device__ void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv,
                                               unsigned int spec_id,
                                               double rate_contribution) {
-  // WARNING: Atomicadd is not desirable,
-  // because it leads to small deviations in the results,
-  // even when scaling the number of data computed in the GPU
-  // It would be desirable to remove it
+  // WARNING: Atomicadd is not desirable, because it leads to small deviations
+  // in the results, even when scaling the number of data computed in the GPU It
+  // would be desirable to remove it
   if (rate_contribution > 0.0) {
     atomicAdd_block(&(time_deriv.production_rates[spec_id]), rate_contribution);
   } else {
@@ -68,7 +75,7 @@ __device__ void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
                                        double jac_contribution) {
   if (prod_or_loss == JACOBIAN_PRODUCTION) {
     atomicAdd_block(&(jac.production_partials[elem_id]), jac_contribution);
-  } else {  //(prod_or_loss == JACOBIAN_LOSS){
+  } else {
     atomicAdd_block(&(jac.loss_partials[elem_id]), jac_contribution);
   }
 }
@@ -390,6 +397,8 @@ __device__ void rxn_gpu_photolysis_calc_jac_contrib(
   }
 }
 
+// Auxiliar functions for the GPU ODE solver
+
 __device__ void cudaDevicemin(double *g_odata, double in,
                               volatile double *sdata, int n_shr_empty) {
   unsigned int tid = threadIdx.x;
@@ -529,6 +538,7 @@ __device__ void cudaDeviceJacCopy(int *diA, double *Ax, double *Bx) {
   }
 }
 
+// Functions equivalent to CAMP CPU solver
 __device__ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md,
                                                        ModelDataVariable *sc,
                                                        double *y) {
@@ -909,7 +919,7 @@ __device__ int cudaDeviceJac(ModelDataGPU *md, ModelDataVariable *sc) {
 #endif
   return 0;
 }
-
+// Functions equivalent to CVODE CPU solver (BDF method)
 __device__ int cudaDevicelinsolsetup(ModelDataGPU *md, ModelDataVariable *sc,
                                      int convfail) {
   extern __shared__ int flag_shr[];
@@ -941,6 +951,10 @@ __device__ int cudaDevicelinsolsetup(ModelDataGPU *md, ModelDataVariable *sc,
   return 0;
 }
 
+// Biconjugate Gradient algorithm, more details explained in C. Guzman et. al. -
+// "Optimized thread-block arrangement in a GPU implementation of a linear
+// solver for atmospheric chemistry mechanisms", Computer Physics Communications
+// 2024
 __device__ void solveBcgCudaDeviceCVODE(ModelDataGPU *md,
                                         ModelDataVariable *sc) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -1577,6 +1591,7 @@ __device__ int cudaDevicecvEwtSetSV(ModelDataGPU *md, ModelDataVariable *sc,
   return (0);
 }
 
+// Most external loop (equivalent to main CVode function from CVODE library)
 __device__ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -1588,6 +1603,7 @@ __device__ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
   sc->cv_qwait = sc->cv_L;
   sc->cv_etamax = ETAMX1;
   sc->cv_next_h = 0.;
+  // Solver initilization
   retval = cudaDevicecvEwtSetSV(md, sc, md->dewt);
   if (retval != 0) {
     return (CV_ILL_INPUT);
@@ -1611,6 +1627,7 @@ __device__ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
   sc->nstlj = 0;
   sc->cv_nst = 0;
   sc->cv_nstlp = 0;
+  // Most external loop of solving
   for (;;) {
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if (threadIdx.x == 0) sc->countercvStep++;
@@ -1645,6 +1662,7 @@ __device__ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
       if (i == 0) printf("ERROR: cv_tolsf > 1\n");
       return CV_TOO_MUCH_ACC;
     }
+    // Solve
     kflag2 = cudaDevicecvStep(md, sc);
     if (kflag2 != CV_SUCCESS) {
       md->yout[i] = md->dzn[0][i];
@@ -1664,7 +1682,7 @@ __global__ void cudaGlobalCVode(double t_initial, ModelDataGPU md_object) {
   extern __shared__ int flag_shr[];
   ModelDataVariable sc_object = *md->sCells;
   ModelDataVariable *sc = &sc_object;
-  sc->cv_tn = t_initial;
+  sc->cv_tn = t_initial;  // Set initial value of "t" to each cell data
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   // Update input
   md->dzn[0][i] = md->state[md->map_state_deriv[threadIdx.x] +
@@ -1698,7 +1716,7 @@ __global__ void cudaGlobalCVode(double t_initial, ModelDataGPU md_object) {
 #endif
 }
 
-static int nextPowerOfTwoCVODE2(int v) {
+static int nextPowerOfTwo(int v) {
   v--;
   v |= v >> 1;
   v |= v >> 2;
@@ -1711,8 +1729,8 @@ static int nextPowerOfTwoCVODE2(int v) {
 
 void cvodeRun(double t_initial, ModelDataGPU *mGPU, int blocks,
               int threads_block, cudaStream_t stream) {
-  int n_shr_memory = nextPowerOfTwoCVODE2(threads_block);
+  int n_shr_memory = nextPowerOfTwo(threads_block);
   mGPU->n_shr_empty = n_shr_memory - threads_block;
   cudaGlobalCVode<<<blocks, threads_block, n_shr_memory * sizeof(double),
-                    stream>>>(t_initial, *mGPU);
+                    stream>>>(t_initial, *mGPU);  // Call to GPU
 }

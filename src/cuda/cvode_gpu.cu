@@ -24,11 +24,12 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   ModelDataGPU *mGPU = sd->mGPU;
   ModelData *md = &(sd->model_data);
   int n_cells = md->n_cells_gpu;
-  cudaStream_t stream;
+  cudaStream_t stream;  // Variable for asynchronous execution of the GPU
   cudaStreamCreate(&stream);
 #ifdef PROFILE_GPU_SOLVING
-  cudaEventRecord(sd->startGPU, stream);
+  cudaEventRecord(sd->startGPU, stream);  // Start GPU timer
 #endif
+  // Transfer data to GPU
   cudaMemcpyAsync(mGPU->rxn_env_data, md->rxn_env_data,
                   md->n_rxn_env_data * n_cells * sizeof(double),
                   cudaMemcpyHostToDevice, stream);
@@ -37,29 +38,34 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
                   cudaMemcpyHostToDevice, stream);
   mGPU->init_time_step = sd->init_time_step;
   mGPU->tout = t_final;
+  // Solve
   cvodeRun(t_initial, mGPU, n_cells, md->n_per_cell_dep_var,
            stream);  // Asynchronous
 #ifdef PROFILE_GPU_SOLVING
-  cudaEventRecord(sd->stopGPU, stream);
+  cudaEventRecord(sd->stopGPU, stream);  // End GPU timer
 #endif
-  // CPU
+  // CPU solver, equivalent to the CPU solver for the option CPU-Only
 #ifdef TRACE_CPUGPU
-  nvtxRangePushA("CPU Code");
+  nvtxRangePushA("CPU Code");  // Start of profiling trace
 #endif
 #ifdef PROFILE_GPU_SOLVING
   double startTime = MPI_Wtime();
 #endif
+  // Set data
   n_cells = md->n_cells;
   int flag = CV_SUCCESS;
   int n_state_var = md->n_per_cell_state_var;
+  // Get pointers to the first value of the arrays
   double *state = md->total_state;
   double *env = md->total_env;
   double *rxn_env_data = md->rxn_env_data;
+  // Set pointers of arrays to the next cell after the GPU cells
   md->total_state += n_state_var * md->n_cells_gpu;
   md->total_env += CAMP_NUM_ENV_PARAM_ * md->n_cells_gpu;
   md->rxn_env_data += md->n_rxn_env_data * md->n_cells_gpu;
   for (int i_cell = md->n_cells_gpu; i_cell < n_cells; i_cell++) {
     int i_dep_var = 0;
+    // Update input
     for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
       if (sd->model_data.var_type[i_spec] == CHEM_SPEC_VARIABLE) {
         NV_Ith_S(sd->y, i_dep_var++) = md->total_state[i_spec] > TINY
@@ -67,6 +73,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
                                            : TINY;
       }
     }
+    // Reset Jacobian
     if (sd->is_reset_jac == 1) {
       N_VConst(0.0, md->J_state);
       N_VConst(0.0, md->J_deriv);
@@ -75,16 +82,18 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
         (SM_DATA_S(md->J_solver))[i] = 0.0;
       }
     }
+    // Reset solver
     flag = CVodeReInit(sd->cvode_mem, t_initial, sd->y);
     flag = SUNKLUReInit(sd->ls, sd->J, SM_NNZ_S(sd->J), SUNKLU_REINIT_PARTIAL);
     flag = CVodeSetInitStep(sd->cvode_mem, sd->init_time_step);
     realtype t_rt = (realtype)t_initial;
-    flag = 0;
+    // Solve
     flag = CVode(sd->cvode_mem, t_final, sd->y, &t_rt, CV_NORMAL);
     if (flag < 0) {
       flag = CAMP_SOLVER_FAIL;
       break;
     }
+    // Get output
     i_dep_var = 0;
     for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
       if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
@@ -94,10 +103,12 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
         i_dep_var++;
       }
     }
+    // Update pointers for next iteration
     md->total_state += n_state_var;
     md->total_env += CAMP_NUM_ENV_PARAM_;
     md->rxn_env_data += md->n_rxn_env_data;
   }
+  // Reset pointers
   md->total_state = state;
   md->total_env = env;
   md->rxn_env_data = rxn_env_data;
@@ -105,11 +116,14 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   double timeCPU = (MPI_Wtime() - startTime);
 #endif
 #ifdef TRACE_CPUGPU
-  nvtxRangePop();
+  nvtxRangePop();  // End of profiling trace
 #endif
 #ifdef PROFILE_GPU_SOLVING
-  cudaEventRecord(sd->startGPUSync, stream);
+  cudaEventRecord(sd->startGPUSync,
+                  stream);  // Start synchronization timer between CPU and GPU
 #endif
+  // Transfer data back to CPU. This is located after the CPU solver and not
+  // before because it blocks CPU execution until finish the GPU kernel
   cudaMemcpyAsync(md->total_state, mGPU->state,
                   md->n_per_cell_state_var * md->n_cells_gpu * sizeof(double),
                   cudaMemcpyDeviceToHost, stream);
@@ -117,10 +131,13 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   cudaMemcpyAsync(sd->flags, mGPU->flags, md->n_cells_gpu * sizeof(int),
                   cudaMemcpyDeviceToHost, stream);
 #endif
+  // Ensure synchronization
   cudaStreamSynchronize(stream);
   cudaDeviceSynchronize();
 #ifdef PROFILE_GPU_SOLVING
-  cudaEventRecord(sd->stopGPUSync, stream);
+  // Balance load between CPU and GPU, changing the number of cells solved on
+  // both architectures. Method explained on C. Guzman PhD Thesis - Chapter 6
+  cudaEventRecord(sd->stopGPUSync, stream);  // End synchronization timer
   cudaEventSynchronize(sd->stopGPUSync);
   cudaEventSynchronize(sd->stopGPU);
   float msDevice = 0.0;
@@ -154,40 +171,22 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   if (sd->load_gpu < 1) sd->load_gpu = 1;
   sd->acc_load_balance += load_balance;
   sd->iters_load_balance++;
-  md->n_cells_gpu =
-      md->n_cells * sd->load_gpu / 100;  //  Automatic load balance
-  // int rank;
-  // MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  // if(rank==0)printf("load_gpu: %.2lf%% Load balance: %.2lf%% short_gpu %d
-  // increase_in_load_gpu
-  // %.2lf\n",sd->last_load_gpu,load_balance,sd->last_short_gpu,increase_in_load_gpu);
-  // if(rank==0)printf("remaining_load_balance %.2lf diff_load_balance %.2lf "
-  //"increase_in_load_gpu
-  //%.2lf\n",remaining_load_balance,diff_load_balance,increase_in_load_gpu);
-  // if(rank==0)printf("timeGPU %lf timeCPU %lf\n",timeGPU,timeCPU);
-  // if(rank==0)printf("Load balance: %.2lf%% load_gpu
-  // %.2lf%%\n",sd->last_load_balance,sd->last_load_gpu);
+  md->n_cells_gpu = md->n_cells * sd->load_gpu / 100;  // Automatic load balance
+#ifdef DEBUG_LOAD_BALANCE
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  if (rank == 0)printf("load_gpu: %.2lf%% Load balance: %.2lf%% short_gpu %d
+  increase_in_load_gpu %.2lf\n",sd->last_load_gpu,load_balance,sd->last_short_gpu,increase_in_load_gpu);
+#endif
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-  printf("DEBUG: CAMP_PROFILE_DEVICE_FUNCTIONS\n");
   cudaMemcpyAsync(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable),
                   cudaMemcpyDeviceToHost, stream);
 #endif
 #endif
-  cudaStreamDestroy(stream);
+  cudaStreamDestroy(stream); // reset stream for next iteration
 #ifdef DEBUG_SOLVER_FAILURES
   cudaMemcpyAsync(sd->flags, mGPU->flags, md->n_cells_gpu * sizeof(int),
                   cudaMemcpyDeviceToHost, stream);
-  /*
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if(rank==0){
-    for(int i=0;i<md->n_cells_gpu;i++){
-      if(sd->flags[i]!=0){
-        //printf("Solver failure in cell %d\n",i);
-      }
-    }
-  }
-  */
 #endif
   return (CV_SUCCESS);
 }
