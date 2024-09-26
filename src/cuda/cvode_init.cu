@@ -59,6 +59,8 @@ void init_solve_gpu(SolverData *sd) {
   int n_state_var = md->n_per_cell_state_var;
   // Parameters from CAMP chemical model
   int nnz = md->n_per_cell_solver_jac_elem * n_cells;
+  Jacobian *jac = &sd->jac;
+  JacobianGPU *jacgpu = &(mGPU->jac);
 
   HANDLE_ERROR(cudaMalloc((void **)&mGPU->state,
                           n_state_var * n_cells * sizeof(double)));
@@ -69,6 +71,12 @@ void init_solve_gpu(SolverData *sd) {
   cudaMalloc((void **)&mGPU->diA, (n_dep_var + 1) * sizeof(int));
   cudaMalloc((void **)&mGPU->J_solver, nnz * sizeof(double));
   cudaMalloc((void **)&mGPU->J_state, n_dep_var * n_cells * sizeof(double));
+  cudaMalloc((void **)&mGPU->J_deriv, n_dep_var * n_cells * sizeof(double));
+  cudaMalloc((void **)&jacgpu->num_elem, 1 * sizeof(jacgpu->num_elem));
+  cudaMalloc((void **)&(jacgpu->production_partials),
+             jac->num_elem * n_cells * sizeof(double));
+  cudaMalloc((void **)&(jacgpu->loss_partials),
+             jac->num_elem * n_cells * sizeof(double));
 
   int *map_state_derivCPU = (int *)malloc(
       n_dep_var * sizeof(int));  // Auxiliar variable to copy to GPU
@@ -83,22 +91,32 @@ void init_solve_gpu(SolverData *sd) {
              cudaMemcpyHostToDevice);  // Synchronous due to the
                                        // free(map_state_derivCPU)
   free(map_state_derivCPU);
-  cudaMemset(mGPU->J_solver, 0, nnz * sizeof(double));
-  cudaMemset(N_VGetArrayPointer(md->J_state), 0,
-             n_dep_var * n_cells * sizeof(double));
-
-  // Translate from datatype of CVODE library (sunindextype int64) to int
-  CVDlsMem cvdls_mem = (CVDlsMem)cv_mem->cv_lmem;
+  CVDlsMem cvdls_mem =
+      (CVDlsMem)
+          cv_mem->cv_lmem;  // Auxiliar variable to translate from datatype of
+                            // CVODE library (sunindextype int64) to int
   SUNMatrix J = cvdls_mem->A;
   int *jA = (int *)malloc(sizeof(int) * md->n_per_cell_solver_jac_elem);
   int *iA = (int *)malloc(sizeof(int) * (n_dep_var + 1));
   for (int i = 0; i < md->n_per_cell_solver_jac_elem; i++)
-    jA[i] = SM_INDEXVALS_S(J)[i];
-  for (int i = 0; i <= n_dep_var; i++) iA[i] = SM_INDEXPTRS_S(J)[i];
+    jA[i] = SM_INDEXVALS_S(J)[i];  // int64 to int
+  for (int i = 0; i <= n_dep_var; i++)
+    iA[i] = SM_INDEXPTRS_S(J)[i];  // int64 to int
   cudaMemcpyAsync(mGPU->djA, jA, md->n_per_cell_solver_jac_elem * sizeof(int),
                   cudaMemcpyHostToDevice, stream);
   cudaMemcpyAsync(mGPU->diA, iA, (n_dep_var + 1) * sizeof(int),
                   cudaMemcpyHostToDevice, stream);
+  cudaMemset(N_VGetArrayPointer(md->J_deriv), 0,
+             n_dep_var * n_cells * sizeof(double));
+  cudaMemset(mGPU->J_solver, 0, nnz * sizeof(double));
+  cudaMemset(N_VGetArrayPointer(md->J_state), 0,
+             n_dep_var * n_cells * sizeof(double));
+  cudaMemcpyAsync(jacgpu->num_elem, &jac->num_elem,
+                  1 * sizeof(jacgpu->num_elem), cudaMemcpyHostToDevice, stream);
+  cudaMemset(jacgpu->production_partials, 0,
+             jac->num_elem * n_cells * sizeof(double));
+  cudaMemset(jacgpu->loss_partials, 0,
+             jac->num_elem * n_cells * sizeof(double));
 
   sd->last_load_balance = 0;
   sd->last_load_gpu = 100;
@@ -130,25 +148,11 @@ void init_solve_gpu(SolverData *sd) {
   cudaEventCreate(&sd->startGPUSync);
   cudaEventCreate(&sd->stopGPUSync);
 #endif
-  cudaMalloc((void **)&mGPU->J_deriv, n_dep_var * n_cells * sizeof(double));
-  double *J_deriv = N_VGetArrayPointer(md->J_deriv);
-  cudaMemset(mGPU->J_deriv, 0, n_dep_var * n_cells * sizeof(double));
   cudaMalloc((void **)&mGPU->jac_map,
              sizeof(JacMap) * md->n_per_cell_solver_jac_elem);
   cudaMemcpyAsync(mGPU->jac_map, md->jac_map,
                   sizeof(JacMap) * md->n_per_cell_solver_jac_elem,
                   cudaMemcpyHostToDevice, stream);
-  Jacobian *jac = &sd->jac;
-  JacobianGPU *jacgpu = &(mGPU->jac);
-  cudaMalloc((void **)&jacgpu->num_elem, 1 * sizeof(jacgpu->num_elem));
-  cudaMemcpyAsync(jacgpu->num_elem, &jac->num_elem,
-                  1 * sizeof(jacgpu->num_elem), cudaMemcpyHostToDevice, stream);
-  int num_elem = jac->num_elem * n_cells;
-  cudaMalloc((void **)&(jacgpu->production_partials),
-             num_elem * sizeof(double));
-  cudaMalloc((void **)&(jacgpu->loss_partials), num_elem * sizeof(double));
-  cudaMemset(jacgpu->production_partials, 0, num_elem * sizeof(double));
-  cudaMemset(jacgpu->loss_partials, 0, num_elem * sizeof(double));
   cudaMalloc((void **)&mGPU->rxn_int,
              (md->n_rxn_int_param + md->n_rxn) * sizeof(int));
   cudaMalloc((void **)&mGPU->rxn_double,
