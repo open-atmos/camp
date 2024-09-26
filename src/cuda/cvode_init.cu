@@ -58,6 +58,38 @@ void init_solve_gpu(SolverData *sd) {
   int nrows = n_dep_var * n_cells;
   int n_state_var = md->n_per_cell_state_var;
 
+  // Set GPU device (e.g. a node can have more than one GPU available) for each
+  // CPU thread (i.e. MPI rank)
+  int nGPUs;
+  HANDLE_ERROR(cudaGetDeviceCount(&nGPUs));
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  if (rank == 0) {
+    printf("Cells to GPU: %.lf%%\n", sd->load_gpu);
+  }
+  int iDevice = rank % nGPUs;
+  double startTime = MPI_Wtime();
+  cudaSetDevice(iDevice);
+  if (rank == 0) printf("Time INIT: %f\n", MPI_Wtime() - startTime);
+
+  // Parameters on the CPU related to the GPU solver
+  sd->last_load_balance = 0;
+  sd->last_load_gpu = 100;
+  sd->acc_load_balance = 0;
+  sd->iters_load_balance = 0;
+  sd->last_short_gpu = 0;
+#ifdef PROFILE_SOLVING
+  cudaEventCreate(&sd->startGPU);
+  cudaEventCreate(&sd->stopGPU);
+  cudaEventCreate(&sd->startGPUSync);
+  cudaEventCreate(&sd->stopGPUSync);
+#endif
+#ifdef DEBUG_SOLVER_FAILURES
+  cudaMalloc((void **)&mGPU->flags, n_cells);
+  malloc(mCPU->flags, n_cells);
+  int *aux_solver_id = (int *)malloc(nnz * sizeof(int));
+#endif
+
   // Parameters from CAMP chemical model
   int nnz = md->n_per_cell_solver_jac_elem * n_cells;
   Jacobian *jac = &sd->jac;
@@ -88,6 +120,10 @@ void init_solve_gpu(SolverData *sd) {
   cudaMalloc((void **)&mGPU->rxn_env_data,
              md->n_rxn_env_data * n_cells * sizeof(double));
   cudaMalloc((void **)&mGPU->rxn_env_idx, (md->n_rxn + 1) * sizeof(int));
+  cudaMalloc((void **)&(mGPU->production_rates),
+             n_dep_var * n_cells * sizeof(mGPU->production_rates));
+  cudaMalloc((void **)&(mGPU->loss_rates),
+             n_dep_var * n_cells * sizeof(mGPU->loss_rates));
 
   int *map_state_derivCPU = (int *)malloc(
       n_dep_var * sizeof(int));  // Auxiliar variable to copy to GPU
@@ -134,12 +170,12 @@ void init_solve_gpu(SolverData *sd) {
   cudaMemcpyAsync(mGPU->rxn_int, md->rxn_int_data,
                   (md->n_rxn_int_param + md->n_rxn) * sizeof(int),
                   cudaMemcpyHostToDevice, stream);
-  cudaMemcpyAsync(mGPU->rxn_double, md->rxn_float_data,
-                  md->n_rxn_float_param * sizeof(double),
-                  cudaMemcpyHostToDevice, stream);
   cudaMemcpyAsync(mGPU->rxn_int_indices, md->rxn_int_indices,
                   (md->n_rxn + 1) * sizeof(int), cudaMemcpyHostToDevice,
                   stream);
+  cudaMemcpyAsync(mGPU->rxn_double, md->rxn_float_data,
+                  md->n_rxn_float_param * sizeof(double),
+                  cudaMemcpyHostToDevice, stream);
   cudaMemcpyAsync(mGPU->rxn_float_indices, md->rxn_float_indices,
                   (md->n_rxn + 1) * sizeof(int), cudaMemcpyHostToDevice,
                   stream);
@@ -149,34 +185,7 @@ void init_solve_gpu(SolverData *sd) {
 
   mGPU->n_per_cell_state_var = md->n_per_cell_state_var;
   mGPU->n_rxn_env_data = md->n_rxn_env_data;
-
-  sd->last_load_balance = 0;
-  sd->last_load_gpu = 100;
-  sd->acc_load_balance = 0;
-  sd->iters_load_balance = 0;
-  sd->last_short_gpu = 0;
-  int nGPUs;
-  HANDLE_ERROR(cudaGetDeviceCount(&nGPUs));
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank == 0) {
-    printf("Cells to GPU: %.lf%%\n", sd->load_gpu);
-  }
-  int iDevice = rank % nGPUs;
-  double startTime = MPI_Wtime();
-  cudaSetDevice(iDevice);
-  if (rank == 0) printf("Time INIT: %f\n", MPI_Wtime() - startTime);
   mGPU->n_rxn = md->n_rxn;
-  cudaMalloc((void **)&(mGPU->production_rates),
-             n_dep_var * n_cells * sizeof(mGPU->production_rates));
-  cudaMalloc((void **)&(mGPU->loss_rates),
-             n_dep_var * n_cells * sizeof(mGPU->loss_rates));
-#ifdef PROFILE_SOLVING
-  cudaEventCreate(&sd->startGPU);
-  cudaEventCreate(&sd->stopGPU);
-  cudaEventCreate(&sd->startGPUSync);
-  cudaEventCreate(&sd->stopGPUSync);
-#endif
 
   // Parameters for the ODE solver, extracted from CVODE library
   mGPU->cv_reltol = cv_mem->cv_reltol;
@@ -323,11 +332,6 @@ void init_solve_gpu(SolverData *sd) {
   free(jac_solver_id);
   free(aux_solver_id);
   free(jac_map);
-#ifdef DEBUG_SOLVER_FAILURES
-  cudaMalloc((void **)&mGPU->flags, n_cells);
-  malloc(mCPU->flags, n_cells);
-  int *aux_solver_id = (int *)malloc(nnz * sizeof(int));
-#endif
 }
 
 void free_gpu_cu(SolverData *sd) {
@@ -374,10 +378,10 @@ void free_gpu_cu(SolverData *sd) {
   cudaFree(mGPU->dzn);
   cudaFree(mGPU->dewt);
   cudaFree(mGPU->dsavedJ);
-#ifdef DEBUG_SOLVER_FAILURES
-  cudaFree(mGPU->flags);
-#endif
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   cudaFree(mGPU->mdvo);
+#endif
+#ifdef DEBUG_SOLVER_FAILURES
+  cudaFree(mGPU->flags);
 #endif
 }

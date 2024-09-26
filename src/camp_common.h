@@ -242,14 +242,6 @@ typedef struct {
 #ifdef PROFILE_SOLVING
   double timeCVode;  // Time of the ODE solver function, used to compare CPU and
                      // GPU solver
-#ifdef CAMP_USE_GPU
-  // Metrics for measuring time execution of the GPU solver, such as solving and
-  // synchronization time
-  cudaEvent_t startGPU;
-  cudaEvent_t stopGPU;
-  cudaEvent_t startGPUSync;
-  cudaEvent_t stopGPUSync;
-#endif
 #endif
 #endif
 
@@ -264,6 +256,14 @@ typedef struct {
   int iters_load_balance;   // Iterations to calculate the average load balance
   int last_short_gpu;  // Flag to indicate that solving on the GPU takes less
                        // time than the CPU
+#ifdef PROFILE_SOLVING
+  // Metrics for measuring time execution of the GPU solver, such as solving and
+  // synchronization time
+  cudaEvent_t startGPU;
+  cudaEvent_t stopGPU;
+  cudaEvent_t startGPUSync;
+  cudaEvent_t stopGPUSync;
+#endif
 #ifdef DEBUG_SOLVER_FAILURES
   int *flags;  // Error flags from solving failures
 #endif
