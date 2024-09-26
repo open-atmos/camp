@@ -166,15 +166,6 @@ void init_solve_gpu(SolverData *sd) {
                   cudaMemcpyHostToDevice, stream);
   cudaMemcpyAsync(mGPU->diA, iA, (n_dep_var + 1) * sizeof(int),
                   cudaMemcpyHostToDevice, stream);
-  cudaMalloc((void **)&mGPU->dftemp, deriv_size);
-  cudaMalloc((void **)&mGPU->dewt, nrows * sizeof(double));
-  cudaMalloc((void **)&mGPU->cv_acor, nrows * sizeof(double));
-  cudaMalloc((void **)&mGPU->dtempv, nrows * sizeof(double));
-  cudaMalloc((void **)&mGPU->dtempv1, nrows * sizeof(double));
-
-  cudaMalloc((void **)&mGPU->dcv_y, nrows * sizeof(double));
-  cudaMalloc((void **)&mGPU->yout, nrows * sizeof(double));
-  cudaMalloc((void **)&mGPU->dsavedJ, nnz * sizeof(double));
 
   // Parameters for the ODE solver, extracted from CVODE library
   mGPU->cv_reltol = cv_mem->cv_reltol;
@@ -185,6 +176,14 @@ void init_solve_gpu(SolverData *sd) {
   cudaMalloc((void **)&mGPU->cv_last_yn, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->cv_acor, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->cv_acor_init, nrows * sizeof(double));
+  cudaMalloc((void **)&mGPU->yout, nrows * sizeof(double));
+  cudaMalloc((void **)&mGPU->dcv_y, nrows * sizeof(double));
+  cudaMalloc((void **)&mGPU->dtempv, nrows * sizeof(double));
+  cudaMalloc((void **)&mGPU->dtempv1, nrows * sizeof(double));
+  cudaMalloc((void **)&mGPU->dftemp, deriv_size);
+  cudaMalloc((void **)&mGPU->dewt, nrows * sizeof(double));
+  cudaMalloc((void **)&mGPU->dsavedJ, nnz * sizeof(double));
+
   double **dzn = (double **)malloc((BDF_Q_MAX + 1) * sizeof(double *));
   for (int i = 0; i <= BDF_Q_MAX; i++)
     cudaMalloc(&dzn[i], nrows * sizeof(double));

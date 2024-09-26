@@ -138,18 +138,18 @@ typedef struct {
                     // acor = y_n(m) - y_n(0). On return, this vector is scaled
                     // to give the est. local err.
   double *cv_acor_init;  // Initial guess for acor
-  double **dzn;    // Nordsieck array, of size N x (q+1). zn[j] is a vector of
-                   // length N (j=0,...,q) zn[j] = [1/factorial(j)] * h^j * (jth
-                   // derivative of the interpolating polynomial
-  double *yout;    // Solution vector, yout=y(tout)
-  double *dcv_y;   // Temporary storage vector
-  double *dtempv;  // Temporary storage vector
-  double *dtempv1;  // Temporary storage vector
-  double *dftemp;   // Temporary storage vector
-  double *dewt;     // Error weight vector
-  double *dsavedJ;  // Jacobian from previous step to avoid calculating the
-                    // jacobian again
-  double tout;      // Time (from y'(t)) reached by the solver at the end.
+  double *yout;          // Solution vector, yout=y(tout)
+  double *dcv_y;         // Temporary storage vector
+  double *dtempv;        // Temporary storage vector
+  double *dtempv1;       // Temporary storage vector
+  double *dftemp;        // Temporary storage vector
+  double *dewt;          // Error weight vector
+  double *dsavedJ;       // Jacobian from previous step to avoid calculating the
+                         // jacobian again
+  double tout;           // Time (from y'(t)) reached by the solver at the end.
+  double **dzn;  // Nordsieck array, of size N x (q+1). zn[j] is a vector of
+                 // length N (j=0,...,q) zn[j] = [1/factorial(j)] * h^j * (jth
+                 // derivative of the interpolating polynomial
   // Parameters for the BCG solver
   double *dx;     // Auxiliar vector of concentrations
   double *ddiag;  // Auxiliar vector
