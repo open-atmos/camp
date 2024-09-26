@@ -159,7 +159,7 @@ void aero_phase_get_volume__m3_m3(ModelData *model_data, int aero_phase_idx,
         SPEC_TYPE_(i_spec) == CHEM_SPEC_CONSTANT ||
         SPEC_TYPE_(i_spec) == CHEM_SPEC_PSSA) {
       *volume += state_var[i_spec] / DENSITY_(i_spec);
-      if (jac_elem){
+      if (jac_elem) {
         jac_elem[i_jac] = 1.0 / DENSITY_(i_spec);
         i_jac++;
       }

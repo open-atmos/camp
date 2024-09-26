@@ -29,15 +29,14 @@
 #include <cvode/cvode.h>        /* Protoypes for CVODE fcts., consts.  */
 #include <cvode/cvode_direct.h> /* CVDls interface                     */
 #ifdef CAMP_CUSTOM_CVODE
-#include <cvode/cvode_impl.h>   /* CVodeMem structure                  */
+#include <cvode/cvode_impl.h> /* CVodeMem structure                  */
 #endif
-#include <nvector/nvector_serial.h>  /* Serial N_Vector types, fcts, macros */
-#include <sundials/sundials_math.h>  /* SUNDIALS math function macros       */
+#include <nvector/nvector_serial.h> /* Serial N_Vector types, fcts, macros */
+#include <sundials/sundials_math.h> /* SUNDIALS math function macros       */
+#include <sundials/sundials_nvector.h>
 #include <sundials/sundials_types.h> /* definition of types                 */
 #include <sunlinsol/sunlinsol_klu.h> /* KLU SUNLinearSolver                 */
-#include <sundials/sundials_nvector.h>
 #include <sunmatrix/sunmatrix_sparse.h> /* sparse SUNMatrix                    */
-
 
 #ifdef CAMP_USE_GPU
 #include <cvode/cvode_direct_impl.h>
@@ -67,7 +66,7 @@
 #endif
 
 /* Number of environmental parameters */
-#define CAMP_NUM_ENV_PARAM_ 2 // !!! Must match the value in camp_state.f90 !!!
+#define CAMP_NUM_ENV_PARAM_ 2  // !!! Must match the value in camp_state.f90 !!!
 
 /* boolean definition */
 // CUDA/C++ already has bool definition: Avoid issues disabling it for GPU
@@ -221,17 +220,17 @@ typedef struct {
                               // calculating deriv
   Jacobian jac;               // CAMP Jacobian structure for use in
                               // calculating the Jacobian
-  N_Vector deriv;      // used to calculate the derivative outside the solver
-  SUNMatrix J;         // Jacobian matrix
-  SUNMatrix J_guess;   // Jacobian matrix for improving guesses sent to linear
-                       // solver
-  realtype J_guess_t;  // Last time (t) for which J_guess was calculated
-  int solver_flag;     // Last flag returned by a call to CVode()
+  N_Vector deriv;        // used to calculate the derivative outside the solver
+  SUNMatrix J;           // Jacobian matrix
+  SUNMatrix J_guess;     // Jacobian matrix for improving guesses sent to linear
+                         // solver
+  realtype J_guess_t;    // Last time (t) for which J_guess was calculated
+  int solver_flag;       // Last flag returned by a call to CVode()
   int output_precision;  // Flag indicating whether to output precision loss
   int use_deriv_est;     // Flag indicating whether to use an estimated
                          // derivative in the f() calculations
 #ifdef CAMP_DEBUG
-  int Jac_eval_fails;  // Number of Jacobian evaluation failures
+  int Jac_eval_fails;     // Number of Jacobian evaluation failures
   booleantype debug_out;  // Output debugging information during solving
   booleantype eval_Jac;   // Evalute Jacobian data during solving
   double
@@ -250,7 +249,7 @@ typedef struct {
 #endif
 
 #ifdef CAMP_USE_GPU
-  ModelDataCPU mCPU; //Auxiliar variable to move data between CPU and GPU
+  ModelDataCPU mCPU;  // Auxiliar variable to move data between CPU and GPU
   ModelDataGPU *mGPU;
   double **dzn;
   double last_load_balance;
@@ -259,14 +258,14 @@ typedef struct {
   int iters_load_balance;
   int short_gpu;
 #ifndef DEBUG_SOLVER_FAILURES
-  int* flags; // Error flags to detect solver failures
+  int *flags;  // Error flags to detect solver failures
 #endif
 #endif
   double load_gpu;
   int is_reset_jac;
 
-  void *cvode_mem;       // CVodeMem object
-  ModelData model_data;  // Model data (used during initialization and solving)
+  void *cvode_mem;        // CVodeMem object
+  ModelData model_data;   // Model data (used during initialization and solving)
   double init_time_step;  // Initial time step (s)
   char **spec_names;      // Species names
 } SolverData;

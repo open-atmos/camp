@@ -297,8 +297,8 @@ void rxn_HL_phase_transfer_calc_deriv_contrib(
 
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (1/s)
-    double cond_rate =
-        gas_aerosol_transition_rxn_rate_constant(DIFF_COEFF_, MFP_M_, radius, ALPHA_);
+    double cond_rate = gas_aerosol_transition_rxn_rate_constant(
+        DIFF_COEFF_, MFP_M_, radius, ALPHA_);
 
     // Calculate the evaporation rate constant (1/s)
     double evap_rate = cond_rate / (EQUIL_CONST_);
@@ -384,8 +384,8 @@ void rxn_HL_phase_transfer_calc_jac_contrib(ModelData *model_data, Jacobian jac,
 
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (1/s)
-    double cond_rate =
-        gas_aerosol_transition_rxn_rate_constant(DIFF_COEFF_, MFP_M_, radius, ALPHA_);
+    double cond_rate = gas_aerosol_transition_rxn_rate_constant(
+        DIFF_COEFF_, MFP_M_, radius, ALPHA_);
 
     // Calculate the evaporation rate constant (1/s)
     double evap_rate = cond_rate / (EQUIL_CONST_);
@@ -428,11 +428,12 @@ void rxn_HL_phase_transfer_calc_jac_contrib(ModelData *model_data, Jacobian jac,
     // Calculate d_rate/d_effecive_radius and d_rate/d_number_concentration
     // ( This was replaced with transition-regime rate equation. )
     double d_cond_d_radius =
-        d_gas_aerosol_transition_rxn_rate_constant_d_radius(
-            DIFF_COEFF_, MFP_M_, radius, ALPHA_) * state[GAS_SPEC_];
+        d_gas_aerosol_transition_rxn_rate_constant_d_radius(DIFF_COEFF_, MFP_M_,
+                                                            radius, ALPHA_) *
+        state[GAS_SPEC_];
     double d_evap_d_radius = d_cond_d_radius / state[GAS_SPEC_] /
-                                  (EQUIL_CONST_)*state[AERO_SPEC_(i_phase)] /
-                                  state[AERO_WATER_(i_phase)];
+                             (EQUIL_CONST_)*state[AERO_SPEC_(i_phase)] /
+                             state[AERO_WATER_(i_phase)];
 
     // Loop through Jac elements and update
     for (int i_elem = 0; i_elem < NUM_AERO_PHASE_JAC_ELEM_(i_phase); ++i_elem) {

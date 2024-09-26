@@ -123,14 +123,12 @@ unsigned int jacobian_build_matrix(Jacobian *jac) {
            i_elem, jac->num_elem);
     exit(EXIT_FAILURE);
   }
-  jac->production_partials =
-      (double *)malloc(jac->num_elem * sizeof(double));
+  jac->production_partials = (double *)malloc(jac->num_elem * sizeof(double));
   if (!jac->production_partials) {
     jacobian_free(jac);
     return 0;
   }
-  jac->loss_partials =
-      (double *)malloc(jac->num_elem * sizeof(double));
+  jac->loss_partials = (double *)malloc(jac->num_elem * sizeof(double));
   if (!jac->loss_partials) {
     jacobian_free(jac);
     return 0;
@@ -189,8 +187,7 @@ void jacobian_output(Jacobian jac, double *dest_array) {
 }
 
 void jacobian_add_value(Jacobian jac, unsigned int elem_id,
-                        unsigned int prod_or_loss,
-                        double jac_contribution) {
+                        unsigned int prod_or_loss, double jac_contribution) {
   if (prod_or_loss == JACOBIAN_PRODUCTION)
     jac.production_partials[elem_id] += jac_contribution;
   if (prod_or_loss == JACOBIAN_LOSS)

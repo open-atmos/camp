@@ -12,11 +12,14 @@
 
 // Create a file for saving output concentrations
 void init_export_state();
-// Export output concentrations to calculate accuracy between CPU and GPU versions at checkGPU test
+// Export output concentrations to calculate accuracy between CPU and GPU
+// versions at checkGPU test
 void export_state(SolverData *sd);
-// Join the files created by each MPI process at "export_solver_state" function into a single file.
+// Join the files created by each MPI process at "export_solver_state" function
+// into a single file.
 void join_export_state();
-// Export execution time of GPU and CPU code to calculate speedups at TestMonarch.py
+// Export execution time of GPU and CPU code to calculate speedups at
+// TestMonarch.py
 void export_stats(SolverData *sd);
 
 // file name prefix
@@ -30,13 +33,13 @@ int file_name_prefix = 1;
 
 #ifdef CAMP_DEBUG
 #define CAMP_DEBUG_SPEC_ 0
-#define CAMP_DEBUG_PRINT(x)                                                    \
+#define CAMP_DEBUG_PRINT(x) \
   camp_debug_print(sd->cvode_mem, x, false, 0, __LINE__, __func__)
-#define CAMP_DEBUG_PRINT_INT(x, y)                                             \
+#define CAMP_DEBUG_PRINT_INT(x, y) \
   camp_debug_print(sd->cvode_mem, x, false, y, __LINE__, __func__)
-#define CAMP_DEBUG_PRINT_FULL(x)                                               \
+#define CAMP_DEBUG_PRINT_FULL(x) \
   camp_debug_print(sd->cvode_mem, x, true, 0, __LINE__, __func__)
-#define CAMP_DEBUG_JAC_STRUCT(J, x)                                            \
+#define CAMP_DEBUG_JAC_STRUCT(J, x) \
   camp_debug_print_jac_struct((void *)sd, J, x)
 #define CAMP_DEBUG_JAC(J, x) camp_debug_print_jac((void *)sd, J, x)
 void camp_debug_print(void *cvode_mem, const char *message, bool do_full,

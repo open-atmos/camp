@@ -43,8 +43,8 @@
  * \param jac Jacobian
  */
 void rxn_condensed_phase_photolysis_get_used_jac_elem(int *rxn_int_data,
-                                                     double *rxn_float_data,
-                                                     Jacobian *jac) {
+                                                      double *rxn_float_data,
+                                                      Jacobian *jac) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
 
@@ -86,9 +86,9 @@ void rxn_condensed_phase_photolysis_get_used_jac_elem(int *rxn_int_data,
  * \param rxn_float_data Pointer to the reaction floating-point data
  */
 void rxn_condensed_phase_photolysis_update_ids(ModelData *model_data,
-                                              int *deriv_ids, Jacobian jac,
-                                              int *rxn_int_data,
-                                              double *rxn_float_data) {
+                                               int *deriv_ids, Jacobian jac,
+                                               int *rxn_int_data,
+                                               double *rxn_float_data) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
 
@@ -154,8 +154,10 @@ void rxn_condensed_phase_photolysis_update_ids(ModelData *model_data,
  * \param rxn_env_data Pointer to the environment-dependent data
  * \return Flag indicating whether this is the reaction to update
  */
-bool rxn_condensed_phase_photolysis_update_data(void *update_data, int *rxn_int_data,
-                                double *rxn_float_data, double *rxn_env_data) {
+bool rxn_condensed_phase_photolysis_update_data(void *update_data,
+                                                int *rxn_int_data,
+                                                double *rxn_float_data,
+                                                double *rxn_env_data) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
 
@@ -183,9 +185,9 @@ bool rxn_condensed_phase_photolysis_update_data(void *update_data, int *rxn_int_
  * \param rxn_env_data Pointer to the environment-dependent parameters
  */
 void rxn_condensed_phase_photolysis_update_env_state(ModelData *model_data,
-                                                    int *rxn_int_data,
-                                                    double *rxn_float_data,
-                                                    double *rxn_env_data) {
+                                                     int *rxn_int_data,
+                                                     double *rxn_float_data,
+                                                     double *rxn_env_data) {
   return;
 }
 
@@ -376,7 +378,7 @@ void rxn_condensed_phase_photolysis_calc_jac_contrib(
  * \param rxn_float_data Pointer to the reaction floating-point data
  */
 void rxn_condensed_phase_photolysis_print(int *rxn_int_data,
-                                         double *rxn_float_data) {
+                                          double *rxn_float_data) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
 
@@ -464,7 +466,9 @@ void rxn_condensed_phase_photolysis_print(int *rxn_int_data,
 void *rxn_condensed_phase_photolysis_create_rate_update_data() {
   int *update_data = (int *)malloc(sizeof(int) + sizeof(double));
   if (update_data == NULL) {
-    printf("\n\nERROR allocating space for condensded phase photolysis update data\n\n");
+    printf(
+        "\n\nERROR allocating space for condensded phase photolysis update "
+        "data\n\n");
     exit(1);
   }
   return (void *)update_data;
@@ -476,8 +480,9 @@ void *rxn_condensed_phase_photolysis_create_rate_update_data() {
  * \param photo_id Id of photolysis reactions to update
  * \param base_rate New pre-scaling photolysis rate
  */
-void rxn_condensed_phase_photolysis_set_rate_update_data(void *update_data, int photo_id,
-                                         double base_rate) {
+void rxn_condensed_phase_photolysis_set_rate_update_data(void *update_data,
+                                                         int photo_id,
+                                                         double base_rate) {
   int *new_photo_id = (int *)update_data;
   double *new_base_rate = (double *)&(new_photo_id[1]);
   *new_photo_id = photo_id;

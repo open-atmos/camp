@@ -341,8 +341,7 @@ void sub_model_ZSR_aerosol_water_get_jac_contrib(int *sub_model_int_data,
           // Determine whether to use the minimum RH in the calculation
           double j_aw =
               a_w > JACOB_low_RH_(i_ion_pair) ? a_w : JACOB_low_RH_(i_ion_pair);
-          double d_jaw_d_wg =
-              a_w > JACOB_low_RH_(i_ion_pair) ? d_aw_d_wg : 0.0;
+          double d_jaw_d_wg = a_w > JACOB_low_RH_(i_ion_pair) ? d_aw_d_wg : 0.0;
 
           // Calculate the molality of the pure binary ion pair solution
           molality = JACOB_Y_(i_ion_pair, 0);
@@ -360,13 +359,13 @@ void sub_model_ZSR_aerosol_water_get_jac_contrib(int *sub_model_int_data,
               JACOB_NUM_CATION_(i_ion_pair) / JACOB_CATION_MW_(i_ion_pair) /
               1000.0;  // (umol/m3)
           double d_cation_d_C = 1.0 / JACOB_NUM_CATION_(i_ion_pair) /
-                                     JACOB_CATION_MW_(i_ion_pair) / 1000.0;
+                                JACOB_CATION_MW_(i_ion_pair) / 1000.0;
           double anion =
               state[PHASE_ID_(i_phase) + JACOB_ANION_ID_(i_ion_pair)] /
               JACOB_NUM_ANION_(i_ion_pair) / JACOB_ANION_MW_(i_ion_pair) /
               1000.0;  // (umol/m3)
           double d_anion_d_A = 1.0 / JACOB_NUM_ANION_(i_ion_pair) /
-                                    JACOB_ANION_MW_(i_ion_pair) / 1000.0;
+                               JACOB_ANION_MW_(i_ion_pair) / 1000.0;
 
           // Calculate the smooth-maximum ion pair concentration
           // (see calculate() function for details)

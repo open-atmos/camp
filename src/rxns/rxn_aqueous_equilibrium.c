@@ -276,9 +276,8 @@ void rxn_aqueous_equilibrium_update_env_state(ModelData *model_data,
  * \return reaction rate per mixing ratio of water [M_X/s*kg_H2O/m^3]
  */
 double calc_standard_rate(int *rxn_int_data, double *rxn_float_data,
-                               double *rxn_env_data, bool is_water_partial,
-                               double *rate_forward,
-                               double *rate_reverse) {
+                          double *rxn_env_data, bool is_water_partial,
+                          double *rate_forward, double *rate_reverse) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
 
@@ -351,9 +350,8 @@ void rxn_aqueous_equilibrium_calc_deriv_contrib(
 
     // Get the rate using the standard calculation
     double rate_forward, rate_reverse;
-    double rate =
-        calc_standard_rate(rxn_int_data, rxn_float_data, rxn_env_data, false,
-                           &rate_forward, &rate_reverse);
+    double rate = calc_standard_rate(rxn_int_data, rxn_float_data, rxn_env_data,
+                                     false, &rate_forward, &rate_reverse);
     if (rate == ZERO) {
       i_deriv += NUM_REACT_ + NUM_PROD_;
       continue;

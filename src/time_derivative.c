@@ -16,12 +16,10 @@ int time_derivative_initialize(TimeDerivative *time_deriv,
                                unsigned int num_spec) {
   if (num_spec <= 0) return 0;
 
-  time_deriv->production_rates =
-      (double *)malloc(num_spec * sizeof(double));
+  time_deriv->production_rates = (double *)malloc(num_spec * sizeof(double));
   if (time_deriv->production_rates == NULL) return 0;
 
-  time_deriv->loss_rates =
-      (double *)malloc(num_spec * sizeof(double));
+  time_deriv->loss_rates = (double *)malloc(num_spec * sizeof(double));
   if (time_deriv->loss_rates == NULL) {
     free(time_deriv->production_rates);
     return 0;

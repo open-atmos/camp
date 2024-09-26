@@ -32,8 +32,7 @@
 #define PROD_ID_(x) (int_data[NUM_INT_PROP_ + x] - 1)
 #define DERIV_ID_(x) int_data[NUM_INT_PROP_ + NUM_PROD_ + x]
 #define JAC_ID_(x) int_data[NUM_INT_PROP_ + 1 + 2 * NUM_PROD_ + x]
-#define PHASE_INT_LOC_(x) \
-  (int_data[NUM_INT_PROP_ + 2 + 3 * NUM_PROD_ + x] - 1)
+#define PHASE_INT_LOC_(x) (int_data[NUM_INT_PROP_ + 2 + 3 * NUM_PROD_ + x] - 1)
 #define PHASE_FLOAT_LOC_(x) \
   (int_data[NUM_INT_PROP_ + 2 + 3 * NUM_PROD_ + NUM_AERO_PHASE_ + x] - 1)
 #define AERO_PHASE_ID_(x) (int_data[PHASE_INT_LOC_(x)] - 1)
@@ -53,10 +52,8 @@
  * \param rxn_float_data Pointer to the reaction floating-point data
  * \param jac Jacobian
  */
-void rxn_surface_get_used_jac_elem(ModelData *model_data,
-                                             int *rxn_int_data,
-                                             double *rxn_float_data,
-                                             Jacobian *jac) {
+void rxn_surface_get_used_jac_elem(ModelData *model_data, int *rxn_int_data,
+                                   double *rxn_float_data, Jacobian *jac) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
 
@@ -129,9 +126,8 @@ void rxn_surface_get_used_jac_elem(ModelData *model_data,
  * \param rxn_int_data Pointer to the reaction integer data
  * \param rxn_float_data Pointer to the reaction floating-point data
  */
-void rxn_surface_update_ids(ModelData *model_data, int *deriv_ids,
-                                      Jacobian jac, int *rxn_int_data,
-                                      double *rxn_float_data) {
+void rxn_surface_update_ids(ModelData *model_data, int *deriv_ids, Jacobian jac,
+                            int *rxn_int_data, double *rxn_float_data) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
 
@@ -145,10 +141,12 @@ void rxn_surface_update_ids(ModelData *model_data, int *deriv_ids,
   int i_jac = 0;
   JAC_ID_(i_jac++) = jacobian_get_element_id(jac, REACT_ID_, REACT_ID_);
   for (int i_prod = 0; i_prod < NUM_PROD_; ++i_prod) {
-    JAC_ID_(i_jac++) = jacobian_get_element_id(jac, PROD_ID_(i_prod), REACT_ID_);
+    JAC_ID_(i_jac++) =
+        jacobian_get_element_id(jac, PROD_ID_(i_prod), REACT_ID_);
   }
   for (int i_aero_phase = 0; i_aero_phase < NUM_AERO_PHASE_; ++i_aero_phase) {
-    for (int i_elem = 0; i_elem < NUM_AERO_PHASE_JAC_ELEM_(i_aero_phase); ++i_elem) {
+    for (int i_elem = 0; i_elem < NUM_AERO_PHASE_JAC_ELEM_(i_aero_phase);
+         ++i_elem) {
       if (PHASE_JAC_ID_(i_aero_phase, 0, i_elem) > 0) {
         PHASE_JAC_ID_(i_aero_phase, 0, i_elem) = jacobian_get_element_id(
             jac, REACT_ID_, PHASE_JAC_ID_(i_aero_phase, 0, i_elem));
@@ -156,8 +154,9 @@ void rxn_surface_update_ids(ModelData *model_data, int *deriv_ids,
       for (int i_prod = 0; i_prod < NUM_PROD_; ++i_prod) {
         if (PHASE_JAC_ID_(i_aero_phase, i_prod + 1, i_elem) > 0) {
           PHASE_JAC_ID_(i_aero_phase, i_prod + 1, i_elem) =
-              jacobian_get_element_id(jac, PROD_ID_(i_prod),
-                                      PHASE_JAC_ID_(i_aero_phase, i_prod + 1, i_elem));
+              jacobian_get_element_id(
+                  jac, PROD_ID_(i_prod),
+                  PHASE_JAC_ID_(i_aero_phase, i_prod + 1, i_elem));
         }
       }
     }
@@ -175,10 +174,9 @@ void rxn_surface_update_ids(ModelData *model_data, int *deriv_ids,
  * \param rxn_float_data Pointer to the reaction floating-point data
  * \param rxn_env_data Pointer to the environment-dependent parameters
  */
-void rxn_surface_update_env_state(ModelData *model_data,
-                                            int *rxn_int_data,
-                                            double *rxn_float_data,
-                                            double *rxn_env_data) {
+void rxn_surface_update_env_state(ModelData *model_data, int *rxn_int_data,
+                                  double *rxn_float_data,
+                                  double *rxn_env_data) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
   double *env_data = model_data->grid_cell_env;
@@ -200,9 +198,10 @@ void rxn_surface_update_env_state(ModelData *model_data,
  * \param time_step Current time step being computed (s)
  */
 #ifdef CAMP_USE_SUNDIALS
-void rxn_surface_calc_deriv_contrib(
-    ModelData *model_data, TimeDerivative time_deriv, int *rxn_int_data,
-    double *rxn_float_data, double *rxn_env_data, realtype time_step) {
+void rxn_surface_calc_deriv_contrib(ModelData *model_data,
+                                    TimeDerivative time_deriv,
+                                    int *rxn_int_data, double *rxn_float_data,
+                                    double *rxn_env_data, realtype time_step) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
   double *state = model_data->grid_cell_state;
@@ -232,8 +231,8 @@ void rxn_surface_calc_deriv_contrib(
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (1/s)
     double cond_rate = state[REACT_ID_] * number_conc *
-        gas_aerosol_continuum_rxn_rate_constant(DIFF_COEFF_, MEAN_SPEED_MS_,
-                                                radius, GAMMA_);
+                       gas_aerosol_continuum_rxn_rate_constant(
+                           DIFF_COEFF_, MEAN_SPEED_MS_, radius, GAMMA_);
 
     // Loss of the reactant
     if (DERIV_ID_(0) >= 0) {
@@ -262,10 +261,8 @@ void rxn_surface_calc_deriv_contrib(
  */
 #ifdef CAMP_USE_SUNDIALS
 void rxn_surface_calc_jac_contrib(ModelData *model_data, Jacobian jac,
-                                            int *rxn_int_data,
-                                            double *rxn_float_data,
-                                            double *rxn_env_data,
-                                            realtype time_step) {
+                                  int *rxn_int_data, double *rxn_float_data,
+                                  double *rxn_env_data, realtype time_step) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
   double *state = model_data->grid_cell_state;
@@ -294,27 +291,27 @@ void rxn_surface_calc_jac_contrib(ModelData *model_data, Jacobian jac,
 
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (1/s)
-    double rate_const =
-        gas_aerosol_continuum_rxn_rate_constant(DIFF_COEFF_, MEAN_SPEED_MS_,
-                                                radius, GAMMA_);
+    double rate_const = gas_aerosol_continuum_rxn_rate_constant(
+        DIFF_COEFF_, MEAN_SPEED_MS_, radius, GAMMA_);
     double cond_rate = state[REACT_ID_] * number_conc * rate_const;
 
     // Dependence on the reactant
-    if (JAC_ID_(0) >=0) {
+    if (JAC_ID_(0) >= 0) {
       jacobian_add_value(jac, (unsigned int)JAC_ID_(0), JACOBIAN_LOSS,
                          number_conc * rate_const);
     }
     for (int i_prod = 0; i_prod < NUM_PROD_; ++i_prod) {
       if (JAC_ID_(i_prod + 1) >= 0) {
-        jacobian_add_value(jac, (unsigned int)JAC_ID_(i_prod + 1), JACOBIAN_PRODUCTION,
+        jacobian_add_value(jac, (unsigned int)JAC_ID_(i_prod + 1),
+                           JACOBIAN_PRODUCTION,
                            YIELD_(i_prod) * number_conc * rate_const);
       }
     }
 
     // Calculate d_rate/d_effective_radius and d_rate/d_number_concentration
     double d_rate_d_radius = state[REACT_ID_] * number_conc *
-        d_gas_aerosol_continuum_rxn_rate_constant_d_radius(DIFF_COEFF_, MEAN_SPEED_MS_,
-                                                           radius, GAMMA_);
+                             d_gas_aerosol_continuum_rxn_rate_constant_d_radius(
+                                 DIFF_COEFF_, MEAN_SPEED_MS_, radius, GAMMA_);
     double d_rate_d_number = state[REACT_ID_] * rate_const;
 
     // Loop through aerosol dependencies
@@ -323,13 +320,11 @@ void rxn_surface_calc_jac_contrib(ModelData *model_data, Jacobian jac,
       if (PHASE_JAC_ID_(i_phase, 0, i_elem) > 0) {
         // Dependence on effective radius
         jacobian_add_value(
-            jac, (unsigned int)PHASE_JAC_ID_(i_phase, 0, i_elem),
-            JACOBIAN_LOSS,
+            jac, (unsigned int)PHASE_JAC_ID_(i_phase, 0, i_elem), JACOBIAN_LOSS,
             d_rate_d_radius * EFF_RAD_JAC_ELEM_(i_phase, i_elem));
         // Dependence on number concentration
         jacobian_add_value(
-            jac, (unsigned int)PHASE_JAC_ID_(i_phase, 0, i_elem),
-            JACOBIAN_LOSS,
+            jac, (unsigned int)PHASE_JAC_ID_(i_phase, 0, i_elem), JACOBIAN_LOSS,
             d_rate_d_number * NUM_CONC_JAC_ELEM_(i_phase, i_elem));
       }
       // Product dependencies
@@ -376,9 +371,9 @@ void rxn_surface_print(int *rxn_int_data, double *rxn_float_data) {
   printf("\nreactant derivative id: %d", DERIV_ID_(0));
   printf("\nd_reactant/d_reactant Jacobian id %d", JAC_ID_(0));
   for (int i_prod = 0; i_prod < NUM_PROD_; ++i_prod) {
-    printf("\n  product %d derivative id: %d", i_prod, DERIV_ID_(i_prod+1));
+    printf("\n  product %d derivative id: %d", i_prod, DERIV_ID_(i_prod + 1));
     printf("\n  d_product_%d/d_reactant Jacobian id: %d", i_prod,
-           JAC_ID_(i_prod+1));
+           JAC_ID_(i_prod + 1));
   }
   for (int i_phase = 0; i_phase < NUM_AERO_PHASE_; ++i_phase) {
     printf("\nPhase %d start indices int: %d float: %d", i_phase,
@@ -388,16 +383,16 @@ void rxn_surface_print(int *rxn_int_data, double *rxn_float_data) {
     printf("\n  number of Jacobian elements: %d",
            NUM_AERO_PHASE_JAC_ELEM_(i_phase));
     for (int i_elem = 0; i_elem < NUM_AERO_PHASE_JAC_ELEM_(i_phase); ++i_elem) {
-      printf("\n  - d_reactant/d_phase_species_%d Jacobian id %d",
-             i_elem, PHASE_JAC_ID_(i_phase,0,i_elem));
+      printf("\n  - d_reactant/d_phase_species_%d Jacobian id %d", i_elem,
+             PHASE_JAC_ID_(i_phase, 0, i_elem));
       for (int i_prod = 0; i_prod < NUM_PROD_; ++i_prod) {
-        printf("\n  - d_product_%s/d_phase_species_%d Jacobian id %d",
-               i_prod, i_elem, PHASE_JAC_ID_(i_phase,i_prod+1,i_elem));
+        printf("\n  - d_product_%s/d_phase_species_%d Jacobian id %d", i_prod,
+               i_elem, PHASE_JAC_ID_(i_phase, i_prod + 1, i_elem));
       }
-      printf("\n  - d_radius/d_phase_species_%d = %le", i_elem,
-             i_elem, EFF_RAD_JAC_ELEM_(i_phase,i_elem));
-      printf("\n  - d_number/d_phase_species_%d = %le", i_elem,
-             i_elem, EFF_RAD_JAC_ELEM_(i_phase,i_elem));
+      printf("\n  - d_radius/d_phase_species_%d = %le", i_elem, i_elem,
+             EFF_RAD_JAC_ELEM_(i_phase, i_elem));
+      printf("\n  - d_number/d_phase_species_%d = %le", i_elem, i_elem,
+             EFF_RAD_JAC_ELEM_(i_phase, i_elem));
     }
   }
   printf("\n *** end surface reaction ***\n\n");

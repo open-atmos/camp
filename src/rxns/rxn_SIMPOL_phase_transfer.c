@@ -339,8 +339,8 @@ void rxn_SIMPOL_phase_transfer_calc_deriv_contrib(
 
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (m3/#/s)
-    double cond_rate =
-        gas_aerosol_transition_rxn_rate_constant(DIFF_COEFF_, MFP_M_, radius, ALPHA_);
+    double cond_rate = gas_aerosol_transition_rxn_rate_constant(
+        DIFF_COEFF_, MFP_M_, radius, ALPHA_);
 
     // Calculate the evaporation rate constant (ppm_x*m^3/kg_x/s)
     double evap_rate =
@@ -477,8 +477,8 @@ void rxn_SIMPOL_phase_transfer_calc_jac_contrib(ModelData *model_data,
 
     // Calculate the rate constant for diffusion limited mass transfer to the
     // aerosol phase (m3/#/s)
-    double cond_rate =
-        gas_aerosol_transition_rxn_rate_constant(DIFF_COEFF_, MFP_M_, radius, ALPHA_);
+    double cond_rate = gas_aerosol_transition_rxn_rate_constant(
+        DIFF_COEFF_, MFP_M_, radius, ALPHA_);
 
     // Calculate the evaporation rate constant (ppm_x*m^3/kg_x/s)
     double evap_rate =
@@ -579,9 +579,10 @@ void rxn_SIMPOL_phase_transfer_calc_jac_contrib(ModelData *model_data,
         -(2.0 * radius / (3.0 * DIFF_COEFF_) + 4.0 / (3.0 * MFP_M_)) *
         cond_rate * cond_rate / state[GAS_SPEC_];
 #endif
-    realtype d_cond_d_radius = d_gas_aerosol_transition_rxn_rate_constant_d_radius(
-                                   DIFF_COEFF_, MFP_M_, radius, ALPHA_) *
-                               state[GAS_SPEC_];
+    realtype d_cond_d_radius =
+        d_gas_aerosol_transition_rxn_rate_constant_d_radius(DIFF_COEFF_, MFP_M_,
+                                                            radius, ALPHA_) *
+        state[GAS_SPEC_];
     realtype d_evap_d_radius = d_cond_d_radius / state[GAS_SPEC_] *
                                EQUIL_CONST_ * aero_phase_avg_MW /
                                aero_phase_mass * state[AERO_SPEC_(i_phase)];
