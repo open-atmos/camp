@@ -67,8 +67,11 @@ void init_solve_gpu(SolverData *sd) {
   cudaMalloc((void **)&mGPU->dA, nnz * sizeof(double));
   cudaMalloc((void **)&mGPU->djA, md->n_per_cell_solver_jac_elem * sizeof(int));
   cudaMalloc((void **)&mGPU->diA, (n_dep_var + 1) * sizeof(int));
+  cudaMalloc((void **)&mGPU->J_solver, nnz * sizeof(double));
+  cudaMalloc((void **)&mGPU->J_state, n_dep_var * n_cells * sizeof(double));
 
-  int *map_state_derivCPU = (int *)malloc(n_dep_var * sizeof(int));
+  int *map_state_derivCPU = (int *)malloc(
+      n_dep_var * sizeof(int));  // Auxiliar variable to copy to GPU
   int i_dep_var = 0;
   for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
     if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
@@ -80,7 +83,11 @@ void init_solve_gpu(SolverData *sd) {
              cudaMemcpyHostToDevice);  // Synchronous due to the
                                        // free(map_state_derivCPU)
   free(map_state_derivCPU);
-  // Translate from int64 (sunindextype) to int
+  cudaMemset(mGPU->J_solver, 0, nnz * sizeof(double));
+  cudaMemset(N_VGetArrayPointer(md->J_state), 0,
+             n_dep_var * n_cells * sizeof(double));
+
+  // Translate from datatype of CVODE library (sunindextype int64) to int
   CVDlsMem cvdls_mem = (CVDlsMem)cv_mem->cv_lmem;
   SUNMatrix J = cvdls_mem->A;
   int *jA = (int *)malloc(sizeof(int) * md->n_per_cell_solver_jac_elem);
@@ -123,14 +130,9 @@ void init_solve_gpu(SolverData *sd) {
   cudaEventCreate(&sd->startGPUSync);
   cudaEventCreate(&sd->stopGPUSync);
 #endif
-  cudaMalloc((void **)&mGPU->J_solver, nnz * sizeof(double));
-  cudaMalloc((void **)&mGPU->J_state, n_dep_var * n_cells * sizeof(double));
-  double *J_state = N_VGetArrayPointer(md->J_state);
-  cudaMemset(mGPU->J_state, 0, n_dep_var * n_cells * sizeof(double));
   cudaMalloc((void **)&mGPU->J_deriv, n_dep_var * n_cells * sizeof(double));
   double *J_deriv = N_VGetArrayPointer(md->J_deriv);
   cudaMemset(mGPU->J_deriv, 0, n_dep_var * n_cells * sizeof(double));
-  cudaMemset(mGPU->J_solver, 0, nnz * sizeof(double));
   cudaMalloc((void **)&mGPU->jac_map,
              sizeof(JacMap) * md->n_per_cell_solver_jac_elem);
   cudaMemcpyAsync(mGPU->jac_map, md->jac_map,
