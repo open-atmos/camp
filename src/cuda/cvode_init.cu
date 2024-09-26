@@ -61,7 +61,7 @@ void init_solve_gpu(SolverData *sd) {
   double startTime = MPI_Wtime();
   cudaSetDevice(iDevice);
   if (rank == 0)
-    printf("Time INIT MPI: %f\n",
+    printf("Time INIT: %f\n",
            MPI_Wtime() -
                startTime);  // High on MN5 with multiple cores (e.g. 4s for 80)
   // Parameters on the CPU related to the GPU solver
