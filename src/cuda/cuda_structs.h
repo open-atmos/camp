@@ -105,7 +105,6 @@ typedef struct {
                      // from Jacobian calculation
   double *J_state;   // Last state used to calculate the Jacobian
   double *J_deriv;   // Last derivative used to calculate the Jacobian
-  JacMap *jac_map;   // Mapping of Array of Jacobian mapping elements
   JacobianGPU jac;   // Auxiliar structure to store positive and negative
                      // contributions to the Jacobian
   JacMap *jac_map;   // Mapping JacobianGPU to the solver Jacobian

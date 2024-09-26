@@ -852,7 +852,12 @@ __device__ void cudaDevicecalc_Jac(double *y, ModelDataGPU *md,
 #endif
   __syncthreads();
   JacMap *jac_map = md->jac_map;
-  int nnz = md->n_mapped_values[0];
+  // int nnz = md->diA[blockDim.x];
+  //  for (int j = diA[threadIdx.x]; j < diA[threadIdx.x + 1]; j++) {
+  //    Bx[j + nnz * blockIdx.x] = Ax[j + nnz * blockIdx.x];
+  //  }
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int nnz = md->diA[blockDim.x];
   int n_iters = nnz / blockDim.x;
   for (int z = 0; z < n_iters; z++) {
     int j = threadIdx.x + z * blockDim.x;
@@ -872,6 +877,7 @@ __device__ void cudaDevicecalc_Jac(double *y, ModelDataGPU *md,
     jacBlock.loss_partials[jac_map[j].rxn_id] = 0.0;
   }
   __syncthreads();
+
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   if (threadIdx.x == 0)
     sc->timecalc_Jac += ((double)(clock() - start)) / (clock_khz * 1000);
@@ -889,7 +895,7 @@ __device__ int cudaDeviceJac(ModelDataGPU *md, ModelDataVariable *sc) {
   retval = cudaDevicef(sc->cv_next_h, md->dcv_y, md->dftemp, false, md, sc);
   if (retval == CAMP_SOLVER_FAIL) return CAMP_SOLVER_FAIL;
   cudaDevicecalc_Jac(md->dcv_y, md, sc);
-  int nnz = md->n_mapped_values[0];
+  int nnz = md->diA[blockDim.x];
   int n_iters = nnz / blockDim.x;
   for (int z = 0; z < n_iters; z++) {
     int j = threadIdx.x + z * blockDim.x + nnz * blockIdx.x;
