@@ -33,20 +33,21 @@ typedef struct {
 // Variables for each cell in the model.
 typedef struct {
   // Variables extracted from CVODE library
-  double cv_saved_tq5;
-  double cv_hu;  // last successful h value used
+  double cv_saved_tq5;  // saved value of tq[5]
+  double cv_acnrm;      // | acor | wrms
+  double cv_eta;        // eta = hprime / h
+  double cv_hmin;       // |h| >= hmin
+  double cv_hu;         // last successful h value used
   int cv_jcur;   // flag indicating if Jacobian info. for lin. solver is current
   int cv_nstlp;  // step number of last setup call
   int cv_L;      // L = q + 1
-  double cv_acnrm;   // | acor | wrms
-  int cv_qwait;      // number of internal steps to wait before
-                     // considering a change in q
+  int cv_qwait;  // number of internal steps to wait before
+                 // considering a change in q
   double cv_crate;   // estimated corrector convergence rate
   double cv_gamrat;  // gamma / gammap
   double cv_gammap;  // gamma at the last
   double cv_gamma;   // gamma = h * rl1
   double cv_rl1;     // the scalar 1/l[1]
-  double cv_eta;     // eta = hprime / h
   int cv_q;          // current order
   int cv_qprime;     // order to be used on the next step
                      //  = q-1, q, or q+1
@@ -54,7 +55,6 @@ typedef struct {
   double cv_next_h;  // step size to be used on the next step
   double cv_hscale;  // value of h used in zn
   double cv_hprime;  // step size to be used on the next step
-  double cv_hmin;    // |h| >= hmin
   double cv_tn;      // current internal value of t
   double cv_etamax;  // eta <= etamax
   int cv_nst;        // number of internal steps taken

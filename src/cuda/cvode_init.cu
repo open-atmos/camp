@@ -167,6 +167,34 @@ void init_solve_gpu(SolverData *sd) {
   cudaMemcpyAsync(mGPU->diA, iA, (n_dep_var + 1) * sizeof(int),
                   cudaMemcpyHostToDevice, stream);
 
+  // Variables for each cell (struct ModelDataVariable), extracted from the
+  // CVODE library
+  mCPU->mdvCPU.cv_saved_tq5 = 0.;
+  mCPU->mdvCPU.cv_acnrm = 0.;
+  mCPU->mdvCPU.cv_eta = 1.;
+  mCPU->mdvCPU.cv_hmin = 0;
+
+  cudaMalloc((void **)&mGPU->sCells, sizeof(ModelDataVariable));
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+  // Metrics for statistics
+  cudaDeviceGetAttribute(&mGPU->clock_khz, cudaDevAttrClockRate, 0);
+  mCPU->mdvCPU.countercvStep = 0;
+  mCPU->mdvCPU.counterBCGInternal = 0;
+  mCPU->mdvCPU.counterBCG = 0;
+  mCPU->mdvCPU.timeNewtonIteration = 0.;
+  mCPU->mdvCPU.timeJac = 0.;
+  mCPU->mdvCPU.timelinsolsetup = 0.;
+  mCPU->mdvCPU.timecalc_Jac = 0.;
+  mCPU->mdvCPU.timef = 0.;
+  mCPU->mdvCPU.timeguess_helper = 0.;
+  mCPU->mdvCPU.timeBCG = 0.;
+  mCPU->mdvCPU.timeDeviceCVode = 0.;
+  cudaMalloc((void **)&mGPU->mdvo, sizeof(ModelDataVariable));
+  cudaMemcpyAsync(mGPU->mdvo, &mCPU->mdvCPU, sizeof(ModelDataVariable),
+                  cudaMemcpyHostToDevice, stream);
+#endif
+  cudaMemcpyAsync(&mGPU->sCells, &mCPU->mdvCPU, sizeof(ModelDataVariable),
+                  cudaMemcpyHostToDevice, stream);
   // Parameters for the ODE solver, extracted from CVODE library
   mGPU->cv_reltol = cv_mem->cv_reltol;
   cudaMalloc((void **)&mGPU->cv_Vabstol, n_dep_var * sizeof(double));
@@ -183,7 +211,6 @@ void init_solve_gpu(SolverData *sd) {
   cudaMalloc((void **)&mGPU->dftemp, deriv_size);
   cudaMalloc((void **)&mGPU->dewt, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->dsavedJ, nnz * sizeof(double));
-
   double **dzn = (double **)malloc((BDF_Q_MAX + 1) * sizeof(double *));
   for (int i = 0; i <= BDF_Q_MAX; i++)
     cudaMalloc(&dzn[i], nrows * sizeof(double));
@@ -223,14 +250,6 @@ void init_solve_gpu(SolverData *sd) {
   cudaMalloc((void **)&mGPU->ds, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->dy, nrows * sizeof(double));
 
-  // Variables for each cell (struct ModelDataVariable)
-  mCPU->mdvCPU.cv_saved_tq5 = 0.;
-  mCPU->mdvCPU.cv_acnrm = 0.;
-  mCPU->mdvCPU.cv_eta = 1.;
-  mCPU->mdvCPU.cv_hmin = 0;
-  cudaMalloc((void **)&mGPU->sCells, sizeof(ModelDataVariable));
-  cudaMemcpyAsync(&mGPU->sCells, &mCPU->mdvCPU, sizeof(ModelDataVariable),
-                  cudaMemcpyHostToDevice, stream);
   // Swap Jacobian format from CSC in the CPU to CSR for the GPU
   int n_row = nrows / n_cells;
   int *Ap = iA;
@@ -297,23 +316,6 @@ void init_solve_gpu(SolverData *sd) {
   cudaMalloc((void **)&mGPU->flags, n_cells);
   malloc(mCPU->flags, n_cells);
   int *aux_solver_id = (int *)malloc(nnz * sizeof(int));
-#endif
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-  cudaMalloc((void **)&mGPU->mdvo, sizeof(ModelDataVariable));
-  cudaDeviceGetAttribute(&mGPU->clock_khz, cudaDevAttrClockRate, 0);
-  mCPU->mdvCPU.countercvStep = 0;
-  mCPU->mdvCPU.counterBCGInternal = 0;
-  mCPU->mdvCPU.counterBCG = 0;
-  mCPU->mdvCPU.timeNewtonIteration = 0.;
-  mCPU->mdvCPU.timeJac = 0.;
-  mCPU->mdvCPU.timelinsolsetup = 0.;
-  mCPU->mdvCPU.timecalc_Jac = 0.;
-  mCPU->mdvCPU.timef = 0.;
-  mCPU->mdvCPU.timeguess_helper = 0.;
-  mCPU->mdvCPU.timeBCG = 0.;
-  mCPU->mdvCPU.timeDeviceCVode = 0.;
-  cudaMemcpyAsync(mGPU->mdvo, &mCPU->mdvCPU, sizeof(ModelDataVariable),
-                  cudaMemcpyHostToDevice, stream);
 #endif
 }
 
