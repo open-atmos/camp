@@ -107,6 +107,9 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
   cudaEventRecord(sd->startGPUSync,stream);
 #endif
   cudaMemcpyAsync(md->total_state, mGPU->state, md->n_per_cell_state_var*md->n_cells_gpu*sizeof(double), cudaMemcpyDeviceToHost, stream);
+  #ifndef DEBUG_SOLVER_FAILURES
+  cudaMemcpyAsync(md->flags, mGPU->flags,md->n_cells_gpu*sizeof(int), cudaMemcpyDeviceToHost, stream);
+#endif
   cudaStreamSynchronize(stream);
   cudaDeviceSynchronize();
 #ifdef PROFILE_GPU_SOLVING
@@ -156,6 +159,20 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout,
 #endif
 #endif
   cudaStreamDestroy(stream);
+  #ifndef DEBUG_SOLVER_FAILURES
+  cudaMemcpyAsync(md->flags, mGPU->flags,md->n_cells_gpu*sizeof(int), cudaMemcpyDeviceToHost, stream);
+  /*
+  int rank;
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  if(rank==0){
+    for(int i=0;i<md->n_cells_gpu;i++){
+      if(md->flags[i]!=0){
+        //printf("Solver failure in cell %d\n",i);
+      }
+    }
+  }
+  */
+#endif
   return(CV_SUCCESS);
 }
 

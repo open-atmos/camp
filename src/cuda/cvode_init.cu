@@ -176,23 +176,6 @@ void constructor_cvode_gpu(SolverData *sd){
   cudaMalloc((void **) &mGPU->cv_Vabstol, n_dep_var * sizeof(double));
   double *cv_Vabstol = N_VGetArrayPointer(cv_mem->cv_Vabstol);
   cudaMemcpyAsync(mGPU->cv_Vabstol, cv_Vabstol, n_dep_var * sizeof(double), cudaMemcpyHostToDevice, stream);
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-  cudaMalloc((void **) &mGPU->mdvo, sizeof(ModelDataVariable));
-  cudaDeviceGetAttribute(&mGPU->clock_khz, cudaDevAttrClockRate, 0);
-  mCPU->mdvCPU.countercvStep=0;
-  mCPU->mdvCPU.counterBCGInternal=0;
-  mCPU->mdvCPU.counterBCG=0;
-  mCPU->mdvCPU.timeNewtonIteration=0.;
-  mCPU->mdvCPU.timeJac=0.;
-  mCPU->mdvCPU.timelinsolsetup=0.;
-  mCPU->mdvCPU.timecalc_Jac=0.;
-  mCPU->mdvCPU.timef=0.;
-  mCPU->mdvCPU.timeguess_helper=0.;
-  mCPU->mdvCPU.dtBCG=0.;
-  mCPU->mdvCPU.dtcudaDeviceCVode=0.;
-  mCPU->mdvCPU.dtPostBCG=0.;
-  cudaMemcpyAsync(mGPU->mdvo, &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice, stream);
-#endif
 //Swap CSC to CSR
   int n_row=nrows/n_cells;
   int* Ap=iA;
@@ -252,6 +235,29 @@ void constructor_cvode_gpu(SolverData *sd){
   free(jac_solver_id);
   free(aux_solver_id);
   free(jac_map);
+  #ifndef DEBUG_SOLVER_FAILURES
+  cudaMalloc((void **) &mGPU->flags, n_cells);
+  malloc(mCPU->flags, n_cells);
+  int *aux_solver_id= (int *)malloc(nnz * sizeof(int));
+
+  #endif
+  #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+  cudaMalloc((void **) &mGPU->mdvo, sizeof(ModelDataVariable));
+  cudaDeviceGetAttribute(&mGPU->clock_khz, cudaDevAttrClockRate, 0);
+  mCPU->mdvCPU.countercvStep=0;
+  mCPU->mdvCPU.counterBCGInternal=0;
+  mCPU->mdvCPU.counterBCG=0;
+  mCPU->mdvCPU.timeNewtonIteration=0.;
+  mCPU->mdvCPU.timeJac=0.;
+  mCPU->mdvCPU.timelinsolsetup=0.;
+  mCPU->mdvCPU.timecalc_Jac=0.;
+  mCPU->mdvCPU.timef=0.;
+  mCPU->mdvCPU.timeguess_helper=0.;
+  mCPU->mdvCPU.dtBCG=0.;
+  mCPU->mdvCPU.dtcudaDeviceCVode=0.;
+  mCPU->mdvCPU.dtPostBCG=0.;
+  cudaMemcpyAsync(mGPU->mdvo, &mCPU->mdvCPU, sizeof(ModelDataVariable), cudaMemcpyHostToDevice, stream);
+#endif
 }
 
 void free_gpu_cu(SolverData *sd) {
@@ -303,6 +309,9 @@ void free_gpu_cu(SolverData *sd) {
   free(sd->dzn);
   cudaFree(mGPU->dewt);
   cudaFree(mGPU->dsavedJ);
+#ifndef DEBUG_SOLVER_FAILURES
+  cudaFree(mGPU->flags);
+#endif
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   cudaFree(mGPU->mdvo);
 #endif

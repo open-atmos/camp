@@ -1598,21 +1598,25 @@ void cudaGlobalCVode(double t_initial, ModelDataGPU md_object) {
   ModelDataVariable *sc = &sc_object;
   sc->cv_tn = t_initial;
   int i = blockIdx.x * blockDim.x + threadIdx.x;
-  //Update concs from state
+  //Update input
   md->dzn[0][i]=
     md->state[md->map_state_deriv[threadIdx.x]+blockIdx.x*md->n_per_cell_state_var] > TINY
     ? md->state[md->map_state_deriv[threadIdx.x]+blockIdx.x*md->n_per_cell_state_var]
     : TINY;
+  //Solve
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz=md->clock_khz;
     clock_t start;
     start = clock();
 #endif
+#ifndef DEBUG_SOLVER_FAILURES
+  md->flags[i] = cudaDeviceCVode(md,sc);
+#else
   cudaDeviceCVode(md,sc);
-  //Update state from concs
+#endif
+  //Update output
   md->state[md->map_state_deriv[threadIdx.x]+blockIdx.x*md->n_per_cell_state_var]=
     md->yout[i] > 0. ? md->yout[i] : 0.;
-  //if(i==0) printf("kernel end\n");
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if(threadIdx.x==0) sc->dtcudaDeviceCVode += ((double)(int)(clock() - start))/(clock_khz*1000);
 #endif

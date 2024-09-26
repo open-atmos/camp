@@ -37,6 +37,7 @@ class TestMonarch:
     self.is_import = False
     self.is_import_base = False
     self.is_out = True
+    self.loads_gpu = [0] #Percentage of computational load (cells) to GPU
     # Auxiliary
     self.sbatch_job_id = ""
     self.exportPath = "exports"
@@ -84,7 +85,6 @@ def run(conf):
     exec_str += ("/apps/ACC/NVIDIA-HPC-SDK/23.9/Linux_x86_64/23.9/profilers/Nsight_Compute/ncu ")
     pathNsight = ("../../compile/profile")
     exec_str += "--target-processes application-only --set full -f -o " + pathNsight + " "
-    #exec_str += "./wrap.sh " #not works, let imagine that the other implementation is fine
     print("Saving nsight file in ",
           os.path.abspath(os.getcwd())
           + "/" + pathNsight + ".ncu-rep")

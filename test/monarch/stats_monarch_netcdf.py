@@ -24,7 +24,7 @@ def calculate_speedup(file1_path, file2_path):
     return speedup
 
 def calculate_nrmse(data1, data2):
-    rmsd = np.sqrt(np.mean((data1 - data2) ** 2))
+    rmsd = np.sqrt(np.mean(np.square(np.float64(data1 - data2))))
     range_data1 = np.max(data1) - np.min(data1)
     nrmse = (rmsd / range_data1) * 100
     return nrmse
@@ -120,7 +120,7 @@ def get_error(day):
 def get_errors():
     folder_path = "/gpfs/scratch/bsc32/bsc032815/a5hl/nmmb-monarch/ARCHIVE/000"
     folders = sorted(os.listdir(folder_path))
-    folder="2016072712"
+    folder="2016072412"
     #for folder in folders:
     print("folder:",folder)
     error,speedup = get_error(folder)

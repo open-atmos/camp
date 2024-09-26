@@ -10,16 +10,17 @@ from mainMonarch import *
 def all_timesteps():
   conf = TestMonarch()
   conf.timeSteps = 1
-  conf.loads_gpu = [1]
+  conf.loads_gpu = [50]
+  #todo set maximum of code line length for python, C, C++, Fortran
   conf.cells = [1]
   conf.mpiProcessesCaseBase = 1
   conf.caseBase = "CPU One-cell"
   #conf.caseBase = "GPU BDF"
   conf.mpiProcessesCaseOptimList = [1]
-  conf.casesOptim = ["GPU BDF"]
+  #conf.casesOptim = ["GPU BDF"] #todo trigger exception if this is commented
   #conf.is_import = True
   #conf.is_import_base = True
-  #conf.profileCuda = "ncu"
+  #conf.profileCuda = "ncu" #todo comment Need allocated note on MN5
   #conf.profileCuda = "nsys"
   #conf.profileExtrae = True
   datay = run_main(conf)

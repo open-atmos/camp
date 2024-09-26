@@ -128,7 +128,9 @@ typedef struct {
     double init_time_step;
     double tout;
     double cv_reltol;
-//ODE stats
+#ifndef DEBUG_SOLVER_FAILURES
+    int* flags;
+#endif
 #ifdef PROFILE_SOLVING
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int clock_khz;

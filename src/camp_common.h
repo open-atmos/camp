@@ -250,7 +250,7 @@ typedef struct {
 #endif
 
 #ifdef CAMP_USE_GPU
-  ModelDataCPU mCPU;
+  ModelDataCPU mCPU; //Auxiliar variable to move data between CPU and GPU
   ModelDataGPU *mGPU;
   double **dzn;
   double last_load_balance;
@@ -258,6 +258,9 @@ typedef struct {
   double acc_load_balance;
   int iters_load_balance;
   int short_gpu;
+#ifndef DEBUG_SOLVER_FAILURES
+  int* flags; // Error flags to detect solver failures
+#endif
 #endif
   double load_gpu;
   int is_reset_jac;
