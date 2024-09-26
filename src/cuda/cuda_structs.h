@@ -34,10 +34,10 @@ typedef struct {
 typedef struct {
   // Variables extracted from CVODE library
   double cv_saved_tq5;
-  double cv_hu;      // last successful h value used
-  int cv_jcur;       // is Jacobian info. for lin. solver current?
-  int cv_nstlp;      // step number of last setup call
-  int cv_L;          // L = q + 1
+  double cv_hu;  // last successful h value used
+  int cv_jcur;   // flag indicating if Jacobian info. for lin. solver is current
+  int cv_nstlp;  // step number of last setup call
+  int cv_L;      // L = q + 1
   double cv_acnrm;   // | acor | wrms
   int cv_qwait;      // number of internal steps to wait before
                      // considering a change in q
@@ -79,7 +79,7 @@ typedef struct {
   double timeBCG;              // Time spent in the BCG solver
   double timeDeviceCVode;      // Time spent in the ODE solver
 #endif
-} ModelDataVariable;  // variables for each cell
+} ModelDataVariable;  // Variables for each cell
 
 /*
  * Auxiliary struct for transferring cell data
