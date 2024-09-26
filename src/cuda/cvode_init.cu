@@ -58,15 +58,13 @@ void init_solve_gpu(SolverData *sd) {
   int nrows = n_dep_var * n_cells;
   int n_state_var = md->n_per_cell_state_var;
   // Parameters from CAMP chemical model
-  int num_spec = n_dep_var * n_cells;
   int nnz = md->n_per_cell_solver_jac_elem * n_cells;
-  size_t jac_size = nnz * sizeof(double);
 
   HANDLE_ERROR(cudaMalloc((void **)&mGPU->state,
                           n_state_var * n_cells * sizeof(double)));
   mGPU->n_per_cell_state_var = md->n_per_cell_state_var;
   cudaMalloc((void **)&mGPU->map_state_deriv, n_dep_var * sizeof(int));
-  cudaMalloc((void **)&mGPU->dA, jac_size);
+  cudaMalloc((void **)&mGPU->dA, nnz * sizeof(double));
   cudaMalloc((void **)&mGPU->djA, md->n_per_cell_solver_jac_elem * sizeof(int));
   cudaMalloc((void **)&mGPU->diA, (n_dep_var + 1) * sizeof(int));
 
@@ -116,23 +114,23 @@ void init_solve_gpu(SolverData *sd) {
   cudaMalloc((void **)&mGPU->rxn_env_data,
              md->n_rxn_env_data * n_cells * sizeof(double));
   cudaMalloc((void **)&(mGPU->production_rates),
-             num_spec * sizeof(mGPU->production_rates));
-  cudaMalloc((void **)&(mGPU->loss_rates), num_spec * sizeof(mGPU->loss_rates));
+             n_dep_var * n_cells * sizeof(mGPU->production_rates));
+  cudaMalloc((void **)&(mGPU->loss_rates),
+             n_dep_var * n_cells * sizeof(mGPU->loss_rates));
 #ifdef PROFILE_SOLVING
   cudaEventCreate(&sd->startGPU);
   cudaEventCreate(&sd->stopGPU);
   cudaEventCreate(&sd->startGPUSync);
   cudaEventCreate(&sd->stopGPUSync);
 #endif
-  size_t deriv_size = n_dep_var * n_cells * sizeof(double);
-  cudaMalloc((void **)&mGPU->J_solver, jac_size);
-  cudaMalloc((void **)&mGPU->J_state, deriv_size);
+  cudaMalloc((void **)&mGPU->J_solver, nnz * sizeof(double));
+  cudaMalloc((void **)&mGPU->J_state, n_dep_var * n_cells * sizeof(double));
   double *J_state = N_VGetArrayPointer(md->J_state);
-  cudaMemset(mGPU->J_state, 0, deriv_size);
-  cudaMalloc((void **)&mGPU->J_deriv, deriv_size);
+  cudaMemset(mGPU->J_state, 0, n_dep_var * n_cells * sizeof(double));
+  cudaMalloc((void **)&mGPU->J_deriv, n_dep_var * n_cells * sizeof(double));
   double *J_deriv = N_VGetArrayPointer(md->J_deriv);
-  cudaMemset(mGPU->J_deriv, 0, deriv_size);
-  cudaMemset(mGPU->J_solver, 0, jac_size);
+  cudaMemset(mGPU->J_deriv, 0, n_dep_var * n_cells * sizeof(double));
+  cudaMemset(mGPU->J_solver, 0, nnz * sizeof(double));
   cudaMalloc((void **)&mGPU->jac_map,
              sizeof(JacMap) * md->n_per_cell_solver_jac_elem);
   cudaMemcpyAsync(mGPU->jac_map, md->jac_map,
@@ -185,7 +183,7 @@ void init_solve_gpu(SolverData *sd) {
   cudaMalloc((void **)&mGPU->dcv_y, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->dtempv, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->dtempv1, nrows * sizeof(double));
-  cudaMalloc((void **)&mGPU->dftemp, deriv_size);
+  cudaMalloc((void **)&mGPU->dftemp, n_dep_var * n_cells * sizeof(double));
   cudaMalloc((void **)&mGPU->dewt, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->dsavedJ, nnz * sizeof(double));
   double **dzn = (double **)malloc((BDF_Q_MAX + 1) * sizeof(double *));
