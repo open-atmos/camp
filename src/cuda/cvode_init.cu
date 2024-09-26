@@ -33,7 +33,7 @@ void constructor_cvode_gpu(SolverData *sd) {
   sd->last_load_gpu = 100;
   sd->acc_load_balance = 0;
   sd->iters_load_balance = 0;
-  sd->short_gpu = 0;
+  sd->last_short_gpu = 0;
   int nGPUs;
   HANDLE_ERROR(cudaGetDeviceCount(&nGPUs));
   int rank;
@@ -173,12 +173,13 @@ void constructor_cvode_gpu(SolverData *sd) {
     cudaMemsetAsync(dzn[i], 0, nrows * sizeof(double), stream);
   }
   cudaMalloc(&mGPU->dzn, (BDF_Q_MAX + 1) * sizeof(double *));
-  cudaMemcpyAsync(mGPU->dzn, dzn, (BDF_Q_MAX + 1) * sizeof(double *),
-                  cudaMemcpyHostToDevice, stream);
+  cudaMemcpy(
+      mGPU->dzn, dzn, (BDF_Q_MAX + 1) * sizeof(double *),
+      cudaMemcpyHostToDevice);  // Synchronous because cudaFree is synchronous
   for (int i = 0; i <= BDF_Q_MAX; i++) {
-    cudaFree(&sd->dzn[i]);
+    cudaFree(&dzn[i]);
   }
-  free(sd->dzn);
+  free(dzn);
   cudaMalloc((void **)&mGPU->dcv_y, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->dx, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->cv_last_yn, nrows * sizeof(double));

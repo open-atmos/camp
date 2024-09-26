@@ -135,7 +135,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   int short_gpu = 0;
   if (timeGPU < timeCPU) short_gpu = 1;
   double increase_in_load_gpu = sd->load_gpu - sd->last_load_gpu;
-  double last_short_gpu = sd->short_gpu;
+  double last_short_gpu = sd->last_short_gpu;
   double diff_load_balance = load_balance - sd->last_load_balance;
   if (short_gpu != last_short_gpu) {
     diff_load_balance = 100 - sd->last_load_balance + 100 - load_balance;
@@ -146,7 +146,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
     increase_in_load_gpu *= 1.5;
   else
     increase_in_load_gpu /= 2;
-  sd->short_gpu = short_gpu;
+  sd->last_short_gpu = short_gpu;
   sd->last_load_balance = load_balance;
   sd->last_load_gpu = sd->load_gpu;
   if (load_balance != 100) sd->load_gpu += increase_in_load_gpu;
@@ -160,7 +160,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   // MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // if(rank==0)printf("load_gpu: %.2lf%% Load balance: %.2lf%% short_gpu %d
   // increase_in_load_gpu
-  // %.2lf\n",sd->last_load_gpu,load_balance,sd->short_gpu,increase_in_load_gpu);
+  // %.2lf\n",sd->last_load_gpu,load_balance,sd->last_short_gpu,increase_in_load_gpu);
   // if(rank==0)printf("remaining_load_balance %.2lf diff_load_balance %.2lf "
   //"increase_in_load_gpu
   //%.2lf\n",remaining_load_balance,diff_load_balance,increase_in_load_gpu);

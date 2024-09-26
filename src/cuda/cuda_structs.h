@@ -30,7 +30,7 @@ typedef struct {
   double *loss_partials;     // Data array for loss rate partial derivs
 } JacobianGPU;
 
-// Structure representing variables for each cell in the model.
+// Variables for each cell in the model.
 typedef struct {
   // Variables extracted from CVODE library
   double cv_saved_tq5;
@@ -91,13 +91,26 @@ typedef struct {
 } ModelDataCPU;
 
 typedef struct {
-  int *map_state_deriv;       //
-  double *J_solver;           //
-  double *J_state;            //
-  double *J_deriv;            //
-  int *rxn_int;               //
+  double *state;  // Concentrations of species, including constant and
+                  // non-constant values
+  // Derivatives = Concentrations of non-constant species. The ODE solver works
+  // around this array, using auxiliary arrays of the same size.
+  int *map_state_deriv;  // Map of state variables to derivatives
+  double *dA;            // Jacobian values
+  int *djA;  // Jacobian indices for equivalent dense matrix (for CSR are
+             // columns, for CSC are rows)
+  int *diA;  // Jacobian ranged indices (for CSR and CSC are used to mark the
+             // end of elements in a row and column, respectively)
+  double *J_solver;  // Auxiliar Jacobian used in derivative calculation, stored
+                     // from Jacobian calculation
+  double *J_state;   // Last state used to calculate the Jacobian
+  double *J_deriv;   // Last derivative used to calculate the Jacobian
+  JacMap *jac_map;   // Mapping of Array of Jacobian mapping elements
+  JacobianGPU jac;   // Auxiliar structure to store positive and negative
+                     // contributions to the Jacobian
+  JacMap *jac_map;   // Mapping JacobianGPU to the solver Jacobian
+  int *rxn_int;      //
   double *rxn_double;         //
-  double *state;              //
   double *rxn_env_data;       //
   int *rxn_env_idx;           //
   double *production_rates;   //
@@ -108,8 +121,6 @@ typedef struct {
   int n_rxn;                  //
   int n_rxn_env_data;         //
   int *n_mapped_values;       //
-  JacMap *jac_map;            //
-  JacobianGPU jac;            //
   double *yout;               //
   double *cv_Vabstol;         //
   double *cv_l;               //
@@ -117,9 +128,6 @@ typedef struct {
   double *cv_tq;              //
   double *cv_last_yn;         //
   double *cv_acor_init;       //
-  double *dA;                 //
-  int *djA;                   //
-  int *diA;                   //
   double *dx;                 //
   double *dtempv;             //
   int n_shr_empty;            //
@@ -139,10 +147,10 @@ typedef struct {
   double **dzn;               //
   double *dewt;               //
   double *dsavedJ;            //
-  ModelDataVariable *sCells;  //
   double init_time_step;      //
   double tout;                //
   double cv_reltol;           //
+  ModelDataVariable *sCells;  // Variables for each cell in the model.
 #ifdef DEBUG_SOLVER_FAILURES
   int *flags;  // Error failures on solving
 #endif

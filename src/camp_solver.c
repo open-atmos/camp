@@ -571,8 +571,7 @@ int solver_run_gpu(SolverData *sd, double *state, double *env, double t_initial,
   }
 
 #ifdef PROFILE_SOLVING
-  double starttimeCvode =
-      MPI_Wtime();  // removed to be the same than occupancy CPU-GPU
+  double starttimeCvode = MPI_Wtime();
 #endif
   cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y, sd, t_initial);
 #ifdef PROFILE_SOLVING

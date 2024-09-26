@@ -256,19 +256,20 @@ typedef struct {
 #ifdef CAMP_USE_GPU
   ModelDataCPU mCPU;   // Auxiliar variable to move data between CPU and GPU
   ModelDataGPU *mGPU;  // GPU data
-  double **dzn;        // Auxiliar array
-  double last_load_balance;
-  double last_load_gpu;
-  double acc_load_balance;
-  int iters_load_balance;
-  int short_gpu;
+  double load_gpu;     // Percentage of number of cells, equivalent to
+                       // computational load, to compute on the GPU
+  double last_load_balance;  // Load balance of the previous time step
+  double last_load_gpu;      // Load on the GPU of the previous time step
+  double acc_load_balance;  // Accumulated load balance to calculate the average
+  int iters_load_balance;   // Iterations to calculate the average load balance
+  int last_short_gpu;  // Flag to indicate that solving on the GPU takes less
+                       // time than the CPU
 #ifdef DEBUG_SOLVER_FAILURES
-  int *flags;  // Error flags to detect solver failures
+  int *flags;  // Error flags from solving failures
 #endif
 #endif
-  double load_gpu;
-  int is_reset_jac;
-
+  int is_reset_jac;       // Flag to indicate that the Jacobian matrix must be
+                          // re-initialized
   void *cvode_mem;        // CVodeMem object
   ModelData model_data;   // Model data (used during initialization and solving)
   double init_time_step;  // Initial time step (s)
