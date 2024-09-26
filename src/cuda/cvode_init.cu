@@ -47,6 +47,8 @@ void init_solve_gpu(SolverData *sd) {
     }
   }
 #endif
+  cudaStream_t stream;
+  cudaStreamCreate(&stream);
   CVodeMem cv_mem = (CVodeMem)sd->cvode_mem;
   ModelDataCPU *mCPU = &(sd->mCPU);
   sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
@@ -55,7 +57,44 @@ void init_solve_gpu(SolverData *sd) {
   int n_cells = md->n_cells;  // Load balance can differ up to n_cells size
   int nrows = n_dep_var * n_cells;
   int n_state_var = md->n_per_cell_state_var;
+  // Parameters from CAMP chemical model
+  int num_spec = n_dep_var * n_cells;
+  int nnz = md->n_per_cell_solver_jac_elem * n_cells;
+  size_t jac_size = nnz * sizeof(double);
+
+  HANDLE_ERROR(cudaMalloc((void **)&mGPU->state,
+                          n_state_var * n_cells * sizeof(double)));
   mGPU->n_per_cell_state_var = md->n_per_cell_state_var;
+  cudaMalloc((void **)&mGPU->map_state_deriv, n_dep_var * sizeof(int));
+  cudaMalloc((void **)&mGPU->dA, jac_size);
+  cudaMalloc((void **)&mGPU->djA, md->n_per_cell_solver_jac_elem * sizeof(int));
+  cudaMalloc((void **)&mGPU->diA, (n_dep_var + 1) * sizeof(int));
+
+  int *map_state_derivCPU = (int *)malloc(n_dep_var * sizeof(int));
+  int i_dep_var = 0;
+  for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
+    if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
+      map_state_derivCPU[i_dep_var] = i_spec;
+      i_dep_var++;
+    }
+  }
+  cudaMemcpy(mGPU->map_state_deriv, map_state_derivCPU, n_dep_var * sizeof(int),
+             cudaMemcpyHostToDevice);  // Synchronous due to the
+                                       // free(map_state_derivCPU)
+  free(map_state_derivCPU);
+  // Translate from int64 (sunindextype) to int
+  CVDlsMem cvdls_mem = (CVDlsMem)cv_mem->cv_lmem;
+  SUNMatrix J = cvdls_mem->A;
+  int *jA = (int *)malloc(sizeof(int) * md->n_per_cell_solver_jac_elem);
+  int *iA = (int *)malloc(sizeof(int) * (n_dep_var + 1));
+  for (int i = 0; i < md->n_per_cell_solver_jac_elem; i++)
+    jA[i] = SM_INDEXVALS_S(J)[i];
+  for (int i = 0; i <= n_dep_var; i++) iA[i] = SM_INDEXPTRS_S(J)[i];
+  cudaMemcpyAsync(mGPU->djA, jA, md->n_per_cell_solver_jac_elem * sizeof(int),
+                  cudaMemcpyHostToDevice, stream);
+  cudaMemcpyAsync(mGPU->diA, iA, (n_dep_var + 1) * sizeof(int),
+                  cudaMemcpyHostToDevice, stream);
+
   sd->last_load_balance = 0;
   sd->last_load_gpu = 100;
   sd->acc_load_balance = 0;
@@ -76,34 +115,16 @@ void init_solve_gpu(SolverData *sd) {
   mGPU->n_rxn_env_data = md->n_rxn_env_data;
   cudaMalloc((void **)&mGPU->rxn_env_data,
              md->n_rxn_env_data * n_cells * sizeof(double));
-  int num_spec = n_dep_var * n_cells;
   cudaMalloc((void **)&(mGPU->production_rates),
              num_spec * sizeof(mGPU->production_rates));
   cudaMalloc((void **)&(mGPU->loss_rates), num_spec * sizeof(mGPU->loss_rates));
-  cudaMalloc((void **)&mGPU->map_state_deriv, n_dep_var * sizeof(int));
-  int *map_state_derivCPU = (int *)malloc(n_dep_var * sizeof(int));
-  int i_dep_var = 0;
-  for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
-    if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
-      map_state_derivCPU[i_dep_var] = i_spec;
-      i_dep_var++;
-    }
-  }
 #ifdef PROFILE_SOLVING
   cudaEventCreate(&sd->startGPU);
   cudaEventCreate(&sd->stopGPU);
   cudaEventCreate(&sd->startGPUSync);
   cudaEventCreate(&sd->stopGPUSync);
 #endif
-  cudaStream_t stream;
-  cudaStreamCreate(&stream);
-  cudaMemcpyAsync(mGPU->map_state_deriv, map_state_derivCPU,
-                  n_dep_var * sizeof(int), cudaMemcpyHostToDevice, stream);
-  free(map_state_derivCPU);
   size_t deriv_size = n_dep_var * n_cells * sizeof(double);
-  int nnz = md->n_per_cell_solver_jac_elem * n_cells;
-  size_t jac_size = nnz * sizeof(double);
-  cudaMalloc((void **)&mGPU->dA, jac_size);
   cudaMalloc((void **)&mGPU->J_solver, jac_size);
   cudaMalloc((void **)&mGPU->J_state, deriv_size);
   double *J_state = N_VGetArrayPointer(md->J_state);
@@ -150,24 +171,7 @@ void init_solve_gpu(SolverData *sd) {
   cudaMemcpyAsync(mGPU->rxn_float_indices, md->rxn_float_indices,
                   (md->n_rxn + 1) * sizeof(int), cudaMemcpyHostToDevice,
                   stream);
-  // Translate from int64 (sunindextype) to int
-  CVDlsMem cvdls_mem = (CVDlsMem)cv_mem->cv_lmem;
-  SUNMatrix J = cvdls_mem->A;
-  int *jA = (int *)malloc(sizeof(int) * md->n_per_cell_solver_jac_elem);
-  int *iA = (int *)malloc(sizeof(int) * (n_dep_var + 1));
-  for (int i = 0; i < md->n_per_cell_solver_jac_elem; i++)
-    jA[i] = SM_INDEXVALS_S(J)[i];
-  for (int i = 0; i <= n_dep_var; i++) iA[i] = SM_INDEXPTRS_S(J)[i];
-  cudaMalloc((void **)&mGPU->djA, md->n_per_cell_solver_jac_elem * sizeof(int));
-  cudaMalloc((void **)&mGPU->diA, (n_dep_var + 1) * sizeof(int));
-  cudaMemcpyAsync(mGPU->djA, jA, md->n_per_cell_solver_jac_elem * sizeof(int),
-                  cudaMemcpyHostToDevice, stream);
-  cudaMemcpyAsync(mGPU->diA, iA, (n_dep_var + 1) * sizeof(int),
-                  cudaMemcpyHostToDevice, stream);
 
-  // Parameters from CAMP chemical model
-  HANDLE_ERROR(cudaMalloc((void **)&mGPU->state,
-                          n_state_var * n_cells * sizeof(double)));
   // Parameters for the ODE solver, extracted from CVODE library
   mGPU->cv_reltol = cv_mem->cv_reltol;
   cudaMalloc((void **)&mGPU->cv_Vabstol, n_dep_var * sizeof(double));
