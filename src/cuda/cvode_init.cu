@@ -12,6 +12,7 @@ extern "C" {
 #endif
 
 void init_solve_gpu(SolverData *sd) {
+  // Variables used in SANITY_CHECK and further initialization code
   ModelData *md = &(sd->model_data);
   int n_dep_var = md->n_per_cell_dep_var;
 #ifndef SANITY_CHECK
@@ -47,17 +48,6 @@ void init_solve_gpu(SolverData *sd) {
     }
   }
 #endif
-  cudaStream_t stream;
-  cudaStreamCreate(&stream);
-  CVodeMem cv_mem = (CVodeMem)sd->cvode_mem;
-  ModelDataCPU *mCPU = &(sd->mCPU);
-  sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
-  ModelDataGPU *mGPU = sd->mGPU;
-  md->n_cells_gpu = md->n_cells * sd->load_gpu / 100.;
-  int n_cells = md->n_cells;  // Load balance can differ up to n_cells size
-  int nrows = n_dep_var * n_cells;
-  int n_state_var = md->n_per_cell_state_var;
-
   // Set GPU device (e.g. a node can have more than one GPU available) for each
   // CPU thread (i.e. MPI rank)
   int nGPUs;
@@ -70,9 +60,21 @@ void init_solve_gpu(SolverData *sd) {
   int iDevice = rank % nGPUs;
   double startTime = MPI_Wtime();
   cudaSetDevice(iDevice);
-  if (rank == 0) printf("Time INIT: %f\n", MPI_Wtime() - startTime);
-
+  if (rank == 0)
+    printf("Time INIT MPI: %f\n",
+           MPI_Wtime() -
+               startTime);  // High on MN5 with multiple cores (e.g. 4s for 80)
   // Parameters on the CPU related to the GPU solver
+  CVodeMem cv_mem = (CVodeMem)sd->cvode_mem;  // Variables from CVODE library
+  int n_cells = md->n_cells;
+  int nrows = n_dep_var * n_cells;   // Number of rows in the Jacobian and
+                                     // chemical concentrations to solve
+  ModelDataCPU *mCPU = &(sd->mCPU);  // Variables from CPU to gpu
+  sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));  // GPU data
+  ModelDataGPU *mGPU = sd->mGPU;
+  cudaStream_t stream;  // Stream for asynchronous memory copy
+  cudaStreamCreate(&stream);
+  md->n_cells_gpu = md->n_cells * sd->load_gpu / 100.;
   sd->last_load_balance = 0;
   sd->last_load_gpu = 100;
   sd->acc_load_balance = 0;
@@ -96,7 +98,7 @@ void init_solve_gpu(SolverData *sd) {
   JacobianGPU *jacgpu = &(mGPU->jac);
 
   HANDLE_ERROR(cudaMalloc((void **)&mGPU->state,
-                          n_state_var * n_cells * sizeof(double)));
+                          md->n_per_cell_state_var * n_cells * sizeof(double)));
   cudaMalloc((void **)&mGPU->map_state_deriv, n_dep_var * sizeof(int));
   cudaMalloc((void **)&mGPU->dA, nnz * sizeof(double));
   cudaMalloc((void **)&mGPU->djA, md->n_per_cell_solver_jac_elem * sizeof(int));
@@ -128,7 +130,7 @@ void init_solve_gpu(SolverData *sd) {
   int *map_state_derivCPU = (int *)malloc(
       n_dep_var * sizeof(int));  // Auxiliar variable to copy to GPU
   int i_dep_var = 0;
-  for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
+  for (int i_spec = 0; i_spec < md->n_per_cell_state_var; i_spec++) {
     if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
       map_state_derivCPU[i_dep_var] = i_spec;
       i_dep_var++;
