@@ -39,6 +39,8 @@
 #include <sunmatrix/sunmatrix_sparse.h> /* sparse SUNMatrix                    */
 
 #ifdef CAMP_USE_GPU
+// Require to handle CVODE structures in .cu files, such as CVDlsMem for
+// the Jacobian matrix
 #include <cvode/cvode_direct_impl.h>
 #include <sundials/sundials_direct.h>
 #include <sundials/sundials_linearsolver.h>
@@ -238,8 +240,11 @@ typedef struct {
 #endif
 
 #ifdef PROFILE_SOLVING
-  double timeCVode;
+  double timeCVode;  // Time of the ODE solver function, used to compare CPU and
+                     // GPU solver
 #ifdef CAMP_USE_GPU
+  // Metrics for measuring time execution of the GPU solver, such as solving and
+  // synchronization time
   cudaEvent_t startGPU;
   cudaEvent_t stopGPU;
   cudaEvent_t startGPUSync;
@@ -249,9 +254,9 @@ typedef struct {
 #endif
 
 #ifdef CAMP_USE_GPU
-  ModelDataCPU mCPU;  // Auxiliar variable to move data between CPU and GPU
-  ModelDataGPU *mGPU;
-  double **dzn;
+  ModelDataCPU mCPU;   // Auxiliar variable to move data between CPU and GPU
+  ModelDataGPU *mGPU;  // GPU data
+  double **dzn;        // Auxiliar array
   double last_load_balance;
   double last_load_gpu;
   double acc_load_balance;

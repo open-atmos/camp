@@ -26,7 +26,7 @@ void cvodeRun(double t_initial, ModelDataGPU *mGPU, int blocks,
 #define PREV_CONV_FAIL +7
 #define PREV_ERR_FAIL +8
 #define RHSFUNC_RECVR +9
-#define NUM_TESTS 5               /* number of error test quantities     */
+#define NUM_TESTS 5               /* number of error test quantities */
 #define PT1 RCONST(0.1)           /* real 0.1     */
 #define POINT2 RCONST(0.2)        /* real 0.2     */
 #define FOURTH RCONST(0.25)       /* real 0.25    */
@@ -99,5 +99,9 @@ void cvodeRun(double t_initial, ModelDataGPU *mGPU, int blocks,
 #define CAMP_SOLVER_DEFAULT_MAX_STEPS 10000
 #define CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS 1000
 #define BDF_Q_MAX 5
-
+#define CVD_MSBJ \
+  50  //  CVD_MSBJ   maximum number of steps between Jacobian evaluations
+#define CVD_DGMAX \
+  RCONST(0.2)  //  CVD_DGMAX  maximum change in gamma between Jacobian
+               //  evaluations
 #endif

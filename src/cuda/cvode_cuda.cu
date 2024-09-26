@@ -994,15 +994,15 @@ __device__ int cudaDevicecvNewtonIteration(ModelDataGPU *md,
   clock_t start;
 #endif
   for (;;) {
+    md->dtempv[i] = sc->cv_rl1 * md->dzn[1][i] + md->cv_acor[i];
+    md->dtempv[i] = sc->cv_gamma * md->dftemp[i] - md->dtempv[i];
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     start = clock();
 #endif
-    md->dtempv[i] = sc->cv_rl1 * md->dzn[1][i] + md->cv_acor[i];
-    md->dtempv[i] = sc->cv_gamma * md->dftemp[i] - md->dtempv[i];
     solveBcgCudaDeviceCVODE(md, sc);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if (threadIdx.x == 0)
-      sc->dtBCG += ((double)(int)(clock() - start)) / (clock_khz * 1000);
+      sc->timeBCG += ((double)(int)(clock() - start)) / (clock_khz * 1000);
 #endif
     md->dtempv[i] = md->dx[i];
     cudaDeviceVWRMS_Norm_2(md->dx, md->dewt, &del, md->n_shr_empty);
@@ -1060,10 +1060,6 @@ __device__ int cudaDevicecvNewtonIteration(ModelDataGPU *md,
         return RHSFUNC_RECVR;
       }
     }
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-    if (threadIdx.x == 0)
-      sc->dtPostBCG += ((double)(clock() - start)) / (clock_khz * 1000);
-#endif
   }
 }
 
@@ -1692,7 +1688,7 @@ __global__ void cudaGlobalCVode(double t_initial, ModelDataGPU md_object) {
       md->yout[i] > 0. ? md->yout[i] : 0.;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   if (threadIdx.x == 0)
-    sc->dtcudaDeviceCVode +=
+    sc->timeDeviceCVode +=
         ((double)(int)(clock() - start)) / (clock_khz * 1000);
 #endif
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS

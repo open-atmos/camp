@@ -91,11 +91,6 @@ def run(conf):
     else:
         exec_str += "mpirun -np " + str(conf.mpiProcesses) + " --bind-to core "
     if conf.profileCuda == "ncu" and conf.caseGpuCpu == "GPU":
-        if os.environ.get("SLURM_JOB_NUM_NODES", 0) != "1":
-            raise Exception(
-                "ncu option is for slurm salloc session."
-                " It could work on multiple nodes but it needs to be implemented"
-            )
         # gui: /apps/ACC/NVIDIA-HPC-SDK/24.3/Linux_x86_64/2024/profilers/Nsight_Compute/ncu-ui
         exec_str += "/apps/ACC/NVIDIA-HPC-SDK/23.9/Linux_x86_64/23.9/profilers/Nsight_Compute/ncu "
         pathNsight = "../../compile/profile"
@@ -387,6 +382,10 @@ def plot_cases(conf, datay):
 
 
 def run_main(conf):
+    if conf.profileCuda and os.environ.get("SLURM_JOB_NUM_NODES", 0) != "1":
+        raise Exception(
+            "CUDA profiling option is for slurm salloc session on Marenostrum 5."
+        )
     if conf.is_out and conf.casesOptim:
         if (
             len(conf.mpiProcessesCaseOptimList) > 1
