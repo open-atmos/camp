@@ -1,4 +1,4 @@
-/* Copyright (C) 2021 Barcelona Supercomputing Center and University of dddddd
+/* Copyright (C) 2021 Barcelona Supercomputing Center and University of
  * Illinois at Urbana-Champaign
  * SPDX-License-Identifier: MIT
  */
@@ -1681,7 +1681,7 @@ __global__ void cudaGlobalCVode(double t_initial, ModelDataGPU md_object) {
   clock_t start;
   start = clock();
 #endif
-#ifndef DEBUG_SOLVER_FAILURES
+#ifdef DEBUG_SOLVER_FAILURES
   md->flags[i] = cudaDeviceCVode(md, sc);
 #else
   cudaDeviceCVode(md, sc);

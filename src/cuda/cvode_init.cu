@@ -266,7 +266,7 @@ void constructor_cvode_gpu(SolverData *sd) {
   free(jac_solver_id);
   free(aux_solver_id);
   free(jac_map);
-#ifndef DEBUG_SOLVER_FAILURES
+#ifdef DEBUG_SOLVER_FAILURES
   cudaMalloc((void **)&mGPU->flags, n_cells);
   malloc(mCPU->flags, n_cells);
   int *aux_solver_id = (int *)malloc(nnz * sizeof(int));
@@ -341,7 +341,7 @@ void free_gpu_cu(SolverData *sd) {
   free(sd->dzn);
   cudaFree(mGPU->dewt);
   cudaFree(mGPU->dsavedJ);
-#ifndef DEBUG_SOLVER_FAILURES
+#ifdef DEBUG_SOLVER_FAILURES
   cudaFree(mGPU->flags);
 #endif
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS

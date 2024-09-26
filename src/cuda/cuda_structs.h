@@ -131,7 +131,7 @@ typedef struct {
   double init_time_step;
   double tout;
   double cv_reltol;
-#ifndef DEBUG_SOLVER_FAILURES
+#ifdef DEBUG_SOLVER_FAILURES
   int *flags;
 #endif
 #ifdef PROFILE_SOLVING

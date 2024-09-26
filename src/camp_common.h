@@ -257,7 +257,7 @@ typedef struct {
   double acc_load_balance;
   int iters_load_balance;
   int short_gpu;
-#ifndef DEBUG_SOLVER_FAILURES
+#ifdef DEBUG_SOLVER_FAILURES
   int *flags;  // Error flags to detect solver failures
 #endif
 #endif
