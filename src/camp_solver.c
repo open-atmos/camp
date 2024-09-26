@@ -491,7 +491,7 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol) {
 
 #ifdef CAMP_USE_GPU
   if (sd->load_gpu != 0) {
-    constructor_cvode_gpu(sd);
+    init_solve_gpu(sd);
   }
 #endif
 #ifdef FAILURE_DETAIL
@@ -573,6 +573,7 @@ int solver_run_gpu(SolverData *sd, double *state, double *env, double t_initial,
 #ifdef PROFILE_SOLVING
   double starttimeCvode = MPI_Wtime();
 #endif
+  // Solve
   cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y, sd, t_initial);
 #ifdef PROFILE_SOLVING
   sd->timeCVode += (MPI_Wtime() - starttimeCvode);
@@ -690,12 +691,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   sd->model_data.total_state = state;
   sd->model_data.total_env = env;
 
-  // Reset jac solving, otherwise values from previous iteration would be
-  // carried to current iteration Using or not this option accelerates solving
-  // depending on the case Enable reset when the inputs are very different
-  // between each other or to compare with the GPU version Avoid reset when the
-  // inputs are similar like when using CAMP from MONARCH The default value is
-  // 0, because is the most used case in our case
+  // Reset jac solving
   if (sd->is_reset_jac == 1) {
     N_VConst(0.0, md->J_state);
     N_VConst(0.0, md->J_deriv);
@@ -1284,11 +1280,12 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     // Scale incomplete jumps
     if (i_fast >= 0 && h_n > ZERO)
       h_j *= 0.95 +
-             0.1 * iter / (double)GUESS_MAX_ITER;  // good for box compare with
-                                                   // GPU, fails in MONARCH
+             0.1 * iter /
+                 (double)
+                     GUESS_MAX_ITER;  // pending validation monarch long run mn5
     // if (i_fast >= 0 && h_n > ZERO) h_j *= 0.95 + 0.1 * rand() /
-    // (double)RAND_MAX; //old routine, good for MONARCH in mn4 but do not fix
-    // the issue on mn5, bad for box compare with GPU
+    // (double)RAND_MAX; //old routine, good for MONARCH, bad for box compare
+    // with GPU
     h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
 
     // Only make small changes to adjustment vectors used in Newton iteration

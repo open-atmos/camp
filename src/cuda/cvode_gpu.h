@@ -3,15 +3,22 @@
  * SPDX-License-Identifier: MIT
  */
 
+/*
+Interface between GPU solver and CAMP .c interface
+
+Solver extracted from CVODE 3.4 version (BDF method) with the BiConjugate
+Gradient algorithm as the linear solver.
+*/
+
 #ifndef CVODE_gpu_SOLVER_H_
 #define CVODE_gpu_SOLVER_H_
 
 #include <cuda.h>
 #include "../camp_common.h"
 
-void constructor_cvode_gpu(SolverData *sd);
+void init_solve_gpu(SolverData *sd);
 int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
-              double t_initial);
+              double t_initial);  // Solve
 void solver_get_statistics_gpu(SolverData *sd);
 void free_gpu_cu(SolverData *sd);
 

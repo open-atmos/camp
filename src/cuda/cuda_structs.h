@@ -6,10 +6,10 @@
 #ifndef CAMPGPU_CUDA_STRUCTS_H
 #define CAMPGPU_CUDA_STRUCTS_H
 
-/* Time derivative for solver species */
+/* Time derivative of solver species for each cell */
 typedef struct {
-  double *production_rates;  // Production rates for all species
-  double *loss_rates;        // Loss rates for all species
+  double *production_rates;  // Production rates
+  double *loss_rates;        // Loss rates
 } TimeDerivativeGPU;
 
 #ifndef DEF_JAC_MAP
@@ -34,31 +34,32 @@ typedef struct {
 typedef struct {
   // Variables extracted from CVODE library
   double cv_saved_tq5;
-  double cv_hu;             // last successful h value used
-  int cv_jcur;              // is Jacobian info. for lin. solver current?
-  int cv_nstlp;             // step number of last setup call
-  int cv_L;                 // L = q + 1
-  double cv_acnrm;          // | acor | wrms
-  int cv_qwait;             // number of internal steps to wait before
-                            // considering a change in q
-  double cv_crate;          // estimated corrector convergence rate
-  double cv_gamrat;         // gamma / gammap
-  double cv_gammap;         // gamma at the last
-  double cv_gamma;          // gamma = h * rl1
-  double cv_rl1;            // the scalar 1/l[1]
-  double cv_eta;            // eta = hprime / h
-  int cv_q;                 // current order
-  int cv_qprime;            // order to be used on the next step
-                            //  = q-1, q, or q+1
-  double cv_h;              // current step size
-  double cv_next_h;         // step size to be used on the next step
-  double cv_hscale;         // value of h used in zn
-  double cv_hprime;         // step size to be used on the next step
-  double cv_hmin;           // |h| >= hmin
-  double cv_tn;             // current internal value of t
-  double cv_etamax;         // eta <= etamax
-  int cv_nst;               // number of internal steps taken
-  int nstlj;                // nstlj = nst at last Jacobian eval.
+  double cv_hu;      // last successful h value used
+  int cv_jcur;       // is Jacobian info. for lin. solver current?
+  int cv_nstlp;      // step number of last setup call
+  int cv_L;          // L = q + 1
+  double cv_acnrm;   // | acor | wrms
+  int cv_qwait;      // number of internal steps to wait before
+                     // considering a change in q
+  double cv_crate;   // estimated corrector convergence rate
+  double cv_gamrat;  // gamma / gammap
+  double cv_gammap;  // gamma at the last
+  double cv_gamma;   // gamma = h * rl1
+  double cv_rl1;     // the scalar 1/l[1]
+  double cv_eta;     // eta = hprime / h
+  int cv_q;          // current order
+  int cv_qprime;     // order to be used on the next step
+                     //  = q-1, q, or q+1
+  double cv_h;       // current step size
+  double cv_next_h;  // step size to be used on the next step
+  double cv_hscale;  // value of h used in zn
+  double cv_hprime;  // step size to be used on the next step
+  double cv_hmin;    // |h| >= hmin
+  double cv_tn;      // current internal value of t
+  double cv_etamax;  // eta <= etamax
+  int cv_nst;        // number of internal steps taken
+  int nstlj;         // nstlj = nst at last Jacobian eval.
+  // Variables from CAMP chemical model
   double *grid_cell_state;  // Pointer to the current grid cell being solved
                             // on the total_state array
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
@@ -91,8 +92,11 @@ typedef struct {
 } ModelDataCPU;
 
 typedef struct {
-  double *state;  // Concentrations of species, including constant and
-                  // non-constant values
+  // Parameters from CAMP chemical model
+  double
+      *state;  // Concentrations of species, including constant and non-constant
+               // values. Used as input and output of the ODE solver
+  int n_per_cell_state_var;  // number of state variables per cell
   // Derivatives = Concentrations of non-constant species. The ODE solver works
   // around this array, using auxiliary arrays of the same size.
   int *map_state_deriv;  // Map of state variables to derivatives
@@ -108,55 +112,67 @@ typedef struct {
   JacobianGPU jac;   // Auxiliar structure to store positive and negative
                      // contributions to the Jacobian
   JacMap *jac_map;   // Mapping JacobianGPU to the solver Jacobian
-  int *rxn_int;      //
-  double *rxn_double;         //
-  double *rxn_env_data;       //
-  int *rxn_env_idx;           //
-  double *production_rates;   //
-  double *loss_rates;         //
-  int *rxn_int_indices;       //
-  int *rxn_float_indices;     //
-  double *grid_cell_state;    //
-  int n_rxn;                  //
-  int n_rxn_env_data;         //
-  int *n_mapped_values;       //
-  double *yout;               //
-  double *cv_Vabstol;         //
-  double *cv_l;               //
-  double *cv_tau;             //
-  double *cv_tq;              //
-  double *cv_last_yn;         //
-  double *cv_acor_init;       //
-  double *dx;                 //
-  double *dtempv;             //
-  int n_shr_empty;            //
-  double *ddiag;              //
-  double *dr0;                //
-  double *dr0h;               //
-  double *dn0;                //
-  double *dp0;                //
-  double *dt;                 //
-  double *ds;                 //
-  double *dy;                 //
-  double *dftemp;             //
-  double *dcv_y;              //
-  double *dtempv1;            //
-  int n_per_cell_state_var;   //
-  double *cv_acor;            //
-  double **dzn;               //
-  double *dewt;               //
-  double *dsavedJ;            //
-  double init_time_step;      //
-  double tout;                //
-  double cv_reltol;           //
+  int *rxn_int;      // Pointer to the reaction integer parameters
+  int *rxn_int_indices;    // Array of indices of integer data
+  double *rxn_double;      // Pointer to the reaction floating-point parameters
+  int *rxn_float_indices;  // Array of indices of float data
+  double *
+      rxn_env_data;  // Reaction environment-dependent parameters, i.e. Reaction
+                     // parameters that are affected by environemntal variables
+  int *rxn_env_idx;  // Mapping of the environment-dependent data and reaction
+                     // types
+  int n_rxn_env_data;        // Number of reaction environmental parameters
+  double *production_rates;  // Production rates of species
+  double *loss_rates;        // Loss rates of species
+  int n_rxn;                 // Number of reactions
+  double init_time_step;     // Initial time step (s)
+  // Parameters for the ODE solver, extracted from CVODE library
+  double cv_reltol;    // Relative tolerance
+  double *cv_Vabstol;  // Vector absolute tolerance
+  double *cv_l;        // L = q + 1 (q is the order)
+  double *cv_tau;  // array of previous q+1 successful step sizes indexed from 1
+                   // to q+1
+  double *cv_tq;   // array of test quantities
+  double *cv_last_yn;  // last solved value for y_n
+  double *cv_acor;  // In the context of the solution of the nonlinear equation,
+                    // acor = y_n(m) - y_n(0). On return, this vector is scaled
+                    // to give the est. local err.
+  double *cv_acor_init;  // Initial guess for acor
+  double **dzn;    // Nordsieck array, of size N x (q+1). zn[j] is a vector of
+                   // length N (j=0,...,q) zn[j] = [1/factorial(j)] * h^j * (jth
+                   // derivative of the interpolating polynomial
+  double *yout;    // Solution vector, yout=y(tout)
+  double *dcv_y;   // Temporary storage vector
+  double *dtempv;  // Temporary storage vector
+  double *dtempv1;  // Temporary storage vector
+  double *dftemp;   // Temporary storage vector
+  double *dewt;     // Error weight vector
+  double *dsavedJ;  // Jacobian from previous step to avoid calculating the
+                    // jacobian again
+  double tout;      // Time (from y'(t)) reached by the solver at the end.
+  // Parameters for the BCG solver
+  double *dx;     // Auxiliar vector of concentrations
+  double *ddiag;  // Auxiliar vector
+  double *dr0;    // Auxiliar vector
+  double *dr0h;   // Auxiliar vector
+  double *dn0;    // Auxiliar vector
+  double *dp0;    // Auxiliar vector
+  double *dt;     // Auxiliar vector
+  double *ds;     // Auxiliar vector
+  double *dy;     // Auxiliar vector
+  // GPU parameters
+  int n_shr_empty;  // Number of empty shared memory slots, used on "reduce"
+                    // type operations to treat the input as a power of two
   ModelDataVariable *sCells;  // Variables for each cell in the model.
 #ifdef DEBUG_SOLVER_FAILURES
   int *flags;  // Error failures on solving
 #endif
 #ifdef PROFILE_SOLVING
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-  int clock_khz;            // Clock frequency
-  ModelDataVariable *mdvo;  // out device for time measurement
+  int clock_khz;  // Clock frequency
+  ModelDataVariable
+      *mdvo;  // Out device for time measurement. Warning: Long time without
+              // using, it may fail or exist a better implementation
 #endif
 #endif
 } ModelDataGPU;

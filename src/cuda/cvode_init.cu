@@ -11,15 +11,42 @@ extern "C" {
 #include <mpi.h>
 #endif
 
-void constructor_cvode_gpu(SolverData *sd) {
+void init_solve_gpu(SolverData *sd) {
   ModelData *md = &(sd->model_data);
   int n_dep_var = md->n_per_cell_dep_var;
+#ifndef SANITY_CHECK
   if (n_dep_var < 32) {
-    printf(
-        "CAMP ERROR: TOO FEW SPECIES FOR GPU (Species < 32),"
-        " use CPU case instead\n");
+    printf("CAMP ERROR: TOO FEW SPECIES FOR GPU, use CPU case instead\n");
     exit(0);
   }
+  if (n_dep_var > 1024) {
+    printf("CAMP ERROR: TOO MUCH SPECIES FOR GPU,use CPU case instead\n");
+    exit(0);
+  }
+  // Check if reaction types are implemented in the GPU
+  int n_rxn = md->n_rxn;
+  for (int i_rxn = 0; i_rxn < n_rxn; i_rxn++) {
+    int *rxn_int_data = &(md->rxn_int_data[md->rxn_int_indices[i_rxn]]);
+    int rxn_type = rxn_int_data[0];
+    switch (rxn_type) {
+      case RXN_ARRHENIUS:
+        break;
+      case RXN_CMAQ_H2O2:
+        break;
+      case RXN_CMAQ_OH_HNO3:
+        break;
+      case RXN_FIRST_ORDER_LOSS:
+        break;
+      case RXN_PHOTOLYSIS:
+        break;
+      case RXN_TROE:
+        break;
+      default:
+        printf("CAMP ERROR: Reaction type not implemented in GPU\n");
+        exit(0);
+    }
+  }
+#endif
   CVodeMem cv_mem = (CVodeMem)sd->cvode_mem;
   ModelDataCPU *mCPU = &(sd->mCPU);
   sd->mGPU = (ModelDataGPU *)malloc(sizeof(ModelDataGPU));
@@ -88,12 +115,10 @@ void constructor_cvode_gpu(SolverData *sd) {
   double *J_deriv = N_VGetArrayPointer(md->J_deriv);
   cudaMemset(mGPU->J_deriv, 0, deriv_size);
   cudaMemset(mGPU->J_solver, 0, jac_size);
-  cudaMalloc((void **)&mGPU->jac_map, sizeof(JacMap) * md->n_mapped_values);
-  cudaMalloc((void **)&mGPU->n_mapped_values, 1 * sizeof(int));
+  cudaMalloc((void **)&mGPU->jac_map,
+             sizeof(JacMap) * md->n_per_cell_solver_jac_elem);
   cudaMemcpyAsync(mGPU->jac_map, md->jac_map,
-                  sizeof(JacMap) * md->n_mapped_values, cudaMemcpyHostToDevice,
-                  stream);
-  cudaMemcpyAsync(mGPU->n_mapped_values, &md->n_mapped_values, 1 * sizeof(int),
+                  sizeof(JacMap) * md->n_per_cell_solver_jac_elem,
                   cudaMemcpyHostToDevice, stream);
   Jacobian *jac = &sd->jac;
   JacobianGPU *jacgpu = &(mGPU->jac);
@@ -128,6 +153,8 @@ void constructor_cvode_gpu(SolverData *sd) {
   cudaMemcpyAsync(mGPU->rxn_float_indices, md->rxn_float_indices,
                   (md->n_rxn + 1) * sizeof(int), cudaMemcpyHostToDevice,
                   stream);
+
+  // Parameters for the BCG solver
   double **dr0 = &mGPU->dr0;
   double **dr0h = &mGPU->dr0h;
   double **dn0 = &mGPU->dn0;
@@ -137,7 +164,6 @@ void constructor_cvode_gpu(SolverData *sd) {
   double **dy = &mGPU->dy;
   double **ddiag = &mGPU->ddiag;
   cudaMalloc(dr0, nrows * sizeof(double));
-  cudaMalloc(dr0h, nrows * sizeof(double));
   cudaMalloc(dn0, nrows * sizeof(double));
   cudaMalloc(dp0, nrows * sizeof(double));
   cudaMalloc(dt, nrows * sizeof(double));
@@ -145,6 +171,7 @@ void constructor_cvode_gpu(SolverData *sd) {
   cudaMalloc(dy, nrows * sizeof(double));
   cudaMalloc(ddiag, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->dsavedJ, nnz * sizeof(double));
+
   // Translate from int64 (sunindextype) to int
   CVDlsMem cvdls_mem = (CVDlsMem)cv_mem->cv_lmem;
   SUNMatrix J = cvdls_mem->A;
@@ -180,8 +207,8 @@ void constructor_cvode_gpu(SolverData *sd) {
     cudaFree(&dzn[i]);
   }
   free(dzn);
-  cudaMalloc((void **)&mGPU->dcv_y, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->dx, nrows * sizeof(double));
+  cudaMalloc((void **)&mGPU->dcv_y, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->cv_last_yn, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->cv_acor_init, nrows * sizeof(double));
   cudaMalloc((void **)&mGPU->cv_acor, nrows * sizeof(double));
@@ -209,7 +236,7 @@ void constructor_cvode_gpu(SolverData *sd) {
   double *cv_Vabstol = N_VGetArrayPointer(cv_mem->cv_Vabstol);
   cudaMemcpyAsync(mGPU->cv_Vabstol, cv_Vabstol, n_dep_var * sizeof(double),
                   cudaMemcpyHostToDevice, stream);
-  // Swap CSC to CSR
+  // Swap Jacobian format from CSC in the CPU to CSR for the GPU
   int n_row = nrows / n_cells;
   int *Ap = iA;
   int *Aj = jA;
@@ -244,7 +271,7 @@ void constructor_cvode_gpu(SolverData *sd) {
     Bp[col] = last;
     last = temp;
   }
-  nnz = md->n_mapped_values;
+  nnz = md->n_per_cell_solver_jac_elem;
   int *aux_solver_id = (int *)malloc(nnz * sizeof(int));
   for (int i = 0; i < nnz; i++) {
     aux_solver_id[i] = mapJSPMV[md->jac_map[i].solver_id];
@@ -312,7 +339,6 @@ void free_gpu_cu(SolverData *sd) {
   cudaFree(mGPU->loss_rates);
   cudaFree(mGPU->rxn_int_indices);
   cudaFree(mGPU->rxn_float_indices);
-  cudaFree(mGPU->n_mapped_values);
   cudaFree(mGPU->jac_map);
   cudaFree(mGPU->yout);
   cudaFree(mGPU->cv_Vabstol);

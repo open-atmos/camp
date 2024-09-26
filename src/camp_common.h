@@ -268,9 +268,12 @@ typedef struct {
   int *flags;  // Error flags from solving failures
 #endif
 #endif
-  int is_reset_jac;       // Flag to indicate that the Jacobian matrix must be
-                          // re-initialized
-  void *cvode_mem;        // CVodeMem object
+  int is_reset_jac;  // Flag to indicate that the Jacobian matrix must be
+                     // re-initialized. It may accelerate solving. Enable reset
+                     // when the inputs are very different between each other or
+                     // to compare with the GPU version. Avoid reset when the
+                     // inputs are similar like CAMP-MONARCH.
+  void *cvode_mem;   // CVodeMem object
   ModelData model_data;   // Model data (used during initialization and solving)
   double init_time_step;  // Initial time step (s)
   char **spec_names;      // Species names

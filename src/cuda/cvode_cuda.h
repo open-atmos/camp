@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+// Defined variables
+
 #ifndef CVODE_CUDA_H_
 #define CVODE_CUDA_H_
 
@@ -17,6 +19,25 @@ extern "C" {
 void cvodeRun(double t_initial, ModelDataGPU *mGPU, int blocks,
               int threads_block, cudaStream_t stream);
 
+// Variables of the CAMP model
+#define RXN_ARRHENIUS 1
+#define RXN_TROE 2
+#define RXN_CMAQ_H2O2 3
+#define RXN_CMAQ_OH_HNO3 4
+#define RXN_PHOTOLYSIS 5
+#define RXN_HL_PHASE_TRANSFER 6
+#define RXN_AQUEOUS_EQUILIBRIUM 7
+#define RXN_SIMPOL_PHASE_TRANSFER 10
+#define RXN_CONDENSED_PHASE_ARRHENIUS 11
+#define RXN_FIRST_ORDER_LOSS 12
+#define RXN_EMISSION 13
+#define RXN_WET_DEPOSITION 14
+#define CAMP_SOLVER_SUCCESS 0
+#define CAMP_SOLVER_FAIL 1
+#define MAX_PRECISION_LOSS 1.0e-14
+#define GUESS_MAX_ITER 5
+#define CAMP_TINY RCONST(1.0e-30)
+// Variables from CVODE
 #define CV_SUCCESS 0
 #define DO_ERROR_TEST +2
 #define PREDICT_AGAIN +3
@@ -26,17 +47,16 @@ void cvodeRun(double t_initial, ModelDataGPU *mGPU, int blocks,
 #define PREV_CONV_FAIL +7
 #define PREV_ERR_FAIL +8
 #define RHSFUNC_RECVR +9
-#define NUM_TESTS 5               /* number of error test quantities */
-#define PT1 RCONST(0.1)           /* real 0.1     */
-#define POINT2 RCONST(0.2)        /* real 0.2     */
-#define FOURTH RCONST(0.25)       /* real 0.25    */
-#define TWO RCONST(2.0)           /* real 2.0     */
-#define THREE RCONST(3.0)         /* real 3.0     */
-#define FOUR RCONST(4.0)          /* real 4.0     */
-#define FIVE RCONST(5.0)          /* real 5.0     */
-#define TWELVE RCONST(12.0)       /* real 12.0    */
-#define HUNDRED RCONST(100.0)     /* real 100.0   */
-#define CAMP_TINY RCONST(1.0e-30) /* small number for CAMP */
+#define NUM_TESTS 5           /* number of error test quantities */
+#define PT1 RCONST(0.1)       /* real 0.1     */
+#define POINT2 RCONST(0.2)    /* real 0.2     */
+#define FOURTH RCONST(0.25)   /* real 0.25    */
+#define TWO RCONST(2.0)       /* real 2.0     */
+#define THREE RCONST(3.0)     /* real 3.0     */
+#define FOUR RCONST(4.0)      /* real 4.0     */
+#define FIVE RCONST(5.0)      /* real 5.0     */
+#define TWELVE RCONST(12.0)   /* real 12.0    */
+#define HUNDRED RCONST(100.0) /* real 100.0   */
 #define DO_ERROR_TEST +2
 #define PREDICT_AGAIN +3
 #define CONV_FAIL +4
@@ -79,29 +99,10 @@ void cvodeRun(double t_initial, ModelDataGPU *mGPU, int blocks,
 #define DGMAX RCONST(0.3)
 #define RDIV 2.0
 #define MSBP 20
-#define RXN_ARRHENIUS 1
-#define RXN_TROE 2
-#define RXN_CMAQ_H2O2 3
-#define RXN_CMAQ_OH_HNO3 4
-#define RXN_PHOTOLYSIS 5
-#define RXN_HL_PHASE_TRANSFER 6
-#define RXN_AQUEOUS_EQUILIBRIUM 7
-#define RXN_SIMPOL_PHASE_TRANSFER 10
-#define RXN_CONDENSED_PHASE_ARRHENIUS 11
-#define RXN_FIRST_ORDER_LOSS 12
-#define RXN_EMISSION 13
-#define RXN_WET_DEPOSITION 14
-#define CAMP_SOLVER_SUCCESS 0
-#define CAMP_SOLVER_FAIL 1
-#define MAX_PRECISION_LOSS 1.0e-14
-#define GUESS_MAX_ITER 5
 #define CV_NLSCOEF 0.1
 #define CAMP_SOLVER_DEFAULT_MAX_STEPS 10000
 #define CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS 1000
 #define BDF_Q_MAX 5
-#define CVD_MSBJ \
-  50  //  CVD_MSBJ   maximum number of steps between Jacobian evaluations
-#define CVD_DGMAX \
-  RCONST(0.2)  //  CVD_DGMAX  maximum change in gamma between Jacobian
-               //  evaluations
+#define CVD_MSBJ 50
+#define CVD_DGMAX RCONST(0.2)
 #endif

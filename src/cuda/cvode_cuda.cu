@@ -852,11 +852,6 @@ __device__ void cudaDevicecalc_Jac(double *y, ModelDataGPU *md,
 #endif
   __syncthreads();
   JacMap *jac_map = md->jac_map;
-  // int nnz = md->diA[blockDim.x];
-  //  for (int j = diA[threadIdx.x]; j < diA[threadIdx.x + 1]; j++) {
-  //    Bx[j + nnz * blockIdx.x] = Ax[j + nnz * blockIdx.x];
-  //  }
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
   int nnz = md->diA[blockDim.x];
   int n_iters = nnz / blockDim.x;
   for (int z = 0; z < n_iters; z++) {

@@ -376,8 +376,8 @@ def plot_cases(conf, datay):
         print("plotTitle: ", plotTitle, " legend:", legend)
     else:
         print("plotTitle: ", plotTitle)
-    print(namex, ":", datax)
-    print(namey, ":", datay)
+    # print(namex, ":", datax)
+    # print(namey, ":", datay)
     # plot_functions.plotsns(namex, namey, datax, datay, plotTitle, legend)
 
 
