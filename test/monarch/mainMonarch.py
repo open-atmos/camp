@@ -7,7 +7,7 @@ import subprocess
 from pandas import read_csv as pd_read_csv
 
 
-# TODO; DEFINE OPTIONS
+# TODO: DEFINE OPTIONS
 # TODO: Add option to save path for output files
 # TODO: Move profile files to a new folder
 class TestMonarch:
@@ -40,7 +40,7 @@ class TestMonarch:
         self.is_import = False
         self.is_import_base = False
         self.is_out = True
-        self.load_gpu = 0  # Percentage of computational load (cells) to GPU
+        self.loads_gpu = [0]  # Percentage of computational load (cells) to GPU
         # Auxiliary
         self.sbatch_job_id = ""
         self.exportPath = "exports"
@@ -261,7 +261,7 @@ def run_cells(conf):
 
 def run_loads_gpu(conf):
     data = []
-    for i, item in enumerate(conf.load_gpu):
+    for i, item in enumerate(conf.loads_gpu):
         conf.load_gpu = item
         data += run_cells(conf)
     return data
@@ -361,16 +361,16 @@ def plot_cases(conf, datay):
         datax = nGPUsOptim
         if len(conf.cells) > 1:
             plotTitle += ", Cells: " + str(conf.cells[0])
-    elif len(conf.load_gpu) > 1:
+    elif len(conf.loads_gpu) > 1:
         namex = "Percentage of cells to GPU"
-        datax = conf.load_gpu
+        datax = conf.loads_gpu
         plotTitle += "," + str(conf.cells[0]) + " Cells"
     else:
         plotTitle += (
             ", Cells: "
             + str(conf.cells[0])
             + " Load GPU: "
-            + str(conf.load_gpu[0])
+            + str(conf.loads_gpu[0])
         )
         datax = list(range(1, conf.timeSteps + 1, 1))
         namex = "Time-steps"

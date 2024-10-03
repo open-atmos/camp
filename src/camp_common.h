@@ -264,6 +264,9 @@ typedef struct {
   cudaEvent_t startGPUSync;
   cudaEvent_t stopGPUSync;
 #endif
+#ifdef PROFILE_SOLVING
+  booleantype is_load_balance;
+#endif
 #ifdef DEBUG_SOLVER_FAILURES
   int *flags;  // Error flags from solving failures
 #endif

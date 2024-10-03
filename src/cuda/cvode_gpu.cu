@@ -4,7 +4,7 @@
  */
 #include "cvode_cuda.h"
 
-#define PROFILE_GPU_SOLVING
+#define LOAD_BALANCE
 
 extern "C" {
 #include "cvode_gpu.h"
@@ -26,7 +26,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   int n_cells = md->n_cells_gpu;
   cudaStream_t stream;  // Variable for asynchronous execution of the GPU
   cudaStreamCreate(&stream);
-#ifdef PROFILE_GPU_SOLVING
+#ifdef LOAD_BALANCE
   cudaEventRecord(sd->startGPU, stream);  // Start GPU timer
 #endif
   // Transfer data to GPU
@@ -41,14 +41,14 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   // Solve
   cvodeRun(t_initial, mGPU, n_cells, md->n_per_cell_dep_var,
            stream);  // Asynchronous
-#ifdef PROFILE_GPU_SOLVING
+#ifdef LOAD_BALANCE
   cudaEventRecord(sd->stopGPU, stream);  // End GPU timer
 #endif
   // CPU solver, equivalent to the CPU solver for the option CPU-Only
 #ifdef TRACE_CPUGPU
   nvtxRangePushA("CPU Code");  // Start of profiling trace
 #endif
-#ifdef PROFILE_GPU_SOLVING
+#ifdef LOAD_BALANCE
   double startTime = MPI_Wtime();
 #endif
   // Set data
@@ -112,15 +112,15 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   md->total_state = state;
   md->total_env = env;
   md->rxn_env_data = rxn_env_data;
-#ifdef PROFILE_GPU_SOLVING
+#ifdef LOAD_BALANCE
   double timeCPU = (MPI_Wtime() - startTime);
 #endif
 #ifdef TRACE_CPUGPU
   nvtxRangePop();  // End of profiling trace
 #endif
-#ifdef PROFILE_GPU_SOLVING
-  cudaEventRecord(sd->startGPUSync,
-                  stream);  // Start synchronization timer between CPU and GPU
+#ifdef LOAD_BALANCE
+  // Start synchronization timer between CPU and GPU
+  cudaEventRecord(sd->startGPUSync, stream);
 #endif
   // Transfer data back to CPU. This is located after the CPU solver and not
   // before because it blocks CPU execution until finish the GPU kernel
@@ -136,7 +136,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   cudaDeviceSynchronize();
   // #IFDEF LOAD_BALANCE
   // TODO: Move Load_balance to runtime option
-#ifdef PROFILE_GPU_SOLVING
+#ifdef LOAD_BALANCE
   // Balance load between CPU and GPU, changing the number of cells solved on
   // both architectures. Method explained on C. Guzman PhD Thesis - Chapter 6
   cudaEventRecord(sd->stopGPUSync, stream);  // End synchronization timer
