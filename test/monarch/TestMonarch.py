@@ -7,14 +7,11 @@
 from mainMonarch import *
 
 
-# TODO: Add Doyxigen documentation of GPU code following CAMP example
-
 def all_timesteps():
     conf = TestMonarch()
     conf.timeSteps = 10
-    conf.loads_gpu = [100]  # e.g. 0: CPU-Only 100: GPU-Only 1-99: CPU+GPU
+    conf.load_gpu = 100  # e.g. 0: CPU-Only 100: GPU-Only 1-99: CPU+GPU
     # TODO: Set LOAD_BALANCE as an option to ensure GPU-Only is fixed to 100
-    # todo remove array (loads_gpu to load_gpu)
     conf.cells = [10]
     conf.mpiProcessesCaseBase = 2
     conf.caseBase = "CPU One-cell"
