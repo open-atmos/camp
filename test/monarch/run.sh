@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 set -e
+while getopts 'h' flag; do
+  case "${flag}" in
+    h) echo "Script to use after compiling to run make and the executable.
+More info at the README.md included in this directory" &
+    exit 1 ;;
+  esac
+done
 scriptdir="$(dirname "$0")"
 cd "$scriptdir"
 unset I_MPI_PMI_LIBRARY

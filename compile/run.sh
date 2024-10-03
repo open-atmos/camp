@@ -11,6 +11,13 @@
 #SBATCH --exclusive
 #SBATCH -A bsc32
 
+while getopts 'h' flag; do
+  case "${flag}" in
+    h) echo "Script to run a sample test, used for development" &
+    exit 1 ;;
+  esac
+done
+
 set -e
 scriptdir="$(dirname "$0")"
 cd "$scriptdir"

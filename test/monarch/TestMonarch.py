@@ -7,10 +7,7 @@
 from mainMonarch import *
 
 
-# TODO: Fix rxn_SIMPOL test
-# TODO: add "./run.sh -h" -> Brief description and message to look at the README.md
 # TODO: Add Doyxigen documentation of GPU code following CAMP example
-
 
 def all_timesteps():
     conf = TestMonarch()
