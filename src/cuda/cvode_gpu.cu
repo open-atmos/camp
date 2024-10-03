@@ -134,6 +134,8 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   // Ensure synchronization
   cudaStreamSynchronize(stream);
   cudaDeviceSynchronize();
+  // #IFDEF LOAD_BALANCE
+  // TODO: Move Load_balance to runtime option
 #ifdef PROFILE_GPU_SOLVING
   // Balance load between CPU and GPU, changing the number of cells solved on
   // both architectures. Method explained on C. Guzman PhD Thesis - Chapter 6

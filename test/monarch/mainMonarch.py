@@ -7,6 +7,9 @@ import subprocess
 from pandas import read_csv as pd_read_csv
 
 
+# TODO; DEFINE OPTIONS
+# TODO: Add option to save path for output files
+# TODO: Move profile files to a new folder
 class TestMonarch:
     def __init__(self):
         # Case configuration
@@ -376,8 +379,8 @@ def plot_cases(conf, datay):
         print("plotTitle: ", plotTitle, " legend:", legend)
     else:
         print("plotTitle: ", plotTitle)
-    # print(namex, ":", datax)
-    # print(namey, ":", datay)
+    print(namex, ":", datax)
+    print(namey, ":", datay)
     # plot_functions.plotsns(namex, namey, datax, datay, plotTitle, legend)
 
 

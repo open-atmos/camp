@@ -16,11 +16,11 @@ Gradient algorithm as the linear solver.
 #include <cuda.h>
 #include "../camp_common.h"
 
-void init_solve_gpu(SolverData *sd);
+void init_solve_gpu(SolverData *sd);  // Initialize GPU solver
 int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
-              double t_initial);  // Solve
-void solver_get_statistics_gpu(SolverData *sd);
-void free_gpu_cu(SolverData *sd);
+              double t_initial);                 // Solve
+void solver_get_statistics_gpu(SolverData *sd);  // Get statistics
+void free_gpu_cu(SolverData *sd);                // Deallocate
 
 #define HANDLE_ERROR(err) (HandleError(err, __FILE__, __LINE__))
 static void HandleError(cudaError_t err, const char *file, int line) {

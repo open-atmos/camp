@@ -1,12 +1,19 @@
 CAMP GPU : Instructions for Marenostrum cluster
 ======
 
+#TODO: One section: All options listed here in the README and some sections putting more context
+#TODO: Organize files on folder (e.g. profileCPU folder)
+#TODO: WARNING: Output is saved in this folder:
+#TODO: Define each file and move the output files to the same folder (e.g. Extrae output with the stats output)
+    # e.g. cells: 10000, mpi_processes: 2, gpu_load: 50
+    # 5000->rank 0 ; 5000->rank 1
+    # 2500->CPU rank 0; 2500->GPU rank 0; 2500->CPU rank 1; 2500->GPU rank 1
+
 *If you previously run another branch, run `compile.sh `.*
 
 Run `compile.sh ` and `run.sh ` for developing the GPU test.
 
-We recommend to modify the file `TestMonarch.py` for testing
-the GPU version. It includes multiple configuration variables, such as number of cells, case, MPI processes, etc.
+We recommend to modify the file `TestMonarch.py` for testing the GPU version. It includes multiple configuration variables, such as number of cells, CPU or GPU version, MPI processes, etc.
 
 The intended behaviour of `TestMonarch.py` is to compare the CPU and GPU versions. It runs both versions, saving the output concentrations and execution times, and using that data to calculate the accuracy error and speedup. 
 
@@ -40,9 +47,7 @@ Where x represents the number of grid-cells to compute.
 A cell is the minimal region obtained after the domain
 decomposition of an Earth Science Model, such as
 the atmosphere. It can be also referred as the _dx_ component
-from a differential equation. It can also be referred 
-as the systems of Ordinary 
-Diferential Equation (ODE) to solve.
+from a differential equation. It can also be referred as the systems of Ordinary Diferential Equation (ODE) to solve.
 
 Each ODE computes the predicted value of a chemical specie.
 Thus, there are as much ODE as chemical species.

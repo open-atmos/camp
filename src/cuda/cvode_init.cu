@@ -50,6 +50,7 @@ void init_solve_gpu(SolverData *sd) {
 #endif
   // Set GPU device (e.g. a node can have more than one GPU available) for each
   // CPU thread (i.e. MPI rank)
+  // e.g. Run with 4 processes and 4 GPus: 0->GPU0, 1->GPU1, 2->GPU2, 3->GPU3
   int nGPUs;
   HANDLE_ERROR(cudaGetDeviceCount(&nGPUs));
   int rank;
@@ -64,6 +65,7 @@ void init_solve_gpu(SolverData *sd) {
     printf("Time INIT: %f\n",
            MPI_Wtime() -
                startTime);  // High on MN5 with multiple cores (e.g. 4s for 80)
+  // TODO: Check MPI-GPU assignment with Andrew
   // Parameters on the CPU related to the GPU solver
   CVodeMem cv_mem = (CVodeMem)sd->cvode_mem;  // Variables from CVODE library
   int n_cells = md->n_cells;
@@ -74,7 +76,8 @@ void init_solve_gpu(SolverData *sd) {
   ModelDataGPU *mGPU = sd->mGPU;
   cudaStream_t stream;  // Stream for asynchronous memory copy
   cudaStreamCreate(&stream);
-  md->n_cells_gpu = md->n_cells * sd->load_gpu / 100.;
+  md->n_cells_gpu =
+      md->n_cells * sd->load_gpu / 100.;  // Number of cells to solve in the GPU
   sd->last_load_balance = 0;
   sd->last_load_gpu = 100;
   sd->acc_load_balance = 0;
@@ -272,7 +275,8 @@ void init_solve_gpu(SolverData *sd) {
   cudaMemcpyAsync(&mGPU->sCells, &mCPU->mdvCPU, sizeof(ModelDataVariable),
                   cudaMemcpyHostToDevice, stream);
 
-  // Swap Jacobian format from CSC in the CPU to CSR for the GPU
+  // Swap Jacobian format from CSC in the CPU to CSR for the GPU (for efficiency
+  // reasons)
   int n_row = nrows / n_cells;
   int *Ap = iA;
   int *Aj = jA;

@@ -1662,6 +1662,7 @@ __device__ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
       if (i == 0) printf("ERROR: cv_tolsf > 1\n");
       return CV_TOO_MUCH_ACC;
     }
+    //TODO: Copy paste comments from CVODE and add information about differences
     // Solve
     kflag2 = cudaDevicecvStep(md, sc);
     if (kflag2 != CV_SUCCESS) {

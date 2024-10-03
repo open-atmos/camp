@@ -91,6 +91,7 @@ typedef struct {
   ModelDataVariable mdvCPU;
 } ModelDataCPU;
 
+// TODO: Group type variables together
 typedef struct {
   // Parameters from CAMP chemical model
   double

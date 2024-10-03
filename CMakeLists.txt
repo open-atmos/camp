@@ -304,6 +304,7 @@ endif()
 
 set(STD_C_FLAGS "-std=c99")
 #-lnvToolsExt for nsys profiling
+#WARNING: -dc flag does not work with MONARCH, avoid that
 set(STD_CUDA_FLAGS "-g -O3 --default-stream per-thread") #-G for assembly code nsight
 
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
