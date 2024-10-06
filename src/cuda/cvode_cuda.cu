@@ -663,6 +663,14 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y, double *yout,
   }
 }
 
+/** \brief Compute the time derivative f(t,y)
+ *
+ * \param time_step Current model time (s)
+ * \param y Dependent variable array
+ * \param yout Vector f(t,y) to calculate
+ * \param use_deriv_est Flag to use an scale factor on f(t,y)
+ * \return Status code
+ */
 __device__ int cudaDevicef(double time_step, double *y, double *yout,
                            bool use_deriv_est, ModelDataGPU *md,
                            ModelDataVariable *sc) {

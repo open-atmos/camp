@@ -222,15 +222,14 @@ typedef struct {
                               // calculating deriv
   Jacobian jac;               // CAMP Jacobian structure for use in
                               // calculating the Jacobian
-  N_Vector deriv;        // used to calculate the derivative outside the solver
-  SUNMatrix J;           // Jacobian matrix
-  SUNMatrix J_guess;     // Jacobian matrix for improving guesses sent to linear
-                         // solver
+  N_Vector deriv;  // used to calculate the derivative outside the solver
+  SUNMatrix J;     // Jacobian matrix
+  SUNMatrix
+      J_guess;  // Jacobian matrix for improving guesses sent to linearsolver
   realtype J_guess_t;    // Last time (t) for which J_guess was calculated
   int solver_flag;       // Last flag returned by a call to CVode()
   int output_precision;  // Flag indicating whether to output precision loss
-  int use_deriv_est;     // Flag indicating whether to use an estimated
-                         // derivative in the f() calculations
+  int use_deriv_est;     // Flag to use an scale factor on f(t,y)
 #ifdef CAMP_DEBUG
   int Jac_eval_fails;     // Number of Jacobian evaluation failures
   booleantype debug_out;  // Output debugging information during solving

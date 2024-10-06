@@ -192,7 +192,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
     if (rank == 0)
       printf(
           "load_gpu: %.2lf%% Load balance: %.2lf%% short_gpu %d \
-    increase_in_load_gpu %.2lf\n",
+          increase_in_load_gpu %.2lf\n",
           sd->last_load_gpu, load_balance, sd->last_short_gpu,
           increase_in_load_gpu);
 

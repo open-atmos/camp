@@ -204,7 +204,8 @@ if (ENABLE_GPU)
   add_definitions(-DCAMP_USE_GPU)
 endif()
 
-if (ENABLE_DEBUG_SOLVER_FAILURES)
+if (!ENABLE_DEBUG_SOLVER_FAILURES)
+else()
   add_definitions(-DDEBUG_SOLVER_FAILURES)
 endif()
 
