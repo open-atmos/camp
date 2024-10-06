@@ -53,7 +53,7 @@ program mock_monarch_t
   type(json_core) :: json
   character(len=:), allocatable :: export_path
   character(len=128) :: i_str
-  integer :: id, n_cells_monarch, load_gpu
+  integer :: id, n_cells_monarch, load_gpu, load_balance
 
   call camp_mpi_init()
   I_W=1
@@ -70,15 +70,13 @@ program mock_monarch_t
   output_path = "out/"//output_file_title
   call jfile%get('nCells',NUM_VERT_CELLS)
   n_cells_monarch = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
-  load_gpu=0
-  open(unit=32, file='settings/config_variables_c_solver.txt', status='old')
-  read(32, *) load_gpu
-  close(32)
+  call jfile%get('load_gpu',load_gpu)
   if(load_gpu == 0) then
     n_cells = 1
   else
     n_cells = n_cells_monarch
   end if
+  call jfile%get('load_balance',load_balance)
   call jfile%get('timeSteps',NUM_TIME_STEP)
   call jfile%get('timeStepsDt',TIME_STEP)
   call jfile%get('diffCells',diffCells)
@@ -91,8 +89,7 @@ program mock_monarch_t
   if (camp_mpi_rank()==0) then
     write(*,*) "Time-steps:", NUM_TIME_STEP, "Cells:",&
         NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS, &
-            diffCells,caseGpuCpu, "MPI processes",camp_mpi_size()
-
+            diffCells,caseGpuCpu, " MPI processes:", camp_mpi_size()
   end if
   allocate(temperature(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
   allocate(species_conc(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS,NUM_MONARCH_SPEC))
@@ -102,8 +99,7 @@ program mock_monarch_t
   allocate(conv(NUM_WE_CELLS, NUM_SN_CELLS, NUM_VERT_CELLS))
 
   camp_interface => camp_monarch_interface_t(camp_input_file, output_file_title, &
-          START_CAMP_ID, END_CAMP_ID, n_cells, load_gpu)
-
+          START_CAMP_ID, END_CAMP_ID, n_cells, load_gpu, load_balance)
   camp_interface%camp_state%state_var(:) = 0.0
   species_conc(:,:,:,:) = 0.0
   air_density(:,:,:) = 1.225

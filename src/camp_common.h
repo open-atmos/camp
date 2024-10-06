@@ -256,6 +256,9 @@ typedef struct {
   int iters_load_balance;   // Iterations to calculate the average load balance
   int last_short_gpu;  // Flag to indicate that solving on the GPU takes less
                        // time than the CPU
+  int load_balance;    // Flag to balance the load between CPU and GPU. 0 to
+  // fixed load balance during run time, while 1 to automatic
+  // load balance
 #ifdef PROFILE_SOLVING
   // Metrics for measuring time execution of the GPU solver, such as solving and
   // synchronization time

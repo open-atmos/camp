@@ -41,6 +41,7 @@ class TestMonarch:
         self.is_import_base = False
         self.is_out = True
         self.loads_gpu = [0]  # Percentage of computational load (cells) to GPU
+        self.load_balance = 0 #0 to Fixed load balance during run time 1 to Automatic load balance
         # Auxiliary
         self.sbatch_job_id = ""
         self.exportPath = "exports"
@@ -116,6 +117,7 @@ def run(conf):
         file1 = open(conf.campConf, "w")
         if conf.caseGpuCpu == "GPU":
             file1.write(str(conf.load_gpu) + "\n")
+            file1.write(str(conf.load_balance) + "\n")
         else:
             file1.write("0\n")
         file1.close()
@@ -130,6 +132,7 @@ def run(conf):
         conf.nCells,
         "Cells to GPU:",
         str(conf.load_gpu) + "%",
+        "Load_balance: ", str(conf.load_balance)
     )
     conf_name = "settings/TestMonarch.json"
     with open(conf_name, "w", encoding="utf-8") as jsonFile:
@@ -142,7 +145,7 @@ def run(conf):
     is_import = False
     data_path = "out/stats"
     if conf.caseGpuCpu == "GPU":
-        data_path += str(conf.load_gpu)
+        data_path += str(conf.load_gpu) + str(conf.load_balance)
     data_path += (
         caseGpuCpuName
         + nCellsStr
@@ -153,7 +156,7 @@ def run(conf):
     print("data_path", data_path)
     data_path2 = "out/state"
     if conf.caseGpuCpu == "GPU":
-        data_path2 += str(conf.load_gpu)
+        data_path2 += str(conf.load_gpu) + str(conf.load_balance)
     data_path2 += (
         caseGpuCpuName
         + nCellsStr

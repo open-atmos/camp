@@ -50,7 +50,7 @@ module camp_camp_solver_data
                     n_aero_rep_int_param, n_aero_rep_float_param, &
                     n_aero_rep_env_param, n_sub_model, n_sub_model_int_param,&
                     n_sub_model_float_param, n_sub_model_env_param,&
-                    load_gpu, is_reset_jac) bind (c)
+                    load_gpu, is_reset_jac, load_balance) bind (c)
       use iso_c_binding
       !> Number of variables on the state array per grid cell
       !! (including const, PSSA, etc.)
@@ -93,6 +93,7 @@ module camp_camp_solver_data
       integer(kind=c_int), value :: n_sub_model_env_param
       integer(kind=c_int), value :: load_gpu
       integer(kind=c_int), value :: is_reset_jac
+      integer(kind=c_int), value :: load_balance
     end function solver_new
 
     !> Set specie name
@@ -450,7 +451,7 @@ contains
   !> Initialize the solver
   subroutine initialize(this, var_type, abs_tol, mechanisms, aero_phases, &
           aero_reps, sub_models, rxn_phase, n_cells,&
-          spec_names, load_gpu, is_reset_jac)
+          spec_names, load_gpu, is_reset_jac, load_balance)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
@@ -469,7 +470,7 @@ contains
     type(aero_rep_data_ptr), pointer, intent(in) :: aero_reps(:)
     !> Sub models to include
     type(sub_model_data_ptr), pointer, intent(in) :: sub_models(:)
-    integer, intent(in) :: load_gpu, is_reset_jac
+    integer, intent(in) :: load_gpu, is_reset_jac, load_balance
     !> Reactions phase to solve -- gas, aerosol, or both (default)
     !! Use parameters in camp_rxn_data to specify phase:
     !! GAS_RXN, AERO_RXN, GAS_AERO_RXN
@@ -653,7 +654,7 @@ contains
             n_sub_model_int_param,             & ! # of sub model int params
             n_sub_model_float_param,           & ! # of sub model real params
             n_sub_model_env_param,              & ! # of sub model env params
-            load_gpu, is_reset_jac &
+            load_gpu, is_reset_jac, load_balance &
             )
 
     ! Add all the condensed reaction data to the solver data block for

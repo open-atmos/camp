@@ -100,7 +100,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
                  int n_sub_model_float_param, int n_sub_model_env_param,
-                 int load_gpu, int is_reset_jac) {
+                 int load_gpu, int is_reset_jac, int load_balance) {
   // Create the SolverData object
   SolverData *sd = (SolverData *)malloc(sizeof(SolverData));
   if (sd == NULL) {
@@ -129,6 +129,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
   sd->load_gpu = (double)load_gpu;
   sd->is_reset_jac = is_reset_jac;
+  sd->load_balance = load_balance;
   sd->model_data.n_cells = n_cells;
 
   // Add the variable types to the solver data

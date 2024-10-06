@@ -4,7 +4,7 @@
  */
 #include "cvode_cuda.h"
 
-#define LOAD_BALANCE
+// #define LOAD_BALANCE
 
 extern "C" {
 #include "cvode_gpu.h"
@@ -27,7 +27,9 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   cudaStream_t stream;  // Variable for asynchronous execution of the GPU
   cudaStreamCreate(&stream);
 #ifdef LOAD_BALANCE
-  cudaEventRecord(sd->startGPU, stream);  // Start GPU timer
+  if (sd->load_balance == 1) {
+    cudaEventRecord(sd->startGPU, stream);  // Start GPU timer
+  }
 #endif
   // Transfer data to GPU
   cudaMemcpyAsync(mGPU->rxn_env_data, md->rxn_env_data,
@@ -42,14 +44,19 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   cvodeRun(t_initial, mGPU, n_cells, md->n_per_cell_dep_var,
            stream);  // Asynchronous
 #ifdef LOAD_BALANCE
-  cudaEventRecord(sd->stopGPU, stream);  // End GPU timer
+  if (sd->load_balance == 1) {
+    cudaEventRecord(sd->stopGPU, stream);  // End GPU timer
+  }
 #endif
   // CPU solver, equivalent to the CPU solver for the option CPU-Only
 #ifdef TRACE_CPUGPU
   nvtxRangePushA("CPU Code");  // Start of profiling trace
 #endif
 #ifdef LOAD_BALANCE
-  double startTime = MPI_Wtime();
+  double startTime;
+  if (sd->load_balance == 1) {
+    startTime = MPI_Wtime();
+  }
 #endif
   // Set data
   n_cells = md->n_cells;
@@ -113,14 +120,19 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   md->total_env = env;
   md->rxn_env_data = rxn_env_data;
 #ifdef LOAD_BALANCE
-  double timeCPU = (MPI_Wtime() - startTime);
+  double timeCPU;
+  if (sd->load_balance == 1) {
+    timeCPU = (MPI_Wtime() - startTime);
+  }
 #endif
 #ifdef TRACE_CPUGPU
   nvtxRangePop();  // End of profiling trace
 #endif
 #ifdef LOAD_BALANCE
-  // Start synchronization timer between CPU and GPU
-  cudaEventRecord(sd->startGPUSync, stream);
+  if (sd->load_balance == 1) {
+    // Start synchronization timer between CPU and GPU
+    cudaEventRecord(sd->startGPUSync, stream);
+  }
 #endif
   // Transfer data back to CPU. This is located after the CPU solver and not
   // before because it blocks CPU execution until finish the GPU kernel
@@ -134,58 +146,64 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   // Ensure synchronization
   cudaStreamSynchronize(stream);
   cudaDeviceSynchronize();
-  // #IFDEF LOAD_BALANCE
-  // TODO: Move Load_balance to runtime option
 #ifdef LOAD_BALANCE
   // Balance load between CPU and GPU, changing the number of cells solved on
   // both architectures. Method explained on C. Guzman PhD Thesis - Chapter 6
-  cudaEventRecord(sd->stopGPUSync, stream);  // End synchronization timer
-  cudaEventSynchronize(sd->stopGPUSync);
-  cudaEventSynchronize(sd->stopGPU);
-  float msDevice = 0.0;
-  cudaEventElapsedTime(&msDevice, sd->startGPU, sd->stopGPU);
-  double timeGPU = msDevice / 1000;
-  cudaEventElapsedTime(&msDevice, sd->startGPUSync, sd->stopGPUSync);
-  timeGPU += msDevice / 1000;
-  double load_balance = 100;
-  double min = fmin(timeGPU, timeCPU);
-  double max = fmax(timeGPU, timeCPU);
-  load_balance = 100 * min / max;
-  int short_gpu = 0;
-  if (timeGPU < timeCPU) short_gpu = 1;
-  double increase_in_load_gpu = sd->load_gpu - sd->last_load_gpu;
-  double last_short_gpu = sd->last_short_gpu;
-  double diff_load_balance = load_balance - sd->last_load_balance;
-  if (short_gpu != last_short_gpu) {
-    diff_load_balance = 100 - sd->last_load_balance + 100 - load_balance;
-    increase_in_load_gpu *= -1;
-  }
-  double remaining_load_balance = 100 - load_balance;
-  if (remaining_load_balance > diff_load_balance)
-    increase_in_load_gpu *= 1.5;
-  else
-    increase_in_load_gpu /= 2;
-  sd->last_short_gpu = short_gpu;
-  sd->last_load_balance = load_balance;
-  sd->last_load_gpu = sd->load_gpu;
-  if (load_balance != 100) sd->load_gpu += increase_in_load_gpu;
-  if (sd->load_gpu > 99) sd->load_gpu = 99;
-  if (sd->load_gpu < 1) sd->load_gpu = 1;
-  sd->acc_load_balance += load_balance;
-  sd->iters_load_balance++;
-  md->n_cells_gpu = md->n_cells * sd->load_gpu / 100;  // Automatic load balance
+  if (sd->load_balance == 1) {
+    cudaEventRecord(sd->stopGPUSync, stream);  // End synchronization timer
+    cudaEventSynchronize(sd->stopGPUSync);
+    cudaEventSynchronize(sd->stopGPU);
+    float msDevice = 0.0;
+    cudaEventElapsedTime(&msDevice, sd->startGPU, sd->stopGPU);
+    double timeGPU = msDevice / 1000;
+    cudaEventElapsedTime(&msDevice, sd->startGPUSync, sd->stopGPUSync);
+    timeGPU += msDevice / 1000;
+    double load_balance = 100;
+    double min = fmin(timeGPU, timeCPU);
+    double max = fmax(timeGPU, timeCPU);
+    load_balance = 100 * min / max;
+    int short_gpu = 0;
+    if (timeGPU < timeCPU) short_gpu = 1;
+    double increase_in_load_gpu = sd->load_gpu - sd->last_load_gpu;
+    double last_short_gpu = sd->last_short_gpu;
+    double diff_load_balance = load_balance - sd->last_load_balance;
+    if (short_gpu != last_short_gpu) {
+      diff_load_balance = 100 - sd->last_load_balance + 100 - load_balance;
+      increase_in_load_gpu *= -1;
+    }
+    double remaining_load_balance = 100 - load_balance;
+    if (remaining_load_balance > diff_load_balance)
+      increase_in_load_gpu *= 1.5;
+    else
+      increase_in_load_gpu /= 2;
+    sd->last_short_gpu = short_gpu;
+    sd->last_load_balance = load_balance;
+    sd->last_load_gpu = sd->load_gpu;
+    if (load_balance != 100) sd->load_gpu += increase_in_load_gpu;
+    if (sd->load_gpu > 99) sd->load_gpu = 99;
+    if (sd->load_gpu < 1) sd->load_gpu = 1;
+    sd->acc_load_balance += load_balance;
+    sd->iters_load_balance++;
+    md->n_cells_gpu = md->n_cells * sd->load_gpu / 100;  // Automatic load
+                                                         // balance
 #ifdef DEBUG_LOAD_BALANCE
-  int rank;
-  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  if (rank == 0)printf("load_gpu: %.2lf%% Load balance: %.2lf%% short_gpu %d
-  increase_in_load_gpu %.2lf\n",sd->last_load_gpu,load_balance,sd->last_short_gpu,increase_in_load_gpu);
+    int rank;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    if (rank == 0)
+      printf(
+          "load_gpu: %.2lf%% Load balance: %.2lf%% short_gpu %d \
+    increase_in_load_gpu %.2lf\n",
+          sd->last_load_gpu, load_balance, sd->last_short_gpu,
+          increase_in_load_gpu);
+
 #endif
+  }
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   cudaMemcpyAsync(&mCPU->mdvCPU, mGPU->mdvo, sizeof(ModelDataVariable),
                   cudaMemcpyDeviceToHost, stream);
 #endif
 #endif
-  cudaStreamDestroy(stream); // reset stream for next iteration
+  cudaStreamDestroy(stream);  // reset stream for next iteration
 #ifdef DEBUG_SOLVER_FAILURES
   cudaMemcpyAsync(sd->flags, mGPU->flags, md->n_cells_gpu * sizeof(int),
                   cudaMemcpyDeviceToHost, stream);
