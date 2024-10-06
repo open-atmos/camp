@@ -165,7 +165,7 @@ typedef struct {
   int n_shr_empty;  // Number of empty shared memory slots, used on "reduce"
                     // type operations to treat the input as a power of two
   ModelDataVariable *sCells;  // Variables for each cell in the model.
-#ifdef DEBUG_SOLVER_FAILURES
+#ifndef DEBUG_SOLVER_FAILURES
   int *flags;  // Error failures on solving
 #endif
 #ifdef PROFILE_SOLVING

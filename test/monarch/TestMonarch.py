@@ -9,11 +9,11 @@ from mainMonarch import *
 
 def all_timesteps():
     conf = TestMonarch()
-    conf.timeSteps = 10
+    conf.timeSteps = 1
     conf.loads_gpu = [100]  # e.g. 0: CPU-Only 100: GPU-Only 1-99: CPU+GPU
-    conf.load_balance = 1 #0: fixed, 1: automatic in runtime
-    conf.cells = [10000]
-    conf.mpiProcessesCaseBase = 10
+    conf.load_balance = 0 #0: fixed, 1: automatic in runtime
+    conf.cells = [100]
+    conf.mpiProcessesCaseBase = 1
     conf.caseBase = "CPU One-cell"
     # conf.caseBase = "GPU BDF"
     conf.mpiProcessesCaseOptimList = [1]

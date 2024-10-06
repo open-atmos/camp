@@ -30,4 +30,45 @@ static void HandleError(cudaError_t err, const char *file, int line) {
   }
 }
 
+/*
+ * cvHandleFailure
+ *
+ * This routine prints error messages for all cases of failure by
+ * cvHin and cvStep.
+ * It returns to CVode the value that CVode is to return to the user.
+ */
+static void cudacvHandleFailure(int flag, int cell) {
+  switch (flag) {
+    case CV_ERR_FAILURE:
+      printf("CVODE ERROR: %s at cell %d\n", MSGCV_ERR_FAILS, cell);
+      break;
+    case CV_CONV_FAILURE:
+      printf("CVODE ERROR: %s at cell %d\n", MSGCV_CONV_FAILS, cell);
+      break;
+    case CV_LSETUP_FAIL:
+      printf("CVODE ERROR: %s at cell %d\n", MSGCV_SETUP_FAILED, cell);
+      break;
+    case CV_LSOLVE_FAIL:
+      printf("CVODE ERROR: %s at cell %d\n", MSGCV_SOLVE_FAILED, cell);
+      break;
+    case CV_RHSFUNC_FAIL:
+      printf("CVODE ERROR: %s at cell %d\n", MSGCV_RHSFUNC_FAILED, cell);
+      break;
+    case CV_UNREC_RHSFUNC_ERR:
+      printf("CVODE ERROR: %s at cell %d\n", MSGCV_RHSFUNC_UNREC, cell);
+      break;
+    case CV_REPTD_RHSFUNC_ERR:
+      printf("CVODE ERROR: %s at cell %d\n", MSGCV_RHSFUNC_REPTD, cell);
+      break;
+    case CV_RTFUNC_FAIL:
+      printf("CVODE ERROR: %s at cell %d\n", MSGCV_RTFUNC_FAILED, cell);
+      break;
+    case CV_TOO_CLOSE:
+      printf("CVODE ERROR: %s at cell %d\n", MSGCV_TOO_CLOSE, cell);
+      break;
+    default:
+      printf("CVODE ERROR: Unknown at cell %d\n", cell);
+  }
+}
+
 #endif

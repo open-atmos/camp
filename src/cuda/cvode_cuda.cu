@@ -1578,6 +1578,19 @@ __device__ int cudaDeviceCVodeGetDky(ModelDataGPU *md, ModelDataVariable *sc,
   return (CV_SUCCESS);
 }
 
+/*
+ * cvEwtSet
+ *
+ * This routine is responsible for setting the error weight vector ewt
+ *
+ *    ewt[i] = 1 / (reltol * SUNRabs(ycur[i]) + abstol[i]), i=0,...,neq-1
+ *
+ * It tests for non-positive components before inverting.
+ * cvEwtSet returns 0 if ewt is successfully set as above to a
+ * positive vector and -1 otherwise. In the latter case, ewt is
+ * considered undefined.
+ *
+ */
 __device__ int cudaDevicecvEwtSetSV(ModelDataGPU *md, ModelDataVariable *sc,
                                     double *weight) {
   extern __shared__ double flag_shr2[];
@@ -1591,19 +1604,46 @@ __device__ int cudaDevicecvEwtSetSV(ModelDataGPU *md, ModelDataVariable *sc,
   return (0);
 }
 
-// Most external loop (equivalent to main CVode function from CVODE library)
+/*
+ * CVode
+ *
+ * This routine is equivalent to the main driver of the CVODE package.
+ *
+ * It integrates over a time interval defined by the user, by calling
+ * cvStep to do internal time steps.
+ *
+ * It computes a tentative initial step size h.
+ *
+ * The solver steps until it reaches or passes tout
+ * and then interpolates to obtain y(tout).
+ */
 __device__ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
   extern __shared__ int flag_shr[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int kflag2, retval;
   sc->cv_h = md->init_time_step;  // CVodeSetInitStep
   // CVodeReInit
+  // Set step parameters
   sc->cv_q = 1;
   sc->cv_L = 2;
   sc->cv_qwait = sc->cv_L;
   sc->cv_etamax = ETAMX1;
-  sc->cv_next_h = 0.;
-  // Solver initilization
+  sc->cv_next_h = 0.;  // Set other integrator optional output
+  /*
+   * --------------------------------------------------
+   * Looping point for internal steps
+   *
+   *    1. check for errors (too many steps, too much
+   *         accuracy requested, step size too small)
+   *    2. take a new step (call cvStep)
+   *    3. stop on error
+   *    4. perform stop tests:
+   *         - check for root in last step
+   *         - check if tout was passed
+   *         - check if close to tstop
+   * --------------------------------------------------
+   */
+  // Reset and check ewt
   retval = cudaDevicecvEwtSetSV(md, sc, md->dewt);
   if (retval != 0) {
     return (CV_ILL_INPUT);
@@ -1611,6 +1651,7 @@ __device__ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
   retval = cudaDevicef(sc->cv_tn, md->dzn[0], md->dzn[1], true, md, sc);
   md->yout[i] = md->dzn[0][i];
   if (retval != 0) {
+    md->yout[i] = md->dzn[0][i];
     return (CV_RHSFUNC_FAIL);
   }
   if (fabs(sc->cv_h) < sc->cv_hmin) {
@@ -1641,7 +1682,6 @@ __device__ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
       ewtsetOK = cudaDevicecvEwtSetSV(md, sc, md->dewt);
       if (ewtsetOK != 0) {
         md->yout[i] = md->dzn[0][i];
-        if (i == 0) printf("ERROR: ewtsetOK\n");
         return CV_ILL_INPUT;
       }
     }
@@ -1662,8 +1702,9 @@ __device__ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
       if (i == 0) printf("ERROR: cv_tolsf > 1\n");
       return CV_TOO_MUCH_ACC;
     }
-    //TODO: Copy paste comments from CVODE and add information about differences
-    // Solve
+    // TODO: Copy paste comments from CVODE and add information about
+    // differences
+    //  Solve
     kflag2 = cudaDevicecvStep(md, sc);
     if (kflag2 != CV_SUCCESS) {
       md->yout[i] = md->dzn[0][i];
@@ -1697,7 +1738,7 @@ __global__ void cudaGlobalCVode(double t_initial, ModelDataGPU md_object) {
   clock_t start;
   start = clock();
 #endif
-#ifdef DEBUG_SOLVER_FAILURES
+#ifndef DEBUG_SOLVER_FAILURES
   md->flags[i] = cudaDeviceCVode(md, sc);
 #else
   cudaDeviceCVode(md, sc);

@@ -47,8 +47,6 @@ class TestMonarch:
         self.exportPath = "exports"
         self.results_file = "_solver_stats.csv"
         self.nCellsProcesses = 1
-        self.campConf = "settings/config_variables_c_solver.txt"
-
 
 # from line_profiler_pycharm import profile
 # @profile
@@ -113,16 +111,6 @@ def run(conf):
         exec_str += "valgrind --tool=cachegrind "
     path_exec = "../../build/mock_monarch"
     exec_str += path_exec
-    try:
-        file1 = open(conf.campConf, "w")
-        if conf.caseGpuCpu == "GPU":
-            file1.write(str(conf.load_gpu) + "\n")
-            file1.write(str(conf.load_balance) + "\n")
-        else:
-            file1.write("0\n")
-        file1.close()
-    except Exception as e:
-        print("write_camp_config_file fails", e)
     print("exec_str:", exec_str)
     print(
         conf.diffCells,

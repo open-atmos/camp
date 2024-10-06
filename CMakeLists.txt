@@ -29,6 +29,7 @@ option(ENABLE_DEBUG "Compile debugging functions" OFF)
 option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
 option(ENABLE_PROFILE_SOLVING "" OFF)
+option(DEBUG_SOLVER_FAILURES "" OFF)
 option(ENABLE_NETCDF "Include NETCDF package" OFF)
 option(DISABLE_INSTALL_OPTIONS "" OFF)
 SET(USE_TESTS OFF)
@@ -201,6 +202,10 @@ if (ENABLE_GPU)
   find_package(CUDA)
   enable_language(CUDA)
   add_definitions(-DCAMP_USE_GPU)
+endif()
+
+if (ENABLE_DEBUG_SOLVER_FAILURES)
+  add_definitions(-DDEBUG_SOLVER_FAILURES)
 endif()
 
 ######################################################################

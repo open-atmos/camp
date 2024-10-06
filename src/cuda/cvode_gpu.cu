@@ -139,7 +139,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   cudaMemcpyAsync(md->total_state, mGPU->state,
                   md->n_per_cell_state_var * md->n_cells_gpu * sizeof(double),
                   cudaMemcpyDeviceToHost, stream);
-#ifdef DEBUG_SOLVER_FAILURES
+#ifndef DEBUG_SOLVER_FAILURES
   cudaMemcpyAsync(sd->flags, mGPU->flags, md->n_cells_gpu * sizeof(int),
                   cudaMemcpyDeviceToHost, stream);
 #endif
@@ -204,11 +204,15 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
 #endif
 #endif
   cudaStreamDestroy(stream);  // reset stream for next iteration
-#ifdef DEBUG_SOLVER_FAILURES
-  cudaMemcpyAsync(sd->flags, mGPU->flags, md->n_cells_gpu * sizeof(int),
-                  cudaMemcpyDeviceToHost, stream);
+#ifndef DEBUG_SOLVER_FAILURES
+  for (int i = 0; i < md->n_cells_gpu; i++) {
+    if (sd->flags[i] != 0) {
+      // cudacvHandleFailure(sd->flags[i], i);
+      flag = CAMP_SOLVER_FAIL;
+    }
+  }
 #endif
-  return (CV_SUCCESS);
+  return (flag);
 }
 
 void solver_get_statistics_gpu(SolverData *sd) {

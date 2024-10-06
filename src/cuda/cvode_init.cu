@@ -65,7 +65,6 @@ void init_solve_gpu(SolverData *sd) {
     printf("Time INIT: %f\n",
            MPI_Wtime() -
                startTime);  // High on MN5 with multiple cores (e.g. 4s for 80)
-  // TODO: Check MPI-GPU assignment with Andrew
   // Parameters on the CPU related to the GPU solver
   CVodeMem cv_mem = (CVodeMem)sd->cvode_mem;  // Variables from CVODE library
   int n_cells = md->n_cells;
@@ -89,10 +88,9 @@ void init_solve_gpu(SolverData *sd) {
   cudaEventCreate(&sd->startGPUSync);
   cudaEventCreate(&sd->stopGPUSync);
 #endif
-#ifdef DEBUG_SOLVER_FAILURES
+#ifndef DEBUG_SOLVER_FAILURES
   cudaMalloc((void **)&mGPU->flags, n_cells);
-  malloc(mCPU->flags, n_cells);
-  int *aux_solver_id = (int *)malloc(nnz * sizeof(int));
+  sd->flags = (int *)malloc(n_cells * sizeof(int));
 #endif
 
   // Parameters from CAMP chemical model
@@ -387,7 +385,7 @@ void free_gpu_cu(SolverData *sd) {
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   cudaFree(mGPU->mdvo);
 #endif
-#ifdef DEBUG_SOLVER_FAILURES
+#ifndef DEBUG_SOLVER_FAILURES
   cudaFree(mGPU->flags);
 #endif
 }

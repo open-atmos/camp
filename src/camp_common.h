@@ -270,7 +270,7 @@ typedef struct {
 #ifdef PROFILE_SOLVING
   booleantype is_load_balance;
 #endif
-#ifdef DEBUG_SOLVER_FAILURES
+#ifndef DEBUG_SOLVER_FAILURES
   int *flags;  // Error flags from solving failures
 #endif
 #endif
