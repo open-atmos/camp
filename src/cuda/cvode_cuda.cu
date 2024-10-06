@@ -669,6 +669,8 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y, double *yout,
  * \param y Dependent variable array
  * \param yout Vector f(t,y) to calculate
  * \param use_deriv_est Flag to use an scale factor on f(t,y)
+ * \param md Global data
+ * \param sc Block data
  * \return Status code
  */
 __device__ int cudaDevicef(double time_step, double *y, double *yout,
@@ -679,8 +681,11 @@ __device__ int cudaDevicef(double time_step, double *y, double *yout,
   clock_t start;
   start = clock();
 #endif
+  // On the first call to f(), the time step hasn't been set yet, so use the
+  // default value
   time_step = sc->cv_next_h;
   time_step = time_step > 0. ? time_step : md->init_time_step;
+  // Update the state array with the current dependent variable values.
   int checkflag = cudaDevicecamp_solver_check_model_state(md, sc, y);
   if (checkflag == CAMP_SOLVER_FAIL) {
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
@@ -690,6 +695,7 @@ __device__ int cudaDevicef(double time_step, double *y, double *yout,
 #endif
     return CAMP_SOLVER_FAIL;
   }
+  // Calculate the time derivative f(t,y)
   cudaDevicecalc_deriv(time_step, y, yout, use_deriv_est, md, sc);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -699,12 +705,44 @@ __device__ int cudaDevicef(double time_step, double *y, double *yout,
   return 0;
 }
 
+/** \brief Try to improve guesses of y sent to the linear solver
+ *
+ * This function checks if there are any negative guessed concentrations,
+ * and if there are it calculates a set of initial corrections to the
+ * guessed state using the state at time \f$t_{n-1}\f$ and the derivative
+ * \f$f_{n-1}\f$ and advancing the state according to:
+ * \f[
+ *   y_n = y_{n-1} + \sum_{j=1}^m h_j * f_j
+ * \f]
+ * where \f$h_j\f$ is the largest timestep possible where
+ * \f[
+ *   y_{j-1} + h_j * f_j > 0
+ * \f]
+ * and
+ * \f[
+ *   t_n = t_{n-1} + \sum_{j=1}^m h_j
+ * \f]
+ *
+ * \param t_n Current time [s]
+ * \param h_n Current time step size [s] If this is set to zero, the change hf
+ *            is assumed to be an adjustment where y_n = y_n1 + hf
+ * \param y_n Current guess for \f$y(t_n)\f$
+ * \param y_n1 \f$y(t_{n-1})\f$
+ * \param hf Current guess for change in \f$y\f$ from \f$t_{n-1}\f$ to
+ *            \f$t_n\f$ [input/output]
+ * \param atmp1 Temporary vector for calculations
+ * \param acorr Vector of calculated adjustments to \f$y(t_n)\f$ [output]
+ * \param md Global data
+ * \param sc Block data
+ * \return 1 if corrections were calculated, 0 if not, -1 if error
+ */
 __device__ int CudaDeviceguess_helper(double t_n, double h_n, double *y_n,
                                       double *y_n1, double *hf, double *atmp1,
                                       double *acorr, ModelDataGPU *md,
                                       ModelDataVariable *sc) {
   extern __shared__ double sdata[];
   int i = blockIdx.x * blockDim.x + threadIdx.x;
+  // Only try improvements when negative concentrations are predicted
   double min;
   cudaDevicemin(&min, y_n[i], sdata, md->n_shr_empty);
   if (min > -SMALL) {
@@ -715,15 +753,19 @@ __device__ int CudaDeviceguess_helper(double t_n, double h_n, double *y_n,
   clock_t start;
   start = clock();
 #endif
+  // Copy \f$y(t_{n-1})\f$ to working array
   atmp1[i] = y_n1[i];
+  // Get  \f$f(t_{n-1})\f$
   if (h_n > 0.) {
     acorr[i] = (1. / h_n) * hf[i];
   } else {
     acorr[i] = hf[i];
   }
+  // Advance state interatively
   double t_0 = h_n > 0. ? t_n - h_n : t_n - 1.;
   double t_j = 0.;
   for (int iter = 0; iter < GUESS_MAX_ITER && t_0 + t_j < t_n; iter++) {
+    // Calculate \f$h_j\f$
     double h_j = t_n - (t_0 + t_j);
 #ifdef IS_DEBUG_MODE_CudaDeviceguess_helper
     if (threadIdx.x == 0) {
@@ -746,6 +788,7 @@ __device__ int CudaDeviceguess_helper(double t_n, double h_n, double *y_n,
     if (t_star < 0. || (t_star == 0. && acorr[i] >= 0.)) {
       t_star = h_j;
     }
+    // Scale incomplete jumps
     cudaDevicemin(&min, t_star, sdata, md->n_shr_empty);
     if (min < h_j) {
       h_j = min;
@@ -753,6 +796,7 @@ __device__ int CudaDeviceguess_helper(double t_n, double h_n, double *y_n,
     }
 #endif
     h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
+    // Only make small changes to adjustment vectors used in Newton iteration
     if (h_n == 0. && t_n - (h_j + t_j + t_0) > md->cv_reltol) {
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
       if (threadIdx.x == 0)
@@ -761,8 +805,11 @@ __device__ int CudaDeviceguess_helper(double t_n, double h_n, double *y_n,
 #endif
       return -1;
     }
+    // Advance the state
     atmp1[i] += h_j * acorr[i];
+    // Advance t_j
     t_j += h_j;
+    // Recalculate the time derivative \f$f(t_j)\f$
     int fflag = cudaDevicef(t_0 + t_j, atmp1, acorr, true, md, sc);
     if (fflag == CAMP_SOLVER_FAIL) {
       acorr[i] = 0.;
@@ -784,8 +831,11 @@ __device__ int CudaDeviceguess_helper(double t_n, double h_n, double *y_n,
       }
     }
   }
+  // Set the correction vector
   acorr[i] = atmp1[i] - y_n[i];
+  // Scale the initial corrections
   if (h_n > 0.) acorr[i] = acorr[i] * 0.999;
+  // Update the hf vector
   hf[i] = atmp1[i] - y_n1[i];
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   if (threadIdx.x == 0)
@@ -869,6 +919,7 @@ __device__ void cudaDevicecalc_Jac(double *y, ModelDataGPU *md,
   }
 #endif
   __syncthreads();
+  // Set the solver Jacobian using the reaction Jacobians
   JacMap *jac_map = md->jac_map;
   int nnz = md->diA[blockDim.x];
   int n_iters = nnz / blockDim.x;
@@ -897,6 +948,12 @@ __device__ void cudaDevicecalc_Jac(double *y, ModelDataGPU *md,
 #endif
 }
 
+/** \brief Compute the Jacobian
+ *
+ * \param md Global data
+ * \param sc Block data
+ * \return Status code
+ */
 __device__ int cudaDeviceJac(ModelDataGPU *md, ModelDataVariable *sc) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int retval;
@@ -905,9 +962,13 @@ __device__ int cudaDeviceJac(ModelDataGPU *md, ModelDataVariable *sc) {
   clock_t start;
   start = clock();
 #endif
+  // Calculate the the derivative for the current state y without
+  // the estimated derivative from the last Jacobian calculation
   retval = cudaDevicef(sc->cv_next_h, md->dcv_y, md->dftemp, false, md, sc);
   if (retval == CAMP_SOLVER_FAIL) return CAMP_SOLVER_FAIL;
+  // Calculate the reaction Jacobian
   cudaDevicecalc_Jac(md->dcv_y, md, sc);
+  // Save the Jacobian for use with derivative calculations
   int nnz = md->diA[blockDim.x];
   int n_iters = nnz / blockDim.x;
   for (int z = 0; z < n_iters; z++) {
@@ -1685,9 +1746,9 @@ __device__ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
     flag_shr[0] = 0;
     __syncthreads();
     sc->cv_next_h = sc->cv_h;
-    int ewtsetOK = 0;
+    /* Reset and check ewt */
     if (sc->cv_nst > 0) {
-      ewtsetOK = cudaDevicecvEwtSetSV(md, sc, md->dewt);
+      int ewtsetOK = cudaDevicecvEwtSetSV(md, sc, md->dewt);
       if (ewtsetOK != 0) {
         md->yout[i] = md->dzn[0][i];
         return CV_ILL_INPUT;

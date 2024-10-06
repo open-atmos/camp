@@ -15,6 +15,10 @@
 extern "C" {
 #include "../camp_solver.h"
 }
+__device__ int CudaDeviceguess_helper(double t_n, double h_n, double *y_n,
+                                      double *y_n1, double *hf, double *atmp1,
+                                      double *acorr, ModelDataGPU *md,
+                                      ModelDataVariable *sc);
 
 void cvodeRun(double t_initial, ModelDataGPU *mGPU, int blocks,
               int threads_block, cudaStream_t stream);

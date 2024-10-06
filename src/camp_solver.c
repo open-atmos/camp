@@ -1280,13 +1280,11 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
 
     // Scale incomplete jumps
     if (i_fast >= 0 && h_n > ZERO)
-      h_j *= 0.95 +
-             0.1 * iter /
-                 (double)
-                     GUESS_MAX_ITER;  // pending validation monarch long run mn5
-    // if (i_fast >= 0 && h_n > ZERO) h_j *= 0.95 + 0.1 * rand() /
-    // (double)RAND_MAX; //old routine, good for MONARCH, bad for box compare
-    // with GPU
+      h_j *=
+          0.95 + 0.1 * iter /
+                     (double)GUESS_MAX_ITER;  // pending validation monarch long
+                                              // run mn5. remove for validation
+                                              // with MONARCH (experiment a7s4)
     h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
 
     // Only make small changes to adjustment vectors used in Newton iteration
