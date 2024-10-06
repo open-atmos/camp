@@ -9,7 +9,7 @@ from mainMonarch import *
 
 def all_timesteps():
     conf = TestMonarch()
-    conf.timeSteps = 1
+    conf.timeSteps = 10
     conf.loads_gpu = [100]  # e.g. 0: CPU-Only 100: GPU-Only 1-99: CPU+GPU
     conf.load_balance = 0 #0: fixed, 1: automatic in runtime
     conf.cells = [100]

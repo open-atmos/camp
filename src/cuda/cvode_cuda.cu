@@ -1738,8 +1738,8 @@ __global__ void cudaGlobalCVode(double t_initial, ModelDataGPU md_object) {
   clock_t start;
   start = clock();
 #endif
-#ifndef DEBUG_SOLVER_FAILURES
-  md->flags[i] = cudaDeviceCVode(md, sc);
+#ifdef DEBUG_SOLVER_FAILURES
+  md->flags[blockIdx.x] = cudaDeviceCVode(md, sc);
 #else
   cudaDeviceCVode(md, sc);
 #endif

@@ -29,6 +29,7 @@
       "ratio": "cpp",
       "semaphore": "cpp",
       "locale": "cpp",
-      "string": "cpp"
+      "string": "cpp",
+      "cvode_cuda.h": "c"
     }
    }

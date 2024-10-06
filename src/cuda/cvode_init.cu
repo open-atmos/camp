@@ -88,9 +88,12 @@ void init_solve_gpu(SolverData *sd) {
   cudaEventCreate(&sd->startGPUSync);
   cudaEventCreate(&sd->stopGPUSync);
 #endif
-#ifndef DEBUG_SOLVER_FAILURES
+#ifdef DEBUG_SOLVER_FAILURES
   cudaMalloc((void **)&mGPU->flags, n_cells);
   sd->flags = (int *)malloc(n_cells * sizeof(int));
+  for (int i = 0; i < md->n_cells; i++) {
+    sd->flags[i] = CV_SUCCESS;
+  }
 #endif
 
   // Parameters from CAMP chemical model
@@ -143,8 +146,8 @@ void init_solve_gpu(SolverData *sd) {
   free(map_state_derivCPU);
   CVDlsMem cvdls_mem =
       (CVDlsMem)
-          cv_mem->cv_lmem;  // Auxiliar variable to translate from datatype of
-                            // CVODE library (sunindextype int64) to int
+          cv_mem->cv_lmem;  // Auxiliar variable to translate from datatype
+                            // of CVODE library (sunindextype int64) to int
   SUNMatrix J = cvdls_mem->A;
   int *jA = (int *)malloc(sizeof(int) * md->n_per_cell_solver_jac_elem);
   int *iA = (int *)malloc(sizeof(int) * (n_dep_var + 1));
@@ -385,7 +388,7 @@ void free_gpu_cu(SolverData *sd) {
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   cudaFree(mGPU->mdvo);
 #endif
-#ifndef DEBUG_SOLVER_FAILURES
+#ifdef DEBUG_SOLVER_FAILURES
   cudaFree(mGPU->flags);
 #endif
 }
