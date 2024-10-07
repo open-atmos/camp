@@ -56,7 +56,7 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
 void error_handler(int error_code, const char *module, const char *function,
                    char *msg, void *sd);
 
-/* SUNDIALS support functions */
+/* SUNDIALS support functions d */
 SUNMatrix get_jac_init(SolverData *sd);
 bool check_Jac(realtype t, N_Vector y, SUNMatrix J, N_Vector deriv,
                N_Vector tmp, N_Vector tmp1, void *solver_data);

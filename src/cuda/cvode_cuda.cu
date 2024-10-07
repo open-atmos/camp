@@ -80,16 +80,15 @@ __device__ void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
 
 #else
 
-
-
 /**
  * @brief Adds a value to the time derivative of a specific species on the GPU.
  *
- * This function adds a rate contribution to the time derivative of a specific species on the GPU.
- * It uses atomic operations to ensure correct synchronization when multiple threads are accessing
- * the same memory location.
+ * This function adds a rate contribution to the time derivative of a specific
+ * species on the GPU. It uses atomic operations to ensure correct
+ * synchronization when multiple threads are accessing the same memory location.
  *
- * @param time_deriv The time derivative structure containing the production and loss rates.
+ * @param time_deriv The time derivative structure containing the production and
+ * loss rates.
  * @param spec_id The ID of the species.
  * @param rate_contribution The rate contribution to be added.
  */
@@ -109,15 +108,18 @@ __device__ void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv,
 /**
  * @brief Adds a value to the Jacobian matrix on the GPU.
  *
- * This function adds a contribution to the Jacobian matrix on the GPU for a specific element.
- * The contribution can be either a production or a loss, determined by the `prod_or_loss` parameter.
- * The value of the contribution is specified by the `jac_contribution` parameter.
+ * This function adds a contribution to the Jacobian matrix on the GPU for a
+ * specific element. The contribution can be either a production or a loss,
+ * determined by the `prod_or_loss` parameter. The value of the contribution is
+ * specified by the `jac_contribution` parameter.
  *
  * @param jac The Jacobian matrix on the GPU.
  * @param elem_id The ID of the element in the Jacobian matrix.
- * @param prod_or_loss Specifies whether the contribution is a production or a loss.
- *                    Use the `JACOBIAN_PRODUCTION` constant for production and the `JACOBIAN_LOSS` constant for loss.
- * @param jac_contribution The value of the contribution to be added to the Jacobian matrix.
+ * @param prod_or_loss Specifies whether the contribution is a production or a
+ * loss. Use the `JACOBIAN_PRODUCTION` constant for production and the
+ * `JACOBIAN_LOSS` constant for loss.
+ * @param jac_contribution The value of the contribution to be added to the
+ * Jacobian matrix.
  */
 __device__ void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
                                        int prod_or_loss,
@@ -135,7 +137,8 @@ __device__ void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
  * Calculates the derivative contribution from this reaction.
  *
  * @param sc The ModelDataVariable object containing the grid cell state.
- * @param time_deriv The TimeDerivativeGPU object to store the calculated derivative values.
+ * @param time_deriv The TimeDerivativeGPU object to store the calculated
+ * derivative values.
  * @param rxn_int_data An array of integer data for the reaction.
  * @param rxn_float_data An array of floating-point data for the reaction.
  * @param rxn_env_data An array of environmental data for the reaction.
@@ -154,7 +157,8 @@ __device__ void rxn_gpu_first_order_loss_calc_deriv_contrib(
  * Calculates the derivative contribution from this reaction.
  *
  * @param sc The ModelDataVariable object containing the grid cell state.
- * @param time_deriv The TimeDerivativeGPU object to store the calculated derivative values.
+ * @param time_deriv The TimeDerivativeGPU object to store the calculated
+ * derivative values.
  * @param rxn_int_data An array of integer data for the reaction.
  * @param rxn_float_data An array of floating-point data for the reaction.
  * @param rxn_env_data An array of environmental data for the reaction.
@@ -192,7 +196,8 @@ __device__ void rxn_gpu_CMAQ_H2O2_calc_deriv_contrib(
  * Calculates the derivative contribution from this reaction.
  *
  * @param sc The ModelDataVariable object containing the grid cell state.
- * @param time_deriv The TimeDerivativeGPU object to store the calculated derivative values.
+ * @param time_deriv The TimeDerivativeGPU object to store the calculated
+ * derivative values.
  * @param rxn_int_data An array of integer data for the reaction.
  * @param rxn_float_data An array of floating-point data for the reaction.
  * @param rxn_env_data An array of environmental data for the reaction.
@@ -230,7 +235,8 @@ __device__ void rxn_gpu_CMAQ_OH_HNO3_calc_deriv_contrib(
  * Calculates the derivative contribution from this reaction.
  *
  * @param sc The ModelDataVariable object containing the grid cell state.
- * @param time_deriv The TimeDerivativeGPU object to store the calculated derivative values.
+ * @param time_deriv The TimeDerivativeGPU object to store the calculated
+ * derivative values.
  * @param rxn_int_data An array of integer data for the reaction.
  * @param rxn_float_data An array of floating-point data for the reaction.
  * @param rxn_env_data An array of environmental data for the reaction.
@@ -268,7 +274,8 @@ __device__ void rxn_gpu_arrhenius_calc_deriv_contrib(
  * Calculates the derivative contribution from this reaction.
  *
  * @param sc The ModelDataVariable object containing the grid cell state.
- * @param time_deriv The TimeDerivativeGPU object to store the calculated derivative values.
+ * @param time_deriv The TimeDerivativeGPU object to store the calculated
+ * derivative values.
  * @param rxn_int_data An array of integer data for the reaction.
  * @param rxn_float_data An array of floating-point data for the reaction.
  * @param rxn_env_data An array of environmental data for the reaction.
@@ -306,7 +313,8 @@ __device__ void rxn_gpu_troe_calc_deriv_contrib(
  * Calculates the derivative contribution from this reaction.
  *
  * @param sc The ModelDataVariable object containing the grid cell state.
- * @param time_deriv The TimeDerivativeGPU object to store the calculated derivative values.
+ * @param time_deriv The TimeDerivativeGPU object to store the calculated
+ * derivative values.
  * @param rxn_int_data An array of integer data for the reaction.
  * @param rxn_float_data An array of floating-point data for the reaction.
  * @param rxn_env_data An array of environmental data for the reaction.
@@ -339,7 +347,6 @@ __device__ void rxn_gpu_photolysis_calc_deriv_contrib(
     }
   }
 }
-
 
 /**
  * Calculate contributions to the Jacobian from this reaction
@@ -569,16 +576,19 @@ __device__ void rxn_gpu_photolysis_calc_jac_contrib(
 
 // Auxiliar functions for the GPU ODE solver
 
-
 /**
- * @brief Performs reduction operation to find the minimum value in an array on the device.
+ * @brief Performs reduction operation to find the minimum value in an array on
+ * the device.
  *
- * This function is executed on the device and performs a reduction operation to find the minimum value in an array.
- * It uses shared memory to store intermediate results and performs a binary reduction algorithm.
+ * This function is executed on the device and performs a reduction operation to
+ * find the minimum value in an array. It uses shared memory to store
+ * intermediate results and performs a binary reduction algorithm.
  *
- * @param g_odata Pointer to the global memory location where the minimum value will be stored.
+ * @param g_odata Pointer to the global memory location where the minimum value
+ * will be stored.
  * @param in The input value to be compared for finding the minimum.
- * @param sdata Pointer to the shared memory array used for intermediate results.
+ * @param sdata Pointer to the shared memory array used for intermediate
+ * results.
  * @param n_shr_empty The number of empty elements in the shared memory array.
  */
 __device__ void cudaDevicemin(double *g_odata, double in,
@@ -602,34 +612,18 @@ __device__ void cudaDevicemin(double *g_odata, double in,
  * @brief Applies a preconditioner to a matrix on the device.
  *
  * This function applies a preconditioner to a matrix represented by
- * the compressed sparse row (CSR) format on the device. The preconditioner modifies the matrix
- * in-place by scaling the diagonal elements and applying an alpha factor to the off-diagonal
- * elements.
+ * the compressed sparse row (CSR) format on the device. The preconditioner
+ * modifies the matrix in-place by scaling the diagonal elements and applying an
+ * alpha factor to the off-diagonal elements.
  *
  * @param dA     Pointer to the matrix elements in CSR format.
- * @param djA    Pointer to the column indices of the matrix elements in CSR format.
- * @param diA    Pointer to the row offsets of the matrix elements in CSR format.
+ * @param djA    Pointer to the column indices of the matrix elements in CSR
+ * format.
+ * @param diA    Pointer to the row offsets of the matrix elements in CSR
+ * format.
  * @param ddiag  Pointer to the diagonal elements of the matrix.
  * @param alpha  The alpha factor to be applied to the off-diagonal elements.
  */
-__device__ void cudaDeviceBCGprecond_2(double *dA, int *djA, int *diA,
-                     double *ddiag, double alpha) {
-  int row = threadIdx.x + blockDim.x * blockIdx.x;
-  int nnz = diA[blockDim.x];
-  for (int j = diA[threadIdx.x]; j < diA[threadIdx.x + 1]; j++) {
-  if (djA[j] == threadIdx.x) {
-    dA[j + nnz * blockIdx.x] = 1.0 + alpha * dA[j + nnz * blockIdx.x];
-    if (dA[j + nnz * blockIdx.x] != 0.0) {
-    ddiag[row] = 1.0 / dA[j + nnz * blockIdx.x];
-    } else {
-    // Handle division by zero error
-    ddiag[row] = 0.0;
-    }
-  } else {
-    dA[j + nnz * blockIdx.x] *= alpha;
-  }
-  }
-}
 __device__ void cudaDeviceBCGprecond_2(double *dA, int *djA, int *diA,
                                        double *ddiag, double alpha) {
   int row = threadIdx.x + blockDim.x * blockIdx.x;
@@ -643,11 +637,24 @@ __device__ void cudaDeviceBCGprecond_2(double *dA, int *djA, int *diA,
         ddiag[row] = 1.0;
       }
     } else {
-      dA[j + nnz * blockIdx.x] = alpha * dA[j + nnz * blockIdx.x];
+      dA[j + nnz * blockIdx.x] *= alpha;
     }
   }
 }
 
+/**
+ * @brief Performs sparse matrix-vector multiplication on a CUDA device.
+ *
+ * This function calculates the product of a sparse matrix and a vector on a
+ * CUDA device. It uses the Compressed Sparse Row (CSR) format to represent the
+ * sparse matrix.
+ *
+ * @param dx Pointer to the output vector.
+ * @param db Pointer to the input vector.
+ * @param dA Pointer to the values of the sparse matrix.
+ * @param djA Pointer to the column indices of the sparse matrix.
+ * @param diA Pointer to the row offsets of the sparse matrix.
+ */
 __device__ void cudaDeviceSpmv_CSR(double *dx, double *db, double *dA, int *djA,
                                    int *diA) {
   __syncthreads();
@@ -661,6 +668,17 @@ __device__ void cudaDeviceSpmv_CSR(double *dx, double *db, double *dA, int *djA,
   dx[row] = sum;
 }
 
+/**
+ * @brief Performs a reduction operation within a warp.
+ *
+ * This function reduces the values stored in the shared memory array `sdata`
+ * within a warp. The reduction is performed by adding adjacent elements in the
+ * array in a binary tree fashion. The result is stored in the first element of
+ * the array.
+ *
+ * @param sdata The shared memory array containing the values to be reduced.
+ * @param tid The thread ID within the warp.
+ */
 __device__ void warpReduce_2(volatile double *sdata, unsigned int tid) {
   unsigned int blockSize = blockDim.x;
   if (blockSize >= 64) sdata[tid] += sdata[tid + 32];
@@ -671,6 +689,18 @@ __device__ void warpReduce_2(volatile double *sdata, unsigned int tid) {
   if (blockSize >= 2) sdata[tid] += sdata[tid + 1];
 }
 
+/**
+ * @brief Performs dot product of two arrays on the device.
+ *
+ * This function calculates the dot product of two arrays, `g_idata1` and
+ * `g_idata2`, and stores the result in `g_odata`. The dot product is calculated
+ * by multiplying corresponding elements of the arrays and summing them up.
+ *
+ * @param g_idata1 Pointer to the first input array.
+ * @param g_idata2 Pointer to the second input array.
+ * @param g_odata Pointer to the output array.
+ * @param n_shr_empty Number of empty elements in the shared memory.
+ */
 __device__ void cudaDevicedotxy_2(double *g_idata1, double *g_idata2,
                                   double *g_odata, int n_shr_empty) {
   extern __shared__ double sdata[];
@@ -715,6 +745,18 @@ __device__ void cudaDevicedotxy_2(double *g_idata1, double *g_idata2,
   __syncthreads();
 }
 
+/**
+ * @brief Calculates the VWRMS (Vector Weighted Root Mean Square) norm of two
+ * arrays on the device.
+ *
+ * This function calculates the VWRMS norm of two arrays `g_idata1` and
+ * `g_idata2` on the device. The result is stored in the `g_odata` array.
+ *
+ * @param g_idata1 Pointer to the first input array.
+ * @param g_idata2 Pointer to the second input array.
+ * @param g_odata Pointer to the output array.
+ * @param n_shr_empty Number of empty elements in the shared memory.
+ */
 __device__ void cudaDeviceVWRMS_Norm_2(double *g_idata1, double *g_idata2,
                                        double *g_odata, int n_shr_empty) {
   extern __shared__ double sdata[];
@@ -753,9 +795,24 @@ __device__ void cudaDeviceJacCopy(int *diA, double *Ax, double *Bx) {
 }
 
 // Functions equivalent to CAMP CPU solver
-__device__ int cudaDevicecamp_solver_check_model_state(ModelDataGPU *md,
-                                                       ModelDataVariable *sc,
-                                                       double *y) {
+
+/**
+ * @brief Checks the model state for a given device in the CUDA environment.
+ *
+ * This function checks the model state for a given device in the CUDA
+ * environment. It takes a pointer to the ModelDataGPU structure, a pointer to
+ * the ModelDataVariable structure, and a pointer to the array of state
+ * variables as input parameters.
+ *
+ * @param md A pointer to the ModelDataGPU structure.
+ * @param sc A pointer to the ModelDataVariable structure.
+ * @param y A pointer to the array of state variables.
+ *
+ * @return An integer representing the flag indicating the model state.
+ */
+__device__ int cudaDevicecamp_solver_update_model_state(ModelDataGPU *md,
+                                                        ModelDataVariable *sc,
+                                                        double *y) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   extern __shared__ int flag_shr[];
   __syncthreads();
@@ -900,7 +957,7 @@ __device__ int cudaDevicef(double time_step, double *y, double *yout,
   time_step = sc->cv_next_h;
   time_step = time_step > 0. ? time_step : md->init_time_step;
   // Update the state array with the current dependent variable values.
-  int checkflag = cudaDevicecamp_solver_check_model_state(md, sc, y);
+  int checkflag = cudaDevicecamp_solver_update_model_state(md, sc, y);
   if (checkflag == CAMP_SOLVER_FAIL) {
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     int i = blockIdx.x * blockDim.x + threadIdx.x;
