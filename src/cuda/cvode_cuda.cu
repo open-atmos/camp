@@ -11,6 +11,17 @@
 #include "cvode_cuda.h"
 
 // Auxiliar methods
+
+/**
+ * @brief Computes the power of a base raised to an integer exponent.
+ *
+ * @param base The base value of type realtype.
+ * @param exponent The exponent value of type int.
+ * @return The result of base raised to the power of exponent.
+ *
+ * SUNRpowerI returns the value of base^exponent, where base is of type
+ * realtype and exponent is of type int.
+ */
 __device__ double dSUNRpowerR(double base, double exponent) {
   if (base <= ZERO) return (ZERO);
 #ifdef EQUALLIZE_CPU_CUDA_POW
@@ -21,6 +32,16 @@ __device__ double dSUNRpowerR(double base, double exponent) {
   return (pow(base, (double)(exponent)));
 }
 
+/**
+ * @brief Computes the power of a base raised to an integer exponent.
+ *
+ * @param base The base value of type realtype.
+ * @param exponent The exponent value of type int.
+ * @return The result of base raised to the power of exponent.
+ *
+ * SUNRpowerI returns the value of base^exponent, where base is of type
+ * realtype and exponent is of type int.
+ */
 __device__ double dSUNRpowerI(double base, int exponent) {
   int i, expt;
   double prod;
@@ -33,6 +54,8 @@ __device__ double dSUNRpowerI(double base, int exponent) {
 
 // Solving chemical reactions for a specific time (f(y,t) and Jacobian(y,t))
 
+// Debug mode: remove atomic operations, useful to see that atomicAdd generate
+// random results, slightly varying the accuracy of the results
 #ifdef IS_DEBUG_MODE_removeAtomic
 
 __device__ void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv,
@@ -57,6 +80,19 @@ __device__ void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
 
 #else
 
+
+
+/**
+ * @brief Adds a value to the time derivative of a specific species on the GPU.
+ *
+ * This function adds a rate contribution to the time derivative of a specific species on the GPU.
+ * It uses atomic operations to ensure correct synchronization when multiple threads are accessing
+ * the same memory location.
+ *
+ * @param time_deriv The time derivative structure containing the production and loss rates.
+ * @param spec_id The ID of the species.
+ * @param rate_contribution The rate contribution to be added.
+ */
 __device__ void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv,
                                               unsigned int spec_id,
                                               double rate_contribution) {
@@ -70,6 +106,19 @@ __device__ void time_derivative_add_value_gpu(TimeDerivativeGPU time_deriv,
   }
 }
 
+/**
+ * @brief Adds a value to the Jacobian matrix on the GPU.
+ *
+ * This function adds a contribution to the Jacobian matrix on the GPU for a specific element.
+ * The contribution can be either a production or a loss, determined by the `prod_or_loss` parameter.
+ * The value of the contribution is specified by the `jac_contribution` parameter.
+ *
+ * @param jac The Jacobian matrix on the GPU.
+ * @param elem_id The ID of the element in the Jacobian matrix.
+ * @param prod_or_loss Specifies whether the contribution is a production or a loss.
+ *                    Use the `JACOBIAN_PRODUCTION` constant for production and the `JACOBIAN_LOSS` constant for loss.
+ * @param jac_contribution The value of the contribution to be added to the Jacobian matrix.
+ */
 __device__ void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
                                        int prod_or_loss,
                                        double jac_contribution) {
@@ -82,6 +131,16 @@ __device__ void jacobian_add_value_gpu(JacobianGPU jac, unsigned int elem_id,
 
 #endif
 
+/**
+ * Calculates the derivative contribution from this reaction.
+ *
+ * @param sc The ModelDataVariable object containing the grid cell state.
+ * @param time_deriv The TimeDerivativeGPU object to store the calculated derivative values.
+ * @param rxn_int_data An array of integer data for the reaction.
+ * @param rxn_float_data An array of floating-point data for the reaction.
+ * @param rxn_env_data An array of environmental data for the reaction.
+ * @param time_step The time step for the calculation.
+ */
 __device__ void rxn_gpu_first_order_loss_calc_deriv_contrib(
     ModelDataVariable *sc, TimeDerivativeGPU time_deriv, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, double time_step) {
@@ -91,6 +150,16 @@ __device__ void rxn_gpu_first_order_loss_calc_deriv_contrib(
     time_derivative_add_value_gpu(time_deriv, int_data[2], -rate);
 }
 
+/**
+ * Calculates the derivative contribution from this reaction.
+ *
+ * @param sc The ModelDataVariable object containing the grid cell state.
+ * @param time_deriv The TimeDerivativeGPU object to store the calculated derivative values.
+ * @param rxn_int_data An array of integer data for the reaction.
+ * @param rxn_float_data An array of floating-point data for the reaction.
+ * @param rxn_env_data An array of environmental data for the reaction.
+ * @param time_step The time step for the calculation.
+ */
 __device__ void rxn_gpu_CMAQ_H2O2_calc_deriv_contrib(
     ModelDataVariable *sc, TimeDerivativeGPU time_deriv, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, double time_step) {
@@ -119,6 +188,16 @@ __device__ void rxn_gpu_CMAQ_H2O2_calc_deriv_contrib(
   }
 }
 
+/**
+ * Calculates the derivative contribution from this reaction.
+ *
+ * @param sc The ModelDataVariable object containing the grid cell state.
+ * @param time_deriv The TimeDerivativeGPU object to store the calculated derivative values.
+ * @param rxn_int_data An array of integer data for the reaction.
+ * @param rxn_float_data An array of floating-point data for the reaction.
+ * @param rxn_env_data An array of environmental data for the reaction.
+ * @param time_step The time step for the calculation.
+ */
 __device__ void rxn_gpu_CMAQ_OH_HNO3_calc_deriv_contrib(
     ModelDataVariable *sc, TimeDerivativeGPU time_deriv, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, double time_step) {
@@ -147,6 +226,16 @@ __device__ void rxn_gpu_CMAQ_OH_HNO3_calc_deriv_contrib(
   }
 }
 
+/**
+ * Calculates the derivative contribution from this reaction.
+ *
+ * @param sc The ModelDataVariable object containing the grid cell state.
+ * @param time_deriv The TimeDerivativeGPU object to store the calculated derivative values.
+ * @param rxn_int_data An array of integer data for the reaction.
+ * @param rxn_float_data An array of floating-point data for the reaction.
+ * @param rxn_env_data An array of environmental data for the reaction.
+ * @param time_step The time step for the calculation.
+ */
 __device__ void rxn_gpu_arrhenius_calc_deriv_contrib(
     ModelDataVariable *sc, TimeDerivativeGPU time_deriv, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, double time_step) {
@@ -175,6 +264,16 @@ __device__ void rxn_gpu_arrhenius_calc_deriv_contrib(
   }
 }
 
+/**
+ * Calculates the derivative contribution from this reaction.
+ *
+ * @param sc The ModelDataVariable object containing the grid cell state.
+ * @param time_deriv The TimeDerivativeGPU object to store the calculated derivative values.
+ * @param rxn_int_data An array of integer data for the reaction.
+ * @param rxn_float_data An array of floating-point data for the reaction.
+ * @param rxn_env_data An array of environmental data for the reaction.
+ * @param time_step The time step for the calculation.
+ */
 __device__ void rxn_gpu_troe_calc_deriv_contrib(
     ModelDataVariable *sc, TimeDerivativeGPU time_deriv, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, double time_step) {
@@ -203,6 +302,16 @@ __device__ void rxn_gpu_troe_calc_deriv_contrib(
   }
 }
 
+/**
+ * Calculates the derivative contribution from this reaction.
+ *
+ * @param sc The ModelDataVariable object containing the grid cell state.
+ * @param time_deriv The TimeDerivativeGPU object to store the calculated derivative values.
+ * @param rxn_int_data An array of integer data for the reaction.
+ * @param rxn_float_data An array of floating-point data for the reaction.
+ * @param rxn_env_data An array of environmental data for the reaction.
+ * @param time_step The time step for the calculation.
+ */
 __device__ void rxn_gpu_photolysis_calc_deriv_contrib(
     ModelDataVariable *sc, TimeDerivativeGPU time_deriv, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, double time_step) {
@@ -231,6 +340,17 @@ __device__ void rxn_gpu_photolysis_calc_deriv_contrib(
   }
 }
 
+
+/**
+ * Calculate contributions to the Jacobian from this reaction
+ *
+ * @param sc The model data variable.
+ * @param jac The Jacobian matrix.
+ * @param rxn_int_data The integer data for the reaction.
+ * @param rxn_float_data The float data for the reaction.
+ * @param rxn_env_data The environmental data for the reaction.
+ * @param time_step The time step.
+ */
 __device__ void rxn_gpu_first_order_loss_calc_jac_contrib(
     ModelDataVariable *sc, JacobianGPU jac, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, double time_step) {
@@ -239,6 +359,16 @@ __device__ void rxn_gpu_first_order_loss_calc_jac_contrib(
     jacobian_add_value_gpu(jac, int_data[3], JACOBIAN_LOSS, rxn_env_data[0]);
 }
 
+/**
+ * Calculate contributions to the Jacobian from this reaction
+ *
+ * @param sc The model data variable.
+ * @param jac The Jacobian matrix.
+ * @param rxn_int_data The integer data for the reaction.
+ * @param rxn_float_data The float data for the reaction.
+ * @param rxn_env_data The environmental data for the reaction.
+ * @param time_step The time step.
+ */
 __device__ void rxn_gpu_CMAQ_H2O2_calc_jac_contrib(
     ModelDataVariable *sc, JacobianGPU jac, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, double time_step) {
@@ -271,6 +401,16 @@ __device__ void rxn_gpu_CMAQ_H2O2_calc_jac_contrib(
   }
 }
 
+/**
+ * Calculate contributions to the Jacobian from this reaction
+ *
+ * @param sc The model data variable.
+ * @param jac The Jacobian matrix.
+ * @param rxn_int_data The integer data for the reaction.
+ * @param rxn_float_data The float data for the reaction.
+ * @param rxn_env_data The environmental data for the reaction.
+ * @param time_step The time step.
+ */
 __device__ void rxn_gpu_CMAQ_OH_HNO3_calc_jac_contrib(
     ModelDataVariable *sc, JacobianGPU jac, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, double time_step) {
@@ -303,6 +443,16 @@ __device__ void rxn_gpu_CMAQ_OH_HNO3_calc_jac_contrib(
   }
 }
 
+/**
+ * Calculate contributions to the Jacobian from this reaction
+ *
+ * @param sc The model data variable.
+ * @param jac The Jacobian matrix.
+ * @param rxn_int_data The integer data for the reaction.
+ * @param rxn_float_data The float data for the reaction.
+ * @param rxn_env_data The environmental data for the reaction.
+ * @param time_step The time step.
+ */
 __device__ void rxn_gpu_arrhenius_calc_jac_contrib(
     ModelDataVariable *sc, JacobianGPU jac, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, double time_step) {
@@ -333,6 +483,16 @@ __device__ void rxn_gpu_arrhenius_calc_jac_contrib(
   }
 }
 
+/**
+ * Calculate contributions to the Jacobian from this reaction
+ *
+ * @param sc The model data variable.
+ * @param jac The Jacobian matrix.
+ * @param rxn_int_data The integer data for the reaction.
+ * @param rxn_float_data The float data for the reaction.
+ * @param rxn_env_data The environmental data for the reaction.
+ * @param time_step The time step.
+ */
 __device__ void rxn_gpu_troe_calc_jac_contrib(
     ModelDataVariable *sc, JacobianGPU jac, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, double time_step) {
@@ -365,6 +525,16 @@ __device__ void rxn_gpu_troe_calc_jac_contrib(
   }
 }
 
+/**
+ * Calculate contributions to the Jacobian from this reaction
+ *
+ * @param sc The model data variable.
+ * @param jac The Jacobian matrix.
+ * @param rxn_int_data The integer data for the reaction.
+ * @param rxn_float_data The float data for the reaction.
+ * @param rxn_env_data The environmental data for the reaction.
+ * @param time_step The time step.
+ */
 __device__ void rxn_gpu_photolysis_calc_jac_contrib(
     ModelDataVariable *sc, JacobianGPU jac, int *rxn_int_data,
     double *rxn_float_data, double *rxn_env_data, double time_step) {
@@ -399,6 +569,18 @@ __device__ void rxn_gpu_photolysis_calc_jac_contrib(
 
 // Auxiliar functions for the GPU ODE solver
 
+
+/**
+ * @brief Performs reduction operation to find the minimum value in an array on the device.
+ *
+ * This function is executed on the device and performs a reduction operation to find the minimum value in an array.
+ * It uses shared memory to store intermediate results and performs a binary reduction algorithm.
+ *
+ * @param g_odata Pointer to the global memory location where the minimum value will be stored.
+ * @param in The input value to be compared for finding the minimum.
+ * @param sdata Pointer to the shared memory array used for intermediate results.
+ * @param n_shr_empty The number of empty elements in the shared memory array.
+ */
 __device__ void cudaDevicemin(double *g_odata, double in,
                               volatile double *sdata, int n_shr_empty) {
   unsigned int tid = threadIdx.x;
@@ -416,6 +598,38 @@ __device__ void cudaDevicemin(double *g_odata, double in,
   __syncthreads();
 }
 
+/**
+ * @brief Applies a preconditioner to a matrix on the device.
+ *
+ * This function applies a preconditioner to a matrix represented by
+ * the compressed sparse row (CSR) format on the device. The preconditioner modifies the matrix
+ * in-place by scaling the diagonal elements and applying an alpha factor to the off-diagonal
+ * elements.
+ *
+ * @param dA     Pointer to the matrix elements in CSR format.
+ * @param djA    Pointer to the column indices of the matrix elements in CSR format.
+ * @param diA    Pointer to the row offsets of the matrix elements in CSR format.
+ * @param ddiag  Pointer to the diagonal elements of the matrix.
+ * @param alpha  The alpha factor to be applied to the off-diagonal elements.
+ */
+__device__ void cudaDeviceBCGprecond_2(double *dA, int *djA, int *diA,
+                     double *ddiag, double alpha) {
+  int row = threadIdx.x + blockDim.x * blockIdx.x;
+  int nnz = diA[blockDim.x];
+  for (int j = diA[threadIdx.x]; j < diA[threadIdx.x + 1]; j++) {
+  if (djA[j] == threadIdx.x) {
+    dA[j + nnz * blockIdx.x] = 1.0 + alpha * dA[j + nnz * blockIdx.x];
+    if (dA[j + nnz * blockIdx.x] != 0.0) {
+    ddiag[row] = 1.0 / dA[j + nnz * blockIdx.x];
+    } else {
+    // Handle division by zero error
+    ddiag[row] = 0.0;
+    }
+  } else {
+    dA[j + nnz * blockIdx.x] *= alpha;
+  }
+  }
+}
 __device__ void cudaDeviceBCGprecond_2(double *dA, int *djA, int *diA,
                                        double *ddiag, double alpha) {
   int row = threadIdx.x + blockDim.x * blockIdx.x;
@@ -1754,6 +1968,7 @@ __device__ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
         return CV_ILL_INPUT;
       }
     }
+    /* Check for too many steps */
     if ((CAMP_SOLVER_DEFAULT_MAX_STEPS > 0) &&
         (nstloc >= CAMP_SOLVER_DEFAULT_MAX_STEPS)) {
       md->yout[i] = md->dzn[0][i];
@@ -1764,6 +1979,7 @@ __device__ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
             nstloc, CAMP_SOLVER_DEFAULT_MAX_STEPS);
       return CV_TOO_MUCH_WORK;
     }
+    /* Check for too much accuracy requested */
     double nrm;
     cudaDeviceVWRMS_Norm_2(md->dzn[0], md->dewt, &nrm, md->n_shr_empty);
     if (UNIT_ROUNDOFF * nrm > 1.) {
@@ -1771,16 +1987,16 @@ __device__ int cudaDeviceCVode(ModelDataGPU *md, ModelDataVariable *sc) {
       if (i == 0) printf("ERROR: cv_tolsf > 1\n");
       return CV_TOO_MUCH_ACC;
     }
-    // TODO: Copy paste comments from CVODE and add information about
-    // differences
-    //  Solve
+    /* Call cvStep to take a step */
     kflag2 = cudaDevicecvStep(md, sc);
+    /* Process failed step cases, and exit loop */
     if (kflag2 != CV_SUCCESS) {
       md->yout[i] = md->dzn[0][i];
       if (i == 0) printf("ERROR: kflag != CV_SUCCESS\n");
       return kflag2;
     }
     nstloc++;
+    /*Check if tout reached */
     if ((sc->cv_tn - md->tout) * sc->cv_h >= 0.) {
       cudaDeviceCVodeGetDky(md, sc, md->tout, 0, md->yout);
       return CV_SUCCESS;

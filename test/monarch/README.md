@@ -1,6 +1,7 @@
 CAMP GPU : Instructions for Marenostrum cluster
 ======
 
+#TODO: Copy paste comments from CVODE and add information about differences
 #TODO: One section: All options listed here in the README and some sections putting more context
 #TODO: Organize files on folder (e.g. profileCPU folder)
 #TODO: WARNING: Output is saved in this folder:
@@ -8,7 +9,7 @@ CAMP GPU : Instructions for Marenostrum cluster
     # e.g. cells: 10000, mpi_processes: 2, gpu_load: 50
     # 5000->rank 0 ; 5000->rank 1
     # 2500->CPU rank 0; 2500->GPU rank 0; 2500->CPU rank 1; 2500->GPU rank 1
-# TODO: Add Doyxigen documentation of GPU code following CAMP example
+#TODO: Add Doyxigen documentation of GPU code following CAMP example
 
 *If you previously run another branch, run `compile.sh `.*
 
