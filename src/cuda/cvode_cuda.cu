@@ -882,10 +882,6 @@ __device__ void cudaDevicerxn_calc_deriv(int i_rxn,
   }
 }
 
-__device__ void cudaDevicecalc_deriv(double time_step, double *y, double *yout,
-                                     bool use_deriv_est, ModelDataGPU *md,
-                                     ModelDataVariable *sc) {}
-
 /** \brief Compute the time derivative f(t,y)
  *
  * \param time_step Current model time (s)
@@ -1132,9 +1128,21 @@ __device__ int CudaDeviceguess_helper(double t_n, double h_n, double *y_n,
   return 1;
 }
 
-__device__ void cudaDevicerxn_calc_derivJac(int i_rxn, JacobianGPU jac,
-                                            ModelDataGPU *md,
-                                            ModelDataVariable *sc) {
+/**
+ * @brief Calculates the Jacobian.
+ *
+ * The reaction data is accessed from the ModelDataGPU object using the reaction
+ * index. The function then switches based on the reaction type and calls the
+ * corresponding GPU function to calculate the Jacobian contribution.
+ *
+ * @param i_rxn The index of the reaction.
+ * @param jac The JacobianGPU object.
+ * @param md The ModelDataGPU object.
+ * @param sc The ModelDataVariable object.
+ */
+__device__ void cudaDevicerxn_calc_Jac(int i_rxn, JacobianGPU jac,
+                                       ModelDataGPU *md,
+                                       ModelDataVariable *sc) {
   double *rxn_float_data =
       (double *)&(md->rxn_double[md->rxn_float_indices[i_rxn]]);
   int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[i_rxn]]);
@@ -1169,8 +1177,25 @@ __device__ void cudaDevicerxn_calc_derivJac(int i_rxn, JacobianGPU jac,
   }
 }
 
-__device__ void cudaDevicecalc_Jac(double *y, ModelDataGPU *md,
-                                   ModelDataVariable *sc) {
+/** \brief Compute the Jacobian
+ *
+ * \param md Global data
+ * \param sc Block data
+ * \return Status code
+ */
+__device__ int cudaDeviceJac(ModelDataGPU *md, ModelDataVariable *sc) {
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  int retval;
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+  int clock_khz = md->clock_khz;
+  clock_t start;
+  start = clock();
+#endif
+  // Calculate the the derivative for the current state y without
+  // the estimated derivative from the last Jacobian calculation
+  retval = cudaDevicef(sc->cv_next_h, md->dcv_y, md->dftemp, false, md, sc);
+  if (retval == CAMP_SOLVER_FAIL) return CAMP_SOLVER_FAIL;
+    // Calculate the reaction Jacobian
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int clock_khz = md->clock_khz;
   clock_t start;
@@ -1179,6 +1204,7 @@ __device__ void cudaDevicecalc_Jac(double *y, ModelDataGPU *md,
   JacobianGPU *jac = &md->jac;
   JacobianGPU jacBlock;
   __syncthreads();
+  // Set production and loss rates to each cell
   jacBlock.num_elem = jac->num_elem;
   jacBlock.production_partials =
       &(jac->production_partials[jacBlock.num_elem[0] * blockIdx.x]);
@@ -1190,20 +1216,20 @@ __device__ void cudaDevicecalc_Jac(double *y, ModelDataGPU *md,
 #ifdef IS_DEBUG_MODE_removeAtomic
   if (threadIdx.x == 0) {
     for (int j = 0; j < n_rxn; j++) {
-      cudaDevicerxn_calc_derivJac(j, jacBlock, md, sc);
+      cudaDevicerxn_calc_Jac(j, jacBlock, md, sc);
     }
   }
 #else
-  if (threadIdx.x < n_rxn) {
+  if (threadIdx.x < n_rxn) {  // Avoid cases of less species than reactions
     int n_iters = n_rxn / blockDim.x;
     for (int j = 0; j < n_iters; j++) {
       int i_rxn = threadIdx.x + j * blockDim.x;
-      cudaDevicerxn_calc_derivJac(i_rxn, jacBlock, md, sc);
+      cudaDevicerxn_calc_Jac(i_rxn, jacBlock, md, sc);
     }
     int residual = n_rxn % blockDim.x;
     if (threadIdx.x < residual) {
       int i_rxn = threadIdx.x + blockDim.x * n_iters;
-      cudaDevicerxn_calc_derivJac(i_rxn, jacBlock, md, sc);
+      cudaDevicerxn_calc_Jac(i_rxn, jacBlock, md, sc);
     }
   }
 #endif
@@ -1235,36 +1261,14 @@ __device__ void cudaDevicecalc_Jac(double *y, ModelDataGPU *md,
   if (threadIdx.x == 0)
     sc->timecalc_Jac += ((double)(clock() - start)) / (clock_khz * 1000);
 #endif
-}
-
-/** \brief Compute the Jacobian
- *
- * \param md Global data
- * \param sc Block data
- * \return Status code
- */
-__device__ int cudaDeviceJac(ModelDataGPU *md, ModelDataVariable *sc) {
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  int retval;
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-  int clock_khz = md->clock_khz;
-  clock_t start;
-  start = clock();
-#endif
-  // Calculate the the derivative for the current state y without
-  // the estimated derivative from the last Jacobian calculation
-  retval = cudaDevicef(sc->cv_next_h, md->dcv_y, md->dftemp, false, md, sc);
-  if (retval == CAMP_SOLVER_FAIL) return CAMP_SOLVER_FAIL;
-  // Calculate the reaction Jacobian
-  cudaDevicecalc_Jac(md->dcv_y, md, sc);
   // Save the Jacobian for use with derivative calculations
-  int nnz = md->diA[blockDim.x];
-  int n_iters = nnz / blockDim.x;
+  nnz = md->diA[blockDim.x];
+  n_iters = nnz / blockDim.x;
   for (int z = 0; z < n_iters; z++) {
     int j = threadIdx.x + z * blockDim.x + nnz * blockIdx.x;
     md->J_solver[j] = md->dA[j];
   }
-  int residual = nnz % blockDim.x;
+  residual = nnz % blockDim.x;
   if (threadIdx.x < residual) {
     int j = threadIdx.x + n_iters * blockDim.x + nnz * blockIdx.x;
     md->J_solver[j] = md->dA[j];
@@ -1277,7 +1281,9 @@ __device__ int cudaDeviceJac(ModelDataGPU *md, ModelDataVariable *sc) {
 #endif
   return 0;
 }
+
 // Functions equivalent to CVODE CPU solver (BDF method)
+
 __device__ int cudaDevicelinsolsetup(ModelDataGPU *md, ModelDataVariable *sc,
                                      int convfail) {
   extern __shared__ int flag_shr[];
