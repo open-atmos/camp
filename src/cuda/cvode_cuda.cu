@@ -797,12 +797,7 @@ __device__ void cudaDeviceJacCopy(int *diA, double *Ax, double *Bx) {
 // Functions equivalent to CAMP CPU solver
 
 /**
- * @brief Checks the model state for a given device in the CUDA environment.
- *
- * This function checks the model state for a given device in the CUDA
- * environment. It takes a pointer to the ModelDataGPU structure, a pointer to
- * the ModelDataVariable structure, and a pointer to the array of state
- * variables as input parameters.
+ * @brief Update reaction data for new environmental conditions
  *
  * @param md A pointer to the ModelDataGPU structure.
  * @param sc A pointer to the ModelDataVariable structure.
@@ -831,9 +826,23 @@ __device__ int cudaDevicecamp_solver_update_model_state(ModelDataGPU *md,
   return flag;
 }
 
-__device__ void solveRXN(int i_rxn, TimeDerivativeGPU deriv_data,
-                         double time_step, ModelDataGPU *md,
-                         ModelDataVariable *sc) {
+/**
+ * @brief Calculate the time derivative \f$f(t,y)\f$
+ *
+ * The reaction data is accessed from the model data based on the reaction
+ * index. The function then switches based on the reaction type and calls the
+ * corresponding GPU function to calculate the derivative contribution.
+ *
+ * @param i_rxn The index of the reaction.
+ * @param deriv_data The time derivative data on the GPU.
+ * @param time_step The time step.
+ * @param md The model data on the GPU.
+ * @param sc The model data variables on the GPU.
+ */
+__device__ void cudaDevicerxn_calc_deriv(int i_rxn,
+                                         TimeDerivativeGPU deriv_data,
+                                         double time_step, ModelDataGPU *md,
+                                         ModelDataVariable *sc) {
   double *rxn_float_data =
       (double *)&(md->rxn_double[md->rxn_float_indices[i_rxn]]);
   int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[i_rxn]]);
@@ -896,7 +905,7 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y, double *yout,
 #ifdef IS_DEBUG_MODE_removeAtomic
   if (threadIdx.x == 0) {
     for (int j = 0; j < md->n_rxn; j++) {
-      solveRXN(j, deriv_data, time_step, md, sc);
+      cudaDevicerxn_calc_deriv(j, deriv_data, time_step, md, sc);
     }
   }
 #else
@@ -904,12 +913,12 @@ __device__ void cudaDevicecalc_deriv(double time_step, double *y, double *yout,
     int n_iters = md->n_rxn / blockDim.x;
     for (int j = 0; j < n_iters; j++) {
       int i_rxn = threadIdx.x + j * blockDim.x;
-      solveRXN(i_rxn, deriv_data, time_step, md, sc);
+      cudaDevicerxn_calc_deriv(i_rxn, deriv_data, time_step, md, sc);
     }
     int residual = md->n_rxn % blockDim.x;
     if (threadIdx.x < residual) {
       int i_rxn = threadIdx.x + blockDim.x * n_iters;
-      solveRXN(i_rxn, deriv_data, time_step, md, sc);
+      cudaDevicerxn_calc_deriv(i_rxn, deriv_data, time_step, md, sc);
     }
   }
 #endif
@@ -1115,8 +1124,9 @@ __device__ int CudaDeviceguess_helper(double t_n, double h_n, double *y_n,
   return 1;
 }
 
-__device__ void solveRXNJac(int i_rxn, JacobianGPU jac, ModelDataGPU *md,
-                            ModelDataVariable *sc) {
+__device__ void cudaDevicerxn_calc_derivJac(int i_rxn, JacobianGPU jac,
+                                            ModelDataGPU *md,
+                                            ModelDataVariable *sc) {
   double *rxn_float_data =
       (double *)&(md->rxn_double[md->rxn_float_indices[i_rxn]]);
   int *int_data = (int *)&(md->rxn_int[md->rxn_int_indices[i_rxn]]);
@@ -1172,7 +1182,7 @@ __device__ void cudaDevicecalc_Jac(double *y, ModelDataGPU *md,
 #ifdef IS_DEBUG_MODE_removeAtomic
   if (threadIdx.x == 0) {
     for (int j = 0; j < n_rxn; j++) {
-      solveRXNJac(j, jacBlock, md, sc);
+      cudaDevicerxn_calc_derivJac(j, jacBlock, md, sc);
     }
   }
 #else
@@ -1180,12 +1190,12 @@ __device__ void cudaDevicecalc_Jac(double *y, ModelDataGPU *md,
     int n_iters = n_rxn / blockDim.x;
     for (int j = 0; j < n_iters; j++) {
       int i_rxn = threadIdx.x + j * blockDim.x;
-      solveRXNJac(i_rxn, jacBlock, md, sc);
+      cudaDevicerxn_calc_derivJac(i_rxn, jacBlock, md, sc);
     }
     int residual = n_rxn % blockDim.x;
     if (threadIdx.x < residual) {
       int i_rxn = threadIdx.x + blockDim.x * n_iters;
-      solveRXNJac(i_rxn, jacBlock, md, sc);
+      cudaDevicerxn_calc_derivJac(i_rxn, jacBlock, md, sc);
     }
   }
 #endif
