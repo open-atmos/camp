@@ -884,64 +884,7 @@ __device__ void cudaDevicerxn_calc_deriv(int i_rxn,
 
 __device__ void cudaDevicecalc_deriv(double time_step, double *y, double *yout,
                                      bool use_deriv_est, ModelDataGPU *md,
-                                     ModelDataVariable *sc) {
-  int i = blockIdx.x * blockDim.x + threadIdx.x;
-  md->dn0[i] = y[i] - md->J_state[i];
-  cudaDeviceSpmv_CSR(md->dy, md->dn0, md->J_solver, md->djA, md->diA);
-  md->dn0[i] = md->J_deriv[i] + md->dy[i];
-  TimeDerivativeGPU deriv_data;
-  __syncthreads();
-  deriv_data.production_rates = md->production_rates;
-  deriv_data.loss_rates = md->loss_rates;
-  __syncthreads();
-  deriv_data.production_rates[i] = 0.0;
-  deriv_data.loss_rates[i] = 0.0;
-  __syncthreads();
-  deriv_data.production_rates =
-      &(md->production_rates[blockDim.x * blockIdx.x]);
-  deriv_data.loss_rates = &(md->loss_rates[blockDim.x * blockIdx.x]);
-  sc->grid_cell_state = &(md->state[md->n_per_cell_state_var * blockIdx.x]);
-  __syncthreads();
-#ifdef IS_DEBUG_MODE_removeAtomic
-  if (threadIdx.x == 0) {
-    for (int j = 0; j < md->n_rxn; j++) {
-      cudaDevicerxn_calc_deriv(j, deriv_data, time_step, md, sc);
-    }
-  }
-#else
-  if (threadIdx.x < md->n_rxn) {
-    int n_iters = md->n_rxn / blockDim.x;
-    for (int j = 0; j < n_iters; j++) {
-      int i_rxn = threadIdx.x + j * blockDim.x;
-      cudaDevicerxn_calc_deriv(i_rxn, deriv_data, time_step, md, sc);
-    }
-    int residual = md->n_rxn % blockDim.x;
-    if (threadIdx.x < residual) {
-      int i_rxn = threadIdx.x + blockDim.x * n_iters;
-      cudaDevicerxn_calc_deriv(i_rxn, deriv_data, time_step, md, sc);
-    }
-  }
-#endif
-  __syncthreads();
-  deriv_data.production_rates = md->production_rates;
-  deriv_data.loss_rates = md->loss_rates;
-  __syncthreads();
-  double *r_p = deriv_data.production_rates;
-  double *r_l = deriv_data.loss_rates;
-  if (r_p[i] + r_l[i] != 0.0) {
-    if (use_deriv_est) {
-      double scale_fact = 1.0 / (r_p[i] + r_l[i]) /
-                          (1.0 / (r_p[i] + r_l[i]) +
-                           MAX_PRECISION_LOSS / fabs(r_p[i] - r_l[i]));
-      yout[i] =
-          scale_fact * (r_p[i] - r_l[i]) + (1.0 - scale_fact) * (md->dn0[i]);
-    } else {
-      yout[i] = r_p[i] - r_l[i];
-    }
-  } else {
-    yout[i] = 0.0;
-  }
-}
+                                     ModelDataVariable *sc) {}
 
 /** \brief Compute the time derivative f(t,y)
  *
@@ -975,8 +918,73 @@ __device__ int cudaDevicef(double time_step, double *y, double *yout,
 #endif
     return CAMP_SOLVER_FAIL;
   }
+  int i = blockIdx.x * blockDim.x + threadIdx.x;
+  // Get the Jacobian-estimated derivative
+  md->dn0[i] = y[i] - md->J_state[i];
+  cudaDeviceSpmv_CSR(md->dy, md->dn0, md->J_solver, md->djA, md->diA);
+  md->dn0[i] = md->J_deriv[i] + md->dy[i];
+  TimeDerivativeGPU deriv_data;
+  // Set production and loss rates to start of global memory
+  __syncthreads();
+  deriv_data.production_rates = md->production_rates;
+  deriv_data.loss_rates = md->loss_rates;
+  __syncthreads();
+  // Reset production and loss rates
+  deriv_data.production_rates[i] = 0.0;
+  deriv_data.loss_rates[i] = 0.0;
+  __syncthreads();
+  // Get pointers to each cell
+  deriv_data.production_rates =
+      &(md->production_rates[blockDim.x * blockIdx.x]);
+  deriv_data.loss_rates = &(md->loss_rates[blockDim.x * blockIdx.x]);
+  sc->grid_cell_state = &(md->state[md->n_per_cell_state_var * blockIdx.x]);
+  __syncthreads();
   // Calculate the time derivative f(t,y)
-  cudaDevicecalc_deriv(time_step, y, yout, use_deriv_est, md, sc);
+#ifdef IS_DEBUG_MODE_removeAtomic
+  if (threadIdx.x == 0) {
+    for (int j = 0; j < md->n_rxn; j++) {
+      cudaDevicerxn_calc_deriv(j, deriv_data, time_step, md, sc);
+    }
+  }
+#else
+  // Assign reactions to each threads evenly
+  if (threadIdx.x < md->n_rxn) {
+    int n_iters = md->n_rxn / blockDim.x;
+    for (int j = 0; j < n_iters; j++) {
+      int i_rxn = threadIdx.x + j * blockDim.x;
+      cudaDevicerxn_calc_deriv(i_rxn, deriv_data, time_step, md, sc);
+    }
+    // In case of non-even division of reactions, assign the remaining reactions
+    int residual = md->n_rxn % blockDim.x;
+    if (threadIdx.x < residual) {
+      int i_rxn = threadIdx.x + blockDim.x * n_iters;
+      cudaDevicerxn_calc_deriv(i_rxn, deriv_data, time_step, md, sc);
+    }
+  }
+#endif
+  __syncthreads();
+  // Reset pointers to global data
+  deriv_data.production_rates = md->production_rates;
+  deriv_data.loss_rates = md->loss_rates;
+  __syncthreads();
+  // Update output
+  double *r_p = deriv_data.production_rates;
+  double *r_l = deriv_data.loss_rates;
+  // Avoid division by zero
+  if (r_p[i] + r_l[i] != 0.0) {
+    if (use_deriv_est) {
+      double scale_fact = 1.0 / (r_p[i] + r_l[i]) /
+                          (1.0 / (r_p[i] + r_l[i]) +
+                           MAX_PRECISION_LOSS / fabs(r_p[i] - r_l[i]));
+      yout[i] =
+          scale_fact * (r_p[i] - r_l[i]) + (1.0 - scale_fact) * (md->dn0[i]);
+    } else {
+      yout[i] = r_p[i] - r_l[i];
+    }
+  } else {
+    yout[i] = 0.0;
+  }
+
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   if (threadIdx.x == 0)
