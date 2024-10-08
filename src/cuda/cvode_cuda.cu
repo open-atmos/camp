@@ -944,13 +944,15 @@ __device__ int cudaDevicef(double time_step, double *y, double *yout,
   }
 #else
   // Assign reactions to each threads evenly
-  if (threadIdx.x < md->n_rxn) {
+  if (threadIdx.x < md->n_rxn) {  // Avoid case of less threads than reactions,
+                                  // where thread would access non-existent data
     int n_iters = md->n_rxn / blockDim.x;
     for (int j = 0; j < n_iters; j++) {
       int i_rxn = threadIdx.x + j * blockDim.x;
       cudaDevicerxn_calc_deriv(i_rxn, deriv_data, time_step, md, sc);
     }
-    // In case of non-even division of reactions, assign the remaining reactions
+    // In case of non-even division of reactions, assign the remaining
+    // reactions
     int residual = md->n_rxn % blockDim.x;
     if (threadIdx.x < residual) {
       int i_rxn = threadIdx.x + blockDim.x * n_iters;
@@ -1212,7 +1214,6 @@ __device__ int cudaDeviceJac(ModelDataGPU *md, ModelDataVariable *sc) {
       &(jac->loss_partials[jacBlock.num_elem[0] * blockIdx.x]);
   sc->grid_cell_state = &(md->state[md->n_per_cell_state_var * blockIdx.x]);
   __syncthreads();
-  int n_rxn = md->n_rxn;
 #ifdef IS_DEBUG_MODE_removeAtomic
   if (threadIdx.x == 0) {
     for (int j = 0; j < n_rxn; j++) {
@@ -1220,13 +1221,14 @@ __device__ int cudaDeviceJac(ModelDataGPU *md, ModelDataVariable *sc) {
     }
   }
 #else
-  if (threadIdx.x < n_rxn) {  // Avoid cases of less species than reactions
-    int n_iters = n_rxn / blockDim.x;
+  if (threadIdx.x < md->n_rxn) {  // Avoid case of less threads than reactions,
+                                  // where thread would access non-existent data
+    int n_iters = md->n_rxn / blockDim.x;
     for (int j = 0; j < n_iters; j++) {
       int i_rxn = threadIdx.x + j * blockDim.x;
       cudaDevicerxn_calc_Jac(i_rxn, jacBlock, md, sc);
     }
-    int residual = n_rxn % blockDim.x;
+    int residual = md->n_rxn % blockDim.x;
     if (threadIdx.x < residual) {
       int i_rxn = threadIdx.x + blockDim.x * n_iters;
       cudaDevicerxn_calc_Jac(i_rxn, jacBlock, md, sc);
