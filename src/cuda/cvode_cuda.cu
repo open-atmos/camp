@@ -2004,6 +2004,7 @@ __device__ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *sc,
     cudaDevicecvRescale(md, sc);
     return (TRY_AGAIN);
   }
+  /* After MXNEF1 failures, force an order reduction and retry step */
   if (sc->cv_q > 1) {
     sc->cv_eta = SUNMAX(ETAMIN, sc->cv_hmin / fabs(sc->cv_h));
     cudaDevicecvDecreaseBDF(md, sc);
@@ -2013,6 +2014,8 @@ __device__ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *sc,
     cudaDevicecvRescale(md, sc);
     return (TRY_AGAIN);
   }
+
+  /* If already at order 1, restart: reload zn from scratch */
   sc->cv_eta = SUNMAX(ETAMIN, sc->cv_hmin / fabs(sc->cv_h));
   sc->cv_h *= sc->cv_eta;
   sc->cv_next_h = sc->cv_h;
@@ -2025,6 +2028,19 @@ __device__ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *sc,
   return (TRY_AGAIN);
 }
 
+/**
+ * \brief This routine performs various update operations when the solution
+ * to the nonlinear system has passed the local error test.
+ *
+ * We increment the step counter nst, record the values hu and qu,
+ * update the tau array, and apply the corrections to the zn array.
+ * The tau[i] are the last q values of h, with tau[1] the most recent.
+ * The counter qwait is decremented, and if qwait == 1 (and q < qmax)
+ * we save acor and cv_mem->cv_tq[5] for a possible order increase.
+ *
+ * \param md Pointer to the ModelDataGPU structure.
+ * \param sc Pointer to the ModelDataVariable structure.
+ */
 __device__ void cudaDevicecvCompleteStep(ModelDataGPU *md,
                                          ModelDataVariable *sc) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -2038,6 +2054,7 @@ __device__ void cudaDevicecvCompleteStep(ModelDataGPU *md,
     md->cv_tau[2 + blockIdx.x * (L_MAX + 1)] =
         md->cv_tau[1 + blockIdx.x * (L_MAX + 1)];
   md->cv_tau[1 + blockIdx.x * (L_MAX + 1)] = sc->cv_h;
+  /* Apply correction to column j of zn: l_j * Delta_n */
   for (j = 0; j <= sc->cv_q; j++) {
     md->dzn[j][i] += md->cv_l[j + blockIdx.x * L_MAX] * md->cv_acor[i];
   }
@@ -2048,6 +2065,22 @@ __device__ void cudaDevicecvCompleteStep(ModelDataGPU *md,
   }
 }
 
+/**
+ * \brief Given etaqm1, etaq, etaqp1 (the values of eta for qprime = q - 1, q,
+ * or q + 1, respectively), this routine chooses the maximum eta value, sets eta
+ * to that value, and sets qprime to the corresponding value of q.
+ *
+ * If there is a tie, the preference order is to (1) keep the same order, then
+ * (2) decrease the order, and finally (3) increase the order. If the maximum
+ * eta value is below the threshhold THRESH, the order is kept unchanged and eta
+ * is set to 1.
+ *
+ * \param cv_etaqp1 The value of eta for qprime = q + 1.
+ * \param cv_etaq The value of eta for q.
+ * \param cv_etaqm1 The value of eta for qprime = q - 1.
+ * \param md Pointer to the ModelDataGPU structure.
+ * \param sc Pointer to the ModelDataVariable structure.
+ */
 __device__ void cudaDevicecvChooseEta(double cv_etaqp1, double cv_etaq,
                                       double cv_etaqm1, ModelDataGPU *md,
                                       ModelDataVariable *sc) {
@@ -2068,23 +2101,51 @@ __device__ void cudaDevicecvChooseEta(double cv_etaqp1, double cv_etaq,
   } else {
     sc->cv_eta = cv_etaqp1;
     sc->cv_qprime = sc->cv_q + 1;
+    /*
+     * Store Delta_n in zn[qmax] to be used in order increase
+     *
+     * This happens at the last step of order q before an increase
+     * to order q+1, so it represents Delta_n in the ELTE at q+1
+     */
     md->dzn[BDF_Q_MAX][i] = md->cv_acor[i];
   }
 }
 
+/**
+ * Adjusts the value of eta according to the various heuristic limits and the
+ * optional input hmax.
+ *
+ * @param md The model data on the device.
+ * @param sc The model data variable on the device.
+ */
 __device__ void cudaDevicecvSetEta(ModelDataGPU *md, ModelDataVariable *sc) {
+  /* If eta below the threshhold THRESH, reject a change of step size */
   if (sc->cv_eta < THRESH) {
     sc->cv_eta = 1.;
     sc->cv_hprime = sc->cv_h;
   } else {
+    /* Limit eta by etamax and hmax, then set hprime */
     sc->cv_eta = SUNMIN(sc->cv_eta, sc->cv_etamax);
     sc->cv_hprime = sc->cv_h * sc->cv_eta;
   }
 }
 
+/**
+ * \brief This routine handles the setting of stepsize and order for the next
+ * step -- hprime and qprime. Along with hprime, it sets the ratio eta =
+ * hprime/h. It also updates other state variables related to a change of step
+ * size or order.
+ *
+ * \param md The ModelDataGPU object pointer.
+ * \param sc The ModelDataVariable object pointer.
+ * \param dsm The value of dsm.
+ *
+ * \return Returns 0 on success.
+ */
 __device__ int cudaDevicecvPrepareNextStep(ModelDataGPU *md,
                                            ModelDataVariable *sc, double dsm) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
+  /* If etamax = 1, defer step size or order changes */
   if (sc->cv_etamax == 1.) {
     sc->cv_qwait = SUNMAX(sc->cv_qwait, 2);
     sc->cv_qprime = sc->cv_q;
@@ -2092,13 +2153,20 @@ __device__ int cudaDevicecvPrepareNextStep(ModelDataGPU *md,
     sc->cv_eta = 1.;
     return 0;
   }
+
+  /* etaq is the ratio of new to old h at the current order */
   double cv_etaq = 1. / (dSUNRpowerR(BIAS2 * dsm, 1. / sc->cv_L) + ADDON);
+
+  /* If no order change, adjust eta and acor in cvSetEta and return */
   if (sc->cv_qwait != 0) {
     sc->cv_eta = cv_etaq;
     sc->cv_qprime = sc->cv_q;
     cudaDevicecvSetEta(md, sc);
     return 0;
   }
+  /* If qwait = 0, consider an order change.   etaqm1 and etaqp1 are
+   the ratios of new to old h at orders q-1 and q+1, respectively.
+   cvChooseEta selects the largest; cvSetEta adjusts eta and acor */
   sc->cv_qwait = 2;
   double ddn;
   double cv_etaqm1 = 0.;
@@ -2123,6 +2191,18 @@ __device__ int cudaDevicecvPrepareNextStep(ModelDataGPU *md,
   return CV_SUCCESS;
 }
 
+/**
+ * \brief Adjusts the history array on an increase in the order q in the case
+ * that lmm == CV_BDF.
+ *
+ * This routine sets a new column zn[q+1] equal to a multiple of the saved
+ * vector (= acor) in zn[indx_acor]. Then each zn[j] is adjusted by a multiple
+ * of zn[q+1]. The coefficients in the adjustment are the coefficients of the
+ * polynomial x*x*(x+xi_1)*...*(x+xi_j), where xi_j = [t_n - t_(n-j)]/h.
+ *
+ * \param md Pointer to the ModelDataGPU structure.
+ * \param sc Pointer to the ModelDataVariable structure.
+ */
 __device__ void cudaDevicecvIncreaseBDF(ModelDataGPU *md,
                                         ModelDataVariable *sc) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -2153,6 +2233,19 @@ __device__ void cudaDevicecvIncreaseBDF(ModelDataGPU *md,
   }
 }
 
+/**
+ * \brief Adjusts the parameters of the history array zn based on a change in
+ * step size.
+ *
+ * This routine is called when a change in step size was decided upon,
+ * and it handles the required adjustments to the history array zn.
+ * If there is to be a change in order, it calls cvAdjustOrder and resets
+ * q, L = q+1, and qwait. Then in any case, it calls cvRescale, which
+ * resets h and rescales the Nordsieck array.
+ *
+ * \param md The model data on the device.
+ * \param sc The model data variable on the device.
+ */
 __device__ void cudaDevicecvAdjustParams(ModelDataGPU *md,
                                          ModelDataVariable *sc) {
   if (sc->cv_qprime != sc->cv_q) {
@@ -2172,6 +2265,26 @@ __device__ void cudaDevicecvAdjustParams(ModelDataGPU *md,
   cudaDevicecvRescale(md, sc);
 }
 
+/**
+ * Performs one internal cvode step, from tn to tn + h.
+ * Calls other routines to do all the work.
+ *
+ * The main operations done here are as follows:
+ * - Preliminary adjustments if a new step size was chosen.
+ * - Prediction of the Nordsieck history array zn at tn + h.
+ * - Setting of multistep method coefficients and test quantities.
+ * - Solution of the nonlinear system.
+ * - Testing the local error.
+ * - Updating zn and other state data if successful.
+ * - Resetting stepsize and order for the next step.
+ * - If SLDET is on, check for stability, reduce order if necessary.
+ * On a failure in the nonlinear system solution or error test, the
+ * step may be reattempted, depending on the nature of the failure.
+ *
+ * @param md The ModelDataGPU object.
+ * @param sc The ModelDataVariable object.
+ * @return The result of the cvStep operation.
+ */
 __device__ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *sc) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int ncf = 0;
@@ -2182,39 +2295,83 @@ __device__ int cudaDevicecvStep(ModelDataGPU *md, ModelDataVariable *sc) {
   if ((sc->cv_nst > 0) && (sc->cv_hprime != sc->cv_h)) {
     cudaDevicecvAdjustParams(md, sc);
   }
+
+  /* Looping point for attempts to take a step */
   for (;;) {
     cudaDevicecvPredict(md, sc);
     cudaDevicecvSet(md, sc);
     nflag = cudaDevicecvNlsNewton(nflag, md, sc);
     int kflag = cudaDevicecvHandleNFlag(md, sc, &nflag, saved_t, &ncf);
+
+    /* Go back in loop if we need to predict again (nflag=PREV_CONV_FAIL)*/
     if (kflag == PREDICT_AGAIN) {
       continue;
     }
+
+    /* Return if nonlinear solve failed and recovery not possible. */
     if (kflag != DO_ERROR_TEST) {
       return (kflag);
     }
+
+    /* Perform error test (nflag=CV_SUCCESS) */
     int eflag = cudaDevicecvDoErrorTest(md, sc, &nflag, saved_t, &nef, &dsm);
+
+    /* Go back in loop if we need to predict again (nflag=PREV_ERR_FAIL) */
     if (eflag == TRY_AGAIN) {
       continue;
     }
+
+    /* Return if error test failed and recovery not possible. */
     if (eflag != CV_SUCCESS) {
       return (eflag);
     }
+
+    /* Error test passed (eflag=CV_SUCCESS), break from loop */
     break;
   }
+
+  /* Nonlinear system solve and error test were both successful.
+   Update data, and consider change of step and/or order.       */
   cudaDevicecvCompleteStep(md, sc);
   cudaDevicecvPrepareNextStep(md, sc, dsm);
   sc->cv_etamax = 10.;
+
+  /*  Finally, we rescale the acor array to be the
+    estimated local error vector. */
   md->cv_acor[i] *= md->cv_tq[2 + blockIdx.x * (NUM_TESTS + 1)];
   return (CV_SUCCESS);
 }
 
+/**
+ * CVodeGetDky
+ *
+ * This routine computes the k-th derivative of the interpolating
+ * polynomial at the time t and stores the result in the vector dky.
+ * The formula is:
+ *         q
+ *  dky = SUM c(j,k) * (t - tn)^(j-k) * h^(-j) * zn[j] ,
+ *        j=k
+ * where c(j,k) = j*(j-1)*...*(j-k+1), q is the current order, and
+ * zn[j] is the j-th column of the Nordsieck history array.
+ *
+ * This function is called by CVode with k = 0 and t = tout, but
+ * may also be called directly by the user.
+ *
+ * @param md The ModelDataGPU pointer.
+ * @param sc The ModelDataVariable pointer.
+ * @param t The time at which to compute the derivative.
+ * @param k The order of the derivative to compute.
+ * @param dky The vector to store the computed derivative.
+ * @return CV_SUCCESS if successful, CV_BAD_T if t is outside the valid range.
+ */
 __device__ int cudaDeviceCVodeGetDky(ModelDataGPU *md, ModelDataVariable *sc,
                                      double t, int k, double *dky) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   double s, c, r;
   double tfuzz, tp, tn1;
   int z, j;
+
+  /* Allow for some slack */
   tfuzz = FUZZ_FACTOR * UNIT_ROUNDOFF * (fabs(sc->cv_tn) + fabs(sc->cv_hu));
   if (sc->cv_hu < 0.) tfuzz = -tfuzz;
   tp = sc->cv_tn - sc->cv_hu - tfuzz;
@@ -2222,6 +2379,8 @@ __device__ int cudaDeviceCVodeGetDky(ModelDataGPU *md, ModelDataVariable *sc,
   if ((t - tp) * (t - tn1) > 0.) {
     return (CV_BAD_T);
   }
+
+  /* Sum the differentiated interpolating polynomial */
   s = (t - sc->cv_tn) / sc->cv_h;
   for (j = sc->cv_q; j >= k; j--) {
     c = 1.;
@@ -2241,18 +2400,18 @@ __device__ int cudaDeviceCVodeGetDky(ModelDataGPU *md, ModelDataVariable *sc,
 /**
  * \brief This routine is responsible for setting the error weight vector ewt.
  *
- * \param md The ModelDataGPU pointer.
- * \param sc The ModelDataVariable pointer.
- * \param weight The double pointer to the weight vector.
- * \return Returns 0 if ewt is successfully set to a positive vector, -1
- * otherwise.
- *
  * This routine sets the error weight vector ewt according to the formula:
  *    ewt[i] = 1 / (reltol * abs(ycur[i]) + abstol[i]), i=0,...,neq-1
  *
  * It tests for non-positive components before inverting.
  * If ewt is successfully set, it returns 0. Otherwise, it returns -1 and ewt is
  * considered undefined.
+ *
+ * \param md Pointer to the ModelDataGPU structure.
+ * \param sc Pointer to the ModelDataVariable structure.
+ * \param weight Pointer to the array for storing the error weight vector ewt.
+ *
+ * \return Returns 0 if ewt is successfully set, -1 otherwise.
  */
 __device__ int cudaDevicecvEwtSetSV(ModelDataGPU *md, ModelDataVariable *sc,
                                     double *weight) {
@@ -2397,12 +2556,12 @@ __global__ void cudaGlobalCVode(double t_initial, ModelDataGPU md_object) {
                       ? md->state[md->map_state_deriv[threadIdx.x] +
                                   blockIdx.x * md->n_per_cell_state_var]
                       : TINY;
-  // Solve
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int clock_khz = md->clock_khz;
   clock_t start;
   start = clock();
 #endif
+// Solve
 #ifdef DEBUG_SOLVER_FAILURES
   md->flags[blockIdx.x] = cudaDeviceCVode(md, sc);
 #else
@@ -2423,6 +2582,12 @@ __global__ void cudaGlobalCVode(double t_initial, ModelDataGPU md_object) {
 #endif
 }
 
+/**
+ * Calculates the next power of two for a given integer.
+ *
+ * @param v The input integer.
+ * @return The next power of two.
+ */
 static int nextPowerOfTwo(int v) {
   v--;
   v |= v >> 1;
@@ -2434,6 +2599,15 @@ static int nextPowerOfTwo(int v) {
   return v;
 }
 
+/**
+ * Runs the CVode solver on the GPU.
+ *
+ * @param t_initial The initial time.
+ * @param mGPU The pointer to the ModelDataGPU structure.
+ * @param blocks The number of blocks for the kernel launch.
+ * @param threads_block The number of threads per block for the kernel launch.
+ * @param stream The CUDA stream to associate with the kernel launch.
+ */
 void cvodeRun(double t_initial, ModelDataGPU *mGPU, int blocks,
               int threads_block, cudaStream_t stream) {
   int n_shr_memory = nextPowerOfTwo(threads_block);
