@@ -1423,26 +1423,34 @@ __device__ int cudaDevicecvNewtonIteration(ModelDataGPU *md,
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   double del, delp, dcon;
   int m = 0;
+  /* Initialize delp to avoid compiler warning message */
   del = delp = 0.0;
   int retval;
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int clock_khz = md->clock_khz;
   clock_t start;
 #endif
+  /* Looping point for Newton iteration */
   for (;;) {
+    /* Evaluate the residual of the nonlinear system */
     md->dtempv[i] = sc->cv_rl1 * md->dzn[1][i] + md->cv_acor[i];
     md->dtempv[i] = sc->cv_gamma * md->dftemp[i] - md->dtempv[i];
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     start = clock();
 #endif
+    /* Call the linear solver function */
     solveBcgCudaDeviceCVODE(md, sc);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if (threadIdx.x == 0)
       sc->timeBCG += ((double)(int)(clock() - start)) / (clock_khz * 1000);
 #endif
     md->dtempv[i] = md->dx[i];
+
+    /* Get WRMS norm of correction */
     cudaDeviceVWRMS_Norm_2(md->dx, md->dewt, &del, md->n_shr_empty);
     md->dftemp[i] = md->dcv_y[i] + md->dtempv[i];
+
+    /* Improve guesses for zn(0) */
     int guessflag =
         CudaDeviceguess_helper(sc->cv_tn, 0., md->dftemp, md->dcv_y, md->dtempv,
                                md->dtempv1, md->dp0, md, sc);
@@ -1453,14 +1461,21 @@ __device__ int cudaDevicecvNewtonIteration(ModelDataGPU *md,
         return RHSFUNC_RECVR;
       }
     }
+
+    /* Check for negative concentrations */
     md->dftemp[i] = md->dcv_y[i] + md->dtempv[i];
     double min;
     cudaDevicemin(&min, md->dftemp[i], flag_shr2, md->n_shr_empty);
     if (min < -CAMP_TINY) {
       return CONV_FAIL;
     }
+
+    /* Add correction to acor and y */
     md->cv_acor[i] += md->dtempv[i];
     md->dcv_y[i] = md->dzn[0][i] + md->cv_acor[i];
+
+    /* Test for convergence.  If m > 0, an estimate of the convergence
+   rate constant is stored in crate, and used in the test. */
     if (m > 0) {
       sc->cv_crate = SUNMAX(0.3 * sc->cv_crate, del / delp);
     }
@@ -1476,6 +1491,10 @@ __device__ int cudaDevicecvNewtonIteration(ModelDataGPU *md,
       return CV_SUCCESS;
     }
     m++;
+
+    /* Stop at maxcor iterations or if iter. seems to be diverging.
+   If still not converged and Jacobian data is not current,
+   signal to try the solution again */
     if ((m == NLS_MAXCOR) || ((m >= 2) && (del > RDIV * delp))) {
       if (!(sc->cv_jcur)) {
         return TRY_AGAIN;
@@ -1483,6 +1502,8 @@ __device__ int cudaDevicecvNewtonIteration(ModelDataGPU *md,
         return RHSFUNC_RECVR;
       }
     }
+
+    /* Save norm of correction, evaluate f, and loop again */
     delp = del;
     retval = cudaDevicef(sc->cv_next_h, md->dcv_y, md->dftemp, true, md, sc);
     md->cv_acor[i] = md->dcv_y[i] + md->dzn[0][i];
@@ -1496,9 +1517,34 @@ __device__ int cudaDevicecvNewtonIteration(ModelDataGPU *md,
         return RHSFUNC_RECVR;
       }
     }
-  }
+  } /* end loop */
 }
 
+/**
+ * cvNlsNewton
+ *
+ * This routine handles the Newton iteration. It calls lsetup if
+ * indicated, calls cvNewtonIteration to perform the iteration, and
+ * retries a failed attempt at Newton iteration if that is indicated.
+ *
+ * Possible return values:
+ *
+ *   CV_SUCCESS       ---> continue with error test
+ *
+ *   CV_RHSFUNC_FAIL  -+
+ *   CV_LSETUP_FAIL    |-> halt the integration
+ *   CV_LSOLVE_FAIL   -+
+ *
+ *   CONV_FAIL        -+
+ *   RHSFUNC_RECVR    -+-> predict again or stop if too many
+ *
+ * @param nflag The flag indicating the type of call to cvNlsNewton.
+ * @param md The ModelDataGPU structure containing the model data on the GPU.
+ * @param sc The ModelDataVariable structure containing the model data
+ * variables.
+ * @return The return value indicating the success or failure of the Newton
+ * iteration.
+ */
 __device__ int cudaDevicecvNlsNewton(int nflag, ModelDataGPU *md,
                                      ModelDataVariable *sc) {
   extern __shared__ int flag_shr[];
@@ -1508,22 +1554,29 @@ __device__ int cudaDevicecvNlsNewton(int nflag, ModelDataGPU *md,
   int clock_khz = md->clock_khz;
   clock_t start;
 #endif
+  /* Set flag convfail, input to lsetup for its evaluation decision */
   int convfail = ((nflag == FIRST_CALL) || (nflag == PREV_ERR_FAIL))
                      ? CV_NO_FAILURES
                      : CV_FAIL_OTHER;
   int dgamrat = fabs(sc->cv_gamrat - 1.);
+  /* Decide whether or not to call setup routine*/
   int callSetup = (nflag == PREV_CONV_FAIL) || (nflag == PREV_ERR_FAIL) ||
                   (sc->cv_nst == 0) || (sc->cv_nst >= sc->cv_nstlp + MSBP) ||
                   (dgamrat > DGMAX);
   md->dftemp[i] = md->dzn[0][i] - md->cv_last_yn[i];
   md->cv_acor_init[i] = 0.;
+  /* Improve guesses for zn(0) */
   int guessflag =
       CudaDeviceguess_helper(sc->cv_tn, sc->cv_h, md->dzn[0], md->cv_last_yn,
                              md->dftemp, md->dtempv1, md->cv_acor_init, md, sc);
   if (guessflag < 0) {
     return RHSFUNC_RECVR;
   }
+  /* Looping point for the solution of the nonlinear system.
+   Evaluate f at the predicted y, call cvDlsSetup if indicated, and
+   call cvNewtonIteration for the Newton iteration itself. */
   for (;;) {
+    /* Load prediction into y vector */
     md->dcv_y[i] = md->dzn[0][i] + md->cv_acor_init[i];
     retval = cudaDevicef(sc->cv_tn, md->dcv_y, md->dftemp, true, md, sc);
     if (retval < 0) {
@@ -1545,6 +1598,7 @@ __device__ int cudaDevicecvNlsNewton(int nflag, ModelDataGPU *md,
       sc->cv_gamrat = sc->cv_crate = 1.0;
       sc->cv_gammap = sc->cv_gamma;
       sc->cv_nstlp = sc->cv_nst;
+      /* Break if lsetup failed */
       if (linflag < 0) {
         flag_shr[0] = CV_LSETUP_FAIL;
         break;
@@ -1554,25 +1608,38 @@ __device__ int cudaDevicecvNlsNewton(int nflag, ModelDataGPU *md,
         break;
       }
     }
+    /* Set acor to the initial guess for adjustments to the y vector */
     md->cv_acor[i] = md->cv_acor_init[i];
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     start = clock();
 #endif
+    /* Do the Newton iteration */
     int nItflag = cudaDevicecvNewtonIteration(md, sc);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
     if (threadIdx.x == 0)
       sc->timeNewtonIteration +=
           ((double)(clock() - start)) / (clock_khz * 1000);
 #endif
+    /* If there is a convergence failure and the Jacobian-related
+       data appears not to be current, loop again with a call to cvDlsSetup
+       in which convfail=CV_FAIL_BAD_J.  Otherwise return. */
     if (nItflag != TRY_AGAIN) {
       return nItflag;
     }
     callSetup = 1;
     convfail = CV_FAIL_BAD_J;
-  }  // for(;;)
+  }
   return nflag;
 }
 
+/**
+ * Rescales the Nordsieck array by multiplying the jth column zn[j] by eta^j, j
+ * = 1, ..., q. Then the value of h is rescaled by eta, and hscale is reset to
+ * h.
+ *
+ * @param md - Pointer to ModelDataGPU struct
+ * @param sc - Pointer to ModelDataVariable struct
+ */
 __device__ void cudaDevicecvRescale(ModelDataGPU *md, ModelDataVariable *sc) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   double factor;
@@ -1586,6 +1653,15 @@ __device__ void cudaDevicecvRescale(ModelDataGPU *md, ModelDataVariable *sc) {
   sc->cv_hscale = sc->cv_h;
 }
 
+/**
+ * Restores the value of tn to saved_t and undoes the prediction.
+ * After execution of cvRestore, the Nordsieck array zn has the same values as
+ * before the call to cvPredict.
+ *
+ * @param md - Pointer to ModelDataGPU structure.
+ * @param sc - Pointer to ModelDataVariable structure.
+ * @param saved_t - The value of tn to be restored.
+ */
 __device__ void cudaDevicecvRestore(ModelDataGPU *md, ModelDataVariable *sc,
                                     double saved_t) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -1599,6 +1675,43 @@ __device__ void cudaDevicecvRestore(ModelDataGPU *md, ModelDataVariable *sc,
   md->dzn[0][i] = md->cv_last_yn[i];
 }
 
+/**
+ * cvHandleNFlag
+ *
+ * This routine takes action on the return value nflag = *nflagPtr
+ * returned by cvNls, as follows:
+ *
+ * If cvNls succeeded in solving the nonlinear system, then
+ * cvHandleNFlag returns the constant DO_ERROR_TEST, which tells cvStep
+ * to perform the error test.
+ *
+ * If the nonlinear system was not solved successfully, then ncfn and
+ * ncf = *ncfPtr are incremented and Nordsieck array zn is restored.
+ *
+ * If the solution of the nonlinear system failed due to an
+ * unrecoverable failure by setup, we return the value CV_LSETUP_FAIL.
+ *
+ * If it failed due to an unrecoverable failure in solve, then we return
+ * the value CV_LSOLVE_FAIL.
+ *
+ * If it failed due to an unrecoverable failure in rhs, then we return
+ * the value CV_RHSFUNC_FAIL.
+ *
+ * Otherwise, a recoverable failure occurred when solving the
+ * nonlinear system (cvNls returned nflag == CONV_FAIL or RHSFUNC_RECVR).
+ * In this case, if ncf is now equal to maxncf or |h| = hmin,
+ * we return the value CV_CONV_FAILURE (if nflag=CONV_FAIL) or
+ * CV_REPTD_RHSFUNC_ERR (if nflag=RHSFUNC_RECVR).
+ * If not, we set *nflagPtr = PREV_CONV_FAIL and return the value
+ * PREDICT_AGAIN, telling cvStep to reattempt the step.
+ *
+ * @param md - Pointer to ModelDataGPU struct
+ * @param sc - Pointer to ModelDataVariable struct
+ * @param nflagPtr - Pointer to the return value nflag
+ * @param saved_t - The saved value of t
+ * @param ncfPtr - Pointer to the value of ncf
+ * @return int - The return value indicating the action to be taken
+ */
 __device__ int cudaDevicecvHandleNFlag(ModelDataGPU *md, ModelDataVariable *sc,
                                        int *nflagPtr, double saved_t,
                                        int *ncfPtr) {
@@ -1606,27 +1719,52 @@ __device__ int cudaDevicecvHandleNFlag(ModelDataGPU *md, ModelDataVariable *sc,
   if (*nflagPtr == CV_SUCCESS) {
     return (DO_ERROR_TEST);
   }
+
+  /* The nonlinear soln. failed; increment ncfn and restore zn */
   cudaDevicecvRestore(md, sc, saved_t);
+
+  /* Return if lsetup, lsolve, or rhs failed unrecoverably */
   if (*nflagPtr == CV_LSETUP_FAIL) return (CV_LSETUP_FAIL);
   if (*nflagPtr == CV_LSOLVE_FAIL) return (CV_LSOLVE_FAIL);
   if (*nflagPtr == CV_RHSFUNC_FAIL) return (CV_RHSFUNC_FAIL);
+
+  /* At this point, nflag = CONV_FAIL or RHSFUNC_RECVR; increment ncf */
   (*ncfPtr)++;
   sc->cv_etamax = 1.;
+
+  /* If we had maxncf failures or |h| = hmin,
+   return CV_CONV_FAILURE or CV_REPTD_RHSFUNC_ERR. */
   if ((fabs(sc->cv_h) <= sc->cv_hmin * ONEPSM) ||
       (*ncfPtr == CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS)) {
     if (*nflagPtr == CONV_FAIL) return (CV_CONV_FAILURE);
     if (*nflagPtr == RHSFUNC_RECVR) return (CV_REPTD_RHSFUNC_ERR);
   }
+
+  /* Reduce step size; return to reattempt the step */
   sc->cv_eta = SUNMAX(ETACF, sc->cv_hmin / fabs(sc->cv_h));
   *nflagPtr = PREV_CONV_FAIL;
   cudaDevicecvRescale(md, sc);
   return (PREDICT_AGAIN);
 }
 
-__device__ void cudaDevicecvSetTqBDFt(ModelDataGPU *md, ModelDataVariable *sc,
-                                      double hsum, double alpha0,
-                                      double alpha0_hat, double xi_inv,
-                                      double xistar_inv) {
+/**
+ * \brief Sets the test quantity array `tq` in the case `lmm == CV_BDF`.
+ *
+ * This function sets the test quantity array `tq` based on the given
+ * parameters.
+ *
+ * \param md The pointer to the `ModelDataGPU` structure.
+ * \param sc The pointer to the `ModelDataVariable` structure.
+ * \param hsum The sum of `h` values.
+ * \param alpha0 The value of `alpha0`.
+ * \param alpha0_hat The value of `alpha0_hat`.
+ * \param xi_inv The inverse of `xi`.
+ * \param xistar_inv The inverse of `xistar`.
+ */
+__device__ void cudaDevicecvSetTqBDF(ModelDataGPU *md, ModelDataVariable *sc,
+                                     double hsum, double alpha0,
+                                     double alpha0_hat, double xi_inv,
+                                     double xistar_inv) {
   extern __shared__ int flag_shr[];
   double A1, A2, A3, A4, A5, A6;
   double C, Cpinv, Cppinv;
@@ -1683,7 +1821,7 @@ __device__ void cudaDevicecvSetBDF(ModelDataGPU *md, ModelDataVariable *sc) {
       md->cv_l[z + blockIdx.x * L_MAX] +=
           md->cv_l[z - 1 + blockIdx.x * L_MAX] * xistar_inv;
   }
-  cudaDevicecvSetTqBDFt(md, sc, hsum, alpha0, alpha0_hat, xi_inv, xistar_inv);
+  cudaDevicecvSetTqBDF(md, sc, hsum, alpha0, alpha0_hat, xi_inv, xistar_inv);
 }
 
 __device__ void cudaDevicecvSet(ModelDataGPU *md, ModelDataVariable *sc) {
@@ -1999,18 +2137,21 @@ __device__ int cudaDeviceCVodeGetDky(ModelDataGPU *md, ModelDataVariable *sc,
   return (CV_SUCCESS);
 }
 
-/*
- * cvEwtSet
+/**
+ * \brief This routine is responsible for setting the error weight vector ewt.
  *
- * This routine is responsible for setting the error weight vector ewt
+ * \param md The ModelDataGPU pointer.
+ * \param sc The ModelDataVariable pointer.
+ * \param weight The double pointer to the weight vector.
+ * \return Returns 0 if ewt is successfully set to a positive vector, -1
+ * otherwise.
  *
- *    ewt[i] = 1 / (reltol * SUNRabs(ycur[i]) + abstol[i]), i=0,...,neq-1
+ * This routine sets the error weight vector ewt according to the formula:
+ *    ewt[i] = 1 / (reltol * abs(ycur[i]) + abstol[i]), i=0,...,neq-1
  *
  * It tests for non-positive components before inverting.
- * cvEwtSet returns 0 if ewt is successfully set as above to a
- * positive vector and -1 otherwise. In the latter case, ewt is
+ * If ewt is successfully set, it returns 0. Otherwise, it returns -1 and ewt is
  * considered undefined.
- *
  */
 __device__ int cudaDevicecvEwtSetSV(ModelDataGPU *md, ModelDataVariable *sc,
                                     double *weight) {
