@@ -226,18 +226,16 @@ contains
     ! (and probably more cases).
     call this%camp_core%solver_initialize(load_gpu, is_reset_jac, load_balance)
     this%camp_state => this%camp_core%new_state()
-    if(this%output_file_title=="cb05_paperV2") then
-      allocate(this%offset_photo_rates_cells(this%n_cells))
-      this%offset_photo_rates_cells(:) = 0.
-      do z =1, this%n_cells
-        do i = 1, this%n_photo_rxn
-          base_rate = this%base_rates(i)
-          call this%photo_rxns(i)%set_rate(base_rate)
-          call this%camp_core%update_data(this%photo_rxns(i),z)
-        end do
+    allocate(this%offset_photo_rates_cells(this%n_cells))
+    this%offset_photo_rates_cells(:) = 0.
+    do z =1, this%n_cells
+      do i = 1, this%n_photo_rxn
+        base_rate = this%base_rates(i)
+        call this%photo_rxns(i)%set_rate(base_rate)
+        call this%camp_core%update_data(this%photo_rxns(i),z)
       end do
-      deallocate(this%offset_photo_rates_cells)
-    end if
+    end do
+    deallocate(this%offset_photo_rates_cells)
     call camp_mpi_barrier(MPI_COMM_WORLD)
     do z =1, this%n_cells
       if (i_sect_bc>0) then
@@ -324,21 +322,14 @@ contains
             end do
             this%camp_state%state_var(this%map_camp_id(:)) = &
                             MONARCH_conc(i,j,k,this%map_monarch_id(:))
-            if(this%output_file_title=="monarch_cb05") then
-              this%camp_state%state_var(this%gas_phase_water_id) = &
-              water_conc(1,1,1,water_vapor_index)
-            else
-              this%camp_state%state_var(this%gas_phase_water_id) = &
+            this%camp_state%state_var(this%gas_phase_water_id) = &
                       water_conc(1,1,1,water_vapor_index) * &
                               mwair / mwwat * 1.e6
-            end if
-            if(this%output_file_title=="cb05_paperV2") then
-              do r=1,size(this%specs_emi_id)
-                this%camp_state%state_var(this%specs_emi_id(r))=&
-                  this%camp_state%state_var(this%specs_emi_id(r))&
-                    +this%specs_emi(r)*this%rate_emi(i_hour,z+1)*conv(i,j,k)
-              end do
-            end if
+            do r=1,size(this%specs_emi_id)
+              this%camp_state%state_var(this%specs_emi_id(r))=&
+                this%camp_state%state_var(this%specs_emi_id(r))&
+                  +this%specs_emi(r)*this%rate_emi(i_hour,z+1)*conv(i,j,k)
+            end do
             call cpu_time(comp_start)
             call this%camp_core%solve(this%camp_state, real(time_step*60., kind=dp))
             call cpu_time(comp_end)
@@ -364,20 +355,13 @@ contains
             call this%camp_state%env_states(z+1)%set_pressure_Pa(real(pressure(i,j,k),kind=dp))
             this%camp_state%state_var(this%map_camp_id(:) + (z*state_size_per_cell))&
              = MONARCH_conc(i,j,k,this%map_monarch_id(:))
-            if(this%output_file_title=="monarch_cb05") then
-              this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
-                      water_conc(1,1,1,water_vapor_index)
-            else
               this%camp_state%state_var(this%gas_phase_water_id+(z*state_size_per_cell)) = &
                       water_conc(1,1,1,water_vapor_index) * mwair / mwwat * 1.e6
-            end if
-            if(this%output_file_title=="cb05_paperV2") then
-              do r=1,size(this%specs_emi_id)
-                this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)=&
-                  this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)&
-                  +this%specs_emi(r)*this%rate_emi(i_hour,z+1)*conv(i,j,k)
-              end do
-            endif
+            do r=1,size(this%specs_emi_id)
+              this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)=&
+                this%camp_state%state_var(this%specs_emi_id(r)+z*state_size_per_cell)&
+                +this%specs_emi(r)*this%rate_emi(i_hour,z+1)*conv(i,j,k)
+            end do
           end do
         end do
       end do
@@ -613,11 +597,7 @@ contains
     integer(kind=i_kind) :: i_spec, num_spec, i
     real :: factor_ppb_to_ppm
 
-    if(this%output_file_title=="cb05_paperV2") then
-      factor_ppb_to_ppm=1.0E-3
-    else
-      factor_ppb_to_ppm=1.0
-    end if
+    factor_ppb_to_ppm=1.0E-3
     num_spec = 0
     key_name = "gas-phase species"
     if (this%init_conc_data%get_property_t(key_name, gas_species_list)) then

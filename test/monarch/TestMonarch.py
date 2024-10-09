@@ -19,7 +19,7 @@ def all_timesteps():
     conf.mpiProcessesCaseOptimList = [1]
     conf.casesOptim = ["GPU BDF"]
     #conf.is_import = True
-    conf.is_import_base = True
+    #conf.is_import_base = True
     # conf.profileCuda = "ncu"
     # conf.profileCuda = "nsys"
     # conf.profileExtrae = True

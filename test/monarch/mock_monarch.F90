@@ -108,10 +108,6 @@ program mock_monarch_t
   call camp_interface%get_init_conc(species_conc, water_conc, WATER_VAPOR_ID, &
           i_W,I_E,I_S,I_N)
 
-  if(output_file_title=="monarch_cb05") then
-    call import_camp_input_json(camp_interface)
-  end if
-
   call set_env(camp_interface,output_path)
 
   if(TIME_STEP*NUM_TIME_STEP>(60*24)) then !24h limit time-step
@@ -204,106 +200,5 @@ contains
     end if
     call camp_mpi_barrier()
   end subroutine
-
-  subroutine import_camp_input_json(camp_interface)
-    type(camp_monarch_interface_t), intent(inout) :: camp_interface
-    integer :: z,i,j,k,r,o,i_cell,i_spec,i_photo_rxn
-    integer :: state_size_per_cell
-    type(json_file) :: jfile
-    type(json_core) :: json
-    character(len=:), allocatable :: export_path, spec_name_json
-    real(kind=dp) :: dt, temp, press, real_val
-    type(string_t), allocatable :: camp_spec_names(:), unique_names(:)
-    real, dimension(NUM_EBI_PHOTO_RXN) :: ebi_photo_rates
-    character(len=128) :: mpi_rank_str, i_str
-    integer :: mpi_rank, id
-    character, allocatable :: buffer(:)
-    integer :: max_spec_name_size=512
-    integer(kind=i_kind) :: pos, pack_size, size_state_per_cell
-    character(len=:), allocatable :: spec_name
-    real(kind=dp) :: base_rate
-
-    state_size_per_cell = camp_interface%camp_core%size_state_per_cell
-    call jfile%initialize()
-    export_path = "settings/monarch_cb05/monarch_cell_init_concs.json"
-    call jfile%load_file(export_path); if (jfile%failed()) print*,&
-            "JSON not found at ",export_path
-    size_state_per_cell = camp_interface%camp_core%size_state_per_cell
-    mpi_rank = camp_mpi_rank()
-    if (mpi_rank==0) then
-    unique_names=camp_interface%camp_core%unique_names()
-    pack_size = 0
-    do z=1, size_state_per_cell
-      pack_size = pack_size +  camp_mpi_pack_size_string(trim(unique_names(z)%string))
-    end do
-    allocate(buffer(pack_size))
-    pos = 0
-    do z=1, size(unique_names)
-      call camp_mpi_pack_string(buffer, pos, trim(unique_names(z)%string))
-    end do
-    end if
-    call camp_mpi_bcast_integer(pack_size, MPI_COMM_WORLD)
-    if (mpi_rank/=0) then
-      allocate(buffer(pack_size))
-    end if
-    call camp_mpi_bcast_packed(buffer, MPI_COMM_WORLD)
-    if (mpi_rank/=0) then
-      pos = 0
-      allocate(unique_names(size_state_per_cell))
-      spec_name=""
-      do z=1,max_spec_name_size
-        spec_name=spec_name//" "
-      end do
-      do z=1, size_state_per_cell
-        call camp_mpi_unpack_string(buffer, pos, spec_name)
-        unique_names(z)%string= trim(spec_name)
-      end do
-    end if
-    deallocate(buffer)
-    camp_spec_names=unique_names
-    do i=1, size(camp_spec_names)
-      call jfile%get('input.species.'//camp_spec_names(i)%string,&
-              camp_interface%camp_state%state_var(i))
-    end do
-    do z=0,n_cells-1
-      do i=1,state_size_per_cell
-        camp_interface%camp_state%state_var(i+(z*state_size_per_cell))=&
-                camp_interface%camp_state%state_var(i)
-      end do
-    end do
-    do i=I_W,I_E
-      do j=I_S,I_N
-        do k=1,NUM_VERT_CELLS
-          o = (j-1)*(I_E) + (i-1)
-          z = (k-1)*(I_E*I_N) + o
-          species_conc(i,j,k,camp_interface%map_monarch_id(:)) = &
-                  camp_interface%camp_state%state_var(camp_interface%map_camp_id(:))
-          call jfile%get('input.temperature',temp)
-          temperature(i,j,k)=temp
-          call jfile%get('input.pressure',press)
-          pressure(i,j,k)=press
-        end do
-      end do
-    end do
-    do i = 1, state_size_per_cell
-      if (trim(camp_spec_names(i)%string)=="H2O") then
-        water_conc(:,:,:,WATER_VAPOR_ID) = camp_interface%camp_state%state_var(i)
-      end if
-    end do
-    do i=1, camp_interface%n_photo_rxn
-      write(i_str,*) i
-      i_str=adjustl(i_str)
-      call jfile%get('input.photo_rates.'//trim(i_str),&
-              camp_interface%base_rates(i))
-    end do
-    do z =1, n_cells
-      do i = 1, camp_interface%n_photo_rxn
-        base_rate = camp_interface%base_rates(i)
-        call camp_interface%photo_rxns(i)%set_rate(base_rate)
-        call camp_interface%camp_core%update_data(camp_interface%photo_rxns(i),z)
-      end do
-    end do
-    call jfile%destroy()
-  end subroutine import_camp_input_json
 
 end program mock_monarch_t

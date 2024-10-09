@@ -14,7 +14,6 @@ class TestMonarch:
     def __init__(self):
         # Case configuration
         self.chemFile = "cb05_paperV2"
-        # self.chemFile = "monarch_cb05"
         self.diffCells = ""
         self.timeSteps = 1
         self.timeStepsDt = 2
