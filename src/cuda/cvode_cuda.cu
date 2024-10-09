@@ -1794,6 +1794,22 @@ __device__ void cudaDevicecvSetTqBDF(ModelDataGPU *md, ModelDataVariable *sc,
       CV_NLSCOEF / md->cv_tq[2 + blockIdx.x * (NUM_TESTS + 1)];
 }
 
+/**
+ * \brief This routine computes the coefficients l and tq in the case lmm ==
+ * CV_BDF.
+ *
+ * cvSetBDF calls cvSetTqBDF to set the test quantity array tq.
+ *
+ * The components of the array l are the coefficients of a polynomial Lambda(x)
+ * = l_0 + l_1 x + ... + l_q x^q, given by Lambda(x) = (1 + x / xi*_q) * PRODUCT
+ * (1 + x / xi_i) , where xi_i = [t_n - t_(n-i)] / h.
+ *
+ * The array tq is set to test quantities used in the convergence test, the
+ * error test, and the selection of h at a new order.
+ *
+ * \param md The ModelDataGPU pointer.
+ * \param sc The ModelDataVariable pointer.
+ */
 __device__ void cudaDevicecvSetBDF(ModelDataGPU *md, ModelDataVariable *sc) {
   extern __shared__ int flag_shr[];
   double alpha0, alpha0_hat, xi_inv, xistar_inv, hsum;
@@ -1811,6 +1827,7 @@ __device__ void cudaDevicecvSetBDF(ModelDataGPU *md, ModelDataVariable *sc) {
       for (z = j; z >= 1; z--)
         md->cv_l[z + blockIdx.x * L_MAX] +=
             md->cv_l[z - 1 + blockIdx.x * L_MAX] * xi_inv;
+      /* The l[i] are coefficients of product(1 to j) (1 + x/xi_i) */
     }
     alpha0 -= 1. / sc->cv_q;
     xistar_inv = -md->cv_l[1 + blockIdx.x * L_MAX] - alpha0;
@@ -1824,6 +1841,23 @@ __device__ void cudaDevicecvSetBDF(ModelDataGPU *md, ModelDataVariable *sc) {
   cudaDevicecvSetTqBDF(md, sc, hsum, alpha0, alpha0_hat, xi_inv, xistar_inv);
 }
 
+/*
+ * cvSet
+ *
+ * This routine is a high level routine which calls cvSetBDF to set the
+ * polynomial l, the test quantity array tq, and the related variables rl1,
+ * gamma, and gamrat.
+ *
+ * The array tq is loaded with constants used in the control of estimated
+ * local errors and in the nonlinear convergence test.  Specifically, while
+ * running at order q, the components of tq are as follows:
+ *   tq[1] = a coefficient used to get the est. local error at order q-1
+ *   tq[2] = a coefficient used to get the est. local error at order q
+ *   tq[3] = a coefficient used to get the est. local error at order q+1
+ *   tq[4] = constant used in nonlinear iteration convergence test
+ *   tq[5] = coefficient used to get the order q+2 derivative vector used in
+ *           the est. local error at order q+1
+ */
 __device__ void cudaDevicecvSet(ModelDataGPU *md, ModelDataVariable *sc) {
   extern __shared__ int flag_shr[];
   cudaDevicecvSetBDF(md, sc);
@@ -1836,6 +1870,18 @@ __device__ void cudaDevicecvSet(ModelDataGPU *md, ModelDataVariable *sc) {
                                    : 1.;  // protect x / x != 1.0
 }
 
+/**
+ * cvPredict
+ *
+ * This routine advances tn by the tentative step size h, and computes
+ * the predicted array z_n(0), which is overwritten on zn. The
+ * prediction of zn is done by repeated additions.
+ * If tstop is enabled, it is possible for tn + h to be past tstop by roundoff,
+ * and in that case, we reset tn (after incrementing by h) to tstop.
+ *
+ * @param md The pointer to the ModelDataGPU struct.
+ * @param sc The pointer to the ModelDataVariable struct.
+ */
 __device__ void cudaDevicecvPredict(ModelDataGPU *md, ModelDataVariable *sc) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
   int j, k;
@@ -1848,6 +1894,15 @@ __device__ void cudaDevicecvPredict(ModelDataGPU *md, ModelDataVariable *sc) {
   }
 }
 
+/**
+ * Decreases the history array on a decrease in the order q in the case that lmm
+ * == CV_BDF. Each zn[j] is adjusted by a multiple of zn[q]. The coefficients in
+ * the adjustment are the coefficients of the polynomial
+ * x*x*(x+xi_1)*...*(x+xi_j), where xi_j = [t_n - t_(n-j)]/h.
+ *
+ * @param md The ModelDataGPU object.
+ * @param sc The ModelDataVariable object.
+ */
 __device__ void cudaDevicecvDecreaseBDF(ModelDataGPU *md,
                                         ModelDataVariable *sc) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -1869,6 +1924,38 @@ __device__ void cudaDevicecvDecreaseBDF(ModelDataGPU *md,
   }
 }
 
+/**
+ * @brief Performs the local error test.
+ *
+ * This routine performs the local error test. The weighted local error norm dsm
+ * is loaded into *dsmPtr, and the test dsm ?<= 1 is made.
+ *
+ * If the test passes, cvDoErrorTest returns CV_SUCCESS.
+ *
+ * If the test fails, we undo the step just taken (call cvRestore) and
+ *
+ *   - if maxnef error test failures have occurred or if SUNRabs(h) = hmin, we
+ * return CV_ERR_FAILURE.
+ *
+ *   - if more than MXNEF1 error test failures have occurred, an order reduction
+ * is forced. If already at order 1, restart by reloading zn from scratch. If
+ * f() fails we return either CV_RHSFUNC_FAIL or CV_UNREC_RHSFUNC_ERR (no
+ * recovery is possible at this stage).
+ *
+ *   - otherwise, set *nflagPtr to PREV_ERR_FAIL, and return TRY_AGAIN.
+ *
+ * @param md The ModelDataGPU object.
+ * @param sc The ModelDataVariable object.
+ * @param nflagPtr Pointer to the flag indicating the status of the error test.
+ * @param saved_t The saved value of t.
+ * @param nefPtr Pointer to the number of error test failures.
+ * @param dsmPtr Pointer to the weighted local error norm.
+ * @return CV_SUCCESS if the test passes, CV_ERR_FAILURE if the test fails and
+ * maxnef error test failures have occurred or SUNRabs(h) = hmin, TRY_AGAIN if
+ * the test fails and more than MXNEF1 error test failures have occurred,
+ * CV_RHSFUNC_FAIL if f() fails, CV_UNREC_RHSFUNC_ERR if f() fails and no
+ * recovery is possible at this stage.
+ */
 __device__ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *sc,
                                        int *nflagPtr, double saved_t,
                                        int *nefPtr, double *dsmPtr) {
@@ -1877,6 +1964,9 @@ __device__ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *sc,
   double dsm;
   double min_val;
   int retval;
+
+  /* Find the minimum concentration and if it's small and negative, make it
+   * positive */
   md->dftemp[i] = md->cv_l[blockIdx.x * L_MAX] * md->cv_acor[i] + md->dzn[0][i];
   cudaDevicemin(&min_val, md->dftemp[i], flag_shr2, md->n_shr_empty);
   if (min_val < 0. && min_val > -CAMP_TINY) {
@@ -1886,15 +1976,26 @@ __device__ int cudaDevicecvDoErrorTest(ModelDataGPU *md, ModelDataVariable *sc,
     min_val = 0.;
   }
   dsm = sc->cv_acnrm * md->cv_tq[2 + blockIdx.x * (NUM_TESTS + 1)];
+
+  /* If est. local error norm dsm passes test and there are no negative values,
+   * return CV_SUCCESS */
   *dsmPtr = dsm;
   if (dsm <= 1. && min_val >= 0.) return (CV_SUCCESS);
+
+  /* Test failed; increment counters, set nflag, and restore zn array */
   (*nefPtr)++;
   *nflagPtr = PREV_ERR_FAIL;
   cudaDevicecvRestore(md, sc, saved_t);
+
+  /* At maxnef failures or |h| = hmin, return CV_ERR_FAILURE */
   if ((fabs(sc->cv_h) <= sc->cv_hmin * ONEPSM) ||
       (*nefPtr == CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS))
     return (CV_ERR_FAILURE);
+
+  /* Set etamax = 1 to prevent step size increase at end of this step */
   sc->cv_etamax = 1.;
+
+  /* Set h ratio eta from dsm, rescale, and return for retry of step */
   if (*nefPtr <= MXNEF1) {
     sc->cv_eta = 1. / (dSUNRpowerR(BIAS2 * dsm, 1. / sc->cv_L) + ADDON);
     sc->cv_eta =
