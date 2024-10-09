@@ -787,6 +787,19 @@ __device__ void cudaDeviceVWRMS_Norm_2(double *g_idata1, double *g_idata2,
   __syncthreads();
 }
 
+/**
+ * @brief Copies the Jacobian values from input array `Ax` to the output array
+ * `Bx` for a specific device.
+ *
+ * This function copies the elements of the input array `Ax` to the output array
+ * `Bx` for a specific device. The number of non-zero elements in each row is
+ * specified by the `diA` array.
+ *
+ * @param diA Pointer to the array containing the number of non-zero elements in
+ * each row.
+ * @param Ax Pointer to the input array.
+ * @param Bx Pointer to the output array.
+ */
 __device__ void cudaDeviceJacCopy(int *diA, double *Ax, double *Bx) {
   int nnz = diA[blockDim.x];
   for (int j = diA[threadIdx.x]; j < diA[threadIdx.x + 1]; j++) {
@@ -1286,19 +1299,38 @@ __device__ int cudaDeviceJac(ModelDataGPU *md, ModelDataVariable *sc) {
 
 // Functions equivalent to CVODE CPU solver (BDF method)
 
-__device__ int cudaDevicelinsolsetup(ModelDataGPU *md, ModelDataVariable *sc,
-                                     int convfail) {
+/**
+ * \brief Determines whether to update a Jacobian matrix or use a stored version
+ * based  on heuristics regarding previous convergence issues and the number of
+ * time steps since it was last updated. It then creates the system matrix from
+ * this, the 'gamma' factor, and the identity matrix.
+ *
+ * A = I-gamma*J.
+ *
+ * This routine then calls the LS 'setup' routine with A.
+ *
+ * \param md Pointer to the ModelDataGPU structure.
+ * \param sc Pointer to the ModelDataVariable structure.
+ * \param convfail The convergence failure flag.
+ * \return Returns 0 on success, -1 if an error occurred during the Jacobi
+ * calculation, and 1 if a guess was made.
+ */
+__device__ int cudaDevicecvDlsSetup(ModelDataGPU *md, ModelDataVariable *sc,
+                                    int convfail) {
   extern __shared__ int flag_shr[];
   double dgamma;
   int jbad, jok;
+  /* Use nst, gamma/gammap, and convfail to set J eval. flag jok */
   dgamma = fabs((sc->cv_gamma / sc->cv_gammap) - 1.);
   jbad = (sc->cv_nst == 0) || (sc->cv_nst > sc->nstlj + CVD_MSBJ) ||
          ((convfail == CV_FAIL_BAD_J) && (dgamma < CVD_DGMAX)) ||
          (convfail == CV_FAIL_OTHER);
   jok = !jbad;
+  /* If jok = TRUE, use saved copy of J */
   if (jok == 1) {
     sc->cv_jcur = 0;
     cudaDeviceJacCopy(md->diA, md->dsavedJ, md->dA);
+    /* If jok = SUNFALSE, call jac routine for new J value */
   } else {
     sc->nstlj = sc->cv_nst;
     sc->cv_jcur = 1;
@@ -1312,15 +1344,24 @@ __device__ int cudaDevicelinsolsetup(ModelDataGPU *md, ModelDataVariable *sc,
     cudaDeviceJacCopy(md->diA, md->dA, md->dsavedJ);
   }
   int i = blockIdx.x * blockDim.x + threadIdx.x;
+  // Reset vector for linear solver
   md->dx[i] = 0.;
+  // Preconditioner linear solver
   cudaDeviceBCGprecond_2(md->dA, md->djA, md->diA, md->ddiag, -sc->cv_gamma);
   return 0;
 }
 
-// Biconjugate Gradient algorithm, more details explained in C. Guzman et. al. -
-// "Optimized thread-block arrangement in a GPU implementation of a linear
-// solver for atmospheric chemistry mechanisms", Computer Physics Communications
-// 2024
+/**
+ * @brief Solves a linear system of equations using the Biconjugate Gradient
+ * (BCG) algorithm.
+ *
+ * Details explained in C. Guzman et. al. "Optimized thread-block arrangement in
+ * a GPU implementation of a linear solver for atmospheric chemistry
+ * mechanisms", Computer Physics Communications 2024
+ *
+ * @param md A pointer to the ModelDataGPU object.
+ * @param sc A pointer to the ModelDataVariable object.
+ */
 __device__ void solveBcgCudaDeviceCVODE(ModelDataGPU *md,
                                         ModelDataVariable *sc) {
   int i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -1362,6 +1403,20 @@ __device__ void solveBcgCudaDeviceCVODE(ModelDataGPU *md,
 #endif
 }
 
+/**
+ * Performs the Newton iteration. If the iteration succeeds,
+ * it returns the value CV_SUCCESS. If not, it may signal the cvNlsNewton
+ * routine to call lsetup again and reattempt the iteration, by
+ * returning the value TRY_AGAIN. (In this case, cvNlsNewton must set
+ * convfail to CV_FAIL_BAD_J before calling setup again).
+ * Otherwise, this routine returns one of the appropriate values
+ * CV_LSOLVE_FAIL, CV_RHSFUNC_FAIL, CONV_FAIL, or RHSFUNC_RECVR back
+ * to cvNlsNewton.
+ *
+ * @param md The ModelDataGPU object
+ * @param sc The ModelDataVariable object
+ * @return The result of the Newton iteration
+ */
 __device__ int cudaDevicecvNewtonIteration(ModelDataGPU *md,
                                            ModelDataVariable *sc) {
   extern __shared__ double flag_shr2[];
@@ -1481,7 +1536,7 @@ __device__ int cudaDevicecvNlsNewton(int nflag, ModelDataGPU *md,
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
       start = clock();
 #endif
-      int linflag = cudaDevicelinsolsetup(md, sc, convfail);
+      int linflag = cudaDevicecvDlsSetup(md, sc, convfail);
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
       if (threadIdx.x == 0)
         sc->timelinsolsetup += ((double)(clock() - start)) / (clock_khz * 1000);
