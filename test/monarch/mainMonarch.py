@@ -16,7 +16,6 @@ class TestMonarch:
         self.chemFile = "cb05_paperV2"  # Folder with chemical mechanism
         self.timeSteps = 1  # Number of chemistry time steps
         self.timeStepsDt = 2  # Time-step size
-        self.case = []  # Current case from cases
         self.nCells = 1  # Number of cells
         self.caseGpuCpu = ""  # CPU or GPU
         self.mpiProcesses = 1
@@ -188,9 +187,7 @@ def run_cases(conf):
             int(conf.nCellsProcesses / conf.mpiProcesses) * conf.mpiProcesses,
         )
     conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
-    cases_words = conf.caseBase.split()
-    conf.caseGpuCpu = cases_words[0]
-    conf.case = conf.caseBase
+    conf.caseGpuCpu = conf.caseBase
     timeBase, valuesBase = run(conf)
     # OptimCases
     conf.is_import = save_is_import
@@ -209,9 +206,7 @@ def run_cases(conf):
             )
         conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
         for caseOptim in conf.casesOptim:
-            cases_words = caseOptim.split()
-            conf.caseGpuCpu = cases_words[0]
-            conf.case = caseOptim
+            conf.caseGpuCpu = caseOptim
             timeOptim, valuesOptim = run(conf)
             if conf.is_out:
                 math_functions.check_NRMSE(
@@ -240,26 +235,18 @@ def run_loads_gpu(conf):
 
 
 def plot_cases(conf, datay):
-    try:
-        cases_words = conf.casesOptim[0].split()
-    except Exception:
-        raise Exception(
-            "Missing 'conf.casesOptim'. Ensure you have a case enabled such as 'CPU' or 'GPU'"
-        )
-    conf.caseGpuCpu = cases_words[0]
+    conf.caseGpuCpu = conf.casesOptim[0]
     last_arch_optim = conf.caseGpuCpu
     is_same_arch_optim = True
     for caseOptim in conf.casesOptim:
-        cases_words = caseOptim.split()
-        conf.caseGpuCpu = cases_words[0]
+        conf.caseGpuCpu = caseOptim
         if last_arch_optim != conf.caseGpuCpu:
             is_same_arch_optim = False
         last_arch_optim = conf.caseGpuCpu
     legend = []
     for mpiProcessesCaseOptim in conf.mpiProcessesCaseOptimList:
         for caseOptim in conf.casesOptim:
-            cases_words = caseOptim.split()
-            conf.caseGpuCpu = cases_words[0]
+            conf.caseGpuCpu = caseOptim
             legend_name = ""
             if not is_same_arch_optim:
                 legend_name += conf.caseGpuCpu + " "
@@ -287,8 +274,7 @@ def plot_cases(conf, datay):
             legend_name += str(mpiProcessesCaseOptim) + " MPI "
     else:
         plotTitle += "Implementations "
-    cases_words = conf.caseBase.split()
-    conf.caseGpuCpu = cases_words[0]
+    conf.caseGpuCpu = conf.caseBase
     plotTitle += "vs " + str(conf.mpiProcessesCaseBase) + " Cores CPU"
     namey = "Speedup"
     if len(conf.cells) > 1:
