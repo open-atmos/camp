@@ -14,12 +14,12 @@ class TestMonarch:
     def __init__(self):
         # Case configuration
         self.chemFile = "cb05_paperV2"  # Folder with chemical mechanism
-        self.timeSteps = 1
-        self.timeStepsDt = 2
-        self.case = []
-        self.nCells = 1
-        self.caseGpuCpu = ""
-        self.caseMulticellsOnecell = ""
+        self.timeSteps = 1  # Number of chemistry time steps
+        self.timeStepsDt = 2  # Time-step size
+        self.case = []  # Current case from cases
+        self.nCells = 1  # Number of cells
+        self.caseGpuCpu = ""  # CPU or GPU
+        self.caseMulticellsOnecell = "" #
         self.mpiProcesses = 1
         # Cases configuration
         self.mpiProcessesCaseBase = 1
