@@ -7,9 +7,10 @@ import subprocess
 from pandas import read_csv as pd_read_csv
 
 
-# TODO: DEFINE OPTIONS
-# TODO: Add option to save path for output files
 # TODO: Move profile files to a new folder
+# TODO: Create a config file to write config variables such as load_gpu,
+# out file, etc, which should be read in the .c files instead of going
+# from python files to .f90 to .c.
 class TestMonarch:
 
     def __init__(self):
@@ -42,15 +43,11 @@ class TestMonarch:
         self.is_import = False  # Import data from previous run
         # Import data from previous run for the base case
         self.is_import_base = False
-        self.loads_gpu = [0]  # Percentage of computational load (cells) to GPU
+        self.loads_gpu = [100
+                          ]  # Percentage of computational load (cells) to GPU
         # 0 to Fixed load balance during run time 1 to Automatic load balance
         self.load_balance = 0
         self.timeFromStats = "timeCVode"  # Name of variable from the stats file.
-        # Auxiliary
-        self.sbatch_job_id = ""
-        self.exportPath = "exports"
-        self.results_file = "_solver_stats.csv"
-        self.nCellsProcesses = 1
 
 
 # from line_profiler_pycharm import profile
@@ -110,7 +107,7 @@ def run(conf):
             os.path.abspath(os.getcwd()) + "/" + pathNsight + ".ncu-rep",
         )
     if conf.profileExtrae is not None:
-        exec_str += "./trace_f.sh "
+        exec_str += "extrae/trace_f.sh "
     if conf.profileValgrind is not None:
         exec_str += "valgrind --tool=cachegrind "
     path_exec = "../../build/mock_monarch"
@@ -139,7 +136,6 @@ def run(conf):
         data_path += str(load_gpu) + str(conf.load_balance)
     data_path += (caseGpuCpuName + nCellsStr + "cells" + str(conf.timeSteps) +
                   "tsteps.csv")
-    print("data_path", data_path)
     data_path2 = "out/state"
     if conf.caseGpuCpu == "GPU":
         data_path2 += str(load_gpu) + str(conf.load_balance)
@@ -164,7 +160,6 @@ def run(conf):
         nRows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
         df = pd_read_csv(data_path, nrows=nRows_csv)
         data = df.to_dict("list")
-        print("data", data)
         data = data[conf.timeFromStats]
         print(conf.timeFromStats + ":", data)
     if os.path.exists(data_path2):

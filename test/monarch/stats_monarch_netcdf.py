@@ -10,6 +10,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import os
 
+# File to evaluate stats from MONARCH run
+
 
 def calculate_speedup(file1_path, file2_path):
     try:
@@ -40,9 +42,8 @@ def process_variable(dataset1, dataset2, var_name):
     max_array = np.maximum(np.abs(array1), np.abs(array2))
     non_zero_mask = max_array != 0
     relative_error = np.zeros_like(abs_diff)
-    relative_error[non_zero_mask] = (abs_diff[non_zero_mask] * 100) / max_array[
-        non_zero_mask
-    ]
+    relative_error[non_zero_mask] = (abs_diff[non_zero_mask] *
+                                     100) / max_array[non_zero_mask]
 
     mean = np.mean(relative_error)
     # print(mean)
@@ -144,9 +145,8 @@ def get_error(day):
         sns.boxplot(data=data, orient="v", showfliers=False)
         plt.ylabel("Relative Error [%]")
         plt.xticks(range(len(variable_names)), variable_names, rotation=90)
-        plt.title(
-            "Species with highest NRMSE for MONARCH-CAMP"
-        )  # 4 GPUs 480 time-steps
+        plt.title("Species with highest NRMSE for MONARCH-CAMP"
+                  )  # 4 GPUs 480 time-steps
         plt.show()
     return highest_nrmse, speedup
 

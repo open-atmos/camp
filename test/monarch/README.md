@@ -32,7 +32,7 @@ To read just the base case data. This is useful to develop the GPU version since
 
 # Profiling CPU
 
-Run `python profileCPU.py` for an example of a 
+Run `python exampleProfileCPU.py` for an example of a 
 CPU execution 1 day simulation.
 
 At follows there is an explanation of the relevant
@@ -86,7 +86,7 @@ the rest of the command line to run the program.
 
 # Profiling GPU
 
-Run `python profileGPU.py` for an example of profiling
+Run `python exampleProfileGPU.py` for an example of profiling
 the GPU with Nvidia profilers.
 
 Set:
