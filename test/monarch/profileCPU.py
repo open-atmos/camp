@@ -8,12 +8,12 @@ from mainMonarch import *
 
 
 def all_timesteps():
-  conf = TestMonarch()
-  conf.mpiProcessesCaseBase = 2
-  conf.cells = [10000]
-  conf.timeSteps = 1
-  run_main(conf)
+    conf = TestMonarch()
+    conf.mpiProcessesCaseBase = 2
+    conf.cells = [10000]
+    conf.timeSteps = 1
+    run_main(conf)
 
 
 if __name__ == "__main__":
-  all_timesteps()
+    all_timesteps()

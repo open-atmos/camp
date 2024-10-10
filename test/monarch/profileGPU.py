@@ -8,14 +8,14 @@ from mainMonarch import *
 
 
 def all_timesteps():
-  conf = TestMonarch()
-  conf.mpiProcessesCaseBase = 1
-  conf.cells = [10000]
-  conf.timeSteps = 1
-  conf.profileCuda = "ncu"
-  conf.caseBase = "GPU BDF"
-  run_main(conf)
+    conf = TestMonarch()
+    conf.mpiProcessesCaseBase = 1
+    conf.cells = [10000]
+    conf.timeSteps = 1
+    conf.profileCuda = "ncu"
+    conf.caseBase = "GPU"
+    run_main(conf)
 
 
 if __name__ == "__main__":
-  all_timesteps()
+    all_timesteps()

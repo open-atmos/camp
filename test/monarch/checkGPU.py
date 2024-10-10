@@ -15,10 +15,9 @@ def checkGPU():
     conf.cells = [10]
     conf.timeSteps = 3
     conf.timeStepsDt = 2
-    conf.caseBase = "CPU One-cell"
+    conf.caseBase = "CPU"
     conf.casesOptim = []
-    conf.casesOptim.append("GPU BDF")
-    conf.plotYKey = "Speedup timecvStep"
+    conf.casesOptim.append("GPU")
     """END OF CONFIGURATION VARIABLES"""
     run_main(conf)
 

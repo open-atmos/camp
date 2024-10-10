@@ -39,8 +39,7 @@ program mock_monarch_t
   integer :: i_hour = 0
   real :: curr_time = START_TIME
   type(camp_monarch_interface_t), pointer :: camp_interface
-  character(len=:), allocatable :: camp_input_file, chemFile,&
-    diffCells,caseGpuCpu
+  character(len=:), allocatable :: camp_input_file, chemFile
   character(len=:), allocatable :: output_path, output_file_title, str_to_int_aux
   character(len=:), allocatable :: str
   character, allocatable :: buffer(:)
@@ -69,10 +68,6 @@ program mock_monarch_t
   call jfile%get('nCells',NUM_VERT_CELLS)
   n_cells_monarch = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
   call jfile%get('load_gpu',load_gpu)
-  call jfile%get('caseGpuCpu',caseGpuCpu)
-  if(caseGpuCpu == "CPU") then
-    load_gpu = 0
-  end if
   if(load_gpu == 0) then
     n_cells = 1
   else
@@ -86,7 +81,7 @@ program mock_monarch_t
   if (camp_mpi_rank()==0) then
     write(*,*) "Time-steps:", NUM_TIME_STEP, "Cells:",&
         NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS, &
-            diffCells,caseGpuCpu, " MPI processes:", camp_mpi_size()
+           " MPI processes:", camp_mpi_size()
   end if
   allocate(temperature(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS))
   allocate(species_conc(NUM_WE_CELLS,NUM_SN_CELLS,NUM_VERT_CELLS,NUM_MONARCH_SPEC))

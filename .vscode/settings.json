@@ -30,5 +30,6 @@
     "semaphore": "cpp",
     "locale": "cpp",
     "string": "cpp"
-  }
+  },
+  "python.analysis.autoImportCompletions": true
 }
