@@ -117,7 +117,7 @@ void cvodeRun(double t_initial, ModelDataGPU *mGPU, int blocks,
 #define DGMAX \
   RCONST(0.3)     // iter == CV_NEWTON, |gamma/gammap-1| > DGMAX => call lsetup
 #define RDIV 2.0  // declare divergence if ratio del/delp > RDIV
-#define MSBP 20 max no.of steps between lsetup calls
+#define MSBP 20   // max no.of steps between lsetup calls
 #define CV_NLSCOEF 0.1
 // Maximum number of internal integration steps
 #define BDF_Q_MAX 5  // max value of q for lmm == BDF

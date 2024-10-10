@@ -142,6 +142,7 @@ program mock_monarch_t
     write(*,*) "Model run time: ", comp_time, " s"
   end if
   call camp_mpi_finalize()
+  write(*,*) "camp_mpi_finalize (Debug random seg.fault on mn5"
 contains
   subroutine set_env(camp_interface,file_prefix)
     type(camp_monarch_interface_t), intent(inout) :: camp_interface

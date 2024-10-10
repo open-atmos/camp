@@ -230,6 +230,13 @@ typedef struct {
   int solver_flag;       // Last flag returned by a call to CVode()
   int output_precision;  // Flag indicating whether to output precision loss
   int use_deriv_est;     // Flag to use an scale factor on f(t,y)
+  int is_reset_jac;      // Flag to indicate that the Jacobian matrix must be
+                     // re-initialized. It may accelerate solving. Enable reset
+                     // when the inputs are very different between each other or
+                     // to compare with the GPU version. Avoid reset when the
+                     // inputs are similar like CAMP-MONARCH.
+  double init_time_step;  // Initial time step (s)
+
 #ifdef CAMP_DEBUG
   int Jac_eval_fails;     // Number of Jacobian evaluation failures
   booleantype debug_out;  // Output debugging information during solving
@@ -245,19 +252,21 @@ typedef struct {
 #endif
 
 #ifdef CAMP_USE_GPU
-  ModelDataCPU mCPU;   // Auxiliar variable to move data between CPU and GPU
-  ModelDataGPU *mGPU;  // GPU data
-  double load_gpu;     // Percentage of number of cells, equivalent to
-                       // computational load, to compute on the GPU
+  int iters_load_balance;  // Iterations to calculate the average load balance
+  int last_short_gpu;  // Flag to indicate that solving on the GPU takes less
+                       // time than the CPU
+  int load_balance;  // Flag to balance the load between CPU and GPU. 0 to fixed
+                     // load balance during run time, while 1 to automatic load
+                     // balance
+#ifdef DEBUG_SOLVER_FAILURES
+  int *flags;  // Error flags from solving failures
+#endif
+  double load_gpu;           // Percentage of number of cells, equivalent to
+                             // computational load, to compute on the GPU
   double last_load_balance;  // Load balance of the previous time step
   double last_load_gpu;      // Load on the GPU of the previous time step
   double acc_load_balance;  // Accumulated load balance to calculate the average
-  int iters_load_balance;   // Iterations to calculate the average load balance
-  int last_short_gpu;  // Flag to indicate that solving on the GPU takes less
-                       // time than the CPU
-  int load_balance;    // Flag to balance the load between CPU and GPU. 0 to
-  // fixed load balance during run time, while 1 to automatic
-  // load balance
+  ModelDataGPU *mGPU;       // GPU data
 #ifdef PROFILE_SOLVING
   // Metrics for measuring time execution of the GPU solver, such as solving and
   // synchronization time
@@ -266,22 +275,10 @@ typedef struct {
   cudaEvent_t startGPUSync;
   cudaEvent_t stopGPUSync;
 #endif
-#ifdef PROFILE_SOLVING
-  booleantype is_load_balance;
+  ModelDataCPU mCPU;  // Auxiliar variable to move data between CPU and GPU
 #endif
-#ifdef DEBUG_SOLVER_FAILURES
-  int *flags;  // Error flags from solving failures
-#endif
-#endif
-  int is_reset_jac;  // Flag to indicate that the Jacobian matrix must be
-                     // re-initialized. It may accelerate solving. Enable reset
-                     // when the inputs are very different between each other or
-                     // to compare with the GPU version. Avoid reset when the
-                     // inputs are similar like CAMP-MONARCH.
-  void *cvode_mem;   // CVodeMem object
-  ModelData model_data;   // Model data (used during initialization and solving)
-  double init_time_step;  // Initial time step (s)
-  char **spec_names;      // Species names
+  void *cvode_mem;       // CVodeMem object
+  ModelData model_data;  // Model data (used during initialization and solving)
 } SolverData;
 
 #endif

@@ -90,6 +90,14 @@
  *                                parameters
  * \param n_sub_model_env_param Total number of environment-dependent sub model
  *                              parameters
+ * \param load_gpu Percentage of number of cells, equivalent to computational
+ load, to compute on the GPU
+ * \param is_reset_jac Flag to indicate that the Jacobian matrix must be
+ re-initialized. It may accelerate solving. Enable reset when the inputs are
+ very different between each other or to compare with the GPU version. Avoid
+ reset when the inputs are similar like CAMP-MONARCH.
+ * \param load_balance Flag to balance the load between CPU and GPU. 0 to fixed
+ load balance during run time, while 1 to automatic load balance
  * \return Pointer to the new SolverData object
  */
 void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
@@ -542,8 +550,18 @@ int solver_set_eval_jac(void *solver_data, bool eval_Jac) {
 #endif
 
 #ifdef CAMP_USE_GPU
-int solver_run_gpu(SolverData *sd, double *state, double *env, double t_initial,
-                   double t_final) {
+/**
+ * Update the dependent input and runs the solver on the CPU-GPU.
+ *
+ * @param sd The SolverData struct containing solver parameters.
+ * @param state The array representing the state.
+ * @param env The array representing the environment.
+ * @param t_initial The initial time.
+ * @param t_final The final time.
+ * @return An integer indicating the status of the solver run.
+ */
+int solver_run_cpu_gpu(SolverData *sd, double *state, double *env,
+                       double t_initial, double t_final) {
   ModelData *md = &(sd->model_data);
   int n_state_var = md->n_per_cell_state_var;
   int n_cells = md->n_cells;
@@ -583,6 +601,16 @@ int solver_run_gpu(SolverData *sd, double *state, double *env, double t_initial,
 }
 #endif
 
+/** \brief Solve for a given timestep on the CPU
+ *
+ * \param solver_data A pointer to the initialized solver data
+ * \param state A pointer to the full state array (all grid cells)
+ * \param env A pointer to the full array of environmental conditions
+ *            (all grid cells)
+ * \param t_initial Initial time (s)
+ * \param t_final (s)
+ * \return Flag indicating CAMP_SOLVER_SUCCESS or CAMP_SOLVER_FAIL
+ */
 int solver_run_cpu(SolverData *sd, double *state, double *env, double t_initial,
                    double t_final) {
   ModelData *md = &(sd->model_data);
@@ -709,7 +737,7 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   if (sd->load_gpu == 0) {
     return solver_run_cpu(sd, state, env, t_initial, t_final);
   } else {
-    return solver_run_gpu(sd, state, env, t_initial, t_final);
+    return solver_run_cpu_gpu(sd, state, env, t_initial, t_final);
   }
 #else
   return solver_run_cpu(sd, state, env, t_initial, t_final);
