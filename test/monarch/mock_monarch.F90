@@ -30,7 +30,6 @@ program mock_monarch_t
   integer, parameter :: WATER_VAPOR_ID = 5
   real, parameter :: START_TIME = 0
   integer :: n_cells = 1
-  character(len=:), allocatable :: DIFF_CELLS
   real,allocatable :: temperature(:, :, :)
   real, allocatable  :: species_conc(:, :, :, :)
   real, allocatable  :: water_conc(:, :, :, :) !(kg_H2O/kg_air)
@@ -60,7 +59,6 @@ program mock_monarch_t
   I_E=1
   I_S=1
   I_N=1
-  DIFF_CELLS = "OFF"
   call jfile%initialize()
   export_path = "settings/TestMonarch"//".json"
   call jfile%load_file(export_path); if (jfile%failed()) print*,&
@@ -79,10 +77,6 @@ program mock_monarch_t
   call jfile%get('load_balance',load_balance)
   call jfile%get('timeSteps',NUM_TIME_STEP)
   call jfile%get('timeStepsDt',TIME_STEP)
-  call jfile%get('diffCells',diffCells)
-  if(diffCells=="Realistic") then
-    DIFF_CELLS = "ON"
-  end if
   NUM_WE_CELLS = I_E-I_W+1
   NUM_SN_CELLS = I_N-I_S+1
   call jfile%get('caseGpuCpu',caseGpuCpu)
@@ -142,7 +136,7 @@ program mock_monarch_t
     write(*,*) "Model run time: ", comp_time, " s"
   end if
   call camp_mpi_finalize()
-  write(*,*) "camp_mpi_finalize (Debug random seg.fault on mn5"
+  write(*,*) "camp_mpi_finalize (Debug random seg.fault on mn5)"
 contains
   subroutine set_env(camp_interface,file_prefix)
     type(camp_monarch_interface_t), intent(inout) :: camp_interface
@@ -157,48 +151,35 @@ contains
     press_init = 100000.
     allocate(camp_interface%rate_emi(24,n_cells_monarch))
     camp_interface%rate_emi(:,:)=0.0
-    if(DIFF_CELLS=="ON") then
-      ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
-      mpi_size=camp_mpi_size()
-      tid=camp_mpi_rank()
-      ncells_mpi=ncells*mpi_size
-      press_end = 10000.
-      press_range = press_end-press_init
-      if((ncells_mpi)==1) then
-        press_slide = 0.
-      else
-        press_slide = press_range/(ncells_mpi-1)
-      end if
-      do i=I_W,I_E
-        do j=I_S,I_N
-          do k=1,NUM_VERT_CELLS
-            o = (j-1)*(I_E) + (i-1)
-            z1 = (k-1)*(I_E*I_N) + o
-            z = tid*ncells+z1
-            pressure(i,j,k)=press_init+press_slide*z
-            temperature(i,j,k)=temp_init*((pressure(i,j,k)/press_init)**(287./1004.)) !dry_adiabatic formula
-            rate_emi=abs((press_end-pressure(i,j,k))/press_range)
-            do t=1,12 !12 first hours
-              camp_interface%rate_emi(t,z1+1)=rate_emi
-            end do
+    ncells=(I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
+    mpi_size=camp_mpi_size()
+    tid=camp_mpi_rank()
+    ncells_mpi=ncells*mpi_size
+    press_end = 10000.
+    press_range = press_end-press_init
+    if((ncells_mpi)==1) then
+      press_slide = 0.
+    else
+      press_slide = press_range/(ncells_mpi-1)
+    end if
+    do i=I_W,I_E
+      do j=I_S,I_N
+        do k=1,NUM_VERT_CELLS
+          o = (j-1)*(I_E) + (i-1)
+          z1 = (k-1)*(I_E*I_N) + o
+          z = tid*ncells+z1
+          pressure(i,j,k)=press_init+press_slide*z
+          temperature(i,j,k)=temp_init*((pressure(i,j,k)/press_init)**(287./1004.)) !dry_adiabatic formula
+          rate_emi=abs((press_end-pressure(i,j,k))/press_range)
+          do t=1,12 !12 first hours
+            camp_interface%rate_emi(t,z1+1)=rate_emi
           end do
         end do
       end do
-    else
-      if(output_file_title=="cb05_paperV2") then
-        temperature(:,:,:) = temp_init
-        pressure(:,:,:) = press_init
-      end if
-      do t=1,12 !12 first hours
-        camp_interface%rate_emi(t,:)=1.0
-      end do
-    end if
-    if(output_file_title=="cb05_paperV2") then
-      air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
-              (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
-      conv(:,:,:)=0.02897/air_density(:,:,:)*(TIME_STEP*60.)*1e6 !units of time_step to seconds
-
-    end if
+    end do
+    air_density(:,:,:) = pressure(:,:,:)/(287.04*temperature(:,:,:)* &
+            (1.+0.60813824*water_conc(:,:,:,WATER_VAPOR_ID))) !kg m-3
+    conv(:,:,:)=0.02897/air_density(:,:,:)*(TIME_STEP*60.)*1e6 !units of time_step to seconds
     call camp_mpi_barrier()
   end subroutine
 
