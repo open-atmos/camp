@@ -10,19 +10,12 @@
 
 #include "camp_common.h"
 
-// Create a file for saving output concentrations
 void init_export_state();
-// Export output concentrations to calculate accuracy between CPU and GPU
-// versions at checkGPU test
 void export_state(SolverData *sd);
-// Join the files created by each MPI process at "export_solver_state" function
-// into a single file.
 void join_export_state();
-// Export execution time of GPU and CPU code to calculate speedups at
-// TestMonarch.py
 void export_stats(SolverData *sd);
 
-// file name prefix
+// File name prefix
 int file_name_prefix = 1;
 
 // Maximum size of output file names
