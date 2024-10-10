@@ -10,6 +10,8 @@ extern "C" {
 #include "cvode_gpu.h"
 }
 #ifdef TRACE_CPUGPU
+// Used for profiling traces with Nsight Systems. It allows to add a tag to the
+// CPU code.
 #include "nvToolsExt.h"
 #endif
 
@@ -19,6 +21,24 @@ extern "C" {
 
 #include <unistd.h>
 
+/**
+ * @brief Executes the CVode solver on GPU and CPU.
+ *
+ * This function performs the CVode solver on the GPU and CPU. It transfers
+ * the necessary data from the host to the device, solves the system of
+ * equations, and transfers the results back to the host. Simultaneously, it
+ * solves a part of the cells in the CPU, managed through the variable
+ * "load_gpu". It also handles load balancing between the CPU and GPU if the
+ * load_balance flag is set. Details explained on C. Guzman PhD Thesis - Chapter
+ * 6
+ *
+ * @param cvode_mem A pointer to the CVode memory structure.
+ * @param t_final The final time for the solver.
+ * @param yout The output vector where the solution will be stored.
+ * @param sd A pointer to the SolverData structure.
+ * @param t_initial The initial time for the solver.
+ * @return An integer representing the status of the solver.
+ */
 int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
               double t_initial) {
   ModelDataGPU *mGPU = sd->mGPU;
@@ -50,7 +70,8 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
 #endif
   // CPU solver, equivalent to the CPU solver for the option CPU-Only
 #ifdef TRACE_CPUGPU
-  nvtxRangePushA("CPU Code");  // Start of profiling trace
+  // Start of profiling trace using a tag to display on the trace
+  nvtxRangePushA("CPU Code");
 #endif
 #ifdef LOAD_BALANCE
   double startTime;
@@ -184,8 +205,8 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
     if (sd->load_gpu < 1) sd->load_gpu = 1;
     sd->acc_load_balance += load_balance;
     sd->iters_load_balance++;
-    md->n_cells_gpu = md->n_cells * sd->load_gpu / 100;  // Automatic load
-                                                         // balance
+    // Update values for next iteration from automatic load balance
+    md->n_cells_gpu = md->n_cells * sd->load_gpu / 100;
 #ifdef DEBUG_LOAD_BALANCE
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);

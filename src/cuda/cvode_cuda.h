@@ -15,10 +15,6 @@
 extern "C" {
 #include "../camp_solver.h"
 }
-__device__ int CudaDeviceguess_helper(double t_n, double h_n, double *y_n,
-                                      double *y_n1, double *hf, double *atmp1,
-                                      double *acorr, ModelDataGPU *md,
-                                      ModelDataVariable *sc);
 
 void cvodeRun(double t_initial, ModelDataGPU *mGPU, int blocks,
               int threads_block, cudaStream_t stream);
@@ -38,9 +34,16 @@ void cvodeRun(double t_initial, ModelDataGPU *mGPU, int blocks,
 #define RXN_WET_DEPOSITION 14
 #define CAMP_SOLVER_SUCCESS 0
 #define CAMP_SOLVER_FAIL 1
+#define CAMP_SOLVER_DEFAULT_MAX_STEPS 10000
+#define CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS 1000
+
+// Threshhold for precisition loss in rate calculations
 #define MAX_PRECISION_LOSS 1.0e-14
+
+// Maximum number of steps in discreet addition guess helper
 #define GUESS_MAX_ITER 5
 #define CAMP_TINY RCONST(1.0e-30)
+
 // Variables from CVODE
 #define CV_SUCCESS 0
 #define DO_ERROR_TEST +2
@@ -71,10 +74,13 @@ void cvodeRun(double t_initial, ModelDataGPU *mGPU, int blocks,
 #define RHSFUNC_RECVR +9
 #define RTFOUND +1
 #define CLOSERT +3
+
+// Control constants for tolerances
 #define CV_NN 0
 #define CV_SS 1
 #define CV_SV 2
 #define CV_WF 3
+
 #define FUZZ_FACTOR RCONST(100.0)
 #define HLB_FACTOR RCONST(100.0)
 #define HUB_FACTOR RCONST(0.1)
@@ -93,20 +99,29 @@ void cvodeRun(double t_initial, ModelDataGPU *mGPU, int blocks,
 #define BIAS2 RCONST(6.0)
 #define BIAS3 RCONST(10.0)
 #define ONEPSM RCONST(1.000001)
-#define SMALL_NST 10
-#define MXNEF 7
-#define MXNEF1 3
-#define SMALL_NEF 2
-#define LONG_WAIT 10
-#define NLS_MAXCOR 3
-#define CRDOWN RCONST(0.3)
-#define DGMAX RCONST(0.3)
-#define RDIV 2.0
-#define MSBP 20
+#define SMALL_NST 10 nst > SMALL_NST = > use ETAMX3
+#define MXNEF 7  // max no.of error test failures during one step try
+#define MXNEF1 \
+  3  // max no.of error test failures before forcing a reduction of order
+#define SMALL_NEF \
+  2  // if an error failure occurs and SMALL_NEF <= nef <= MXNEF1, then reset
+     // eta = SUNMIN(eta, ETAMXF)
+#define LONG_WAIT \
+  10  // number of steps to wait before considering an order change when q == 1
+      // and MXNEF1 error test failures have occurred
+#define NLS_MAXCOR \
+  3  // maximum no. of corrector iterations for the nonlinear solver
+#define CRDOWN \
+  RCONST(0.3)  // constant used in the estimation of the convergence rate
+               // (crate) of the iterates for the nonlinear equation
+#define DGMAX \
+  RCONST(0.3)     // iter == CV_NEWTON, |gamma/gammap-1| > DGMAX => call lsetup
+#define RDIV 2.0  // declare divergence if ratio del/delp > RDIV
+#define MSBP 20 max no.of steps between lsetup calls
 #define CV_NLSCOEF 0.1
-#define CAMP_SOLVER_DEFAULT_MAX_STEPS 10000
-#define CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS 1000
-#define BDF_Q_MAX 5
-#define CVD_MSBJ 50
-#define CVD_DGMAX RCONST(0.2)
+// Maximum number of internal integration steps
+#define BDF_Q_MAX 5  // max value of q for lmm == BDF
+#define CVD_MSBJ 50  // maximum number of steps between Jacobian evaluations
+#define CVD_DGMAX \
+  RCONST(0.2)  // maximum change in gamma between Jacobian evaluations
 #endif
