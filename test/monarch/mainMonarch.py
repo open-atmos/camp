@@ -7,10 +7,6 @@ import subprocess
 from pandas import read_csv as pd_read_csv
 
 
-# TODO: Move profile files to a new folder
-# TODO: Create a config file to write config variables such as load_gpu,
-# out file, etc, which should be read in the .c files instead of going
-# from python files to .f90 to .c.
 class TestMonarch:
 
     def __init__(self):
@@ -46,7 +42,8 @@ class TestMonarch:
         self.loads_gpu = [100
                           ]  # Percentage of computational load (cells) to GPU
         # 0 to Fixed load balance during run time 1 to Automatic load balance
-        self.load_balance = 0
+        self.load_balance = 0  # Flag to indicate if the balance should be balanced in run-time
+        # 0: Fixed, 1: Automatic
         self.timeFromStats = "timeCVode"  # Name of variable from the stats file.
 
 
