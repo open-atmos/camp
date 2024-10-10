@@ -69,6 +69,10 @@ program mock_monarch_t
   call jfile%get('nCells',NUM_VERT_CELLS)
   n_cells_monarch = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
   call jfile%get('load_gpu',load_gpu)
+  call jfile%get('caseGpuCpu',caseGpuCpu)
+  if(caseGpuCpu == "CPU") then
+    load_gpu = 0
+  end if
   if(load_gpu == 0) then
     n_cells = 1
   else
@@ -79,7 +83,6 @@ program mock_monarch_t
   call jfile%get('timeStepsDt',TIME_STEP)
   NUM_WE_CELLS = I_E-I_W+1
   NUM_SN_CELLS = I_N-I_S+1
-  call jfile%get('caseGpuCpu',caseGpuCpu)
   if (camp_mpi_rank()==0) then
     write(*,*) "Time-steps:", NUM_TIME_STEP, "Cells:",&
         NUM_WE_CELLS*NUM_SN_CELLS*NUM_VERT_CELLS, &

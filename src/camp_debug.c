@@ -98,8 +98,6 @@ void export_stats(SolverData *sd) {
     FILE *fptr;
     if (sd->iters_load_balance == 0)
       sd->iters_load_balance = 1;  // avoid division by 0
-    printf("export_stats: avg_load_balance %.2lf%%\n",
-           sd->acc_load_balance / sd->iters_load_balance);
     if ((fptr = fopen("out/stats.csv", "w")) != NULL) {
       fprintf(fptr, "timeCVode,avg_load_balance\n");
       fprintf(fptr, "%.17le,%.17le", sd->timeCVode,

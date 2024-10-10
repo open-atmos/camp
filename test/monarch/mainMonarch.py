@@ -19,7 +19,6 @@ class TestMonarch:
         self.case = []  # Current case from cases
         self.nCells = 1  # Number of cells
         self.caseGpuCpu = ""  # CPU or GPU
-        self.caseMulticellsOnecell = "" #
         self.mpiProcesses = 1
         # Cases configuration
         self.mpiProcessesCaseBase = 1
@@ -108,7 +107,6 @@ def run(conf):
     print("exec_str:", exec_str)
     print(
         conf.caseGpuCpu,
-        conf.caseMulticellsOnecell,
         "ncellsPerMPIProcess:",
         conf.nCells,
         "Cells to GPU:",
@@ -192,7 +190,6 @@ def run_cases(conf):
     conf.nCells = int(conf.nCellsProcesses / conf.mpiProcesses)
     cases_words = conf.caseBase.split()
     conf.caseGpuCpu = cases_words[0]
-    conf.caseMulticellsOnecell = cases_words[1]
     conf.case = conf.caseBase
     timeBase, valuesBase = run(conf)
     # OptimCases
@@ -214,7 +211,6 @@ def run_cases(conf):
         for caseOptim in conf.casesOptim:
             cases_words = caseOptim.split()
             conf.caseGpuCpu = cases_words[0]
-            conf.caseMulticellsOnecell = cases_words[1]
             conf.case = caseOptim
             timeOptim, valuesOptim = run(conf)
             if conf.is_out:
@@ -251,33 +247,22 @@ def plot_cases(conf, datay):
             "Missing 'conf.casesOptim'. Ensure you have a case enabled such as 'CPU' or 'GPU'"
         )
     conf.caseGpuCpu = cases_words[0]
-    conf.caseMulticellsOnecell = cases_words[1]
     last_arch_optim = conf.caseGpuCpu
-    last_case_optim = conf.caseMulticellsOnecell
     is_same_arch_optim = True
-    is_same_case_optim = True
     for caseOptim in conf.casesOptim:
         cases_words = caseOptim.split()
         conf.caseGpuCpu = cases_words[0]
-        conf.caseMulticellsOnecell = cases_words[1]
         if last_arch_optim != conf.caseGpuCpu:
             is_same_arch_optim = False
         last_arch_optim = conf.caseGpuCpu
-        if last_case_optim != conf.caseMulticellsOnecell:
-            is_same_case_optim = False
-        last_case_optim = conf.caseMulticellsOnecell
     legend = []
     for mpiProcessesCaseOptim in conf.mpiProcessesCaseOptimList:
         for caseOptim in conf.casesOptim:
             cases_words = caseOptim.split()
             conf.caseGpuCpu = cases_words[0]
-            conf.caseMulticellsOnecell = cases_words[1]
-            case_multicells_onecell_name = ""
             legend_name = ""
             if not is_same_arch_optim:
                 legend_name += conf.caseGpuCpu + " "
-            if not is_same_case_optim:
-                legend_name += case_multicells_onecell_name
             if not legend_name == "":
                 legend.append(legend_name)
     plotTitle = ""
