@@ -48,6 +48,10 @@ class TestMonarch:
 # from line_profiler_pycharm import profile
 # @profile
 def run(conf):
+    if conf.caseGpuCpu == "CPU":
+        load_gpu = 0
+    else:
+        load_gpu = conf.load_gpu
     exec_str = ""
     try:
         ddt_pid = subprocess.check_output("pidof -x $(ps cax | grep forge)", shell=True)
@@ -109,7 +113,7 @@ def run(conf):
         "ncellsPerMPIProcess:",
         conf.nCells,
         "Cells to GPU:",
-        str(conf.load_gpu) + "%",
+        str(load_gpu) + "%",
         "Load_balance: ",
         str(conf.load_balance),
     )
@@ -124,14 +128,14 @@ def run(conf):
     is_import = False
     data_path = "out/stats"
     if conf.caseGpuCpu == "GPU":
-        data_path += str(conf.load_gpu) + str(conf.load_balance)
+        data_path += str(load_gpu) + str(conf.load_balance)
     data_path += (
         caseGpuCpuName + nCellsStr + "cells" + str(conf.timeSteps) + "tsteps.csv"
     )
     print("data_path", data_path)
     data_path2 = "out/state"
     if conf.caseGpuCpu == "GPU":
-        data_path2 += str(conf.load_gpu) + str(conf.load_balance)
+        data_path2 += str(load_gpu) + str(conf.load_balance)
     data_path2 += (
         caseGpuCpuName + nCellsStr + "cells" + str(conf.timeSteps) + "tsteps.csv"
     )
