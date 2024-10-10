@@ -28,7 +28,9 @@ if __name__ == "__main__":
       0 for fixed load, 1 for automatic load balancing.
     - conf.cells (list of int): Represents points in the map from the domain decomposition
       of an Earth Science Model, such as the atmosphere. Mathematically, it is a system
-      of Ordinary Differential Equations (ODE) to solve.
+      of Ordinary Differential Equations (ODE) to solve. 
+      Cells are divided between the MPI processes. 
+      Example: 10 cells and 2 MPI processes results to 5 cells per MPI process.
     - conf.mpiProcessesCaseBase (int): Number of MPI processes for the base case.
     - conf.caseBase (str): Base case to run, either "CPU" or "GPU".
     - conf.mpiProcessesCaseOptimList (list of int): List of MPI processes for optimized cases.

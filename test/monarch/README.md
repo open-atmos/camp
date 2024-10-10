@@ -1,12 +1,6 @@
 CAMP GPU : Instructions for Marenostrum cluster
 ======
 
-#TODO: One section: All options listed here in the README and some sections putting more context
-#TODO: 
-    # e.g. cells: 10000, mpi_processes: 2, gpu_load: 50
-    # 5000->rank 0 ; 5000->rank 1
-    # 2500->CPU rank 0; 2500->GPU rank 0; 2500->CPU rank 1; 2500->GPU rank 1
-
 This file includes instructions to run the GPU version of the code. All the related files to the GPU code are in this directory.
 
 *If you previously run another branch, run `compile.sh `.*
