@@ -215,19 +215,19 @@ contains
         max_part = aero_rep%maximum_computational_particles()
         jam_phase_instance = 0
         !check value
-        print *, "jam_instances ", aero_rep%num_phase_instances(phase_name_test, num_is_at_surface = .false.)
+        print *, "jam_instances ", aero_rep%num_phase_instances(phase_name_test, is_at_surface = .false.)
         call assert(417730478, 3 .eq. max_part)
         call assert(493602373, jam_phase_instance .eq. aero_rep%num_phase_instances(phase_name_test, &
-                                                         num_is_at_surface = .true.))
+                                                         is_at_surface = .true.))
 
         phase_name_test = "bread"
         num_bread = 1
         bread_phase_instance = num_bread * max_part
         !check value
         print *, bread_phase_instance
-        print *, "bread_instqnces ", aero_rep%num_phase_instances(phase_name_test, num_is_at_surface = .true.)
+        print *, "bread_instqnces ", aero_rep%num_phase_instances(phase_name_test, is_at_surface = .true.)
         call assert(734138496, bread_phase_instance .eq. aero_rep%num_phase_instances(phase_name_test, &
-                                                         num_is_at_surface = .true.))
+                                                         is_at_surface = .true.))
 
       class default
         call die_msg(519535557, rep_name)

@@ -60,7 +60,9 @@ contains
     camp_solver_data => camp_solver_data_t()
 
     if (camp_solver_data%is_solver_available()) then
+      write(*,*) "Running SIMPOL phase transfer reaction test for single particle aerosol"
       passed = run_SIMPOL_phase_transfer_test(1)
+      write(*,*) "Running SIMPOL phase transfer reaction test for modal aerosol"
       passed = passed .and. run_SIMPOL_phase_transfer_test(2)
     else
       call warn_msg(713064651, "No solver available")
