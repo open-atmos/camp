@@ -43,18 +43,17 @@ if __name__ == "__main__":
     - conf.profileExtrae (bool): Flag to indicate if Extrae profiling should be enabled.
     """
     conf = TestMonarch()
-    conf.timeSteps = 10  # Minimum value of 1
+    conf.timeSteps = 1  # Minimum value of 1
     conf.loads_gpu = [100]  # e.g. 100: GPU-Only 1-99: CPU+GPU
     conf.load_balance = 0  # 0: Fixed, 1: Automatic in runtime
-    conf.cells = [100]  # Minimum value of 1
+    conf.cells = [1000]  # Minimum value of 1
     conf.mpiProcessesCaseBase = 1  # Minimum value of 1
-    conf.caseBase = "CPU"  # CPU or GPU
-    # conf.caseBase = "GPU"
+    conf.caseBase = "GPU"  # CPU or GPU
     conf.mpiProcessesCaseOptimList = [1]  # Minimum value of 1
-    conf.casesOptim = ["GPU"]  # CPU or GPU
+    #conf.casesOptim = ["GPU"]  # CPU or GPU
     # conf.is_import = True # Import results for case Base and Optim
     # conf.is_import_base = True # Import results for case Base
-    # conf.profileCuda = "ncu" # ncu or nsys
+    conf.profileCuda = "ncu" # ncu or nsys
     # conf.profileCuda = "nsys"# ncu or nsys
     # conf.profileExtrae = True # Enable Extrae profiling
     datay = run_main(conf)  # Run
