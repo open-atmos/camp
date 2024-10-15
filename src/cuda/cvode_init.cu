@@ -89,7 +89,7 @@ void init_solve_gpu(SolverData *sd) {
   cudaEventCreate(&sd->stopGPUSync);
 #endif
 #ifdef DEBUG_SOLVER_FAILURES
-  cudaMalloc((void **)&mGPU->flags, n_cells);
+  cudaMalloc((void **)&mGPU->flags, n_cells * sizeof(int));
   sd->flags = (int *)malloc(n_cells * sizeof(int));
   for (int i = 0; i < md->n_cells; i++) {
     sd->flags[i] = CV_SUCCESS;

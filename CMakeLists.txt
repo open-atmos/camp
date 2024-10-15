@@ -33,6 +33,7 @@ option(DEBUG_SOLVER_FAILURES "" OFF)
 option(ENABLE_NETCDF "Include NETCDF package" OFF)
 option(DISABLE_INSTALL_OPTIONS "" OFF)
 SET(USE_TESTS OFF)
+add_definitions(-DDEBUG_SOLVER_FAILURES)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 
@@ -202,11 +203,6 @@ if (ENABLE_GPU)
   find_package(CUDA)
   enable_language(CUDA)
   add_definitions(-DCAMP_USE_GPU)
-endif()
-
-if (!ENABLE_DEBUG_SOLVER_FAILURES)
-else()
-  add_definitions(-DDEBUG_SOLVER_FAILURES)
 endif()
 
 ######################################################################
