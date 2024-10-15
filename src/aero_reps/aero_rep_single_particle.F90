@@ -487,7 +487,8 @@ contains
   !! For a single particle representation, the unique names will be a 'P'
   !! followed by the computational particle number, a '.', the phase name,
   !! another '.', and the species name.
-  function unique_names(this, phase_name, tracer_type, spec_name)
+  function unique_names(this, phase_name, tracer_type, spec_name,             &
+      phase_is_at_surface)
 
     use camp_util,                      only : integer_to_string
     !> List of unique names
@@ -500,6 +501,8 @@ contains
     integer(kind=i_kind), optional, intent(in) :: tracer_type
     !> Aerosol-phase species name
     character(len=*), optional, intent(in) :: spec_name
+    !> Indicates if aerosol phase is at the surface of particle
+    logical, optional, intent(in) :: phase_is_at_surface
 
     integer :: i_particle, i_layer, i_phase, i_spec, j_spec
     integer :: num_spec, curr_tracer_type
@@ -519,6 +522,10 @@ contains
     do i_phase = 1, size(this%aero_phase)
       if (present(phase_name)) then
         if(phase_name .ne. this%aero_phase(i_phase)%val%name()) cycle
+      end if
+      if (present(phase_is_at_surface)) then
+        if (phase_is_at_surface .neqv.                                          &
+            this%aero_phase_is_at_surface(i_phase)) cycle
       end if
       if (present(spec_name) .or. present(tracer_type)) then
         spec_names = this%aero_phase(i_phase)%val%get_species_names()
@@ -548,6 +555,10 @@ contains
       do i_phase = LAYER_PHASE_START_(i_layer), LAYER_PHASE_END_(i_layer)
         if (present(phase_name)) then
           if(phase_name .ne. this%aero_phase(i_phase)%val%name()) cycle
+        end if
+        if (present(phase_is_at_surface)) then
+          if (phase_is_at_surface .neqv.                                        &
+              this%aero_phase_is_at_surface(i_phase)) cycle
         end if
         spec_names = this%aero_phase(i_phase)%val%get_species_names()
         do j_spec = 1, this%aero_phase(i_phase)%val%size()
@@ -641,27 +652,25 @@ contains
   !! particle representation with layers, a phase can exist in multiple layers
   !! in one particle.  
   integer(kind=i_kind) function num_phase_instances(this, phase_name, &
-                                                    num_is_at_surface)
+                                                    is_at_surface)
   
     !> Aerosol representation data
     class(aero_rep_single_particle_t), intent(in) :: this
     !> Aerosol phase name
     character(len=*), intent(in) :: phase_name
     !> Indicates if aerosol phase is at the surface of particle
-    logical, intent(in), optional :: num_is_at_surface
+    logical, intent(in), optional :: is_at_surface
 
     integer(kind=i_kind) ::  i_phase, i_layer, phase_index
 
-
     num_phase_instances = 0
-    phase_index = 0
-    if (present(num_is_at_surface)) then
-      if (num_is_at_surface) then
+    if (present(is_at_surface)) then
+      if (is_at_surface) then
         do i_layer = 1, NUM_LAYERS_
           do i_phase = LAYER_PHASE_START_(i_layer), LAYER_PHASE_END_(i_layer)
             if (this%aero_phase(i_phase)%val%name() .eq. phase_name .and. &
               this%aero_phase_is_at_surface(i_phase)) then
-              phase_index = phase_index + 1
+              num_phase_instances = num_phase_instances + 1
             end if
           end do
         end do
@@ -670,7 +679,7 @@ contains
           do i_phase = LAYER_PHASE_START_(i_layer), LAYER_PHASE_END_(i_layer)
             if (this%aero_phase(i_phase)%val%name() .eq. phase_name .and. &
               .not. this%aero_phase_is_at_surface(i_phase)) then
-              phase_index = phase_index + 1
+              num_phase_instances = num_phase_instances + 1
             end if
           end do
         end do
@@ -679,12 +688,12 @@ contains
       do i_layer = 1, NUM_LAYERS_
         do i_phase = LAYER_PHASE_START_(i_layer), LAYER_PHASE_END_(i_layer)
           if (this%aero_phase(i_phase)%val%name() .eq. phase_name) then 
-            phase_index = phase_index + 1
+            num_phase_instances = num_phase_instances + 1
           end if
         end do
       end do
     end if
-    num_phase_instances = phase_index * MAX_PARTICLES_
+    num_phase_instances = num_phase_instances * MAX_PARTICLES_
 
   end function num_phase_instances
 
