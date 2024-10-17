@@ -193,6 +193,7 @@ contains
               "Missing ending tracer index for chemical species")
 
       ! Load the interface data
+      print*,"a",interface_config_file
       call this%load(interface_config_file)
 
       ! Initialize the camp-chem core

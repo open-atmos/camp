@@ -25,6 +25,8 @@
 __device__ double dSUNRpowerR(double base, double exponent) {
   if (base <= ZERO) return (ZERO);
 #ifdef EQUALLIZE_CPU_CUDA_POW
+  // The pow function results from CUDA differs from the pow results from CPU
+  // This code can be used to equallize the results
   if (exponent == (1. / 2)) return sqrt(base);
   if (exponent == (1. / 3)) return sqrt(sqrt(base));
   if (exponent == (1. / 4)) return sqrt(sqrt(base));

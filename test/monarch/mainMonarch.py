@@ -33,9 +33,9 @@ class TestMonarch:
         self.profileValgrind = None  # Option to profile with Valgrind
         # First case to run. It is the reference to calculate speedup
         # or the accuracy error. Example: Speedup = TimeBase / TimeOptim
-        self.caseBase = "" # CPU or GPU
+        self.caseBase = ""  # CPU or GPU
         # Cases to compare with the base case.
-        self.casesOptim = [] # "CPU" or "GPU"
+        self.casesOptim = []  # "CPU" or "GPU"
         self.is_import = False  # Import data from previous run
         # Import data from previous run for the base case
         self.is_import_base = False

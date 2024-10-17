@@ -59,11 +59,14 @@ program mock_monarch_t
   I_S=1
   I_N=1
   call jfile%initialize()
-  export_path = "settings/TestMonarch"//".json"
+    CHARACTER(len=255) :: cwd
+  CALL getcwd(cwd)
+  WRITE(*,*) TRIM(cwd)
+  export_path = "../test/binned_gpu/settings/TestMonarch"//".json"
   call jfile%load_file(export_path); if (jfile%failed()) print*,&
           "JSON not found at ",export_path
   call jfile%get('chemFile',output_file_title)
-  camp_input_file = "settings/"//output_file_title//"/config.json"
+  camp_input_file = "../test/binned_gpu/settings/"//output_file_title//"/config.json"
   output_path = "out/"//output_file_title
   call jfile%get('nCells',NUM_VERT_CELLS)
   n_cells_monarch = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS
@@ -134,7 +137,6 @@ program mock_monarch_t
     write(*,*) "Model run time: ", comp_time, " s"
   end if
   call camp_mpi_finalize()
-  write(*,*) "camp_mpi_finalize (Debug random seg.fault on mn5)"
 contains
   subroutine set_env(camp_interface,file_prefix)
     type(camp_monarch_interface_t), intent(inout) :: camp_interface

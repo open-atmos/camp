@@ -33,9 +33,9 @@ class TestMonarch:
         self.profileValgrind = None  # Option to profile with Valgrind
         # First case to run. It is the reference to calculate speedup
         # or the accuracy error. Example: Speedup = TimeBase / TimeOptim
-        self.caseBase = "" # CPU or GPU
+        self.caseBase = ""  # CPU or GPU
         # Cases to compare with the base case.
-        self.casesOptim = [] # "CPU" or "GPU"
+        self.casesOptim = []  # "CPU" or "GPU"
         self.is_import = False  # Import data from previous run
         # Import data from previous run for the base case
         self.is_import_base = False
@@ -107,7 +107,7 @@ def run(conf):
         exec_str += "extrae/trace_f.sh "
     if conf.profileValgrind is not None:
         exec_str += "valgrind --tool=cachegrind "
-    path_exec = "../../build/mock_monarch"
+    path_exec = "../../build/binned_gpu"
     exec_str += path_exec
     print("exec_str:", exec_str)
     print(
@@ -152,8 +152,8 @@ def run(conf):
             is_import = False
     if not is_import:
         os.system(exec_str)
-        os.rename("out/stats.csv", data_path)
-        os.rename("out/state.csv", data_path2)
+        os.rename("../../build/out/stats.csv", data_path)
+        os.rename("../../build/out/state.csv", data_path2)
         nRows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
         df = pd_read_csv(data_path, nrows=nRows_csv)
         data = df.to_dict("list")

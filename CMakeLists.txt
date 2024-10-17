@@ -304,7 +304,6 @@ endif()
 ######################################################################
 # camp library
 
-set(STD_C_FLAGS "-std=c99")
 #-lnvToolsExt for nsys profiling
 #WARNING: -dc flag does not work with MONARCH, avoid that
 set(STD_CUDA_FLAGS "-g -O3 --default-stream per-thread") #-G for assembly code nsight
@@ -312,11 +311,14 @@ set(STD_CUDA_FLAGS "-g -O3 --default-stream per-thread") #-G for assembly code n
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
   if(${CMAKE_Fortran_COMPILER_VERSION} GREATER_EQUAL 2021.10.0)
     set(STD_F_FLAGS "-extend-source -warn truncated_source")
+    set(STD_C_FLAGS "-std=c99 -diag-disable=10441")
   else ()
     set(STD_F_FLAGS "-extend_source -warn truncated_source")
   endif ()
 elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
   set(STD_F_FLAGS "-ffree-line-length-none")
+else()
+  set(STD_C_FLAGS "-std=c99 ")
 endif()
 
 set(REACTIONS_F_SRC
@@ -524,17 +526,15 @@ endif()
 set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 	${CB5_EBI_FLAGS})
 
-add_executable(binned_gpu test/monarch/mock_monarch.F90
-    test/monarch/camp_monarch_interface.F90)
+add_executable(binned_gpu test/binned_gpu/mock_monarch.F90
+    test/binned_gpu/camp_monarch_interface.F90)
 target_link_libraries(binned_gpu camplib)
 
-add_executable(mock_monarch test/monarch/mock_monarch.F90
-    test/monarch/camp_monarch_interface.F90
-    ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-    test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(mock_monarch camplib)
-
 if (USE_TESTS)
+
+add_executable(mock_monarch test/monarch/mock_monarch.F90
+    test/monarch/camp_monarch_interface.F90)
+target_link_libraries(mock_monarch camplib)
 
 ######################################################################
 # camp-chem box model
