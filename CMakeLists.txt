@@ -524,6 +524,10 @@ endif()
 set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 	${CB5_EBI_FLAGS})
 
+add_executable(binned_gpu test/monarch/mock_monarch.F90
+    test/monarch/camp_monarch_interface.F90)
+target_link_libraries(binned_gpu camplib)
+
 add_executable(mock_monarch test/monarch/mock_monarch.F90
     test/monarch/camp_monarch_interface.F90
     ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}

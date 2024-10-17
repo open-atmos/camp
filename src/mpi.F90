@@ -93,7 +93,8 @@ contains
     integer :: ierr
 
     call mpi_finalize(ierr)
-    call camp_mpi_check_ierr(ierr)
+! Removed camp_mpi_check_ierr because otherwise sometimes leads to segmentation fault 
+! (tested on Marenostrum 5, icc 2021.10.0 -O3 -g)
 #endif
 
   end subroutine camp_mpi_finalize

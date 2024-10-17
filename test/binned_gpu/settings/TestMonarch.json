@@ -1,0 +1,29 @@
+{
+    "chemFile": "cb05_paperV2",
+    "timeSteps": 1,
+    "timeStepsDt": 2,
+    "nCells": 10000,
+    "caseGpuCpu": "GPU",
+    "mpiProcesses": 1,
+    "mpiProcessesCaseBase": 1,
+    "mpiProcessesCaseOptimList": [
+        1
+    ],
+    "cells": [
+        10000
+    ],
+    "profileCuda": "",
+    "profileExtrae": null,
+    "profileValgrind": null,
+    "caseBase": "GPU",
+    "casesOptim": [],
+    "is_import": false,
+    "is_import_base": false,
+    "loads_gpu": [
+        100
+    ],
+    "load_balance": 0,
+    "timeFromStats": "timeCVode",
+    "load_gpu": 100,
+    "nCellsProcesses": 10000
+}
