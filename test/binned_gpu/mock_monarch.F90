@@ -52,6 +52,8 @@ program mock_monarch_t
   character(len=:), allocatable :: export_path
   character(len=128) :: i_str
   integer :: id, n_cells_monarch, load_gpu, load_balance
+      CHARACTER(len=255) :: cwd
+
 
   call camp_mpi_init()
   I_W=1
@@ -59,7 +61,6 @@ program mock_monarch_t
   I_S=1
   I_N=1
   call jfile%initialize()
-    CHARACTER(len=255) :: cwd
   CALL getcwd(cwd)
   WRITE(*,*) TRIM(cwd)
   export_path = "../test/binned_gpu/settings/TestMonarch"//".json"
