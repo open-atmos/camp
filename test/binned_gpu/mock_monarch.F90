@@ -52,8 +52,9 @@ program mock_monarch_t
   character(len=:), allocatable :: export_path
   character(len=128) :: i_str
   integer :: id, n_cells_monarch, load_gpu, load_balance
-      CHARACTER(len=255) :: cwd
-
+  CHARACTER(len=255) :: cwd
+  CALL getcwd(cwd)
+  WRITE(*,*) TRIM(cwd)
 
   call camp_mpi_init()
   I_W=1
@@ -61,13 +62,12 @@ program mock_monarch_t
   I_S=1
   I_N=1
   call jfile%initialize()
-  CALL getcwd(cwd)
-  WRITE(*,*) TRIM(cwd)
-  export_path = "../test/binned_gpu/settings/TestMonarch"//".json"
+
+  export_path = "settings/TestMonarch"//".json"
   call jfile%load_file(export_path); if (jfile%failed()) print*,&
           "JSON not found at ",export_path
   call jfile%get('chemFile',output_file_title)
-  camp_input_file = "../test/binned_gpu/settings/"//output_file_title//"/config.json"
+  camp_input_file = "settings/"//output_file_title//"/config.json"
   output_path = "out/"//output_file_title
   call jfile%get('nCells',NUM_VERT_CELLS)
   n_cells_monarch = (I_E - I_W+1)*(I_N - I_S+1)*NUM_VERT_CELLS

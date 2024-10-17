@@ -9,10 +9,10 @@ from mainMonarch import *
 
 def run_testMonarch():
     conf = TestMonarch()
-    conf.timeSteps = 2  # Minimum value of 1
+    conf.timeSteps = 10  # Minimum value of 1
     conf.loads_gpu = [100]  # e.g. 100: GPU-Only 1-99: CPU+GPU
     conf.load_balance = 0  # 0: Fixed, 1: Automatic in runtime
-    conf.cells = [100]  # Minimum value of 1
+    conf.cells = [10]  # Minimum value of 1
     conf.mpiProcessesCaseBase = 1  # Minimum value of 1
     conf.caseBase = "CPU"  # CPU or GPU
     conf.mpiProcessesCaseOptimList = [1]  # Minimum value of 1

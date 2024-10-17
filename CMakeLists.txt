@@ -530,11 +530,11 @@ add_executable(binned_gpu test/binned_gpu/mock_monarch.F90
     test/binned_gpu/camp_monarch_interface.F90)
 target_link_libraries(binned_gpu camplib)
 
-if (USE_TESTS)
-
 add_executable(mock_monarch test/monarch/mock_monarch.F90
     test/monarch/camp_monarch_interface.F90)
 target_link_libraries(mock_monarch camplib)
+
+if (USE_TESTS)
 
 ######################################################################
 # camp-chem box model

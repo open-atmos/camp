@@ -1,16 +1,16 @@
 {
     "chemFile": "cb05_paperV2",
-    "timeSteps": 2,
+    "timeSteps": 10,
     "timeStepsDt": 2,
-    "nCells": 100,
-    "caseGpuCpu": "CPU",
+    "nCells": 10,
+    "caseGpuCpu": "GPU",
     "mpiProcesses": 1,
     "mpiProcessesCaseBase": 1,
     "mpiProcessesCaseOptimList": [
         1
     ],
     "cells": [
-        100
+        10
     ],
     "profileCuda": "",
     "profileExtrae": null,
@@ -27,5 +27,5 @@
     "load_balance": 0,
     "timeFromStats": "timeCVode",
     "load_gpu": 100,
-    "nCellsProcesses": 100
+    "nCellsProcesses": 10
 }

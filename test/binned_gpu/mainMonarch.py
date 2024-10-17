@@ -152,8 +152,8 @@ def run(conf):
             is_import = False
     if not is_import:
         os.system(exec_str)
-        os.rename("../../build/out/stats.csv", data_path)
-        os.rename("../../build/out/state.csv", data_path2)
+        os.rename("out/stats.csv", data_path)
+        os.rename("out/state.csv", data_path2)
         nRows_csv = conf.timeSteps * conf.nCells * conf.mpiProcesses
         df = pd_read_csv(data_path, nrows=nRows_csv)
         data = df.to_dict("list")

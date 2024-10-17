@@ -43,7 +43,6 @@ make_run() {
   make -j 4
   cd $initial_dir
   python TestMonarch.py
-  #python checkGPU.py
 }
 
 make_run
