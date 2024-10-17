@@ -52,9 +52,6 @@ program mock_monarch_t
   character(len=:), allocatable :: export_path
   character(len=128) :: i_str
   integer :: id, n_cells_monarch, load_gpu, load_balance
-  CHARACTER(len=255) :: cwd
-  CALL getcwd(cwd)
-  WRITE(*,*) TRIM(cwd)
 
   call camp_mpi_init()
   I_W=1
@@ -62,7 +59,6 @@ program mock_monarch_t
   I_S=1
   I_N=1
   call jfile%initialize()
-
   export_path = "settings/TestMonarch"//".json"
   call jfile%load_file(export_path); if (jfile%failed()) print*,&
           "JSON not found at ",export_path

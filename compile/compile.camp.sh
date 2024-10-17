@@ -57,7 +57,5 @@ cmake -D CMAKE_C_COMPILER=$(which mpicc) \
   -D ENABLE_NETCDF=ON \
   ..
 
-ln -sf ${camp_suite_dir}/camp/test/monarch/settings
-ln -sf ${camp_suite_dir}/camp/test/monarch/out
 make -j 4 VERBOSE=1
 cd $initial_dir
