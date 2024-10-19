@@ -27,5 +27,5 @@ fi
 if ! module list 2>&1 | grep -q "\<python\>"; then
   source load.modules.camp.sh
 fi
-cd ../test/binned_gpu
+cd ../test/monarch
 ./run.sh

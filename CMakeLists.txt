@@ -525,14 +525,16 @@ endif()
 
 set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 	${CB5_EBI_FLAGS})
-
-add_executable(binned_gpu test/binned_gpu/mock_monarch.F90
-    test/binned_gpu/camp_monarch_interface.F90)
-target_link_libraries(binned_gpu camplib)
-
 add_executable(mock_monarch test/monarch/mock_monarch.F90
     test/monarch/camp_monarch_interface.F90)
 target_link_libraries(mock_monarch camplib)
+
+#Binned GPU is in development. It may fail running it as a test
+if (CHECK_BINNED_GPU)
+  add_executable(binned_gpu test/binned_gpu/mock_monarch.F90
+      test/binned_gpu/camp_monarch_interface.F90)
+  target_link_libraries(binned_gpu camplib)
+endif()
 
 if (USE_TESTS)
 
