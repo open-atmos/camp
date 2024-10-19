@@ -1,0 +1,14 @@
+{
+  "camp-files" : [
+    "settings/binned/monarch_mod37_aerosol_representation.json",
+    "settings/binned/aerosol_phases.json",
+    "settings/binned/cb05_abs_tol.json",
+    "settings/binned/cb05_mechanism.noR142R143.json",
+    "settings/binned/cb05_species.json",
+    "settings/binned/custom_species.json",
+    "settings/binned/partitioning_species_params.json",
+    "settings/binned/tsigaridis_2_product_SOA_scheme/mechanism.json",
+    "settings/binned/tsigaridis_2_product_SOA_scheme/species.json"
+  ]
+}
+

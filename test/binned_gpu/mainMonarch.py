@@ -11,7 +11,7 @@ class TestMonarch:
 
     def __init__(self):
         # Case configuration
-        self.chemFile = "cb05_paperV2"  # Folder with chemical mechanism
+        self.chemFile = "binned"  # Folder with chemical mechanism
         self.timeSteps = 1  # Number of chemistry time steps
         self.timeStepsDt = 2  # Time-step size
         self.nCells = 1  # Number of cells
@@ -50,10 +50,9 @@ class TestMonarch:
 # from line_profiler_pycharm import profile
 # @profile
 def run(conf):
+    saved_load_gpu = conf.load_gpu
     if conf.caseGpuCpu == "CPU":
-        load_gpu = 0
-    else:
-        load_gpu = conf.load_gpu
+        conf.load_gpu = 0
     exec_str = ""
     try:
         ddt_pid = subprocess.check_output("pidof -x $(ps cax | grep forge)",
@@ -115,7 +114,7 @@ def run(conf):
         "ncellsPerMPIProcess:",
         conf.nCells,
         "Cells to GPU:",
-        str(load_gpu) + "%",
+        str(conf.load_gpu) + "%",
         "Load_balance: ",
         str(conf.load_balance),
     )
@@ -130,12 +129,12 @@ def run(conf):
     is_import = False
     data_path = "out/stats"
     if conf.caseGpuCpu == "GPU":
-        data_path += str(load_gpu) + str(conf.load_balance)
+        data_path += str(conf.load_gpu) + str(conf.load_balance)
     data_path += (caseGpuCpuName + nCellsStr + "cells" + str(conf.timeSteps) +
                   "tsteps.csv")
     data_path2 = "out/state"
     if conf.caseGpuCpu == "GPU":
-        data_path2 += str(load_gpu) + str(conf.load_balance)
+        data_path2 += str(conf.load_gpu) + str(conf.load_balance)
     data_path2 += (caseGpuCpuName + nCellsStr + "cells" + str(conf.timeSteps) +
                    "tsteps.csv")
     if conf.is_import and os.path.exists(data_path):
@@ -162,6 +161,7 @@ def run(conf):
     if os.path.exists(data_path2):
         df = pd_read_csv(data_path2, header=None, names=["Column1"])
         out = df["Column1"].tolist()
+    conf.load_gpu = saved_load_gpu
     return data[0], out
 
 
