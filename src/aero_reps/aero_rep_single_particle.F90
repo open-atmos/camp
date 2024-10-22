@@ -375,7 +375,7 @@ contains
     curr_phase = 1
     do i_layer = 1, size(ordered_layer_id)
       j_layer = ordered_layer_id(i_layer)
-
+      print *, "layer number ", i_layer
       ! Loop through the phases and make sure they exist
       call phases(j_layer)%val_%iter_reset()
       do i_phase = 1, phases(j_layer)%val_%size()
@@ -387,7 +387,6 @@ contains
                 layer_names_unordered(j_layer)%string// &
                 "' in single-particle layer aerosol representation '"// &
                 this%rep_name//"'")
-  
         ! find phase and set pointer and indices
         found = .false.
         do j_phase = 1, size(aero_phase_set)
@@ -405,7 +404,7 @@ contains
                     .false.
               end if
             end do
-            print *, "aero_phase_is_at_surface", this%aero_phase_is_at_surface 
+            !print *, "aero_phase_is_at_surface", this%aero_phase_is_at_surface 
             PHASE_STATE_ID_(i_layer,i_phase) = curr_id
             PHASE_MODEL_DATA_ID_(i_layer,i_phase) = j_phase
             curr_id = curr_id + aero_phase_set(j_phase)%val%size()
@@ -417,6 +416,7 @@ contains
         call phases(j_layer)%val_%iter_next()
       end do
     end do
+    print *, "aero_phase_is_at_surface", this%aero_phase_is_at_surface
     PARTICLE_STATE_SIZE_ = curr_id - spec_state_id
 
     ! Initialize the aerosol representation id

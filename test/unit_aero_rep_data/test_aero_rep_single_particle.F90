@@ -157,7 +157,7 @@ contains
     type(camp_core_t), pointer :: camp_core
     class(aero_rep_data_t), pointer :: aero_rep
 
-    type(string_t), allocatable :: file_list(:), unique_names(:)
+    type(string_t), allocatable :: file_list(:), unique_names(:), unique_names_surface(:)
     character(len=:), allocatable :: rep_name, phase_name_test
     integer :: i_name, num_bread, max_part, bread_phase_instance
     integer :: num_jam, jam_phase_instance
@@ -272,6 +272,19 @@ contains
     call assert(779745112, unique_names(35)%string .eq. "P3.top bread.bread.water")
     call assert(109646110, unique_names(36)%string .eq. "P3.top bread.bread.salt")
 
+    ! Test the unique names function with phase_is_at_surface flag
+    phase_name_test = "bread"
+    unique_names_surface = aero_rep%unique_names(phase_name=phase_name_test, phase_is_at_surface=.true.)
+    call assert(516157019, size( unique_names_surface ) .eq. 9)
+    call assert(071532611, unique_names_surface(1)%string .eq. "P1.top bread.bread.wheat")
+    call assert(911371605, unique_names_surface(2)%string .eq. "P1.top bread.bread.water")
+    call assert(537662837, unique_names_surface(3)%string .eq. "P1.top bread.bread.salt")
+    call assert(952202112, unique_names_surface(4)%string .eq. "P2.top bread.bread.wheat")
+    call assert(019187427, unique_names_surface(5)%string .eq. "P2.top bread.bread.water")
+    call assert(471502051, unique_names_surface(6)%string .eq. "P2.top bread.bread.salt")
+    call assert(623071633, unique_names_surface(7)%string .eq. "P3.top bread.bread.wheat")
+    call assert(862917237, unique_names_surface(8)%string .eq. "P3.top bread.bread.water")
+    call assert(521426951, unique_names_surface(9)%string .eq. "P3.top bread.bread.salt")
 #endif
   end subroutine test_config_read
 
