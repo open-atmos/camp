@@ -109,7 +109,9 @@ contains
     class(aero_rep_data_t), pointer :: aero_rep_ptr
     real(kind=dp), allocatable, dimension(:,:) :: model_conc, true_conc
     integer(kind=i_kind) :: idx_phase, idx_aero_rep
-    integer(kind=i_kind) :: idx_ethanol, idx_ethanol_aq, idx_H2O_aq
+    integer(kind=i_kind) :: idx_ethanol, idx_ethanol_aq_layer1, idx_H2O_aq_layer1
+    integer(kind=i_kind) :: idx_ethanol_aq_layer2, idx_H2O_aq_layer2
+    integer(kind=i_kind) :: idx_ethanol_aq, idx_H2O_aq
     integer(kind=i_kind) :: i_time, i_spec
     real(kind=dp) :: time_step, time
     real(kind=dp) :: n_star, del_H, del_S, del_G, alpha, kgm3_to_ppm
@@ -147,8 +149,8 @@ contains
 
     ! Allocate space for the results
     if (scenario.eq.1) then
-      allocate(model_conc(0:NUM_TIME_STEP, 7))
-      allocate(true_conc(0:NUM_TIME_STEP, 7))
+      allocate(model_conc(0:NUM_TIME_STEP, 9))
+      allocate(true_conc(0:NUM_TIME_STEP, 9))
     else if (scenario.eq.2) then
       allocate(model_conc(0:NUM_TIME_STEP, 6))
       allocate(true_conc(0:NUM_TIME_STEP, 6))
@@ -221,21 +223,35 @@ contains
 
       ! Get species indices
       if (scenario.eq.1) then
-        idx_prefix = "P1.one layer."
+        idx_prefix = "P1."
+        key = "ethanol"
+        idx_ethanol = chem_spec_data%gas_state_id(key);
+        key = idx_prefix//"one layer.aqueous aerosol.ethanol_aq"
+        idx_ethanol_aq_layer1 = aero_rep_ptr%spec_state_id(key);
+        key = idx_prefix//"one layer.aqueous aerosol.H2O_aq"
+        idx_H2O_aq_layer1 = aero_rep_ptr%spec_state_id(key);
+        key = idx_prefix//"two layer.aqueous aerosol.ethanol_aq"
+        idx_ethanol_aq_layer2 = aero_rep_ptr%spec_state_id(key);
+        key = idx_prefix//"two layer.aqueous aerosol.H2O_aq"
+        idx_H2O_aq_layer2 = aero_rep_ptr%spec_state_id(key);
+        ! Make sure the expected species are in the model
+        call assert(884352514, idx_ethanol.gt.0)
+        call assert(556235354, idx_ethanol_aq_layer1.gt.0)
+        call assert(709481366, idx_H2O_aq_layer1.gt.0)
+        call assert(638424219, idx_ethanol_aq_layer2.gt.0)
+        call assert(954729633, idx_H2O_aq_layer2.gt.0)
       else if (scenario.eq.2) then
         idx_prefix = "the mode."
+        key = "ethanol"
+        idx_ethanol = chem_spec_data%gas_state_id(key);
+        key = idx_prefix//"aqueous aerosol.ethanol_aq"
+        idx_ethanol_aq = aero_rep_ptr%spec_state_id(key);
+        key = idx_prefix//"aqueous aerosol.H2O_aq"
+        idx_H2O_aq = aero_rep_ptr%spec_state_id(key);
+        ! Make sure the expected species are in the model
+        call assert(554593868, idx_ethanol_aq.gt.0)
+        call assert(041265027, idx_H2O_aq.gt.0)
       endif
-      key = "ethanol"
-      idx_ethanol = chem_spec_data%gas_state_id(key);
-      key = idx_prefix//"aqueous aerosol.ethanol_aq"
-      idx_ethanol_aq = aero_rep_ptr%spec_state_id(key);
-      key = idx_prefix//"aqueous aerosol.H2O_aq"
-      idx_H2O_aq = aero_rep_ptr%spec_state_id(key);
-
-      ! Make sure the expected species are in the model
-      call assert(884352514, idx_ethanol.gt.0)
-      call assert(379146109, idx_ethanol_aq.gt.0)
-      call assert(208989205, idx_H2O_aq.gt.0)
 
 #ifdef CAMP_USE_MPI
       ! pack the camp core
@@ -262,6 +278,10 @@ contains
 
     ! broadcast the species ids
     call camp_mpi_bcast_integer(idx_ethanol)
+    call camp_mpi_bcast_integer(idx_ethanol_aq_layer1)
+    call camp_mpi_bcast_integer(idx_H2O_aq_layer1)
+    call camp_mpi_bcast_integer(idx_ethanol_aq_layer2)
+    call camp_mpi_bcast_integer(idx_H2O_aq_layer2)
     call camp_mpi_bcast_integer(idx_ethanol_aq)
     call camp_mpi_bcast_integer(idx_H2O_aq)
     call camp_mpi_bcast_integer(i_sect_unused)
@@ -319,20 +339,33 @@ contains
       call camp_state%env_states(1)%set_pressure_Pa( pressure )
 
       ! Save the initial concentrations
-      true_conc(:,:) = 0.0
-      true_conc(0,idx_ethanol) = 1.0e-1
-      true_conc(0,idx_ethanol_aq) = 1.0e-8
-      true_conc(0,idx_H2O_aq) = 1.4e-2
+      if (scenario.eq.1) then
+        true_conc(:,:) = 0.0
+        true_conc(0,idx_ethanol) = 1.0e-1
+        true_conc(0,idx_ethanol_aq_layer1) = 1.0e-8
+        true_conc(0,idx_H2O_aq_layer1) = 1.4e-2
+        true_conc(0,idx_ethanol_aq_layer2) = 0.0e0
+        true_conc(0,idx_H2O_aq_layer2) = 0.0e0
+      else if (scenario.eq.2) then
+        true_conc(:,:) = 0.0
+        true_conc(0,idx_ethanol) = 1.0e-1
+        true_conc(0,idx_ethanol_aq) = 1.0e-8
+        true_conc(0,idx_H2O_aq) = 1.4e-2
+      end if
 
       ! Calculate the radius and number concentration to use
       if (scenario.eq.1) then
         number_conc = 1.3e6         ! particle number concentration (#/cc)
         ! single particle aerosol mass concentrations are per particle
-        true_conc(0,idx_ethanol_aq) = true_conc(0,idx_ethanol_aq) / number_conc
-        true_conc(0,idx_H2O_aq)     = true_conc(0,idx_H2O_aq)     / number_conc
+        true_conc(0,idx_ethanol_aq_layer1) = true_conc(0,idx_ethanol_aq_layer1) / number_conc
+        true_conc(0,idx_H2O_aq_layer1)     = true_conc(0,idx_H2O_aq_layer1)     / number_conc
+        true_conc(0,idx_ethanol_aq_layer2) = true_conc(0,idx_ethanol_aq_layer2) / number_conc
+        true_conc(0,idx_H2O_aq_layer2)     = true_conc(0,idx_H2O_aq_layer2)     / number_conc
         ! radius (m) calculated based on particle mass
-        radius = ( ( true_conc(0,idx_ethanol_aq) / 1000.0 +  &
-                     true_conc(0,idx_H2O_aq)     / 1000.0 )  &
+        radius = ( ( true_conc(0,idx_ethanol_aq_layer1) / 1000.0 +  &
+                     true_conc(0,idx_H2O_aq_layer1)     / 1000.0 +  &
+                     true_conc(0,idx_ethanol_aq_layer2)     / 1000.0 +  &
+                     true_conc(0,idx_H2O_aq_layer2)     / 1000.0 ) &
                    * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
       else if (scenario.eq.2) then
         ! radius (m)
@@ -392,7 +425,8 @@ contains
       if (scenario.eq.1) then
         ! aerosol mass concentrations are per particle
         total_mass = true_conc(0,idx_ethanol)/kgm3_to_ppm + &
-                     true_conc(0,idx_ethanol_aq)*number_conc ! (kg/m3)
+                     true_conc(0,idx_ethanol_aq_layer1)*number_conc + &
+                     true_conc(0,idx_ethanol_aq_layer2)*number_conc! (kg/m3)
       else if (scenario.eq.2) then
         ! aerosol mass concentrations for the total mode
         total_mass = true_conc(0,idx_ethanol)/kgm3_to_ppm + &
@@ -446,33 +480,53 @@ contains
         ! [A_aero] = ([A_init_aero] - [A_eq_aero]) * exp(-t * (k_f + k_b)) +
         !                 [A_eq_aero]
         time = i_time * time_step
-        true_conc(i_time,idx_ethanol) = &
-                (true_conc(0,idx_ethanol) - equil_ethanol) * &
-                exp(-time * (k_forward + k_backward)) + equil_ethanol
-        true_conc(i_time,idx_ethanol_aq) = &
-                (true_conc(0,idx_ethanol_aq) - equil_ethanol_aq) * &
-                exp(-time * (k_forward + k_backward)) + equil_ethanol_aq
-        true_conc(i_time,idx_H2O_aq) = true_conc(0,idx_H2O_aq)
+        if (scenario.eq.1) then
+           true_conc(i_time,idx_ethanol) = &
+                  (true_conc(0,idx_ethanol) - equil_ethanol) * &
+                  exp(-time * (k_forward + k_backward)) + equil_ethanol
+          true_conc(i_time,idx_ethanol_aq_layer1) = &
+                  (true_conc(0,idx_ethanol_aq_layer1) - equil_ethanol_aq) * &
+                  exp(-time * (k_forward + k_backward)) + equil_ethanol_aq
+          true_conc(i_time,idx_ethanol_aq_layer2) = true_conc(0,idx_ethanol_aq_layer2)
+          true_conc(i_time,idx_H2O_aq_layer1) = true_conc(0,idx_H2O_aq_layer1)
+          true_conc(i_time,idx_H2O_aq_layer2) = true_conc(0,idx_H2O_aq_layer2)
+        else if (scenario.eq.2) then
+           true_conc(i_time,idx_ethanol) = &
+                  (true_conc(0,idx_ethanol) - equil_ethanol) * &
+                  exp(-time * (k_forward + k_backward)) + equil_ethanol
+          true_conc(i_time,idx_ethanol_aq) = &
+                  (true_conc(0,idx_ethanol_aq) - equil_ethanol_aq) * &
+                  exp(-time * (k_forward + k_backward)) + equil_ethanol_aq
+          true_conc(i_time,idx_H2O_aq) = true_conc(0,idx_H2O_aq)
+        end if
       end do
 
       ! Save the results
       if (scenario.eq.1) then
-        open(unit=7, file="out/SIMPOL_phase_transfer_results.txt", &
+        open(unit=9, file="out/SIMPOL_phase_transfer_results.txt", &
                 status="replace", action="write")
       else if (scenario.eq.2) then
         open(unit=7, file="out/SIMPOL_phase_transfer_results_2.txt", &
                 status="replace", action="write")
       endif
       do i_time = 0, NUM_TIME_STEP
-        write(7,*) i_time*time_step, &
-              ' ', true_conc(i_time, idx_ethanol),        &
-              ' ', model_conc(i_time, idx_ethanol),       &
-              ' ', true_conc(i_time, idx_ethanol_aq),     &
-              ' ', model_conc(i_time, idx_ethanol_aq),    &
-              ' ', true_conc(i_time, idx_H2O_aq),         &
-              ' ', model_conc(i_time, idx_H2O_aq)
+        if (scenario.eq.1) then
+          write(9,*) i_time*time_step, &
+                ' ', true_conc(i_time, idx_ethanol),        &
+                ' ', model_conc(i_time, idx_ethanol),       &
+                ' ', true_conc(i_time, idx_ethanol_aq_layer1),     &
+                ' ', model_conc(i_time, idx_ethanol_aq_layer2),    &
+                ' ', true_conc(i_time, idx_H2O_aq_layer1),         &
+                ' ', model_conc(i_time, idx_H2O_aq_layer2)        
+        else if (scenario.eq.2) then
+          write(7,*) i_time*time_step, &
+                ' ', true_conc(i_time, idx_ethanol),        &
+                ' ', model_conc(i_time, idx_ethanol),       &
+                ' ', true_conc(i_time, idx_ethanol_aq),        &
+                ' ', model_conc(i_time, idx_H2O_aq)
+        end if    
       end do
-      close(7)
+      close(9)
 
       ! Analyze the results
       !
@@ -480,7 +534,7 @@ contains
       ! an exact solution is not calculated. The tolerances on the comparison
       ! with "true" values are higher to account for this.
       do i_time = 1, NUM_TIME_STEP
-        do i_spec = 1, 5
+        do i_spec = 1, 7
           ! scenario 1 - Only check the second phase
           if (scenario.eq.1.and.i_spec.ge.2.and.i_spec.le.3) cycle
           ! scenario 2 - exclude activity coefficient
