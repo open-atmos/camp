@@ -183,24 +183,32 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
     double min = fmin(timeGPU, timeCPU);
     double max = fmax(timeGPU, timeCPU);
     load_balance = 100 * min / max;
+    /* Set if GPU time is less than CPU */
     int short_gpu = 0;
     if (timeGPU < timeCPU) short_gpu = 1;
     double increase_in_load_gpu = sd->load_gpu - sd->last_load_gpu;
     double last_short_gpu = sd->last_short_gpu;
+    /* Set how much the load balance has increased */
     double diff_load_balance = load_balance - sd->last_load_balance;
     if (short_gpu != last_short_gpu) {
       diff_load_balance = 100 - sd->last_load_balance + 100 - load_balance;
+      /* Change the increase sign because we surpass the limit of 100%,
+      swapping from one architecture being short in time to the other */
       increase_in_load_gpu *= -1;
     }
+    /* Set the remaining load balance to reach the ideal case of 100% */
     double remaining_load_balance = 100 - load_balance;
+    /* Set the Increase in Load GPU */
     if (remaining_load_balance > diff_load_balance)
       increase_in_load_gpu *= 1.5;
     else
       increase_in_load_gpu /= 2;
+    /* Update values for next iteration */
     sd->last_short_gpu = short_gpu;
     sd->last_load_balance = load_balance;
     sd->last_load_gpu = sd->load_gpu;
     if (load_balance != 100) sd->load_gpu += increase_in_load_gpu;
+    /* Avoid the GPU percentage reaching or exceeding 100\% and 0\% */
     if (sd->load_gpu > 99) sd->load_gpu = 99;
     if (sd->load_gpu < 1) sd->load_gpu = 1;
     sd->acc_load_balance += load_balance;
