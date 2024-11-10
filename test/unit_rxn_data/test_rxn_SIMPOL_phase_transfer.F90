@@ -249,6 +249,7 @@ contains
         key = idx_prefix//"aqueous aerosol.H2O_aq"
         idx_H2O_aq = aero_rep_ptr%spec_state_id(key);
         ! Make sure the expected species are in the model
+        call assert(640274151, idx_ethanol.gt.0)
         call assert(554593868, idx_ethanol_aq.gt.0)
         call assert(041265027, idx_H2O_aq.gt.0)
       endif
@@ -339,15 +340,14 @@ contains
       call camp_state%env_states(1)%set_pressure_Pa( pressure )
 
       ! Save the initial concentrations
+      true_conc(:,:) = 0.0
       if (scenario.eq.1) then
-        true_conc(:,:) = 0.0
         true_conc(0,idx_ethanol) = 1.0e-1
         true_conc(0,idx_ethanol_aq_layer1) = 1.0e-8
         true_conc(0,idx_H2O_aq_layer1) = 1.4e-2
         true_conc(0,idx_ethanol_aq_layer2) = 0.0e0
         true_conc(0,idx_H2O_aq_layer2) = 0.0e0
       else if (scenario.eq.2) then
-        true_conc(:,:) = 0.0
         true_conc(0,idx_ethanol) = 1.0e-1
         true_conc(0,idx_ethanol_aq) = 1.0e-8
         true_conc(0,idx_H2O_aq) = 1.4e-2
@@ -367,6 +367,7 @@ contains
                      true_conc(0,idx_ethanol_aq_layer2)     / 1000.0 +  &
                      true_conc(0,idx_H2O_aq_layer2)     / 1000.0 ) &
                    * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
+        print *, 'radius', radius
       else if (scenario.eq.2) then
         ! radius (m)
         radius = 9.37e-7 / 2.0 * exp(5.0/2.0 * log(0.9) * log(0.9))
@@ -427,6 +428,7 @@ contains
         total_mass = true_conc(0,idx_ethanol)/kgm3_to_ppm + &
                      (true_conc(0,idx_ethanol_aq_layer1)+ &
                       true_conc(0,idx_ethanol_aq_layer2))*number_conc! (kg/m3)
+        print *, 'total mass', total_mass
       else if (scenario.eq.2) then
         ! aerosol mass concentrations for the total mode
         total_mass = true_conc(0,idx_ethanol)/kgm3_to_ppm + &
@@ -501,7 +503,11 @@ contains
         end if
       end do
 
-      print *, "layer 2 ethanol conc", true_conc(:,idx_ethanol_aq_layer2)
+      print *, "layer 1 ethanol conc", true_conc(:,idx_ethanol_aq_layer1)
+      print *, "layer 1 index", idx_ethanol_aq_layer1
+      print *, "layer 2 index", idx_ethanol_aq_layer2
+      print *, "layer 1 index water", idx_H2O_aq_layer1
+      print *, "layer 2 index water", idx_H2O_aq_layer2
 
       ! Save the results
       if (scenario.eq.1) then
