@@ -47,7 +47,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   cudaStream_t stream;  // Variable for asynchronous execution of the GPU
   cudaStreamCreate(&stream);
 #ifdef LOAD_BALANCE
-  if (sd->load_balance == 1) {
+  if (sd->is_load_balance == 1) {
     cudaEventRecord(sd->startGPU, stream);  // Start GPU timer
   }
 #endif
@@ -64,7 +64,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   cvodeRun(t_initial, mGPU, n_cells, md->n_per_cell_dep_var,
            stream);  // Asynchronous
 #ifdef LOAD_BALANCE
-  if (sd->load_balance == 1) {
+  if (sd->is_load_balance == 1) {
     cudaEventRecord(sd->stopGPU, stream);  // End GPU timer
   }
 #endif
@@ -75,7 +75,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
 #endif
 #ifdef LOAD_BALANCE
   double startTime;
-  if (sd->load_balance == 1) {
+  if (sd->is_load_balance == 1) {
     startTime = MPI_Wtime();
   }
 #endif
@@ -142,7 +142,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   md->rxn_env_data = rxn_env_data;
 #ifdef LOAD_BALANCE
   double timeCPU;
-  if (sd->load_balance == 1) {
+  if (sd->is_load_balance == 1) {
     timeCPU = (MPI_Wtime() - startTime);
   }
 #endif
@@ -150,7 +150,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
   nvtxRangePop();  // End of profiling trace
 #endif
 #ifdef LOAD_BALANCE
-  if (sd->load_balance == 1) {
+  if (sd->is_load_balance == 1) {
     // Start synchronization timer between CPU and GPU
     cudaEventRecord(sd->startGPUSync, stream);
   }
@@ -170,7 +170,7 @@ int cudaCVode(void *cvode_mem, double t_final, N_Vector yout, SolverData *sd,
 #ifdef LOAD_BALANCE
   // Balance load between CPU and GPU, changing the number of cells solved on
   // both architectures. Method explained on C. Guzman PhD Thesis - Chapter 6
-  if (sd->load_balance == 1) {
+  if (sd->is_load_balance == 1) {
     cudaEventRecord(sd->stopGPUSync, stream);  // End synchronization timer
     cudaEventSynchronize(sd->stopGPUSync);
     cudaEventSynchronize(sd->stopGPU);

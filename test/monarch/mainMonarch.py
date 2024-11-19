@@ -106,7 +106,7 @@ def run(conf):
         exec_str += "extrae/trace_f.sh "
     if conf.profileValgrind is not None:
         exec_str += "valgrind --tool=cachegrind "
-    path_exec = "../../build/binned_gpu"
+    path_exec = "../../build/mock_monarch"
     exec_str += path_exec
     print("exec_str:", exec_str)
     print(

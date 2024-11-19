@@ -73,14 +73,14 @@ contains
 
 
   function constructor(camp_config_file, output_file_title, &
-   starting_id, ending_id, n_cells, load_gpu, load_balance) result (this)
+   starting_id, ending_id, n_cells, load_gpu, is_load_balance) result (this)
     type(camp_monarch_interface_t), pointer :: this
     character(len=:), allocatable, optional :: camp_config_file
     character(len=*), intent(in):: output_file_title
     integer :: starting_id
     integer :: ending_id
     integer :: n_cells
-    integer, intent(in) :: load_gpu, load_balance
+    integer, intent(in) :: load_gpu, is_load_balance
     type(camp_solver_data_t), pointer :: camp_solver_data
     character, allocatable :: buffer(:)
     integer(kind=i_kind) :: pos, pack_size, size
@@ -224,7 +224,7 @@ contains
     ! use values from previous cell.
     !By default is_reset_jac is set to 0 because it accelerates MONARCH case
     ! (and probably more cases).
-    call this%camp_core%solver_initialize(load_gpu, is_reset_jac, load_balance)
+    call this%camp_core%solver_initialize(load_gpu, is_reset_jac, is_load_balance)
     this%camp_state => this%camp_core%new_state()
     allocate(this%offset_photo_rates_cells(this%n_cells))
     this%offset_photo_rates_cells(:) = 0.

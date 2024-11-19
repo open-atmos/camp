@@ -51,7 +51,7 @@ program mock_monarch_t
   type(json_core) :: json
   character(len=:), allocatable :: export_path
   character(len=128) :: i_str
-  integer :: id, n_cells_monarch, load_gpu, load_balance
+  integer :: id, n_cells_monarch, load_gpu, is_load_balance
 
   call camp_mpi_init()
   I_W=1
@@ -73,7 +73,7 @@ program mock_monarch_t
   else
     n_cells = n_cells_monarch
   end if
-  call jfile%get('load_balance',load_balance)
+  call jfile%get('is_load_balance',is_load_balance)
   call jfile%get('timeSteps',NUM_TIME_STEP)
   call jfile%get('timeStepsDt',TIME_STEP)
   NUM_WE_CELLS = I_E-I_W+1
@@ -91,7 +91,7 @@ program mock_monarch_t
   allocate(conv(NUM_WE_CELLS, NUM_SN_CELLS, NUM_VERT_CELLS))
 
   camp_interface => camp_monarch_interface_t(camp_input_file, output_file_title, &
-          START_CAMP_ID, END_CAMP_ID, n_cells, load_gpu, load_balance)
+          START_CAMP_ID, END_CAMP_ID, n_cells, load_gpu, is_load_balance)
   camp_interface%camp_state%state_var(:) = 0.0
   species_conc(:,:,:,:) = 0.0
   air_density(:,:,:) = 1.225

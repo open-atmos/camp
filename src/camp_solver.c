@@ -96,8 +96,8 @@
  re-initialized. It may accelerate solving. Enable reset when the inputs are
  very different between each other or to compare with the GPU version. Avoid
  reset when the inputs are similar like CAMP-MONARCH.
- * \param load_balance Flag to balance the load between CPU and GPU. 0 to fixed
- load balance during run time, while 1 to automatic load balance
+ * \param is_load_balance Flag to balance the load between CPU and GPU. 0 to
+ fixed load balance during run time, while 1 to automatic load balance
  * \return Pointer to the new SolverData object
  */
 void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
@@ -108,7 +108,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
                  int n_sub_model_float_param, int n_sub_model_env_param,
-                 int load_gpu, int is_reset_jac, int load_balance) {
+                 int load_gpu, int is_reset_jac, int is_load_balance) {
   // Create the SolverData object
   SolverData *sd = (SolverData *)malloc(sizeof(SolverData));
   if (sd == NULL) {
@@ -137,7 +137,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
   sd->load_gpu = (double)load_gpu;
   sd->is_reset_jac = is_reset_jac;
-  sd->load_balance = load_balance;
+  sd->is_load_balance = is_load_balance;
   sd->model_data.n_cells = n_cells;
 
   // Add the variable types to the solver data

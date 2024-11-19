@@ -1156,11 +1156,11 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize the solver
-  subroutine solver_initialize(this, load_gpu, is_reset_jac, load_balance)
+  subroutine solver_initialize(this, load_gpu, is_reset_jac, is_load_balance)
     class(camp_core_t), intent(inout) :: this
-    integer, intent(in), optional :: load_gpu, is_reset_jac, load_balance
+    integer, intent(in), optional :: load_gpu, is_reset_jac, is_load_balance
     type(string_t), allocatable :: spec_names(:)
-    integer :: i_spec, n_gas_spec, load_gpu1, is_reset_jac1, load_balance1
+    integer :: i_spec, n_gas_spec, load_gpu1, is_reset_jac1, is_load_balance1
     call assert_msg(662920365, .not.this%solver_is_initialized, &
             "Attempting to initialize the solver twice.")
 
@@ -1172,9 +1172,9 @@ contains
     if (present(is_reset_jac)) then
       is_reset_jac1=is_reset_jac
     end if
-    load_balance1=1
-    if (present(load_balance)) then
-      load_balance1=load_balance
+    is_load_balance1=1
+    if (present(is_load_balance)) then
+      is_load_balance1=is_load_balance
     end if
 
     ! Set up either two solvers (gas and aerosol) or one solver (combined)
@@ -1201,7 +1201,7 @@ contains
                 GAS_RXN,         & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                load_gpu1, is_reset_jac1, load_balance1 &
+                load_gpu1, is_reset_jac1, is_load_balance1 &
       )
       call this%solver_data_aero%initialize( &
                 this%var_type,   & ! State array variable types
@@ -1213,7 +1213,7 @@ contains
                 AERO_RXN,        & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                load_gpu1, is_reset_jac1, load_balance1 &
+                load_gpu1, is_reset_jac1, is_load_balance1 &
               )
     else
 
@@ -1236,7 +1236,7 @@ contains
                 GAS_AERO_RXN,    & ! Reaction phase
                 this%n_cells,    & ! # of cells computed simultaneosly
                 spec_names,       & ! Species names
-                load_gpu1, is_reset_jac1, load_balance1 &
+                load_gpu1, is_reset_jac1, is_load_balance1 &
                 )
     end if
 
