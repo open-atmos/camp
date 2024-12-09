@@ -161,6 +161,8 @@ contains
     character(len=:), allocatable :: rep_name, phase_name_test
     integer :: i_name, num_bread, max_part, bread_phase_instance
     integer :: num_jam, jam_phase_instance
+    integer, dimension(3) :: bread_phase_id, jam_phase_id
+    integer, allocatable :: jam_phase_id_correct(:), bread_phase_id_correct(:)
 
     ! create the camp core from test data
     allocate(file_list(1))
@@ -209,25 +211,39 @@ contains
 
         call assert(768528274, aero_rep%phase_state_size(layer=3,phase=1) .eq. 3)
 
-        ! test num_phase_instances funtion
+        ! test phase_ids and rum_phase_instances funtion
+        ! test for jam (one instance in particle)
         phase_name_test = "jam"
         num_jam = 0
+        jam_phase_id(1) = 2
+        jam_phase_id(2) = 6
+        jam_phase_id(3) = 10
         max_part = aero_rep%maximum_computational_particles()
-        jam_phase_instance = 0
+        jam_phase_instance = 0 
         !check value
-        print *, "jam_instances ", aero_rep%num_phase_instances(phase_name_test, is_at_surface = .false.)
         call assert(417730478, 3 .eq. max_part)
+        jam_phase_id_correct = aero_rep%phase_ids(phase_name_test, is_at_surface = .false.)
+        call assert(757273007, jam_phase_id(1) .eq. jam_phase_id_correct(1))
+        call assert(396819026, jam_phase_id(2) .eq. jam_phase_id_correct(2))
+        call assert(777863671, jam_phase_id(3) .eq. jam_phase_id_correct(3))
         call assert(493602373, jam_phase_instance .eq. aero_rep%num_phase_instances(phase_name_test, &
                                                          is_at_surface = .true.))
-
+        ! check for bread (two instances but only one at surface)
         phase_name_test = "bread"
         num_bread = 1
+        bread_phase_id(1) = 4
+        bread_phase_id(2) = 8
+        bread_phase_id(3) = 12
         bread_phase_instance = num_bread * max_part
-        !check value
-        print *, bread_phase_instance
-        print *, "bread_instqnces ", aero_rep%num_phase_instances(phase_name_test, is_at_surface = .true.)
+        !check values
+        bread_phase_id_correct = aero_rep%phase_ids(phase_name_test, is_at_surface = .true.)
+        !call assert(942495687, bread_phase_id(1) .eq. bread_phase_id_correct(1))
+        !call assert(283157050, bread_phase_id(2) .eq. bread_phase_id_correct(2))
+        !call assert(799763568, bread_phase_id(3) .eq. bread_phase_id_correct(3))
         call assert(734138496, bread_phase_instance .eq. aero_rep%num_phase_instances(phase_name_test, &
                                                          is_at_surface = .true.))
+        bread_phase_id_correct = aero_rep%phase_ids(phase_name_test)
+        print *, "bread_phase_id", bread_phase_id_correct
 
       class default
         call die_msg(519535557, rep_name)
