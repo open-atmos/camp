@@ -237,13 +237,11 @@ contains
         bread_phase_instance = num_bread * max_part
         !check values
         bread_phase_id_correct = aero_rep%phase_ids(phase_name_test, is_at_surface = .true.)
-        !call assert(942495687, bread_phase_id(1) .eq. bread_phase_id_correct(1))
-        !call assert(283157050, bread_phase_id(2) .eq. bread_phase_id_correct(2))
-        !call assert(799763568, bread_phase_id(3) .eq. bread_phase_id_correct(3))
+        call assert(942495687, bread_phase_id(1) .eq. bread_phase_id_correct(1))
+        call assert(283157050, bread_phase_id(2) .eq. bread_phase_id_correct(2))
+        call assert(799763568, bread_phase_id(3) .eq. bread_phase_id_correct(3))
         call assert(734138496, bread_phase_instance .eq. aero_rep%num_phase_instances(phase_name_test, &
                                                          is_at_surface = .true.))
-        bread_phase_id_correct = aero_rep%phase_ids(phase_name_test)
-        print *, "bread_phase_id", bread_phase_id_correct
 
       class default
         call die_msg(519535557, rep_name)

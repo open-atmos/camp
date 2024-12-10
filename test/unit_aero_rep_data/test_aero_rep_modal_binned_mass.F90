@@ -110,6 +110,9 @@ contains
     integer(kind=i_kind) :: i_spec, j_spec, i_phase, spec_id
     character(len=:), allocatable :: rep_name, spec_name, phase_name
     type(string_t), allocatable :: file_list(:), unique_names(:)
+    character(len=:), allocatable :: phase_name_test
+    integer, allocatable :: last_phase_id_correct(:)
+    integer, dimension(9) :: last_phase_id
 #ifdef CAMP_USE_MPI
     type(string_t), allocatable :: rep_names(:)
     type(aero_rep_factory_t) :: aero_rep_factory
@@ -158,6 +161,28 @@ contains
     call assert(444139145, unique_names(8)%string.eq."single phase mode.my last test phase.species e")
     call assert(208973841, unique_names(25)%string.eq."binned aerosol.6.my test phase one.species b")
     call assert(386300586, unique_names(47)%string.eq."binned aerosol.8.my last test phase.species b")
+
+    phase_name_test = "my last test phase"
+    last_phase_id(1) = 3
+    last_phase_id(2) = 12
+    last_phase_id(3) = 13
+    last_phase_id(4) = 14
+    last_phase_id(5) = 15
+    last_phase_id(6) = 16
+    last_phase_id(7) = 17
+    last_phase_id(8) = 18
+    last_phase_id(9) = 19
+    !check values
+    last_phase_id_correct = aero_rep%phase_ids(phase_name_test, is_at_surface = .true.)
+    call assert(087831392, last_phase_id(1) .eq. last_phase_id_correct(1))
+    call assert(597703093, last_phase_id(2) .eq. last_phase_id_correct(2))
+    call assert(803195649, last_phase_id(3) .eq. last_phase_id_correct(3))
+    call assert(516324200, last_phase_id(4) .eq. last_phase_id_correct(4))
+    call assert(160854212, last_phase_id(5) .eq. last_phase_id_correct(5))
+    call assert(626595159, last_phase_id(6) .eq. last_phase_id_correct(6))
+    call assert(886729286, last_phase_id(7) .eq. last_phase_id_correct(7))
+    call assert(787382607, last_phase_id(8) .eq. last_phase_id_correct(8))
+    call assert(132691589, last_phase_id(9) .eq. last_phase_id_correct(9))
 
     ! Set the species concentrations
     phase_name = "my test phase one"
