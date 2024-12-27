@@ -28,7 +28,8 @@ program camp_test_aero_rep_data
   implicit none
 
   ! Test computational particle
-  integer(kind=i_kind), parameter :: TEST_PARTICLE = 2
+  integer(kind=i_kind), parameter :: TEST_PARTICLE_1 = 2
+  integer(kind=i_kind), parameter :: TEST_PARTICLE_2 = 1
 
   ! Total computational particles
   integer(kind=i_kind), parameter :: NUM_COMP_PARTICLES = 3
@@ -36,8 +37,9 @@ program camp_test_aero_rep_data
   ! Number of aerosol phases per particle
   integer(kind=i_kind), parameter :: NUM_AERO_PHASE = 4
 
-  ! Index for the test phase (test-particle phase 2)
-  integer(kind=i_kind), parameter :: AERO_PHASE_IDX = ((TEST_PARTICLE-1)*NUM_AERO_PHASE+2)
+  ! Index for the test phase 
+  integer(kind=i_kind), parameter :: AERO_PHASE_IDX_1 = ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+2)
+  integer(kind=i_kind), parameter :: AERO_PHASE_IDX_2 = ((TEST_PARTICLE_2)*NUM_AERO_PHASE-0)
 
   ! Number of expected Jacobian elements for the test phase
   integer(kind=i_kind), parameter :: NUM_JAC_ELEM = 12
@@ -118,8 +120,6 @@ contains
 
     type(string_t), dimension(4) :: layer_names, correct_layer_names
     type(string_t), dimension(4) :: cover_names
-    !type(string_t), allocatable :: layer_names(:), correct_layer_names(:)
-    !type(string_t), allocatable :: cover_names(:)
     integer, allocatable :: ordered_ids(:)
 
     ! Assemble input arguments
@@ -136,8 +136,6 @@ contains
     correct_layer_names(3)%string = 'jam'
     correct_layer_names(4)%string = 'top bread'
 
-    !layer_names(1)%string = 'one layer'
-    !correct_layer_names(1)%string = 'one layer'
     ! Call the function and enter inputs 
     ordered_ids = ordered_layer_ids(layer_names, cover_names)
     ! check individual values:
@@ -369,7 +367,7 @@ contains
         end do
       end do
 
-      ! Set the species concentrations
+      ! Set the species concentrations (P1)
       phase_name = "top bread"
       spec_name = "wheat"
       unique_names = aero_rep%unique_names()
@@ -423,6 +421,117 @@ contains
       i_spec = aero_rep%spec_state_id(unique_names(12)%string)
       call assert_msg(149863598, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 12.5
+
+      ! Set the species concentrations (P2)
+      phase_name = "top bread"
+      spec_name = "wheat"
+      unique_names = aero_rep%unique_names()
+      i_spec = aero_rep%spec_state_id(unique_names(13)%string)
+      call assert_msg(752656273, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 1.5
+      spec_name = "water"
+      i_spec = aero_rep%spec_state_id(unique_names(14)%string)
+      call assert_msg(491172859, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 2.5
+      spec_name = "salt"
+      i_spec = aero_rep%spec_state_id(unique_names(15)%string)
+      call assert_msg(903979796, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 3.5
+      phase_name = "jam"
+      spec_name = "rasberry"
+      i_spec = aero_rep%spec_state_id(unique_names(16)%string)
+      call assert_msg(094588550, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 4.5
+      spec_name = "honey"
+      i_spec = aero_rep%spec_state_id(unique_names(17)%string)
+      call assert_msg(203341280, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 5.5
+      spec_name = "sugar"
+      i_spec = aero_rep%spec_state_id(unique_names(18)%string)
+      call assert_msg(010697815, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 6.5
+      spec_name = "lemon"
+      i_spec = aero_rep%spec_state_id(unique_names(19)%string)
+      call assert_msg(437481598, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 7.5
+      phase_name = "almond butter"
+      spec_name = "almonds"
+      i_spec = aero_rep%spec_state_id(unique_names(20)%string)
+      call assert_msg(471657965, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 8.5
+      spec_name = "sugar"
+      i_spec = aero_rep%spec_state_id(unique_names(21)%string)
+      call assert_msg(494073104, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 9.5
+      phase_name = "bottom bread"
+      spec_name = "wheat"
+      i_spec = aero_rep%spec_state_id(unique_names(22)%string)
+      call assert_msg(390101312, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 10.5
+      spec_name = "water"
+      i_spec = aero_rep%spec_state_id(unique_names(23)%string)
+      call assert_msg(320239819, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 11.5
+      spec_name = "salt"
+      i_spec = aero_rep%spec_state_id(unique_names(24)%string)
+      call assert_msg(501204067, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 12.5
+
+      ! Set the species concentrations (P3)
+      phase_name = "top bread"
+      spec_name = "wheat"
+      unique_names = aero_rep%unique_names()
+      i_spec = aero_rep%spec_state_id(unique_names(25)%string)
+      call assert_msg(189910318, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 1.5
+      spec_name = "water"
+      i_spec = aero_rep%spec_state_id(unique_names(26)%string)
+      call assert_msg(704399585, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 2.5
+      spec_name = "salt"
+      i_spec = aero_rep%spec_state_id(unique_names(27)%string)
+      call assert_msg(418977803, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 3.5
+      phase_name = "jam"
+      spec_name = "rasberry"
+      i_spec = aero_rep%spec_state_id(unique_names(28)%string)
+      call assert_msg(888754404, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 4.5
+      spec_name = "honey"
+      i_spec = aero_rep%spec_state_id(unique_names(29)%string)
+      call assert_msg(006633311, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 5.5
+      spec_name = "sugar"
+      i_spec = aero_rep%spec_state_id(unique_names(30)%string)
+      call assert_msg(701211482, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 6.5
+      spec_name = "lemon"
+      i_spec = aero_rep%spec_state_id(unique_names(31)%string)
+      call assert_msg(818017683, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 7.5
+      phase_name = "almond butter"
+      spec_name = "almonds"
+      i_spec = aero_rep%spec_state_id(unique_names(32)%string)
+      call assert_msg(735591255, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 8.5
+      spec_name = "sugar"
+      i_spec = aero_rep%spec_state_id(unique_names(33)%string)
+      call assert_msg(467138849, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 9.5
+      phase_name = "bottom bread"
+      spec_name = "wheat"
+      i_spec = aero_rep%spec_state_id(unique_names(34)%string)
+      call assert_msg(373107037, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 10.5
+      spec_name = "water"
+      i_spec = aero_rep%spec_state_id(unique_names(35)%string)
+      call assert_msg(498732740, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 11.5
+      spec_name = "salt"
+      i_spec = aero_rep%spec_state_id(unique_names(36)%string)
+      call assert_msg(165886615, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 12.5
+
 
     end do
 
@@ -517,15 +626,20 @@ contains
 
     ! Check the number of Jacobian elements for the test phase
     call assert_msg(153137613, &
-                    aero_rep%num_jac_elem(AERO_PHASE_IDX) .eq. NUM_JAC_ELEM, &
+                    aero_rep%num_jac_elem(AERO_PHASE_IDX_1) .eq. NUM_JAC_ELEM, &
+                    rep_name)
+    call assert_msg(994566346, &
+                    aero_rep%num_jac_elem(AERO_PHASE_IDX_2) .eq. NUM_JAC_ELEM, &
                     rep_name)
 
     ! Update external properties
-    call update_number%set_number__n_m3( TEST_PARTICLE, 12.3d0 )
+    call update_number%set_number__n_m3( TEST_PARTICLE_1, 12.3d0 )
+    call update_number%set_number__n_m3( TEST_PARTICLE_2, 12.3d0 )
     call camp_core%update_data( update_number )
 
     ! Test re-setting number concentration
-    call update_number%set_number__n_m3( TEST_PARTICLE, PART_NUM_CONC )
+    call update_number%set_number__n_m3( TEST_PARTICLE_1, PART_NUM_CONC )
+    call update_number%set_number__n_m3( TEST_PARTICLE_2, PART_NUM_CONC )
     call camp_core%update_data( update_number )
 
     passed = run_aero_rep_single_particle_c_tests(                           &

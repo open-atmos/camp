@@ -28,7 +28,7 @@
 
 // index for the test phase (test-particle phase 2)
 #define AERO_PHASE_IDX_1 ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+1)
-#define AERO_PHASE_IDX_2 ((TEST_PARTICLE_2)*NUM_AERO_PHASE-3)
+#define AERO_PHASE_IDX_2 ((TEST_PARTICLE_2)*NUM_AERO_PHASE-1)
 
 // number of Jacobian elements used for the test phase
 #define N_JAC_ELEM 12
@@ -165,8 +165,9 @@ int test_number_concentration(ModelData * model_data, N_Vector state) {
   for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv[i] = 999.9;
 
   aero_rep_get_number_conc__n_m3(model_data, AERO_REP_IDX,
-                           AERO_PHASE_IDX_1, &num_conc, &(partial_deriv[1]));
+                           AERO_PHASE_IDX_2, &num_conc, &(partial_deriv[1]));
 
+  printf("\nnumber conc : %f", num_conc);
   ret_val += ASSERT_MSG(fabs(num_conc-PART_NUM_CONC) < 1.0e-10*PART_NUM_CONC,
                         "Bad number concentration");
 
@@ -190,38 +191,65 @@ int test_number_concentration(ModelData * model_data, N_Vector state) {
 int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
 
   int ret_val = 0;
-  double partial_deriv[N_JAC_ELEM+2];
-  double phase_mass = -999.9;
+  double partial_deriv_1[N_JAC_ELEM+2];
+  double partial_deriv_2[N_JAC_ELEM+2];
+  double phase_mass_1 = -999.9;
+  double phase_mass_2 = -999.9;
 
-  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv[i] = 999.9;
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_1[i] = 999.9;
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_2[i] = 999.9;
 
   aero_rep_get_aero_phase_mass__kg_m3(model_data, AERO_REP_IDX, AERO_PHASE_IDX_1,
-                               &phase_mass, &(partial_deriv[1]));
+                               &phase_mass_1, &(partial_deriv_1[1]));
+/*  aero_rep_get_aero_phase_mass__kg_m3(model_data, AERO_REP_IDX, AERO_PHASE_IDX_2,
+*/                               &phase_mass_2, &(partial_deriv_2[1]));
 
-  double mass = CONC_rasberry + CONC_honey + CONC_sugar + CONC_lemon;
-
-  ret_val += ASSERT_MSG(fabs(phase_mass-mass) < 1.0e-10*mass,
+  double mass_1 = CONC_rasberry + CONC_honey + CONC_sugar + CONC_lemon;
+/*  double mass_2 = CONC_wheatB + CONC_waterB + CONC_saltB;
+*/
+  ret_val += ASSERT_MSG(fabs(phase_mass_1-mass_1) < 1.0e-10*mass_1,
                         "Bad aerosol phase mass");
 
-  ret_val += ASSERT_MSG(partial_deriv[0] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_1[0] = 999.9,
                         "Bad Jacobian (-1)");
   for( int i = 1; i < 4; ++i )
-    ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
+    ret_val += ASSERT_MSG(partial_deriv_1[i] == ZERO,
                           "Bad Jacobian element");
   for( int i = 4; i < 8; ++i )
-    ret_val += ASSERT_MSG(partial_deriv[i] == ONE,
+    ret_val += ASSERT_MSG(partial_deriv_1[i] == ONE,
                           "Bad Jacobian element");
   for( int i = 8; i < 10; ++i )
-    ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
+    ret_val += ASSERT_MSG(partial_deriv_1[i] == ZERO,
                           "Bad Jacobian element");
   for( int i = 10; i < N_JAC_ELEM+1; ++i )
-    ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
+    ret_val += ASSERT_MSG(partial_deriv_1[i] == ZERO,
                           "Bad Jacobian element");
-  ret_val += ASSERT_MSG(partial_deriv[N_JAC_ELEM+1] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_1[N_JAC_ELEM+1] = 999.9,
+                        "Bad Jacobian (end+1)");
+/**
+  ret_val_2 += ASSERT_MSG(fabs(phase_mass_2-mass_2) < 1.0e-10*mass_2,
+                        "Bad aerosol phase mass");
+  ret_val_2 += ASSERT_MSG(partial_deriv_2[0] = 999.9,
+                        "Bad Jacobian (-1)");
+  for( int i = 1; i < 4; ++i )
+    ret_val_2 += ASSERT_MSG(partial_deriv_2[i] == ZERO,
+                          "Bad Jacobian element");
+  for( int i = 4; i < 8; ++i )
+    ret_val_2 += ASSERT_MSG(partial_deriv_2[i] == ZERO,
+                          "Bad Jacobian element");
+  for( int i = 8; i < 10; ++i )
+    ret_val_2 += ASSERT_MSG(partial_deriv_2[i] == ZERO,
+                          "Bad Jacobian element");
+  for( int i = 10; i < N_JAC_ELEM+1; ++i )
+    ret_val_2 += ASSERT_MSG(partial_deriv_2[i] == ONE,
+                          "Bad Jacobian element");
+  ret_val_2 += ASSERT_MSG(partial_deriv_2[N_JAC_ELEM+1] = 999.9,
                         "Bad Jacobian (end+1)");
 
+  return ret_val_1;
+  return ret_val_2;
+*/
   return ret_val;
-
 }
 
 /** \brief Test the aerosol phase average molecular weight function
