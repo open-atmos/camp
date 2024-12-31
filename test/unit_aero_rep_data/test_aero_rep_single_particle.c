@@ -197,16 +197,18 @@ int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
   double phase_mass_2 = -999.9;
 
   for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_1[i] = 999.9;
+
   for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_2[i] = 999.9;
 
   aero_rep_get_aero_phase_mass__kg_m3(model_data, AERO_REP_IDX, AERO_PHASE_IDX_1,
                                &phase_mass_1, &(partial_deriv_1[1]));
-/*  aero_rep_get_aero_phase_mass__kg_m3(model_data, AERO_REP_IDX, AERO_PHASE_IDX_2,
+
+  aero_rep_get_aero_phase_mass__kg_m3(model_data, AERO_REP_IDX, AERO_PHASE_IDX_2,
                                &phase_mass_2, &(partial_deriv_2[1]));
-*/
+
   double mass_1 = CONC_rasberry + CONC_honey + CONC_sugar + CONC_lemon;
-/*  double mass_2 = CONC_wheatB + CONC_waterB + CONC_saltB;
-*/
+  double mass_2 = CONC_wheatB + CONC_waterB + CONC_saltB;
+
   ret_val += ASSERT_MSG(fabs(phase_mass_1-mass_1) < 1.0e-10*mass_1,
                         "Bad aerosol phase mass");
 
@@ -226,29 +228,26 @@ int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
                           "Bad Jacobian element");
   ret_val += ASSERT_MSG(partial_deriv_1[N_JAC_ELEM+1] = 999.9,
                         "Bad Jacobian (end+1)");
-/**
-  ret_val_2 += ASSERT_MSG(fabs(phase_mass_2-mass_2) < 1.0e-10*mass_2,
+
+  ret_val += ASSERT_MSG(fabs(phase_mass_2-mass_2) < 1.0e-10*mass_2,
                         "Bad aerosol phase mass");
-  ret_val_2 += ASSERT_MSG(partial_deriv_2[0] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_2[0] = 999.9,
                         "Bad Jacobian (-1)");
   for( int i = 1; i < 4; ++i )
-    ret_val_2 += ASSERT_MSG(partial_deriv_2[i] == ZERO,
+    ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
                           "Bad Jacobian element");
   for( int i = 4; i < 8; ++i )
-    ret_val_2 += ASSERT_MSG(partial_deriv_2[i] == ZERO,
+    ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
                           "Bad Jacobian element");
   for( int i = 8; i < 10; ++i )
-    ret_val_2 += ASSERT_MSG(partial_deriv_2[i] == ZERO,
+    ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
                           "Bad Jacobian element");
   for( int i = 10; i < N_JAC_ELEM+1; ++i )
-    ret_val_2 += ASSERT_MSG(partial_deriv_2[i] == ONE,
+    ret_val += ASSERT_MSG(partial_deriv_2[i] == ONE,
                           "Bad Jacobian element");
-  ret_val_2 += ASSERT_MSG(partial_deriv_2[N_JAC_ELEM+1] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_2[N_JAC_ELEM+1] = 999.9,
                         "Bad Jacobian (end+1)");
 
-  return ret_val_1;
-  return ret_val_2;
-*/
   return ret_val;
 }
 
@@ -260,8 +259,7 @@ int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
 
 int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
 
-  int ret_val_1 = 0;
-  int ret_val_2 = 0;
+  int ret_val = 0;
   double partial_deriv_1[N_JAC_ELEM+2];
   double partial_deriv_2[N_JAC_ELEM+2];
   double avg_mw_1 = -999.9;
@@ -272,9 +270,9 @@ int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
 
   aero_rep_get_aero_phase_avg_MW__kg_mol(model_data, AERO_REP_IDX, AERO_PHASE_IDX_1,
                                  &avg_mw_1, &(partial_deriv_1[1]));
-/*  aero_rep_get_aero_phase_avg_MW__kg_mol(model_data, AERO_REP_IDX, AERO_PHASE_IDX_2,
+  aero_rep_get_aero_phase_avg_MW__kg_mol(model_data, AERO_REP_IDX, AERO_PHASE_IDX_2,
                                  &avg_mw_2, &(partial_deriv_2[1]));
-*/
+
   double mass_1 = CONC_rasberry + CONC_honey + CONC_sugar + CONC_lemon;
   double moles_1 = CONC_rasberry / MW_rasberry + CONC_honey / MW_honey + CONC_sugar / MW_sugar + CONC_lemon / MW_lemon;
   double avg_mw_real_1 = mass_1 / moles_1;
@@ -283,29 +281,29 @@ int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
   double dMW_dsugar = ONE / moles_1 - mass_1 / (moles_1 * moles_1 * MW_sugar);
   double dMW_dlemon = ONE / moles_1 - mass_1 / (moles_1 * moles_1 * MW_lemon);
 
-  ret_val_1 += ASSERT_MSG(fabs(avg_mw_1-avg_mw_real_1) < 1.0e-10*avg_mw_real_1,
+  ret_val += ASSERT_MSG(fabs(avg_mw_1-avg_mw_real_1) < 1.0e-10*avg_mw_real_1,
                         "Bad average MW");
 
-  ret_val_1 += ASSERT_MSG(partial_deriv_1[0] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_1[0] = 999.9,
                         "Bad Jacobian (-1)");
   for( int i = 1; i < 4; ++i )
-    ret_val_1 += ASSERT_MSG(partial_deriv_1[i] == ZERO,
+    ret_val += ASSERT_MSG(partial_deriv_1[i] == ZERO,
                           "Bad Jacobian element");
-  ret_val_1 += ASSERT_MSG(fabs(partial_deriv_1[4]-dMW_drasberry) < 1.0e-10*fabs(dMW_drasberry),
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[4]-dMW_drasberry) < 1.0e-10*fabs(dMW_drasberry),
                         "Bad Jacobian (-1)");
-  ret_val_1 += ASSERT_MSG(fabs(partial_deriv_1[5]-dMW_dhoney) < 1.0e-10*fabs(dMW_dhoney),
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[5]-dMW_dhoney) < 1.0e-10*fabs(dMW_dhoney),
                         "Bad Jacobian (-1)");
-  ret_val_1 += ASSERT_MSG(fabs(partial_deriv_1[6]-dMW_dsugar) < 1.0e-10*fabs(dMW_dsugar),
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[6]-dMW_dsugar) < 1.0e-10*fabs(dMW_dsugar),
                         "Bad Jacobian (-1)");
-  ret_val_1 += ASSERT_MSG(fabs(partial_deriv_1[7]-dMW_dlemon) < 1.0e-10*fabs(dMW_dlemon),
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[7]-dMW_dlemon) < 1.0e-10*fabs(dMW_dlemon),
                         "Bad Jacobian (-1)");
   for( int i = 8; i < N_JAC_ELEM+1; ++i )
-    ret_val_1 += ASSERT_MSG(partial_deriv_1[i] == ZERO,
+    ret_val += ASSERT_MSG(partial_deriv_1[i] == ZERO,
                           "Bad Jacobian element");
-  ret_val_1 += ASSERT_MSG(partial_deriv_1[N_JAC_ELEM+1] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_1[N_JAC_ELEM+1] = 999.9,
                         "Bad Jacobian (end+1)");
 
-  return ret_val_1;
+  return ret_val;
 }
 
 #endif
