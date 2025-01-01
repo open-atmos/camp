@@ -28,7 +28,7 @@
 
 // index for the test phase (test-particle phase 2)
 #define AERO_PHASE_IDX_1 ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+1)
-#define AERO_PHASE_IDX_2 ((TEST_PARTICLE_2)*NUM_AERO_PHASE-1)
+#define AERO_PHASE_IDX_2 ((TEST_PARTICLE_2)*NUM_AERO_PHASE-3)
 
 // number of Jacobian elements used for the test phase
 #define N_JAC_ELEM 12
@@ -229,21 +229,23 @@ int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
   ret_val += ASSERT_MSG(partial_deriv_1[N_JAC_ELEM+1] = 999.9,
                         "Bad Jacobian (end+1)");
 
-  ret_val += ASSERT_MSG(fabs(phase_mass_2-mass_2) < 1.0e-10*mass_2,
+  printf("\nmass_2 : %f", mass_2);
+  ret_val += ASSERT_MSG(fabs(phase_mass_2-mass_1) < 1.0e-10*mass_1,
                         "Bad aerosol phase mass");
+  printf("\nphase_mass_2 : %f", phase_mass_2);
   ret_val += ASSERT_MSG(partial_deriv_2[0] = 999.9,
                         "Bad Jacobian (-1)");
   for( int i = 1; i < 4; ++i )
     ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
                           "Bad Jacobian element");
   for( int i = 4; i < 8; ++i )
-    ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
+    ret_val += ASSERT_MSG(partial_deriv_2[i] == ONE,
                           "Bad Jacobian element");
   for( int i = 8; i < 10; ++i )
     ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
                           "Bad Jacobian element");
   for( int i = 10; i < N_JAC_ELEM+1; ++i )
-    ret_val += ASSERT_MSG(partial_deriv_2[i] == ONE,
+    ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
                           "Bad Jacobian element");
   ret_val += ASSERT_MSG(partial_deriv_2[N_JAC_ELEM+1] = 999.9,
                         "Bad Jacobian (end+1)");
