@@ -39,7 +39,7 @@ program camp_test_aero_rep_data
 
   ! Index for the test phase 
   integer(kind=i_kind), parameter :: AERO_PHASE_IDX_1 = ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+2)
-  integer(kind=i_kind), parameter :: AERO_PHASE_IDX_2 = ((TEST_PARTICLE_2)*NUM_AERO_PHASE-2)
+  integer(kind=i_kind), parameter :: AERO_PHASE_IDX_2 = ((TEST_PARTICLE_2)*NUM_AERO_PHASE)
 
   ! Number of expected Jacobian elements for the test phase
   integer(kind=i_kind), parameter :: NUM_JAC_ELEM = 12
