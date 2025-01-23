@@ -143,7 +143,7 @@ module camp_aero_rep_single_particle
     !> Returns the number of state variables for a layer and phase
     procedure :: phase_state_size
     !> Finalize the aerosol representation
-    final :: finalize
+    final :: finalize, finalize_array
   end type aero_rep_single_particle_t
 
   ! Constructor for aero_rep_single_particle_t
@@ -171,7 +171,7 @@ module camp_aero_rep_single_particle
     !> Unpack the local update data from a binary
     procedure :: internal_bin_unpack => internal_bin_unpack_number
     !> Finalize the number update data
-    final :: update_data_number_finalize
+    final :: update_data_number_finalize, update_data_number_finalize_array
   end type aero_rep_update_data_single_particle_number_t
 
   !> Interface to c aerosol representation functions
@@ -763,7 +763,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the aerosol representation
-  elemental subroutine finalize(this)
+  subroutine finalize(this)
 
     !> Aerosol representation data
     type(aero_rep_single_particle_t), intent(inout) :: this
@@ -783,6 +783,22 @@ contains
         deallocate(this%condensed_data_int)
 
   end subroutine finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize the aerosol representation array
+  subroutine finalize_array(this_array)
+
+    !> Aerosol representation data
+    type(aero_rep_single_particle_t), intent(inout) :: this_array(:)
+
+    integer(kind=i_kind) :: i_aero
+
+    do i_aero = 1, size(this_array)
+      call finalize(this_array(i_aero))
+    end do
+
+  end subroutine finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -966,7 +982,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize a number update data object
-  elemental subroutine update_data_number_finalize(this)
+  subroutine update_data_number_finalize(this)
 
     !> Update data object to free
     type(aero_rep_update_data_single_particle_number_t), intent(inout) :: this
@@ -974,6 +990,23 @@ contains
     if (this%is_malloced) call aero_rep_free_update_data(this%update_data)
 
   end subroutine update_data_number_finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize an array of number update data objects
+  subroutine update_data_number_finalize_array(this)
+
+    !> Update data objects to free
+    type(aero_rep_update_data_single_particle_number_t), intent(inout) :: &
+            this(:)
+
+    integer(kind=i_kind) :: i_aero
+
+    do i_aero = 1, size(this)
+      call update_data_number_finalize(this(i_aero))
+    end do
+
+  end subroutine update_data_number_finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

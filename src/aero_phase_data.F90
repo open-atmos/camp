@@ -127,7 +127,7 @@ module camp_aero_phase_data
     !> Print the aerosol phase data
     procedure :: print => do_print
     !> Finalize the aerosol phase data
-    final :: finalize
+    final :: finalize, finalize_array
 
     ! Private functions
     !> Ensure there is enough room in the species dataset to add a specified
@@ -151,7 +151,7 @@ module camp_aero_phase_data
     !> Dereference the pointer
     procedure :: dereference
     !> Finalize the pointer
-    final :: ptr_finalize
+    final :: ptr_finalize, ptr_finalize_array
   end type aero_phase_data_ptr
 
 contains
@@ -584,7 +584,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the aerosol phase data
-  elemental subroutine finalize(this)
+  subroutine finalize(this)
 
     !> Aerosol phase data
     type(aero_phase_data_t), intent(inout) :: this
@@ -598,6 +598,22 @@ contains
                                        deallocate(this%condensed_data_int)
 
   end subroutine finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize the aerosol phase data
+  subroutine finalize_array(this)
+  
+    !> Aerosol phase data
+    type(aero_phase_data_t), intent(inout) :: this(:)
+
+    integer(kind=i_kind) :: i_phase
+
+    do i_phase = 1, size(this)
+      call finalize(this(i_phase))
+    end do
+
+  end subroutine finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -685,7 +701,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize a pointer to aerosol phase data
-  elemental subroutine ptr_finalize(this)
+  subroutine ptr_finalize(this)
 
     !> Pointer to aerosol phase data
     type(aero_phase_data_ptr), intent(inout) :: this
@@ -693,6 +709,22 @@ contains
     if (associated(this%val)) deallocate(this%val)
 
   end subroutine ptr_finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize an array of pointers to aerosol phase data
+  subroutine ptr_finalize_array(this)
+
+    !> Array of pointers to aerosol phase data
+    type(aero_phase_data_ptr), intent(inout) :: this(:)
+
+    integer(kind=i_kind) :: i_ptr
+
+    do i_ptr = 1, size(this)
+      call ptr_finalize(this(i_ptr))
+    end do
+
+  end subroutine ptr_finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

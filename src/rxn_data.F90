@@ -152,7 +152,7 @@ module camp_rxn_data
     !> Dereference the pointer
     procedure :: dereference
     !> Finalize the pointer
-    final :: ptr_finalize
+    final :: ptr_finalize, ptr_finalize_array
   end type rxn_data_ptr
 
   !> Update cookie
@@ -521,7 +521,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize a pointer to a reaction
-  elemental subroutine ptr_finalize(this)
+  subroutine ptr_finalize(this)
 
     !> Pointer to a reaction
     type(rxn_data_ptr), intent(inout) :: this
@@ -529,6 +529,22 @@ contains
     if (associated(this%val)) deallocate(this%val)
 
   end subroutine ptr_finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize an array of pointers to reactions
+  subroutine ptr_finalize_array(this)
+
+    !> Pointer to a reaction
+    type(rxn_data_ptr), intent(inout) :: this(:)
+
+    integer :: i
+
+    do i = 1, size(this)
+      call ptr_finalize(this(i))
+    end do
+
+  end subroutine ptr_finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

@@ -221,7 +221,7 @@ module camp_sub_model_ZSR_aerosol_water
     !! of higher priority sub models.
     procedure :: priority
     !> Finalize
-    final :: finalize
+    final :: finalize, finalize_array
   end type sub_model_ZSR_aerosol_water_t
 
   !> Constructor for sub_model_ZSR_aerosol_water_t
@@ -716,7 +716,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the reaction
-  elemental subroutine finalize(this)
+  subroutine finalize(this)
 
     !> Reaction data
     type(sub_model_ZSR_aerosol_water_t), intent(inout) :: this
@@ -729,6 +729,22 @@ contains
             deallocate(this%condensed_data_int)
 
   end subroutine finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize an array of sub models
+  subroutine finalize_array(this)
+  
+    !> Array of sub models
+    type(sub_model_ZSR_aerosol_water_t), intent(inout) :: this(:)
+
+    integer(kind=i_kind) :: i
+
+    do i = 1, size(this)
+      call finalize(this(i))
+    end do
+
+  end subroutine finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

@@ -107,7 +107,7 @@ public :: rxn_troe_t
     !> Reaction initialization
     procedure :: initialize
     !> Finalize the reaction
-    final :: finalize
+    final :: finalize, finalize_array
   end type rxn_troe_t
 
   !> Constructor for rxn_troe_t
@@ -300,7 +300,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the reaction
-  elemental subroutine finalize(this)
+  subroutine finalize(this)
 
     !> Reaction data
     type(rxn_troe_t), intent(inout) :: this
@@ -313,6 +313,22 @@ contains
             deallocate(this%condensed_data_int)
 
   end subroutine finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize an array of reactions
+  subroutine finalize_array(this)
+  
+    !> Array of reaction data
+    type(rxn_troe_t), intent(inout) :: this(:)
+
+    integer(kind=i_kind) :: i_rxn
+
+    do i_rxn = 1, size(this)
+      call finalize(this(i_rxn))
+    end do
+
+  end subroutine finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

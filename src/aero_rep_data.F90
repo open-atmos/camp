@@ -145,7 +145,7 @@ module camp_aero_rep_data
     !> Dereference the pointer
     procedure :: dereference
     !> Finalize the pointer
-    final :: ptr_finalize
+    final :: ptr_finalize, ptr_finalize_array
   end type aero_rep_data_ptr
 
   !> Update cookie
@@ -652,7 +652,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize a pointer to an aerosol representation
-  elemental subroutine ptr_finalize(this)
+  subroutine ptr_finalize(this)
 
     !> Pointer to an aerosol representation
     type(aero_rep_data_ptr), intent(inout) :: this
@@ -660,6 +660,22 @@ contains
     if (associated(this%val)) deallocate(this%val)
 
   end subroutine ptr_finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize an array of pointers to aerosol representations
+  subroutine ptr_finalize_array(this)
+
+    !> Array of pointers to aerosol representations
+    type(aero_rep_data_ptr), intent(inout) :: this(:)
+
+    integer(kind=i_kind) :: i
+
+    do i = 1, size(this)
+      call ptr_finalize(this(i))
+    end do
+
+  end subroutine ptr_finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

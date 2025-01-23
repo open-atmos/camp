@@ -515,7 +515,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the box model
-  elemental subroutine finalize( this )
+  subroutine finalize( this )
 
     !> CAMP box model
     type(camp_box_model_data_t), intent(inout) :: this
@@ -791,7 +791,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the reaction profile
-  elemental subroutine rxn_profile_finalize( this )
+  subroutine rxn_profile_finalize( this )
 
     !> Reaction profile
     type(rxn_profile_t), intent(inout) :: this
@@ -928,7 +928,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the aerosol representation profile
-  elemental subroutine aero_rep_profile_finalize( this )
+  subroutine aero_rep_profile_finalize( this )
 
     !> Aerosol representation profile
     type(aero_rep_profile_t), intent(inout) :: this
