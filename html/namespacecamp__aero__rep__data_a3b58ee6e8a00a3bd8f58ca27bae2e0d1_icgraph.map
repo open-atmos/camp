@@ -1,0 +1,15 @@
+<map id="camp_aero_rep_data::ptr_finalize" name="camp_aero_rep_data::ptr_finalize">
+<area shape="rect" id="Node000001" title="Finalize a pointer to an aerosol representation." alt="" coords="420,117,562,158"/>
+<area shape="rect" id="Node000002" href="$structcamp__mechanism__data_1_1mechanism__data__ptr.html#aec13765cdce2bd8c6ce97dcb00878cb0" title="Finalize the pointer." alt="" coords="5,5,165,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="458,108,419,76,371,50,319,36,265,29,213,26,165,28,165,22,213,21,266,23,320,31,373,45,422,72,461,104"/>
+<area shape="rect" id="Node000003" href="$structcamp__rxn__data_1_1rxn__data__ptr.html#aeb4835f0e8b0380fb8a6fc2884bf36d5" title="Finalize the pointer." alt="" coords="14,96,156,136"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="404,135,157,122,157,117,404,130"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__aero__rep__data.html#ae31c9acd8899c57d845c227f4a11b98e" title="Finalize an array of pointers to aerosol representations." alt="" coords="221,60,364,100"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="404,115,363,103,365,98,406,110"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__mechanism__data.html#a964f9a19992158e7fad656b526f3e3a1" title="Finalize an array of mechanism data pointers." alt="" coords="213,174,372,215"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="406,165,366,176,365,171,404,159"/>
+<area shape="rect" id="Node000006" href="$namespacecamp__rxn__data.html#a0eb3c8b8215a825a9581d08b326ad03f" title="Finalize an array of pointers to reactions." alt="" coords="227,240,358,280"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="456,170,417,200,373,229,349,241,346,237,371,224,414,195,453,165"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="205,63,165,54,166,49,206,58"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="206,97,157,106,156,101,205,92"/>
+</map>

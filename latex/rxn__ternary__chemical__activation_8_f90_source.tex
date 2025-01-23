@@ -112,7 +112,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00108}00108\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ initialization}}
 \DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00109}\mbox{\hyperlink{structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t_ae102bbe0a9b0bbde2ea5a28245688dc2}{00109}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00110}00110\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00111}\mbox{\hyperlink{structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t_ae2b7a5ed35651d6690f4edd869e79491}{00111}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00111}\mbox{\hyperlink{structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t_ae2b7a5ed35651d6690f4edd869e79491}{00111}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}},\ \mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
 \DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00112}00112\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t}{rxn\_ternary\_chemical\_activation\_t}}}
 \DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00113}00113\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00114}00114\ \textcolor{comment}{\ \ !>\ Constructor\ for\ rxn\_ternary\_chemical\_activation\_t}}
@@ -305,7 +305,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00301}00301\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00302}00302\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00303}00303\ \textcolor{comment}{\ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00304}\mbox{\hyperlink{namespacecamp__rxn__ternary__chemical__activation_a7fd1849ceee82bb44c56094d0c9e23ba}{00304}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00304}\mbox{\hyperlink{namespacecamp__rxn__ternary__chemical__activation_a641fc0e058e6668c7f7871b850384e1c}{00304}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
 \DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00305}00305\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00306}00306\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00307}00307\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t}{rxn\_ternary\_chemical\_activation\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
@@ -320,7 +320,23 @@
 \DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00316}00316\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
 \DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00317}00317\ }
 \DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00318}00318\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00319}00319\ }
-\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00320}00320\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__ternary__chemical__activation}{camp\_rxn\_ternary\_chemical\_activation}}}
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00319}00319\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00320}00320\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ reactions}}
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00321}\mbox{\hyperlink{namespacecamp__rxn__ternary__chemical__activation_acd4ac72feab0ada46f3fef8e1f92336a}{00321}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00322}00322\ \ \ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00323}00323\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00324}00324\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t}{rxn\_ternary\_chemical\_activation\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00325}00325\ }
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00326}00326\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i}
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00327}00327\ }
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00328}00328\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00329}00329\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this(i))}
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00330}00330\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00331}00331\ }
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00332}00332\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00333}00333\ }
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00334}00334\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00335}00335\ }
+\DoxyCodeLine{\Hypertarget{rxn__ternary__chemical__activation_8_f90_source_l00336}00336\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__ternary__chemical__activation}{camp\_rxn\_ternary\_chemical\_activation}}}
 
 \end{DoxyCode}

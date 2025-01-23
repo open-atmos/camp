@@ -84,8 +84,10 @@ integer function \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_aec
 \begin{DoxyCompactList}\small\item\em Returns the number of phases in a layer or overall. \end{DoxyCompactList}\item 
 integer function \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_ad9d74330579c43a815e0cb46d546dc53}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::phase\+\_\+state\+\_\+size}} (this, layer, phase)
 \begin{DoxyCompactList}\small\item\em Returns the number of state variables for a layer and phase. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a00f8f7d409096fd16673b7218ff80fa7}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::finalize}} (this)
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_aa04907b92cfcfefd74758da3ca7607cb}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the aerosol representation. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a3769b1d5fd802c6c09cffb22135961eb}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::finalize\+\_\+array}} (this\+\_\+array)
+\begin{DoxyCompactList}\small\item\em Finalize the aerosol representation array. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a0cf95e9e46b97393e5654f5f65e417eb}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::update\+\_\+data\+\_\+init\+\_\+number}} (this, update\+\_\+data, aero\+\_\+rep\+\_\+type)
 \begin{DoxyCompactList}\small\item\em Initialize an update data object. \end{DoxyCompactList}\item 
 integer function, dimension(\+:), allocatable, public \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::ordered\+\_\+layer\+\_\+ids}} (layer\+\_\+names\+\_\+unordered, cover\+\_\+names\+\_\+unordered)
@@ -98,8 +100,10 @@ subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a60e07855
 \begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a3fb691978e783fdfad253b8e745443be}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::internal\+\_\+bin\+\_\+unpack\+\_\+number}} (this, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a118fa6795315a201ecb6943a69306c96}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::update\+\_\+data\+\_\+number\+\_\+finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize a number update data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a48a29e244d03622902168c47b290cc93}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::update\+\_\+data\+\_\+number\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize a number update data object. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a352b6c95b34347dda7296463d9f3ae82}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::update\+\_\+data\+\_\+number\+\_\+finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of number update data objects. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 

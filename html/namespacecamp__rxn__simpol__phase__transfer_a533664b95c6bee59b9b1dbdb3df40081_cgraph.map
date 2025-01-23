@@ -1,0 +1,5 @@
+<map id="camp_rxn_simpol_phase_transfer::finalize_array" name="camp_rxn_simpol_phase_transfer::finalize_array">
+<area shape="rect" id="Node000001" title="Finalize an array of reactions." alt="" coords="5,5,170,46"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__aero__phase__data.html#a8eebec681f9d24bd7741bb357f7c4e43" title="Finalize the aerosol phase data." alt="" coords="218,5,377,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,23,202,23,202,28,170,28"/>
+</map>

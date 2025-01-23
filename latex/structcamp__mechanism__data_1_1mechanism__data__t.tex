@@ -37,7 +37,9 @@ procedure \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_a21
 procedure \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_a6713a2b580de18e05a794d81ec43f848}{print}} (this, file\+\_\+unit)
 \begin{DoxyCompactList}\small\item\em Print the mechanism data. \end{DoxyCompactList}\item 
 final \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_a10680daaad91a57e83bf3dadd6c191d8}{finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize the mechanism. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Finalize the mechanism. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_ab898bf11f6737e97ed7c635541e3af21}{finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of mechanisms. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -169,6 +171,25 @@ Ensure there is enough room in the reaction dataset to add a specified number of
 
 
 Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00095}{95}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__mechanism__data_1_1mechanism__data__t_ab898bf11f6737e97ed7c635541e3af21}\label{structcamp__mechanism__data_1_1mechanism__data__t_ab898bf11f6737e97ed7c635541e3af21} 
+\index{camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+t\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\+\_\+data\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})}
+
+
+
+Finalize an array of mechanisms. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of mechanism data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00090}{90}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
 
 \Hypertarget{structcamp__mechanism__data_1_1mechanism__data__t_a4cbb30ee65fdc8f7688cc02548075874}\label{structcamp__mechanism__data_1_1mechanism__data__t_a4cbb30ee65fdc8f7688cc02548075874} 
 \index{camp\_mechanism\_data::mechanism\_data\_t@{camp\_mechanism\_data::mechanism\_data\_t}!get\_rxn@{get\_rxn}}

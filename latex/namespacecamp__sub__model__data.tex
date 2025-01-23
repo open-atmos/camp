@@ -41,8 +41,10 @@ subroutine \mbox{\hyperlink{namespacecamp__sub__model__data_abd83a6e9b4f2f32c706
 \begin{DoxyCompactList}\small\item\em Print the sub-\/model data. \end{DoxyCompactList}\item 
 elemental subroutine \mbox{\hyperlink{namespacecamp__sub__model__data_aa2de42fe7daec012e98ecb5136d97dee}{dereference}} (this)
 \begin{DoxyCompactList}\small\item\em Dereference a pointer to a sub-\/model. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__sub__model__data_a11c56d9079ebcb5ea484d6029c493dfe}{ptr\+\_\+finalize}} (this)
+subroutine \mbox{\hyperlink{namespacecamp__sub__model__data_a948456dc58fca2c06d03d956c984614f}{ptr\+\_\+finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize a pointer to a sub-\/model. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__sub__model__data_a995cd06122a36a168d92cfb757eb18f9}{ptr\+\_\+finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of pointers to sub-\/models. \end{DoxyCompactList}\item 
 integer(kind=c\+\_\+int) function \mbox{\hyperlink{namespacecamp__sub__model__data_a007af08b73416405d00a2cc869c825b1}{sub\+\_\+model\+\_\+update\+\_\+data\+\_\+get\+\_\+type}} (this)
 \begin{DoxyCompactList}\small\item\em Get the update data sub-\/model type. \end{DoxyCompactList}\item 
 integer(kind=c\+\_\+int) function \mbox{\hyperlink{namespacecamp__sub__model__data_a49861f20508a55155fa8b43d968bbbd2}{sub\+\_\+model\+\_\+update\+\_\+data\+\_\+get\+\_\+cell\+\_\+id}} (this)
@@ -188,7 +190,7 @@ Print the update data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00612}{612}} of file \mbox{\hyperlink{sub__model__data_8_f90_source}{sub\+\_\+model\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00628}{628}} of file \mbox{\hyperlink{sub__model__data_8_f90_source}{sub\+\_\+model\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__sub__model__data_acf9376f22354ccb462195a33599ddd57}\label{namespacecamp__sub__model__data_acf9376f22354ccb462195a33599ddd57} 
 \index{camp\_sub\_model\_data@{camp\_sub\_model\_data}!get\_name@{get\_name}}
@@ -288,11 +290,11 @@ Here is the caller graph for this function\+:
 \includegraphics[width=350pt]{namespacecamp__sub__model__data_a428e7081801d630bdf8d9f544842a2a3_icgraph}
 \end{center}
 \end{figure}
-\Hypertarget{namespacecamp__sub__model__data_a11c56d9079ebcb5ea484d6029c493dfe}\label{namespacecamp__sub__model__data_a11c56d9079ebcb5ea484d6029c493dfe} 
+\Hypertarget{namespacecamp__sub__model__data_a948456dc58fca2c06d03d956c984614f}\label{namespacecamp__sub__model__data_a948456dc58fca2c06d03d956c984614f} 
 \index{camp\_sub\_model\_data@{camp\_sub\_model\_data}!ptr\_finalize@{ptr\_finalize}}
 \index{ptr\_finalize@{ptr\_finalize}!camp\_sub\_model\_data@{camp\_sub\_model\_data}}
 \doxysubsubsection{\texorpdfstring{ptr\_finalize()}{ptr\_finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+sub\+\_\+model\+\_\+data\+::ptr\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__ptr}{sub\+\_\+model\+\_\+data\+\_\+ptr}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+sub\+\_\+model\+\_\+data\+::ptr\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__ptr}{sub\+\_\+model\+\_\+data\+\_\+ptr}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -312,7 +314,42 @@ Here is the caller graph for this function\+:
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=349pt]{namespacecamp__sub__model__data_a11c56d9079ebcb5ea484d6029c493dfe_icgraph}
+\includegraphics[width=350pt]{namespacecamp__sub__model__data_a948456dc58fca2c06d03d956c984614f_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__sub__model__data_a995cd06122a36a168d92cfb757eb18f9}\label{namespacecamp__sub__model__data_a995cd06122a36a168d92cfb757eb18f9} 
+\index{camp\_sub\_model\_data@{camp\_sub\_model\_data}!ptr\_finalize\_array@{ptr\_finalize\_array}}
+\index{ptr\_finalize\_array@{ptr\_finalize\_array}!camp\_sub\_model\_data@{camp\_sub\_model\_data}}
+\doxysubsubsection{\texorpdfstring{ptr\_finalize\_array()}{ptr\_finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+sub\+\_\+model\+\_\+data\+::ptr\+\_\+finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__ptr}{sub\+\_\+model\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of pointers to sub-\/models. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Pointer to a sub-\/model \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00466}{466}} of file \mbox{\hyperlink{sub__model__data_8_f90_source}{sub\+\_\+model\+\_\+data.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=349pt]{namespacecamp__sub__model__data_a995cd06122a36a168d92cfb757eb18f9_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=349pt]{namespacecamp__sub__model__data_a995cd06122a36a168d92cfb757eb18f9_icgraph}
 \end{center}
 \end{figure}
 \Hypertarget{namespacecamp__sub__model__data_a8061031b7e87fa51b122a316784e044d}\label{namespacecamp__sub__model__data_a8061031b7e87fa51b122a316784e044d} 
@@ -338,7 +375,7 @@ Pack the given value to the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00540}{540}} of file \mbox{\hyperlink{sub__model__data_8_f90_source}{sub\+\_\+model\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00556}{556}} of file \mbox{\hyperlink{sub__model__data_8_f90_source}{sub\+\_\+model\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -371,7 +408,7 @@ Unpack the given value from the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00576}{576}} of file \mbox{\hyperlink{sub__model__data_8_f90_source}{sub\+\_\+model\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00592}{592}} of file \mbox{\hyperlink{sub__model__data_8_f90_source}{sub\+\_\+model\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -401,7 +438,7 @@ Grid cell id
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00480}{480}} of file \mbox{\hyperlink{sub__model__data_8_f90_source}{sub\+\_\+model\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00496}{496}} of file \mbox{\hyperlink{sub__model__data_8_f90_source}{sub\+\_\+model\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__sub__model__data_ac839fcea5243af8bcec3c530d0a51e3b}\label{namespacecamp__sub__model__data_ac839fcea5243af8bcec3c530d0a51e3b} 
 \index{camp\_sub\_model\_data@{camp\_sub\_model\_data}!sub\_model\_update\_data\_get\_data@{sub\_model\_update\_data\_get\_data}}
@@ -423,7 +460,7 @@ Update data ptr
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00494}{494}} of file \mbox{\hyperlink{sub__model__data_8_f90_source}{sub\+\_\+model\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00510}{510}} of file \mbox{\hyperlink{sub__model__data_8_f90_source}{sub\+\_\+model\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__sub__model__data_a007af08b73416405d00a2cc869c825b1}\label{namespacecamp__sub__model__data_a007af08b73416405d00a2cc869c825b1} 
 \index{camp\_sub\_model\_data@{camp\_sub\_model\_data}!sub\_model\_update\_data\_get\_type@{sub\_model\_update\_data\_get\_type}}
@@ -445,7 +482,7 @@ Sub-\/model type
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00466}{466}} of file \mbox{\hyperlink{sub__model__data_8_f90_source}{sub\+\_\+model\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00482}{482}} of file \mbox{\hyperlink{sub__model__data_8_f90_source}{sub\+\_\+model\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__sub__model__data_a220d5f85a6afee00ee82db72f03e48a3}\label{namespacecamp__sub__model__data_a220d5f85a6afee00ee82db72f03e48a3} 
 \index{camp\_sub\_model\_data@{camp\_sub\_model\_data}!sub\_model\_update\_data\_pack\_size@{sub\_model\_update\_data\_pack\_size}}
@@ -466,7 +503,7 @@ Determine the size of a binary required to pack the reaction data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00508}{508}} of file \mbox{\hyperlink{sub__model__data_8_f90_source}{sub\+\_\+model\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{sub__model__data_8_f90_source_l00524}{524}} of file \mbox{\hyperlink{sub__model__data_8_f90_source}{sub\+\_\+model\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak

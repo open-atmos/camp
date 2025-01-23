@@ -83,6 +83,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aec13765cdce2bd8c6ce97dcb00878cb0" id="r_aec13765cdce2bd8c6ce97dcb00878cb0"><td class="memItemLeft" align="right" valign="top">final&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcamp__mechanism__data_1_1mechanism__data__ptr.html#aec13765cdce2bd8c6ce97dcb00878cb0">ptr_finalize</a> (this)</td></tr>
 <tr class="memdesc:aec13765cdce2bd8c6ce97dcb00878cb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the pointer.  <br /></td></tr>
 <tr class="separator:aec13765cdce2bd8c6ce97dcb00878cb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abea10da6ae16582b869d4bfb373cf571" id="r_abea10da6ae16582b869d4bfb373cf571"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcamp__mechanism__data_1_1mechanism__data__ptr.html#abea10da6ae16582b869d4bfb373cf571">ptr_finalize_array</a> (this)</td></tr>
+<tr class="memdesc:abea10da6ae16582b869d4bfb373cf571"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize an array of mechanism data pointers.  <br /></td></tr>
+<tr class="separator:abea10da6ae16582b869d4bfb373cf571"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -133,8 +136,11 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="structcamp__mechanism__data_1_1mechanism__data__ptr_aec13765cdce2bd8c6ce97dcb00878cb0_cgraph.png" border="0" usemap="#astructcamp__mechanism__data_1_1mechanism__data__ptr_aec13765cdce2bd8c6ce97dcb00878cb0_cgraph" alt=""/></div>
 <map name="astructcamp__mechanism__data_1_1mechanism__data__ptr_aec13765cdce2bd8c6ce97dcb00878cb0_cgraph" id="astructcamp__mechanism__data_1_1mechanism__data__ptr_aec13765cdce2bd8c6ce97dcb00878cb0_cgraph">
 <area shape="rect" title="Finalize the pointer." alt="" coords="5,5,165,61"/>
-<area shape="rect" href="namespacecamp__aero__rep__data.html#ab3b32282b8f6c9afc8734361f7b47d97" title="Finalize a pointer to an aerosol representation." alt="" coords="213,13,355,54"/>
-<area shape="poly" title=" " alt="" coords="165,31,197,31,197,36,165,36"/>
+<area shape="rect" href="namespacecamp__aero__rep__data.html#a3b58ee6e8a00a3bd8f58ca27bae2e0d1" title="Finalize a pointer to an aerosol representation." alt="" coords="403,13,545,54"/>
+<area shape="poly" title=" " alt="" coords="165,28,213,27,355,27,387,27,387,33,355,32,213,32,165,33"/>
+<area shape="rect" href="namespacecamp__aero__rep__data.html#ae31c9acd8899c57d845c227f4a11b98e" title="Finalize an array of pointers to aerosol representations." alt="" coords="213,41,355,82"/>
+<area shape="poly" title=" " alt="" coords="165,42,198,46,197,52,165,47"/>
+<area shape="poly" title=" " alt="" coords="355,48,387,43,388,49,356,53"/>
 </map>
 </div>
 
@@ -166,6 +172,34 @@ Here is the call graph for this function:</div>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="mechanism__data_8_f90_source.html#l00108">108</a> of file <a class="el" href="mechanism__data_8_f90_source.html">mechanism_data.F90</a>.</p>
+
+</div>
+</div>
+<a id="abea10da6ae16582b869d4bfb373cf571" name="abea10da6ae16582b869d4bfb373cf571"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abea10da6ae16582b869d4bfb373cf571">&#9670;&#160;</a></span>ptr_finalize_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">camp_mechanism_data::mechanism_data_ptr::ptr_finalize_array </td>
+          <td>(</td>
+          <td class="paramtype">type(<a class="el" href="structcamp__mechanism__data_1_1mechanism__data__ptr.html">mechanism_data_ptr</a>), dimension(:), intent(inout)&#160;</td>
+          <td class="paramname"><em>this</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Finalize an array of mechanism data pointers. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Array of mechanism data pointers </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="mechanism__data_8_f90_source.html#l00110">110</a> of file <a class="el" href="mechanism__data_8_f90_source.html">mechanism_data.F90</a>.</p>
 
 </div>
 </div>

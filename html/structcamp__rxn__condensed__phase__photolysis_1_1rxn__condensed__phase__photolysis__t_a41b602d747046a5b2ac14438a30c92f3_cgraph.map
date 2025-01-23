@@ -1,5 +1,8 @@
 <map id="camp_rxn_condensed_phase_photolysis::rxn_condensed_phase_photolysis_t::finalize" name="camp_rxn_condensed_phase_photolysis::rxn_condensed_phase_photolysis_t::finalize">
 <area shape="rect" id="Node000001" title="Finalize the reaction." alt="" coords="5,5,204,76"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__aero__phase__data.html#a18e6adfc1bb22f7514247a1920d86090" title="Finalize the aerosol phase data." alt="" coords="252,20,411,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,38,236,38,236,43,204,43"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__aero__phase__data.html#a8eebec681f9d24bd7741bb357f7c4e43" title="Finalize the aerosol phase data." alt="" coords="459,20,618,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,35,252,34,411,34,443,35,443,40,411,39,252,39,204,40"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__aero__phase__data.html#a0e828293ef8b5cc169dfe653abed14e8" title="Finalize the aerosol phase data." alt="" coords="252,48,411,89"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="204,50,237,54,236,60,204,56"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="411,55,443,51,444,56,412,61"/>
 </map>

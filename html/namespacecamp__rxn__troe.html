@@ -72,9 +72,12 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:a9722464e9603a64e43d61be72e7c4ebe" id="r_a9722464e9603a64e43d61be72e7c4ebe"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__troe.html#a9722464e9603a64e43d61be72e7c4ebe">initialize</a> (this, chem_spec_data, aero_rep, n_cells)</td></tr>
 <tr class="memdesc:a9722464e9603a64e43d61be72e7c4ebe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving.  <br /></td></tr>
 <tr class="separator:a9722464e9603a64e43d61be72e7c4ebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add0bd4c886d3a64d48a29700035534d9" id="r_add0bd4c886d3a64d48a29700035534d9"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__troe.html#add0bd4c886d3a64d48a29700035534d9">finalize</a> (this)</td></tr>
-<tr class="memdesc:add0bd4c886d3a64d48a29700035534d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
-<tr class="separator:add0bd4c886d3a64d48a29700035534d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af94c6c642fc4c9845245ada2d59f8a38" id="r_af94c6c642fc4c9845245ada2d59f8a38"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__troe.html#af94c6c642fc4c9845245ada2d59f8a38">finalize</a> (this)</td></tr>
+<tr class="memdesc:af94c6c642fc4c9845245ada2d59f8a38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
+<tr class="separator:af94c6c642fc4c9845245ada2d59f8a38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a099415123b17f3d869d6218b4711152e" id="r_a099415123b17f3d869d6218b4711152e"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__troe.html#a099415123b17f3d869d6218b4711152e">finalize_array</a> (this)</td></tr>
+<tr class="memdesc:a099415123b17f3d869d6218b4711152e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize an array of reactions.  <br /></td></tr>
+<tr class="separator:a099415123b17f3d869d6218b4711152e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="structcamp__rxn__troe_1_1rxn__troe__t.html" title="Generic test reaction data type.">rxn_troe_t</a> type and associated functions. </p>
@@ -106,8 +109,8 @@ Functions/Subroutines</h2></td></tr>
 
 </div>
 </div>
-<a id="add0bd4c886d3a64d48a29700035534d9" name="add0bd4c886d3a64d48a29700035534d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add0bd4c886d3a64d48a29700035534d9">&#9670;&#160;</a></span>finalize()</h2>
+<a id="af94c6c642fc4c9845245ada2d59f8a38" name="af94c6c642fc4c9845245ada2d59f8a38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af94c6c642fc4c9845245ada2d59f8a38">&#9670;&#160;</a></span>finalize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -116,7 +119,7 @@ Functions/Subroutines</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">elemental subroutine camp_rxn_troe::finalize </td>
+          <td class="memname">subroutine camp_rxn_troe::finalize </td>
           <td>(</td>
           <td class="paramtype">type(<a class="el" href="structcamp__rxn__troe_1_1rxn__troe__t.html">rxn_troe_t</a>), intent(inout)&#160;</td>
           <td class="paramname"><em>this</em></td><td>)</td>
@@ -139,6 +142,52 @@ Functions/Subroutines</h2></td></tr>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="rxn__troe_8_f90_source.html#l00303">303</a> of file <a class="el" href="rxn__troe_8_f90_source.html">rxn_troe.F90</a>.</p>
+
+</div>
+</div>
+<a id="a099415123b17f3d869d6218b4711152e" name="a099415123b17f3d869d6218b4711152e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a099415123b17f3d869d6218b4711152e">&#9670;&#160;</a></span>finalize_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine camp_rxn_troe::finalize_array </td>
+          <td>(</td>
+          <td class="paramtype">type(<a class="el" href="structcamp__rxn__troe_1_1rxn__troe__t.html">rxn_troe_t</a>), dimension(:), intent(inout)&#160;</td>
+          <td class="paramname"><em>this</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Finalize an array of reactions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Array of reaction data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__troe_8_f90_source.html#l00320">320</a> of file <a class="el" href="rxn__troe_8_f90_source.html">rxn_troe.F90</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e_cgraph.png" border="0" usemap="#anamespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e_cgraph" alt=""/></div>
+<map name="anamespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e_cgraph" id="anamespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e_cgraph">
+<area shape="rect" title="Finalize an array of reactions." alt="" coords="5,5,157,46"/>
+<area shape="rect" href="namespacecamp__camp__state.html#a5522f7056d1ff8bb1626e36c97dfff5a" title="Finalize the state." alt="" coords="205,13,378,39"/>
+<area shape="poly" title=" " alt="" coords="157,23,189,23,189,28,157,28"/>
+</map>
+</div>
 
 </div>
 </div>

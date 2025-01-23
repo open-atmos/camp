@@ -39,8 +39,10 @@ subroutine \mbox{\hyperlink{namespacecamp__rxn__data_a0a8239fb07b298cde1d02b6397
 \begin{DoxyCompactList}\small\item\em Print the reaction data. \end{DoxyCompactList}\item 
 elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__data_a005184b2ff08ed9baac23a226b86ccdc}{dereference}} (this)
 \begin{DoxyCompactList}\small\item\em Dereference a pointer to a reaction. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__data_a0f5a80be4fae50c8db2972b54bdcc7e8}{ptr\+\_\+finalize}} (this)
+subroutine \mbox{\hyperlink{namespacecamp__rxn__data_a3d6cb59ec3063a40bd2e98e6c698688f}{ptr\+\_\+finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize a pointer to a reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__data_a0eb3c8b8215a825a9581d08b326ad03f}{ptr\+\_\+finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of pointers to reactions. \end{DoxyCompactList}\item 
 integer(kind=c\+\_\+int) function \mbox{\hyperlink{namespacecamp__rxn__data_ab3b029cdec60826e4b69637d6dcb6c9a}{rxn\+\_\+update\+\_\+data\+\_\+get\+\_\+type}} (this)
 \begin{DoxyCompactList}\small\item\em Get the update data reaction type. \end{DoxyCompactList}\item 
 integer(kind=c\+\_\+int) function \mbox{\hyperlink{namespacecamp__rxn__data_a17fa733e5945a0b34b9dc2519fa820f3}{rxn\+\_\+update\+\_\+data\+\_\+get\+\_\+cell\+\_\+id}} (this)
@@ -216,7 +218,7 @@ Print the update data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00680}{680}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00696}{696}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__data_af37ec267973ffc6b553ecbbe37b62c98}\label{namespacecamp__rxn__data_af37ec267973ffc6b553ecbbe37b62c98} 
 \index{camp\_rxn\_data@{camp\_rxn\_data}!load@{load}}
@@ -278,11 +280,11 @@ Here is the caller graph for this function\+:
 \includegraphics[width=350pt]{namespacecamp__rxn__data_a03c2677e2905ea3b28ba1c1b77d79f90_icgraph}
 \end{center}
 \end{figure}
-\Hypertarget{namespacecamp__rxn__data_a0f5a80be4fae50c8db2972b54bdcc7e8}\label{namespacecamp__rxn__data_a0f5a80be4fae50c8db2972b54bdcc7e8} 
+\Hypertarget{namespacecamp__rxn__data_a3d6cb59ec3063a40bd2e98e6c698688f}\label{namespacecamp__rxn__data_a3d6cb59ec3063a40bd2e98e6c698688f} 
 \index{camp\_rxn\_data@{camp\_rxn\_data}!ptr\_finalize@{ptr\_finalize}}
 \index{ptr\_finalize@{ptr\_finalize}!camp\_rxn\_data@{camp\_rxn\_data}}
 \doxysubsubsection{\texorpdfstring{ptr\_finalize()}{ptr\_finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+data\+::ptr\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__ptr}{rxn\+\_\+data\+\_\+ptr}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+data\+::ptr\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__ptr}{rxn\+\_\+data\+\_\+ptr}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -297,6 +299,33 @@ Finalize a pointer to a reaction.
 
 Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00524}{524}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
 
+\Hypertarget{namespacecamp__rxn__data_a0eb3c8b8215a825a9581d08b326ad03f}\label{namespacecamp__rxn__data_a0eb3c8b8215a825a9581d08b326ad03f} 
+\index{camp\_rxn\_data@{camp\_rxn\_data}!ptr\_finalize\_array@{ptr\_finalize\_array}}
+\index{ptr\_finalize\_array@{ptr\_finalize\_array}!camp\_rxn\_data@{camp\_rxn\_data}}
+\doxysubsubsection{\texorpdfstring{ptr\_finalize\_array()}{ptr\_finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+data\+::ptr\+\_\+finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__ptr}{rxn\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of pointers to reactions. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Pointer to a reaction \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00536}{536}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=321pt]{namespacecamp__rxn__data_a0eb3c8b8215a825a9581d08b326ad03f_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{namespacecamp__rxn__data_a648bdedc76d56881987517445567d7dd}\label{namespacecamp__rxn__data_a648bdedc76d56881987517445567d7dd} 
 \index{camp\_rxn\_data@{camp\_rxn\_data}!rxn\_update\_data\_bin\_pack@{rxn\_update\_data\_bin\_pack}}
 \index{rxn\_update\_data\_bin\_pack@{rxn\_update\_data\_bin\_pack}!camp\_rxn\_data@{camp\_rxn\_data}}
@@ -320,7 +349,7 @@ Pack the given value to the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00609}{609}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00625}{625}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -353,7 +382,7 @@ Unpack the given value from the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00644}{644}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00660}{660}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -383,7 +412,7 @@ Grid cell id
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00550}{550}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00566}{566}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__data_ad6e931331583cff5d45bd95aa33b808e}\label{namespacecamp__rxn__data_ad6e931331583cff5d45bd95aa33b808e} 
 \index{camp\_rxn\_data@{camp\_rxn\_data}!rxn\_update\_data\_get\_data@{rxn\_update\_data\_get\_data}}
@@ -405,7 +434,7 @@ Update data ptr
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00564}{564}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00580}{580}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__data_ab3b029cdec60826e4b69637d6dcb6c9a}\label{namespacecamp__rxn__data_ab3b029cdec60826e4b69637d6dcb6c9a} 
 \index{camp\_rxn\_data@{camp\_rxn\_data}!rxn\_update\_data\_get\_type@{rxn\_update\_data\_get\_type}}
@@ -427,7 +456,7 @@ Reaction type
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00536}{536}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00552}{552}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__data_ae08ddb27fa7f7d4a0910a990719f70f7}\label{namespacecamp__rxn__data_ae08ddb27fa7f7d4a0910a990719f70f7} 
 \index{camp\_rxn\_data@{camp\_rxn\_data}!rxn\_update\_data\_pack\_size@{rxn\_update\_data\_pack\_size}}
@@ -448,7 +477,7 @@ Determine the size of a binary required to pack the reaction data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00578}{578}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00594}{594}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak

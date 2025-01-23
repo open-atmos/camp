@@ -72,9 +72,12 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:aea3274c0e9f67632a485c3571c3aa02b" id="r_aea3274c0e9f67632a485c3571c3aa02b"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__wennberg__tunneling.html#aea3274c0e9f67632a485c3571c3aa02b">initialize</a> (this, chem_spec_data, aero_rep, n_cells)</td></tr>
 <tr class="memdesc:aea3274c0e9f67632a485c3571c3aa02b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving.  <br /></td></tr>
 <tr class="separator:aea3274c0e9f67632a485c3571c3aa02b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ace54cc1f1ba5ed71aa4f6360c1b42f" id="r_a9ace54cc1f1ba5ed71aa4f6360c1b42f"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__wennberg__tunneling.html#a9ace54cc1f1ba5ed71aa4f6360c1b42f">finalize</a> (this)</td></tr>
-<tr class="memdesc:a9ace54cc1f1ba5ed71aa4f6360c1b42f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
-<tr class="separator:a9ace54cc1f1ba5ed71aa4f6360c1b42f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5a28b51c2daafa8b79c3bc4ba3297c4" id="r_ad5a28b51c2daafa8b79c3bc4ba3297c4"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__wennberg__tunneling.html#ad5a28b51c2daafa8b79c3bc4ba3297c4">finalize</a> (this)</td></tr>
+<tr class="memdesc:ad5a28b51c2daafa8b79c3bc4ba3297c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
+<tr class="separator:ad5a28b51c2daafa8b79c3bc4ba3297c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3274b6fad784be09ef5fb037fa9fe7c6" id="r_a3274b6fad784be09ef5fb037fa9fe7c6"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__wennberg__tunneling.html#a3274b6fad784be09ef5fb037fa9fe7c6">finalize_array</a> (this)</td></tr>
+<tr class="memdesc:a3274b6fad784be09ef5fb037fa9fe7c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize an array of reactions.  <br /></td></tr>
+<tr class="separator:a3274b6fad784be09ef5fb037fa9fe7c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="structcamp__rxn__wennberg__tunneling_1_1rxn__wennberg__tunneling__t.html" title="Generic test reaction data type.">rxn_wennberg_tunneling_t</a> type and associated functions. </p>
@@ -106,8 +109,8 @@ Functions/Subroutines</h2></td></tr>
 
 </div>
 </div>
-<a id="a9ace54cc1f1ba5ed71aa4f6360c1b42f" name="a9ace54cc1f1ba5ed71aa4f6360c1b42f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ace54cc1f1ba5ed71aa4f6360c1b42f">&#9670;&#160;</a></span>finalize()</h2>
+<a id="ad5a28b51c2daafa8b79c3bc4ba3297c4" name="ad5a28b51c2daafa8b79c3bc4ba3297c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5a28b51c2daafa8b79c3bc4ba3297c4">&#9670;&#160;</a></span>finalize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -116,7 +119,7 @@ Functions/Subroutines</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">elemental subroutine camp_rxn_wennberg_tunneling::finalize </td>
+          <td class="memname">subroutine camp_rxn_wennberg_tunneling::finalize </td>
           <td>(</td>
           <td class="paramtype">type(<a class="el" href="structcamp__rxn__wennberg__tunneling_1_1rxn__wennberg__tunneling__t.html">rxn_wennberg_tunneling_t</a>), intent(inout)&#160;</td>
           <td class="paramname"><em>this</em></td><td>)</td>
@@ -139,6 +142,52 @@ Functions/Subroutines</h2></td></tr>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="rxn__wennberg__tunneling_8_f90_source.html#l00260">260</a> of file <a class="el" href="rxn__wennberg__tunneling_8_f90_source.html">rxn_wennberg_tunneling.F90</a>.</p>
+
+</div>
+</div>
+<a id="a3274b6fad784be09ef5fb037fa9fe7c6" name="a3274b6fad784be09ef5fb037fa9fe7c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3274b6fad784be09ef5fb037fa9fe7c6">&#9670;&#160;</a></span>finalize_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine camp_rxn_wennberg_tunneling::finalize_array </td>
+          <td>(</td>
+          <td class="paramtype">type(<a class="el" href="structcamp__rxn__wennberg__tunneling_1_1rxn__wennberg__tunneling__t.html">rxn_wennberg_tunneling_t</a>), dimension(:), intent(inout)&#160;</td>
+          <td class="paramname"><em>this</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Finalize an array of reactions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Array of reaction data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__wennberg__tunneling_8_f90_source.html#l00277">277</a> of file <a class="el" href="rxn__wennberg__tunneling_8_f90_source.html">rxn_wennberg_tunneling.F90</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacecamp__rxn__wennberg__tunneling_a3274b6fad784be09ef5fb037fa9fe7c6_cgraph.png" border="0" usemap="#anamespacecamp__rxn__wennberg__tunneling_a3274b6fad784be09ef5fb037fa9fe7c6_cgraph" alt=""/></div>
+<map name="anamespacecamp__rxn__wennberg__tunneling_a3274b6fad784be09ef5fb037fa9fe7c6_cgraph" id="anamespacecamp__rxn__wennberg__tunneling_a3274b6fad784be09ef5fb037fa9fe7c6_cgraph">
+<area shape="rect" title="Finalize an array of reactions." alt="" coords="5,5,205,46"/>
+<area shape="rect" href="namespacecamp__camp__state.html#a5522f7056d1ff8bb1626e36c97dfff5a" title="Finalize the state." alt="" coords="253,13,426,39"/>
+<area shape="poly" title=" " alt="" coords="205,23,237,23,237,28,205,28"/>
+</map>
+</div>
 
 </div>
 </div>

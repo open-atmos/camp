@@ -1,5 +1,8 @@
 <map id="camp_rxn_data::rxn_data_ptr::ptr_finalize" name="camp_rxn_data::rxn_data_ptr::ptr_finalize">
 <area shape="rect" id="Node000001" title="Finalize the pointer." alt="" coords="5,5,148,46"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__aero__rep__data.html#ab3b32282b8f6c9afc8734361f7b47d97" title="Finalize a pointer to an aerosol representation." alt="" coords="196,5,338,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,23,180,23,180,28,148,28"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__aero__rep__data.html#a3b58ee6e8a00a3bd8f58ca27bae2e0d1" title="Finalize a pointer to an aerosol representation." alt="" coords="386,5,528,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,20,196,19,338,19,370,20,370,25,338,24,196,24,148,26"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__aero__rep__data.html#ae31c9acd8899c57d845c227f4a11b98e" title="Finalize an array of pointers to aerosol representations." alt="" coords="196,33,338,74"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="149,34,181,38,180,44,148,39"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="338,41,370,36,371,41,339,46"/>
 </map>

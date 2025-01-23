@@ -101,6 +101,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a61550fea263cc9bfd90c76a360de73e5" id="r_a61550fea263cc9bfd90c76a360de73e5"><td class="memItemLeft" align="right" valign="top">final&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t.html#a61550fea263cc9bfd90c76a360de73e5">finalize</a> (this)</td></tr>
 <tr class="memdesc:a61550fea263cc9bfd90c76a360de73e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
 <tr class="separator:a61550fea263cc9bfd90c76a360de73e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a082ce0de3d641239670908862044432a" id="r_a082ce0de3d641239670908862044432a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t.html#a082ce0de3d641239670908862044432a">finalize_array</a> (this)</td></tr>
+<tr class="memdesc:a082ce0de3d641239670908862044432a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize an array of reactions.  <br /></td></tr>
+<tr class="separator:a082ce0de3d641239670908862044432a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_structcamp__rxn__data_1_1rxn__data__t"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structcamp__rxn__data_1_1rxn__data__t')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structcamp__rxn__data_1_1rxn__data__t.html">camp_rxn_data::rxn_data_t</a></td></tr>
 <tr class="memitem:a5f2f5f59b695ecf52a110454cc185fb4 inherit pub_methods_structcamp__rxn__data_1_1rxn__data__t" id="r_a5f2f5f59b695ecf52a110454cc185fb4"><td class="memItemLeft" align="right" valign="top">procedure(<a class="el" href="interfacecamp__aero__rep__data_1_1initialize.html">initialize</a>), deferred&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcamp__rxn__data_1_1rxn__data__t.html#a5f2f5f59b695ecf52a110454cc185fb4">initialize</a> <a class="el" href="interfacecamp__aero__rep__data_1_1initialize.html">initialize</a></td></tr>
 <tr class="memdesc:a5f2f5f59b695ecf52a110454cc185fb4 inherit pub_methods_structcamp__rxn__data_1_1rxn__data__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reaction initialization. Takes species, phase and reaction parameters and packs required information into the condensed data arrays for use during the model run.  <br /></td></tr>
@@ -187,15 +190,47 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t_a61550fea263cc9bfd90c76a360de73e5_cgraph.png" border="0" usemap="#astructcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t_a61550fea263cc9bfd90c76a360de73e5_cgraph" alt=""/></div>
 <map name="astructcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t_a61550fea263cc9bfd90c76a360de73e5_cgraph" id="astructcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t_a61550fea263cc9bfd90c76a360de73e5_cgraph">
-<area shape="rect" title="Finalize the reaction." alt="" coords="5,5,177,61"/>
-<area shape="rect" href="namespacecamp__camp__state.html#a5522f7056d1ff8bb1626e36c97dfff5a" title="Finalize the state." alt="" coords="225,20,398,46"/>
-<area shape="poly" title=" " alt="" coords="177,31,209,31,209,36,177,36"/>
+<area shape="rect" title="Finalize the reaction." alt="" coords="5,20,177,75"/>
+<area shape="rect" href="namespacecamp__camp__state.html#a5522f7056d1ff8bb1626e36c97dfff5a" title="Finalize the state." alt="" coords="225,5,398,31"/>
+<area shape="poly" title=" " alt="" coords="177,33,209,29,209,34,177,39"/>
+<area shape="rect" href="namespacecamp__chem__spec__data.html#a161ca7ad4370d191a2b1bf70ec810fcc" title="Finalize the chemical species data." alt="" coords="232,55,391,96"/>
+<area shape="poly" title=" " alt="" coords="177,56,216,61,216,66,177,61"/>
+<area shape="rect" href="namespacecamp__chem__spec__data.html#a254fa8186f63759084357c65d51e9f7f" title="Finalize the chemical species data." alt="" coords="446,55,605,96"/>
+<area shape="poly" title=" " alt="" coords="391,73,430,73,430,78,391,78"/>
 </map>
 </div>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function/Subroutine Documentation</h2>
+<a id="a082ce0de3d641239670908862044432a" name="a082ce0de3d641239670908862044432a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a082ce0de3d641239670908862044432a">&#9670;&#160;</a></span>finalize_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">camp_rxn_wet_deposition::rxn_wet_deposition_t::finalize_array </td>
+          <td>(</td>
+          <td class="paramtype">type(<a class="el" href="structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t.html">rxn_wet_deposition_t</a>), dimension(:), intent(inout)&#160;</td>
+          <td class="paramname"><em>this</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Finalize an array of reactions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Array of reaction data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__wet__deposition_8_f90_source.html#l00092">92</a> of file <a class="el" href="rxn__wet__deposition_8_f90_source.html">rxn_wet_deposition.F90</a>.</p>
+
+</div>
+</div>
 <a id="a7fb15c2a258db67fede314623d946eb0" name="a7fb15c2a258db67fede314623d946eb0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7fb15c2a258db67fede314623d946eb0">&#9670;&#160;</a></span>get_property_set()</h2>
 

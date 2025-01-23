@@ -11,7 +11,9 @@ Pointer type for building arrays of mixed reactions.
 procedure \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__ptr_a22c072d77e014c6a912c829dc959bd9f}{dereference}} (this)
 \begin{DoxyCompactList}\small\item\em Dereference the pointer. \end{DoxyCompactList}\item 
 final \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__ptr_aeb4835f0e8b0380fb8a6fc2884bf36d5}{ptr\+\_\+finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize the pointer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Finalize the pointer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__ptr_ae973295db056744e6ec38692fafadf4f}{ptr\+\_\+finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of pointers to reactions. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -51,7 +53,7 @@ Here is the call graph for this function\+:
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=330pt]{structcamp__rxn__data_1_1rxn__data__ptr_aeb4835f0e8b0380fb8a6fc2884bf36d5_cgraph}
+\includegraphics[width=350pt]{structcamp__rxn__data_1_1rxn__data__ptr_aeb4835f0e8b0380fb8a6fc2884bf36d5_cgraph}
 \end{center}
 \end{figure}
 
@@ -75,6 +77,25 @@ Dereference the pointer.
 
 
 Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00153}{153}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__rxn__data_1_1rxn__data__ptr_ae973295db056744e6ec38692fafadf4f}\label{structcamp__rxn__data_1_1rxn__data__ptr_ae973295db056744e6ec38692fafadf4f} 
+\index{camp\_rxn\_data::rxn\_data\_ptr@{camp\_rxn\_data::rxn\_data\_ptr}!ptr\_finalize\_array@{ptr\_finalize\_array}}
+\index{ptr\_finalize\_array@{ptr\_finalize\_array}!camp\_rxn\_data::rxn\_data\_ptr@{camp\_rxn\_data::rxn\_data\_ptr}}
+\doxysubsubsection{\texorpdfstring{ptr\_finalize\_array()}{ptr\_finalize\_array()}}
+{\footnotesize\ttfamily camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+ptr\+::ptr\+\_\+finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__ptr}{rxn\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})}
+
+
+
+Finalize an array of pointers to reactions. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Pointer to a reaction \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00155}{155}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
 
 
 

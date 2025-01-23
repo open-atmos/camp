@@ -145,7 +145,7 @@
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00141}00141\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ initialization}}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00142}\mbox{\hyperlink{structcamp__rxn__hl__phase__transfer_1_1rxn__hl__phase__transfer__t_af8828a43193ece18abb9ad3c0247a381}{00142}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00143}00143\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00144}\mbox{\hyperlink{structcamp__rxn__hl__phase__transfer_1_1rxn__hl__phase__transfer__t_a1c3a780bf66d3460b1f3bc79bd4fabee}{00144}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00144}\mbox{\hyperlink{structcamp__rxn__hl__phase__transfer_1_1rxn__hl__phase__transfer__t_a1c3a780bf66d3460b1f3bc79bd4fabee}{00144}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}},\ \mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00145}00145\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__rxn__hl__phase__transfer_1_1rxn__hl__phase__transfer__t}{rxn\_hl\_phase\_transfer\_t}}}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00146}00146\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00147}00147\ \textcolor{comment}{\ \ !>\ Constructor\ for\ rxn\_HL\_phase\_transfer\_t}}
@@ -421,7 +421,7 @@
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00417}00417\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00418}00418\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00419}00419\ \textcolor{comment}{\ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00420}\mbox{\hyperlink{namespacecamp__rxn__hl__phase__transfer_a0822eb86ef5ec6953b9bea6d972e0b74}{00420}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00420}\mbox{\hyperlink{namespacecamp__rxn__hl__phase__transfer_a4d75890d66324cef7cc7396ab558402e}{00420}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this)}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00421}00421\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00422}00422\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00423}00423\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__hl__phase__transfer_1_1rxn__hl__phase__transfer__t}{rxn\_hl\_phase\_transfer\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
@@ -433,10 +433,26 @@
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00429}00429\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_int))\ \&}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00430}00430\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_int)}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00431}00431\ }
-\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00432}00432\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00432}00432\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}}
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00433}00433\ }
 \DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00434}00434\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00435}00435\ }
-\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00436}00436\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__hl__phase__transfer}{camp\_rxn\_hl\_phase\_transfer}}}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00435}00435\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00436}00436\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ reactions}}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00437}\mbox{\hyperlink{namespacecamp__rxn__hl__phase__transfer_a38288ca26b8a28eb47195fb5160cc0c0}{00437}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00438}00438\ \ \ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00439}00439\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00440}00440\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__hl__phase__transfer_1_1rxn__hl__phase__transfer__t}{rxn\_hl\_phase\_transfer\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00441}00441\ }
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00442}00442\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00443}00443\ }
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00444}00444\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00445}00445\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this(i))}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00446}00446\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00447}00447\ }
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00448}00448\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00449}00449\ }
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00450}00450\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00451}00451\ }
+\DoxyCodeLine{\Hypertarget{rxn___h_l__phase__transfer_8_f90_source_l00452}00452\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__hl__phase__transfer}{camp\_rxn\_hl\_phase\_transfer}}}
 
 \end{DoxyCode}

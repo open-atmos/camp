@@ -27,8 +27,10 @@ subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_acb523afa7b98b8afa1b7a0
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
 type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__emission_ab7c8ff1ba07514c99fdc4a0a6be11988}{get\+\_\+property\+\_\+set}} (this)
 \begin{DoxyCompactList}\small\item\em Get the reaction properties. (For use by external modules.) \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_a3af938b929508032fba32597c3269eee}{finalize}} (this)
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_a870578355f3dad062f36754670e6506e}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_af300f8ec9e50816bf04c96840c70c21d}{finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of reactions. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_a281be8ca77bf3c15b3674cdf7946378d}{update\+\_\+data\+\_\+rate\+\_\+set}} (this, base\+\_\+rate)
 \begin{DoxyCompactList}\small\item\em Set packed update data for emission rate constants. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_af9ce1d3bfd29e3ee49aaf22279e9f4c7}{update\+\_\+data\+\_\+initialize}} (this, update\+\_\+data, rxn\+\_\+type)
@@ -39,8 +41,10 @@ subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_ad82a22ae9ba6a379ee4269
 \begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_abd42fbac768937f899625ab96d36251b}{internal\+\_\+bin\+\_\+unpack}} (this, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_ad2ebaade1033d55208ee52421f7eb9ea}{update\+\_\+data\+\_\+finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize an update data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_a2f92386406c810085eb868883ae1f8be}{update\+\_\+data\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an update data object. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_a47dba1b73a1a2bfc05f828592971b6d4}{update\+\_\+data\+\_\+finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of update data objects. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -64,11 +68,11 @@ A new reaction instance
 
 Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00151}{151}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
 
-\Hypertarget{namespacecamp__rxn__emission_a3af938b929508032fba32597c3269eee}\label{namespacecamp__rxn__emission_a3af938b929508032fba32597c3269eee} 
+\Hypertarget{namespacecamp__rxn__emission_a870578355f3dad062f36754670e6506e}\label{namespacecamp__rxn__emission_a870578355f3dad062f36754670e6506e} 
 \index{camp\_rxn\_emission@{camp\_rxn\_emission}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_emission@{camp\_rxn\_emission}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+emission\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\+\_\+emission\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+emission\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\+\_\+emission\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -83,6 +87,33 @@ Finalize the reaction.
 
 Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00236}{236}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
 
+\Hypertarget{namespacecamp__rxn__emission_af300f8ec9e50816bf04c96840c70c21d}\label{namespacecamp__rxn__emission_af300f8ec9e50816bf04c96840c70c21d} 
+\index{camp\_rxn\_emission@{camp\_rxn\_emission}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_rxn\_emission@{camp\_rxn\_emission}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+emission\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\+\_\+emission\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of reactions. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of reactions \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00253}{253}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__rxn__emission_af300f8ec9e50816bf04c96840c70c21d_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{namespacecamp__rxn__emission_ab7c8ff1ba07514c99fdc4a0a6be11988}\label{namespacecamp__rxn__emission_ab7c8ff1ba07514c99fdc4a0a6be11988} 
 \index{camp\_rxn\_emission@{camp\_rxn\_emission}!get\_property\_set@{get\_property\_set}}
 \index{get\_property\_set@{get\_property\_set}!camp\_rxn\_emission@{camp\_rxn\_emission}}
@@ -161,7 +192,7 @@ Pack the given value to the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00311}{311}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00327}{327}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -194,7 +225,7 @@ Unpack the given value from the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00337}{337}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00353}{353}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -223,7 +254,7 @@ Determine the size of a binary required to pack the reaction data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00294}{294}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00310}{310}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -233,11 +264,11 @@ Here is the call graph for this function\+:
 \includegraphics[width=350pt]{namespacecamp__rxn__emission_a39eb8f193083fa40ef8d84643aa04ac2_cgraph}
 \end{center}
 \end{figure}
-\Hypertarget{namespacecamp__rxn__emission_ad2ebaade1033d55208ee52421f7eb9ea}\label{namespacecamp__rxn__emission_ad2ebaade1033d55208ee52421f7eb9ea} 
+\Hypertarget{namespacecamp__rxn__emission_a2f92386406c810085eb868883ae1f8be}\label{namespacecamp__rxn__emission_a2f92386406c810085eb868883ae1f8be} 
 \index{camp\_rxn\_emission@{camp\_rxn\_emission}!update\_data\_finalize@{update\_data\_finalize}}
 \index{update\_data\_finalize@{update\_data\_finalize}!camp\_rxn\_emission@{camp\_rxn\_emission}}
 \doxysubsubsection{\texorpdfstring{update\_data\_finalize()}{update\_data\_finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+emission\+::update\+\_\+data\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+emission\+::update\+\_\+data\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -250,14 +281,49 @@ Finalize an update data object.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00364}{364}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00380}{380}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacecamp__rxn__emission_ad2ebaade1033d55208ee52421f7eb9ea_icgraph}
+\includegraphics[width=350pt]{namespacecamp__rxn__emission_a2f92386406c810085eb868883ae1f8be_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__rxn__emission_a47dba1b73a1a2bfc05f828592971b6d4}\label{namespacecamp__rxn__emission_a47dba1b73a1a2bfc05f828592971b6d4} 
+\index{camp\_rxn\_emission@{camp\_rxn\_emission}!update\_data\_finalize\_array@{update\_data\_finalize\_array}}
+\index{update\_data\_finalize\_array@{update\_data\_finalize\_array}!camp\_rxn\_emission@{camp\_rxn\_emission}}
+\doxysubsubsection{\texorpdfstring{update\_data\_finalize\_array()}{update\_data\_finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+emission\+::update\+\_\+data\+\_\+finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of update data objects. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of update data objects to free \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00392}{392}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__rxn__emission_a47dba1b73a1a2bfc05f828592971b6d4_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__rxn__emission_a47dba1b73a1a2bfc05f828592971b6d4_icgraph}
 \end{center}
 \end{figure}
 \Hypertarget{namespacecamp__rxn__emission_af9ce1d3bfd29e3ee49aaf22279e9f4c7}\label{namespacecamp__rxn__emission_af9ce1d3bfd29e3ee49aaf22279e9f4c7} 
@@ -281,7 +347,7 @@ Initialize update data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00268}{268}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00284}{284}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -310,5 +376,5 @@ Set packed update data for emission rate constants.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00253}{253}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00269}{269}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
 

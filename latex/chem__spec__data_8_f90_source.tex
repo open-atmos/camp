@@ -117,7 +117,7 @@
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00113}00113\ \textcolor{comment}{\ \ \ \ !>\ Print\ out\ the\ species\ data}}
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00114}\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_a35c6d7fb21e3d4d46cf8db95886b297e}{00114}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ print\ =>\ \mbox{\hyperlink{namespacecamp__chem__spec__data_a60012faea63614e1ce223e11abf1673d}{do\_print}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00115}00115\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ chemical\ species\ data}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00116}\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_abf3743b860bd1602298c4540312320bd}{00116}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__chem__spec__data_ae9a38010284ffefe513884f38ed11374}{finalize}}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00116}\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t_abf3743b860bd1602298c4540312320bd}{00116}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__chem__spec__data_a254fa8186f63759084357c65d51e9f7f}{finalize}},\ \mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00117}00117\ }
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00118}00118\ \ \ \ \ \textcolor{comment}{!\ Private\ functions}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00119}00119\ \textcolor{comment}{\ \ \ \ !>\ Ensure\ there\ is\ enough\ room\ in\ the\ species\ dataset\ to\ add\ a}}
@@ -661,7 +661,7 @@
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00657}00657\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00658}00658\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00659}00659\ \textcolor{comment}{\ \ !>\ Finalize\ the\ chemical\ species\ data}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00660}\mbox{\hyperlink{namespacecamp__chem__spec__data_ae9a38010284ffefe513884f38ed11374}{00660}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_ae9a38010284ffefe513884f38ed11374}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00660}\mbox{\hyperlink{namespacecamp__chem__spec__data_a254fa8186f63759084357c65d51e9f7f}{00660}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a254fa8186f63759084357c65d51e9f7f}{finalize}}(this)}
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00661}00661\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00662}00662\ \textcolor{comment}{\ \ \ \ !>\ Species\ dataset}}
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00663}00663\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
@@ -671,131 +671,147 @@
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00667}00667\ \ \ \ \ \textcolor{keyword}{deallocate}(this\%spec\_phase)}
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00668}00668\ \ \ \ \ \textcolor{keyword}{deallocate}(this\%property\_set)}
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00669}00669\ }
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00670}00670\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_ae9a38010284ffefe513884f38ed11374}{finalize}}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00670}00670\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a254fa8186f63759084357c65d51e9f7f}{finalize}}}
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00671}00671\ }
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00672}00672\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00673}00673\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00674}00674\ \textcolor{comment}{\ \ !>\ Ensure\ there\ is\ enough\ room\ in\ the\ species\ dataset\ to\ add\ a\ specified}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00675}00675\ \textcolor{comment}{\ \ !!\ number\ of\ species}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00676}\mbox{\hyperlink{namespacecamp__chem__spec__data_a98c98bcbf67fda9cd6df1121793a3b76}{00676}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a98c98bcbf67fda9cd6df1121793a3b76}{ensure\_size}}(this,\ num\_spec)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00677}00677\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00678}00678\ \textcolor{comment}{\ \ \ \ !>\ Species\ dataset}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00679}00679\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00680}00680\ \textcolor{comment}{\ \ \ \ !>\ Number\ of\ new\ species\ to\ ensure\ space\ for}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00681}00681\ \ \ \ \ \textcolor{keywordtype}{integer(i\_kind)},\ \textcolor{keywordtype}{intent(in)}\ ::\ num\_spec}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00682}00682\ }
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00683}00683\ \ \ \ \ \textcolor{keywordtype}{integer}\ ::\ new\_size}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00684}00684\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_name(:)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00685}00685\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{pointer}\ ::\ new\_type(:)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00686}00686\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{pointer}\ ::\ new\_phase(:)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00687}00687\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_property\_set(:)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00688}00688\ }
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00689}00689\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{size}(this\%spec\_name)\ .ge.\ this\%num\_spec\ +\ num\_spec)\ \textcolor{keywordflow}{return}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00690}00690\ \ \ \ \ new\_size\ =\ this\%num\_spec\ +\ num\_spec\ +\ \mbox{\hyperlink{namespacecamp__chem__spec__data_a0408e43f2fc8d66f236562a4f671c612}{realloc\_inc}}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00691}00691\ \ \ \ \ \textcolor{keyword}{allocate}(new\_name(new\_size))}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00692}00692\ \ \ \ \ \textcolor{keyword}{allocate}(new\_type(new\_size))}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00693}00693\ \ \ \ \ \textcolor{keyword}{allocate}(new\_phase(new\_size))}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00694}00694\ \ \ \ \ \textcolor{keyword}{allocate}(new\_property\_set(new\_size))}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00695}00695\ \ \ \ \ new\_name(1:this\%num\_spec)\ =\ this\%spec\_name(1:this\%num\_spec)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00696}00696\ \ \ \ \ new\_type(1:this\%num\_spec)\ =\ this\%spec\_type(1:this\%num\_spec)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00697}00697\ \ \ \ \ new\_phase(1:this\%num\_spec)\ =\ this\%spec\_phase(1:this\%num\_spec)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00698}00698\ \ \ \ \ \textcolor{keyword}{call\ }this\%property\_set(1:this\%num\_spec)\%move(new\_property\_set(\ \&}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00699}00699\ \ \ \ \ \ \ \ \ \ \ \ \ 1:this\%num\_spec))}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00700}00700\ \ \ \ \ \textcolor{keyword}{deallocate}(this\%spec\_name)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00701}00701\ \ \ \ \ \textcolor{keyword}{deallocate}(this\%spec\_type)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00702}00702\ \ \ \ \ \textcolor{keyword}{deallocate}(this\%spec\_phase)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00703}00703\ \ \ \ \ \textcolor{keyword}{deallocate}(this\%property\_set)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00704}00704\ \ \ \ \ this\%spec\_name\ =>\ new\_name}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00705}00705\ \ \ \ \ this\%spec\_type\ =>\ new\_type}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00706}00706\ \ \ \ \ this\%spec\_phase\ =>\ new\_phase}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00707}00707\ \ \ \ \ this\%property\_set\ =>\ new\_property\_set}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00708}00708\ }
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00709}00709\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a98c98bcbf67fda9cd6df1121793a3b76}{ensure\_size}}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00710}00710\ }
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00711}00711\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00712}00712\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00713}00713\ \textcolor{comment}{\ \ !>\ Add\ a\ new\ chemical\ species}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00714}\mbox{\hyperlink{namespacecamp__chem__spec__data_aefb1cfb55308ec574d90c4c6cca57d47}{00714}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_aefb1cfb55308ec574d90c4c6cca57d47}{add}}(this,\ spec\_name,\ spec\_type,\ spec\_phase,\ property\_set)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00715}00715\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00716}00716\ \textcolor{comment}{\ \ \ \ !>\ Species\ dataset}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00717}00717\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00718}00718\ \textcolor{comment}{\ \ \ \ !>\ Name\ of\ species\ to\ add}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00719}00719\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{intent(in)}\ ::\ spec\_name\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00720}00720\ \textcolor{comment}{\ \ \ \ !>\ State\ variable\ type}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00721}00721\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(inout)}\ ::\ spec\_type\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00722}00722\ \textcolor{comment}{\ \ \ \ !>\ Species\ phase}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00723}00723\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(inout)}\ ::\ spec\_phase\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00724}00724\ \textcolor{comment}{\ \ \ \ !>\ Property\ set\ for\ new\ species}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00725}00725\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{intent(inout)},\ \textcolor{keywordtype}{optional}\ ::\ property\_set}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00674}00674\ \textcolor{comment}{\ \ !>\ Finalize\ the\ chemical\ species\ data}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00675}\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{00675}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}(this\_array)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00676}00676\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00677}00677\ \textcolor{comment}{\ \ \ \ !>\ Species\ dataset}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00678}00678\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\_array(:)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00679}00679\ }
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00680}00680\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00681}00681\ }
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00682}00682\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(this\_array)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00683}00683\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a254fa8186f63759084357c65d51e9f7f}{finalize}}(this\_array(i))}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00684}00684\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00685}00685\ }
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00686}00686\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00687}00687\ }
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00688}00688\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00689}00689\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00690}00690\ \textcolor{comment}{\ \ !>\ Ensure\ there\ is\ enough\ room\ in\ the\ species\ dataset\ to\ add\ a\ specified}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00691}00691\ \textcolor{comment}{\ \ !!\ number\ of\ species}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00692}\mbox{\hyperlink{namespacecamp__chem__spec__data_a98c98bcbf67fda9cd6df1121793a3b76}{00692}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a98c98bcbf67fda9cd6df1121793a3b76}{ensure\_size}}(this,\ num\_spec)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00693}00693\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00694}00694\ \textcolor{comment}{\ \ \ \ !>\ Species\ dataset}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00695}00695\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00696}00696\ \textcolor{comment}{\ \ \ \ !>\ Number\ of\ new\ species\ to\ ensure\ space\ for}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00697}00697\ \ \ \ \ \textcolor{keywordtype}{integer(i\_kind)},\ \textcolor{keywordtype}{intent(in)}\ ::\ num\_spec}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00698}00698\ }
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00699}00699\ \ \ \ \ \textcolor{keywordtype}{integer}\ ::\ new\_size}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00700}00700\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_name(:)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00701}00701\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{pointer}\ ::\ new\_type(:)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00702}00702\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{pointer}\ ::\ new\_phase(:)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00703}00703\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_property\_set(:)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00704}00704\ }
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00705}00705\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{size}(this\%spec\_name)\ .ge.\ this\%num\_spec\ +\ num\_spec)\ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00706}00706\ \ \ \ \ new\_size\ =\ this\%num\_spec\ +\ num\_spec\ +\ \mbox{\hyperlink{namespacecamp__chem__spec__data_a0408e43f2fc8d66f236562a4f671c612}{realloc\_inc}}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00707}00707\ \ \ \ \ \textcolor{keyword}{allocate}(new\_name(new\_size))}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00708}00708\ \ \ \ \ \textcolor{keyword}{allocate}(new\_type(new\_size))}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00709}00709\ \ \ \ \ \textcolor{keyword}{allocate}(new\_phase(new\_size))}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00710}00710\ \ \ \ \ \textcolor{keyword}{allocate}(new\_property\_set(new\_size))}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00711}00711\ \ \ \ \ new\_name(1:this\%num\_spec)\ =\ this\%spec\_name(1:this\%num\_spec)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00712}00712\ \ \ \ \ new\_type(1:this\%num\_spec)\ =\ this\%spec\_type(1:this\%num\_spec)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00713}00713\ \ \ \ \ new\_phase(1:this\%num\_spec)\ =\ this\%spec\_phase(1:this\%num\_spec)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00714}00714\ \ \ \ \ \textcolor{keyword}{call\ }this\%property\_set(1:this\%num\_spec)\%move(new\_property\_set(\ \&}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00715}00715\ \ \ \ \ \ \ \ \ \ \ \ \ 1:this\%num\_spec))}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00716}00716\ \ \ \ \ \textcolor{keyword}{deallocate}(this\%spec\_name)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00717}00717\ \ \ \ \ \textcolor{keyword}{deallocate}(this\%spec\_type)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00718}00718\ \ \ \ \ \textcolor{keyword}{deallocate}(this\%spec\_phase)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00719}00719\ \ \ \ \ \textcolor{keyword}{deallocate}(this\%property\_set)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00720}00720\ \ \ \ \ this\%spec\_name\ =>\ new\_name}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00721}00721\ \ \ \ \ this\%spec\_type\ =>\ new\_type}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00722}00722\ \ \ \ \ this\%spec\_phase\ =>\ new\_phase}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00723}00723\ \ \ \ \ this\%property\_set\ =>\ new\_property\_set}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00724}00724\ }
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00725}00725\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a98c98bcbf67fda9cd6df1121793a3b76}{ensure\_size}}}
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00726}00726\ }
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00727}00727\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_spec}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00728}00728\ }
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00729}00729\ \ \ \ \ \textcolor{comment}{!\ if\ the\ species\ exists,\ append\ the\ new\ data}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00730}00730\ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%find(spec\_name,\ i\_spec))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00731}00731\ }
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00732}00732\ \ \ \ \ \ \ \textcolor{comment}{!\ Check\ for\ a\ type\ mismatch}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00733}00733\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_type.eq.\mbox{\hyperlink{namespacecamp__chem__spec__data_a5350b5ad9f915fd214b763302fecb769}{chem\_spec\_unknown\_type}})\ \&}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00734}00734\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ spec\_type\ =\ this\%spec\_type(i\_spec)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00735}00735\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(596247182,\ \&}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00736}00736\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%spec\_type(i\_spec).eq.\mbox{\hyperlink{namespacecamp__chem__spec__data_a5350b5ad9f915fd214b763302fecb769}{chem\_spec\_unknown\_type}}\ \&}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00737}00737\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .or.spec\_type.eq.this\%spec\_type(i\_spec),\ \&}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00738}00738\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Type\ mismatch\ for\ species\ "{}}//spec\_name)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00739}00739\ }
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00740}00740\ \ \ \ \ \ \ \textcolor{comment}{!\ Check\ for\ a\ phase\ mismatch}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00741}00741\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_phase.eq.\mbox{\hyperlink{namespacecamp__chem__spec__data_aaf58428c2da2c090d22ca7e524ddd99f}{chem\_spec\_unknown\_phase}})\ \&}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00742}00742\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ spec\_phase\ =\ this\%spec\_phase(i\_spec)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00743}00743\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(612991075,\ \&}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00744}00744\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%spec\_phase(i\_spec).eq.\mbox{\hyperlink{namespacecamp__chem__spec__data_aaf58428c2da2c090d22ca7e524ddd99f}{chem\_spec\_unknown\_phase}}\ \&}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00745}00745\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .or.spec\_phase.eq.this\%spec\_phase(i\_spec),\ \&}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00746}00746\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Phase\ mismatch\ for\ species\ "{}}//spec\_name)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00727}00727\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00728}00728\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00729}00729\ \textcolor{comment}{\ \ !>\ Add\ a\ new\ chemical\ species}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00730}\mbox{\hyperlink{namespacecamp__chem__spec__data_aefb1cfb55308ec574d90c4c6cca57d47}{00730}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_aefb1cfb55308ec574d90c4c6cca57d47}{add}}(this,\ spec\_name,\ spec\_type,\ spec\_phase,\ property\_set)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00731}00731\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00732}00732\ \textcolor{comment}{\ \ \ \ !>\ Species\ dataset}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00733}00733\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00734}00734\ \textcolor{comment}{\ \ \ \ !>\ Name\ of\ species\ to\ add}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00735}00735\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{intent(in)}\ ::\ spec\_name\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00736}00736\ \textcolor{comment}{\ \ \ \ !>\ State\ variable\ type}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00737}00737\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(inout)}\ ::\ spec\_type\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00738}00738\ \textcolor{comment}{\ \ \ \ !>\ Species\ phase}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00739}00739\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(inout)}\ ::\ spec\_phase\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00740}00740\ \textcolor{comment}{\ \ \ \ !>\ Property\ set\ for\ new\ species}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00741}00741\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{intent(inout)},\ \textcolor{keywordtype}{optional}\ ::\ property\_set}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00742}00742\ }
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00743}00743\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_spec}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00744}00744\ }
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00745}00745\ \ \ \ \ \textcolor{comment}{!\ if\ the\ species\ exists,\ append\ the\ new\ data}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00746}00746\ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%find(spec\_name,\ i\_spec))\ \textcolor{keywordflow}{then}}
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00747}00747\ }
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00748}00748\ \ \ \ \ \ \ \textcolor{comment}{!\ Update\ the\ species\ properties}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00749}00749\ \ \ \ \ \ \ this\%spec\_type(i\_spec)\ =\ spec\_type}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00750}00750\ \ \ \ \ \ \ this\%spec\_phase(i\_spec)\ =\ spec\_phase}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00751}00751\ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%property\_set(i\_spec)\%update(property\_set,\ spec\_name)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00752}00752\ }
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00753}00753\ \ \ \ \ \textcolor{comment}{!\ ...\ otherwise,\ create\ a\ new\ species}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00754}00754\ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00755}00755\ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%ensure\_size(1)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00756}00756\ \ \ \ \ \ \ this\%num\_spec\ =\ this\%num\_spec\ +\ 1}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00757}00757\ \ \ \ \ \ \ this\%spec\_name(this\%num\_spec)\%string\ =\ spec\_name}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00758}00758\ \ \ \ \ \ \ this\%spec\_type(this\%num\_spec)\ =\ spec\_type}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00759}00759\ \ \ \ \ \ \ this\%spec\_phase(this\%num\_spec)\ =\ spec\_phase}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00760}00760\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{present}(property\_set))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00761}00761\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }property\_set\%move(this\%property\_set(this\%num\_spec))}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00762}00762\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00763}00763\ \ \ \ \ \ \ \ \ this\%property\_set(this\%num\_spec)\ =\ \mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}()}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00764}00764\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00765}00765\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00766}00766\ }
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00767}00767\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_aefb1cfb55308ec574d90c4c6cca57d47}{add}}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00748}00748\ \ \ \ \ \ \ \textcolor{comment}{!\ Check\ for\ a\ type\ mismatch}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00749}00749\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_type.eq.\mbox{\hyperlink{namespacecamp__chem__spec__data_a5350b5ad9f915fd214b763302fecb769}{chem\_spec\_unknown\_type}})\ \&}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00750}00750\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ spec\_type\ =\ this\%spec\_type(i\_spec)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00751}00751\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(596247182,\ \&}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00752}00752\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%spec\_type(i\_spec).eq.\mbox{\hyperlink{namespacecamp__chem__spec__data_a5350b5ad9f915fd214b763302fecb769}{chem\_spec\_unknown\_type}}\ \&}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00753}00753\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .or.spec\_type.eq.this\%spec\_type(i\_spec),\ \&}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00754}00754\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Type\ mismatch\ for\ species\ "{}}//spec\_name)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00755}00755\ }
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00756}00756\ \ \ \ \ \ \ \textcolor{comment}{!\ Check\ for\ a\ phase\ mismatch}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00757}00757\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_phase.eq.\mbox{\hyperlink{namespacecamp__chem__spec__data_aaf58428c2da2c090d22ca7e524ddd99f}{chem\_spec\_unknown\_phase}})\ \&}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00758}00758\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ spec\_phase\ =\ this\%spec\_phase(i\_spec)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00759}00759\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(612991075,\ \&}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00760}00760\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%spec\_phase(i\_spec).eq.\mbox{\hyperlink{namespacecamp__chem__spec__data_aaf58428c2da2c090d22ca7e524ddd99f}{chem\_spec\_unknown\_phase}}\ \&}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00761}00761\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .or.spec\_phase.eq.this\%spec\_phase(i\_spec),\ \&}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00762}00762\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Phase\ mismatch\ for\ species\ "{}}//spec\_name)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00763}00763\ }
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00764}00764\ \ \ \ \ \ \ \textcolor{comment}{!\ Update\ the\ species\ properties}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00765}00765\ \ \ \ \ \ \ this\%spec\_type(i\_spec)\ =\ spec\_type}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00766}00766\ \ \ \ \ \ \ this\%spec\_phase(i\_spec)\ =\ spec\_phase}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00767}00767\ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%property\_set(i\_spec)\%update(property\_set,\ spec\_name)}
 \DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00768}00768\ }
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00769}00769\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00770}00770\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00771}00771\ \textcolor{comment}{\ \ !>\ Get\ the\ index\ of\ a\ chemical\ species\ by\ name.\ Returns\ true\ if\ the\ species}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00772}00772\ \textcolor{comment}{\ \ !!\ is\ found\ or\ false\ otherwise.}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00773}\mbox{\hyperlink{namespacecamp__chem__spec__data_a383879cb7b02498989ad7869e152a630}{00773}}\ \ \ \textcolor{keyword}{logical\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a383879cb7b02498989ad7869e152a630}{find}}(this,\ spec\_name,\ spec\_id)}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00774}00774\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00775}00775\ \textcolor{comment}{\ \ \ \ !>\ Species\ dataset}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00776}00776\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00777}00777\ \textcolor{comment}{\ \ \ \ !>\ Species\ name}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00778}00778\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{intent(in)}\ ::\ spec\_name\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00779}00779\ \textcolor{comment}{\ \ \ \ !>\ Species\ id}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00780}00780\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(out)}\ ::\ spec\_id}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00781}00781\ }
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00782}00782\ \ \ \ \ \mbox{\hyperlink{namespacecamp__chem__spec__data_a383879cb7b02498989ad7869e152a630}{find}}\ =\ .true.}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00783}00783\ \ \ \ \ \textcolor{keywordflow}{do}\ spec\_id\ =\ 1,\ this\%num\_spec}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00784}00784\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%spec\_name(spec\_id)\%string\ .eq.\ spec\_name)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00785}00785\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00786}00786\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00787}00787\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00788}00788\ \ \ \ \ \mbox{\hyperlink{namespacecamp__chem__spec__data_a383879cb7b02498989ad7869e152a630}{find}}\ =\ .false.}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00789}00789\ \ \ \ \ spec\_id\ =\ 0}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00790}00790\ }
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00791}00791\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a383879cb7b02498989ad7869e152a630}{find}}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00792}00792\ }
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00793}00793\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00794}00794\ }
-\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00795}00795\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__chem__spec__data}{camp\_chem\_spec\_data}}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00769}00769\ \ \ \ \ \textcolor{comment}{!\ ...\ otherwise,\ create\ a\ new\ species}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00770}00770\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00771}00771\ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%ensure\_size(1)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00772}00772\ \ \ \ \ \ \ this\%num\_spec\ =\ this\%num\_spec\ +\ 1}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00773}00773\ \ \ \ \ \ \ this\%spec\_name(this\%num\_spec)\%string\ =\ spec\_name}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00774}00774\ \ \ \ \ \ \ this\%spec\_type(this\%num\_spec)\ =\ spec\_type}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00775}00775\ \ \ \ \ \ \ this\%spec\_phase(this\%num\_spec)\ =\ spec\_phase}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00776}00776\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{present}(property\_set))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00777}00777\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }property\_set\%move(this\%property\_set(this\%num\_spec))}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00778}00778\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00779}00779\ \ \ \ \ \ \ \ \ this\%property\_set(this\%num\_spec)\ =\ \mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}()}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00780}00780\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00781}00781\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00782}00782\ }
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00783}00783\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_aefb1cfb55308ec574d90c4c6cca57d47}{add}}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00784}00784\ }
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00785}00785\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00786}00786\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00787}00787\ \textcolor{comment}{\ \ !>\ Get\ the\ index\ of\ a\ chemical\ species\ by\ name.\ Returns\ true\ if\ the\ species}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00788}00788\ \textcolor{comment}{\ \ !!\ is\ found\ or\ false\ otherwise.}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00789}\mbox{\hyperlink{namespacecamp__chem__spec__data_a383879cb7b02498989ad7869e152a630}{00789}}\ \ \ \textcolor{keyword}{logical\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a383879cb7b02498989ad7869e152a630}{find}}(this,\ spec\_name,\ spec\_id)}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00790}00790\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00791}00791\ \textcolor{comment}{\ \ \ \ !>\ Species\ dataset}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00792}00792\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00793}00793\ \textcolor{comment}{\ \ \ \ !>\ Species\ name}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00794}00794\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{intent(in)}\ ::\ spec\_name\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00795}00795\ \textcolor{comment}{\ \ \ \ !>\ Species\ id}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00796}00796\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(out)}\ ::\ spec\_id}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00797}00797\ }
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00798}00798\ \ \ \ \ \mbox{\hyperlink{namespacecamp__chem__spec__data_a383879cb7b02498989ad7869e152a630}{find}}\ =\ .true.}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00799}00799\ \ \ \ \ \textcolor{keywordflow}{do}\ spec\_id\ =\ 1,\ this\%num\_spec}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00800}00800\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%spec\_name(spec\_id)\%string\ .eq.\ spec\_name)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00801}00801\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00802}00802\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00803}00803\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00804}00804\ \ \ \ \ \mbox{\hyperlink{namespacecamp__chem__spec__data_a383879cb7b02498989ad7869e152a630}{find}}\ =\ .false.}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00805}00805\ \ \ \ \ spec\_id\ =\ 0}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00806}00806\ }
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00807}00807\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a383879cb7b02498989ad7869e152a630}{find}}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00808}00808\ }
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00809}00809\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00810}00810\ }
+\DoxyCodeLine{\Hypertarget{chem__spec__data_8_f90_source_l00811}00811\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__chem__spec__data}{camp\_chem\_spec\_data}}}
 
 \end{DoxyCode}

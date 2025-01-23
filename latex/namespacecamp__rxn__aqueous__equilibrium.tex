@@ -17,8 +17,10 @@ type(\mbox{\hyperlink{structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equ
 \begin{DoxyCompactList}\small\item\em Constructor for Aqueous equilibrium reaction. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__aqueous__equilibrium_a7f4a4888b6018b6965047ae4cf3d06d5}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__aqueous__equilibrium_af0ed2c4d54e7b74b8e85d3e9ef716ad6}{finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__rxn__aqueous__equilibrium_ae0bb8e97dd6f8547ea77e975cd7fd684}{finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__aqueous__equilibrium_ac24584b837abae6de0fd789cab0fea70}{finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of reactions. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -42,11 +44,11 @@ A new reaction instance
 
 Definition at line \mbox{\hyperlink{rxn__aqueous__equilibrium_8_f90_source_l00128}{128}} of file \mbox{\hyperlink{rxn__aqueous__equilibrium_8_f90_source}{rxn\+\_\+aqueous\+\_\+equilibrium.\+F90}}.
 
-\Hypertarget{namespacecamp__rxn__aqueous__equilibrium_af0ed2c4d54e7b74b8e85d3e9ef716ad6}\label{namespacecamp__rxn__aqueous__equilibrium_af0ed2c4d54e7b74b8e85d3e9ef716ad6} 
+\Hypertarget{namespacecamp__rxn__aqueous__equilibrium_ae0bb8e97dd6f8547ea77e975cd7fd684}\label{namespacecamp__rxn__aqueous__equilibrium_ae0bb8e97dd6f8547ea77e975cd7fd684} 
 \index{camp\_rxn\_aqueous\_equilibrium@{camp\_rxn\_aqueous\_equilibrium}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_aqueous\_equilibrium@{camp\_rxn\_aqueous\_equilibrium}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+aqueous\+\_\+equilibrium\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t}{rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+aqueous\+\_\+equilibrium\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t}{rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -61,6 +63,33 @@ Finalize the reaction.
 
 Definition at line \mbox{\hyperlink{rxn__aqueous__equilibrium_8_f90_source_l00500}{500}} of file \mbox{\hyperlink{rxn__aqueous__equilibrium_8_f90_source}{rxn\+\_\+aqueous\+\_\+equilibrium.\+F90}}.
 
+\Hypertarget{namespacecamp__rxn__aqueous__equilibrium_ac24584b837abae6de0fd789cab0fea70}\label{namespacecamp__rxn__aqueous__equilibrium_ac24584b837abae6de0fd789cab0fea70} 
+\index{camp\_rxn\_aqueous\_equilibrium@{camp\_rxn\_aqueous\_equilibrium}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_rxn\_aqueous\_equilibrium@{camp\_rxn\_aqueous\_equilibrium}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+aqueous\+\_\+equilibrium\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t}{rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of reactions. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of reaction data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__aqueous__equilibrium_8_f90_source_l00517}{517}} of file \mbox{\hyperlink{rxn__aqueous__equilibrium_8_f90_source}{rxn\+\_\+aqueous\+\_\+equilibrium.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__rxn__aqueous__equilibrium_ac24584b837abae6de0fd789cab0fea70_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{namespacecamp__rxn__aqueous__equilibrium_a7f4a4888b6018b6965047ae4cf3d06d5}\label{namespacecamp__rxn__aqueous__equilibrium_a7f4a4888b6018b6965047ae4cf3d06d5} 
 \index{camp\_rxn\_aqueous\_equilibrium@{camp\_rxn\_aqueous\_equilibrium}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_aqueous\_equilibrium@{camp\_rxn\_aqueous\_equilibrium}}

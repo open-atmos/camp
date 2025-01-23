@@ -1,5 +1,8 @@
 <map id="camp_camp_core::camp_core_t::finalize" name="camp_camp_core::camp_core_t::finalize">
 <area shape="rect" id="Node000001" title="Finalize the core." alt="" coords="5,5,168,46"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__aero__phase__data.html#a18e6adfc1bb22f7514247a1920d86090" title="Finalize the aerosol phase data." alt="" coords="216,5,375,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,23,200,23,200,28,168,28"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__aero__phase__data.html#a8eebec681f9d24bd7741bb357f7c4e43" title="Finalize the aerosol phase data." alt="" coords="423,5,582,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,20,216,19,375,19,407,20,407,25,375,24,216,24,168,25"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__aero__phase__data.html#a0e828293ef8b5cc169dfe653abed14e8" title="Finalize the aerosol phase data." alt="" coords="216,33,375,74"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,34,201,38,200,44,168,39"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="375,40,407,36,408,41,376,46"/>
 </map>

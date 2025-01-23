@@ -1,0 +1,8 @@
+<map id="camp_rxn_first_order_loss::update_data_finalize" name="camp_rxn_first_order_loss::update_data_finalize">
+<area shape="rect" id="Node000001" title="Finalize an update data object." alt="" coords="484,20,659,61"/>
+<area shape="rect" id="Node000002" href="$structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t.html#a56db544c865c73ad6d882cbacea9d537" title="Finalize the rate update data." alt="" coords="5,5,178,76"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="468,40,436,39,226,39,178,40,178,35,226,34,436,34,468,35"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__rxn__first__order__loss.html#a2986b760f5d2cf4b2dda855f5e568afa" title="Finalize an array of update data objects." alt="" coords="226,48,436,89"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="469,55,437,59,436,54,468,50"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="210,57,178,53,179,48,210,52"/>
+</map>

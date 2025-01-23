@@ -116,7 +116,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00112}00112\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ initialization}}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00113}\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t_a7c15d066fab9bf59d4d4a75c45efee99}{00113}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00114}00114\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00115}\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t_a30cd5c7b21dfb36e108bb2dc1865187d}{00115}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00115}\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t_a30cd5c7b21dfb36e108bb2dc1865187d}{00115}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}},\ \mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00116}00116\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00117}00117\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00118}00118\ \textcolor{comment}{\ \ !>\ Constructor\ for\ rxn\_wennberg\_no\_ro2\_t}}
@@ -318,7 +318,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00314}00314\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00315}00315\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00316}00316\ \textcolor{comment}{\ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00317}\mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_a8709a897f55c2dcc437c60f053f40bad}{00317}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00317}\mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_acdc032de368e4ad73c38499a4ececf11}{00317}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00318}00318\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00319}00319\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00320}00320\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
@@ -333,7 +333,23 @@
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00329}00329\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00330}00330\ }
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00331}00331\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00332}00332\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00333}00333\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2}{camp\_rxn\_wennberg\_no\_ro2}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00332}00332\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00333}00333\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ reactions}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00334}\mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_aafd3ac1652f344d30aad709503996788}{00334}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00335}00335\ \ \ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00336}00336\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00337}00337\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00338}00338\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00339}00339\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_rxn}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00340}00340\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00341}00341\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_rxn\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00342}00342\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this(i\_rxn))}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00343}00343\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00344}00344\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00345}00345\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00346}00346\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00347}00347\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00348}00348\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00349}00349\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2}{camp\_rxn\_wennberg\_no\_ro2}}}
 
 \end{DoxyCode}

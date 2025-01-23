@@ -1,5 +1,9 @@
 <map id="camp_rxn_photolysis::rxn_photolysis_t::finalize" name="camp_rxn_photolysis::rxn_photolysis_t::finalize">
-<area shape="rect" id="Node000001" title="Finalize the reaction." alt="" coords="5,5,148,61"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__camp__state.html#a5522f7056d1ff8bb1626e36c97dfff5a" title="Finalize the state." alt="" coords="196,20,369,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,31,180,31,180,36,148,36"/>
+<area shape="rect" id="Node000001" title="Finalize the reaction." alt="" coords="5,20,148,75"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__camp__state.html#a5522f7056d1ff8bb1626e36c97dfff5a" title="Finalize the state." alt="" coords="196,5,369,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,35,180,30,180,35,149,40"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__chem__spec__data.html#a161ca7ad4370d191a2b1bf70ec810fcc" title="Finalize the chemical species data." alt="" coords="203,55,362,96"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="149,55,187,60,187,65,148,60"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__chem__spec__data.html#a254fa8186f63759084357c65d51e9f7f" title="Finalize the chemical species data." alt="" coords="417,55,576,96"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="362,73,401,73,401,78,362,78"/>
 </map>

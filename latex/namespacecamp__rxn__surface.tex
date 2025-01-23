@@ -17,8 +17,10 @@ type(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\+\_\+surf
 \begin{DoxyCompactList}\small\item\em Constructor for surface reaction. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__surface_a25af23484c87395619d93dd31b5ed529}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__surface_ab3b5e4fadaa198cb962a28e3c0b2eace}{finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__rxn__surface_af914fa36a3f787c0008f1332953f8197}{finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__surface_a1df33979a57a7faa6ea4d2fb4f39e4ea}{finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of reactions. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -42,11 +44,11 @@ A new reaction instance
 
 Definition at line \mbox{\hyperlink{rxn__surface_8_f90_source_l00129}{129}} of file \mbox{\hyperlink{rxn__surface_8_f90_source}{rxn\+\_\+surface.\+F90}}.
 
-\Hypertarget{namespacecamp__rxn__surface_ab3b5e4fadaa198cb962a28e3c0b2eace}\label{namespacecamp__rxn__surface_ab3b5e4fadaa198cb962a28e3c0b2eace} 
+\Hypertarget{namespacecamp__rxn__surface_af914fa36a3f787c0008f1332953f8197}\label{namespacecamp__rxn__surface_af914fa36a3f787c0008f1332953f8197} 
 \index{camp\_rxn\_surface@{camp\_rxn\_surface}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_surface@{camp\_rxn\_surface}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+surface\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\+\_\+surface\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+surface\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\+\_\+surface\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -61,6 +63,33 @@ Finalize the reaction.
 
 Definition at line \mbox{\hyperlink{rxn__surface_8_f90_source_l00281}{281}} of file \mbox{\hyperlink{rxn__surface_8_f90_source}{rxn\+\_\+surface.\+F90}}.
 
+\Hypertarget{namespacecamp__rxn__surface_a1df33979a57a7faa6ea4d2fb4f39e4ea}\label{namespacecamp__rxn__surface_a1df33979a57a7faa6ea4d2fb4f39e4ea} 
+\index{camp\_rxn\_surface@{camp\_rxn\_surface}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_rxn\_surface@{camp\_rxn\_surface}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+surface\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\+\_\+surface\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of reactions. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of reaction data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__surface_8_f90_source_l00298}{298}} of file \mbox{\hyperlink{rxn__surface_8_f90_source}{rxn\+\_\+surface.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__rxn__surface_a1df33979a57a7faa6ea4d2fb4f39e4ea_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{namespacecamp__rxn__surface_a25af23484c87395619d93dd31b5ed529}\label{namespacecamp__rxn__surface_a25af23484c87395619d93dd31b5ed529} 
 \index{camp\_rxn\_surface@{camp\_rxn\_surface}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_surface@{camp\_rxn\_surface}}

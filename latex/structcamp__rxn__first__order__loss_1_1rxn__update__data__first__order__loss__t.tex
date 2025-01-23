@@ -37,7 +37,9 @@ procedure \mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__d
 procedure \mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_a9d6ac97d698f556606a0eeefd9bbdd23}{internal\+\_\+bin\+\_\+unpack}} (this, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Unpack the local update data from a binary. \end{DoxyCompactList}\item 
 final \mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_a56db544c865c73ad6d882cbacea9d537}{update\+\_\+data\+\_\+finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize the rate update data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Finalize the rate update data. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_acbec3274698a3ff6a94ffbd5f3c9383e}{update\+\_\+data\+\_\+finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of update data objects. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__update__data__t}{camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+update\+\_\+data\+\_\+t}}}
 \begin{DoxyCompactItemize}
 \item 
@@ -213,6 +215,25 @@ Update the rate data.
 
 
 Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00106}{106}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
+
+\Hypertarget{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_acbec3274698a3ff6a94ffbd5f3c9383e}\label{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t_acbec3274698a3ff6a94ffbd5f3c9383e} 
+\index{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t@{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t}!update\_data\_finalize\_array@{update\_data\_finalize\_array}}
+\index{update\_data\_finalize\_array@{update\_data\_finalize\_array}!camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t@{camp\_rxn\_first\_order\_loss::rxn\_update\_data\_first\_order\_loss\_t}}
+\doxysubsubsection{\texorpdfstring{update\_data\_finalize\_array()}{update\_data\_finalize\_array()}}
+{\footnotesize\ttfamily camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::rxn\+\_\+update\+\_\+data\+\_\+first\+\_\+order\+\_\+loss\+\_\+t\+::update\+\_\+data\+\_\+finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t}{rxn\+\_\+update\+\_\+data\+\_\+first\+\_\+order\+\_\+loss\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})}
+
+
+
+Finalize an array of update data objects. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of update data objects to free \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00114}{114}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
 
 
 

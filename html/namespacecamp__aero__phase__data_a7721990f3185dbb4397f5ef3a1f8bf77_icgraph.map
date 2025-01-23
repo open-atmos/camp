@@ -1,0 +1,7 @@
+<map id="camp_aero_phase_data::ptr_finalize_array" name="camp_aero_phase_data::ptr_finalize_array">
+<area shape="rect" id="Node000001" title="Finalize an array of pointers to aerosol phase data." alt="" coords="213,53,372,94"/>
+<area shape="rect" id="Node000002" href="$structcamp__aero__phase__data_1_1aero__phase__data__ptr.html#a58d887c775d832ce54e668098bb16fd6" title="Finalize the pointer." alt="" coords="5,5,165,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,58,164,51,166,46,198,52"/>
+<area shape="rect" id="Node000003" href="$structcamp__aero__rep__data_1_1aero__rep__data__ptr.html#a75136b9dc65b5141e5bf673d3348d75a" title="Finalize the pointer." alt="" coords="14,85,156,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="198,94,157,102,156,97,197,89"/>
+</map>

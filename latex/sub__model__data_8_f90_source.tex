@@ -109,7 +109,7 @@
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00105}00105\ \textcolor{comment}{\ \ \ \ !>\ Dereference\ the\ pointer}}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00106}\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__ptr_a9440eb389c6c75be886a1b7170933282}{00106}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__sub__model__data_aa2de42fe7daec012e98ecb5136d97dee}{dereference}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00107}00107\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ pointer}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00108}\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__ptr_a294dc6a2922028d4cf3703f6ebe8e749}{00108}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__sub__model__data_a11c56d9079ebcb5ea484d6029c493dfe}{ptr\_finalize}}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00108}\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__ptr_a294dc6a2922028d4cf3703f6ebe8e749}{00108}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__sub__model__data_a948456dc58fca2c06d03d956c984614f}{ptr\_finalize}},\ \mbox{\hyperlink{namespacecamp__sub__model__data_a995cd06122a36a168d92cfb757eb18f9}{ptr\_finalize\_array}}}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00109}00109\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__ptr}{sub\_model\_data\_ptr}}}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00110}00110\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00111}00111\ \textcolor{comment}{\ \ !>\ Update\ cookie}}
@@ -455,185 +455,201 @@
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00451}00451\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00452}00452\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00453}00453\ \textcolor{comment}{\ \ !>\ Finalize\ a\ pointer\ to\ a\ sub-\/model}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00454}\mbox{\hyperlink{namespacecamp__sub__model__data_a11c56d9079ebcb5ea484d6029c493dfe}{00454}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a11c56d9079ebcb5ea484d6029c493dfe}{ptr\_finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00454}\mbox{\hyperlink{namespacecamp__sub__model__data_a948456dc58fca2c06d03d956c984614f}{00454}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a948456dc58fca2c06d03d956c984614f}{ptr\_finalize}}(this)}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00455}00455\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00456}00456\ \textcolor{comment}{\ \ \ \ !>\ Pointer\ to\ a\ sub-\/model}}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00457}00457\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__ptr}{sub\_model\_data\_ptr}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00458}00458\ }
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00459}00459\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{associated}(this\%val))\ \textcolor{keyword}{deallocate}(this\%val)}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00460}00460\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00461}00461\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a11c56d9079ebcb5ea484d6029c493dfe}{ptr\_finalize}}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00461}00461\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a948456dc58fca2c06d03d956c984614f}{ptr\_finalize}}}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00462}00462\ }
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00463}00463\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00464}00464\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00465}00465\ \textcolor{comment}{\ \ !>\ Get\ the\ update\ data\ sub-\/model\ type}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00466}\mbox{\hyperlink{namespacecamp__sub__model__data_a007af08b73416405d00a2cc869c825b1}{00466}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a007af08b73416405d00a2cc869c825b1}{sub\_model\_update\_data\_get\_type}}(this)\ \textcolor{keyword}{result}(sub\_model\_type)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00465}00465\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ pointers\ to\ sub-\/models}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00466}\mbox{\hyperlink{namespacecamp__sub__model__data_a995cd06122a36a168d92cfb757eb18f9}{00466}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a995cd06122a36a168d92cfb757eb18f9}{ptr\_finalize\_array}}(this)}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00467}00467\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00468}00468\ \textcolor{comment}{\ \ \ \ !>\ Sub-\/model\ type}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00469}00469\ \ \ \ \ \textcolor{keywordtype}{integer(kind=c\_int)}\ ::\ sub\_model\_type\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00470}00470\ \textcolor{comment}{\ \ \ \ !>\ Update\ data}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00471}00471\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\_model\_update\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00468}00468\ \textcolor{comment}{\ \ \ \ !>\ Pointer\ to\ a\ sub-\/model}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00469}00469\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__ptr}{sub\_model\_data\_ptr}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00470}00470\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00471}00471\ \ \ \ \ \textcolor{keywordtype}{integer}\ ::\ i}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00472}00472\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00473}00473\ \ \ \ \ sub\_model\_type\ =\ this\%sub\_model\_type}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00474}00474\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00475}00475\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a007af08b73416405d00a2cc869c825b1}{sub\_model\_update\_data\_get\_type}}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00473}00473\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00474}00474\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a948456dc58fca2c06d03d956c984614f}{ptr\_finalize}}(this(i))}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00475}00475\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00476}00476\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00477}00477\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00478}00478\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00479}00479\ \textcolor{comment}{\ \ !>\ Get\ the\ grid\ cell\ id\ to\ update}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00480}\mbox{\hyperlink{namespacecamp__sub__model__data_a49861f20508a55155fa8b43d968bbbd2}{00480}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a49861f20508a55155fa8b43d968bbbd2}{sub\_model\_update\_data\_get\_cell\_id}}(this)\ \textcolor{keyword}{result}(cell\_id)}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00481}00481\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00482}00482\ \textcolor{comment}{\ \ \ \ !>\ Grid\ cell\ id}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00483}00483\ \ \ \ \ \textcolor{keywordtype}{integer(kind=c\_int)}\ ::\ cell\_id\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00484}00484\ \textcolor{comment}{\ \ \ \ !>\ Update\ data}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00485}00485\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\_model\_update\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00486}00486\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00487}00487\ \ \ \ \ cell\_id\ =\ this\%cell\_id}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00477}00477\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a995cd06122a36a168d92cfb757eb18f9}{ptr\_finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00478}00478\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00479}00479\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00480}00480\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00481}00481\ \textcolor{comment}{\ \ !>\ Get\ the\ update\ data\ sub-\/model\ type}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00482}\mbox{\hyperlink{namespacecamp__sub__model__data_a007af08b73416405d00a2cc869c825b1}{00482}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a007af08b73416405d00a2cc869c825b1}{sub\_model\_update\_data\_get\_type}}(this)\ \textcolor{keyword}{result}(sub\_model\_type)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00483}00483\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00484}00484\ \textcolor{comment}{\ \ \ \ !>\ Sub-\/model\ type}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00485}00485\ \ \ \ \ \textcolor{keywordtype}{integer(kind=c\_int)}\ ::\ sub\_model\_type\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00486}00486\ \textcolor{comment}{\ \ \ \ !>\ Update\ data}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00487}00487\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\_model\_update\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00488}00488\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00489}00489\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a49861f20508a55155fa8b43d968bbbd2}{sub\_model\_update\_data\_get\_cell\_id}}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00489}00489\ \ \ \ \ sub\_model\_type\ =\ this\%sub\_model\_type}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00490}00490\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00491}00491\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00492}00492\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00493}00493\ \textcolor{comment}{\ \ !>\ Get\ the\ update\ data}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00494}\mbox{\hyperlink{namespacecamp__sub__model__data_ac839fcea5243af8bcec3c530d0a51e3b}{00494}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_ac839fcea5243af8bcec3c530d0a51e3b}{sub\_model\_update\_data\_get\_data}}(this)\ \textcolor{keyword}{result}(update\_data)}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00495}00495\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00496}00496\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ ptr}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00497}00497\ \ \ \ \ \textcolor{keywordtype}{type}(c\_ptr)\ ::\ update\_data\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00498}00498\ \textcolor{comment}{\ \ \ \ !>\ Update\ data}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00499}00499\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\_model\_update\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00500}00500\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00501}00501\ \ \ \ \ update\_data\ =\ this\%update\_data}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00491}00491\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a007af08b73416405d00a2cc869c825b1}{sub\_model\_update\_data\_get\_type}}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00492}00492\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00493}00493\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00494}00494\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00495}00495\ \textcolor{comment}{\ \ !>\ Get\ the\ grid\ cell\ id\ to\ update}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00496}\mbox{\hyperlink{namespacecamp__sub__model__data_a49861f20508a55155fa8b43d968bbbd2}{00496}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a49861f20508a55155fa8b43d968bbbd2}{sub\_model\_update\_data\_get\_cell\_id}}(this)\ \textcolor{keyword}{result}(cell\_id)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00497}00497\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00498}00498\ \textcolor{comment}{\ \ \ \ !>\ Grid\ cell\ id}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00499}00499\ \ \ \ \ \textcolor{keywordtype}{integer(kind=c\_int)}\ ::\ cell\_id\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00500}00500\ \textcolor{comment}{\ \ \ \ !>\ Update\ data}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00501}00501\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\_model\_update\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00502}00502\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00503}00503\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_ac839fcea5243af8bcec3c530d0a51e3b}{sub\_model\_update\_data\_get\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00503}00503\ \ \ \ \ cell\_id\ =\ this\%cell\_id}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00504}00504\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00505}00505\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00506}00506\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00507}00507\ \textcolor{comment}{\ \ !>\ Determine\ the\ size\ of\ a\ binary\ required\ to\ pack\ the\ reaction\ data}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00508}\mbox{\hyperlink{namespacecamp__sub__model__data_a220d5f85a6afee00ee82db72f03e48a3}{00508}}\ \ \ \textcolor{keyword}{integer(kind=i\_kind)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a220d5f85a6afee00ee82db72f03e48a3}{sub\_model\_update\_data\_pack\_size}}(this,\ comm)\ \&}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00509}00509\ \ \ \ \ \ \ result(\mbox{\hyperlink{namespacecamp__sub__model__data_a428e7081801d630bdf8d9f544842a2a3}{pack\_size}})}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00510}00510\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00511}00511\ \textcolor{comment}{\ \ \ \ !>\ Sub\ model\ update\ data}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00512}00512\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\_model\_update\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00513}00513\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00514}00514\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)},\ \textcolor{keywordtype}{optional}\ ::\ comm}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00515}00515\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00516}00516\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00517}00517\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ l\_comm}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00505}00505\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a49861f20508a55155fa8b43d968bbbd2}{sub\_model\_update\_data\_get\_cell\_id}}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00506}00506\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00507}00507\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00508}00508\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00509}00509\ \textcolor{comment}{\ \ !>\ Get\ the\ update\ data}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00510}\mbox{\hyperlink{namespacecamp__sub__model__data_ac839fcea5243af8bcec3c530d0a51e3b}{00510}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_ac839fcea5243af8bcec3c530d0a51e3b}{sub\_model\_update\_data\_get\_data}}(this)\ \textcolor{keyword}{result}(update\_data)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00511}00511\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00512}00512\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ ptr}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00513}00513\ \ \ \ \ \textcolor{keywordtype}{type}(c\_ptr)\ ::\ update\_data\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00514}00514\ \textcolor{comment}{\ \ \ \ !>\ Update\ data}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00515}00515\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\_model\_update\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00516}00516\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00517}00517\ \ \ \ \ update\_data\ =\ this\%update\_data}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00518}00518\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00519}00519\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{present}(comm))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00520}00520\ \ \ \ \ \ \ l\_comm\ =\ comm}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00521}00521\ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00522}00522\ \ \ \ \ \ \ l\_comm\ =\ mpi\_comm\_world}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00523}00523\ \textcolor{keywordflow}{\ \ \ \ endif}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00524}00524\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00525}00525\ \ \ \ \ \mbox{\hyperlink{namespacecamp__sub__model__data_a428e7081801d630bdf8d9f544842a2a3}{pack\_size}}\ =\ \&}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00526}00526\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(int(this\%sub\_model\_type,\ kind=i\_kind),\ \ \ \ \ \ \ \&}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00527}00527\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ l\_comm)\ +\ \&}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00528}00528\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(int(this\%sub\_model\_solver\_id,\ kind=i\_kind),\ \ \&}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00529}00529\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ l\_comm)\ +\ \&}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00530}00530\ \ \ \ \ \ \ this\%internal\_pack\_size(l\_comm)}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00531}00531\ \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00532}00532\ \textcolor{preprocessor}{}\ \ \ \ \mbox{\hyperlink{namespacecamp__sub__model__data_a428e7081801d630bdf8d9f544842a2a3}{pack\_size}}\ =\ 0}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00533}00533\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00534}00534\ \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00535}00535\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a220d5f85a6afee00ee82db72f03e48a3}{sub\_model\_update\_data\_pack\_size}}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00536}00536\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00537}00537\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00538}00538\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00539}00539\ \textcolor{comment}{\ \ !>\ Pack\ the\ given\ value\ to\ the\ buffer,\ advancing\ position}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00540}\mbox{\hyperlink{namespacecamp__sub__model__data_a8061031b7e87fa51b122a316784e044d}{00540}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a8061031b7e87fa51b122a316784e044d}{sub\_model\_update\_data\_bin\_pack}}(this,\ buffer,\ pos,\ comm)}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00541}00541\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00542}00542\ \textcolor{comment}{\ \ \ \ !>\ Sub\ model\ update\ data}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00543}00543\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\_model\_update\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00544}00544\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00545}00545\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00546}00546\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00547}00547\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00548}00548\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00549}00549\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)},\ \textcolor{keywordtype}{optional}\ ::\ comm}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00550}00550\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00551}00551\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00552}00552\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position,\ l\_comm}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00553}00553\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00554}00554\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{present}(comm))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00555}00555\ \ \ \ \ \ \ l\_comm\ =\ comm}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00556}00556\ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00557}00557\ \ \ \ \ \ \ l\_comm\ =\ mpi\_comm\_world}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00558}00558\ \textcolor{keywordflow}{\ \ \ \ endif}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00559}00559\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00560}00560\ \ \ \ \ prev\_position\ =\ pos}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00561}00561\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer,\ pos,\ \&}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00562}00562\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int(this\%sub\_model\_type,\ kind=i\_kind),\ l\_comm)}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00563}00563\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer,\ pos,\ \&}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00564}00564\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int(this\%sub\_model\_solver\_id,\ kind=i\_kind),\ \ \ \ \&}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00565}00565\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ l\_comm)}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00566}00566\ \ \ \ \ \textcolor{keyword}{call\ }this\%internal\_bin\_pack(buffer,\ pos,\ l\_comm)}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00567}00567\ \ \ \ \ \textcolor{keyword}{call\ }assert(979240230,\ \&}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00568}00568\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(l\_comm))}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00569}00569\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00570}00570\ \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00571}00571\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a8061031b7e87fa51b122a316784e044d}{sub\_model\_update\_data\_bin\_pack}}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00572}00572\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00573}00573\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00574}00574\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00575}00575\ \textcolor{comment}{\ \ !>\ Unpack\ the\ given\ value\ from\ the\ buffer,\ advancing\ position}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00576}\mbox{\hyperlink{namespacecamp__sub__model__data_a952ac7bee94e0a442cd9e0a711463930}{00576}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a952ac7bee94e0a442cd9e0a711463930}{sub\_model\_update\_data\_bin\_unpack}}(this,\ buffer,\ pos,\ comm)}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00577}00577\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00578}00578\ \textcolor{comment}{\ \ \ \ !>\ Sub\ model\ update\ data}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00579}00579\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\_model\_update\_data\_t}}),\ \textcolor{keywordtype}{intent(out)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00580}00580\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00581}00581\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00582}00582\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00583}00583\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00584}00584\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00585}00585\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)},\ \textcolor{keywordtype}{optional}\ ::\ comm}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00586}00586\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00587}00587\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00588}00588\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position,\ l\_comm}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00589}00589\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ temp\_int}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00590}00590\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00591}00591\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{present}(comm))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00592}00592\ \ \ \ \ \ \ l\_comm\ =\ comm}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00593}00593\ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00594}00594\ \ \ \ \ \ \ l\_comm\ =\ mpi\_comm\_world}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00595}00595\ \textcolor{keywordflow}{\ \ \ \ endif}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00596}00596\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00597}00597\ \ \ \ \ prev\_position\ =\ pos}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00598}00598\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer,\ pos,\ temp\_int,\ l\_comm)}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00599}00599\ \ \ \ \ this\%sub\_model\_type\ =\ int(temp\_int,\ kind=c\_int)}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00600}00600\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer,\ pos,\ temp\_int,\ l\_comm)}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00601}00601\ \ \ \ \ this\%sub\_model\_solver\_id\ =\ int(temp\_int,\ kind=c\_int)}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00602}00602\ \ \ \ \ \textcolor{keyword}{call\ }this\%internal\_bin\_unpack(buffer,\ pos,\ l\_comm)}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00603}00603\ \ \ \ \ \textcolor{keyword}{call\ }assert(191558576,\ \&}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00604}00604\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(l\_comm))}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00605}00605\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00606}00606\ \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00607}00607\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a952ac7bee94e0a442cd9e0a711463930}{sub\_model\_update\_data\_bin\_unpack}}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00608}00608\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00609}00609\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00610}00610\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00611}00611\ \textcolor{comment}{\ \ !>\ Print\ the\ update\ data}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00612}\mbox{\hyperlink{namespacecamp__sub__model__data_a9285678881854ff41f85f039827f9149}{00612}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a9285678881854ff41f85f039827f9149}{do\_sub\_model\_update\_data\_print}}(this,\ file\_unit)}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00613}00613\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00614}00614\ \textcolor{comment}{\ \ \ \ !>\ Sub\ model\ update\ data}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00615}00615\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\_model\_update\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00616}00616\ \textcolor{comment}{\ \ \ \ !>\ File\ unit\ for\ output}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00617}00617\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{optional}\ ::\ file\_unit}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00618}00618\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00619}00619\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ f\_unit}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00620}00620\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00621}00621\ \ \ \ \ f\_unit\ =\ 6}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00622}00622\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00623}00623\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{present}(file\_unit))\ f\_unit\ =\ file\_unit}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00519}00519\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_ac839fcea5243af8bcec3c530d0a51e3b}{sub\_model\_update\_data\_get\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00520}00520\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00521}00521\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00522}00522\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00523}00523\ \textcolor{comment}{\ \ !>\ Determine\ the\ size\ of\ a\ binary\ required\ to\ pack\ the\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00524}\mbox{\hyperlink{namespacecamp__sub__model__data_a220d5f85a6afee00ee82db72f03e48a3}{00524}}\ \ \ \textcolor{keyword}{integer(kind=i\_kind)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a220d5f85a6afee00ee82db72f03e48a3}{sub\_model\_update\_data\_pack\_size}}(this,\ comm)\ \&}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00525}00525\ \ \ \ \ \ \ result(\mbox{\hyperlink{namespacecamp__sub__model__data_a428e7081801d630bdf8d9f544842a2a3}{pack\_size}})}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00526}00526\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00527}00527\ \textcolor{comment}{\ \ \ \ !>\ Sub\ model\ update\ data}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00528}00528\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\_model\_update\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00529}00529\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00530}00530\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)},\ \textcolor{keywordtype}{optional}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00531}00531\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00532}00532\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00533}00533\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ l\_comm}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00534}00534\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00535}00535\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{present}(comm))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00536}00536\ \ \ \ \ \ \ l\_comm\ =\ comm}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00537}00537\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00538}00538\ \ \ \ \ \ \ l\_comm\ =\ mpi\_comm\_world}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00539}00539\ \textcolor{keywordflow}{\ \ \ \ endif}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00540}00540\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00541}00541\ \ \ \ \ \mbox{\hyperlink{namespacecamp__sub__model__data_a428e7081801d630bdf8d9f544842a2a3}{pack\_size}}\ =\ \&}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00542}00542\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(int(this\%sub\_model\_type,\ kind=i\_kind),\ \ \ \ \ \ \ \&}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00543}00543\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ l\_comm)\ +\ \&}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00544}00544\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(int(this\%sub\_model\_solver\_id,\ kind=i\_kind),\ \ \&}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00545}00545\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ l\_comm)\ +\ \&}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00546}00546\ \ \ \ \ \ \ this\%internal\_pack\_size(l\_comm)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00547}00547\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00548}00548\ \textcolor{preprocessor}{}\ \ \ \ \mbox{\hyperlink{namespacecamp__sub__model__data_a428e7081801d630bdf8d9f544842a2a3}{pack\_size}}\ =\ 0}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00549}00549\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00550}00550\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00551}00551\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a220d5f85a6afee00ee82db72f03e48a3}{sub\_model\_update\_data\_pack\_size}}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00552}00552\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00553}00553\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00554}00554\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00555}00555\ \textcolor{comment}{\ \ !>\ Pack\ the\ given\ value\ to\ the\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00556}\mbox{\hyperlink{namespacecamp__sub__model__data_a8061031b7e87fa51b122a316784e044d}{00556}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a8061031b7e87fa51b122a316784e044d}{sub\_model\_update\_data\_bin\_pack}}(this,\ buffer,\ pos,\ comm)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00557}00557\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00558}00558\ \textcolor{comment}{\ \ \ \ !>\ Sub\ model\ update\ data}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00559}00559\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\_model\_update\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00560}00560\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00561}00561\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00562}00562\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00563}00563\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00564}00564\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00565}00565\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)},\ \textcolor{keywordtype}{optional}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00566}00566\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00567}00567\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00568}00568\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position,\ l\_comm}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00569}00569\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00570}00570\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{present}(comm))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00571}00571\ \ \ \ \ \ \ l\_comm\ =\ comm}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00572}00572\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00573}00573\ \ \ \ \ \ \ l\_comm\ =\ mpi\_comm\_world}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00574}00574\ \textcolor{keywordflow}{\ \ \ \ endif}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00575}00575\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00576}00576\ \ \ \ \ prev\_position\ =\ pos}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00577}00577\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer,\ pos,\ \&}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00578}00578\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int(this\%sub\_model\_type,\ kind=i\_kind),\ l\_comm)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00579}00579\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer,\ pos,\ \&}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00580}00580\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ int(this\%sub\_model\_solver\_id,\ kind=i\_kind),\ \ \ \ \&}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00581}00581\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ l\_comm)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00582}00582\ \ \ \ \ \textcolor{keyword}{call\ }this\%internal\_bin\_pack(buffer,\ pos,\ l\_comm)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00583}00583\ \ \ \ \ \textcolor{keyword}{call\ }assert(979240230,\ \&}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00584}00584\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(l\_comm))}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00585}00585\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00586}00586\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00587}00587\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a8061031b7e87fa51b122a316784e044d}{sub\_model\_update\_data\_bin\_pack}}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00588}00588\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00589}00589\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00590}00590\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00591}00591\ \textcolor{comment}{\ \ !>\ Unpack\ the\ given\ value\ from\ the\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00592}\mbox{\hyperlink{namespacecamp__sub__model__data_a952ac7bee94e0a442cd9e0a711463930}{00592}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a952ac7bee94e0a442cd9e0a711463930}{sub\_model\_update\_data\_bin\_unpack}}(this,\ buffer,\ pos,\ comm)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00593}00593\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00594}00594\ \textcolor{comment}{\ \ \ \ !>\ Sub\ model\ update\ data}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00595}00595\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\_model\_update\_data\_t}}),\ \textcolor{keywordtype}{intent(out)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00596}00596\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00597}00597\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00598}00598\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00599}00599\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00600}00600\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00601}00601\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)},\ \textcolor{keywordtype}{optional}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00602}00602\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00603}00603\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00604}00604\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position,\ l\_comm}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00605}00605\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ temp\_int}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00606}00606\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00607}00607\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{present}(comm))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00608}00608\ \ \ \ \ \ \ l\_comm\ =\ comm}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00609}00609\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00610}00610\ \ \ \ \ \ \ l\_comm\ =\ mpi\_comm\_world}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00611}00611\ \textcolor{keywordflow}{\ \ \ \ endif}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00612}00612\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00613}00613\ \ \ \ \ prev\_position\ =\ pos}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00614}00614\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer,\ pos,\ temp\_int,\ l\_comm)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00615}00615\ \ \ \ \ this\%sub\_model\_type\ =\ int(temp\_int,\ kind=c\_int)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00616}00616\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer,\ pos,\ temp\_int,\ l\_comm)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00617}00617\ \ \ \ \ this\%sub\_model\_solver\_id\ =\ int(temp\_int,\ kind=c\_int)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00618}00618\ \ \ \ \ \textcolor{keyword}{call\ }this\%internal\_bin\_unpack(buffer,\ pos,\ l\_comm)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00619}00619\ \ \ \ \ \textcolor{keyword}{call\ }assert(191558576,\ \&}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00620}00620\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(l\_comm))}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00621}00621\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00622}00622\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00623}00623\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a952ac7bee94e0a442cd9e0a711463930}{sub\_model\_update\_data\_bin\_unpack}}}
 \DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00624}00624\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00625}00625\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}***\ Sub\ model\ update\ data\ ***"{}}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00626}00626\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}Sub\ model\ type"{}},\ this\%sub\_model\_type}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00627}00627\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}Sub\ model\ solver\ id"{}},\ this\%sub\_model\_solver\_id}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00628}00628\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00629}00629\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a9285678881854ff41f85f039827f9149}{do\_sub\_model\_update\_data\_print}}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00630}00630\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00631}00631\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00632}00632\ }
-\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00633}00633\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__sub__model__data}{camp\_sub\_model\_data}}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00625}00625\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00626}00626\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00627}00627\ \textcolor{comment}{\ \ !>\ Print\ the\ update\ data}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00628}\mbox{\hyperlink{namespacecamp__sub__model__data_a9285678881854ff41f85f039827f9149}{00628}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a9285678881854ff41f85f039827f9149}{do\_sub\_model\_update\_data\_print}}(this,\ file\_unit)}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00629}00629\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00630}00630\ \textcolor{comment}{\ \ \ \ !>\ Sub\ model\ update\ data}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00631}00631\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__update__data__t}{sub\_model\_update\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00632}00632\ \textcolor{comment}{\ \ \ \ !>\ File\ unit\ for\ output}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00633}00633\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{optional}\ ::\ file\_unit}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00634}00634\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00635}00635\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ f\_unit}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00636}00636\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00637}00637\ \ \ \ \ f\_unit\ =\ 6}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00638}00638\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00639}00639\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{present}(file\_unit))\ f\_unit\ =\ file\_unit}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00640}00640\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00641}00641\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}***\ Sub\ model\ update\ data\ ***"{}}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00642}00642\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}Sub\ model\ type"{}},\ this\%sub\_model\_type}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00643}00643\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}Sub\ model\ solver\ id"{}},\ this\%sub\_model\_solver\_id}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00644}00644\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00645}00645\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__sub__model__data_a9285678881854ff41f85f039827f9149}{do\_sub\_model\_update\_data\_print}}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00646}00646\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00647}00647\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00648}00648\ }
+\DoxyCodeLine{\Hypertarget{sub__model__data_8_f90_source_l00649}00649\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__sub__model__data}{camp\_sub\_model\_data}}}
 
 \end{DoxyCode}

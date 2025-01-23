@@ -72,9 +72,12 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:a7f4a4888b6018b6965047ae4cf3d06d5" id="r_a7f4a4888b6018b6965047ae4cf3d06d5"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__aqueous__equilibrium.html#a7f4a4888b6018b6965047ae4cf3d06d5">initialize</a> (this, chem_spec_data, aero_rep, n_cells)</td></tr>
 <tr class="memdesc:a7f4a4888b6018b6965047ae4cf3d06d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving.  <br /></td></tr>
 <tr class="separator:a7f4a4888b6018b6965047ae4cf3d06d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0ed2c4d54e7b74b8e85d3e9ef716ad6" id="r_af0ed2c4d54e7b74b8e85d3e9ef716ad6"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__aqueous__equilibrium.html#af0ed2c4d54e7b74b8e85d3e9ef716ad6">finalize</a> (this)</td></tr>
-<tr class="memdesc:af0ed2c4d54e7b74b8e85d3e9ef716ad6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
-<tr class="separator:af0ed2c4d54e7b74b8e85d3e9ef716ad6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0bb8e97dd6f8547ea77e975cd7fd684" id="r_ae0bb8e97dd6f8547ea77e975cd7fd684"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__aqueous__equilibrium.html#ae0bb8e97dd6f8547ea77e975cd7fd684">finalize</a> (this)</td></tr>
+<tr class="memdesc:ae0bb8e97dd6f8547ea77e975cd7fd684"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
+<tr class="separator:ae0bb8e97dd6f8547ea77e975cd7fd684"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac24584b837abae6de0fd789cab0fea70" id="r_ac24584b837abae6de0fd789cab0fea70"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__aqueous__equilibrium.html#ac24584b837abae6de0fd789cab0fea70">finalize_array</a> (this)</td></tr>
+<tr class="memdesc:ac24584b837abae6de0fd789cab0fea70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize an array of reactions.  <br /></td></tr>
+<tr class="separator:ac24584b837abae6de0fd789cab0fea70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t.html" title="Generic test reaction data type.">rxn_aqueous_equilibrium_t</a> type and associated functions. </p>
@@ -106,8 +109,8 @@ Functions/Subroutines</h2></td></tr>
 
 </div>
 </div>
-<a id="af0ed2c4d54e7b74b8e85d3e9ef716ad6" name="af0ed2c4d54e7b74b8e85d3e9ef716ad6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0ed2c4d54e7b74b8e85d3e9ef716ad6">&#9670;&#160;</a></span>finalize()</h2>
+<a id="ae0bb8e97dd6f8547ea77e975cd7fd684" name="ae0bb8e97dd6f8547ea77e975cd7fd684"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0bb8e97dd6f8547ea77e975cd7fd684">&#9670;&#160;</a></span>finalize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -116,7 +119,7 @@ Functions/Subroutines</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">elemental subroutine camp_rxn_aqueous_equilibrium::finalize </td>
+          <td class="memname">subroutine camp_rxn_aqueous_equilibrium::finalize </td>
           <td>(</td>
           <td class="paramtype">type(<a class="el" href="structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t.html">rxn_aqueous_equilibrium_t</a>), intent(inout)&#160;</td>
           <td class="paramname"><em>this</em></td><td>)</td>
@@ -139,6 +142,52 @@ Functions/Subroutines</h2></td></tr>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="rxn__aqueous__equilibrium_8_f90_source.html#l00500">500</a> of file <a class="el" href="rxn__aqueous__equilibrium_8_f90_source.html">rxn_aqueous_equilibrium.F90</a>.</p>
+
+</div>
+</div>
+<a id="ac24584b837abae6de0fd789cab0fea70" name="ac24584b837abae6de0fd789cab0fea70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac24584b837abae6de0fd789cab0fea70">&#9670;&#160;</a></span>finalize_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine camp_rxn_aqueous_equilibrium::finalize_array </td>
+          <td>(</td>
+          <td class="paramtype">type(<a class="el" href="structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t.html">rxn_aqueous_equilibrium_t</a>), dimension(:), intent(inout)&#160;</td>
+          <td class="paramname"><em>this</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Finalize an array of reactions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Array of reaction data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__aqueous__equilibrium_8_f90_source.html#l00517">517</a> of file <a class="el" href="rxn__aqueous__equilibrium_8_f90_source.html">rxn_aqueous_equilibrium.F90</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacecamp__rxn__aqueous__equilibrium_ac24584b837abae6de0fd789cab0fea70_cgraph.png" border="0" usemap="#anamespacecamp__rxn__aqueous__equilibrium_ac24584b837abae6de0fd789cab0fea70_cgraph" alt=""/></div>
+<map name="anamespacecamp__rxn__aqueous__equilibrium_ac24584b837abae6de0fd789cab0fea70_cgraph" id="anamespacecamp__rxn__aqueous__equilibrium_ac24584b837abae6de0fd789cab0fea70_cgraph">
+<area shape="rect" title="Finalize an array of reactions." alt="" coords="5,5,208,46"/>
+<area shape="rect" href="namespacecamp__aero__phase__data.html#a8eebec681f9d24bd7741bb357f7c4e43" title="Finalize the aerosol phase data." alt="" coords="256,5,415,46"/>
+<area shape="poly" title=" " alt="" coords="208,23,240,23,240,28,208,28"/>
+</map>
+</div>
 
 </div>
 </div>

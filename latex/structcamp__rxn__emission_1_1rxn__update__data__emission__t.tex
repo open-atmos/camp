@@ -37,7 +37,9 @@ procedure \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emiss
 procedure \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a108c99705e293f4e0b313cc7ef229c69}{internal\+\_\+bin\+\_\+unpack}} (this, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Unpack the local update data from a binary. \end{DoxyCompactList}\item 
 final \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a9d77cacfa96cde5c181a678a5bb5233d}{update\+\_\+data\+\_\+finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize the rate update data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Finalize the rate update data. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a38c79e97f73a5c68a5aee0fe58ab232f}{update\+\_\+data\+\_\+finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of update data objects. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__update__data__t}{camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+update\+\_\+data\+\_\+t}}}
 \begin{DoxyCompactItemize}
 \item 
@@ -213,6 +215,25 @@ Update the rate data.
 
 
 Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00103}{103}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
+
+\Hypertarget{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a38c79e97f73a5c68a5aee0fe58ab232f}\label{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a38c79e97f73a5c68a5aee0fe58ab232f} 
+\index{camp\_rxn\_emission::rxn\_update\_data\_emission\_t@{camp\_rxn\_emission::rxn\_update\_data\_emission\_t}!update\_data\_finalize\_array@{update\_data\_finalize\_array}}
+\index{update\_data\_finalize\_array@{update\_data\_finalize\_array}!camp\_rxn\_emission::rxn\_update\_data\_emission\_t@{camp\_rxn\_emission::rxn\_update\_data\_emission\_t}}
+\doxysubsubsection{\texorpdfstring{update\_data\_finalize\_array()}{update\_data\_finalize\_array()}}
+{\footnotesize\ttfamily camp\+\_\+rxn\+\_\+emission\+::rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t\+::update\+\_\+data\+\_\+finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\+\_\+update\+\_\+data\+\_\+emission\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})}
+
+
+
+Finalize an array of update data objects. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of update data objects to free \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__emission_8_f90_source_l00111}{111}} of file \mbox{\hyperlink{rxn__emission_8_f90_source}{rxn\+\_\+emission.\+F90}}.
 
 
 

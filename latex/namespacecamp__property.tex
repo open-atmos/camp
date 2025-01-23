@@ -47,8 +47,10 @@ subroutine \mbox{\hyperlink{namespacecamp__property_a2d5d5418bfdd1394948f0c9853f
 \begin{DoxyCompactList}\small\item\em Update this \doxylink{structcamp__property_1_1property__t}{property\+\_\+t} instance with data from another instance. \end{DoxyCompactList}\item 
 recursive subroutine \mbox{\hyperlink{namespacecamp__property_a1d1ce2cf998f2e6d318ef5877c4ab283}{do\+\_\+print}} (this, file\+\_\+unit)
 \begin{DoxyCompactList}\small\item\em Print the contents of a property set. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__property_ab123d6312af66960021d4da84dcc7b9f}{finalize}} (this)
+subroutine \mbox{\hyperlink{namespacecamp__property_a839d4093245e3dcda76885f1fc8b2569}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize a \doxylink{structcamp__property_1_1property__t}{property\+\_\+t} variable. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__property_ada8134a218154da30a9c321fb0090a7f}{finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize a \doxylink{structcamp__property_1_1property__t}{property\+\_\+t} array. \end{DoxyCompactList}\item 
 type(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\+\_\+link\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__property_a6980a9f16e3c1a9c83783070b34d4f55}{get}} (this, \mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}})
 \begin{DoxyCompactList}\small\item\em Find a key-\/value pair by key name. Returns a null pointer if the key name is not found. \end{DoxyCompactList}\item 
 type(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\+\_\+link\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__property_a2bac0cf3f0c88a40cdf50132e00dd30c}{link\+\_\+constructor}} (\mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}}, val)
@@ -69,8 +71,10 @@ type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}) fu
 \begin{DoxyCompactList}\small\item\em Get the \doxylink{structcamp__property_1_1property__t}{property\+\_\+t} value of a property. \end{DoxyCompactList}\item 
 recursive subroutine \mbox{\hyperlink{namespacecamp__property_a31bb4ad71e6fac0fdd3dd3e4d6255cb3}{link\+\_\+do\+\_\+print}} (this, suffix, file\+\_\+unit)
 \begin{DoxyCompactList}\small\item\em Print the contents of a property key-\/value pair. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__property_a8fc09d2181501c08c436eb0995c641cd}{link\+\_\+finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize the \doxylink{structcamp__property_1_1property__link__t}{property\+\_\+link\+\_\+t} variable. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__property_a9c5d4346fc9bf106dc49372f407d44ea}{link\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the \doxylink{structcamp__property_1_1property__link__t}{property\+\_\+link\+\_\+t} variable. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__property_aa1afd639841d0e669133410d6d508f40}{link\+\_\+finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the \doxylink{structcamp__property_1_1property__link__t}{property\+\_\+link\+\_\+t} array. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -115,11 +119,11 @@ Print the contents of a property set.
 
 Definition at line \mbox{\hyperlink{property_8_f90_source_l00626}{626}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
 
-\Hypertarget{namespacecamp__property_ab123d6312af66960021d4da84dcc7b9f}\label{namespacecamp__property_ab123d6312af66960021d4da84dcc7b9f} 
+\Hypertarget{namespacecamp__property_a839d4093245e3dcda76885f1fc8b2569}\label{namespacecamp__property_a839d4093245e3dcda76885f1fc8b2569} 
 \index{camp\_property@{camp\_property}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_property@{camp\_property}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+property\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+property\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -139,7 +143,42 @@ Here is the caller graph for this function\+:
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=348pt]{namespacecamp__property_ab123d6312af66960021d4da84dcc7b9f_icgraph}
+\includegraphics[width=350pt]{namespacecamp__property_a839d4093245e3dcda76885f1fc8b2569_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__property_ada8134a218154da30a9c321fb0090a7f}\label{namespacecamp__property_ada8134a218154da30a9c321fb0090a7f} 
+\index{camp\_property@{camp\_property}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_property@{camp\_property}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+property\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize a \doxylink{structcamp__property_1_1property__t}{property\+\_\+t} array. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Property dataset array \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{property_8_f90_source_l00674}{674}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=343pt]{namespacecamp__property_ada8134a218154da30a9c321fb0090a7f_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=348pt]{namespacecamp__property_ada8134a218154da30a9c321fb0090a7f_icgraph}
 \end{center}
 \end{figure}
 \Hypertarget{namespacecamp__property_a6980a9f16e3c1a9c83783070b34d4f55}\label{namespacecamp__property_a6980a9f16e3c1a9c83783070b34d4f55} 
@@ -164,7 +203,7 @@ Pointer to property key-\/value pair
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{property_8_f90_source_l00675}{675}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
+Definition at line \mbox{\hyperlink{property_8_f90_source_l00691}{691}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -470,7 +509,7 @@ Key name
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{property_8_f90_source_l00725}{725}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
+Definition at line \mbox{\hyperlink{property_8_f90_source_l00741}{741}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -510,7 +549,7 @@ Pointer to new property key-\/value pair
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{property_8_f90_source_l00706}{706}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
+Definition at line \mbox{\hyperlink{property_8_f90_source_l00722}{722}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -541,7 +580,7 @@ Print the contents of a property key-\/value pair.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{property_8_f90_source_l00900}{900}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
+Definition at line \mbox{\hyperlink{property_8_f90_source_l00916}{916}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -551,11 +590,11 @@ Here is the call graph for this function\+:
 \includegraphics[width=350pt]{namespacecamp__property_a31bb4ad71e6fac0fdd3dd3e4d6255cb3_cgraph}
 \end{center}
 \end{figure}
-\Hypertarget{namespacecamp__property_a8fc09d2181501c08c436eb0995c641cd}\label{namespacecamp__property_a8fc09d2181501c08c436eb0995c641cd} 
+\Hypertarget{namespacecamp__property_a9c5d4346fc9bf106dc49372f407d44ea}\label{namespacecamp__property_a9c5d4346fc9bf106dc49372f407d44ea} 
 \index{camp\_property@{camp\_property}!link\_finalize@{link\_finalize}}
 \index{link\_finalize@{link\_finalize}!camp\_property@{camp\_property}}
 \doxysubsubsection{\texorpdfstring{link\_finalize()}{link\_finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+property\+::link\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\+\_\+link\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+property\+::link\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\+\_\+link\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -568,14 +607,41 @@ Finalize the \doxylink{structcamp__property_1_1property__link__t}{property\+\_\+
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{property_8_f90_source_l00942}{942}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
+Definition at line \mbox{\hyperlink{property_8_f90_source_l00958}{958}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=334pt]{namespacecamp__property_a8fc09d2181501c08c436eb0995c641cd_icgraph}
+\includegraphics[width=334pt]{namespacecamp__property_a9c5d4346fc9bf106dc49372f407d44ea_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__property_aa1afd639841d0e669133410d6d508f40}\label{namespacecamp__property_aa1afd639841d0e669133410d6d508f40} 
+\index{camp\_property@{camp\_property}!link\_finalize\_array@{link\_finalize\_array}}
+\index{link\_finalize\_array@{link\_finalize\_array}!camp\_property@{camp\_property}}
+\doxysubsubsection{\texorpdfstring{link\_finalize\_array()}{link\_finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+property\+::link\+\_\+finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\+\_\+link\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize the \doxylink{structcamp__property_1_1property__link__t}{property\+\_\+link\+\_\+t} array. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Property key-\/value pair array \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{property_8_f90_source_l00970}{970}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=334pt]{namespacecamp__property_aa1afd639841d0e669133410d6d508f40_icgraph}
 \end{center}
 \end{figure}
 \Hypertarget{namespacecamp__property_a3f00f8b698974d5594a97eb0f867a9e5}\label{namespacecamp__property_a3f00f8b698974d5594a97eb0f867a9e5} 
@@ -690,7 +756,7 @@ Set the value of a property key-\/value pair.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{property_8_f90_source_l00739}{739}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
+Definition at line \mbox{\hyperlink{property_8_f90_source_l00755}{755}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -743,7 +809,7 @@ Value
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{property_8_f90_source_l00783}{783}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
+Definition at line \mbox{\hyperlink{property_8_f90_source_l00799}{799}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -773,7 +839,7 @@ Value
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{property_8_f90_source_l00831}{831}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
+Definition at line \mbox{\hyperlink{property_8_f90_source_l00847}{847}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -803,7 +869,7 @@ Value
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{property_8_f90_source_l00877}{877}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
+Definition at line \mbox{\hyperlink{property_8_f90_source_l00893}{893}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -833,7 +899,7 @@ Value
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{property_8_f90_source_l00806}{806}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
+Definition at line \mbox{\hyperlink{property_8_f90_source_l00822}{822}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -863,7 +929,7 @@ Value
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{property_8_f90_source_l00854}{854}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
+Definition at line \mbox{\hyperlink{property_8_f90_source_l00870}{870}} of file \mbox{\hyperlink{property_8_f90_source}{property.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak

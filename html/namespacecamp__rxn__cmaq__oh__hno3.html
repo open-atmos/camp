@@ -72,9 +72,12 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:a86c6ad7eb5eaff68cc5394e47f0dfddc" id="r_a86c6ad7eb5eaff68cc5394e47f0dfddc"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__cmaq__oh__hno3.html#a86c6ad7eb5eaff68cc5394e47f0dfddc">initialize</a> (this, chem_spec_data, aero_rep, n_cells)</td></tr>
 <tr class="memdesc:a86c6ad7eb5eaff68cc5394e47f0dfddc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving.  <br /></td></tr>
 <tr class="separator:a86c6ad7eb5eaff68cc5394e47f0dfddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e45a9d25b5f2df66ab4764c656ed9b3" id="r_a7e45a9d25b5f2df66ab4764c656ed9b3"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__cmaq__oh__hno3.html#a7e45a9d25b5f2df66ab4764c656ed9b3">finalize</a> (this)</td></tr>
-<tr class="memdesc:a7e45a9d25b5f2df66ab4764c656ed9b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
-<tr class="separator:a7e45a9d25b5f2df66ab4764c656ed9b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4454021e3b20bf4641db773f6b306a70" id="r_a4454021e3b20bf4641db773f6b306a70"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__cmaq__oh__hno3.html#a4454021e3b20bf4641db773f6b306a70">finalize</a> (this)</td></tr>
+<tr class="memdesc:a4454021e3b20bf4641db773f6b306a70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
+<tr class="separator:a4454021e3b20bf4641db773f6b306a70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37cf33405db75ef2e0d393ec299316ec" id="r_a37cf33405db75ef2e0d393ec299316ec"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__cmaq__oh__hno3.html#a37cf33405db75ef2e0d393ec299316ec">finalize_array</a> (this)</td></tr>
+<tr class="memdesc:a37cf33405db75ef2e0d393ec299316ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize an array of reactions.  <br /></td></tr>
+<tr class="separator:a37cf33405db75ef2e0d393ec299316ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The rxn_CMAQ_OH_HNO3_t type and associated functions. </p>
@@ -106,8 +109,8 @@ Functions/Subroutines</h2></td></tr>
 
 </div>
 </div>
-<a id="a7e45a9d25b5f2df66ab4764c656ed9b3" name="a7e45a9d25b5f2df66ab4764c656ed9b3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e45a9d25b5f2df66ab4764c656ed9b3">&#9670;&#160;</a></span>finalize()</h2>
+<a id="a4454021e3b20bf4641db773f6b306a70" name="a4454021e3b20bf4641db773f6b306a70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4454021e3b20bf4641db773f6b306a70">&#9670;&#160;</a></span>finalize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -116,7 +119,7 @@ Functions/Subroutines</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">elemental subroutine camp_rxn_cmaq_oh_hno3::finalize </td>
+          <td class="memname">subroutine camp_rxn_cmaq_oh_hno3::finalize </td>
           <td>(</td>
           <td class="paramtype">type(<a class="el" href="structcamp__rxn__cmaq__oh__hno3_1_1rxn__cmaq__oh__hno3__t.html">rxn_cmaq_oh_hno3_t</a>), intent(inout)&#160;</td>
           <td class="paramname"><em>this</em></td><td>)</td>
@@ -139,6 +142,52 @@ Functions/Subroutines</h2></td></tr>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="rxn___c_m_a_q___o_h___h_n_o3_8_f90_source.html#l00312">312</a> of file <a class="el" href="rxn___c_m_a_q___o_h___h_n_o3_8_f90_source.html">rxn_CMAQ_OH_HNO3.F90</a>.</p>
+
+</div>
+</div>
+<a id="a37cf33405db75ef2e0d393ec299316ec" name="a37cf33405db75ef2e0d393ec299316ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37cf33405db75ef2e0d393ec299316ec">&#9670;&#160;</a></span>finalize_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine camp_rxn_cmaq_oh_hno3::finalize_array </td>
+          <td>(</td>
+          <td class="paramtype">type(<a class="el" href="structcamp__rxn__cmaq__oh__hno3_1_1rxn__cmaq__oh__hno3__t.html">rxn_cmaq_oh_hno3_t</a>), dimension(:), intent(inout)&#160;</td>
+          <td class="paramname"><em>this</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Finalize an array of reactions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Array of reaction data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn___c_m_a_q___o_h___h_n_o3_8_f90_source.html#l00329">329</a> of file <a class="el" href="rxn___c_m_a_q___o_h___h_n_o3_8_f90_source.html">rxn_CMAQ_OH_HNO3.F90</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacecamp__rxn__cmaq__oh__hno3_a37cf33405db75ef2e0d393ec299316ec_cgraph.png" border="0" usemap="#anamespacecamp__rxn__cmaq__oh__hno3_a37cf33405db75ef2e0d393ec299316ec_cgraph" alt=""/></div>
+<map name="anamespacecamp__rxn__cmaq__oh__hno3_a37cf33405db75ef2e0d393ec299316ec_cgraph" id="anamespacecamp__rxn__cmaq__oh__hno3_a37cf33405db75ef2e0d393ec299316ec_cgraph">
+<area shape="rect" title="Finalize an array of reactions." alt="" coords="5,5,178,46"/>
+<area shape="rect" href="namespacecamp__camp__state.html#a5522f7056d1ff8bb1626e36c97dfff5a" title="Finalize the state." alt="" coords="226,13,399,39"/>
+<area shape="poly" title=" " alt="" coords="178,23,210,23,210,28,178,28"/>
+</map>
+</div>
 
 </div>
 </div>

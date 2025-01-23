@@ -17,8 +17,10 @@ type(\mbox{\hyperlink{structcamp__rxn__condensed__phase__arrhenius_1_1rxn__conde
 \begin{DoxyCompactList}\small\item\em Constructor for Condensed-\/phase Arrhenius reaction. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__arrhenius_a02d1a2accc46cff5bf03e1e81c28780f}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__arrhenius_a076633d91c5e1e277d5efa376f33ba5c}{finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__arrhenius_af0116bbb49b0c7ebfaf21885b2db36a3}{finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__arrhenius_ab81e61283b914d12d3d3feeed34c7a6f}{finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of reactions. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -42,11 +44,11 @@ A new reaction instance
 
 Definition at line \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8_f90_source_l00138}{138}} of file \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+F90}}.
 
-\Hypertarget{namespacecamp__rxn__condensed__phase__arrhenius_a076633d91c5e1e277d5efa376f33ba5c}\label{namespacecamp__rxn__condensed__phase__arrhenius_a076633d91c5e1e277d5efa376f33ba5c} 
+\Hypertarget{namespacecamp__rxn__condensed__phase__arrhenius_af0116bbb49b0c7ebfaf21885b2db36a3}\label{namespacecamp__rxn__condensed__phase__arrhenius_af0116bbb49b0c7ebfaf21885b2db36a3} 
 \index{camp\_rxn\_condensed\_phase\_arrhenius@{camp\_rxn\_condensed\_phase\_arrhenius}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_condensed\_phase\_arrhenius@{camp\_rxn\_condensed\_phase\_arrhenius}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__condensed__phase__arrhenius_1_1rxn__condensed__phase__arrhenius__t}{rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__condensed__phase__arrhenius_1_1rxn__condensed__phase__arrhenius__t}{rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -61,6 +63,33 @@ Finalize the reaction.
 
 Definition at line \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8_f90_source_l00500}{500}} of file \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+F90}}.
 
+\Hypertarget{namespacecamp__rxn__condensed__phase__arrhenius_ab81e61283b914d12d3d3feeed34c7a6f}\label{namespacecamp__rxn__condensed__phase__arrhenius_ab81e61283b914d12d3d3feeed34c7a6f} 
+\index{camp\_rxn\_condensed\_phase\_arrhenius@{camp\_rxn\_condensed\_phase\_arrhenius}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_rxn\_condensed\_phase\_arrhenius@{camp\_rxn\_condensed\_phase\_arrhenius}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__condensed__phase__arrhenius_1_1rxn__condensed__phase__arrhenius__t}{rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of reactions. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of reaction data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8_f90_source_l00517}{517}} of file \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+arrhenius.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__rxn__condensed__phase__arrhenius_ab81e61283b914d12d3d3feeed34c7a6f_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{namespacecamp__rxn__condensed__phase__arrhenius_a02d1a2accc46cff5bf03e1e81c28780f}\label{namespacecamp__rxn__condensed__phase__arrhenius_a02d1a2accc46cff5bf03e1e81c28780f} 
 \index{camp\_rxn\_condensed\_phase\_arrhenius@{camp\_rxn\_condensed\_phase\_arrhenius}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_condensed\_phase\_arrhenius@{camp\_rxn\_condensed\_phase\_arrhenius}}

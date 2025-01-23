@@ -98,6 +98,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0da81c702724cc9599c728e370f3d726" id="r_a0da81c702724cc9599c728e370f3d726"><td class="memItemLeft" align="right" valign="top">final&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcamp__sub__model__unifac_1_1sub__model__unifac__t.html#a0da81c702724cc9599c728e370f3d726">finalize</a> (this)</td></tr>
 <tr class="memdesc:a0da81c702724cc9599c728e370f3d726"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the sub-model.  <br /></td></tr>
 <tr class="separator:a0da81c702724cc9599c728e370f3d726"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7dbad0c12cba55bab2e5fd0f2ebbba4" id="r_ae7dbad0c12cba55bab2e5fd0f2ebbba4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcamp__sub__model__unifac_1_1sub__model__unifac__t.html#ae7dbad0c12cba55bab2e5fd0f2ebbba4">finalize_array</a> (this)</td></tr>
+<tr class="memdesc:ae7dbad0c12cba55bab2e5fd0f2ebbba4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize an array of sub-models.  <br /></td></tr>
+<tr class="separator:ae7dbad0c12cba55bab2e5fd0f2ebbba4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_structcamp__sub__model__data_1_1sub__model__data__t"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structcamp__sub__model__data_1_1sub__model__data__t')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structcamp__sub__model__data_1_1sub__model__data__t.html">camp_sub_model_data::sub_model_data_t</a></td></tr>
 <tr class="memitem:a66967d5bcc5a9ba2f5f34cb0ed5e7504 inherit pub_methods_structcamp__sub__model__data_1_1sub__model__data__t" id="r_a66967d5bcc5a9ba2f5f34cb0ed5e7504"><td class="memItemLeft" align="right" valign="top">procedure(<a class="el" href="interfacecamp__sub__model__data_1_1initialize.html">initialize</a>), deferred&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcamp__sub__model__data_1_1sub__model__data__t.html#a66967d5bcc5a9ba2f5f34cb0ed5e7504">initialize</a> <a class="el" href="interfacecamp__sub__model__data_1_1initialize.html">initialize</a></td></tr>
 <tr class="memdesc:a66967d5bcc5a9ba2f5f34cb0ed5e7504 inherit pub_methods_structcamp__sub__model__data_1_1sub__model__data__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the sub-model data, validating input parameters and loading any required information form the <code><a class="el" href="structcamp__sub__model__data_1_1sub__model__data__t.html#a75ddb7997b5cba90a8b86212c4888142" title="Sub model parameters. These will be available during initialization, but not during integration....">sub_model_data_t::property_set</a></code>. This routine should be called once for each sub-model at the beginning of the model run after all the input files have been read in. It ensures all data required during the model run are included in the condensed data arrays.  <br /></td></tr>
@@ -188,14 +191,45 @@ Here is the call graph for this function:</div>
 <div class="center"><img src="structcamp__sub__model__unifac_1_1sub__model__unifac__t_a0da81c702724cc9599c728e370f3d726_cgraph.png" border="0" usemap="#astructcamp__sub__model__unifac_1_1sub__model__unifac__t_a0da81c702724cc9599c728e370f3d726_cgraph" alt=""/></div>
 <map name="astructcamp__sub__model__unifac_1_1sub__model__unifac__t_a0da81c702724cc9599c728e370f3d726_cgraph" id="astructcamp__sub__model__unifac_1_1sub__model__unifac__t_a0da81c702724cc9599c728e370f3d726_cgraph">
 <area shape="rect" title="Finalize the sub&#45;model." alt="" coords="5,5,171,61"/>
-<area shape="rect" href="namespacecamp__aero__phase__data.html#a18e6adfc1bb22f7514247a1920d86090" title="Finalize the aerosol phase data." alt="" coords="219,13,378,54"/>
-<area shape="poly" title=" " alt="" coords="171,31,203,31,203,36,171,36"/>
+<area shape="rect" href="namespacecamp__aero__phase__data.html#a8eebec681f9d24bd7741bb357f7c4e43" title="Finalize the aerosol phase data." alt="" coords="426,13,585,54"/>
+<area shape="poly" title=" " alt="" coords="171,28,219,27,378,27,410,27,410,33,378,32,219,32,171,33"/>
+<area shape="rect" href="namespacecamp__aero__phase__data.html#a0e828293ef8b5cc169dfe653abed14e8" title="Finalize the aerosol phase data." alt="" coords="219,41,378,82"/>
+<area shape="poly" title=" " alt="" coords="171,42,203,46,203,51,170,47"/>
+<area shape="poly" title=" " alt="" coords="378,48,410,43,411,49,379,53"/>
 </map>
 </div>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function/Subroutine Documentation</h2>
+<a id="ae7dbad0c12cba55bab2e5fd0f2ebbba4" name="ae7dbad0c12cba55bab2e5fd0f2ebbba4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7dbad0c12cba55bab2e5fd0f2ebbba4">&#9670;&#160;</a></span>finalize_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">camp_sub_model_unifac::sub_model_unifac_t::finalize_array </td>
+          <td>(</td>
+          <td class="paramtype">type(<a class="el" href="structcamp__sub__model__unifac_1_1sub__model__unifac__t.html">sub_model_unifac_t</a>), dimension(:), intent(inout)&#160;</td>
+          <td class="paramname"><em>this</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Finalize an array of sub-models. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Array of sub-models </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="sub__model___u_n_i_f_a_c_8_f90_source.html#l00212">212</a> of file <a class="el" href="sub__model___u_n_i_f_a_c_8_f90_source.html">sub_model_UNIFAC.F90</a>.</p>
+
+</div>
+</div>
 <a id="aa025dfb536392b12c1f62a58ebddf7fd" name="aa025dfb536392b12c1f62a58ebddf7fd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa025dfb536392b12c1f62a58ebddf7fd">&#9670;&#160;</a></span>initialize()</h2>
 

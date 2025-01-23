@@ -111,7 +111,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00107}00107\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ initialization}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00108}\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t_a1954c05803d8cfcb97bfd9ba8fd94d06}{00108}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00109}00109\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00110}\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t_abe21d9498dbe67416216f335ee0e134e}{00110}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00110}\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t_abe21d9498dbe67416216f335ee0e134e}{00110}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}},\ \mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00111}00111\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00112}00112\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00113}00113\ \textcolor{comment}{\ \ !>\ Constructor\ for\ rxn\_troe\_t}}
@@ -304,7 +304,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00300}00300\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00301}00301\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00302}00302\ \textcolor{comment}{\ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00303}\mbox{\hyperlink{namespacecamp__rxn__troe_add0bd4c886d3a64d48a29700035534d9}{00303}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00303}\mbox{\hyperlink{namespacecamp__rxn__troe_af94c6c642fc4c9845245ada2d59f8a38}{00303}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00304}00304\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00305}00305\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00306}00306\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
@@ -319,7 +319,23 @@
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00315}00315\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00316}00316\ }
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00317}00317\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00318}00318\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00319}00319\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__troe}{camp\_rxn\_troe}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00318}00318\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00319}00319\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ reactions}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00320}\mbox{\hyperlink{namespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e}{00320}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00321}00321\ \ \ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00322}00322\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00323}00323\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00324}00324\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00325}00325\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_rxn}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00326}00326\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00327}00327\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_rxn\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00328}00328\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this(i\_rxn))}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00329}00329\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00330}00330\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00331}00331\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00332}00332\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00333}00333\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00334}00334\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00335}00335\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__troe}{camp\_rxn\_troe}}}
 
 \end{DoxyCode}

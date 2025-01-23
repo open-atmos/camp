@@ -48,8 +48,10 @@ integer function \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_aec
 \begin{DoxyCompactList}\small\item\em Returns the number of phases in a layer or overall. \end{DoxyCompactList}\item 
 integer function \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_ad9d74330579c43a815e0cb46d546dc53}{phase\+\_\+state\+\_\+size}} (this, layer, phase)
 \begin{DoxyCompactList}\small\item\em Returns the number of state variables for a layer and phase. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a00f8f7d409096fd16673b7218ff80fa7}{finalize}} (this)
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_aa04907b92cfcfefd74758da3ca7607cb}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the aerosol representation. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a3769b1d5fd802c6c09cffb22135961eb}{finalize\+\_\+array}} (this\+\_\+array)
+\begin{DoxyCompactList}\small\item\em Finalize the aerosol representation array. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a0cf95e9e46b97393e5654f5f65e417eb}{update\+\_\+data\+\_\+init\+\_\+number}} (this, update\+\_\+data, aero\+\_\+rep\+\_\+type)
 \begin{DoxyCompactList}\small\item\em Initialize an update data object. \end{DoxyCompactList}\item 
 integer function, dimension(\+:), allocatable, public \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{ordered\+\_\+layer\+\_\+ids}} (layer\+\_\+names\+\_\+unordered, cover\+\_\+names\+\_\+unordered)
@@ -62,8 +64,10 @@ subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a60e07855
 \begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a3fb691978e783fdfad253b8e745443be}{internal\+\_\+bin\+\_\+unpack\+\_\+number}} (this, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a118fa6795315a201ecb6943a69306c96}{update\+\_\+data\+\_\+number\+\_\+finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize a number update data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a48a29e244d03622902168c47b290cc93}{update\+\_\+data\+\_\+number\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize a number update data object. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a352b6c95b34347dda7296463d9f3ae82}{update\+\_\+data\+\_\+number\+\_\+finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of number update data objects. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
@@ -92,11 +96,11 @@ New aerosol representation
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00217}{217}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
-\Hypertarget{namespacecamp__aero__rep__single__particle_a00f8f7d409096fd16673b7218ff80fa7}\label{namespacecamp__aero__rep__single__particle_a00f8f7d409096fd16673b7218ff80fa7} 
+\Hypertarget{namespacecamp__aero__rep__single__particle_aa04907b92cfcfefd74758da3ca7607cb}\label{namespacecamp__aero__rep__single__particle_aa04907b92cfcfefd74758da3ca7607cb} 
 \index{camp\_aero\_rep\_single\_particle@{camp\_aero\_rep\_single\_particle}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_aero\_rep\_single\_particle@{camp\_aero\_rep\_single\_particle}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -111,6 +115,33 @@ Finalize the aerosol representation.
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00766}{766}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
+\Hypertarget{namespacecamp__aero__rep__single__particle_a3769b1d5fd802c6c09cffb22135961eb}\label{namespacecamp__aero__rep__single__particle_a3769b1d5fd802c6c09cffb22135961eb} 
+\index{camp\_aero\_rep\_single\_particle@{camp\_aero\_rep\_single\_particle}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_aero\_rep\_single\_particle@{camp\_aero\_rep\_single\_particle}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), dimension(\+:), intent(inout)}]{this\+\_\+array }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize the aerosol representation array. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this\+\_\+array} & Aerosol representation data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00790}{790}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=349pt]{namespacecamp__aero__rep__single__particle_a3769b1d5fd802c6c09cffb22135961eb_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{namespacecamp__aero__rep__single__particle_a639c8f0f594b7daac0b935f9f77c2401}\label{namespacecamp__aero__rep__single__particle_a639c8f0f594b7daac0b935f9f77c2401} 
 \index{camp\_aero\_rep\_single\_particle@{camp\_aero\_rep\_single\_particle}!get\_size@{get\_size}}
 \index{get\_size@{get\_size}!camp\_aero\_rep\_single\_particle@{camp\_aero\_rep\_single\_particle}}
@@ -187,7 +218,7 @@ Pack the given value to the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00912}{912}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00928}{928}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -220,7 +251,7 @@ Unpack the given value from the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00940}{940}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00956}{956}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -249,7 +280,7 @@ Determine the size of a binary required to pack the reaction data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00894}{894}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00910}{910}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -434,7 +465,7 @@ Index of name in layer\+\_\+name\+\_\+unordered for each layer after reordering
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00820}{820}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00836}{836}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -620,7 +651,7 @@ Initialize an update data object.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00790}{790}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00806}{806}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -630,11 +661,11 @@ Here is the call graph for this function\+:
 \includegraphics[width=350pt]{namespacecamp__aero__rep__single__particle_a0cf95e9e46b97393e5654f5f65e417eb_cgraph}
 \end{center}
 \end{figure}
-\Hypertarget{namespacecamp__aero__rep__single__particle_a118fa6795315a201ecb6943a69306c96}\label{namespacecamp__aero__rep__single__particle_a118fa6795315a201ecb6943a69306c96} 
+\Hypertarget{namespacecamp__aero__rep__single__particle_a48a29e244d03622902168c47b290cc93}\label{namespacecamp__aero__rep__single__particle_a48a29e244d03622902168c47b290cc93} 
 \index{camp\_aero\_rep\_single\_particle@{camp\_aero\_rep\_single\_particle}!update\_data\_number\_finalize@{update\_data\_number\_finalize}}
 \index{update\_data\_number\_finalize@{update\_data\_number\_finalize}!camp\_aero\_rep\_single\_particle@{camp\_aero\_rep\_single\_particle}}
 \doxysubsubsection{\texorpdfstring{update\_data\_number\_finalize()}{update\_data\_number\_finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::update\+\_\+data\+\_\+number\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::update\+\_\+data\+\_\+number\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -647,14 +678,49 @@ Finalize a number update data object.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00969}{969}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00985}{985}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacecamp__aero__rep__single__particle_a118fa6795315a201ecb6943a69306c96_icgraph}
+\includegraphics[width=350pt]{namespacecamp__aero__rep__single__particle_a48a29e244d03622902168c47b290cc93_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__aero__rep__single__particle_a352b6c95b34347dda7296463d9f3ae82}\label{namespacecamp__aero__rep__single__particle_a352b6c95b34347dda7296463d9f3ae82} 
+\index{camp\_aero\_rep\_single\_particle@{camp\_aero\_rep\_single\_particle}!update\_data\_number\_finalize\_array@{update\_data\_number\_finalize\_array}}
+\index{update\_data\_number\_finalize\_array@{update\_data\_number\_finalize\_array}!camp\_aero\_rep\_single\_particle@{camp\_aero\_rep\_single\_particle}}
+\doxysubsubsection{\texorpdfstring{update\_data\_number\_finalize\_array()}{update\_data\_number\_finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::update\+\_\+data\+\_\+number\+\_\+finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of number update data objects. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Update data objects to free \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00997}{997}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=344pt]{namespacecamp__aero__rep__single__particle_a352b6c95b34347dda7296463d9f3ae82_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__aero__rep__single__particle_a352b6c95b34347dda7296463d9f3ae82_icgraph}
 \end{center}
 \end{figure}
 \Hypertarget{namespacecamp__aero__rep__single__particle_a4a7413970e88f0efdaa1a10e3aeed0d3}\label{namespacecamp__aero__rep__single__particle_a4a7413970e88f0efdaa1a10e3aeed0d3} 
@@ -678,7 +744,7 @@ Set packed update data for particle number (\#/m3) for a particular computationa
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00869}{869}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00885}{885}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
 
 

@@ -1,5 +1,8 @@
 <map id="camp_rxn_photolysis::rxn_update_data_photolysis_t::update_data_finalize" name="camp_rxn_photolysis::rxn_update_data_photolysis_t::update_data_finalize">
 <area shape="rect" id="Node000001" title="Finalize the rate update data." alt="" coords="5,5,193,61"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__rxn__photolysis.html#ac16b6e63de618d1bff3b9a8b1480cfc3" title="Finalize an update data object." alt="" coords="241,13,385,54"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="193,31,225,31,225,36,193,36"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__rxn__photolysis.html#a1d04c93e354cfd0c3714b1528f5d2d74" title="Finalize an update data object." alt="" coords="468,13,612,54"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="193,27,241,27,420,27,453,27,452,33,420,32,241,32,193,33"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__rxn__photolysis.html#ac2c39eb76ed9584e683975606e314769" title="Finalize an array of update data objects." alt="" coords="241,41,420,82"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="193,42,225,46,225,51,192,47"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="420,47,452,42,453,47,420,52"/>
 </map>

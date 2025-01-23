@@ -106,7 +106,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00102}00102\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ initialization}}
 \DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00103}\mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t_a8426363e26bebead3683078f5256c153}{00103}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00104}00104\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00105}\mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t_a7dcdd38e10aaed18fe63877e6032d6c5}{00105}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00105}\mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t_a7dcdd38e10aaed18fe63877e6032d6c5}{00105}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}},\ \mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
 \DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00106}00106\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t}{rxn\_arrhenius\_t}}}
 \DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00107}00107\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00108}00108\ \textcolor{comment}{\ \ !>\ Constructor\ for\ rxn\_arrhenius\_t}}
@@ -293,7 +293,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00289}00289\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00290}00290\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00291}00291\ \textcolor{comment}{\ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00292}\mbox{\hyperlink{namespacecamp__rxn__arrhenius_a9efeacc19f39703b1e8ed82522606e21}{00292}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00292}\mbox{\hyperlink{namespacecamp__rxn__arrhenius_a868efd73d1c83561f1347a1b8cc79c4e}{00292}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
 \DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00293}00293\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00294}00294\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00295}00295\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t}{rxn\_arrhenius\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
@@ -308,7 +308,23 @@
 \DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00304}00304\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
 \DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00305}00305\ }
 \DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00306}00306\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00307}00307\ }
-\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00308}00308\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__arrhenius}{camp\_rxn\_arrhenius}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00307}00307\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00308}00308\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ reactions}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00309}\mbox{\hyperlink{namespacecamp__rxn__arrhenius_a1c96564ba1a75e3d097ce62a1fa1d7ec}{00309}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00310}00310\ \ \ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00311}00311\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00312}00312\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t}{rxn\_arrhenius\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00313}00313\ }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00314}00314\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00315}00315\ }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00316}00316\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00317}00317\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this(i))}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00318}00318\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00319}00319\ }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00320}00320\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00321}00321\ }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00322}00322\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00323}00323\ }
+\DoxyCodeLine{\Hypertarget{rxn__arrhenius_8_f90_source_l00324}00324\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__arrhenius}{camp\_rxn\_arrhenius}}}
 
 \end{DoxyCode}

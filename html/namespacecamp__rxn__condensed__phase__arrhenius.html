@@ -72,9 +72,12 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:a02d1a2accc46cff5bf03e1e81c28780f" id="r_a02d1a2accc46cff5bf03e1e81c28780f"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__condensed__phase__arrhenius.html#a02d1a2accc46cff5bf03e1e81c28780f">initialize</a> (this, chem_spec_data, aero_rep, n_cells)</td></tr>
 <tr class="memdesc:a02d1a2accc46cff5bf03e1e81c28780f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving.  <br /></td></tr>
 <tr class="separator:a02d1a2accc46cff5bf03e1e81c28780f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a076633d91c5e1e277d5efa376f33ba5c" id="r_a076633d91c5e1e277d5efa376f33ba5c"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__condensed__phase__arrhenius.html#a076633d91c5e1e277d5efa376f33ba5c">finalize</a> (this)</td></tr>
-<tr class="memdesc:a076633d91c5e1e277d5efa376f33ba5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
-<tr class="separator:a076633d91c5e1e277d5efa376f33ba5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0116bbb49b0c7ebfaf21885b2db36a3" id="r_af0116bbb49b0c7ebfaf21885b2db36a3"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__condensed__phase__arrhenius.html#af0116bbb49b0c7ebfaf21885b2db36a3">finalize</a> (this)</td></tr>
+<tr class="memdesc:af0116bbb49b0c7ebfaf21885b2db36a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
+<tr class="separator:af0116bbb49b0c7ebfaf21885b2db36a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab81e61283b914d12d3d3feeed34c7a6f" id="r_ab81e61283b914d12d3d3feeed34c7a6f"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__condensed__phase__arrhenius.html#ab81e61283b914d12d3d3feeed34c7a6f">finalize_array</a> (this)</td></tr>
+<tr class="memdesc:ab81e61283b914d12d3d3feeed34c7a6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize an array of reactions.  <br /></td></tr>
+<tr class="separator:ab81e61283b914d12d3d3feeed34c7a6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="structcamp__rxn__condensed__phase__arrhenius_1_1rxn__condensed__phase__arrhenius__t.html" title="Generic test reaction data type.">rxn_condensed_phase_arrhenius_t</a> type and associated functions. </p>
@@ -106,8 +109,8 @@ Functions/Subroutines</h2></td></tr>
 
 </div>
 </div>
-<a id="a076633d91c5e1e277d5efa376f33ba5c" name="a076633d91c5e1e277d5efa376f33ba5c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a076633d91c5e1e277d5efa376f33ba5c">&#9670;&#160;</a></span>finalize()</h2>
+<a id="af0116bbb49b0c7ebfaf21885b2db36a3" name="af0116bbb49b0c7ebfaf21885b2db36a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0116bbb49b0c7ebfaf21885b2db36a3">&#9670;&#160;</a></span>finalize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -116,7 +119,7 @@ Functions/Subroutines</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">elemental subroutine camp_rxn_condensed_phase_arrhenius::finalize </td>
+          <td class="memname">subroutine camp_rxn_condensed_phase_arrhenius::finalize </td>
           <td>(</td>
           <td class="paramtype">type(<a class="el" href="structcamp__rxn__condensed__phase__arrhenius_1_1rxn__condensed__phase__arrhenius__t.html">rxn_condensed_phase_arrhenius_t</a>), intent(inout)&#160;</td>
           <td class="paramname"><em>this</em></td><td>)</td>
@@ -139,6 +142,52 @@ Functions/Subroutines</h2></td></tr>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="rxn__condensed__phase__arrhenius_8_f90_source.html#l00500">500</a> of file <a class="el" href="rxn__condensed__phase__arrhenius_8_f90_source.html">rxn_condensed_phase_arrhenius.F90</a>.</p>
+
+</div>
+</div>
+<a id="ab81e61283b914d12d3d3feeed34c7a6f" name="ab81e61283b914d12d3d3feeed34c7a6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab81e61283b914d12d3d3feeed34c7a6f">&#9670;&#160;</a></span>finalize_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine camp_rxn_condensed_phase_arrhenius::finalize_array </td>
+          <td>(</td>
+          <td class="paramtype">type(<a class="el" href="structcamp__rxn__condensed__phase__arrhenius_1_1rxn__condensed__phase__arrhenius__t.html">rxn_condensed_phase_arrhenius_t</a>), dimension(:), intent(inout)&#160;</td>
+          <td class="paramname"><em>this</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Finalize an array of reactions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Array of reaction data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__condensed__phase__arrhenius_8_f90_source.html#l00517">517</a> of file <a class="el" href="rxn__condensed__phase__arrhenius_8_f90_source.html">rxn_condensed_phase_arrhenius.F90</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacecamp__rxn__condensed__phase__arrhenius_ab81e61283b914d12d3d3feeed34c7a6f_cgraph.png" border="0" usemap="#anamespacecamp__rxn__condensed__phase__arrhenius_ab81e61283b914d12d3d3feeed34c7a6f_cgraph" alt=""/></div>
+<map name="anamespacecamp__rxn__condensed__phase__arrhenius_ab81e61283b914d12d3d3feeed34c7a6f_cgraph" id="anamespacecamp__rxn__condensed__phase__arrhenius_ab81e61283b914d12d3d3feeed34c7a6f_cgraph">
+<area shape="rect" title="Finalize an array of reactions." alt="" coords="5,5,209,46"/>
+<area shape="rect" href="namespacecamp__aero__phase__data.html#a8eebec681f9d24bd7741bb357f7c4e43" title="Finalize the aerosol phase data." alt="" coords="257,5,416,46"/>
+<area shape="poly" title=" " alt="" coords="209,23,241,23,241,28,209,28"/>
+</map>
+</div>
 
 </div>
 </div>

@@ -33,7 +33,9 @@ procedure \mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite_
 procedure \mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t_ad9c6552db3bc15826a3259fcef6d1853}{priority}} (this)
 \begin{DoxyCompactList}\small\item\em Return a real number representing the priority of the sub-\/model calculations. Low priority sub models may depend on the results of higher priority sub models. \end{DoxyCompactList}\item 
 final \mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t_ac96559bcef42efb0e6e3cdefb2a9b9ec}{finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t_ac82d8e1a3ccc189d42e1ac3585fe9c20}{finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of reactions. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{structcamp__sub__model__data_1_1sub__model__data__t}{camp\+\_\+sub\+\_\+model\+\_\+data\+::sub\+\_\+model\+\_\+data\+\_\+t}}}
 \begin{DoxyCompactItemize}
 \item 
@@ -74,7 +76,7 @@ Generic test reaction data type.
 
 Constructor for sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+t. 
 
-Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source_l00223}{223}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+F90}}.
+Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source_l00224}{224}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+F90}}.
 
 
 
@@ -96,7 +98,7 @@ Finalize the reaction.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source_l00232}{232}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+F90}}.
+Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source_l00233}{233}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -109,6 +111,25 @@ Here is the call graph for this function\+:
 
 
 \doxysubsection{Member Function/\+Subroutine Documentation}
+\Hypertarget{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t_ac82d8e1a3ccc189d42e1ac3585fe9c20}\label{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t_ac82d8e1a3ccc189d42e1ac3585fe9c20} 
+\index{camp\_sub\_model\_pdfite::sub\_model\_pdfite\_t@{camp\_sub\_model\_pdfite::sub\_model\_pdfite\_t}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_sub\_model\_pdfite::sub\_model\_pdfite\_t@{camp\_sub\_model\_pdfite::sub\_model\_pdfite\_t}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily camp\+\_\+sub\+\_\+model\+\_\+pdfite\+::sub\+\_\+model\+\_\+pdfite\+\_\+t\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\+\_\+model\+\_\+pdfite\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})}
+
+
+
+Finalize an array of reactions. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of reaction data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source_l00233}{233}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+F90}}.
+
 \Hypertarget{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t_a2b149661984529680de1d2339c4df059}\label{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t_a2b149661984529680de1d2339c4df059} 
 \index{camp\_sub\_model\_pdfite::sub\_model\_pdfite\_t@{camp\_sub\_model\_pdfite::sub\_model\_pdfite\_t}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_sub\_model\_pdfite::sub\_model\_pdfite\_t@{camp\_sub\_model\_pdfite::sub\_model\_pdfite\_t}}
@@ -132,7 +153,7 @@ Reaction initialization.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source_l00226}{226}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+F90}}.
+Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source_l00227}{227}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+F90}}.
 
 \Hypertarget{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t_ad9c6552db3bc15826a3259fcef6d1853}\label{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t_ad9c6552db3bc15826a3259fcef6d1853} 
 \index{camp\_sub\_model\_pdfite::sub\_model\_pdfite\_t@{camp\_sub\_model\_pdfite::sub\_model\_pdfite\_t}!priority@{priority}}
@@ -154,7 +175,7 @@ Sub model priority
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source_l00230}{230}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+F90}}.
+Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source_l00231}{231}} of file \mbox{\hyperlink{sub__model___p_d_fi_t_e_8_f90_source}{sub\+\_\+model\+\_\+\+PDFi\+TE.\+F90}}.
 
 
 

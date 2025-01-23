@@ -87,7 +87,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00083}00083\ \textcolor{comment}{\ \ \ \ !>\ Initialize\ update\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00084}\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t_a1a820912d5ac8dab02dc221bf6faf891}{00084}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__rxn__emission_af9ce1d3bfd29e3ee49aaf22279e9f4c7}{update\_data\_initialize}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00085}00085\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00086}\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t_a47cb8f2b59067ee9f4e4960eca1c799b}{00086}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00086}\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t_a47cb8f2b59067ee9f4e4960eca1c799b}{00086}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}},\ \mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00087}00087\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\_emission\_t}}}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00088}00088\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00089}00089\ \textcolor{comment}{\ \ !>\ Constructor\ for\ rxn\_emission\_t}}
@@ -112,7 +112,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00108}00108\ \textcolor{comment}{\ \ \ \ !>\ Unpack\ the\ local\ update\ data\ from\ a\ binary}}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00109}\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a108c99705e293f4e0b313cc7ef229c69}{00109}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__unpack}{internal\_bin\_unpack}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00110}00110\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ rate\ update\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00111}\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a9d77cacfa96cde5c181a678a5bb5233d}{00111}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__rxn__emission_ad2ebaade1033d55208ee52421f7eb9ea}{update\_data\_finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00111}\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t_a9d77cacfa96cde5c181a678a5bb5233d}{00111}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__rxn__emission_a2f92386406c810085eb868883ae1f8be}{update\_data\_finalize}},\ \mbox{\hyperlink{namespacecamp__rxn__emission_a47dba1b73a1a2bfc05f828592971b6d4}{update\_data\_finalize\_array}}}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00112}00112\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\_update\_data\_emission\_t}}}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00113}00113\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00114}00114\ \textcolor{comment}{\ \ !>\ Interface\ to\ c\ reaction\ functions}}
@@ -237,7 +237,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00233}00233\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00234}00234\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00235}00235\ \textcolor{comment}{\ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00236}\mbox{\hyperlink{namespacecamp__rxn__emission_a3af938b929508032fba32597c3269eee}{00236}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00236}\mbox{\hyperlink{namespacecamp__rxn__emission_a870578355f3dad062f36754670e6506e}{00236}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00237}00237\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00238}00238\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00239}00239\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\_emission\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
@@ -253,129 +253,161 @@
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00249}00249\ }
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00250}00250\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00251}00251\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00252}00252\ \textcolor{comment}{\ \ !>\ Set\ packed\ update\ data\ for\ emission\ rate\ constants}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00253}\mbox{\hyperlink{namespacecamp__rxn__emission_a281be8ca77bf3c15b3674cdf7946378d}{00253}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__emission_a281be8ca77bf3c15b3674cdf7946378d}{update\_data\_rate\_set}}(this,\ base\_rate)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00252}00252\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ reactions}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00253}\mbox{\hyperlink{namespacecamp__rxn__emission_af300f8ec9e50816bf04c96840c70c21d}{00253}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}(this)}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00254}00254\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00255}00255\ \textcolor{comment}{\ \ \ \ !>\ Update\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00256}00256\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\_update\_data\_emission\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00257}00257\ \textcolor{comment}{\ \ \ \ !>\ Updated\ pre-\/scaling\ emission\ rate}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00258}00258\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ base\_rate}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00255}00255\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ reactions}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00256}00256\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\_emission\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00257}00257\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00258}00258\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00259}00259\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00260}00260\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{interfacecamp__rxn__emission_1_1rxn__emission__set__rate__update__data}{rxn\_emission\_set\_rate\_update\_data}}(this\%get\_data(),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ this\%rxn\_unique\_id,\ base\_rate)}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00262}00262\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00263}00263\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__emission_a281be8ca77bf3c15b3674cdf7946378d}{update\_data\_rate\_set}}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00264}00264\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00265}00265\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00266}00266\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00267}00267\ \textcolor{comment}{\ \ !>\ Initialize\ update\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00268}\mbox{\hyperlink{namespacecamp__rxn__emission_af9ce1d3bfd29e3ee49aaf22279e9f4c7}{00268}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__emission_af9ce1d3bfd29e3ee49aaf22279e9f4c7}{update\_data\_initialize}}(this,\ update\_data,\ rxn\_type)}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00269}00269\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00270}00270\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rand}{camp\_rand}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}\ :\ \mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{generate\_int\_id}}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00271}00271\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00272}00272\ \textcolor{comment}{\ \ \ \ !>\ The\ reaction\ to\ be\ udpated}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00273}00273\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\_emission\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00274}00274\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ object}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00275}00275\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\_update\_data\_emission\_t}}),\ \textcolor{keywordtype}{intent(out)}\ ::\ update\_data\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00276}00276\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ type\ id}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00277}00277\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)}\ ::\ rxn\_type}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00260}00260\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00261}00261\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this(i))}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00262}00262\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00263}00263\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00264}00264\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00265}00265\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00266}00266\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00267}00267\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00268}00268\ \textcolor{comment}{\ \ !>\ Set\ packed\ update\ data\ for\ emission\ rate\ constants}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00269}\mbox{\hyperlink{namespacecamp__rxn__emission_a281be8ca77bf3c15b3674cdf7946378d}{00269}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__emission_a281be8ca77bf3c15b3674cdf7946378d}{update\_data\_rate\_set}}(this,\ base\_rate)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00270}00270\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00271}00271\ \textcolor{comment}{\ \ \ \ !>\ Update\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00272}00272\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\_update\_data\_emission\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00273}00273\ \textcolor{comment}{\ \ \ \ !>\ Updated\ pre-\/scaling\ emission\ rate}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00274}00274\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ base\_rate}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00275}00275\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00276}00276\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{interfacecamp__rxn__emission_1_1rxn__emission__set__rate__update__data}{rxn\_emission\_set\_rate\_update\_data}}(this\%get\_data(),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ this\%rxn\_unique\_id,\ base\_rate)}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00278}00278\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00279}00279\ \ \ \ \ \textcolor{comment}{!\ If\ a\ reaction\ id\ has\ not\ yet\ been\ generated,\ do\ it\ now}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00280}00280\ \ \ \ \ \textcolor{keywordflow}{if}\ (rxn\_id\_.eq.-\/1)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00281}00281\ \ \ \ \ \ \ rxn\_id\_\ =\ \mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{generate\_int\_id}}()}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00282}00282\ \textcolor{keywordflow}{\ \ \ \ endif}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00283}00283\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00284}00284\ \ \ \ \ update\_data\%rxn\_unique\_id\ =\ rxn\_id\_}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00285}00285\ \ \ \ \ update\_data\%rxn\_type\ =\ int(rxn\_type,\ kind=c\_int)}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00286}00286\ \ \ \ \ update\_data\%update\_data\ =\ \mbox{\hyperlink{interfacecamp__rxn__emission_1_1rxn__emission__create__rate__update__data}{rxn\_emission\_create\_rate\_update\_data}}()}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00287}00287\ \ \ \ \ update\_data\%is\_malloced\ =\ .true.}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00288}00288\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00289}00289\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__emission_af9ce1d3bfd29e3ee49aaf22279e9f4c7}{update\_data\_initialize}}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00290}00290\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00291}00291\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00292}00292\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00293}00293\ \textcolor{comment}{\ \ !>\ Determine\ the\ size\ of\ a\ binary\ required\ to\ pack\ the\ reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00294}\mbox{\hyperlink{namespacecamp__rxn__emission_a39eb8f193083fa40ef8d84643aa04ac2}{00294}}\ \ \ \textcolor{keyword}{integer(kind=i\_kind)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__pack__size}{internal\_pack\_size}}(this,\ comm)\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00295}00295\ \ \ \ \ \ \ result(\mbox{\hyperlink{namespacecamp__aero__rep__data_a4a1d35f1a4f0f3a24aae257c90eb7d7b}{pack\_size}})}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00296}00296\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00297}00297\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ update\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00298}00298\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\_update\_data\_emission\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00299}00299\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00300}00300\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00301}00301\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00302}00302\ \ \ \ \ \mbox{\hyperlink{namespacecamp__aero__rep__data_a4a1d35f1a4f0f3a24aae257c90eb7d7b}{pack\_size}}\ =\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00303}00303\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_a91e386d6f20f660ab0762c32bb55e3a7}{camp\_mpi\_pack\_size\_logical}}(this\%is\_malloced,\ comm)\ +\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00304}00304\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(this\%rxn\_unique\_id,\ comm)}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00305}00305\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00306}00306\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__pack__size}{internal\_pack\_size}}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00307}00307\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00308}00308\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00309}00309\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00310}00310\ \textcolor{comment}{\ \ !>\ Pack\ the\ given\ value\ to\ the\ buffer,\ advancing\ position}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00311}\mbox{\hyperlink{namespacecamp__rxn__emission_ad82a22ae9ba6a379ee426944f9c833d8}{00311}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__pack}{internal\_bin\_pack}}(this,\ buffer,\ pos,\ comm)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00279}00279\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__emission_a281be8ca77bf3c15b3674cdf7946378d}{update\_data\_rate\_set}}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00280}00280\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00281}00281\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00282}00282\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00283}00283\ \textcolor{comment}{\ \ !>\ Initialize\ update\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00284}\mbox{\hyperlink{namespacecamp__rxn__emission_af9ce1d3bfd29e3ee49aaf22279e9f4c7}{00284}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__emission_af9ce1d3bfd29e3ee49aaf22279e9f4c7}{update\_data\_initialize}}(this,\ update\_data,\ rxn\_type)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00285}00285\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00286}00286\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rand}{camp\_rand}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}\ :\ \mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{generate\_int\_id}}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00287}00287\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00288}00288\ \textcolor{comment}{\ \ \ \ !>\ The\ reaction\ to\ be\ udpated}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00289}00289\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\_emission\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00290}00290\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00291}00291\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\_update\_data\_emission\_t}}),\ \textcolor{keywordtype}{intent(out)}\ ::\ update\_data\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00292}00292\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ type\ id}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00293}00293\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)}\ ::\ rxn\_type}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00294}00294\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00295}00295\ \ \ \ \ \textcolor{comment}{!\ If\ a\ reaction\ id\ has\ not\ yet\ been\ generated,\ do\ it\ now}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00296}00296\ \ \ \ \ \textcolor{keywordflow}{if}\ (rxn\_id\_.eq.-\/1)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00297}00297\ \ \ \ \ \ \ rxn\_id\_\ =\ \mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{generate\_int\_id}}()}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00298}00298\ \textcolor{keywordflow}{\ \ \ \ endif}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00299}00299\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00300}00300\ \ \ \ \ update\_data\%rxn\_unique\_id\ =\ rxn\_id\_}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00301}00301\ \ \ \ \ update\_data\%rxn\_type\ =\ int(rxn\_type,\ kind=c\_int)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00302}00302\ \ \ \ \ update\_data\%update\_data\ =\ \mbox{\hyperlink{interfacecamp__rxn__emission_1_1rxn__emission__create__rate__update__data}{rxn\_emission\_create\_rate\_update\_data}}()}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00303}00303\ \ \ \ \ update\_data\%is\_malloced\ =\ .true.}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00304}00304\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00305}00305\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__emission_af9ce1d3bfd29e3ee49aaf22279e9f4c7}{update\_data\_initialize}}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00306}00306\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00307}00307\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00308}00308\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00309}00309\ \textcolor{comment}{\ \ !>\ Determine\ the\ size\ of\ a\ binary\ required\ to\ pack\ the\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00310}\mbox{\hyperlink{namespacecamp__rxn__emission_a39eb8f193083fa40ef8d84643aa04ac2}{00310}}\ \ \ \textcolor{keyword}{integer(kind=i\_kind)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__pack__size}{internal\_pack\_size}}(this,\ comm)\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00311}00311\ \ \ \ \ \ \ result(\mbox{\hyperlink{namespacecamp__aero__rep__data_a4a1d35f1a4f0f3a24aae257c90eb7d7b}{pack\_size}})}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00312}00312\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00313}00313\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ update\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00314}00314\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\_update\_data\_emission\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00315}00315\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00316}00316\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00317}00317\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00318}00318\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00319}00319\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00320}00320\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00315}00315\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00316}00316\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00317}00317\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00318}00318\ \ \ \ \ \mbox{\hyperlink{namespacecamp__aero__rep__data_a4a1d35f1a4f0f3a24aae257c90eb7d7b}{pack\_size}}\ =\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00319}00319\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_a91e386d6f20f660ab0762c32bb55e3a7}{camp\_mpi\_pack\_size\_logical}}(this\%is\_malloced,\ comm)\ +\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00320}00320\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(this\%rxn\_unique\_id,\ comm)}
 \DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00321}00321\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00322}00322\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00323}00323\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00324}00324\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00325}00325\ \ \ \ \ prev\_position\ =\ pos}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00326}00326\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a478c2ca36da605f816ccb99988201acc}{camp\_mpi\_pack\_logical}}(buffer,\ pos,\ this\%is\_malloced,\ comm)}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00327}00327\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer,\ pos,\ this\%rxn\_unique\_id,\ comm)}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00328}00328\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(945453741,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00329}00329\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(comm))}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00330}00330\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00331}00331\ \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00332}00332\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__pack}{internal\_bin\_pack}}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00333}00333\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00334}00334\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00335}00335\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00336}00336\ \textcolor{comment}{\ \ !>\ Unpack\ the\ given\ value\ from\ the\ buffer,\ advancing\ position}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00337}\mbox{\hyperlink{namespacecamp__rxn__emission_abd42fbac768937f899625ab96d36251b}{00337}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__unpack}{internal\_bin\_unpack}}(this,\ buffer,\ pos,\ comm)}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00338}00338\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00339}00339\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ update\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00340}00340\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\_update\_data\_emission\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00341}00341\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00342}00342\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00343}00343\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00344}00344\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00345}00345\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00346}00346\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00347}00347\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00348}00348\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00349}00349\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00350}00350\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00351}00351\ \ \ \ \ prev\_position\ =\ pos}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00352}00352\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a6280c3d9ec2de483b881f0ab7280ddbb}{camp\_mpi\_unpack\_logical}}(buffer,\ pos,\ this\%is\_malloced,\ comm)}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00353}00353\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer,\ pos,\ this\%rxn\_unique\_id,\ comm)}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00354}00354\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(775296837,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00355}00355\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(comm))}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00356}00356\ \ \ \ \ this\%update\_data\ =\ \mbox{\hyperlink{interfacecamp__rxn__emission_1_1rxn__emission__create__rate__update__data}{rxn\_emission\_create\_rate\_update\_data}}()}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00357}00357\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00358}00358\ \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00359}00359\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__unpack}{internal\_bin\_unpack}}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00360}00360\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00361}00361\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00362}00362\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00363}00363\ \textcolor{comment}{\ \ !>\ Finalize\ an\ update\ data\ object}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00364}\mbox{\hyperlink{namespacecamp__rxn__emission_ad2ebaade1033d55208ee52421f7eb9ea}{00364}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__emission_ad2ebaade1033d55208ee52421f7eb9ea}{update\_data\_finalize}}(this)}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00365}00365\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00366}00366\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ object\ to\ free}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00367}00367\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\_update\_data\_emission\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00368}00368\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00369}00369\ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%is\_malloced)\ \textcolor{keyword}{call\ }\mbox{\hyperlink{interfacecamp__rxn__emission_1_1rxn__free__update__data}{rxn\_free\_update\_data}}(this\%update\_data)}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00370}00370\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00371}00371\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__emission_ad2ebaade1033d55208ee52421f7eb9ea}{update\_data\_finalize}}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00372}00372\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00373}00373\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00374}00374\ }
-\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00375}00375\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__emission}{camp\_rxn\_emission}}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00322}00322\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__pack__size}{internal\_pack\_size}}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00323}00323\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00324}00324\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00325}00325\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00326}00326\ \textcolor{comment}{\ \ !>\ Pack\ the\ given\ value\ to\ the\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00327}\mbox{\hyperlink{namespacecamp__rxn__emission_ad82a22ae9ba6a379ee426944f9c833d8}{00327}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__pack}{internal\_bin\_pack}}(this,\ buffer,\ pos,\ comm)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00328}00328\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00329}00329\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ update\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00330}00330\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\_update\_data\_emission\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00331}00331\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00332}00332\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00333}00333\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00334}00334\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00335}00335\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00336}00336\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00337}00337\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00338}00338\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00339}00339\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00340}00340\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00341}00341\ \ \ \ \ prev\_position\ =\ pos}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00342}00342\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a478c2ca36da605f816ccb99988201acc}{camp\_mpi\_pack\_logical}}(buffer,\ pos,\ this\%is\_malloced,\ comm)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00343}00343\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer,\ pos,\ this\%rxn\_unique\_id,\ comm)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00344}00344\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(945453741,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00345}00345\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(comm))}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00346}00346\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00347}00347\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00348}00348\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__pack}{internal\_bin\_pack}}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00349}00349\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00350}00350\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00351}00351\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00352}00352\ \textcolor{comment}{\ \ !>\ Unpack\ the\ given\ value\ from\ the\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00353}\mbox{\hyperlink{namespacecamp__rxn__emission_abd42fbac768937f899625ab96d36251b}{00353}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__unpack}{internal\_bin\_unpack}}(this,\ buffer,\ pos,\ comm)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00354}00354\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00355}00355\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ update\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00356}00356\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\_update\_data\_emission\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00357}00357\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00358}00358\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00359}00359\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00360}00360\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00361}00361\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00362}00362\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00363}00363\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00364}00364\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00365}00365\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00366}00366\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00367}00367\ \ \ \ \ prev\_position\ =\ pos}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00368}00368\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a6280c3d9ec2de483b881f0ab7280ddbb}{camp\_mpi\_unpack\_logical}}(buffer,\ pos,\ this\%is\_malloced,\ comm)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00369}00369\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer,\ pos,\ this\%rxn\_unique\_id,\ comm)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00370}00370\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(775296837,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00371}00371\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(comm))}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00372}00372\ \ \ \ \ this\%update\_data\ =\ \mbox{\hyperlink{interfacecamp__rxn__emission_1_1rxn__emission__create__rate__update__data}{rxn\_emission\_create\_rate\_update\_data}}()}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00373}00373\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00374}00374\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00375}00375\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__unpack}{internal\_bin\_unpack}}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00376}00376\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00377}00377\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00378}00378\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00379}00379\ \textcolor{comment}{\ \ !>\ Finalize\ an\ update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00380}\mbox{\hyperlink{namespacecamp__rxn__emission_a2f92386406c810085eb868883ae1f8be}{00380}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__emission_a2f92386406c810085eb868883ae1f8be}{update\_data\_finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00381}00381\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00382}00382\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ object\ to\ free}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00383}00383\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\_update\_data\_emission\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00384}00384\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00385}00385\ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%is\_malloced)\ \textcolor{keyword}{call\ }\mbox{\hyperlink{interfacecamp__rxn__emission_1_1rxn__free__update__data}{rxn\_free\_update\_data}}(this\%update\_data)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00386}00386\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00387}00387\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__emission_a2f92386406c810085eb868883ae1f8be}{update\_data\_finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00388}00388\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00389}00389\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00390}00390\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00391}00391\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ update\ data\ objects}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00392}\mbox{\hyperlink{namespacecamp__rxn__emission_a47dba1b73a1a2bfc05f828592971b6d4}{00392}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__emission_a47dba1b73a1a2bfc05f828592971b6d4}{update\_data\_finalize\_array}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00393}00393\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00394}00394\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ update\ data\ objects\ to\ free}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00395}00395\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\_update\_data\_emission\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00396}00396\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00397}00397\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00398}00398\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00399}00399\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00400}00400\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__rxn__emission_a2f92386406c810085eb868883ae1f8be}{update\_data\_finalize}}(this(i))}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00401}00401\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00402}00402\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00403}00403\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__emission_a47dba1b73a1a2bfc05f828592971b6d4}{update\_data\_finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00404}00404\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00405}00405\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00406}00406\ }
+\DoxyCodeLine{\Hypertarget{rxn__emission_8_f90_source_l00407}00407\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__emission}{camp\_rxn\_emission}}}
 
 \end{DoxyCode}

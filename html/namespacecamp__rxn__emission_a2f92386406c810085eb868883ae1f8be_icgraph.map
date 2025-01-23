@@ -1,0 +1,8 @@
+<map id="camp_rxn_emission::update_data_finalize" name="camp_rxn_emission::update_data_finalize">
+<area shape="rect" id="Node000001" title="Finalize an update data object." alt="" coords="450,13,592,54"/>
+<area shape="rect" id="Node000002" href="$structcamp__rxn__emission_1_1rxn__update__data__emission__t.html#a9d77cacfa96cde5c181a678a5bb5233d" title="Finalize the rate update data." alt="" coords="5,5,181,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="434,33,402,32,229,32,181,33,181,28,229,27,402,27,434,27"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__rxn__emission.html#a47dba1b73a1a2bfc05f828592971b6d4" title="Finalize an array of update data objects." alt="" coords="229,41,402,82"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="435,48,403,52,402,47,434,42"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="213,51,181,47,181,42,214,46"/>
+</map>

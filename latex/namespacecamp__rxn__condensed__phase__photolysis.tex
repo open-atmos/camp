@@ -27,8 +27,10 @@ subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a0f
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
 type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a80ba2df3166d8cd40ef07ebcec6293db}{get\+\_\+property\+\_\+set}} (this)
 \begin{DoxyCompactList}\small\item\em Get the reaction properties. (For use by external photolysis modules.) \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_aeed920c22a56f60131e7d515275666b6}{finalize}} (this)
+subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a7ce26320f77748fadf951eeea28a2f59}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a0d12a2703cb61b56bf39e3e68fde2bc5}{finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of reactions. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ae70f9b706dc52f1be044d2aedd2dad22}{update\+\_\+data\+\_\+rate\+\_\+set}} (this, base\+\_\+rate)
 \begin{DoxyCompactList}\small\item\em Set packed update data for photolysis rate constants. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a75d0d118062d5bfd38e0f36e64aab706}{update\+\_\+data\+\_\+initialize}} (this, update\+\_\+data, rxn\+\_\+type)
@@ -39,8 +41,10 @@ subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_aae
 \begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_aa5e3c77ac0528b0109a890a25d56b2a9}{internal\+\_\+bin\+\_\+unpack}} (this, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a5f27685a1af55aa6168921ef4659e2b3}{update\+\_\+data\+\_\+finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize an update data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ad77a924a5f63d0e06ac24eb437f63733}{update\+\_\+data\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an update data object. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a5f4efee9927e338f213d93b4b28a8219}{update\+\_\+data\+\_\+finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of update data objects. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -64,11 +68,11 @@ A new reaction instance
 
 Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00173}{173}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
 
-\Hypertarget{namespacecamp__rxn__condensed__phase__photolysis_aeed920c22a56f60131e7d515275666b6}\label{namespacecamp__rxn__condensed__phase__photolysis_aeed920c22a56f60131e7d515275666b6} 
+\Hypertarget{namespacecamp__rxn__condensed__phase__photolysis_a7ce26320f77748fadf951eeea28a2f59}\label{namespacecamp__rxn__condensed__phase__photolysis_a7ce26320f77748fadf951eeea28a2f59} 
 \index{camp\_rxn\_condensed\_phase\_photolysis@{camp\_rxn\_condensed\_phase\_photolysis}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_condensed\_phase\_photolysis@{camp\_rxn\_condensed\_phase\_photolysis}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -83,6 +87,33 @@ Finalize the reaction.
 
 Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00522}{522}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
 
+\Hypertarget{namespacecamp__rxn__condensed__phase__photolysis_a0d12a2703cb61b56bf39e3e68fde2bc5}\label{namespacecamp__rxn__condensed__phase__photolysis_a0d12a2703cb61b56bf39e3e68fde2bc5} 
+\index{camp\_rxn\_condensed\_phase\_photolysis@{camp\_rxn\_condensed\_phase\_photolysis}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_rxn\_condensed\_phase\_photolysis@{camp\_rxn\_condensed\_phase\_photolysis}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of reactions. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Reaction data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00539}{539}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__rxn__condensed__phase__photolysis_a0d12a2703cb61b56bf39e3e68fde2bc5_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{namespacecamp__rxn__condensed__phase__photolysis_a80ba2df3166d8cd40ef07ebcec6293db}\label{namespacecamp__rxn__condensed__phase__photolysis_a80ba2df3166d8cd40ef07ebcec6293db} 
 \index{camp\_rxn\_condensed\_phase\_photolysis@{camp\_rxn\_condensed\_phase\_photolysis}!get\_property\_set@{get\_property\_set}}
 \index{get\_property\_set@{get\_property\_set}!camp\_rxn\_condensed\_phase\_photolysis@{camp\_rxn\_condensed\_phase\_photolysis}}
@@ -161,7 +192,7 @@ Pack the given value to the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00597}{597}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00613}{613}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -194,7 +225,7 @@ Unpack the given value from the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00623}{623}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00639}{639}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -223,7 +254,7 @@ Determine the size of a binary required to pack the reaction data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00580}{580}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00596}{596}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -233,11 +264,11 @@ Here is the call graph for this function\+:
 \includegraphics[width=350pt]{namespacecamp__rxn__condensed__phase__photolysis_a60e574eee0bc40e96cddb2c8e0c8138e_cgraph}
 \end{center}
 \end{figure}
-\Hypertarget{namespacecamp__rxn__condensed__phase__photolysis_a5f27685a1af55aa6168921ef4659e2b3}\label{namespacecamp__rxn__condensed__phase__photolysis_a5f27685a1af55aa6168921ef4659e2b3} 
+\Hypertarget{namespacecamp__rxn__condensed__phase__photolysis_ad77a924a5f63d0e06ac24eb437f63733}\label{namespacecamp__rxn__condensed__phase__photolysis_ad77a924a5f63d0e06ac24eb437f63733} 
 \index{camp\_rxn\_condensed\_phase\_photolysis@{camp\_rxn\_condensed\_phase\_photolysis}!update\_data\_finalize@{update\_data\_finalize}}
 \index{update\_data\_finalize@{update\_data\_finalize}!camp\_rxn\_condensed\_phase\_photolysis@{camp\_rxn\_condensed\_phase\_photolysis}}
 \doxysubsubsection{\texorpdfstring{update\_data\_finalize()}{update\_data\_finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::update\+\_\+data\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{rxn\+\_\+update\+\_\+data\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::update\+\_\+data\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{rxn\+\_\+update\+\_\+data\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -250,14 +281,49 @@ Finalize an update data object.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00650}{650}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00666}{666}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacecamp__rxn__condensed__phase__photolysis_a5f27685a1af55aa6168921ef4659e2b3_icgraph}
+\includegraphics[width=350pt]{namespacecamp__rxn__condensed__phase__photolysis_ad77a924a5f63d0e06ac24eb437f63733_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__rxn__condensed__phase__photolysis_a5f4efee9927e338f213d93b4b28a8219}\label{namespacecamp__rxn__condensed__phase__photolysis_a5f4efee9927e338f213d93b4b28a8219} 
+\index{camp\_rxn\_condensed\_phase\_photolysis@{camp\_rxn\_condensed\_phase\_photolysis}!update\_data\_finalize\_array@{update\_data\_finalize\_array}}
+\index{update\_data\_finalize\_array@{update\_data\_finalize\_array}!camp\_rxn\_condensed\_phase\_photolysis@{camp\_rxn\_condensed\_phase\_photolysis}}
+\doxysubsubsection{\texorpdfstring{update\_data\_finalize\_array()}{update\_data\_finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::update\+\_\+data\+\_\+finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{rxn\+\_\+update\+\_\+data\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of update data objects. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Update data object to free \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00678}{678}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__rxn__condensed__phase__photolysis_a5f4efee9927e338f213d93b4b28a8219_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__rxn__condensed__phase__photolysis_a5f4efee9927e338f213d93b4b28a8219_icgraph}
 \end{center}
 \end{figure}
 \Hypertarget{namespacecamp__rxn__condensed__phase__photolysis_a75d0d118062d5bfd38e0f36e64aab706}\label{namespacecamp__rxn__condensed__phase__photolysis_a75d0d118062d5bfd38e0f36e64aab706} 
@@ -281,7 +347,7 @@ Initialize update data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00554}{554}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00570}{570}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -310,5 +376,5 @@ Set packed update data for photolysis rate constants.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00539}{539}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00555}{555}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
 

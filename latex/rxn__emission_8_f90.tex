@@ -49,8 +49,10 @@ subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_acb523afa7b98b8afa1b7a0
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
 type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__emission_ab7c8ff1ba07514c99fdc4a0a6be11988}{camp\+\_\+rxn\+\_\+emission\+::get\+\_\+property\+\_\+set}} (this)
 \begin{DoxyCompactList}\small\item\em Get the reaction properties. (For use by external modules.) \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_a3af938b929508032fba32597c3269eee}{camp\+\_\+rxn\+\_\+emission\+::finalize}} (this)
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_a870578355f3dad062f36754670e6506e}{camp\+\_\+rxn\+\_\+emission\+::finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_af300f8ec9e50816bf04c96840c70c21d}{camp\+\_\+rxn\+\_\+emission\+::finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of reactions. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_a281be8ca77bf3c15b3674cdf7946378d}{camp\+\_\+rxn\+\_\+emission\+::update\+\_\+data\+\_\+rate\+\_\+set}} (this, base\+\_\+rate)
 \begin{DoxyCompactList}\small\item\em Set packed update data for emission rate constants. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_af9ce1d3bfd29e3ee49aaf22279e9f4c7}{camp\+\_\+rxn\+\_\+emission\+::update\+\_\+data\+\_\+initialize}} (this, update\+\_\+data, rxn\+\_\+type)
@@ -61,8 +63,10 @@ subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_ad82a22ae9ba6a379ee4269
 \begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_abd42fbac768937f899625ab96d36251b}{camp\+\_\+rxn\+\_\+emission\+::internal\+\_\+bin\+\_\+unpack}} (this, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_ad2ebaade1033d55208ee52421f7eb9ea}{camp\+\_\+rxn\+\_\+emission\+::update\+\_\+data\+\_\+finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize an update data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_a2f92386406c810085eb868883ae1f8be}{camp\+\_\+rxn\+\_\+emission\+::update\+\_\+data\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an update data object. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__emission_a47dba1b73a1a2bfc05f828592971b6d4}{camp\+\_\+rxn\+\_\+emission\+::update\+\_\+data\+\_\+finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of update data objects. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}

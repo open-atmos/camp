@@ -225,7 +225,7 @@
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00221}00221\ \textcolor{comment}{\ \ \ \ !!\ of\ higher\ priority\ sub\ models.}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00222}\mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t_a4c4d1d42374afe2e8fd06b35faa9f53d}{00222}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{interfacecamp__sub__model__data_1_1priority}{priority}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00223}00223\ \textcolor{comment}{\ \ \ \ !>\ Finalize}}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00224}\mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t_ad17c1b13fc329a9bfb3be6b1dc0c24c9}{00224}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00224}\mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t_ad17c1b13fc329a9bfb3be6b1dc0c24c9}{00224}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}},\ \mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00225}00225\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\_model\_zsr\_aerosol\_water\_t}}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00226}00226\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00227}00227\ \textcolor{comment}{\ \ !>\ Constructor\ for\ sub\_model\_ZSR\_aerosol\_water\_t}}
@@ -720,7 +720,7 @@
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00716}00716\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00717}00717\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00718}00718\ \textcolor{comment}{\ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00719}\mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water_a6c473852d103ea1eaffb6e923703614a}{00719}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00719}\mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water_a442c233848c1f53b1fa27888f907633b}{00719}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this)}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00720}00720\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00721}00721\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00722}00722\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\_model\_zsr\_aerosol\_water\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
@@ -732,10 +732,26 @@
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00728}00728\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_int))\ \&}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00729}00729\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_int)}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00730}00730\ }
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00731}00731\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00731}00731\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00732}00732\ }
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00733}00733\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00734}00734\ }
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00735}00735\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water}{camp\_sub\_model\_zsr\_aerosol\_water}}}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00734}00734\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00735}00735\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ sub\ models}}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00736}\mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water_ae5da76c41d1cfe74852090f791974592}{00736}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}(this)}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00737}00737\ \ \ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00738}00738\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ sub\ models}}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00739}00739\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\_model\_zsr\_aerosol\_water\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00740}00740\ }
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00741}00741\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00742}00742\ }
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00743}00743\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00744}00744\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this(i))}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00745}00745\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00746}00746\ }
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00747}00747\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00748}00748\ }
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00749}00749\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00750}00750\ }
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8_f90_source_l00751}00751\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water}{camp\_sub\_model\_zsr\_aerosol\_water}}}
 
 \end{DoxyCode}

@@ -97,8 +97,10 @@ integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__rep__mo
 \begin{DoxyCompactList}\small\item\em Get the number of instances of a specified aerosol phase. \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_aed4438fdb785bdabc1ac0381af9a157d}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::num\+\_\+jac\+\_\+elem}} (this, phase\+\_\+id)
 \begin{DoxyCompactList}\small\item\em Get the number of \doxylink{struct_jacobian}{Jacobian} elements used in calculations of aerosol mass, volume, number, etc. for a particular phase. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a92e5f0912e0043cf3997128af656eb3a}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::finalize}} (this)
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a1a2f50822837357ce16a3973ef71525a}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the aerosol representation. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_afcb21ccb14795432a4fc65e8e5892c04}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::finalize\+\_\+array}} (aero\+\_\+reps)
+\begin{DoxyCompactList}\small\item\em Finalize the aerosol representation array. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_afccea8b1865d3f94a32c1bb856d516ba}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+init\+\_\+gmd}} (this, update\+\_\+data, aero\+\_\+rep\+\_\+type)
 \begin{DoxyCompactList}\small\item\em Initialize a GMD update object. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a9c9c6b14c65eae8ac6a3ffe178fef3d3}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+set\+\_\+gmd}} (this, section\+\_\+id, gmd)
@@ -109,8 +111,10 @@ subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a1a68e
 \begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a724950fc8389ffa38a4a1497b5886420}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::internal\+\_\+bin\+\_\+unpack\+\_\+gmd}} (this, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_afd447c39e8f80a6c6849a9562dfc851e}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+gmd\+\_\+finalize}} (this)
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_aea3372ba3e6f599f8b8df4a2ed45ea07}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+gmd\+\_\+finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize a GMD update data object. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a30b10781273462f1003707e8df3d2dc3}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+gmd\+\_\+finalize\+\_\+array}} (update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Finalize a GMD update data array. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a009d8b27783a5659ec7d8a5cc8fbaeea}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+init\+\_\+gsd}} (this, update\+\_\+data, aero\+\_\+rep\+\_\+type)
 \begin{DoxyCompactList}\small\item\em Initialize a GSD update data object. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a38a7229aa559be9f435c6dd6470c7641}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+set\+\_\+gsd}} (this, section\+\_\+id, gsd)
@@ -121,8 +125,10 @@ subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a796c7
 \begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a0d63c15aa46fd5fbbd43b59e5940cf40}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::internal\+\_\+bin\+\_\+unpack\+\_\+gsd}} (this, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_ad670c66458900e6a2c2ea7c527a82003}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+gsd\+\_\+finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize a GSD update data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_ad5d6e5e37724f20755dbe8adc7abac69}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+gsd\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize a GSD update data object. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_ad9520c61d54cdfdf16768227ef27cf7a}{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+gsd\+\_\+finalize\+\_\+array}} (update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Finalize a GSD update data array. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 

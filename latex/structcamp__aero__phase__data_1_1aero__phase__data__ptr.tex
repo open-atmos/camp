@@ -21,7 +21,9 @@ Collaboration diagram for camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase
 procedure \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr_abdc251f2d51ecc99cff81c0d9e56e830}{dereference}} (this)
 \begin{DoxyCompactList}\small\item\em Dereference the pointer. \end{DoxyCompactList}\item 
 final \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr_a58d887c775d832ce54e668098bb16fd6}{ptr\+\_\+finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize the pointer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Finalize the pointer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr_acd89805de1045b8295c4406c1e7861eb}{ptr\+\_\+finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of pointers to aerosol phase data. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -85,6 +87,25 @@ Dereference the pointer.
 
 
 Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00152}{152}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__aero__phase__data_1_1aero__phase__data__ptr_acd89805de1045b8295c4406c1e7861eb}\label{structcamp__aero__phase__data_1_1aero__phase__data__ptr_acd89805de1045b8295c4406c1e7861eb} 
+\index{camp\_aero\_phase\_data::aero\_phase\_data\_ptr@{camp\_aero\_phase\_data::aero\_phase\_data\_ptr}!ptr\_finalize\_array@{ptr\_finalize\_array}}
+\index{ptr\_finalize\_array@{ptr\_finalize\_array}!camp\_aero\_phase\_data::aero\_phase\_data\_ptr@{camp\_aero\_phase\_data::aero\_phase\_data\_ptr}}
+\doxysubsubsection{\texorpdfstring{ptr\_finalize\_array()}{ptr\_finalize\_array()}}
+{\footnotesize\ttfamily camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+ptr\+::ptr\+\_\+finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})}
+
+
+
+Finalize an array of pointers to aerosol phase data. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of pointers to aerosol phase data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00154}{154}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 
 

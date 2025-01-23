@@ -17,8 +17,10 @@ type(\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__r
 \begin{DoxyCompactList}\small\item\em Constructor for Wennberg no\+\_\+ro2 reaction. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_a4380ce12e874ed0fd2dbceb5b4e31284}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_a8709a897f55c2dcc437c60f053f40bad}{finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_acdc032de368e4ad73c38499a4ececf11}{finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_aafd3ac1652f344d30aad709503996788}{finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of reactions. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -42,11 +44,11 @@ A new reaction instance
 
 Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source_l00128}{128}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+F90}}.
 
-\Hypertarget{namespacecamp__rxn__wennberg__no__ro2_a8709a897f55c2dcc437c60f053f40bad}\label{namespacecamp__rxn__wennberg__no__ro2_a8709a897f55c2dcc437c60f053f40bad} 
+\Hypertarget{namespacecamp__rxn__wennberg__no__ro2_acdc032de368e4ad73c38499a4ececf11}\label{namespacecamp__rxn__wennberg__no__ro2_acdc032de368e4ad73c38499a4ececf11} 
 \index{camp\_rxn\_wennberg\_no\_ro2@{camp\_rxn\_wennberg\_no\_ro2}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_wennberg\_no\_ro2@{camp\_rxn\_wennberg\_no\_ro2}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -61,6 +63,33 @@ Finalize the reaction.
 
 Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source_l00317}{317}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+F90}}.
 
+\Hypertarget{namespacecamp__rxn__wennberg__no__ro2_aafd3ac1652f344d30aad709503996788}\label{namespacecamp__rxn__wennberg__no__ro2_aafd3ac1652f344d30aad709503996788} 
+\index{camp\_rxn\_wennberg\_no\_ro2@{camp\_rxn\_wennberg\_no\_ro2}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_rxn\_wennberg\_no\_ro2@{camp\_rxn\_wennberg\_no\_ro2}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of reactions. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of reaction data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source_l00334}{334}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__rxn__wennberg__no__ro2_aafd3ac1652f344d30aad709503996788_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{namespacecamp__rxn__wennberg__no__ro2_a4380ce12e874ed0fd2dbceb5b4e31284}\label{namespacecamp__rxn__wennberg__no__ro2_a4380ce12e874ed0fd2dbceb5b4e31284} 
 \index{camp\_rxn\_wennberg\_no\_ro2@{camp\_rxn\_wennberg\_no\_ro2}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_wennberg\_no\_ro2@{camp\_rxn\_wennberg\_no\_ro2}}

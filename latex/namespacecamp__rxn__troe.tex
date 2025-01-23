@@ -17,8 +17,10 @@ type(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\+\_\+troe\+\_\+
 \begin{DoxyCompactList}\small\item\em Constructor for Troe reaction. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__troe_a9722464e9603a64e43d61be72e7c4ebe}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__troe_add0bd4c886d3a64d48a29700035534d9}{finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__rxn__troe_af94c6c642fc4c9845245ada2d59f8a38}{finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e}{finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of reactions. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -42,11 +44,11 @@ A new reaction instance
 
 Definition at line \mbox{\hyperlink{rxn__troe_8_f90_source_l00123}{123}} of file \mbox{\hyperlink{rxn__troe_8_f90_source}{rxn\+\_\+troe.\+F90}}.
 
-\Hypertarget{namespacecamp__rxn__troe_add0bd4c886d3a64d48a29700035534d9}\label{namespacecamp__rxn__troe_add0bd4c886d3a64d48a29700035534d9} 
+\Hypertarget{namespacecamp__rxn__troe_af94c6c642fc4c9845245ada2d59f8a38}\label{namespacecamp__rxn__troe_af94c6c642fc4c9845245ada2d59f8a38} 
 \index{camp\_rxn\_troe@{camp\_rxn\_troe}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_troe@{camp\_rxn\_troe}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+troe\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\+\_\+troe\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+troe\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\+\_\+troe\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -61,6 +63,33 @@ Finalize the reaction.
 
 Definition at line \mbox{\hyperlink{rxn__troe_8_f90_source_l00303}{303}} of file \mbox{\hyperlink{rxn__troe_8_f90_source}{rxn\+\_\+troe.\+F90}}.
 
+\Hypertarget{namespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e}\label{namespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e} 
+\index{camp\_rxn\_troe@{camp\_rxn\_troe}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_rxn\_troe@{camp\_rxn\_troe}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+troe\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\+\_\+troe\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of reactions. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of reaction data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__troe_8_f90_source_l00320}{320}} of file \mbox{\hyperlink{rxn__troe_8_f90_source}{rxn\+\_\+troe.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{namespacecamp__rxn__troe_a9722464e9603a64e43d61be72e7c4ebe}\label{namespacecamp__rxn__troe_a9722464e9603a64e43d61be72e7c4ebe} 
 \index{camp\_rxn\_troe@{camp\_rxn\_troe}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_troe@{camp\_rxn\_troe}}

@@ -17,8 +17,10 @@ type(\mbox{\hyperlink{structcamp__rxn__cmaq__h2o2_1_1rxn__cmaq__h2o2__t}{rxn\+\_
 \begin{DoxyCompactList}\small\item\em Constructor for CMAQ H2\+O2 reaction. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__cmaq__h2o2_ae8bd98b4f645a3269a3cc622dfad905a}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__cmaq__h2o2_af3e24d1b91ecd153915c73a48bd4472c}{finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__rxn__cmaq__h2o2_a04c4156d03c78c6f414d14d5a6e540bc}{finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__cmaq__h2o2_a2a28944b4ebb9ba2f8fc80273d302125}{finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of reactions. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -42,11 +44,11 @@ A new reaction instance
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8_f90_source_l00123}{123}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8_f90_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+F90}}.
 
-\Hypertarget{namespacecamp__rxn__cmaq__h2o2_af3e24d1b91ecd153915c73a48bd4472c}\label{namespacecamp__rxn__cmaq__h2o2_af3e24d1b91ecd153915c73a48bd4472c} 
+\Hypertarget{namespacecamp__rxn__cmaq__h2o2_a04c4156d03c78c6f414d14d5a6e540bc}\label{namespacecamp__rxn__cmaq__h2o2_a04c4156d03c78c6f414d14d5a6e540bc} 
 \index{camp\_rxn\_cmaq\_h2o2@{camp\_rxn\_cmaq\_h2o2}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_cmaq\_h2o2@{camp\_rxn\_cmaq\_h2o2}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+cmaq\+\_\+h2o2\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__cmaq__h2o2_1_1rxn__cmaq__h2o2__t}{rxn\+\_\+cmaq\+\_\+h2o2\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+cmaq\+\_\+h2o2\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__cmaq__h2o2_1_1rxn__cmaq__h2o2__t}{rxn\+\_\+cmaq\+\_\+h2o2\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -61,6 +63,33 @@ Finalize the reaction.
 
 Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8_f90_source_l00295}{295}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8_f90_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+F90}}.
 
+\Hypertarget{namespacecamp__rxn__cmaq__h2o2_a2a28944b4ebb9ba2f8fc80273d302125}\label{namespacecamp__rxn__cmaq__h2o2_a2a28944b4ebb9ba2f8fc80273d302125} 
+\index{camp\_rxn\_cmaq\_h2o2@{camp\_rxn\_cmaq\_h2o2}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_rxn\_cmaq\_h2o2@{camp\_rxn\_cmaq\_h2o2}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+cmaq\+\_\+h2o2\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__cmaq__h2o2_1_1rxn__cmaq__h2o2__t}{rxn\+\_\+cmaq\+\_\+h2o2\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of reactions. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of reaction data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8_f90_source_l00312}{312}} of file \mbox{\hyperlink{rxn___c_m_a_q___h2_o2_8_f90_source}{rxn\+\_\+\+CMAQ\+\_\+\+H2\+O2.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__rxn__cmaq__h2o2_a2a28944b4ebb9ba2f8fc80273d302125_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{namespacecamp__rxn__cmaq__h2o2_ae8bd98b4f645a3269a3cc622dfad905a}\label{namespacecamp__rxn__cmaq__h2o2_ae8bd98b4f645a3269a3cc622dfad905a} 
 \index{camp\_rxn\_cmaq\_h2o2@{camp\_rxn\_cmaq\_h2o2}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_cmaq\_h2o2@{camp\_rxn\_cmaq\_h2o2}}

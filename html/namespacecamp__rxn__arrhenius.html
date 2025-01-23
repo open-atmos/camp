@@ -72,9 +72,12 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:a6f006a7032915fe7e70c0cb03a712096" id="r_a6f006a7032915fe7e70c0cb03a712096"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__arrhenius.html#a6f006a7032915fe7e70c0cb03a712096">initialize</a> (this, chem_spec_data, aero_rep, n_cells)</td></tr>
 <tr class="memdesc:a6f006a7032915fe7e70c0cb03a712096"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving.  <br /></td></tr>
 <tr class="separator:a6f006a7032915fe7e70c0cb03a712096"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9efeacc19f39703b1e8ed82522606e21" id="r_a9efeacc19f39703b1e8ed82522606e21"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__arrhenius.html#a9efeacc19f39703b1e8ed82522606e21">finalize</a> (this)</td></tr>
-<tr class="memdesc:a9efeacc19f39703b1e8ed82522606e21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
-<tr class="separator:a9efeacc19f39703b1e8ed82522606e21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a868efd73d1c83561f1347a1b8cc79c4e" id="r_a868efd73d1c83561f1347a1b8cc79c4e"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__arrhenius.html#a868efd73d1c83561f1347a1b8cc79c4e">finalize</a> (this)</td></tr>
+<tr class="memdesc:a868efd73d1c83561f1347a1b8cc79c4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
+<tr class="separator:a868efd73d1c83561f1347a1b8cc79c4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c96564ba1a75e3d097ce62a1fa1d7ec" id="r_a1c96564ba1a75e3d097ce62a1fa1d7ec"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__arrhenius.html#a1c96564ba1a75e3d097ce62a1fa1d7ec">finalize_array</a> (this)</td></tr>
+<tr class="memdesc:a1c96564ba1a75e3d097ce62a1fa1d7ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize an array of reactions.  <br /></td></tr>
+<tr class="separator:a1c96564ba1a75e3d097ce62a1fa1d7ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="structcamp__rxn__arrhenius_1_1rxn__arrhenius__t.html" title="Generic test reaction data type.">rxn_arrhenius_t</a> type and associated functions. </p>
@@ -106,8 +109,8 @@ Functions/Subroutines</h2></td></tr>
 
 </div>
 </div>
-<a id="a9efeacc19f39703b1e8ed82522606e21" name="a9efeacc19f39703b1e8ed82522606e21"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9efeacc19f39703b1e8ed82522606e21">&#9670;&#160;</a></span>finalize()</h2>
+<a id="a868efd73d1c83561f1347a1b8cc79c4e" name="a868efd73d1c83561f1347a1b8cc79c4e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a868efd73d1c83561f1347a1b8cc79c4e">&#9670;&#160;</a></span>finalize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -116,7 +119,7 @@ Functions/Subroutines</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">elemental subroutine camp_rxn_arrhenius::finalize </td>
+          <td class="memname">subroutine camp_rxn_arrhenius::finalize </td>
           <td>(</td>
           <td class="paramtype">type(<a class="el" href="structcamp__rxn__arrhenius_1_1rxn__arrhenius__t.html">rxn_arrhenius_t</a>), intent(inout)&#160;</td>
           <td class="paramname"><em>this</em></td><td>)</td>
@@ -139,6 +142,52 @@ Functions/Subroutines</h2></td></tr>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="rxn__arrhenius_8_f90_source.html#l00292">292</a> of file <a class="el" href="rxn__arrhenius_8_f90_source.html">rxn_arrhenius.F90</a>.</p>
+
+</div>
+</div>
+<a id="a1c96564ba1a75e3d097ce62a1fa1d7ec" name="a1c96564ba1a75e3d097ce62a1fa1d7ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c96564ba1a75e3d097ce62a1fa1d7ec">&#9670;&#160;</a></span>finalize_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine camp_rxn_arrhenius::finalize_array </td>
+          <td>(</td>
+          <td class="paramtype">type(<a class="el" href="structcamp__rxn__arrhenius_1_1rxn__arrhenius__t.html">rxn_arrhenius_t</a>), dimension(:), intent(inout)&#160;</td>
+          <td class="paramname"><em>this</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Finalize an array of reactions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Array of reaction data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__arrhenius_8_f90_source.html#l00309">309</a> of file <a class="el" href="rxn__arrhenius_8_f90_source.html">rxn_arrhenius.F90</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacecamp__rxn__arrhenius_a1c96564ba1a75e3d097ce62a1fa1d7ec_cgraph.png" border="0" usemap="#anamespacecamp__rxn__arrhenius_a1c96564ba1a75e3d097ce62a1fa1d7ec_cgraph" alt=""/></div>
+<map name="anamespacecamp__rxn__arrhenius_a1c96564ba1a75e3d097ce62a1fa1d7ec_cgraph" id="anamespacecamp__rxn__arrhenius_a1c96564ba1a75e3d097ce62a1fa1d7ec_cgraph">
+<area shape="rect" title="Finalize an array of reactions." alt="" coords="5,5,143,46"/>
+<area shape="rect" href="namespacecamp__camp__state.html#a5522f7056d1ff8bb1626e36c97dfff5a" title="Finalize the state." alt="" coords="191,13,364,39"/>
+<area shape="poly" title=" " alt="" coords="143,23,175,23,175,28,143,28"/>
+</map>
+</div>
 
 </div>
 </div>

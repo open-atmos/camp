@@ -91,7 +91,7 @@
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00087}00087\ \textcolor{comment}{\ \ \ \ !>\ Print\ the\ mechanism\ data}}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00088}\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_a6713a2b580de18e05a794d81ec43f848}{00088}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ print\ =>\ \mbox{\hyperlink{namespacecamp__aero__rep__data_a361ddb02ca802bce038d2b9471f4b923}{do\_print}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00089}00089\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ mechanism}}
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00090}\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_a10680daaad91a57e83bf3dadd6c191d8}{00090}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00090}\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t_a10680daaad91a57e83bf3dadd6c191d8}{00090}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}},\ \mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00091}00091\ }
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00092}00092\ \ \ \ \ \textcolor{comment}{!\ Private\ functions}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00093}00093\ \textcolor{comment}{\ \ \ \ !>\ Ensure\ there\ is\ enough\ room\ in\ the\ reaction\ dataset\ to\ add\ a}}
@@ -111,7 +111,7 @@
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00107}00107\ \textcolor{comment}{\ \ \ \ !>\ Dereference\ the\ pointer}}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00108}\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__ptr_a1a57213df40d350b4cef29835c2da53d}{00108}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__aero__rep__data_a983e49e20c0c686a7566a842910c99f6}{dereference}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00109}00109\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ pointer}}
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00110}\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__ptr_aec13765cdce2bd8c6ce97dcb00878cb0}{00110}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__aero__rep__data_ab3b32282b8f6c9afc8734361f7b47d97}{ptr\_finalize}}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00110}\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__ptr_aec13765cdce2bd8c6ce97dcb00878cb0}{00110}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__aero__rep__data_a3b58ee6e8a00a3bd8f58ca27bae2e0d1}{ptr\_finalize}},\ \mbox{\hyperlink{namespacecamp__aero__rep__data_ae31c9acd8899c57d845c227f4a11b98e}{ptr\_finalize\_array}}}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00111}00111\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__ptr}{mechanism\_data\_ptr}}}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00112}00112\ }
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00113}00113\ \textcolor{keyword}{contains}}
@@ -427,7 +427,7 @@
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00423}00423\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00424}00424\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00425}00425\ \textcolor{comment}{\ \ !>\ Finalize\ the\ mechanism}}
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00426}\mbox{\hyperlink{namespacecamp__mechanism__data_a1381c2540df1e68eb3e59c6e312e35b8}{00426}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00426}\mbox{\hyperlink{namespacecamp__mechanism__data_a86b0e84247ff1b44832e76dfca292053}{00426}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00427}00427\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00428}00428\ \textcolor{comment}{\ \ \ \ !>\ Mechanism\ data}}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00429}00429\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\_data\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
@@ -440,30 +440,62 @@
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00436}00436\ }
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00437}00437\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00438}00438\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00439}00439\ \textcolor{comment}{\ \ !>\ Dereference\ a\ pointer\ to\ a\ mechanism}}
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00440}\mbox{\hyperlink{namespacecamp__mechanism__data_ac628ddcd5da2ac88501e14df1a0b221d}{00440}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_a983e49e20c0c686a7566a842910c99f6}{dereference}}(this)}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00439}00439\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ mechanisms}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00440}\mbox{\hyperlink{namespacecamp__mechanism__data_af085d0d70728c3eb44f3926e9db5c6d5}{00440}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}(this)}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00441}00441\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00442}00442\ \textcolor{comment}{\ \ \ \ !>\ Pointer\ to\ the\ mechanism}}
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00443}00443\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__ptr}{mechanism\_data\_ptr}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00442}00442\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ mechanism\ data}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00443}00443\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\_data\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00444}00444\ }
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00445}00445\ \ \ \ \ this\%val\ =>\ null()}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00445}00445\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_mech}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00446}00446\ }
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00447}00447\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_a983e49e20c0c686a7566a842910c99f6}{dereference}}}
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00448}00448\ }
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00449}00449\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00450}00450\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00451}00451\ \textcolor{comment}{\ \ !>\ Finalize\ a\ pointer\ to\ mechanism\ data}}
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00452}\mbox{\hyperlink{namespacecamp__mechanism__data_a489bbb2e3e203acfa091c3947c757a16}{00452}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_ab3b32282b8f6c9afc8734361f7b47d97}{ptr\_finalize}}(this)}
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00453}00453\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00454}00454\ \textcolor{comment}{\ \ \ \ !>\ Pointer\ to\ mechanism\ data}}
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00455}00455\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__ptr}{mechanism\_data\_ptr}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00456}00456\ }
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00457}00457\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{associated}(this\%val))\ \textcolor{keyword}{deallocate}(this\%val)}
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00458}00458\ }
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00459}00459\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_ab3b32282b8f6c9afc8734361f7b47d97}{ptr\_finalize}}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00447}00447\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_mech\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00448}00448\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this(i\_mech))}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00449}00449\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00450}00450\ }
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00451}00451\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00452}00452\ }
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00453}00453\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00454}00454\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00455}00455\ \textcolor{comment}{\ \ !>\ Dereference\ a\ pointer\ to\ a\ mechanism}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00456}\mbox{\hyperlink{namespacecamp__mechanism__data_ac628ddcd5da2ac88501e14df1a0b221d}{00456}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_a983e49e20c0c686a7566a842910c99f6}{dereference}}(this)}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00457}00457\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00458}00458\ \textcolor{comment}{\ \ \ \ !>\ Pointer\ to\ the\ mechanism}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00459}00459\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__ptr}{mechanism\_data\_ptr}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00460}00460\ }
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00461}00461\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00461}00461\ \ \ \ \ this\%val\ =>\ null()}
 \DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00462}00462\ }
-\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00463}00463\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__mechanism__data}{camp\_mechanism\_data}}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00463}00463\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_a983e49e20c0c686a7566a842910c99f6}{dereference}}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00464}00464\ }
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00465}00465\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00466}00466\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00467}00467\ \textcolor{comment}{\ \ !>\ Finalize\ a\ pointer\ to\ mechanism\ data}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00468}\mbox{\hyperlink{namespacecamp__mechanism__data_a1c2a179ee0d0428dfda2824870c6f440}{00468}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_a3b58ee6e8a00a3bd8f58ca27bae2e0d1}{ptr\_finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00469}00469\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00470}00470\ \textcolor{comment}{\ \ \ \ !>\ Pointer\ to\ mechanism\ data}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00471}00471\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__ptr}{mechanism\_data\_ptr}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00472}00472\ }
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00473}00473\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{associated}(this\%val))\ \textcolor{keyword}{deallocate}(this\%val)}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00474}00474\ }
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00475}00475\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_a3b58ee6e8a00a3bd8f58ca27bae2e0d1}{ptr\_finalize}}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00476}00476\ }
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00477}00477\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00478}00478\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00479}00479\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ mechanism\ data\ pointers}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00480}\mbox{\hyperlink{namespacecamp__mechanism__data_a964f9a19992158e7fad656b526f3e3a1}{00480}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_ae31c9acd8899c57d845c227f4a11b98e}{ptr\_finalize\_array}}(this)}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00481}00481\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00482}00482\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ mechanism\ data\ pointers}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00483}00483\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__ptr}{mechanism\_data\_ptr}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00484}00484\ }
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00485}00485\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_mech}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00486}00486\ }
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00487}00487\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_mech\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00488}00488\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_a3b58ee6e8a00a3bd8f58ca27bae2e0d1}{ptr\_finalize}}(this(i\_mech))}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00489}00489\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00490}00490\ }
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00491}00491\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_ae31c9acd8899c57d845c227f4a11b98e}{ptr\_finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00492}00492\ }
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00493}00493\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00494}00494\ }
+\DoxyCodeLine{\Hypertarget{mechanism__data_8_f90_source_l00495}00495\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__mechanism__data}{camp\_mechanism\_data}}}
 
 \end{DoxyCode}

@@ -1,5 +1,8 @@
 <map id="camp_mechanism_data::mechanism_data_ptr::ptr_finalize" name="camp_mechanism_data::mechanism_data_ptr::ptr_finalize">
 <area shape="rect" id="Node000001" title="Finalize the pointer." alt="" coords="5,5,165,61"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__aero__rep__data.html#ab3b32282b8f6c9afc8734361f7b47d97" title="Finalize a pointer to an aerosol representation." alt="" coords="213,13,355,54"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,31,197,31,197,36,165,36"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__aero__rep__data.html#a3b58ee6e8a00a3bd8f58ca27bae2e0d1" title="Finalize a pointer to an aerosol representation." alt="" coords="403,13,545,54"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,28,213,27,355,27,387,27,387,33,355,32,213,32,165,33"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__aero__rep__data.html#ae31c9acd8899c57d845c227f4a11b98e" title="Finalize an array of pointers to aerosol representations." alt="" coords="213,41,355,82"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="165,42,198,46,197,52,165,47"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="355,48,387,43,388,49,356,53"/>
 </map>

@@ -1,5 +1,8 @@
 <map id="camp_sub_model_data::sub_model_data_ptr::ptr_finalize" name="camp_sub_model_data::sub_model_data_ptr::ptr_finalize">
 <area shape="rect" id="Node000001" title="Finalize the pointer." alt="" coords="5,5,161,61"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__sub__model__data.html#a11c56d9079ebcb5ea484d6029c493dfe" title="Finalize a pointer to a sub&#45;model." alt="" coords="209,13,364,54"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,31,193,31,193,36,161,36"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__sub__model__data.html#a948456dc58fca2c06d03d956c984614f" title="Finalize a pointer to a sub&#45;model." alt="" coords="412,13,567,54"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,28,209,27,364,27,396,27,396,33,364,32,209,32,161,33"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__sub__model__data.html#a995cd06122a36a168d92cfb757eb18f9" title="Finalize an array of pointers to sub&#45;models." alt="" coords="209,41,364,82"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="161,41,193,46,193,51,160,46"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="364,48,396,43,397,49,364,53"/>
 </map>

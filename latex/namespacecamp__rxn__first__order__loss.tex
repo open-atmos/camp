@@ -27,8 +27,10 @@ subroutine \mbox{\hyperlink{namespacecamp__rxn__first__order__loss_ab8c7146c3572
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
 type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__first__order__loss_a21d5862f51c74e8bd9c280b97c9ac0f5}{get\+\_\+property\+\_\+set}} (this)
 \begin{DoxyCompactList}\small\item\em Get the reaction properties. (For use by external modules.) \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__first__order__loss_a52ffa9527e7e542c4b5dade60382a69c}{finalize}} (this)
+subroutine \mbox{\hyperlink{namespacecamp__rxn__first__order__loss_ad1daac74790fcffd9d094630bcee66ff}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__first__order__loss_adeef5a062a0528a791234f7f7fd67c4f}{finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of reactions. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__first__order__loss_ac7cedb2ca263b15ac02f576ef2b92552}{update\+\_\+data\+\_\+rate\+\_\+set}} (this, base\+\_\+rate)
 \begin{DoxyCompactList}\small\item\em Set packed update data for first\+\_\+order\+\_\+loss rate constants. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__first__order__loss_a395cee7c241345c057290f66376b3b22}{update\+\_\+data\+\_\+initialize}} (this, update\+\_\+data, rxn\+\_\+type)
@@ -39,8 +41,10 @@ subroutine \mbox{\hyperlink{namespacecamp__rxn__first__order__loss_a9e5ac33c132e
 \begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__first__order__loss_a87049d4fccdb02be4139a7fc7deaeaf0}{internal\+\_\+bin\+\_\+unpack}} (this, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__first__order__loss_af3ba605b1040f6bfb29d747ddb42d0d8}{update\+\_\+data\+\_\+finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize an update data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__rxn__first__order__loss_aaceee1f463fa17e2828f0a31a2550f29}{update\+\_\+data\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an update data object. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__first__order__loss_a2986b760f5d2cf4b2dda855f5e568afa}{update\+\_\+data\+\_\+finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of update data objects. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -64,11 +68,11 @@ A new reaction instance
 
 Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00154}{154}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
 
-\Hypertarget{namespacecamp__rxn__first__order__loss_a52ffa9527e7e542c4b5dade60382a69c}\label{namespacecamp__rxn__first__order__loss_a52ffa9527e7e542c4b5dade60382a69c} 
+\Hypertarget{namespacecamp__rxn__first__order__loss_ad1daac74790fcffd9d094630bcee66ff}\label{namespacecamp__rxn__first__order__loss_ad1daac74790fcffd9d094630bcee66ff} 
 \index{camp\_rxn\_first\_order\_loss@{camp\_rxn\_first\_order\_loss}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_first\_order\_loss@{camp\_rxn\_first\_order\_loss}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__first__order__loss__t}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__first__order__loss__t}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -83,6 +87,33 @@ Finalize the reaction.
 
 Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00239}{239}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
 
+\Hypertarget{namespacecamp__rxn__first__order__loss_adeef5a062a0528a791234f7f7fd67c4f}\label{namespacecamp__rxn__first__order__loss_adeef5a062a0528a791234f7f7fd67c4f} 
+\index{camp\_rxn\_first\_order\_loss@{camp\_rxn\_first\_order\_loss}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_rxn\_first\_order\_loss@{camp\_rxn\_first\_order\_loss}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__first__order__loss__t}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of reactions. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of reaction data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00256}{256}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__rxn__first__order__loss_adeef5a062a0528a791234f7f7fd67c4f_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{namespacecamp__rxn__first__order__loss_a21d5862f51c74e8bd9c280b97c9ac0f5}\label{namespacecamp__rxn__first__order__loss_a21d5862f51c74e8bd9c280b97c9ac0f5} 
 \index{camp\_rxn\_first\_order\_loss@{camp\_rxn\_first\_order\_loss}!get\_property\_set@{get\_property\_set}}
 \index{get\_property\_set@{get\_property\_set}!camp\_rxn\_first\_order\_loss@{camp\_rxn\_first\_order\_loss}}
@@ -161,7 +192,7 @@ Pack the given value to the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00314}{314}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00330}{330}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -194,7 +225,7 @@ Unpack the given value from the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00340}{340}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00356}{356}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -223,7 +254,7 @@ Determine the size of a binary required to pack the reaction data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00297}{297}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00313}{313}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -233,11 +264,11 @@ Here is the call graph for this function\+:
 \includegraphics[width=350pt]{namespacecamp__rxn__first__order__loss_a89cafcfa5470cf801f0b142f3c5a3965_cgraph}
 \end{center}
 \end{figure}
-\Hypertarget{namespacecamp__rxn__first__order__loss_af3ba605b1040f6bfb29d747ddb42d0d8}\label{namespacecamp__rxn__first__order__loss_af3ba605b1040f6bfb29d747ddb42d0d8} 
+\Hypertarget{namespacecamp__rxn__first__order__loss_aaceee1f463fa17e2828f0a31a2550f29}\label{namespacecamp__rxn__first__order__loss_aaceee1f463fa17e2828f0a31a2550f29} 
 \index{camp\_rxn\_first\_order\_loss@{camp\_rxn\_first\_order\_loss}!update\_data\_finalize@{update\_data\_finalize}}
 \index{update\_data\_finalize@{update\_data\_finalize}!camp\_rxn\_first\_order\_loss@{camp\_rxn\_first\_order\_loss}}
 \doxysubsubsection{\texorpdfstring{update\_data\_finalize()}{update\_data\_finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::update\+\_\+data\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t}{rxn\+\_\+update\+\_\+data\+\_\+first\+\_\+order\+\_\+loss\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::update\+\_\+data\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t}{rxn\+\_\+update\+\_\+data\+\_\+first\+\_\+order\+\_\+loss\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -250,14 +281,49 @@ Finalize an update data object.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00367}{367}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00383}{383}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacecamp__rxn__first__order__loss_af3ba605b1040f6bfb29d747ddb42d0d8_icgraph}
+\includegraphics[width=350pt]{namespacecamp__rxn__first__order__loss_aaceee1f463fa17e2828f0a31a2550f29_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__rxn__first__order__loss_a2986b760f5d2cf4b2dda855f5e568afa}\label{namespacecamp__rxn__first__order__loss_a2986b760f5d2cf4b2dda855f5e568afa} 
+\index{camp\_rxn\_first\_order\_loss@{camp\_rxn\_first\_order\_loss}!update\_data\_finalize\_array@{update\_data\_finalize\_array}}
+\index{update\_data\_finalize\_array@{update\_data\_finalize\_array}!camp\_rxn\_first\_order\_loss@{camp\_rxn\_first\_order\_loss}}
+\doxysubsubsection{\texorpdfstring{update\_data\_finalize\_array()}{update\_data\_finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+first\+\_\+order\+\_\+loss\+::update\+\_\+data\+\_\+finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t}{rxn\+\_\+update\+\_\+data\+\_\+first\+\_\+order\+\_\+loss\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of update data objects. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of update data objects to free \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00395}{395}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__rxn__first__order__loss_a2986b760f5d2cf4b2dda855f5e568afa_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__rxn__first__order__loss_a2986b760f5d2cf4b2dda855f5e568afa_icgraph}
 \end{center}
 \end{figure}
 \Hypertarget{namespacecamp__rxn__first__order__loss_a395cee7c241345c057290f66376b3b22}\label{namespacecamp__rxn__first__order__loss_a395cee7c241345c057290f66376b3b22} 
@@ -281,7 +347,7 @@ Initialize update data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00271}{271}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00287}{287}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -310,5 +376,5 @@ Set packed update data for first\+\_\+order\+\_\+loss rate constants.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00256}{256}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__first__order__loss_8_f90_source_l00272}{272}} of file \mbox{\hyperlink{rxn__first__order__loss_8_f90_source}{rxn\+\_\+first\+\_\+order\+\_\+loss.\+F90}}.
 

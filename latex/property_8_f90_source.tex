@@ -70,7 +70,7 @@
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00066}00066\ \textcolor{comment}{\ \ \ \ !>\ Print\ the\ contents\ of\ a\ property\ set}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00067}\mbox{\hyperlink{structcamp__property_1_1property__t_a416c07b0957cdd42494d29138b2f455c}{00067}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ print\ =>\ \mbox{\hyperlink{namespacecamp__property_a1d1ce2cf998f2e6d318ef5877c4ab283}{do\_print}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00068}00068\ \textcolor{comment}{\ \ \ \ !>\ Finalize}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00069}\mbox{\hyperlink{structcamp__property_1_1property__t_ae8a3e1a9f3913e89b616fcff58184536}{00069}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__property_ab123d6312af66960021d4da84dcc7b9f}{finalize}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00069}\mbox{\hyperlink{structcamp__property_1_1property__t_ae8a3e1a9f3913e89b616fcff58184536}{00069}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__property_a839d4093245e3dcda76885f1fc8b2569}{finalize}},\ \mbox{\hyperlink{namespacecamp__property_ada8134a218154da30a9c321fb0090a7f}{finalize\_array}}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00070}00070\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00071}00071\ \textcolor{comment}{\ \ \ \ !>\ Private\ functions}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00072}00072\ \textcolor{comment}{\ \ \ \ !>\ Find\ a\ key-\/value\ pair\ by\ key\ name}}
@@ -120,7 +120,7 @@
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00116}00116\ \textcolor{comment}{\ \ \ \ !>\ Print\ the\ contents\ of\ a\ property\ key-\/value\ pair}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00117}\mbox{\hyperlink{structcamp__property_1_1property__link__t_a6b65f5149160d0b619609091b04bbaf3}{00117}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ print\ =>\ \mbox{\hyperlink{namespacecamp__property_a31bb4ad71e6fac0fdd3dd3e4d6255cb3}{link\_do\_print}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00118}00118\ \textcolor{comment}{\ \ \ \ !>\ Finalize}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00119}\mbox{\hyperlink{structcamp__property_1_1property__link__t_a710e97faf5b37b8dc92774471d9ddac0}{00119}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__property_a8fc09d2181501c08c436eb0995c641cd}{link\_finalize}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00119}\mbox{\hyperlink{structcamp__property_1_1property__link__t_a710e97faf5b37b8dc92774471d9ddac0}{00119}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__property_a9c5d4346fc9bf106dc49372f407d44ea}{link\_finalize}},\ \mbox{\hyperlink{namespacecamp__property_aa1afd639841d0e669133410d6d508f40}{link\_finalize\_array}}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00120}00120\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00121}00121\ }
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00122}00122\ \ \ \textcolor{comment}{!\ Constructor\ for\ link}}
@@ -656,7 +656,7 @@
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00652}00652\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00653}00653\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00654}00654\ \textcolor{comment}{\ \ !>\ Finalize\ a\ property\_t\ variable}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00655}\mbox{\hyperlink{namespacecamp__property_ab123d6312af66960021d4da84dcc7b9f}{00655}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__property_ab123d6312af66960021d4da84dcc7b9f}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00655}\mbox{\hyperlink{namespacecamp__property_a839d4093245e3dcda76885f1fc8b2569}{00655}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__property_a839d4093245e3dcda76885f1fc8b2569}{finalize}}(this)}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00656}00656\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00657}00657\ \textcolor{comment}{\ \ \ \ !>\ Property\ dataset}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00658}00658\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
@@ -670,290 +670,322 @@
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00666}00666\ \ \ \ \ \ \ this\%first\_link\ =>\ next}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00667}00667\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00668}00668\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00669}00669\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__property_ab123d6312af66960021d4da84dcc7b9f}{finalize}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00669}00669\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__property_a839d4093245e3dcda76885f1fc8b2569}{finalize}}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00670}00670\ }
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00671}00671\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00672}00672\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00673}00673\ \textcolor{comment}{\ \ !>\ Find\ a\ key-\/value\ pair\ by\ key\ name.\ Returns\ a\ null\ pointer\ if\ the\ key\ name}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00674}00674\ \textcolor{comment}{\ \ !!\ is\ not\ found.}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00675}\mbox{\hyperlink{namespacecamp__property_a6980a9f16e3c1a9c83783070b34d4f55}{00675}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__property_a6980a9f16e3c1a9c83783070b34d4f55}{get}}(this,\ key)\ \textcolor{keyword}{result}(found\_pair)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00676}00676\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00677}00677\ \textcolor{comment}{\ \ \ \ !>\ Pointer\ to\ property\ key-\/value\ pair}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00678}00678\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ found\_pair\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00679}00679\ \textcolor{comment}{\ \ \ \ !>\ Property\ dataset}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00680}00680\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00681}00681\ \textcolor{comment}{\ \ \ \ !>\ Key\ name\ to\ search\ for}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00682}00682\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{intent(in)}\ ::\ \mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00683}00683\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00684}00684\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ curr\_link}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00685}00685\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00686}00686\ \ \ \ \ found\_pair\ =>\ null()}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00687}00687\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ \textcolor{keyword}{associated}(this\%first\_link))\ \textcolor{keywordflow}{return}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00688}00688\ \ \ \ \ curr\_link\ =>\ this\%first\_link}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00689}00689\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{associated}(curr\_link))}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00690}00690\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}}\ .eq.\ curr\_link\%key())\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00691}00691\ \ \ \ \ \ \ \ \ found\_pair\ =>\ curr\_link}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00692}00692\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00693}00693\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00694}00694\ \ \ \ \ \ \ curr\_link\ =>\ curr\_link\%next\_link}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00695}00695\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00696}00696\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00697}00697\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__property_a6980a9f16e3c1a9c83783070b34d4f55}{get}}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00698}00698\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00699}00699\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00700}00700\ \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00701}00701\ \textcolor{comment}{!!\ property\_link\_t\ functions}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00702}00702\ \textcolor{comment}{!!}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00703}00703\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00704}00704\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00705}00705\ \textcolor{comment}{\ \ !>\ Constructor\ for\ property\_link\_t}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00706}\mbox{\hyperlink{namespacecamp__property_a2bac0cf3f0c88a40cdf50132e00dd30c}{00706}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__property_a2bac0cf3f0c88a40cdf50132e00dd30c}{link\_constructor}}(key,\ val)\ \textcolor{keyword}{result}(new\_obj)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00707}00707\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00708}00708\ \textcolor{comment}{\ \ \ \ !>\ Pointer\ to\ new\ property\ key-\/value\ pair}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00709}00709\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_obj\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00710}00710\ \textcolor{comment}{\ \ \ \ !>\ Key\ name}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00711}00711\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{intent(in)}\ ::\ \mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00712}00712\ \textcolor{comment}{\ \ \ \ !>\ New\ value}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00713}00713\ \ \ \ \ \textcolor{keywordtype}{class}(*),\ \textcolor{keywordtype}{intent(in)}\ ::\ val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00673}00673\ \textcolor{comment}{\ \ !>\ Finalize\ a\ property\_t\ array}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00674}\mbox{\hyperlink{namespacecamp__property_ada8134a218154da30a9c321fb0090a7f}{00674}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__property_ada8134a218154da30a9c321fb0090a7f}{finalize\_array}}(this)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00675}00675\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00676}00676\ \textcolor{comment}{\ \ \ \ !>\ Property\ dataset\ array}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00677}00677\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{dimension(:)},\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00678}00678\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00679}00679\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00680}00680\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00681}00681\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00682}00682\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__property_a839d4093245e3dcda76885f1fc8b2569}{finalize}}(this(i))}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00683}00683\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00684}00684\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00685}00685\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__property_ada8134a218154da30a9c321fb0090a7f}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00686}00686\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00687}00687\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00688}00688\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00689}00689\ \textcolor{comment}{\ \ !>\ Find\ a\ key-\/value\ pair\ by\ key\ name.\ Returns\ a\ null\ pointer\ if\ the\ key\ name}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00690}00690\ \textcolor{comment}{\ \ !!\ is\ not\ found.}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00691}\mbox{\hyperlink{namespacecamp__property_a6980a9f16e3c1a9c83783070b34d4f55}{00691}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__property_a6980a9f16e3c1a9c83783070b34d4f55}{get}}(this,\ key)\ \textcolor{keyword}{result}(found\_pair)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00692}00692\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00693}00693\ \textcolor{comment}{\ \ \ \ !>\ Pointer\ to\ property\ key-\/value\ pair}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00694}00694\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ found\_pair\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00695}00695\ \textcolor{comment}{\ \ \ \ !>\ Property\ dataset}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00696}00696\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00697}00697\ \textcolor{comment}{\ \ \ \ !>\ Key\ name\ to\ search\ for}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00698}00698\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{intent(in)}\ ::\ \mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00699}00699\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00700}00700\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ curr\_link}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00701}00701\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00702}00702\ \ \ \ \ found\_pair\ =>\ null()}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00703}00703\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ \textcolor{keyword}{associated}(this\%first\_link))\ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00704}00704\ \ \ \ \ curr\_link\ =>\ this\%first\_link}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00705}00705\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (\textcolor{keyword}{associated}(curr\_link))}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00706}00706\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}}\ .eq.\ curr\_link\%key())\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00707}00707\ \ \ \ \ \ \ \ \ found\_pair\ =>\ curr\_link}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00708}00708\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00709}00709\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00710}00710\ \ \ \ \ \ \ curr\_link\ =>\ curr\_link\%next\_link}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00711}00711\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00712}00712\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00713}00713\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__property_a6980a9f16e3c1a9c83783070b34d4f55}{get}}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00714}00714\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00715}00715\ \ \ \ \ \textcolor{keyword}{allocate}(new\_obj)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00716}00716\ \ \ \ \ new\_obj\%key\_name\ =\ trim(\mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}})}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00717}00717\ \ \ \ \ new\_obj\%next\_link\ =>\ null()}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00718}00718\ \ \ \ \ \textcolor{keyword}{call\ }new\_obj\%set\_value(val)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00719}00719\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00720}00720\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__property_a2bac0cf3f0c88a40cdf50132e00dd30c}{link\_constructor}}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00721}00721\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00722}00722\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00715}00715\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00716}00716\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00717}00717\ \textcolor{comment}{!!\ property\_link\_t\ functions}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00718}00718\ \textcolor{comment}{!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00719}00719\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00720}00720\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00721}00721\ \textcolor{comment}{\ \ !>\ Constructor\ for\ property\_link\_t}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00722}\mbox{\hyperlink{namespacecamp__property_a2bac0cf3f0c88a40cdf50132e00dd30c}{00722}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__property_a2bac0cf3f0c88a40cdf50132e00dd30c}{link\_constructor}}(key,\ val)\ \textcolor{keyword}{result}(new\_obj)}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00723}00723\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00724}00724\ \textcolor{comment}{\ \ !>\ Get\ the\ key\ name\ of\ a\ property}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00725}\mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{00725}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}}(this)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00726}00726\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00727}00727\ \textcolor{comment}{\ \ \ \ !>\ Key\ name}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00728}00728\ \ \ \ \ \textcolor{keywordtype}{character(:)},\ \textcolor{keywordtype}{allocatable}\ ::\ \mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00729}00729\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00730}00730\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00731}00731\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00732}00732\ \ \ \ \ \mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}}\ =\ this\%key\_name}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00733}00733\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00734}00734\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00724}00724\ \textcolor{comment}{\ \ \ \ !>\ Pointer\ to\ new\ property\ key-\/value\ pair}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00725}00725\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_obj\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00726}00726\ \textcolor{comment}{\ \ \ \ !>\ Key\ name}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00727}00727\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{intent(in)}\ ::\ \mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00728}00728\ \textcolor{comment}{\ \ \ \ !>\ New\ value}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00729}00729\ \ \ \ \ \textcolor{keywordtype}{class}(*),\ \textcolor{keywordtype}{intent(in)}\ ::\ val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00730}00730\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00731}00731\ \ \ \ \ \textcolor{keyword}{allocate}(new\_obj)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00732}00732\ \ \ \ \ new\_obj\%key\_name\ =\ trim(\mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}})}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00733}00733\ \ \ \ \ new\_obj\%next\_link\ =>\ null()}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00734}00734\ \ \ \ \ \textcolor{keyword}{call\ }new\_obj\%set\_value(val)}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00735}00735\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00736}00736\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00737}00737\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00738}00738\ \textcolor{comment}{\ \ !>\ Set\ the\ value\ of\ a\ property\ key-\/value\ pair}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00739}\mbox{\hyperlink{namespacecamp__property_a92d9df64e91f97e476a79887341a6eee}{00739}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__property_a92d9df64e91f97e476a79887341a6eee}{set\_value}}(this,\ val)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00740}00740\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00741}00741\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00742}00742\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00743}00743\ \textcolor{comment}{\ \ \ \ !>\ New\ value}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00744}00744\ \ \ \ \ \textcolor{keywordtype}{class}(*),\ \textcolor{keywordtype}{intent(in)}\ ::\ val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00745}00745\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00746}00746\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ str\_val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00736}00736\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__property_a2bac0cf3f0c88a40cdf50132e00dd30c}{link\_constructor}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00737}00737\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00738}00738\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00739}00739\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00740}00740\ \textcolor{comment}{\ \ !>\ Get\ the\ key\ name\ of\ a\ property}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00741}\mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{00741}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}}(this)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00742}00742\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00743}00743\ \textcolor{comment}{\ \ \ \ !>\ Key\ name}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00744}00744\ \ \ \ \ \textcolor{keywordtype}{character(:)},\ \textcolor{keywordtype}{allocatable}\ ::\ \mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00745}00745\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00746}00746\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00747}00747\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00748}00748\ \ \ \ \ \textcolor{comment}{!\ determine\ the\ value\ type}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00749}00749\ \ \ \ \ \textcolor{keywordflow}{select\ type}(val)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00750}00750\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00751}00751\ \ \ \ \ \ \ \textcolor{comment}{!\ add\ integers,\ reals,\ logicals,\ and\ string\_t\ as-\/is}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00752}00752\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\textcolor{keywordtype}{integer}(kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}))}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00753}00753\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}))}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00754}00754\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (logical)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00755}00755\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}})}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00756}00756\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00757}00757\ \ \ \ \ \ \ \textcolor{comment}{!\ handle\ empty\ sub-\/sets}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00758}00758\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ is}\ (\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}})}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00759}00759\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\textcolor{keyword}{associated}(val\%first\_link))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00760}00760\ \ \ \ \ \ \ \ \ \ \ this\%val\ =>\ \mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}()}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00761}00761\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00762}00762\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00748}00748\ \ \ \ \ \mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}}\ =\ this\%key\_name}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00749}00749\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00750}00750\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__property_a52abce158c4eccd039de4f875d697869}{key}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00751}00751\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00752}00752\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00753}00753\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00754}00754\ \textcolor{comment}{\ \ !>\ Set\ the\ value\ of\ a\ property\ key-\/value\ pair}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00755}\mbox{\hyperlink{namespacecamp__property_a92d9df64e91f97e476a79887341a6eee}{00755}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__property_a92d9df64e91f97e476a79887341a6eee}{set\_value}}(this,\ val)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00756}00756\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00757}00757\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00758}00758\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00759}00759\ \textcolor{comment}{\ \ \ \ !>\ New\ value}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00760}00760\ \ \ \ \ \textcolor{keywordtype}{class}(*),\ \textcolor{keywordtype}{intent(in)}\ ::\ val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00761}00761\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00762}00762\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ str\_val}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00763}00763\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00764}00764\ \ \ \ \ \ \ \textcolor{comment}{!\ convert\ character\ arrays\ to\ string\_t\ objects}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00765}00765\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\textcolor{keywordtype}{character}(len=*))}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00766}00766\ \ \ \ \ \ \ \ \ \textcolor{keyword}{allocate}(str\_val)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00767}00767\ \ \ \ \ \ \ \ \ str\_val\%string\ =\ val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00768}00768\ \ \ \ \ \ \ \ \ this\%val\ =>\ str\_val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00769}00769\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00770}00770\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00771}00771\ \ \ \ \ \ \ \textcolor{comment}{!\ error\ on\ unsupported\ types}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00772}00772\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00773}00773\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(728532218,\ \textcolor{stringliteral}{"{}Unsupported\ property\ type"{}})}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00774}00774\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00775}00775\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00776}00776\ \ \ \ \ \textcolor{keyword}{allocate}(this\%val,\ source=val)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00777}00777\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00778}00778\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__property_a92d9df64e91f97e476a79887341a6eee}{set\_value}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00764}00764\ \ \ \ \ \textcolor{comment}{!\ determine\ the\ value\ type}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00765}00765\ \ \ \ \ \textcolor{keywordflow}{select\ type}(val)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00766}00766\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00767}00767\ \ \ \ \ \ \ \textcolor{comment}{!\ add\ integers,\ reals,\ logicals,\ and\ string\_t\ as-\/is}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00768}00768\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\textcolor{keywordtype}{integer}(kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}))}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00769}00769\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}))}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00770}00770\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (logical)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00771}00771\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}})}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00772}00772\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00773}00773\ \ \ \ \ \ \ \textcolor{comment}{!\ handle\ empty\ sub-\/sets}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00774}00774\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ is}\ (\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}})}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00775}00775\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\textcolor{keyword}{associated}(val\%first\_link))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00776}00776\ \ \ \ \ \ \ \ \ \ \ this\%val\ =>\ \mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}()}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00777}00777\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00778}00778\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00779}00779\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00780}00780\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00781}00781\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00782}00782\ \textcolor{comment}{\ \ !>\ Get\ the\ int\ value\ of\ a\ property}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00783}\mbox{\hyperlink{namespacecamp__property_a606edaac8e2cffaf4bed45a5fdc2d918}{00783}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__property_a606edaac8e2cffaf4bed45a5fdc2d918}{value\_int}}(this)\ \textcolor{keyword}{result}(val)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00784}00784\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00785}00785\ \textcolor{comment}{\ \ \ \ !>\ Value}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00786}00786\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ val\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00787}00787\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00788}00788\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00789}00789\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00790}00790\ \ \ \ \ \textcolor{keywordtype}{class}(*),\ \textcolor{keywordtype}{pointer}\ ::\ this\_val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00780}00780\ \ \ \ \ \ \ \textcolor{comment}{!\ convert\ character\ arrays\ to\ string\_t\ objects}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00781}00781\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\textcolor{keywordtype}{character}(len=*))}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00782}00782\ \ \ \ \ \ \ \ \ \textcolor{keyword}{allocate}(str\_val)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00783}00783\ \ \ \ \ \ \ \ \ str\_val\%string\ =\ val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00784}00784\ \ \ \ \ \ \ \ \ this\%val\ =>\ str\_val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00785}00785\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00786}00786\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00787}00787\ \ \ \ \ \ \ \textcolor{comment}{!\ error\ on\ unsupported\ types}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00788}00788\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00789}00789\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(728532218,\ \textcolor{stringliteral}{"{}Unsupported\ property\ type"{}})}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00790}00790\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00791}00791\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00792}00792\ \ \ \ \ this\_val\ =>\ this\%val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00793}00793\ \ \ \ \ \textcolor{keywordflow}{select\ type}(this\_val)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00794}00794\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\textcolor{keywordtype}{integer}(kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}))}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00795}00795\ \ \ \ \ \ \ \ \ val\ =\ this\_val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00796}00796\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00797}00797\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(509101133,\ \textcolor{stringliteral}{"{}Property\ type\ mismatch\ for\ key\ "{}}//\&}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00798}00798\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(this\%key\_name))}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00799}00799\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00800}00800\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00801}00801\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__property_a606edaac8e2cffaf4bed45a5fdc2d918}{value\_int}}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00802}00802\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00803}00803\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00804}00804\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00805}00805\ \textcolor{comment}{\ \ !>\ Get\ the\ real\ value\ of\ a\ property}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00806}\mbox{\hyperlink{namespacecamp__property_a420619bf3ac48faac5fd32fb1ae8577f}{00806}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__property_a420619bf3ac48faac5fd32fb1ae8577f}{value\_real}}(this)\ \textcolor{keyword}{result}(val)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00807}00807\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00808}00808\ \textcolor{comment}{\ \ \ \ !>\ Value}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00809}00809\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ val\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00810}00810\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00811}00811\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00812}00812\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00813}00813\ \ \ \ \ \textcolor{keywordtype}{class}(*),\ \textcolor{keywordtype}{pointer}\ ::\ this\_val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00814}00814\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00815}00815\ \ \ \ \ this\_val\ =>\ this\%val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00816}00816\ \ \ \ \ \textcolor{keywordflow}{select\ type}(this\_val)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00817}00817\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\textcolor{keywordtype}{integer}(kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}))}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00818}00818\ \ \ \ \ \ \ \ \ val\ =\ real(this\_val,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00819}00819\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}))}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00820}00820\ \ \ \ \ \ \ \ \ val\ =\ this\_val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00821}00821\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00822}00822\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(151463892,\ \textcolor{stringliteral}{"{}Property\ type\ mismatch\ for\ key\ "{}}//\&}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00823}00823\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(this\%key\_name))}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00824}00824\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00825}00825\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00826}00826\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__property_a420619bf3ac48faac5fd32fb1ae8577f}{value\_real}}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00827}00827\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00828}00828\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00829}00829\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00830}00830\ \textcolor{comment}{\ \ !>\ Get\ the\ logical\ value\ of\ a\ property}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00831}\mbox{\hyperlink{namespacecamp__property_aea742a930f0a969f663212add29f9f84}{00831}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__property_aea742a930f0a969f663212add29f9f84}{value\_logical}}(this)\ \textcolor{keyword}{result}(val)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00832}00832\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00833}00833\ \textcolor{comment}{\ \ \ \ !>\ Value}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00834}00834\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ val\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00835}00835\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00836}00836\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00837}00837\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00838}00838\ \ \ \ \ \textcolor{keywordtype}{class}(*),\ \textcolor{keywordtype}{pointer}\ ::\ this\_val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00839}00839\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00840}00840\ \ \ \ \ this\_val\ =>\ this\%val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00841}00841\ \ \ \ \ \textcolor{keywordflow}{select\ type}(this\_val)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00842}00842\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (logical)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00843}00843\ \ \ \ \ \ \ \ \ val\ =\ this\_val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00844}00844\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00845}00845\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(371288570,\ \textcolor{stringliteral}{"{}Property\ type\ mismatch\ for\ key\ "{}}//\&}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00846}00846\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(this\%key\_name))}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00847}00847\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00848}00848\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00849}00849\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__property_aea742a930f0a969f663212add29f9f84}{value\_logical}}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00850}00850\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00851}00851\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00852}00852\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00853}00853\ \textcolor{comment}{\ \ !>\ Get\ the\ string\ value\ of\ a\ property}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00854}\mbox{\hyperlink{namespacecamp__property_a37bba149bb92ca864ee33ff129ad0585}{00854}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__property_a37bba149bb92ca864ee33ff129ad0585}{value\_string}}(this)\ \textcolor{keyword}{result}(val)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00855}00855\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00856}00856\ \textcolor{comment}{\ \ \ \ !>\ Value}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00857}00857\ \ \ \ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ val\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00858}00858\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00859}00859\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00860}00860\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00861}00861\ \ \ \ \ \textcolor{keywordtype}{class}(*),\ \textcolor{keywordtype}{pointer}\ ::\ this\_val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00862}00862\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00863}00863\ \ \ \ \ this\_val\ =>\ this\%val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00864}00864\ \ \ \ \ \textcolor{keywordflow}{select\ type}\ (this\_val)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00865}00865\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}})}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00866}00866\ \ \ \ \ \ \ \ \ val\ =\ this\_val\%string}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00867}00867\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00868}00868\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(153505401,\ \textcolor{stringliteral}{"{}Property\ type\ mismatch\ for\ key\ "{}}//\&}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00869}00869\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(this\%key\_name))}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00870}00870\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00871}00871\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00872}00872\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__property_a37bba149bb92ca864ee33ff129ad0585}{value\_string}}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00873}00873\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00874}00874\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00875}00875\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00876}00876\ \textcolor{comment}{\ \ !>\ Get\ the\ property\_t\ value\ of\ a\ property}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00877}\mbox{\hyperlink{namespacecamp__property_a938bf81f9e3809d6d9655e9140a4189b}{00877}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__property_a938bf81f9e3809d6d9655e9140a4189b}{value\_property\_t}}(this)\ \textcolor{keyword}{result}(val)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00878}00878\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00879}00879\ \textcolor{comment}{\ \ \ \ !>\ Value}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00880}00880\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ val\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00881}00881\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00882}00882\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00883}00883\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00884}00884\ \ \ \ \ \textcolor{keywordtype}{class}(*),\ \textcolor{keywordtype}{pointer}\ ::\ this\_val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00885}00885\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00886}00886\ \ \ \ \ this\_val\ =>\ this\%val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00887}00887\ \ \ \ \ \textcolor{keywordflow}{select\ type}(this\_val)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00888}00888\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}})}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00889}00889\ \ \ \ \ \ \ \ \ val\ =>\ this\_val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00890}00890\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00891}00891\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(641781966,\ \textcolor{stringliteral}{"{}Property\ type\ mismatch\ for\ key\ "{}}//\&}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00892}00892\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(this\%key\_name))}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00893}00893\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00894}00894\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00895}00895\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__property_a938bf81f9e3809d6d9655e9140a4189b}{value\_property\_t}}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00896}00896\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00897}00897\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00898}00898\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00899}00899\ \textcolor{comment}{\ \ !>\ Print\ the\ contents\ of\ a\ property\ key-\/value\ pair}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00900}\mbox{\hyperlink{namespacecamp__property_a31bb4ad71e6fac0fdd3dd3e4d6255cb3}{00900}}\ \ \ \textcolor{keywordtype}{recursive}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__property_a31bb4ad71e6fac0fdd3dd3e4d6255cb3}{link\_do\_print}}(this,\ suffix,\ file\_unit)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00901}00901\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00902}00902\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00903}00903\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00904}00904\ \textcolor{comment}{\ \ \ \ !>\ Text\ to\ append\ to\ the\ end\ of\ the\ line}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00905}00905\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{intent(in)}\ ::\ suffix\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00906}00906\ \textcolor{comment}{\ \ \ \ !>\ File\ unit\ for\ output}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00907}00907\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{optional},\ \textcolor{keywordtype}{intent(in)}\ ::\ file\_unit}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00908}00908\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00909}00909\ \ \ \ \ \textcolor{keywordtype}{class}(*),\ \textcolor{keywordtype}{pointer}\ ::\ val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00910}00910\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ f\_unit}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00911}00911\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00912}00912\ \ \ \ \ f\_unit\ =\ 6}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00913}00913\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00914}00914\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{present}(file\_unit))\ f\_unit\ =\ file\_unit}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00915}00915\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00916}00916\ \ \ \ \ val\ =>\ this\%val}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00917}00917\ \ \ \ \ \textcolor{keywordflow}{select\ type}(val)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00918}00918\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\textcolor{keywordtype}{integer}(kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}))}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00919}00919\ \ \ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{'"{}'}//this\%key\_name//\textcolor{stringliteral}{'"{}\ :\ '}//trim(\mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}(val))//\ \&}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00920}00920\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ suffix}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00921}00921\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}))}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00922}00922\ \ \ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{'"{}'}//this\%key\_name//\textcolor{stringliteral}{'"{}\ :\ '}//trim(\mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}(val))//\ \&}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00923}00923\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ suffix}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00924}00924\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (logical)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00925}00925\ \ \ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{'"{}'}//this\%key\_name//\textcolor{stringliteral}{'"{}\ :\ '}//trim(\mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}(val))//\ \&}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00926}00926\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ suffix}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00927}00927\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}})}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00928}00928\ \ \ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{'"{}'}//this\%key\_name//\textcolor{stringliteral}{'"{}\ :\ "{}'}//val\%string//\textcolor{stringliteral}{'"{}'}//suffix}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00929}00929\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ is}\ (\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}})}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00930}00930\ \ \ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{'"{}'}//this\%key\_name//\textcolor{stringliteral}{'"{}\ :\ \{'}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00931}00931\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }val\%print(f\_unit)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00932}00932\ \ \ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{'\}'}//suffix}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00933}00933\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00934}00934\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(711028956,\ \textcolor{stringliteral}{"{}Unsupported\ property\ type"{}})}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00935}00935\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00936}00936\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00937}00937\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__property_a31bb4ad71e6fac0fdd3dd3e4d6255cb3}{link\_do\_print}}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00938}00938\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00939}00939\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00940}00940\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00941}00941\ \textcolor{comment}{\ \ !>\ Finalize\ the\ property\_link\_t\ variable}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00942}\mbox{\hyperlink{namespacecamp__property_a8fc09d2181501c08c436eb0995c641cd}{00942}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__property_a8fc09d2181501c08c436eb0995c641cd}{link\_finalize}}(this)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00943}00943\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00944}00944\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00945}00945\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00946}00946\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00947}00947\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{associated}(this\%val))\ \textcolor{keyword}{deallocate}(this\%val)}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00948}00948\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00949}00949\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__property_a8fc09d2181501c08c436eb0995c641cd}{link\_finalize}}}
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00950}00950\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00951}00951\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00792}00792\ \ \ \ \ \textcolor{keyword}{allocate}(this\%val,\ source=val)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00793}00793\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00794}00794\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__property_a92d9df64e91f97e476a79887341a6eee}{set\_value}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00795}00795\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00796}00796\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00797}00797\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00798}00798\ \textcolor{comment}{\ \ !>\ Get\ the\ int\ value\ of\ a\ property}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00799}\mbox{\hyperlink{namespacecamp__property_a606edaac8e2cffaf4bed45a5fdc2d918}{00799}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__property_a606edaac8e2cffaf4bed45a5fdc2d918}{value\_int}}(this)\ \textcolor{keyword}{result}(val)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00800}00800\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00801}00801\ \textcolor{comment}{\ \ \ \ !>\ Value}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00802}00802\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ val\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00803}00803\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00804}00804\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00805}00805\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00806}00806\ \ \ \ \ \textcolor{keywordtype}{class}(*),\ \textcolor{keywordtype}{pointer}\ ::\ this\_val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00807}00807\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00808}00808\ \ \ \ \ this\_val\ =>\ this\%val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00809}00809\ \ \ \ \ \textcolor{keywordflow}{select\ type}(this\_val)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00810}00810\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\textcolor{keywordtype}{integer}(kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}))}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00811}00811\ \ \ \ \ \ \ \ \ val\ =\ this\_val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00812}00812\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00813}00813\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(509101133,\ \textcolor{stringliteral}{"{}Property\ type\ mismatch\ for\ key\ "{}}//\&}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00814}00814\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(this\%key\_name))}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00815}00815\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00816}00816\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00817}00817\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__property_a606edaac8e2cffaf4bed45a5fdc2d918}{value\_int}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00818}00818\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00819}00819\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00820}00820\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00821}00821\ \textcolor{comment}{\ \ !>\ Get\ the\ real\ value\ of\ a\ property}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00822}\mbox{\hyperlink{namespacecamp__property_a420619bf3ac48faac5fd32fb1ae8577f}{00822}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__property_a420619bf3ac48faac5fd32fb1ae8577f}{value\_real}}(this)\ \textcolor{keyword}{result}(val)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00823}00823\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00824}00824\ \textcolor{comment}{\ \ \ \ !>\ Value}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00825}00825\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ val\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00826}00826\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00827}00827\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00828}00828\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00829}00829\ \ \ \ \ \textcolor{keywordtype}{class}(*),\ \textcolor{keywordtype}{pointer}\ ::\ this\_val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00830}00830\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00831}00831\ \ \ \ \ this\_val\ =>\ this\%val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00832}00832\ \ \ \ \ \textcolor{keywordflow}{select\ type}(this\_val)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00833}00833\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\textcolor{keywordtype}{integer}(kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}))}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00834}00834\ \ \ \ \ \ \ \ \ val\ =\ real(this\_val,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00835}00835\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}))}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00836}00836\ \ \ \ \ \ \ \ \ val\ =\ this\_val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00837}00837\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00838}00838\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(151463892,\ \textcolor{stringliteral}{"{}Property\ type\ mismatch\ for\ key\ "{}}//\&}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00839}00839\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(this\%key\_name))}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00840}00840\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00841}00841\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00842}00842\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__property_a420619bf3ac48faac5fd32fb1ae8577f}{value\_real}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00843}00843\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00844}00844\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00845}00845\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00846}00846\ \textcolor{comment}{\ \ !>\ Get\ the\ logical\ value\ of\ a\ property}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00847}\mbox{\hyperlink{namespacecamp__property_aea742a930f0a969f663212add29f9f84}{00847}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__property_aea742a930f0a969f663212add29f9f84}{value\_logical}}(this)\ \textcolor{keyword}{result}(val)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00848}00848\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00849}00849\ \textcolor{comment}{\ \ \ \ !>\ Value}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00850}00850\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ val\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00851}00851\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00852}00852\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00853}00853\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00854}00854\ \ \ \ \ \textcolor{keywordtype}{class}(*),\ \textcolor{keywordtype}{pointer}\ ::\ this\_val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00855}00855\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00856}00856\ \ \ \ \ this\_val\ =>\ this\%val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00857}00857\ \ \ \ \ \textcolor{keywordflow}{select\ type}(this\_val)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00858}00858\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (logical)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00859}00859\ \ \ \ \ \ \ \ \ val\ =\ this\_val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00860}00860\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00861}00861\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(371288570,\ \textcolor{stringliteral}{"{}Property\ type\ mismatch\ for\ key\ "{}}//\&}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00862}00862\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(this\%key\_name))}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00863}00863\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00864}00864\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00865}00865\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__property_aea742a930f0a969f663212add29f9f84}{value\_logical}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00866}00866\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00867}00867\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00868}00868\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00869}00869\ \textcolor{comment}{\ \ !>\ Get\ the\ string\ value\ of\ a\ property}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00870}\mbox{\hyperlink{namespacecamp__property_a37bba149bb92ca864ee33ff129ad0585}{00870}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__property_a37bba149bb92ca864ee33ff129ad0585}{value\_string}}(this)\ \textcolor{keyword}{result}(val)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00871}00871\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00872}00872\ \textcolor{comment}{\ \ \ \ !>\ Value}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00873}00873\ \ \ \ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ val\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00874}00874\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00875}00875\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00876}00876\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00877}00877\ \ \ \ \ \textcolor{keywordtype}{class}(*),\ \textcolor{keywordtype}{pointer}\ ::\ this\_val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00878}00878\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00879}00879\ \ \ \ \ this\_val\ =>\ this\%val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00880}00880\ \ \ \ \ \textcolor{keywordflow}{select\ type}\ (this\_val)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00881}00881\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}})}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00882}00882\ \ \ \ \ \ \ \ \ val\ =\ this\_val\%string}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00883}00883\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00884}00884\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(153505401,\ \textcolor{stringliteral}{"{}Property\ type\ mismatch\ for\ key\ "{}}//\&}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00885}00885\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(this\%key\_name))}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00886}00886\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00887}00887\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00888}00888\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__property_a37bba149bb92ca864ee33ff129ad0585}{value\_string}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00889}00889\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00890}00890\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00891}00891\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00892}00892\ \textcolor{comment}{\ \ !>\ Get\ the\ property\_t\ value\ of\ a\ property}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00893}\mbox{\hyperlink{namespacecamp__property_a938bf81f9e3809d6d9655e9140a4189b}{00893}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__property_a938bf81f9e3809d6d9655e9140a4189b}{value\_property\_t}}(this)\ \textcolor{keyword}{result}(val)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00894}00894\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00895}00895\ \textcolor{comment}{\ \ \ \ !>\ Value}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00896}00896\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ val\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00897}00897\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00898}00898\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00899}00899\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00900}00900\ \ \ \ \ \textcolor{keywordtype}{class}(*),\ \textcolor{keywordtype}{pointer}\ ::\ this\_val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00901}00901\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00902}00902\ \ \ \ \ this\_val\ =>\ this\%val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00903}00903\ \ \ \ \ \textcolor{keywordflow}{select\ type}(this\_val)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00904}00904\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}})}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00905}00905\ \ \ \ \ \ \ \ \ val\ =>\ this\_val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00906}00906\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00907}00907\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(641781966,\ \textcolor{stringliteral}{"{}Property\ type\ mismatch\ for\ key\ "{}}//\&}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00908}00908\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(this\%key\_name))}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00909}00909\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00910}00910\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00911}00911\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__property_a938bf81f9e3809d6d9655e9140a4189b}{value\_property\_t}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00912}00912\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00913}00913\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00914}00914\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00915}00915\ \textcolor{comment}{\ \ !>\ Print\ the\ contents\ of\ a\ property\ key-\/value\ pair}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00916}\mbox{\hyperlink{namespacecamp__property_a31bb4ad71e6fac0fdd3dd3e4d6255cb3}{00916}}\ \ \ \textcolor{keywordtype}{recursive}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__property_a31bb4ad71e6fac0fdd3dd3e4d6255cb3}{link\_do\_print}}(this,\ suffix,\ file\_unit)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00917}00917\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00918}00918\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00919}00919\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00920}00920\ \textcolor{comment}{\ \ \ \ !>\ Text\ to\ append\ to\ the\ end\ of\ the\ line}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00921}00921\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{intent(in)}\ ::\ suffix\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00922}00922\ \textcolor{comment}{\ \ \ \ !>\ File\ unit\ for\ output}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00923}00923\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{optional},\ \textcolor{keywordtype}{intent(in)}\ ::\ file\_unit}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00924}00924\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00925}00925\ \ \ \ \ \textcolor{keywordtype}{class}(*),\ \textcolor{keywordtype}{pointer}\ ::\ val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00926}00926\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ f\_unit}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00927}00927\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00928}00928\ \ \ \ \ f\_unit\ =\ 6}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00929}00929\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00930}00930\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{present}(file\_unit))\ f\_unit\ =\ file\_unit}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00931}00931\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00932}00932\ \ \ \ \ val\ =>\ this\%val}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00933}00933\ \ \ \ \ \textcolor{keywordflow}{select\ type}(val)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00934}00934\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\textcolor{keywordtype}{integer}(kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}}))}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00935}00935\ \ \ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{'"{}'}//this\%key\_name//\textcolor{stringliteral}{'"{}\ :\ '}//trim(\mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}(val))//\ \&}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00936}00936\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ suffix}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00937}00937\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (real(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}))}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00938}00938\ \ \ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{'"{}'}//this\%key\_name//\textcolor{stringliteral}{'"{}\ :\ '}//trim(\mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}(val))//\ \&}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00939}00939\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ suffix}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00940}00940\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (logical)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00941}00941\ \ \ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{'"{}'}//this\%key\_name//\textcolor{stringliteral}{'"{}\ :\ '}//trim(\mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}(val))//\ \&}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00942}00942\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ suffix}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00943}00943\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}})}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00944}00944\ \ \ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{'"{}'}//this\%key\_name//\textcolor{stringliteral}{'"{}\ :\ "{}'}//val\%string//\textcolor{stringliteral}{'"{}'}//suffix}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00945}00945\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ is}\ (\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}})}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00946}00946\ \ \ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{'"{}'}//this\%key\_name//\textcolor{stringliteral}{'"{}\ :\ \{'}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00947}00947\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }val\%print(f\_unit)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00948}00948\ \ \ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{'\}'}//suffix}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00949}00949\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00950}00950\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(711028956,\ \textcolor{stringliteral}{"{}Unsupported\ property\ type"{}})}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00951}00951\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
 \DoxyCodeLine{\Hypertarget{property_8_f90_source_l00952}00952\ }
-\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00953}00953\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__property}{camp\_property}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00953}00953\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__property_a31bb4ad71e6fac0fdd3dd3e4d6255cb3}{link\_do\_print}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00954}00954\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00955}00955\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00956}00956\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00957}00957\ \textcolor{comment}{\ \ !>\ Finalize\ the\ property\_link\_t\ variable}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00958}\mbox{\hyperlink{namespacecamp__property_a9c5d4346fc9bf106dc49372f407d44ea}{00958}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__property_a9c5d4346fc9bf106dc49372f407d44ea}{link\_finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00959}00959\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00960}00960\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00961}00961\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00962}00962\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00963}00963\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{associated}(this\%val))\ \textcolor{keyword}{deallocate}(this\%val)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00964}00964\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00965}00965\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__property_a9c5d4346fc9bf106dc49372f407d44ea}{link\_finalize}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00966}00966\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00967}00967\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00968}00968\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00969}00969\ \textcolor{comment}{\ \ !>\ Finalize\ the\ property\_link\_t\ array}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00970}\mbox{\hyperlink{namespacecamp__property_aa1afd639841d0e669133410d6d508f40}{00970}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__property_aa1afd639841d0e669133410d6d508f40}{link\_finalize\_array}}(this)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00971}00971\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00972}00972\ \textcolor{comment}{\ \ \ \ !>\ Property\ key-\/value\ pair\ array}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00973}00973\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__link__t}{property\_link\_t}}),\ \textcolor{keywordtype}{dimension(:)},\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00974}00974\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00975}00975\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00976}00976\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00977}00977\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00978}00978\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{associated}(this(i)\%val))\ \textcolor{keyword}{deallocate}(this(i)\%val)}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00979}00979\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00980}00980\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00981}00981\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__property_aa1afd639841d0e669133410d6d508f40}{link\_finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00982}00982\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00983}00983\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00984}00984\ }
+\DoxyCodeLine{\Hypertarget{property_8_f90_source_l00985}00985\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__property}{camp\_property}}}
 
 \end{DoxyCode}

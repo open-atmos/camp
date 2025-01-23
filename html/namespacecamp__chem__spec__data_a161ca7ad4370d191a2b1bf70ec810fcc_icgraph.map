@@ -1,0 +1,29 @@
+<map id="camp_chem_spec_data::finalize_array" name="camp_chem_spec_data::finalize_array">
+<area shape="rect" id="Node000001" title="Finalize the chemical species data." alt="" coords="253,446,412,487"/>
+<area shape="rect" id="Node000002" href="$structcamp__chem__spec__data_1_1chem__spec__data__t.html#abf3743b860bd1602298c4540312320bd" title="Finalize the chemical species data." alt="" coords="25,5,185,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="327,431,318,358,298,263,282,213,262,163,235,117,203,75,183,60,187,55,207,71,240,114,266,161,287,211,304,262,324,357,332,430"/>
+<area shape="rect" id="Node000003" href="$structcamp__mechanism__data_1_1mechanism__data__t.html#a10680daaad91a57e83bf3dadd6c191d8" title="Finalize the mechanism." alt="" coords="25,85,185,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="323,431,311,372,288,298,253,222,230,187,203,155,184,140,187,136,207,151,234,184,258,219,293,296,316,371,328,430"/>
+<area shape="rect" id="Node000004" href="$structcamp__rxn__arrhenius_1_1rxn__arrhenius__t.html#a7dcdd38e10aaed18fe63877e6032d6c5" title="Finalize the reaction." alt="" coords="25,165,185,206"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="320,432,304,384,280,327,247,270,226,244,203,221,184,208,187,204,206,216,230,240,251,267,285,325,309,382,325,430"/>
+<area shape="rect" id="Node000005" href="$structcamp__rxn__cmaq__h2o2_1_1rxn__cmaq__h2o2__t.html#a3b3bbde97e7661c4b715bdb3031fe3aa" title="Finalize the reaction." alt="" coords="18,230,192,271"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="313,433,295,398,270,358,240,318,203,285,185,274,188,269,206,280,243,315,275,355,300,395,318,430"/>
+<area shape="rect" id="Node000006" href="$structcamp__rxn__cmaq__oh__hno3_1_1rxn__cmaq__oh__hno3__t.html#ac9c3b482a68fbe375c0e9811824f508d" title="Finalize the reaction." alt="" coords="19,295,191,350"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="297,437,254,400,203,365,181,353,184,348,206,360,257,396,300,433"/>
+<area shape="rect" id="Node000007" href="$structcamp__rxn__emission_1_1rxn__emission__t.html#a47cb8f2b59067ee9f4e4960eca1c799b" title="Finalize the reaction." alt="" coords="28,374,182,415"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="251,444,171,418,172,413,253,439"/>
+<area shape="rect" id="Node000008" href="$structcamp__rxn__first__order__loss_1_1rxn__first__order__loss__t.html#ab9656832cbea44f436c861cd2c8aecfc" title="Finalize the reaction." alt="" coords="34,439,176,494"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="238,469,176,469,176,464,238,464"/>
+<area shape="rect" id="Node000009" href="$structcamp__rxn__photolysis_1_1rxn__photolysis__t.html#a6b5fa15f492dab79784878ad2e051473" title="Finalize the reaction." alt="" coords="34,519,176,574"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="259,495,177,524,176,519,257,490"/>
+<area shape="rect" id="Node000010" href="$structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t.html#ae2b7a5ed35651d6690f4edd869e79491" title="Finalize the reaction." alt="" coords="5,599,205,654"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="305,500,261,545,206,589,185,600,183,596,203,584,258,541,302,497"/>
+<area shape="rect" id="Node000011" href="$structcamp__rxn__troe_1_1rxn__troe__t.html#abe21d9498dbe67416216f335ee0e134e" title="Finalize the reaction." alt="" coords="40,678,170,719"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="320,502,303,541,278,586,246,630,206,669,171,687,169,683,203,664,242,627,273,583,298,538,315,500"/>
+<area shape="rect" id="Node000012" href="$structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t.html#a30cd5c7b21dfb36e108bb2dc1865187d" title="Finalize the reaction." alt="" coords="24,743,186,798"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="325,503,310,553,286,614,252,677,231,706,206,732,188,746,185,742,203,729,227,703,248,674,281,612,305,551,320,501"/>
+<area shape="rect" id="Node000013" href="$structcamp__rxn__wennberg__tunneling_1_1rxn__wennberg__tunneling__t.html#a689f5cfb35dca0874c554110a7e18480" title="Finalize the reaction." alt="" coords="5,823,205,878"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="330,503,319,567,297,650,281,693,261,736,236,776,207,812,192,824,189,820,203,809,232,773,256,733,276,691,292,648,314,566,325,502"/>
+<area shape="rect" id="Node000014" href="$structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t.html#a61550fea263cc9bfd90c76a360de73e5" title="Finalize the reaction." alt="" coords="19,903,191,958"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="333,503,326,581,307,684,291,740,270,794,242,846,207,892,193,905,189,901,203,889,237,843,265,792,286,738,302,683,321,580,328,502"/>
+</map>

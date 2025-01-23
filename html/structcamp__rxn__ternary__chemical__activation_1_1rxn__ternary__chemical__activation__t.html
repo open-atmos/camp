@@ -95,6 +95,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae2b7a5ed35651d6690f4edd869e79491" id="r_ae2b7a5ed35651d6690f4edd869e79491"><td class="memItemLeft" align="right" valign="top">final&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t.html#ae2b7a5ed35651d6690f4edd869e79491">finalize</a> (this)</td></tr>
 <tr class="memdesc:ae2b7a5ed35651d6690f4edd869e79491"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
 <tr class="separator:ae2b7a5ed35651d6690f4edd869e79491"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7d3cef3a8aa8f238899aa72a09bc1eb" id="r_ae7d3cef3a8aa8f238899aa72a09bc1eb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t.html#ae7d3cef3a8aa8f238899aa72a09bc1eb">finalize_array</a> (this)</td></tr>
+<tr class="memdesc:ae7d3cef3a8aa8f238899aa72a09bc1eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize an array of reactions.  <br /></td></tr>
+<tr class="separator:ae7d3cef3a8aa8f238899aa72a09bc1eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_structcamp__rxn__data_1_1rxn__data__t"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structcamp__rxn__data_1_1rxn__data__t')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="structcamp__rxn__data_1_1rxn__data__t.html">camp_rxn_data::rxn_data_t</a></td></tr>
 <tr class="memitem:a5f2f5f59b695ecf52a110454cc185fb4 inherit pub_methods_structcamp__rxn__data_1_1rxn__data__t" id="r_a5f2f5f59b695ecf52a110454cc185fb4"><td class="memItemLeft" align="right" valign="top">procedure(<a class="el" href="interfacecamp__aero__rep__data_1_1initialize.html">initialize</a>), deferred&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcamp__rxn__data_1_1rxn__data__t.html#a5f2f5f59b695ecf52a110454cc185fb4">initialize</a> <a class="el" href="interfacecamp__aero__rep__data_1_1initialize.html">initialize</a></td></tr>
 <tr class="memdesc:a5f2f5f59b695ecf52a110454cc185fb4 inherit pub_methods_structcamp__rxn__data_1_1rxn__data__t"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reaction initialization. Takes species, phase and reaction parameters and packs required information into the condensed data arrays for use during the model run.  <br /></td></tr>
@@ -181,15 +184,47 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t_ae2b7a5ed35651d6690f4edd869e79491_cgraph.png" border="0" usemap="#astructcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t_ae2b7a5ed35651d6690f4edd869e79491_cgraph" alt=""/></div>
 <map name="astructcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t_ae2b7a5ed35651d6690f4edd869e79491_cgraph" id="astructcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t_ae2b7a5ed35651d6690f4edd869e79491_cgraph">
-<area shape="rect" title="Finalize the reaction." alt="" coords="5,5,205,61"/>
-<area shape="rect" href="namespacecamp__camp__state.html#a5522f7056d1ff8bb1626e36c97dfff5a" title="Finalize the state." alt="" coords="253,20,426,46"/>
-<area shape="poly" title=" " alt="" coords="205,31,237,31,237,36,205,36"/>
+<area shape="rect" title="Finalize the reaction." alt="" coords="5,20,205,75"/>
+<area shape="rect" href="namespacecamp__camp__state.html#a5522f7056d1ff8bb1626e36c97dfff5a" title="Finalize the state." alt="" coords="253,5,426,31"/>
+<area shape="poly" title=" " alt="" coords="205,32,237,28,238,34,206,38"/>
+<area shape="rect" href="namespacecamp__chem__spec__data.html#a161ca7ad4370d191a2b1bf70ec810fcc" title="Finalize the chemical species data." alt="" coords="260,55,419,96"/>
+<area shape="poly" title=" " alt="" coords="206,57,244,62,244,67,205,62"/>
+<area shape="rect" href="namespacecamp__chem__spec__data.html#a254fa8186f63759084357c65d51e9f7f" title="Finalize the chemical species data." alt="" coords="474,55,633,96"/>
+<area shape="poly" title=" " alt="" coords="419,73,458,73,458,78,419,78"/>
 </map>
 </div>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function/Subroutine Documentation</h2>
+<a id="ae7d3cef3a8aa8f238899aa72a09bc1eb" name="ae7d3cef3a8aa8f238899aa72a09bc1eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7d3cef3a8aa8f238899aa72a09bc1eb">&#9670;&#160;</a></span>finalize_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">camp_rxn_ternary_chemical_activation::rxn_ternary_chemical_activation_t::finalize_array </td>
+          <td>(</td>
+          <td class="paramtype">type(<a class="el" href="structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t.html">rxn_ternary_chemical_activation_t</a>), dimension(:), intent(inout)&#160;</td>
+          <td class="paramname"><em>this</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Finalize an array of reactions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Array of reaction data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html#l00111">111</a> of file <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html">rxn_ternary_chemical_activation.F90</a>.</p>
+
+</div>
+</div>
 <a id="ae102bbe0a9b0bbde2ea5a28245688dc2" name="ae102bbe0a9b0bbde2ea5a28245688dc2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae102bbe0a9b0bbde2ea5a28245688dc2">&#9670;&#160;</a></span>initialize()</h2>
 

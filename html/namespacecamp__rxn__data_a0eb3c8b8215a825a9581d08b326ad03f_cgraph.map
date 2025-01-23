@@ -1,0 +1,5 @@
+<map id="camp_rxn_data::ptr_finalize_array" name="camp_rxn_data::ptr_finalize_array">
+<area shape="rect" id="Node000001" title="Finalize an array of pointers to reactions." alt="" coords="5,5,136,46"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__aero__rep__data.html#a3b58ee6e8a00a3bd8f58ca27bae2e0d1" title="Finalize a pointer to an aerosol representation." alt="" coords="184,5,326,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,23,168,23,168,28,136,28"/>
+</map>

@@ -53,8 +53,10 @@ subroutine \mbox{\hyperlink{namespacecamp__aero__rep__data_a361ddb02ca802bce038d
 \begin{DoxyCompactList}\small\item\em Print the aerosol representation data. \end{DoxyCompactList}\item 
 elemental subroutine \mbox{\hyperlink{namespacecamp__aero__rep__data_a983e49e20c0c686a7566a842910c99f6}{dereference}} (this)
 \begin{DoxyCompactList}\small\item\em Deference a pointer to an aerosol representation. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__aero__rep__data_ab3b32282b8f6c9afc8734361f7b47d97}{ptr\+\_\+finalize}} (this)
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__data_a3b58ee6e8a00a3bd8f58ca27bae2e0d1}{ptr\+\_\+finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize a pointer to an aerosol representation. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__data_ae31c9acd8899c57d845c227f4a11b98e}{ptr\+\_\+finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of pointers to aerosol representations. \end{DoxyCompactList}\item 
 integer(kind=c\+\_\+int) function \mbox{\hyperlink{namespacecamp__aero__rep__data_a9a05458716dcec70056a07266c682a4b}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+get\+\_\+type}} (this)
 \begin{DoxyCompactList}\small\item\em Get the update data aerosol representation type. \end{DoxyCompactList}\item 
 integer(kind=c\+\_\+int) function \mbox{\hyperlink{namespacecamp__aero__rep__data_aea447ee7dd83f4a5c951dbd9d8f843ec}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+get\+\_\+cell\+\_\+id}} (this)
@@ -98,7 +100,7 @@ Pack the given value to the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00741}{741}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00757}{757}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -131,7 +133,7 @@ Unpack the given value from the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00777}{777}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00793}{793}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -161,7 +163,7 @@ Grid cell id
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00681}{681}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00697}{697}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__aero__rep__data_a175f9a37f800d223ff24cfe473e5bf7e}\label{namespacecamp__aero__rep__data_a175f9a37f800d223ff24cfe473e5bf7e} 
 \index{camp\_aero\_rep\_data@{camp\_aero\_rep\_data}!aero\_rep\_update\_data\_get\_data@{aero\_rep\_update\_data\_get\_data}}
@@ -183,7 +185,7 @@ Update data ptr
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00695}{695}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00711}{711}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__aero__rep__data_a9a05458716dcec70056a07266c682a4b}\label{namespacecamp__aero__rep__data_a9a05458716dcec70056a07266c682a4b} 
 \index{camp\_aero\_rep\_data@{camp\_aero\_rep\_data}!aero\_rep\_update\_data\_get\_type@{aero\_rep\_update\_data\_get\_type}}
@@ -205,7 +207,7 @@ Aerosol representation type
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00667}{667}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00683}{683}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__aero__rep__data_a2cbe750986350959de8042b064fa4678}\label{namespacecamp__aero__rep__data_a2cbe750986350959de8042b064fa4678} 
 \index{camp\_aero\_rep\_data@{camp\_aero\_rep\_data}!aero\_rep\_update\_data\_pack\_size@{aero\_rep\_update\_data\_pack\_size}}
@@ -226,7 +228,7 @@ Determine the size of a binary required to pack the reaction data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00709}{709}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00725}{725}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -340,7 +342,7 @@ Print the update data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00813}{813}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00829}{829}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__aero__rep__data_a361ddb02ca802bce038d2b9471f4b923}\label{namespacecamp__aero__rep__data_a361ddb02ca802bce038d2b9471f4b923} 
 \index{camp\_aero\_rep\_data@{camp\_aero\_rep\_data}!do\_print@{do\_print}}
@@ -503,11 +505,11 @@ Here is the caller graph for this function\+:
 \includegraphics[width=187pt]{namespacecamp__aero__rep__data_a0b5fe3746da13fcb464fc79b8b6aafd7_icgraph}
 \end{center}
 \end{figure}
-\Hypertarget{namespacecamp__aero__rep__data_ab3b32282b8f6c9afc8734361f7b47d97}\label{namespacecamp__aero__rep__data_ab3b32282b8f6c9afc8734361f7b47d97} 
+\Hypertarget{namespacecamp__aero__rep__data_a3b58ee6e8a00a3bd8f58ca27bae2e0d1}\label{namespacecamp__aero__rep__data_a3b58ee6e8a00a3bd8f58ca27bae2e0d1} 
 \index{camp\_aero\_rep\_data@{camp\_aero\_rep\_data}!ptr\_finalize@{ptr\_finalize}}
 \index{ptr\_finalize@{ptr\_finalize}!camp\_aero\_rep\_data@{camp\_aero\_rep\_data}}
 \doxysubsubsection{\texorpdfstring{ptr\_finalize()}{ptr\_finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+aero\+\_\+rep\+\_\+data\+::ptr\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+data\+::ptr\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -527,6 +529,41 @@ Here is the caller graph for this function\+:
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=342pt]{namespacecamp__aero__rep__data_ab3b32282b8f6c9afc8734361f7b47d97_icgraph}
+\includegraphics[width=350pt]{namespacecamp__aero__rep__data_a3b58ee6e8a00a3bd8f58ca27bae2e0d1_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__aero__rep__data_ae31c9acd8899c57d845c227f4a11b98e}\label{namespacecamp__aero__rep__data_ae31c9acd8899c57d845c227f4a11b98e} 
+\index{camp\_aero\_rep\_data@{camp\_aero\_rep\_data}!ptr\_finalize\_array@{ptr\_finalize\_array}}
+\index{ptr\_finalize\_array@{ptr\_finalize\_array}!camp\_aero\_rep\_data@{camp\_aero\_rep\_data}}
+\doxysubsubsection{\texorpdfstring{ptr\_finalize\_array()}{ptr\_finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+data\+::ptr\+\_\+finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of pointers to aerosol representations. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of pointers to aerosol representations \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00667}{667}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=330pt]{namespacecamp__aero__rep__data_ae31c9acd8899c57d845c227f4a11b98e_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=342pt]{namespacecamp__aero__rep__data_ae31c9acd8899c57d845c227f4a11b98e_icgraph}
 \end{center}
 \end{figure}

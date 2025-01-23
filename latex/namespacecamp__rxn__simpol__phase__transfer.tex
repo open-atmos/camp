@@ -17,8 +17,10 @@ type(\mbox{\hyperlink{structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__p
 \begin{DoxyCompactList}\small\item\em Constructor for Phase transfer reaction. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__simpol__phase__transfer_a356ee35a6341ba8f13878ad206b869b3}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__simpol__phase__transfer_a9b1a0b6d5065325ddad17b4dec28d19d}{finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__rxn__simpol__phase__transfer_ab5e19666d70bcc791457dba451374dac}{finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__simpol__phase__transfer_a533664b95c6bee59b9b1dbdb3df40081}{finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of reactions. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -42,11 +44,11 @@ A new reaction instance
 
 Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00166}{166}} of file \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+F90}}.
 
-\Hypertarget{namespacecamp__rxn__simpol__phase__transfer_a9b1a0b6d5065325ddad17b4dec28d19d}\label{namespacecamp__rxn__simpol__phase__transfer_a9b1a0b6d5065325ddad17b4dec28d19d} 
+\Hypertarget{namespacecamp__rxn__simpol__phase__transfer_ab5e19666d70bcc791457dba451374dac}\label{namespacecamp__rxn__simpol__phase__transfer_ab5e19666d70bcc791457dba451374dac} 
 \index{camp\_rxn\_simpol\_phase\_transfer@{camp\_rxn\_simpol\_phase\_transfer}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_simpol\_phase\_transfer@{camp\_rxn\_simpol\_phase\_transfer}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+rxn\+\_\+simpol\+\_\+phase\+\_\+transfer\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t}{rxn\+\_\+simpol\+\_\+phase\+\_\+transfer\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+simpol\+\_\+phase\+\_\+transfer\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t}{rxn\+\_\+simpol\+\_\+phase\+\_\+transfer\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -61,6 +63,33 @@ Finalize the reaction.
 
 Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00435}{435}} of file \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+F90}}.
 
+\Hypertarget{namespacecamp__rxn__simpol__phase__transfer_a533664b95c6bee59b9b1dbdb3df40081}\label{namespacecamp__rxn__simpol__phase__transfer_a533664b95c6bee59b9b1dbdb3df40081} 
+\index{camp\_rxn\_simpol\_phase\_transfer@{camp\_rxn\_simpol\_phase\_transfer}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_rxn\_simpol\_phase\_transfer@{camp\_rxn\_simpol\_phase\_transfer}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+rxn\+\_\+simpol\+\_\+phase\+\_\+transfer\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t}{rxn\+\_\+simpol\+\_\+phase\+\_\+transfer\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of reactions. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of reaction data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source_l00452}{452}} of file \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8_f90_source}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__rxn__simpol__phase__transfer_a533664b95c6bee59b9b1dbdb3df40081_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{namespacecamp__rxn__simpol__phase__transfer_a356ee35a6341ba8f13878ad206b869b3}\label{namespacecamp__rxn__simpol__phase__transfer_a356ee35a6341ba8f13878ad206b869b3} 
 \index{camp\_rxn\_simpol\_phase\_transfer@{camp\_rxn\_simpol\_phase\_transfer}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_simpol\_phase\_transfer@{camp\_rxn\_simpol\_phase\_transfer}}

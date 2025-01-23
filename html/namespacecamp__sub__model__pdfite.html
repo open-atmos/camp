@@ -72,9 +72,12 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:a615c6e49b354cccfda87b7551b466f1f" id="r_a615c6e49b354cccfda87b7551b466f1f"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__sub__model__pdfite.html#a615c6e49b354cccfda87b7551b466f1f">initialize</a> (this, aero_rep_set, aero_phase_set, chem_spec_data)</td></tr>
 <tr class="memdesc:a615c6e49b354cccfda87b7551b466f1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving.  <br /></td></tr>
 <tr class="separator:a615c6e49b354cccfda87b7551b466f1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ddba2bd7cc93caac144b5eaad85a682" id="r_a6ddba2bd7cc93caac144b5eaad85a682"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__sub__model__pdfite.html#a6ddba2bd7cc93caac144b5eaad85a682">finalize</a> (this)</td></tr>
-<tr class="memdesc:a6ddba2bd7cc93caac144b5eaad85a682"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
-<tr class="separator:a6ddba2bd7cc93caac144b5eaad85a682"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21d67c2f95124880d5b8c9aedf4c9661" id="r_a21d67c2f95124880d5b8c9aedf4c9661"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__sub__model__pdfite.html#a21d67c2f95124880d5b8c9aedf4c9661">finalize</a> (this)</td></tr>
+<tr class="memdesc:a21d67c2f95124880d5b8c9aedf4c9661"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
+<tr class="separator:a21d67c2f95124880d5b8c9aedf4c9661"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7f444a3b60e04c4efd12ddff3656aba" id="r_af7f444a3b60e04c4efd12ddff3656aba"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__sub__model__pdfite.html#af7f444a3b60e04c4efd12ddff3656aba">finalize_array</a> (this)</td></tr>
+<tr class="memdesc:af7f444a3b60e04c4efd12ddff3656aba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize an array of reactions.  <br /></td></tr>
+<tr class="separator:af7f444a3b60e04c4efd12ddff3656aba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d718db6c7657ffd0a80f94f2c648841" id="r_a2d718db6c7657ffd0a80f94f2c648841"><td class="memItemLeft" align="right" valign="top">real(kind=dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__sub__model__pdfite.html#a2d718db6c7657ffd0a80f94f2c648841">priority</a> (this)</td></tr>
 <tr class="memdesc:a2d718db6c7657ffd0a80f94f2c648841"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a real number representing the priority of the sub model calculations. Low priority sub models may use the results of higher priority sub models. Lower numbers indicate higher priority.  <br /></td></tr>
 <tr class="separator:a2d718db6c7657ffd0a80f94f2c648841"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -105,12 +108,12 @@ Functions/Subroutines</h2></td></tr>
 <p>Constructor for activity reaction. </p>
 <dl class="section return"><dt>Returns</dt><dd>A new reaction instance </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html#l00245">245</a> of file <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html">sub_model_PDFiTE.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html#l00246">246</a> of file <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html">sub_model_PDFiTE.F90</a>.</p>
 
 </div>
 </div>
-<a id="a6ddba2bd7cc93caac144b5eaad85a682" name="a6ddba2bd7cc93caac144b5eaad85a682"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ddba2bd7cc93caac144b5eaad85a682">&#9670;&#160;</a></span>finalize()</h2>
+<a id="a21d67c2f95124880d5b8c9aedf4c9661" name="a21d67c2f95124880d5b8c9aedf4c9661"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21d67c2f95124880d5b8c9aedf4c9661">&#9670;&#160;</a></span>finalize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -119,7 +122,7 @@ Functions/Subroutines</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">elemental subroutine camp_sub_model_pdfite::finalize </td>
+          <td class="memname">subroutine camp_sub_model_pdfite::finalize </td>
           <td>(</td>
           <td class="paramtype">type(<a class="el" href="structcamp__sub__model__pdfite_1_1sub__model__pdfite__t.html">sub_model_pdfite_t</a>), intent(inout)&#160;</td>
           <td class="paramname"><em>this</em></td><td>)</td>
@@ -141,7 +144,53 @@ Functions/Subroutines</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html#l00843">843</a> of file <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html">sub_model_PDFiTE.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html#l00845">845</a> of file <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html">sub_model_PDFiTE.F90</a>.</p>
+
+</div>
+</div>
+<a id="af7f444a3b60e04c4efd12ddff3656aba" name="af7f444a3b60e04c4efd12ddff3656aba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7f444a3b60e04c4efd12ddff3656aba">&#9670;&#160;</a></span>finalize_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine camp_sub_model_pdfite::finalize_array </td>
+          <td>(</td>
+          <td class="paramtype">type(<a class="el" href="structcamp__sub__model__pdfite_1_1sub__model__pdfite__t.html">sub_model_pdfite_t</a>), dimension(:), intent(inout)&#160;</td>
+          <td class="paramname"><em>this</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Finalize an array of reactions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Array of reaction data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html#l00862">862</a> of file <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html">sub_model_PDFiTE.F90</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacecamp__sub__model__pdfite_af7f444a3b60e04c4efd12ddff3656aba_cgraph.png" border="0" usemap="#anamespacecamp__sub__model__pdfite_af7f444a3b60e04c4efd12ddff3656aba_cgraph" alt=""/></div>
+<map name="anamespacecamp__sub__model__pdfite_af7f444a3b60e04c4efd12ddff3656aba_cgraph" id="anamespacecamp__sub__model__pdfite_af7f444a3b60e04c4efd12ddff3656aba_cgraph">
+<area shape="rect" title="Finalize an array of reactions." alt="" coords="5,5,167,46"/>
+<area shape="rect" href="namespacecamp__aero__phase__data.html#a8eebec681f9d24bd7741bb357f7c4e43" title="Finalize the aerosol phase data." alt="" coords="215,5,374,46"/>
+<area shape="poly" title=" " alt="" coords="167,23,199,23,199,28,167,28"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -202,7 +251,7 @@ Functions/Subroutines</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html#l00259">259</a> of file <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html">sub_model_PDFiTE.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html#l00260">260</a> of file <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html">sub_model_PDFiTE.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -262,7 +311,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html#l00865">865</a> of file <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html">sub_model_PDFiTE.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html#l00883">883</a> of file <a class="el" href="sub__model___p_d_fi_t_e_8_f90_source.html">sub_model_PDFiTE.F90</a>.</p>
 
 </div>
 </div>

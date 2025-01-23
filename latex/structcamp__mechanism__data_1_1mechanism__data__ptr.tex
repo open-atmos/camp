@@ -21,7 +21,9 @@ Collaboration diagram for camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+
 procedure \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__ptr_a1a57213df40d350b4cef29835c2da53d}{dereference}} (this)
 \begin{DoxyCompactList}\small\item\em Dereference the pointer. \end{DoxyCompactList}\item 
 final \mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__ptr_aec13765cdce2bd8c6ce97dcb00878cb0}{ptr\+\_\+finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize the pointer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Finalize the pointer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__ptr_abea10da6ae16582b869d4bfb373cf571}{ptr\+\_\+finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of mechanism data pointers. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -61,7 +63,7 @@ Here is the call graph for this function\+:
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=342pt]{structcamp__mechanism__data_1_1mechanism__data__ptr_aec13765cdce2bd8c6ce97dcb00878cb0_cgraph}
+\includegraphics[width=350pt]{structcamp__mechanism__data_1_1mechanism__data__ptr_aec13765cdce2bd8c6ce97dcb00878cb0_cgraph}
 \end{center}
 \end{figure}
 
@@ -85,6 +87,25 @@ Dereference the pointer.
 
 
 Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00108}{108}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__mechanism__data_1_1mechanism__data__ptr_abea10da6ae16582b869d4bfb373cf571}\label{structcamp__mechanism__data_1_1mechanism__data__ptr_abea10da6ae16582b869d4bfb373cf571} 
+\index{camp\_mechanism\_data::mechanism\_data\_ptr@{camp\_mechanism\_data::mechanism\_data\_ptr}!ptr\_finalize\_array@{ptr\_finalize\_array}}
+\index{ptr\_finalize\_array@{ptr\_finalize\_array}!camp\_mechanism\_data::mechanism\_data\_ptr@{camp\_mechanism\_data::mechanism\_data\_ptr}}
+\doxysubsubsection{\texorpdfstring{ptr\_finalize\_array()}{ptr\_finalize\_array()}}
+{\footnotesize\ttfamily camp\+\_\+mechanism\+\_\+data\+::mechanism\+\_\+data\+\_\+ptr\+::ptr\+\_\+finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__ptr}{mechanism\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})}
+
+
+
+Finalize an array of mechanism data pointers. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of mechanism data pointers \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{mechanism__data_8_f90_source_l00110}{110}} of file \mbox{\hyperlink{mechanism__data_8_f90_source}{mechanism\+\_\+data.\+F90}}.
 
 
 

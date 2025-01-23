@@ -1,0 +1,8 @@
+<map id="camp_property::finalize" name="camp_property::finalize">
+<area shape="rect" id="Node000001" title="Finalize a property_t variable." alt="" coords="411,13,562,39"/>
+<area shape="rect" id="Node000002" href="$structcamp__property_1_1property__t.html#ae8a3e1a9f3913e89b616fcff58184536" title="Finalize." alt="" coords="5,5,164,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="396,25,363,24,212,24,164,25,164,20,212,19,363,19,396,20"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__property.html#ada8134a218154da30a9c321fb0090a7f" title="Finalize a property_t array." alt="" coords="212,33,363,74"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="396,41,364,46,363,40,395,36"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="196,44,164,39,164,34,197,38"/>
+</map>

@@ -126,7 +126,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00122}00122\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ initialization}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00123}\mbox{\hyperlink{structcamp__rxn__condensed__phase__arrhenius_1_1rxn__condensed__phase__arrhenius__t_a1be42766b2cc2c48ece5b5aaa65fdb1c}{00123}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00124}00124\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00125}\mbox{\hyperlink{structcamp__rxn__condensed__phase__arrhenius_1_1rxn__condensed__phase__arrhenius__t_aeea57d74946316caccd228d2e2123ec7}{00125}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00125}\mbox{\hyperlink{structcamp__rxn__condensed__phase__arrhenius_1_1rxn__condensed__phase__arrhenius__t_aeea57d74946316caccd228d2e2123ec7}{00125}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}},\ \mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00126}00126\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__rxn__condensed__phase__arrhenius_1_1rxn__condensed__phase__arrhenius__t}{rxn\_condensed\_phase\_arrhenius\_t}}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00127}00127\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00128}00128\ \textcolor{comment}{\ \ !>\ Constructor\ for\ rxn\_condensed\_phase\_arrhenius\_t}}
@@ -501,7 +501,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00497}00497\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00498}00498\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00499}00499\ \textcolor{comment}{\ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00500}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__arrhenius_a076633d91c5e1e277d5efa376f33ba5c}{00500}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00500}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__arrhenius_af0116bbb49b0c7ebfaf21885b2db36a3}{00500}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this)}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00501}00501\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00502}00502\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00503}00503\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__arrhenius_1_1rxn__condensed__phase__arrhenius__t}{rxn\_condensed\_phase\_arrhenius\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
@@ -513,10 +513,26 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00509}00509\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_int))\ \&}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00510}00510\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_int)}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00511}00511\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00512}00512\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a18e6adfc1bb22f7514247a1920d86090}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00512}00512\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00513}00513\ }
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00514}00514\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00515}00515\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00516}00516\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__arrhenius}{camp\_rxn\_condensed\_phase\_arrhenius}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00515}00515\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00516}00516\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ reactions}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00517}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__arrhenius_ab81e61283b914d12d3d3feeed34c7a6f}{00517}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00518}00518\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00519}00519\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00520}00520\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__arrhenius_1_1rxn__condensed__phase__arrhenius__t}{rxn\_condensed\_phase\_arrhenius\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00521}00521\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00522}00522\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_rxn}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00523}00523\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00524}00524\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_rxn\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00525}00525\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this(i\_rxn))}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00526}00526\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00527}00527\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00528}00528\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00529}00529\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00530}00530\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00531}00531\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8_f90_source_l00532}00532\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__arrhenius}{camp\_rxn\_condensed\_phase\_arrhenius}}}
 
 \end{DoxyCode}

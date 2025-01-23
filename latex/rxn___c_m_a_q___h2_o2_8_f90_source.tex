@@ -111,7 +111,7 @@
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00107}00107\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ initialization}}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00108}\mbox{\hyperlink{structcamp__rxn__cmaq__h2o2_1_1rxn__cmaq__h2o2__t_a0d77bbfb42d1fd370dac4860acecf033}{00108}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00109}00109\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00110}\mbox{\hyperlink{structcamp__rxn__cmaq__h2o2_1_1rxn__cmaq__h2o2__t_a3b3bbde97e7661c4b715bdb3031fe3aa}{00110}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00110}\mbox{\hyperlink{structcamp__rxn__cmaq__h2o2_1_1rxn__cmaq__h2o2__t_a3b3bbde97e7661c4b715bdb3031fe3aa}{00110}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}},\ \mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00111}00111\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__rxn__cmaq__h2o2_1_1rxn__cmaq__h2o2__t}{rxn\_cmaq\_h2o2\_t}}}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00112}00112\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00113}00113\ \textcolor{comment}{\ \ !>\ Constructor\ for\ rxn\_CMAQ\_H2O2\_t}}
@@ -296,7 +296,7 @@
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00292}00292\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00293}00293\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00294}00294\ \textcolor{comment}{\ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00295}\mbox{\hyperlink{namespacecamp__rxn__cmaq__h2o2_af3e24d1b91ecd153915c73a48bd4472c}{00295}}\ \ \ \textcolor{keywordtype}{elemental}\ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00295}\mbox{\hyperlink{namespacecamp__rxn__cmaq__h2o2_a04c4156d03c78c6f414d14d5a6e540bc}{00295}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00296}00296\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00297}00297\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00298}00298\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__cmaq__h2o2_1_1rxn__cmaq__h2o2__t}{rxn\_cmaq\_h2o2\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
@@ -311,7 +311,23 @@
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00307}00307\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00308}00308\ }
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00309}00309\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00310}00310\ }
-\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00311}00311\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__cmaq__h2o2}{camp\_rxn\_cmaq\_h2o2}}}
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00310}00310\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00311}00311\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ reactions}}
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00312}\mbox{\hyperlink{namespacecamp__rxn__cmaq__h2o2_a2a28944b4ebb9ba2f8fc80273d302125}{00312}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00313}00313\ \ \ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00314}00314\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00315}00315\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__cmaq__h2o2_1_1rxn__cmaq__h2o2__t}{rxn\_cmaq\_h2o2\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00316}00316\ }
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00317}00317\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_rxn}
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00318}00318\ }
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00319}00319\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_rxn\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00320}00320\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this(i\_rxn))}
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00321}00321\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00322}00322\ }
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00323}00323\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00324}00324\ }
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00325}00325\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00326}00326\ }
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___h2_o2_8_f90_source_l00327}00327\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__cmaq__h2o2}{camp\_rxn\_cmaq\_h2o2}}}
 
 \end{DoxyCode}

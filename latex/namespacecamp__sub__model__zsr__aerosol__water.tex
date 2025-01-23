@@ -19,8 +19,10 @@ subroutine \mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water_a705c
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
 real(kind=dp) function \mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water_abc56af78a8e70c8d8c734dd4d7c92344}{priority}} (this)
 \begin{DoxyCompactList}\small\item\em Return a real number representing the priority of the sub model calculations. Low priority sub models may use the results of higher priority sub models. Lower numbers indicate higher priority. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water_a6c473852d103ea1eaffb6e923703614a}{finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water_a442c233848c1f53b1fa27888f907633b}{finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water_ae5da76c41d1cfe74852090f791974592}{finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of sub models. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -44,11 +46,11 @@ A new reaction instance
 
 Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8_f90_source_l00237}{237}} of file \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8_f90_source}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\+F90}}.
 
-\Hypertarget{namespacecamp__sub__model__zsr__aerosol__water_a6c473852d103ea1eaffb6e923703614a}\label{namespacecamp__sub__model__zsr__aerosol__water_a6c473852d103ea1eaffb6e923703614a} 
+\Hypertarget{namespacecamp__sub__model__zsr__aerosol__water_a442c233848c1f53b1fa27888f907633b}\label{namespacecamp__sub__model__zsr__aerosol__water_a442c233848c1f53b1fa27888f907633b} 
 \index{camp\_sub\_model\_zsr\_aerosol\_water@{camp\_sub\_model\_zsr\_aerosol\_water}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_sub\_model\_zsr\_aerosol\_water@{camp\_sub\_model\_zsr\_aerosol\_water}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+sub\+\_\+model\+\_\+zsr\+\_\+aerosol\+\_\+water\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\+\_\+model\+\_\+zsr\+\_\+aerosol\+\_\+water\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+sub\+\_\+model\+\_\+zsr\+\_\+aerosol\+\_\+water\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\+\_\+model\+\_\+zsr\+\_\+aerosol\+\_\+water\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -63,6 +65,33 @@ Finalize the reaction.
 
 Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8_f90_source_l00719}{719}} of file \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8_f90_source}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\+F90}}.
 
+\Hypertarget{namespacecamp__sub__model__zsr__aerosol__water_ae5da76c41d1cfe74852090f791974592}\label{namespacecamp__sub__model__zsr__aerosol__water_ae5da76c41d1cfe74852090f791974592} 
+\index{camp\_sub\_model\_zsr\_aerosol\_water@{camp\_sub\_model\_zsr\_aerosol\_water}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_sub\_model\_zsr\_aerosol\_water@{camp\_sub\_model\_zsr\_aerosol\_water}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+sub\+\_\+model\+\_\+zsr\+\_\+aerosol\+\_\+water\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\+\_\+model\+\_\+zsr\+\_\+aerosol\+\_\+water\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of sub models. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of sub models \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8_f90_source_l00736}{736}} of file \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8_f90_source}{sub\+\_\+model\+\_\+\+ZSR\+\_\+aerosol\+\_\+water.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__sub__model__zsr__aerosol__water_ae5da76c41d1cfe74852090f791974592_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{namespacecamp__sub__model__zsr__aerosol__water_a705c04f19d51da661dc137f39252e0a4}\label{namespacecamp__sub__model__zsr__aerosol__water_a705c04f19d51da661dc137f39252e0a4} 
 \index{camp\_sub\_model\_zsr\_aerosol\_water@{camp\_sub\_model\_zsr\_aerosol\_water}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_sub\_model\_zsr\_aerosol\_water@{camp\_sub\_model\_zsr\_aerosol\_water}}

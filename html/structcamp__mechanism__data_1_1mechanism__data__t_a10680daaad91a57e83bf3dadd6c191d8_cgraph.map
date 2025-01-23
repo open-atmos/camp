@@ -1,5 +1,9 @@
 <map id="camp_mechanism_data::mechanism_data_t::finalize" name="camp_mechanism_data::mechanism_data_t::finalize">
-<area shape="rect" id="Node000001" title="Finalize the mechanism." alt="" coords="5,5,165,61"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__camp__state.html#a5522f7056d1ff8bb1626e36c97dfff5a" title="Finalize the state." alt="" coords="213,20,386,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,31,197,31,197,36,165,36"/>
+<area shape="rect" id="Node000001" title="Finalize the mechanism." alt="" coords="5,20,165,75"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__camp__state.html#a5522f7056d1ff8bb1626e36c97dfff5a" title="Finalize the state." alt="" coords="213,5,386,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,34,197,30,197,35,166,39"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__chem__spec__data.html#a161ca7ad4370d191a2b1bf70ec810fcc" title="Finalize the chemical species data." alt="" coords="220,55,379,96"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="165,55,204,60,204,66,165,61"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__chem__spec__data.html#a254fa8186f63759084357c65d51e9f7f" title="Finalize the chemical species data." alt="" coords="434,55,593,96"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="379,73,418,73,418,78,379,78"/>
 </map>

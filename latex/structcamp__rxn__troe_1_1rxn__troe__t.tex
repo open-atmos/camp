@@ -31,7 +31,9 @@ Collaboration diagram for camp\+\_\+rxn\+\_\+troe\+::rxn\+\_\+troe\+\_\+t\+:
 procedure \mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t_a1954c05803d8cfcb97bfd9ba8fd94d06}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Reaction initialization. \end{DoxyCompactList}\item 
 final \mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t_abe21d9498dbe67416216f335ee0e134e}{finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t_a8ac12761d7bf23292cada014acfd5a16}{finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of reactions. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{camp\+\_\+rxn\+\_\+data\+::rxn\+\_\+data\+\_\+t}}}
 \begin{DoxyCompactItemize}
 \item 
@@ -99,12 +101,31 @@ Here is the call graph for this function\+:
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=343pt]{structcamp__rxn__troe_1_1rxn__troe__t_abe21d9498dbe67416216f335ee0e134e_cgraph}
+\includegraphics[width=350pt]{structcamp__rxn__troe_1_1rxn__troe__t_abe21d9498dbe67416216f335ee0e134e_cgraph}
 \end{center}
 \end{figure}
 
 
 \doxysubsection{Member Function/\+Subroutine Documentation}
+\Hypertarget{structcamp__rxn__troe_1_1rxn__troe__t_a8ac12761d7bf23292cada014acfd5a16}\label{structcamp__rxn__troe_1_1rxn__troe__t_a8ac12761d7bf23292cada014acfd5a16} 
+\index{camp\_rxn\_troe::rxn\_troe\_t@{camp\_rxn\_troe::rxn\_troe\_t}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_rxn\_troe::rxn\_troe\_t@{camp\_rxn\_troe::rxn\_troe\_t}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily camp\+\_\+rxn\+\_\+troe\+::rxn\+\_\+troe\+\_\+t\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\+\_\+troe\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})}
+
+
+
+Finalize an array of reactions. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Array of reaction data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{rxn__troe_8_f90_source_l00110}{110}} of file \mbox{\hyperlink{rxn__troe_8_f90_source}{rxn\+\_\+troe.\+F90}}.
+
 \Hypertarget{structcamp__rxn__troe_1_1rxn__troe__t_a1954c05803d8cfcb97bfd9ba8fd94d06}\label{structcamp__rxn__troe_1_1rxn__troe__t_a1954c05803d8cfcb97bfd9ba8fd94d06} 
 \index{camp\_rxn\_troe::rxn\_troe\_t@{camp\_rxn\_troe::rxn\_troe\_t}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_troe::rxn\_troe\_t@{camp\_rxn\_troe::rxn\_troe\_t}}

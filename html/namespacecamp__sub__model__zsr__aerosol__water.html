@@ -75,9 +75,12 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:abc56af78a8e70c8d8c734dd4d7c92344" id="r_abc56af78a8e70c8d8c734dd4d7c92344"><td class="memItemLeft" align="right" valign="top">real(kind=dp) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__sub__model__zsr__aerosol__water.html#abc56af78a8e70c8d8c734dd4d7c92344">priority</a> (this)</td></tr>
 <tr class="memdesc:abc56af78a8e70c8d8c734dd4d7c92344"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a real number representing the priority of the sub model calculations. Low priority sub models may use the results of higher priority sub models. Lower numbers indicate higher priority.  <br /></td></tr>
 <tr class="separator:abc56af78a8e70c8d8c734dd4d7c92344"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c473852d103ea1eaffb6e923703614a" id="r_a6c473852d103ea1eaffb6e923703614a"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__sub__model__zsr__aerosol__water.html#a6c473852d103ea1eaffb6e923703614a">finalize</a> (this)</td></tr>
-<tr class="memdesc:a6c473852d103ea1eaffb6e923703614a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
-<tr class="separator:a6c473852d103ea1eaffb6e923703614a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a442c233848c1f53b1fa27888f907633b" id="r_a442c233848c1f53b1fa27888f907633b"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__sub__model__zsr__aerosol__water.html#a442c233848c1f53b1fa27888f907633b">finalize</a> (this)</td></tr>
+<tr class="memdesc:a442c233848c1f53b1fa27888f907633b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
+<tr class="separator:a442c233848c1f53b1fa27888f907633b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5da76c41d1cfe74852090f791974592" id="r_ae5da76c41d1cfe74852090f791974592"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__sub__model__zsr__aerosol__water.html#ae5da76c41d1cfe74852090f791974592">finalize_array</a> (this)</td></tr>
+<tr class="memdesc:ae5da76c41d1cfe74852090f791974592"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize an array of sub models.  <br /></td></tr>
+<tr class="separator:ae5da76c41d1cfe74852090f791974592"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The sub_model_ZSR_aerosol_water_t type and associated functions. </p>
@@ -109,8 +112,8 @@ Functions/Subroutines</h2></td></tr>
 
 </div>
 </div>
-<a id="a6c473852d103ea1eaffb6e923703614a" name="a6c473852d103ea1eaffb6e923703614a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6c473852d103ea1eaffb6e923703614a">&#9670;&#160;</a></span>finalize()</h2>
+<a id="a442c233848c1f53b1fa27888f907633b" name="a442c233848c1f53b1fa27888f907633b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a442c233848c1f53b1fa27888f907633b">&#9670;&#160;</a></span>finalize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -119,7 +122,7 @@ Functions/Subroutines</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">elemental subroutine camp_sub_model_zsr_aerosol_water::finalize </td>
+          <td class="memname">subroutine camp_sub_model_zsr_aerosol_water::finalize </td>
           <td>(</td>
           <td class="paramtype">type(<a class="el" href="structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t.html">sub_model_zsr_aerosol_water_t</a>), intent(inout)&#160;</td>
           <td class="paramname"><em>this</em></td><td>)</td>
@@ -142,6 +145,52 @@ Functions/Subroutines</h2></td></tr>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="sub__model___z_s_r__aerosol__water_8_f90_source.html#l00719">719</a> of file <a class="el" href="sub__model___z_s_r__aerosol__water_8_f90_source.html">sub_model_ZSR_aerosol_water.F90</a>.</p>
+
+</div>
+</div>
+<a id="ae5da76c41d1cfe74852090f791974592" name="ae5da76c41d1cfe74852090f791974592"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5da76c41d1cfe74852090f791974592">&#9670;&#160;</a></span>finalize_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine camp_sub_model_zsr_aerosol_water::finalize_array </td>
+          <td>(</td>
+          <td class="paramtype">type(<a class="el" href="structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t.html">sub_model_zsr_aerosol_water_t</a>), dimension(:), intent(inout)&#160;</td>
+          <td class="paramname"><em>this</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Finalize an array of sub models. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Array of sub models </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="sub__model___z_s_r__aerosol__water_8_f90_source.html#l00736">736</a> of file <a class="el" href="sub__model___z_s_r__aerosol__water_8_f90_source.html">sub_model_ZSR_aerosol_water.F90</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacecamp__sub__model__zsr__aerosol__water_ae5da76c41d1cfe74852090f791974592_cgraph.png" border="0" usemap="#anamespacecamp__sub__model__zsr__aerosol__water_ae5da76c41d1cfe74852090f791974592_cgraph" alt=""/></div>
+<map name="anamespacecamp__sub__model__zsr__aerosol__water_ae5da76c41d1cfe74852090f791974592_cgraph" id="anamespacecamp__sub__model__zsr__aerosol__water_ae5da76c41d1cfe74852090f791974592_cgraph">
+<area shape="rect" title="Finalize an array of sub models." alt="" coords="5,5,195,46"/>
+<area shape="rect" href="namespacecamp__aero__phase__data.html#a8eebec681f9d24bd7741bb357f7c4e43" title="Finalize the aerosol phase data." alt="" coords="243,5,402,46"/>
+<area shape="poly" title=" " alt="" coords="195,23,227,23,227,28,195,28"/>
+</map>
+</div>
 
 </div>
 </div>

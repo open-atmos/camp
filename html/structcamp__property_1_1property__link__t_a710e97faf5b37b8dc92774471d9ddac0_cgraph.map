@@ -1,5 +1,7 @@
 <map id="camp_property::property_link_t::link_finalize" name="camp_property::property_link_t::link_finalize">
-<area shape="rect" id="Node000001" title="Finalize." alt="" coords="5,5,164,46"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__property.html#a8fc09d2181501c08c436eb0995c641cd" title="Finalize the property_link_t variable." alt="" coords="212,5,344,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,23,197,23,197,28,164,28"/>
+<area shape="rect" id="Node000001" title="Finalize." alt="" coords="5,39,164,79"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__property.html#a9c5d4346fc9bf106dc49372f407d44ea" title="Finalize the property_link_t variable." alt="" coords="212,5,344,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,43,196,37,197,42,164,48"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__property.html#aa1afd639841d0e669133410d6d508f40" title="Finalize the property_link_t array." alt="" coords="212,71,344,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="164,69,197,75,196,80,163,75"/>
 </map>

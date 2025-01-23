@@ -65,8 +65,10 @@ subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a0f
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
 type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a80ba2df3166d8cd40ef07ebcec6293db}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::get\+\_\+property\+\_\+set}} (this)
 \begin{DoxyCompactList}\small\item\em Get the reaction properties. (For use by external photolysis modules.) \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_aeed920c22a56f60131e7d515275666b6}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::finalize}} (this)
+subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a7ce26320f77748fadf951eeea28a2f59}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a0d12a2703cb61b56bf39e3e68fde2bc5}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of reactions. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ae70f9b706dc52f1be044d2aedd2dad22}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::update\+\_\+data\+\_\+rate\+\_\+set}} (this, base\+\_\+rate)
 \begin{DoxyCompactList}\small\item\em Set packed update data for photolysis rate constants. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a75d0d118062d5bfd38e0f36e64aab706}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::update\+\_\+data\+\_\+initialize}} (this, update\+\_\+data, rxn\+\_\+type)
@@ -77,8 +79,10 @@ subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_aae
 \begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_aa5e3c77ac0528b0109a890a25d56b2a9}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::internal\+\_\+bin\+\_\+unpack}} (this, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a5f27685a1af55aa6168921ef4659e2b3}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::update\+\_\+data\+\_\+finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize an update data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ad77a924a5f63d0e06ac24eb437f63733}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::update\+\_\+data\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an update data object. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a5f4efee9927e338f213d93b4b28a8219}{camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::update\+\_\+data\+\_\+finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of update data objects. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}

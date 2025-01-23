@@ -106,9 +106,12 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:a005184b2ff08ed9baac23a226b86ccdc" id="r_a005184b2ff08ed9baac23a226b86ccdc"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__data.html#a005184b2ff08ed9baac23a226b86ccdc">dereference</a> (this)</td></tr>
 <tr class="memdesc:a005184b2ff08ed9baac23a226b86ccdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dereference a pointer to a reaction.  <br /></td></tr>
 <tr class="separator:a005184b2ff08ed9baac23a226b86ccdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f5a80be4fae50c8db2972b54bdcc7e8" id="r_a0f5a80be4fae50c8db2972b54bdcc7e8"><td class="memItemLeft" align="right" valign="top">elemental subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__data.html#a0f5a80be4fae50c8db2972b54bdcc7e8">ptr_finalize</a> (this)</td></tr>
-<tr class="memdesc:a0f5a80be4fae50c8db2972b54bdcc7e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize a pointer to a reaction.  <br /></td></tr>
-<tr class="separator:a0f5a80be4fae50c8db2972b54bdcc7e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d6cb59ec3063a40bd2e98e6c698688f" id="r_a3d6cb59ec3063a40bd2e98e6c698688f"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__data.html#a3d6cb59ec3063a40bd2e98e6c698688f">ptr_finalize</a> (this)</td></tr>
+<tr class="memdesc:a3d6cb59ec3063a40bd2e98e6c698688f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize a pointer to a reaction.  <br /></td></tr>
+<tr class="separator:a3d6cb59ec3063a40bd2e98e6c698688f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0eb3c8b8215a825a9581d08b326ad03f" id="r_a0eb3c8b8215a825a9581d08b326ad03f"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__data.html#a0eb3c8b8215a825a9581d08b326ad03f">ptr_finalize_array</a> (this)</td></tr>
+<tr class="memdesc:a0eb3c8b8215a825a9581d08b326ad03f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize an array of pointers to reactions.  <br /></td></tr>
+<tr class="separator:a0eb3c8b8215a825a9581d08b326ad03f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3b029cdec60826e4b69637d6dcb6c9a" id="r_ab3b029cdec60826e4b69637d6dcb6c9a"><td class="memItemLeft" align="right" valign="top">integer(kind=c_int) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__rxn__data.html#ab3b029cdec60826e4b69637d6dcb6c9a">rxn_update_data_get_type</a> (this)</td></tr>
 <tr class="memdesc:ab3b029cdec60826e4b69637d6dcb6c9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the update data reaction type.  <br /></td></tr>
 <tr class="separator:ab3b029cdec60826e4b69637d6dcb6c9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -557,7 +560,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00680">680</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00696">696</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 
 </div>
 </div>
@@ -716,8 +719,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a0f5a80be4fae50c8db2972b54bdcc7e8" name="a0f5a80be4fae50c8db2972b54bdcc7e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0f5a80be4fae50c8db2972b54bdcc7e8">&#9670;&#160;</a></span>ptr_finalize()</h2>
+<a id="a3d6cb59ec3063a40bd2e98e6c698688f" name="a3d6cb59ec3063a40bd2e98e6c698688f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d6cb59ec3063a40bd2e98e6c698688f">&#9670;&#160;</a></span>ptr_finalize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -726,7 +729,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">elemental subroutine camp_rxn_data::ptr_finalize </td>
+          <td class="memname">subroutine camp_rxn_data::ptr_finalize </td>
           <td>(</td>
           <td class="paramtype">type(<a class="el" href="structcamp__rxn__data_1_1rxn__data__ptr.html">rxn_data_ptr</a>), intent(inout)&#160;</td>
           <td class="paramname"><em>this</em></td><td>)</td>
@@ -749,6 +752,52 @@ Here is the caller graph for this function:</div>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00524">524</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+
+</div>
+</div>
+<a id="a0eb3c8b8215a825a9581d08b326ad03f" name="a0eb3c8b8215a825a9581d08b326ad03f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0eb3c8b8215a825a9581d08b326ad03f">&#9670;&#160;</a></span>ptr_finalize_array()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">subroutine camp_rxn_data::ptr_finalize_array </td>
+          <td>(</td>
+          <td class="paramtype">type(<a class="el" href="structcamp__rxn__data_1_1rxn__data__ptr.html">rxn_data_ptr</a>), dimension(:), intent(inout)&#160;</td>
+          <td class="paramname"><em>this</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Finalize an array of pointers to reactions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Pointer to a reaction </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00536">536</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacecamp__rxn__data_a0eb3c8b8215a825a9581d08b326ad03f_cgraph.png" border="0" usemap="#anamespacecamp__rxn__data_a0eb3c8b8215a825a9581d08b326ad03f_cgraph" alt=""/></div>
+<map name="anamespacecamp__rxn__data_a0eb3c8b8215a825a9581d08b326ad03f_cgraph" id="anamespacecamp__rxn__data_a0eb3c8b8215a825a9581d08b326ad03f_cgraph">
+<area shape="rect" title="Finalize an array of pointers to reactions." alt="" coords="5,5,136,46"/>
+<area shape="rect" href="namespacecamp__aero__rep__data.html#a3b58ee6e8a00a3bd8f58ca27bae2e0d1" title="Finalize a pointer to an aerosol representation." alt="" coords="184,5,326,46"/>
+<area shape="poly" title=" " alt="" coords="136,23,168,23,168,28,136,28"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -809,7 +858,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00609">609</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00625">625</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -897,7 +946,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00644">644</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00660">660</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -961,7 +1010,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00550">550</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00566">566</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 
 </div>
 </div>
@@ -998,7 +1047,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00564">564</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00580">580</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 
 </div>
 </div>
@@ -1035,7 +1084,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00536">536</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00552">552</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 
 </div>
 </div>
@@ -1082,7 +1131,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00578">578</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__data_8_f90_source.html#l00594">594</a> of file <a class="el" href="rxn__data_8_f90_source.html">rxn_data.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">

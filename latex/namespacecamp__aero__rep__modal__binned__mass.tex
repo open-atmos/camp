@@ -45,8 +45,10 @@ integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__rep__mo
 \begin{DoxyCompactList}\small\item\em Get the number of instances of a specified aerosol phase. \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_aed4438fdb785bdabc1ac0381af9a157d}{num\+\_\+jac\+\_\+elem}} (this, phase\+\_\+id)
 \begin{DoxyCompactList}\small\item\em Get the number of \doxylink{struct_jacobian}{Jacobian} elements used in calculations of aerosol mass, volume, number, etc. for a particular phase. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a92e5f0912e0043cf3997128af656eb3a}{finalize}} (this)
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a1a2f50822837357ce16a3973ef71525a}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the aerosol representation. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_afcb21ccb14795432a4fc65e8e5892c04}{finalize\+\_\+array}} (aero\+\_\+reps)
+\begin{DoxyCompactList}\small\item\em Finalize the aerosol representation array. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_afccea8b1865d3f94a32c1bb856d516ba}{update\+\_\+data\+\_\+init\+\_\+gmd}} (this, update\+\_\+data, aero\+\_\+rep\+\_\+type)
 \begin{DoxyCompactList}\small\item\em Initialize a GMD update object. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a9c9c6b14c65eae8ac6a3ffe178fef3d3}{update\+\_\+data\+\_\+set\+\_\+gmd}} (this, section\+\_\+id, gmd)
@@ -57,8 +59,10 @@ subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a1a68e
 \begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a724950fc8389ffa38a4a1497b5886420}{internal\+\_\+bin\+\_\+unpack\+\_\+gmd}} (this, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_afd447c39e8f80a6c6849a9562dfc851e}{update\+\_\+data\+\_\+gmd\+\_\+finalize}} (this)
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_aea3372ba3e6f599f8b8df4a2ed45ea07}{update\+\_\+data\+\_\+gmd\+\_\+finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize a GMD update data object. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a30b10781273462f1003707e8df3d2dc3}{update\+\_\+data\+\_\+gmd\+\_\+finalize\+\_\+array}} (update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Finalize a GMD update data array. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a009d8b27783a5659ec7d8a5cc8fbaeea}{update\+\_\+data\+\_\+init\+\_\+gsd}} (this, update\+\_\+data, aero\+\_\+rep\+\_\+type)
 \begin{DoxyCompactList}\small\item\em Initialize a GSD update data object. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a38a7229aa559be9f435c6dd6470c7641}{update\+\_\+data\+\_\+set\+\_\+gsd}} (this, section\+\_\+id, gsd)
@@ -69,8 +73,10 @@ subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a796c7
 \begin{DoxyCompactList}\small\item\em Pack the given value to the buffer, advancing position. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_a0d63c15aa46fd5fbbd43b59e5940cf40}{internal\+\_\+bin\+\_\+unpack\+\_\+gsd}} (this, buffer, pos, comm)
 \begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_ad670c66458900e6a2c2ea7c527a82003}{update\+\_\+data\+\_\+gsd\+\_\+finalize}} (this)
-\begin{DoxyCompactList}\small\item\em Finalize a GSD update data object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_ad5d6e5e37724f20755dbe8adc7abac69}{update\+\_\+data\+\_\+gsd\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize a GSD update data object. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass_ad9520c61d54cdfdf16768227ef27cf7a}{update\+\_\+data\+\_\+gsd\+\_\+finalize\+\_\+array}} (update\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Finalize a GSD update data array. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
@@ -101,11 +107,11 @@ New aerosol representation
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00317}{317}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
-\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a92e5f0912e0043cf3997128af656eb3a}\label{namespacecamp__aero__rep__modal__binned__mass_a92e5f0912e0043cf3997128af656eb3a} 
+\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a1a2f50822837357ce16a3973ef71525a}\label{namespacecamp__aero__rep__modal__binned__mass_a1a2f50822837357ce16a3973ef71525a} 
 \index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -120,6 +126,33 @@ Finalize the aerosol representation.
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01007}{1007}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
+\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_afcb21ccb14795432a4fc65e8e5892c04}\label{namespacecamp__aero__rep__modal__binned__mass_afcb21ccb14795432a4fc65e8e5892c04} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), dimension(\+:), intent(inout)}]{aero\+\_\+reps }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize the aerosol representation array. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em aero\+\_\+reps} & Aerosol representation array \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01030}{1030}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__aero__rep__modal__binned__mass_afcb21ccb14795432a4fc65e8e5892c04_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a0e0dbc7c8b315f97a78db9e321603548}\label{namespacecamp__aero__rep__modal__binned__mass_a0e0dbc7c8b315f97a78db9e321603548} 
 \index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!get\_section\_id@{get\_section\_id}}
 \index{get\_section\_id@{get\_section\_id}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
@@ -230,7 +263,7 @@ Pack the given value to the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01092}{1092}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01108}{1108}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -263,7 +296,7 @@ Pack the given value to the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01219}{1219}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01252}{1252}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -296,7 +329,7 @@ Unpack the given value from the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01118}{1118}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01134}{1134}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -329,7 +362,7 @@ Unpack the given value from the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01245}{1245}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01278}{1278}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -358,7 +391,7 @@ Determine the size of a binary required to pack the reaction data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01075}{1075}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01091}{1091}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -387,7 +420,7 @@ Determine the size of a binary required to pack the reaction data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01202}{1202}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01235}{1235}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -539,11 +572,11 @@ List of unique names
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00737}{737}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
-\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_afd447c39e8f80a6c6849a9562dfc851e}\label{namespacecamp__aero__rep__modal__binned__mass_afd447c39e8f80a6c6849a9562dfc851e} 
+\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_aea3372ba3e6f599f8b8df4a2ed45ea07}\label{namespacecamp__aero__rep__modal__binned__mass_aea3372ba3e6f599f8b8df4a2ed45ea07} 
 \index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!update\_data\_gmd\_finalize@{update\_data\_gmd\_finalize}}
 \index{update\_data\_gmd\_finalize@{update\_data\_gmd\_finalize}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
 \doxysubsubsection{\texorpdfstring{update\_data\_gmd\_finalize()}{update\_data\_gmd\_finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+gmd\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gmd\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+gmd\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gmd\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -556,21 +589,56 @@ Finalize a GMD update data object.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01145}{1145}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01161}{1161}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacecamp__aero__rep__modal__binned__mass_afd447c39e8f80a6c6849a9562dfc851e_icgraph}
+\includegraphics[width=350pt]{namespacecamp__aero__rep__modal__binned__mass_aea3372ba3e6f599f8b8df4a2ed45ea07_icgraph}
 \end{center}
 \end{figure}
-\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_ad670c66458900e6a2c2ea7c527a82003}\label{namespacecamp__aero__rep__modal__binned__mass_ad670c66458900e6a2c2ea7c527a82003} 
+\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a30b10781273462f1003707e8df3d2dc3}\label{namespacecamp__aero__rep__modal__binned__mass_a30b10781273462f1003707e8df3d2dc3} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!update\_data\_gmd\_finalize\_array@{update\_data\_gmd\_finalize\_array}}
+\index{update\_data\_gmd\_finalize\_array@{update\_data\_gmd\_finalize\_array}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{update\_data\_gmd\_finalize\_array()}{update\_data\_gmd\_finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+gmd\+\_\+finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gmd\+\_\+t}}), dimension(\+:), intent(inout)}]{update\+\_\+data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize a GMD update data array. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em update\+\_\+data} & Update data array to free \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01173}{1173}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__aero__rep__modal__binned__mass_a30b10781273462f1003707e8df3d2dc3_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__aero__rep__modal__binned__mass_a30b10781273462f1003707e8df3d2dc3_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_ad5d6e5e37724f20755dbe8adc7abac69}\label{namespacecamp__aero__rep__modal__binned__mass_ad5d6e5e37724f20755dbe8adc7abac69} 
 \index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!update\_data\_gsd\_finalize@{update\_data\_gsd\_finalize}}
 \index{update\_data\_gsd\_finalize@{update\_data\_gsd\_finalize}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
 \doxysubsubsection{\texorpdfstring{update\_data\_gsd\_finalize()}{update\_data\_gsd\_finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+gsd\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gsd\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+gsd\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gsd\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -583,14 +651,49 @@ Finalize a GSD update data object.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01272}{1272}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01305}{1305}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacecamp__aero__rep__modal__binned__mass_ad670c66458900e6a2c2ea7c527a82003_icgraph}
+\includegraphics[width=350pt]{namespacecamp__aero__rep__modal__binned__mass_ad5d6e5e37724f20755dbe8adc7abac69_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{namespacecamp__aero__rep__modal__binned__mass_ad9520c61d54cdfdf16768227ef27cf7a}\label{namespacecamp__aero__rep__modal__binned__mass_ad9520c61d54cdfdf16768227ef27cf7a} 
+\index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!update\_data\_gsd\_finalize\_array@{update\_data\_gsd\_finalize\_array}}
+\index{update\_data\_gsd\_finalize\_array@{update\_data\_gsd\_finalize\_array}!camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}}
+\doxysubsubsection{\texorpdfstring{update\_data\_gsd\_finalize\_array()}{update\_data\_gsd\_finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::update\+\_\+data\+\_\+gsd\+\_\+finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gsd\+\_\+t}}), dimension(\+:), intent(inout)}]{update\+\_\+data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize a GSD update data array. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em update\+\_\+data} & Update data array to free \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01317}{1317}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__aero__rep__modal__binned__mass_ad9520c61d54cdfdf16768227ef27cf7a_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__aero__rep__modal__binned__mass_ad9520c61d54cdfdf16768227ef27cf7a_icgraph}
 \end{center}
 \end{figure}
 \Hypertarget{namespacecamp__aero__rep__modal__binned__mass_afccea8b1865d3f94a32c1bb856d516ba}\label{namespacecamp__aero__rep__modal__binned__mass_afccea8b1865d3f94a32c1bb856d516ba} 
@@ -614,7 +717,7 @@ Initialize a GMD update object.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01030}{1030}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01046}{1046}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -645,7 +748,7 @@ Initialize a GSD update data object.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01157}{1157}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01190}{1190}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -676,7 +779,7 @@ Set packed update data for mode GMD.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01057}{1057}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01073}{1073}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
 \Hypertarget{namespacecamp__aero__rep__modal__binned__mass_a38a7229aa559be9f435c6dd6470c7641}\label{namespacecamp__aero__rep__modal__binned__mass_a38a7229aa559be9f435c6dd6470c7641} 
 \index{camp\_aero\_rep\_modal\_binned\_mass@{camp\_aero\_rep\_modal\_binned\_mass}!update\_data\_set\_gsd@{update\_data\_set\_gsd}}
@@ -699,7 +802,7 @@ Set packed update data for mode GSD.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01184}{1184}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l01217}{1217}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
 
 

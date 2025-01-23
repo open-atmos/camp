@@ -1,0 +1,8 @@
+<map id="camp_rxn_photolysis::update_data_finalize" name="camp_rxn_photolysis::update_data_finalize">
+<area shape="rect" id="Node000001" title="Finalize an update data object." alt="" coords="468,13,612,54"/>
+<area shape="rect" id="Node000002" href="$structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t.html#ab39388a1a7cdaf482bf2c5918da2b43a" title="Finalize the rate update data." alt="" coords="5,5,193,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="452,33,420,32,241,32,193,33,193,27,241,27,420,27,453,27"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__rxn__photolysis.html#ac2c39eb76ed9584e683975606e314769" title="Finalize an array of update data objects." alt="" coords="241,41,420,82"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="453,47,421,52,420,46,452,42"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="225,51,193,47,193,42,226,46"/>
+</map>

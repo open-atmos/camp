@@ -85,8 +85,10 @@ type(\mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{s
 \begin{DoxyCompactList}\small\item\em Constructor for activity reaction. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__sub__model__pdfite_a615c6e49b354cccfda87b7551b466f1f}{camp\+\_\+sub\+\_\+model\+\_\+pdfite\+::initialize}} (this, aero\+\_\+rep\+\_\+set, aero\+\_\+phase\+\_\+set, chem\+\_\+spec\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__sub__model__pdfite_a6ddba2bd7cc93caac144b5eaad85a682}{camp\+\_\+sub\+\_\+model\+\_\+pdfite\+::finalize}} (this)
+subroutine \mbox{\hyperlink{namespacecamp__sub__model__pdfite_a21d67c2f95124880d5b8c9aedf4c9661}{camp\+\_\+sub\+\_\+model\+\_\+pdfite\+::finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__sub__model__pdfite_af7f444a3b60e04c4efd12ddff3656aba}{camp\+\_\+sub\+\_\+model\+\_\+pdfite\+::finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of reactions. \end{DoxyCompactList}\item 
 real(kind=dp) function \mbox{\hyperlink{namespacecamp__sub__model__pdfite_a2d718db6c7657ffd0a80f94f2c648841}{camp\+\_\+sub\+\_\+model\+\_\+pdfite\+::priority}} (this)
 \begin{DoxyCompactList}\small\item\em Return a real number representing the priority of the sub model calculations. Low priority sub models may use the results of higher priority sub models. Lower numbers indicate higher priority. \end{DoxyCompactList}\end{DoxyCompactItemize}
 

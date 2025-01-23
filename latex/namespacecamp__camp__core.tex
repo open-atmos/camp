@@ -77,8 +77,10 @@ subroutine \mbox{\hyperlink{namespacecamp__camp__core_a672a6ddc1f764207c4b6aa80b
 \begin{DoxyCompactList}\small\item\em Unpack the given value from the buffer, advancing position. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__camp__core_ad7e85de25d800ea05331e9041c1637fd}{do\+\_\+print}} (this, file\+\_\+unit, solver\+\_\+data\+\_\+only)
 \begin{DoxyCompactList}\small\item\em Print the core data. \end{DoxyCompactList}\item 
-elemental subroutine \mbox{\hyperlink{namespacecamp__camp__core_a275b838802acbff7222f603453851f7b}{finalize}} (this)
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_af5ab2d052b0d53c2c0e2bd3eec00d8fb}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the core. \end{DoxyCompactList}\item 
+subroutine \mbox{\hyperlink{namespacecamp__camp__core_aa5f193ffd1e34445bb71881983998fd4}{finalize\+\_\+array}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize an array of core data. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__camp__core_a807e14d531f9191c243a4e766314ca43}{add\+\_\+aero\+\_\+phase}} (this, phase\+\_\+name)
 \begin{DoxyCompactList}\small\item\em Add a aerosol phase to the model data. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__camp__core_a061e1d70300d903948d3f5ace5b38a44}{add\+\_\+aero\+\_\+rep}} (this, rep\+\_\+name)
@@ -112,7 +114,7 @@ Add a aerosol phase to the model data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{camp__core_8_f90_source_l01748}{1748}} of file \mbox{\hyperlink{camp__core_8_f90_source}{camp\+\_\+core.\+F90}}.
+Definition at line \mbox{\hyperlink{camp__core_8_f90_source_l01764}{1764}} of file \mbox{\hyperlink{camp__core_8_f90_source}{camp\+\_\+core.\+F90}}.
 
 \Hypertarget{namespacecamp__camp__core_a061e1d70300d903948d3f5ace5b38a44}\label{namespacecamp__camp__core_a061e1d70300d903948d3f5ace5b38a44} 
 \index{camp\_camp\_core@{camp\_camp\_core}!add\_aero\_rep@{add\_aero\_rep}}
@@ -133,7 +135,7 @@ Add a aerosol representation to the model data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{camp__core_8_f90_source_l01772}{1772}} of file \mbox{\hyperlink{camp__core_8_f90_source}{camp\+\_\+core.\+F90}}.
+Definition at line \mbox{\hyperlink{camp__core_8_f90_source_l01788}{1788}} of file \mbox{\hyperlink{camp__core_8_f90_source}{camp\+\_\+core.\+F90}}.
 
 \Hypertarget{namespacecamp__camp__core_a714172895a48f79549016aa3132bd418}\label{namespacecamp__camp__core_a714172895a48f79549016aa3132bd418} 
 \index{camp\_camp\_core@{camp\_camp\_core}!add\_mechanism@{add\_mechanism}}
@@ -154,7 +156,7 @@ Add a chemical mechanism to the model data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{camp__core_8_f90_source_l01798}{1798}} of file \mbox{\hyperlink{camp__core_8_f90_source}{camp\+\_\+core.\+F90}}.
+Definition at line \mbox{\hyperlink{camp__core_8_f90_source_l01814}{1814}} of file \mbox{\hyperlink{camp__core_8_f90_source}{camp\+\_\+core.\+F90}}.
 
 \Hypertarget{namespacecamp__camp__core_a0c0833d4af6d0d1f37b3bf1130a9d0fb}\label{namespacecamp__camp__core_a0c0833d4af6d0d1f37b3bf1130a9d0fb} 
 \index{camp\_camp\_core@{camp\_camp\_core}!add\_sub\_model@{add\_sub\_model}}
@@ -175,7 +177,7 @@ Add a sub-\/model to the model data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{camp__core_8_f90_source_l01823}{1823}} of file \mbox{\hyperlink{camp__core_8_f90_source}{camp\+\_\+core.\+F90}}.
+Definition at line \mbox{\hyperlink{camp__core_8_f90_source_l01839}{1839}} of file \mbox{\hyperlink{camp__core_8_f90_source}{camp\+\_\+core.\+F90}}.
 
 \Hypertarget{namespacecamp__camp__core_a0ca4cb9df7fab00fc42c9a56c0e88ac1}\label{namespacecamp__camp__core_a0ca4cb9df7fab00fc42c9a56c0e88ac1} 
 \index{camp\_camp\_core@{camp\_camp\_core}!aero\_rep\_update\_data@{aero\_rep\_update\_data}}
@@ -319,11 +321,11 @@ Here is the call graph for this function\+:
 \includegraphics[width=350pt]{namespacecamp__camp__core_ad7e85de25d800ea05331e9041c1637fd_cgraph}
 \end{center}
 \end{figure}
-\Hypertarget{namespacecamp__camp__core_a275b838802acbff7222f603453851f7b}\label{namespacecamp__camp__core_a275b838802acbff7222f603453851f7b} 
+\Hypertarget{namespacecamp__camp__core_af5ab2d052b0d53c2c0e2bd3eec00d8fb}\label{namespacecamp__camp__core_af5ab2d052b0d53c2c0e2bd3eec00d8fb} 
 \index{camp\_camp\_core@{camp\_camp\_core}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_camp\_core@{camp\_camp\_core}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily elemental subroutine camp\+\_\+camp\+\_\+core\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily subroutine camp\+\_\+camp\+\_\+core\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -338,6 +340,33 @@ Finalize the core.
 
 Definition at line \mbox{\hyperlink{camp__core_8_f90_source_l01717}{1717}} of file \mbox{\hyperlink{camp__core_8_f90_source}{camp\+\_\+core.\+F90}}.
 
+\Hypertarget{namespacecamp__camp__core_aa5f193ffd1e34445bb71881983998fd4}\label{namespacecamp__camp__core_aa5f193ffd1e34445bb71881983998fd4} 
+\index{camp\_camp\_core@{camp\_camp\_core}!finalize\_array@{finalize\_array}}
+\index{finalize\_array@{finalize\_array}!camp\_camp\_core@{camp\_camp\_core}}
+\doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
+{\footnotesize\ttfamily subroutine camp\+\_\+camp\+\_\+core\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), dimension(\+:), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Finalize an array of core data. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & CAMP-\/core data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{camp__core_8_f90_source_l01748}{1748}} of file \mbox{\hyperlink{camp__core_8_f90_source}{camp\+\_\+core.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecamp__camp__core_aa5f193ffd1e34445bb71881983998fd4_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{namespacecamp__camp__core_a10bbb0d738844de79c4946f6ddf0f120}\label{namespacecamp__camp__core_a10bbb0d738844de79c4946f6ddf0f120} 
 \index{camp\_camp\_core@{camp\_camp\_core}!free\_solver@{free\_solver}}
 \index{free\_solver@{free\_solver}!camp\_camp\_core@{camp\_camp\_core}}
