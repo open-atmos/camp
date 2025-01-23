@@ -199,7 +199,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   // If there are no reactions, flag the solver not to run
   sd->no_solve = (n_rxn == 0);
 
-  // Allocate space for the aerosol phase data and st the number
+  // Allocate space for the aerosol phase data and set the number
   // of aerosol phases (including one int for the number of
   // phases)
   sd->model_data.aero_phase_int_data =

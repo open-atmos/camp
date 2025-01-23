@@ -28,7 +28,7 @@
 
 // index for the test phase (test-particle phase 2)
 #define AERO_PHASE_IDX_1 ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+1)
-#define AERO_PHASE_IDX_2 ((TEST_PARTICLE_2)*NUM_AERO_PHASE-4)
+#define AERO_PHASE_IDX_2 ((TEST_PARTICLE_2)*NUM_AERO_PHASE-1)
 
 // number of Jacobian elements used for the test phase
 #define N_JAC_ELEM 12
@@ -102,10 +102,7 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
                             CONC_water / DENSITY_water +
                             CONC_salt / DENSITY_salt ); // volume density (m3/m3)
   
-  printf("\neff_rad_1 : %f", eff_rad_1);
-  printf("\neff_rad_2 : %f", eff_rad_2);
   double eff_rad_expected = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density ), 1.0/3.0 );
-  printf("\neff_rad_expected %f", eff_rad_expected);
   ret_val += ASSERT_MSG(fabs(eff_rad_1-eff_rad_expected) < 1.0e-6*eff_rad_expected,
                         "Bad effective radius");
   ret_val += ASSERT_MSG(fabs(eff_rad_2-eff_rad_expected) < 1.0e-6*eff_rad_expected,
