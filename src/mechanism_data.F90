@@ -87,7 +87,7 @@ module camp_mechanism_data
     !> Print the mechanism data
     procedure :: print => do_print
     !> Finalize the mechanism
-    final :: finalize
+    final :: finalize, finalize_array
 
     ! Private functions
     !> Ensure there is enough room in the reaction dataset to add a
@@ -107,7 +107,7 @@ module camp_mechanism_data
     !> Dereference the pointer
     procedure :: dereference
     !> Finalize the pointer
-    final :: ptr_finalize
+    final :: ptr_finalize, ptr_finalize_array
   end type mechanism_data_ptr
 
 contains
@@ -423,7 +423,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the mechanism
-  elemental subroutine finalize(this)
+  subroutine finalize(this)
 
     !> Mechanism data
     type(mechanism_data_t), intent(inout) :: this
@@ -433,6 +433,22 @@ contains
     if (associated(this%rxn_ptr))          deallocate(this%rxn_ptr)
 
   end subroutine finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize an array of mechanisms
+  subroutine finalize_array(this)
+
+    !> Array of mechanism data
+    type(mechanism_data_t), intent(inout) :: this(:)
+
+    integer(kind=i_kind) :: i_mech
+
+    do i_mech = 1, size(this)
+      call finalize(this(i_mech))
+    end do
+
+  end subroutine finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -449,7 +465,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize a pointer to mechanism data
-  elemental subroutine ptr_finalize(this)
+  subroutine ptr_finalize(this)
 
     !> Pointer to mechanism data
     type(mechanism_data_ptr), intent(inout) :: this
@@ -457,6 +473,22 @@ contains
     if (associated(this%val)) deallocate(this%val)
 
   end subroutine ptr_finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize an array of mechanism data pointers
+  subroutine ptr_finalize_array(this)
+
+    !> Array of mechanism data pointers
+    type(mechanism_data_ptr), intent(inout) :: this(:)
+
+    integer(kind=i_kind) :: i_mech
+
+    do i_mech = 1, size(this)
+      call ptr_finalize(this(i_mech))
+    end do
+
+  end subroutine ptr_finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

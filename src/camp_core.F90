@@ -226,7 +226,7 @@ module camp_camp_core
     !> Print the core data
     procedure :: print => do_print
     !> Finalize the core
-    final :: finalize
+    final :: finalize, finalize_array
 
     ! Private functions
     !> Add an aerosol phase to the model
@@ -1714,7 +1714,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the core
-  elemental subroutine finalize(this)
+  subroutine finalize(this)
 
     !> CAMP-core data
     type(camp_core_t), intent(inout) :: this
@@ -1741,6 +1741,22 @@ contains
             deallocate(this%solver_data_gas_aero)
 
   end subroutine finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize an array of core data
+  subroutine finalize_array(this)
+  
+    !> CAMP-core data
+    type(camp_core_t), intent(inout) :: this(:)
+
+    integer(kind=i_kind) :: i_core
+
+    do i_core = 1, size(this)
+      call finalize(this(i_core))
+    end do
+
+  end subroutine finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

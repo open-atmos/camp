@@ -83,7 +83,7 @@ public :: rxn_emission_t, rxn_update_data_emission_t
     !> Initialize update data
     procedure :: update_data_initialize
     !> Finalize the reaction
-    final :: finalize
+    final :: finalize, finalize_array
   end type rxn_emission_t
 
   !> Constructor for rxn_emission_t
@@ -108,7 +108,7 @@ public :: rxn_emission_t, rxn_update_data_emission_t
     !> Unpack the local update data from a binary
     procedure :: internal_bin_unpack
     !> Finalize the rate update data
-    final :: update_data_finalize
+    final :: update_data_finalize, update_data_finalize_array
   end type rxn_update_data_emission_t
 
   !> Interface to c reaction functions
@@ -233,7 +233,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the reaction
-  elemental subroutine finalize(this)
+  subroutine finalize(this)
 
     !> Reaction data
     type(rxn_emission_t), intent(inout) :: this
@@ -246,6 +246,22 @@ contains
             deallocate(this%condensed_data_int)
 
   end subroutine finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize an array of reactions
+  subroutine finalize_array(this)
+
+    !> Array of reactions
+    type(rxn_emission_t), intent(inout) :: this(:)
+
+    integer(kind=i_kind) :: i
+
+    do i = 1, size(this)
+      call finalize(this(i))
+    end do
+
+  end subroutine finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -361,7 +377,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize an update data object
-  elemental subroutine update_data_finalize(this)
+  subroutine update_data_finalize(this)
 
     !> Update data object to free
     type(rxn_update_data_emission_t), intent(inout) :: this
@@ -369,6 +385,22 @@ contains
     if (this%is_malloced) call rxn_free_update_data(this%update_data)
 
   end subroutine update_data_finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize an array of update data objects
+  subroutine update_data_finalize_array(this)
+
+    !> Array of update data objects to free
+    type(rxn_update_data_emission_t), intent(inout) :: this(:)
+
+    integer(kind=i_kind) :: i
+
+    do i = 1, size(this)
+      call update_data_finalize(this(i))
+    end do
+
+  end subroutine update_data_finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

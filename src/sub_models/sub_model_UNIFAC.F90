@@ -209,7 +209,7 @@ module camp_sub_model_UNIFAC
     !! of higher priority sub models.
     procedure :: priority
     !> Finalize the sub-model
-    final :: finalize
+    final :: finalize, finalize_array
   end type sub_model_UNIFAC_t
 
   ! Constructor for sub_model_UNIFAC_t
@@ -738,7 +738,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the sub-model
-  elemental subroutine finalize(this)
+  subroutine finalize(this)
 
     !> Sub-model data
     type(sub_model_UNIFAC_t), intent(inout) :: this
@@ -753,6 +753,22 @@ contains
             deallocate(this%condensed_data_int)
 
   end subroutine finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize an array of sub-models
+  subroutine finalize_array(this)
+  
+    !> Array of sub-models
+    type(sub_model_UNIFAC_t), intent(inout) :: this(:)
+
+    integer(kind=i_kind) :: i
+
+    do i = 1, size(this)
+      call finalize(this(i))
+    end do
+
+  end subroutine finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

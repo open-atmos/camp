@@ -200,7 +200,7 @@ module camp_aero_rep_modal_binned_mass
     !! volume, number, etc. for a particular phase
     procedure :: num_jac_elem
     !> Finalize the aerosol representation
-    final :: finalize
+    final :: finalize, finalize_array
 
   end type aero_rep_modal_binned_mass_t
 
@@ -227,7 +227,7 @@ module camp_aero_rep_modal_binned_mass
     !> Unpack the local update data from a binary
     procedure :: internal_bin_unpack => internal_bin_unpack_GMD
     !> Finalize the GMD update data
-    final :: update_data_GMD_finalize
+    final :: update_data_GMD_finalize, update_data_GMD_finalize_array
   end type aero_rep_update_data_modal_binned_mass_GMD_t
 
   !> Update GSD object
@@ -248,7 +248,7 @@ module camp_aero_rep_modal_binned_mass
     !> Unpack the local update data from a binary
     procedure :: internal_bin_unpack => internal_bin_unpack_GSD
     !> Finalize the GSD update data
-    final :: update_data_GSD_finalize
+    final :: update_data_GSD_finalize, update_data_GSD_finalize_array
   end type aero_rep_update_data_modal_binned_mass_GSD_t
 
   !> Interface to c aerosol representation functions
@@ -1004,7 +1004,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the aerosol representation
-  elemental subroutine finalize(this)
+  subroutine finalize(this)
 
     !> Aerosol representation data
     type(aero_rep_modal_binned_mass_t), intent(inout) :: this
@@ -1023,6 +1023,22 @@ contains
             deallocate(this%condensed_data_int)
 
   end subroutine finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize the aerosol representation array
+  subroutine finalize_array(aero_reps)
+
+    !> Aerosol representation array
+    type(aero_rep_modal_binned_mass_t), intent(inout) :: aero_reps(:)
+
+    integer(kind=i_kind) :: i_rep
+
+    do i_rep = 1, size(aero_reps)
+      call finalize(aero_reps(i_rep))
+    end do
+
+  end subroutine finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -1142,7 +1158,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize a GMD update data object
-  elemental subroutine update_data_GMD_finalize(this)
+  subroutine update_data_GMD_finalize(this)
 
     !> Update data object to free
     type(aero_rep_update_data_modal_binned_mass_GMD_t), intent(inout) :: this
@@ -1150,6 +1166,23 @@ contains
     if (this%is_malloced) call aero_rep_free_update_data(this%update_data)
 
   end subroutine update_data_GMD_finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize a GMD update data array
+  subroutine update_data_GMD_finalize_array(update_data)
+
+    !> Update data array to free
+    type(aero_rep_update_data_modal_binned_mass_GMD_t), intent(inout) :: &
+        update_data(:)
+
+    integer(kind=i_kind) :: i_data
+
+    do i_data = 1, size(update_data)
+      call update_data_GMD_finalize(update_data(i_data))
+    end do
+
+  end subroutine update_data_GMD_finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -1269,7 +1302,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize a GSD update data object
-  elemental subroutine update_data_GSD_finalize(this)
+  subroutine update_data_GSD_finalize(this)
 
     !> Update data object to free
     type(aero_rep_update_data_modal_binned_mass_GSD_t), intent(inout) :: this
@@ -1277,6 +1310,23 @@ contains
     if (this%is_malloced) call aero_rep_free_update_data(this%update_data)
 
   end subroutine update_data_GSD_finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize a GSD update data array
+  subroutine update_data_GSD_finalize_array(update_data)
+
+    !> Update data array to free
+    type(aero_rep_update_data_modal_binned_mass_GSD_t), intent(inout) :: &
+        update_data(:)
+
+    integer(kind=i_kind) :: i_data
+
+    do i_data = 1, size(update_data)
+      call update_data_GSD_finalize(update_data(i_data))
+    end do
+
+  end subroutine update_data_GSD_finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

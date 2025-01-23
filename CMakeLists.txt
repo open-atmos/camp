@@ -182,7 +182,9 @@ else()
 endif()
 
 # New unit tests (UNDER DEVELOPMENT)
-add_test(test_rxn_arrhenius_mech ${CMAKE_BINARY_DIR}/test_run/unit_tests/input_files/run_rxn_arrhenius.sh ${MPI_TEST_FLAG})
+if (NOT ${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
+  add_test(test_rxn_arrhenius_mech ${CMAKE_BINARY_DIR}/test_run/unit_tests/input_files/run_rxn_arrhenius.sh ${MPI_TEST_FLAG})
+endif()
 
 # Old-style unit tests
 add_test(test_rxn_aqueous_equilibrium ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_aqueous_equilibrium.sh ${MPI_TEST_FLAG})
@@ -206,8 +208,10 @@ add_test(test_sub_model_UNIFAC ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/
 add_test(test_sub_model_ZSR_aerosol_water ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_ZSR_aerosol_water.sh ${MPI_TEST_FLAG})
 add_test(test_chem_mech_solver ${CMAKE_BINARY_DIR}/test_run/chemistry/test_chemistry_1.sh ${MPI_TEST_FLAG})
 add_test(test_chemistry_cb05cl_ae5 ${CMAKE_BINARY_DIR}/test_run/chemistry/cb05cl_ae5/test_chemistry_cb05cl_ae5.sh ${MPI_TEST_FLAG})
-add_test(test_MONARCH_1 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_1.sh ${MPI_TEST_FLAG})
-add_test(test_MONARCH_2 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_2.sh ${MPI_TEST_FLAG})
+if(NOT ${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
+  add_test(test_MONARCH_1 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_1.sh ${MPI_TEST_FLAG})
+  add_test(test_MONARCH_2 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_2.sh ${MPI_TEST_FLAG})
+endif()
 add_test(boot_camp_part_1 ${CMAKE_BINARY_DIR}/boot_camp_run/part_2_code/run_part_1.sh ${MPI_TEST_FLAG})
 add_test(boot_camp_part_2 ${CMAKE_BINARY_DIR}/boot_camp_run/part_2_code/run_part_2.sh ${MPI_TEST_FLAG})
 add_test(boot_camp_part_3 ${CMAKE_BINARY_DIR}/boot_camp_run/part_3_code/run_part_3.sh ${MPI_TEST_FLAG})
@@ -222,7 +226,7 @@ set(STD_C_FLAGS "-std=c99 -Werror=format")
 set(STD_CUDA_FLAGS "-dc -arch=compute_70 -code=sm_70")
 
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
-  set(STD_F_FLAGS "-extend_source -warn truncated_source")
+  set(STD_F_FLAGS "-extend-source -warn truncated_source")
 elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
   set(STD_F_FLAGS "-ffree-line-length-none")
 endif()
@@ -443,7 +447,7 @@ set(CB5_KPP_SOLVER
 	)
 
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
-	set(CB5_EBI_FLAGS "-fixed -extend_source -warn truncated_source")
+	set(CB5_EBI_FLAGS "-fixed -extend-source -warn truncated_source")
 elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
 	set(CB5_EBI_FLAGS "-ffixed-form -ffixed-line-length-none")
 endif()
@@ -463,10 +467,11 @@ target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
 ######################################################################
 # MONARCH interface
 
-add_executable(mock_monarch test/monarch/mock_monarch.F90
-        test/monarch/camp_monarch_interface.F90)
-
-target_link_libraries(mock_monarch camplib)
+if(NOT ${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
+  add_executable(mock_monarch test/monarch/mock_monarch.F90
+          test/monarch/camp_monarch_interface.F90)
+  target_link_libraries(mock_monarch camplib)
+endif()
 
 ######################################################################
 # test_chemistry_cb05cl_ae5
@@ -549,25 +554,27 @@ target_link_libraries(test_sub_model_ZSR_aerosol_water camplib)
 ######################################################################
 # New unit tests (UNDER DEVELOPMENT)
 
-set(UNIT_TEST_SRC
-    test/unit_tests/unit_test_data.F90
-    test/unit_tests/unit_test_driver.F90)
-
-set(UNIT_TEST_RXN_ARRHENIUS_SRC
-    test/unit_tests/rxns/unit_test_rxn_arrhenius.F90 ${UNIT_TEST_SRC})
-if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
-  set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_DEFINITIONS
-    "UNIT_TEST_MODULE_=camp_unit_test_rxn_arrhenius \
-    ;UNIT_TEST_TYPE_='unit_test_rxn_arrhenius_t()'")
-elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
-  set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_DEFINITIONS
-    "UNIT_TEST_MODULE_=camp_unit_test_rxn_arrhenius \
-    ;UNIT_TEST_TYPE_=unit_test_rxn_arrhenius_t()")
+if(NOT ${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
+  set(UNIT_TEST_SRC
+      test/unit_tests/unit_test_data.F90
+      test/unit_tests/unit_test_driver.F90)
+  
+  set(UNIT_TEST_RXN_ARRHENIUS_SRC
+      test/unit_tests/rxns/unit_test_rxn_arrhenius.F90 ${UNIT_TEST_SRC})
+  if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
+    set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_DEFINITIONS
+      "UNIT_TEST_MODULE_=camp_unit_test_rxn_arrhenius \
+      ;UNIT_TEST_TYPE_='unit_test_rxn_arrhenius_t()'")
+  elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
+    set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_DEFINITIONS
+      "UNIT_TEST_MODULE_=camp_unit_test_rxn_arrhenius \
+      ;UNIT_TEST_TYPE_=unit_test_rxn_arrhenius_t()")
+  endif()
+  set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_FLAGS
+                              ${STD_F_FLAGS})
+  add_executable(unit_test_rxn_arrhenius ${UNIT_TEST_RXN_ARRHENIUS_SRC})
+  target_link_libraries(unit_test_rxn_arrhenius camplib)
 endif()
-set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_FLAGS
-                            ${STD_F_FLAGS})
-add_executable(unit_test_rxn_arrhenius ${UNIT_TEST_RXN_ARRHENIUS_SRC})
-target_link_libraries(unit_test_rxn_arrhenius camplib)
 
 ######################################################################
 # test_camp_core

@@ -113,7 +113,7 @@ module camp_chem_spec_data
     !> Print out the species data
     procedure :: print => do_print
     !> Finalize the chemical species data
-    final :: finalize
+    final :: finalize, finalize_array
 
     ! Private functions
     !> Ensure there is enough room in the species dataset to add a
@@ -657,7 +657,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the chemical species data
-  elemental subroutine finalize(this)
+  subroutine finalize(this)
 
     !> Species dataset
     type(chem_spec_data_t), intent(inout) :: this
@@ -668,6 +668,22 @@ contains
     deallocate(this%property_set)
 
   end subroutine finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize the chemical species data
+  subroutine finalize_array(this_array)
+
+    !> Species dataset
+    type(chem_spec_data_t), intent(inout) :: this_array(:)
+
+    integer(kind=i_kind) :: i
+
+    do i = 1, size(this_array)
+      call finalize(this_array(i))
+    end do
+
+  end subroutine finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

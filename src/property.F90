@@ -66,7 +66,7 @@ module camp_property
     !> Print the contents of a property set
     procedure :: print => do_print
     !> Finalize
-    final :: finalize
+    final :: finalize, finalize_array
 
     !> Private functions
     !> Find a key-value pair by key name
@@ -116,7 +116,7 @@ module camp_property
     !> Print the contents of a property key-value pair
     procedure :: print => link_do_print
     !> Finalize
-    final :: link_finalize
+    final :: link_finalize, link_finalize_array
   end type property_link_t
 
   ! Constructor for link
@@ -652,7 +652,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize a property_t variable
-  elemental subroutine finalize(this)
+  subroutine finalize(this)
 
     !> Property dataset
     type(property_t), intent(inout) :: this
@@ -667,6 +667,22 @@ contains
     end do
 
   end subroutine finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize a property_t array
+  subroutine finalize_array(this)
+
+    !> Property dataset array
+    type(property_t), dimension(:), intent(inout) :: this
+
+    integer(kind=i_kind) :: i
+
+    do i = 1, size(this)
+      call finalize(this(i))
+    end do
+
+  end subroutine finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -939,7 +955,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the property_link_t variable
-  elemental subroutine link_finalize(this)
+  subroutine link_finalize(this)
 
     !> Property key-value pair
     type(property_link_t), intent(inout) :: this
@@ -947,6 +963,22 @@ contains
     if (associated(this%val)) deallocate(this%val)
 
   end subroutine link_finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize the property_link_t array
+  subroutine link_finalize_array(this)
+
+    !> Property key-value pair array
+    type(property_link_t), dimension(:), intent(inout) :: this
+
+    integer(kind=i_kind) :: i
+
+    do i = 1, size(this)
+      if (associated(this(i)%val)) deallocate(this(i)%val)
+    end do
+
+  end subroutine link_finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

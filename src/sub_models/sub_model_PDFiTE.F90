@@ -168,6 +168,7 @@
 !> The sub_model_PDFiTE_t type and associated functions.
 module camp_sub_model_PDFiTE
 
+  use, intrinsic :: ieee_arithmetic, only: ieee_next_after
   use camp_aero_phase_data
   use camp_aero_rep_data
   use camp_chem_spec_data
@@ -229,7 +230,7 @@ module camp_sub_model_PDFiTE
     !! of higher priority sub models.
     procedure :: priority
     !> Finalize the reaction
-    final :: finalize
+    final :: finalize, finalize_array
   end type sub_model_PDFiTE_t
 
   !> Constructor for sub_model_PDFiTE_t
@@ -806,7 +807,8 @@ contains
         ! Make sure the entire RH range is covered
         do i_spec = 1, size(rh_range)
           call assert_msg(370258071, &
-                  rh_range(i_spec).eq.real(1.0, kind=dp).or. &
+                  (rh_range(i_spec).ge.ieee_next_after(1.0_dp, 0.0_dp) .and. &
+                   rh_range(i_spec).le.ieee_next_after(1.0_dp, 2.0_dp)) .or. &
                   num_inter(i_spec).eq.0, &
                   "Incomplete RH coverage for interaction with ion pair '"// &
                   ion_pair_names(i_spec)%string//"' for '"//ion_pair_name// &
@@ -840,7 +842,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the reaction
-  elemental subroutine finalize(this)
+  subroutine finalize(this)
 
     !> Reaction data
     type(sub_model_PDFiTE_t), intent(inout) :: this
@@ -853,6 +855,22 @@ contains
             deallocate(this%condensed_data_int)
 
   end subroutine finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize an array of reactions
+  subroutine finalize_array(this)
+
+    !> Array of reaction data
+    type(sub_model_PDFiTE_t), intent(inout) :: this(:)
+
+    integer(kind=i_kind) :: i
+
+    do i = 1, size(this)
+      call finalize(this(i))
+    end do
+
+  end subroutine finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

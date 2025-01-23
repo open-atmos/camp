@@ -105,7 +105,7 @@ module camp_sub_model_data
     !> Dereference the pointer
     procedure :: dereference
     !> Finalize the pointer
-    final :: ptr_finalize
+    final :: ptr_finalize, ptr_finalize_array
   end type sub_model_data_ptr
 
   !> Update cookie
@@ -451,7 +451,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize a pointer to a sub-model
-  elemental subroutine ptr_finalize(this)
+  subroutine ptr_finalize(this)
 
     !> Pointer to a sub-model
     type(sub_model_data_ptr), intent(inout) :: this
@@ -459,6 +459,22 @@ contains
     if (associated(this%val)) deallocate(this%val)
 
   end subroutine ptr_finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize an array of pointers to sub-models
+  subroutine ptr_finalize_array(this)
+
+    !> Pointer to a sub-model
+    type(sub_model_data_ptr), intent(inout) :: this(:)
+
+    integer :: i
+
+    do i = 1, size(this)
+      call ptr_finalize(this(i))
+    end do
+
+  end subroutine ptr_finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

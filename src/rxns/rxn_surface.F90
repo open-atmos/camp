@@ -113,7 +113,7 @@ module camp_rxn_surface
     !> Reaction initialization
     procedure :: initialize
     !> Finalize the reaction
-    final :: finalize
+    final :: finalize, finalize_array
   end type rxn_surface_t
 
   !> Constructor for rxn_surface_t
@@ -278,7 +278,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the reaction
-  elemental subroutine finalize(this)
+  subroutine finalize(this)
 
     !> Reaction data
     type(rxn_surface_t), intent(inout) :: this
@@ -291,6 +291,22 @@ contains
             deallocate(this%condensed_data_int)
 
   end subroutine finalize
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Finalize an array of reactions
+  subroutine finalize_array(this)
+  
+    !> Array of reaction data
+    type(rxn_surface_t), intent(inout) :: this(:)
+
+    integer :: i_rxn
+
+    do i_rxn = 1, size(this)
+      call finalize(this(i_rxn))
+    end do
+
+  end subroutine finalize_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

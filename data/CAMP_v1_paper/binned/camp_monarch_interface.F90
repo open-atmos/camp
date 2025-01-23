@@ -1213,7 +1213,7 @@ end if
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the interface
-  elemental subroutine finalize(this)
+  subroutine finalize(this)
 
     !> PartMC-camp <-> MONARCH interface
     type(monarch_interface_t), intent(inout) :: this
