@@ -375,7 +375,7 @@ contains
     curr_phase = 1
     do i_layer = 1, size(ordered_layer_id)
       j_layer = ordered_layer_id(i_layer)
-      print *, "layer number ", i_layer
+      !print *, "layer number ", i_layer
       ! Loop through the phases and make sure they exist
       call phases(j_layer)%val_%iter_reset()
       do i_phase = 1, phases(j_layer)%val_%size()
@@ -391,7 +391,7 @@ contains
         found = .false.
         do j_phase = 1, size(aero_phase_set)
           if (aero_phase_set(j_phase)%val%name() .eq. phase_name) then
-            print *, "phase name : ", phase_name
+            !print *, "phase name : ", phase_name
             found = .true.
             do i_particle = 0, num_particles-1
               this%aero_phase(i_particle*num_phases + curr_phase) = &
@@ -416,11 +416,33 @@ contains
         call phases(j_layer)%val_%iter_next()
       end do
     end do
-    print *, "aero_phase_is_at_surface", this%aero_phase_is_at_surface
+    !print *, "aero_phase_is_at_surface", this%aero_phase_is_at_surface
     PARTICLE_STATE_SIZE_ = curr_id - spec_state_id
 
     ! Initialize the aerosol representation id
     AERO_REP_ID_ = -1
+    print *, "condensed_data_int 1 :", this%condensed_data_int(1)
+    print *, "condensed_data_int 2 :", this%condensed_data_int(2)
+    print *, "condensed_data_int 3 :", this%condensed_data_int(3)
+    print *, "condensed_data_int 4 :", this%condensed_data_int(4)
+    print *, "condensed_data_int 5 :", this%condensed_data_int(5)
+    print *, "condensed_data_int 6 :", this%condensed_data_int(6)
+    print *, "condensed_data_int 7 :", this%condensed_data_int(7)
+    print *, "condensed_data_int 8 :", this%condensed_data_int(8)
+    print *, "condensed_data_int 9 :", this%condensed_data_int(9)
+    print *, "condensed_data_int 10 :", this%condensed_data_int(10)
+    print *, "condensed_data_int 11 :", this%condensed_data_int(11)
+    print *, "condensed_data_int 12 :", this%condensed_data_int(12)
+    print *, "condensed_data_int 13 :", this%condensed_data_int(13)
+    print *, "condensed_data_int 14 :", this%condensed_data_int(14)
+    print *, "condensed_data_int 15 :", this%condensed_data_int(15)
+    print *, "condensed_data_int 16:", this%condensed_data_int(16)
+    print *, "condensed_data_int 17 :", this%condensed_data_int(17)
+    print *, "condensed_data_int 18 :", this%condensed_data_int(18)
+    print *, "condensed_data_int 19 :", this%condensed_data_int(19)
+    print *, "condensed_data_int 10 :", this%condensed_data_int(20)
+    print *, "condensed_data_int 21 :", this%condensed_data_int(21)
+    print *, "condensed_data_int 22 :", this%condensed_data_int(22)
 
     ! Set the unique names for the chemical species
     this%unique_names_ = this%unique_names( )

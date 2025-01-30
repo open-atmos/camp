@@ -164,11 +164,17 @@ void aero_rep_single_particle_get_effective_radius__m(
   if (partial_deriv) curr_partial = partial_deriv;
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
+      //printf("\n i_layer: %d", i_layer);
+      //printf("\n i_phase: %d", i_phase); 
       double *state = (double *)(model_data->grid_cell_state);
       state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase);
+      //printf("\n particle state size : %d", PARTICLE_STATE_SIZE_);
+      //printf("\n phase state id : %d", PHASE_STATE_ID_(i_layer,i_phase));
       double volume;
       aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_layer,i_phase),
                                    state, &(volume), curr_partial);
+      //printf("\n phase_model_data_id : %d", PHASE_MODEL_DATA_ID_(i_layer,i_phase));
+      //printf("\n volume : %f", volume);
       if (partial_deriv) curr_partial += PHASE_NUM_JAC_ELEM_(i_layer,i_phase);
       *radius += volume;
     }
@@ -288,6 +294,7 @@ void aero_rep_single_particle_get_aero_phase_mass__kg_m3(
   double *float_data = aero_rep_float_data;
   int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
   aero_phase_idx -= i_part * TOTAL_NUM_PHASES_;
+  printf("\n aero_phase_idx %d", aero_phase_idx);
 
   int i_total_phase = 0; 
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
@@ -341,6 +348,7 @@ void aero_rep_single_particle_get_aero_phase_avg_MW__kg_mol(
   int i_total_phase = 0;
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
+      printf("\n MW NUM_PHASES_ %d", NUM_PHASES_(i_layer));
       if ( i_total_phase == aero_phase_idx ) {
         double *state = (double *)(model_data->grid_cell_state);
         state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase);

@@ -53,8 +53,11 @@ int aero_phase_get_used_jac_elem(ModelData *model_data, int aero_phase_idx,
             [model_data->aero_phase_float_indices[aero_phase_idx]]);
 
   int num_flagged_elem = 0;
+  printf("\n int_data ptr: %d", *int_data);
 
   for (int i_spec = 0; i_spec < NUM_STATE_VAR_; i_spec++) {
+    printf("\n NUM_STATE_VAR_: %d", NUM_STATE_VAR_);
+    printf("\n i_spec: %d", i_spec);
     if (SPEC_TYPE_(i_spec) == CHEM_SPEC_VARIABLE ||
         SPEC_TYPE_(i_spec) == CHEM_SPEC_CONSTANT ||
         SPEC_TYPE_(i_spec) == CHEM_SPEC_PSSA) {
@@ -104,7 +107,10 @@ void aero_phase_get_mass__kg_m3(ModelData *model_data, int aero_phase_idx,
   long double l_mass = MINIMUM_MASS_;
   long double moles = MINIMUM_MASS_ / MINIMUM_MW_;
   int i_jac = 0;
+  printf("\n int_data ptr: %d", *int_data);
   for (int i_spec = 0; i_spec < NUM_STATE_VAR_; i_spec++) {
+    printf("\n i_spec: %d", i_spec);
+    printf("\n NUM_STATE_VAR_ mass MW: %d", NUM_STATE_VAR_);
     if (SPEC_TYPE_(i_spec) == CHEM_SPEC_VARIABLE ||
         SPEC_TYPE_(i_spec) == CHEM_SPEC_CONSTANT ||
         SPEC_TYPE_(i_spec) == CHEM_SPEC_PSSA) {
