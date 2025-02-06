@@ -412,6 +412,7 @@ contains
             exit
           end if
         end do
+        call assert(373124707, found)
 
         call phases(j_layer)%val_%iter_next()
       end do

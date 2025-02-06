@@ -18,7 +18,6 @@
 
 // test computational particle
 #define TEST_PARTICLE_1 2
-#define TEST_PARTICLE_2 1
 
 // number of computational particles in the test
 #define N_COMP_PARTICLES 3
@@ -26,9 +25,11 @@
 // number of aerosol phases per particle
 #define NUM_AERO_PHASE 4
 
-// index for the test phase (test-particle phase 2)
+// index for the test phase
+// (test-particle phase 2 : middle layer, jam)
 #define AERO_PHASE_IDX_1 ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+1)
-#define AERO_PHASE_IDX_2 ((TEST_PARTICLE_2)*NUM_AERO_PHASE-1)
+// (test-particle phase 4 : top layer, bread)
+#define AERO_PHASE_IDX_2 ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+3)
 
 // number of Jacobian elements used for the test phase
 #define N_JAC_ELEM 12
@@ -381,25 +382,14 @@ int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, doubl
   NV_DATA_S(solver_state)[(TEST_PARTICLE_1-1)*12+10] = state[(TEST_PARTICLE_1-1)*12+10] = CONC_water; // layer three, phase one
   NV_DATA_S(solver_state)[(TEST_PARTICLE_1-1)*12+11] = state[(TEST_PARTICLE_1-1)*12+11] = CONC_salt; // layer three, phase one
 
-  NV_DATA_S(solver_state)[(TEST_PARTICLE_2-1)*12+0] = state[(TEST_PARTICLE_2-1)*12+0] = CONC_wheat; // layer one, phase one
-  NV_DATA_S(solver_state)[(TEST_PARTICLE_2-1)*12+1] = state[(TEST_PARTICLE_2-1)*12+1] = CONC_water; // layer one, phase one
-  NV_DATA_S(solver_state)[(TEST_PARTICLE_2-1)*12+2] = state[(TEST_PARTICLE_2-1)*12+2] = CONC_salt; // layer one, phase one
-  NV_DATA_S(solver_state)[(TEST_PARTICLE_2-1)*12+3] = state[(TEST_PARTICLE_2-1)*12+3] = CONC_rasberry; // layer two, phase one
-  NV_DATA_S(solver_state)[(TEST_PARTICLE_2-1)*12+4] = state[(TEST_PARTICLE_2-1)*12+4] = CONC_honey; // layer two, phase one
-  NV_DATA_S(solver_state)[(TEST_PARTICLE_2-1)*12+5] = state[(TEST_PARTICLE_2-1)*12+5] = CONC_sugar; // layer two, phase one
-  NV_DATA_S(solver_state)[(TEST_PARTICLE_2-1)*12+6] = state[(TEST_PARTICLE_2-1)*12+6] = CONC_lemon; // layer two, phase one
-  NV_DATA_S(solver_state)[(TEST_PARTICLE_2-1)*12+7] = state[(TEST_PARTICLE_2-1)*12+7] = CONC_almonds; // layer two, phase two
-  NV_DATA_S(solver_state)[(TEST_PARTICLE_2-1)*12+8] = state[(TEST_PARTICLE_2-1)*12+8] = CONC_sugar; // layer two, phase two
-  NV_DATA_S(solver_state)[(TEST_PARTICLE_2-1)*12+9] = state[(TEST_PARTICLE_2-1)*12+9] = CONC_wheat; // layer three, phase one
-  NV_DATA_S(solver_state)[(TEST_PARTICLE_2-1)*12+10] = state[(TEST_PARTICLE_2-1)*12+10] = CONC_water; // layer three, phase one
-  NV_DATA_S(solver_state)[(TEST_PARTICLE_2-1)*12+11] = state[(TEST_PARTICLE_2-1)*12+11] = CONC_salt; // layer three, phase one
-  
   // Set the environment-dependent parameter pointer to the first grid cell
   model_data->grid_cell_aero_rep_env_data = model_data->aero_rep_env_data;
 
   // Update the environmental and concentration states
   aero_rep_update_env_state(model_data);
   aero_rep_update_state(model_data);
+
+  aero_rep_print_data(sd);
 
   // Run the property tests
   ret_val += test_effective_radius(model_data, solver_state);
