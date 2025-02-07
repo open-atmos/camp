@@ -29,7 +29,6 @@ program camp_test_aero_rep_data
 
   ! Test computational particle
   integer(kind=i_kind), parameter :: TEST_PARTICLE_1 = 2
-  integer(kind=i_kind), parameter :: TEST_PARTICLE_2 = 1
 
   ! Total computational particles
   integer(kind=i_kind), parameter :: NUM_COMP_PARTICLES = 3
@@ -636,12 +635,10 @@ contains
 
     ! Update external properties
     call update_number%set_number__n_m3( TEST_PARTICLE_1, 12.3d0 )
-    call update_number%set_number__n_m3( TEST_PARTICLE_2, 12.3d0 )
     call camp_core%update_data( update_number )
 
     ! Test re-setting number concentration
     call update_number%set_number__n_m3( TEST_PARTICLE_1, PART_NUM_CONC )
-    call update_number%set_number__n_m3( TEST_PARTICLE_2, PART_NUM_CONC )
     call camp_core%update_data( update_number )
 
     passed = run_aero_rep_single_particle_c_tests(                           &

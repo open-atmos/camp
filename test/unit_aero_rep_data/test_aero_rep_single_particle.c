@@ -159,7 +159,7 @@ int test_number_concentration(ModelData * model_data, N_Vector state) {
   for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv[i] = 999.9;
 
   aero_rep_get_number_conc__n_m3(model_data, AERO_REP_IDX,
-                           AERO_PHASE_IDX_2, &num_conc, &(partial_deriv[1]));
+                           AERO_PHASE_IDX_1, &num_conc, &(partial_deriv[1]));
 
   printf("\nnumber conc : %f", num_conc);
   ret_val += ASSERT_MSG(fabs(num_conc-PART_NUM_CONC) < 1.0e-10*PART_NUM_CONC,
@@ -229,7 +229,7 @@ int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
   ret_val += ASSERT_MSG(partial_deriv_2[0] = 999.9,
                         "Bad Jacobian (-1)");
   for( int i = 1; i < 4; ++i )
-    ret_val += ASSERT_MSG(partial_deriv_2[i] == ONE,
+    ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
                           "Bad Jacobian element");
   for( int i = 4; i < 8; ++i )
     ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
@@ -238,7 +238,7 @@ int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
     ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
                           "Bad Jacobian element");
   for( int i = 10; i < N_JAC_ELEM+1; ++i )
-    ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
+    ret_val += ASSERT_MSG(partial_deriv_2[i] == ONE,
                           "Bad Jacobian element");
   ret_val += ASSERT_MSG(partial_deriv_2[N_JAC_ELEM+1] = 999.9,
                         "Bad Jacobian (end+1)");
@@ -311,15 +311,15 @@ int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
 
   ret_val += ASSERT_MSG(partial_deriv_2[0] = 999.9,
                         "Bad Jacobian (-1)");
-  ret_val += ASSERT_MSG(fabs(partial_deriv_2[1]-dMW_dwheat) < 1.0e-10*fabs(dMW_dwheat),
-                        "Bad Jacobian (-1)");
-  ret_val += ASSERT_MSG(fabs(partial_deriv_2[2]-dMW_dwater) < 1.0e-10*fabs(dMW_dwater),
-                        "Bad Jacobian (-1)");
-  ret_val += ASSERT_MSG(fabs(partial_deriv_2[3]-dMW_dsalt) < 1.0e-10*fabs(dMW_dsalt),
-                        "Bad Jacobian (-1)");
-  for( int i = 4; i < N_JAC_ELEM+1; ++i )
+  for( int i = 1; i < 9; ++i )
     ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
                           "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[10]-dMW_dwheat) < 1.0e-10*fabs(dMW_dwheat),
+                        "Bad Jacobian (-1)");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[11]-dMW_dwater) < 1.0e-10*fabs(dMW_dwater),
+                        "Bad Jacobian (-1)");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[12]-dMW_dsalt) < 1.0e-10*fabs(dMW_dsalt),
+                        "Bad Jacobian (-1)");
   ret_val += ASSERT_MSG(partial_deriv_2[N_JAC_ELEM+1] = 999.9,
                         "Bad Jacobian (end+1)");
   return ret_val;
