@@ -1,4 +1,4 @@
-! Copyright (C) 2021 Barcelona :/repSupercomputing Center and University of
+! Copyright (C) 2021 Barcelona Supercomputing Center and University of
 ! Illinois at Urbana-Champaign
 ! SPDX-License-Identifier: MIT
 
@@ -221,7 +221,6 @@ contains
             this%property_set%get_string(key_name, aero_spec_name), &
             "Missing aerosol-phase species in SIMPOL.1 phase-transfer "// &
             "reaction")
-    print *, "species name ", aero_spec_name
 
     ! Set up a general error message
     error_msg = " for SIMPOL.1 phase transfer of gas species '"// &
@@ -258,7 +257,6 @@ contains
       ! Get the number of Jacobian elements for calculations of mass, volume,
       ! number, etc. for this partitioning into this phase
       phase_ids = aero_rep(i_aero_rep)%val%phase_ids(phase_name, is_at_surface=.true.)
-      print *, "phase_ids", phase_ids
       do i_phase = 1, size(phase_ids)
         n_aero_jac_elem = n_aero_jac_elem + &
                 aero_rep(i_aero_rep)%val%num_jac_elem(phase_ids(i_phase))
@@ -425,18 +423,12 @@ contains
     ! Check the sizes of the data arrays
     tmp_size = PHASE_INT_LOC_(i_aero_id - 1) + 1 + &
                2*NUM_AERO_PHASE_JAC_ELEM_(i_aero_id - 1) - 1
-    print *, "PHASE_INT_LOC_", PHASE_INT_LOC_(i_aero_id - 1)
-    print *, "NUM_AERO_PHASE_JAC_ELEM_", NUM_AERO_PHASE_JAC_ELEM_(i_aero_id - 1)
-    print *, "tmp_size_1", tmp_size
-    print *, "size condensed data int",size(this%condensed_data_int)
     call assert_msg(625802519, size(this%condensed_data_int) .eq. tmp_size, &
                     "int array size mismatch"//error_msg)
     tmp_size = PHASE_REAL_LOC_(i_aero_id - 1) + &
                4*NUM_AERO_PHASE_JAC_ELEM_(i_aero_id - 1) - 1
     call assert_msg(391089510, size(this%condensed_data_real) .eq. tmp_size, &
                     "real array size mismatch"//error_msg)
-    print *, "tmp_size_2", tmp_size
-    print *, "size condensed data real",size(this%condensed_data_real)
 
   end subroutine initialize
 
