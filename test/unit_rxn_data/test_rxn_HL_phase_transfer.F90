@@ -388,7 +388,7 @@ contains
       if (scenario.eq.1) then
         true_conc(0,idx_O3) = 0.0
         true_conc(0,idx_O3_aq_layer1) = 1.0e-3
-        true_conc(0,idx_O3_aq_layer2) = 0.0
+        true_conc(0,idx_O3_aq_layer2) = 1.0e-3
         true_conc(0,idx_H2O2) = 1.0
         true_conc(0,idx_H2O2_aq_layer1) = 0.0
         true_conc(0,idx_H2O2_aq_layer2) = 0.0
@@ -510,10 +510,10 @@ contains
                     / (MW_O3 * pressure)
       if (scenario.eq.1) then
         equil_O3 = (true_conc(0,idx_O3) + &
-                true_conc(0,idx_O3_aq_layer1)*number_conc*kgm3_to_ppm) / &
-                (K_eq_O3*M_to_ppm + 1.0d0)
+                (true_conc(0,idx_O3_aq_layer1)+true_conc(0,idx_O3_aq_layer1)) * &
+                number_conc*kgm3_to_ppm) / (K_eq_O3*M_to_ppm + 1.0d0)
         equil_O3_aq = (true_conc(0,idx_O3)/kgm3_to_ppm/number_conc + &
-                true_conc(0,idx_O3_aq_layer1)) / &
+                true_conc(0,idx_O3_aq_layer1) + true_conc(0,idx_O3_aq_layer2)) / &
                 (1.0d0 + 1.0d0/(K_eq_O3*M_to_ppm))
       else if (scenario.eq.2) then
         equil_O3 = (true_conc(0,idx_O3) + &
@@ -528,10 +528,10 @@ contains
                     / (MW_H2O2 * pressure)
       if (scenario.eq.1) then
         equil_H2O2 = (true_conc(0,idx_H2O2) + &
-                true_conc(0,idx_H2O2_aq_layer1)*number_conc*kgm3_to_ppm) / &
-                (K_eq_H2O2*M_to_ppm + 1.0d0)
+                (true_conc(0,idx_H2O2_aq_layer1) + true_conc(0,idx_H2O2_aq_layer2)) * &
+                number_conc*kgm3_to_ppm) / (K_eq_H2O2*M_to_ppm + 1.0d0)
         equil_H2O2_aq = (true_conc(0,idx_H2O2)/kgm3_to_ppm/number_conc + &
-                true_conc(0,idx_H2O2_aq_layer1)) / &
+                true_conc(0,idx_H2O2_aq_layer1) + true_conc(0,idx_H2O2_aq_layer2)) / &
                 (1.0d0 + 1.0d0/(K_eq_H2O2*M_to_ppm))
       else if (scenario.eq.2) then
         equil_H2O2 = (true_conc(0,idx_H2O2) + &
