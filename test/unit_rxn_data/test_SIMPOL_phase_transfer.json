@@ -54,14 +54,14 @@
     "maximum computational particles" : 1,
     "layers": [
             {
-                    "name": "one_layer",
+                    "name": "one layer",
                     "phases": [
                                "aqueous aerosol"
                     ],
-                    "covers": "two_layer"
+                    "covers": "two layer"
             },
             {
-                    "name": "two_layer",
+                    "name": "two layer",
                     "phases": [
                                "aqueous aerosol"
                     ],

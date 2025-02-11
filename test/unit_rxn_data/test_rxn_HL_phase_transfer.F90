@@ -97,10 +97,13 @@ contains
     type(chem_spec_data_t), pointer :: chem_spec_data
     class(aero_rep_data_t), pointer :: aero_rep_ptr
     real(kind=dp), allocatable, dimension(:,:) :: model_conc, true_conc
-    integer(kind=i_kind) :: idx_phase, idx_aero_rep, idx_O3, idx_O3_aq, &
-            idx_H2O2, idx_H2O2_aq, idx_H2O_aq, idx_HNO3, idx_HNO3_aq, &
+    integer(kind=i_kind) :: idx_phase, idx_aero_rep, idx_HNO3, idx_HNO3_aq, &
             idx_NH3, idx_NH3_aq, idx_H2O, idx_Na_p, idx_Cl_m, idx_Ca_pp, &
             i_time, i_spec
+    integer(kind=i_kind) :: idx_O3, idx_O3_aq, &
+            idx_O3_aq_layer1, idx_O3_aq_layer2, idx_H2O2, idx_H2O2_aq, &
+            idx_H2O2_aq_layer1, idx_H2O2_aq_layer2, idx_H2O_aq, &
+            idx_H2O_aq_layer1, idx_H2O_aq_layer2
     character(len=:), allocatable :: key, idx_prefix
     real(kind=dp) :: time_step, time, n_star, del_H, del_S, del_G, alpha, &
             mfp, Kn, corr, M_to_ppm, kgm3_to_ppm, K_eq_O3, K_eq_H2O2, &
@@ -127,6 +130,7 @@ contains
     type(aero_rep_update_data_modal_binned_mass_GMD_t) :: update_data_GMD
     type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
 
+    print *, "did we make it here?"
     call assert_msg(144071521, scenario.ge.1 .and. scenario.le.2, &
                     "Invalid scenario specified: "//to_string( scenario ) )
 
@@ -134,8 +138,8 @@ contains
 
     ! Allocate space for the results
     if (scenario.eq.1) then
-      allocate(model_conc(0:NUM_TIME_STEP, 11))
-      allocate(true_conc(0:NUM_TIME_STEP, 11))
+      allocate(model_conc(0:NUM_TIME_STEP, 14))
+      allocate(true_conc(0:NUM_TIME_STEP, 14))
     else if (scenario.eq.2) then
       allocate(model_conc(0:NUM_TIME_STEP, 24))
       allocate(true_conc(0:NUM_TIME_STEP, 24))
@@ -210,20 +214,44 @@ contains
 
       ! Get species indices
       if (scenario.eq.1) then
-        idx_prefix = "P1.one layer."
+        idx_prefix = "P1."
+        key = "O3"
+        idx_O3 = chem_spec_data%gas_state_id(key);
+        key = idx_prefix//"one layer.aqueous aerosol.O3_aq"
+        print *, "key", key
+        idx_O3_aq_layer1 = aero_rep_ptr%spec_state_id(key);
+        key = idx_prefix//"two layer.aqueous aerosol.O3_aq"
+        idx_O3_aq_layer2 = aero_rep_ptr%spec_state_id(key);
+        key = "H2O2"
+        idx_H2O2 = chem_spec_data%gas_state_id(key);
+        key = idx_prefix//"one layer.aqueous aerosol.H2O2_aq"
+        idx_H2O2_aq_layer1 = aero_rep_ptr%spec_state_id(key);
+        key = idx_prefix//"two layer.aqueous aerosol.H2O2_aq"
+        idx_H2O2_aq_layer2 = aero_rep_ptr%spec_state_id(key);
+        key = idx_prefix//"one layer.aqueous aerosol.H2O_aq"
+        idx_H2O_aq_layer1 = aero_rep_ptr%spec_state_id(key);
+        key = idx_prefix//"two layer.aqueous aerosol.H2O_aq"
+        idx_H2O_aq_layer2 = aero_rep_ptr%spec_state_id(key);
+        ! Make sure the expected species are in the model
+        call assert(167389209, idx_O3.gt.0)
+        call assert(156210838, idx_O3_aq_layer1.gt.0)
+        call assert(802672616, idx_O3_aq_layer2.gt.0)
+        call assert(844092221, idx_H2O2.gt.0)
+        call assert(097661255, idx_H2O2_aq_layer1.gt.0)
+        call assert(429463219, idx_H2O2_aq_layer2.gt.0)
+        call assert(312315501, idx_H2O_aq_layer1.gt.0)
+        call assert(448976280, idx_H2O_aq_layer2.gt.0)
       else if (scenario.eq.2) then
         idx_prefix = "the mode."
-      end if
+        key = "O3"
+        idx_O3 = chem_spec_data%gas_state_id(key);
+        key = idx_prefix//"aqueous aerosol.O3_aq"
+        idx_O3_aq = aero_rep_ptr%spec_state_id(key);
+        key = "H2O2"
+        idx_H2O2 = chem_spec_data%gas_state_id(key);
+        key = idx_prefix//"aqueous aerosol.H2O2_aq"
+        idx_H2O2_aq = aero_rep_ptr%spec_state_id(key);
 
-      key = "O3"
-      idx_O3 = chem_spec_data%gas_state_id(key);
-      key = idx_prefix//"aqueous aerosol.O3_aq"
-      idx_O3_aq = aero_rep_ptr%spec_state_id(key);
-      key = "H2O2"
-      idx_H2O2 = chem_spec_data%gas_state_id(key);
-      key = idx_prefix//"aqueous aerosol.H2O2_aq"
-      idx_H2O2_aq = aero_rep_ptr%spec_state_id(key);
-      if (scenario.eq.2) then
         key = "HNO3"
         idx_HNO3 = chem_spec_data%gas_state_id(key);
         key = idx_prefix//"aqueous aerosol.HNO3_aq"
@@ -240,23 +268,20 @@ contains
         idx_Cl_m = aero_rep_ptr%spec_state_id(key);
         key = idx_prefix//"aqueous aerosol.Ca_pp"
         idx_Ca_pp = aero_rep_ptr%spec_state_id(key);
-      end if
-      key = idx_prefix//"aqueous aerosol.H2O_aq"
-      idx_H2O_aq = aero_rep_ptr%spec_state_id(key);
-
-      ! Make sure the expected species are in the model
-      call assert(202593939, idx_O3.gt.0)
-      call assert(262338032, idx_O3_aq.gt.0)
-      call assert(374656377, idx_H2O2.gt.0)
-      call assert(704441571, idx_H2O2_aq.gt.0)
-      if (scenario.eq.2) then
+        key = idx_prefix//"aqueous aerosol.H2O_aq"
+        idx_H2O_aq = aero_rep_ptr%spec_state_id(key);
+        ! Make sure the expected species are in the model
+        call assert(202593939, idx_O3.gt.0)
+        call assert(262338032, idx_O3_aq.gt.0)
+        call assert(374656377, idx_H2O2.gt.0)
+        call assert(704441571, idx_H2O2_aq.gt.0)
         call assert(274044966, idx_HNO3.gt.0)
         call assert(386363311, idx_HNO3_aq.gt.0)
         call assert(833731157, idx_NH3.gt.0)
         call assert(946049502, idx_NH3_aq.gt.0)
         call assert(688163399, idx_H2O.gt.0)
+        call assert(758921357, idx_H2O_aq.gt.0)
       end if
-      call assert(758921357, idx_H2O_aq.gt.0)
 
 #ifdef CAMP_USE_MPI
       ! pack the camp core
@@ -283,10 +308,18 @@ contains
 
     ! broadcast the species ids
     call camp_mpi_bcast_integer(idx_O3)
-    call camp_mpi_bcast_integer(idx_O3_aq)
     call camp_mpi_bcast_integer(idx_H2O2)
-    call camp_mpi_bcast_integer(idx_H2O2_aq)
-    if (scenario.eq.2) then
+    if (scenario.eq.1) then
+      call camp_mpi_bcast_integer(idx_O3_aq_layer1)
+      call camp_mpi_bcast_integer(idx_O3_aq_layer2)
+      call camp_mpi_bcast_integer(idx_H2O2_aq_layer1)
+      call camp_mpi_bcast_integer(idx_H2O2_aq_layer2)
+      call camp_mpi_bcast_integer(idx_H2O_aq_layer1)
+      call camp_mpi_bcast_integer(idx_H2O_aq_layer2)
+    else if (scenario.eq.2) then
+      call camp_mpi_bcast_integer(idx_O3_aq)
+      call camp_mpi_bcast_integer(idx_H2O2_aq)
+      call camp_mpi_bcast_integer(idx_H2O_aq)
       call camp_mpi_bcast_integer(idx_HNO3)
       call camp_mpi_bcast_integer(idx_HNO3_aq)
       call camp_mpi_bcast_integer(idx_NH3)
@@ -296,7 +329,6 @@ contains
       call camp_mpi_bcast_integer(idx_Cl_m)
       call camp_mpi_bcast_integer(idx_Ca_pp)
     end if
-    call camp_mpi_bcast_integer(idx_H2O_aq)
     call camp_mpi_bcast_integer(i_sect_unused)
     call camp_mpi_bcast_integer(i_sect_the_mode)
 
@@ -355,10 +387,13 @@ contains
       true_conc(:,:) = 0.0
       if (scenario.eq.1) then
         true_conc(0,idx_O3) = 0.0
-        true_conc(0,idx_O3_aq) = 1.0e-3
+        true_conc(0,idx_O3_aq_layer1) = 1.0e-3
+        true_conc(0,idx_O3_aq_layer2) = 0.0
         true_conc(0,idx_H2O2) = 1.0
-        true_conc(0,idx_H2O2_aq) = 0.0
-        true_conc(0,idx_H2O_aq) = 1.4e-2
+        true_conc(0,idx_H2O2_aq_layer1) = 0.0
+        true_conc(0,idx_H2O2_aq_layer2) = 0.0
+        true_conc(0,idx_H2O_aq_layer1) = 1.4e-2
+        true_conc(0,idx_H2O_aq_layer2) = 1.4e-2
       else if (scenario.eq.2) then
         true_conc(0,idx_O3) = 0.0
         true_conc(0,idx_O3_aq) = 1.0
@@ -380,11 +415,15 @@ contains
       if (scenario.eq.1) then
         number_conc = 1.3e6         ! particle number concentration (#/cc)
         ! single particle aerosol mass concentrations are per particle
-        true_conc(0,idx_O3_aq)  = true_conc(0,idx_O3_aq)  / number_conc
-        true_conc(0,idx_H2O_aq) = true_conc(0,idx_H2O_aq) / number_conc
+        true_conc(0,idx_O3_aq_layer1)  = true_conc(0,idx_O3_aq_layer1)  / number_conc
+        true_conc(0,idx_O3_aq_layer2)  = true_conc(0,idx_O3_aq_layer2)  / number_conc
+        true_conc(0,idx_H2O_aq_layer1) = true_conc(0,idx_H2O_aq_layer1) / number_conc
+        true_conc(0,idx_H2O_aq_layer2) = true_conc(0,idx_H2O_aq_layer2) / number_conc
         ! radius (m) calculated based on particle mass
-        radius = ( ( true_conc(0,idx_O3_aq)  / 1000.0 +  &
-                     true_conc(0,idx_H2O_aq) / 1000.0 )  &
+        radius = ( ( true_conc(0,idx_O3_aq_layer1)  / 1000.0 +  &
+                     true_conc(0,idx_O3_aq_layer2)  / 1000.0 + &
+                     true_conc(0,idx_H2O_aq_layer1)  / 1000.0 + &
+                     true_conc(0,idx_H2O_aq_layer2) / 1000.0 )  &
                    * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
       else if (scenario.eq.2) then
         ! radius (m)
@@ -418,8 +457,13 @@ contains
       end if
 
       ! Determine the M -> ppm conversion using the total aerosol water
-      M_to_ppm = number_conc * 1.0d6 * true_conc(0,idx_H2O_aq) * &
-              const%univ_gas_const * temp / pressure
+      if (scenario.eq.1) then
+        M_to_ppm = number_conc * 1.0d6 * true_conc(0,idx_H2O_aq_layer1) * &
+                const%univ_gas_const * temp / pressure
+      else if (scenario.eq.2) then
+        M_to_ppm = number_conc * 1.0d6 * true_conc(0,idx_H2O_aq) * &
+                const%univ_gas_const * temp / pressure
+      end if
 
       ! O3 rate constants
       n_star = 1.89d0
@@ -464,21 +508,40 @@ contains
       ! [A_aero] = [A_total] / (K_HL + 1)
       kgm3_to_ppm = const%univ_gas_const * 1.0e6 * temp &
                     / (MW_O3 * pressure)
-      equil_O3 = (true_conc(0,idx_O3) + &
-              true_conc(0,idx_O3_aq)*number_conc*kgm3_to_ppm) / &
-              (K_eq_O3*M_to_ppm + 1.0d0)
-      equil_O3_aq = (true_conc(0,idx_O3)/kgm3_to_ppm/number_conc + &
-              true_conc(0,idx_O3_aq)) / &
-              (1.0d0 + 1.0d0/(K_eq_O3*M_to_ppm))
+      if (scenario.eq.1) then
+        equil_O3 = (true_conc(0,idx_O3) + &
+                true_conc(0,idx_O3_aq_layer1)*number_conc*kgm3_to_ppm) / &
+                (K_eq_O3*M_to_ppm + 1.0d0)
+        !!! EDIT HERE !!!
+        equil_O3_aq = (true_conc(0,idx_O3)/kgm3_to_ppm/number_conc + &
+                true_conc(0,idx_O3_aq_layer1)) / &
+                (1.0d0 + 1.0d0/(K_eq_O3*M_to_ppm))
+      else if (scenario.eq.2) then
+        equil_O3 = (true_conc(0,idx_O3) + &
+                true_conc(0,idx_O3_aq)*number_conc*kgm3_to_ppm) / &
+                (K_eq_O3*M_to_ppm + 1.0d0)
+        equil_O3_aq = (true_conc(0,idx_O3)/kgm3_to_ppm/number_conc + &
+                true_conc(0,idx_O3_aq)) / &
+                (1.0d0 + 1.0d0/(K_eq_O3*M_to_ppm))
+      end if
 
       kgm3_to_ppm = const%univ_gas_const * 1.0e6 * temp &
                     / (MW_H2O2 * pressure)
-      equil_H2O2 = (true_conc(0,idx_H2O2) + &
-              true_conc(0,idx_H2O2_aq)*number_conc*kgm3_to_ppm) / &
-              (K_eq_H2O2*M_to_ppm + 1.0d0)
-      equil_H2O2_aq = (true_conc(0,idx_H2O2)/kgm3_to_ppm/number_conc + &
-              true_conc(0,idx_H2O2_aq)) / &
-              (1.0d0 + 1.0d0/(K_eq_H2O2*M_to_ppm))
+      if (scenario.eq.1) then
+        equil_H2O2 = (true_conc(0,idx_H2O2) + &
+                true_conc(0,idx_H2O2_aq_layer1)*number_conc*kgm3_to_ppm) / &
+                (K_eq_H2O2*M_to_ppm + 1.0d0)
+        equil_H2O2_aq = (true_conc(0,idx_H2O2)/kgm3_to_ppm/number_conc + &
+                true_conc(0,idx_H2O2_aq_layer1)) / &
+                (1.0d0 + 1.0d0/(K_eq_H2O2*M_to_ppm))
+      else if (scenario.eq.2) then
+        equil_H2O2 = (true_conc(0,idx_H2O2) + &
+                true_conc(0,idx_H2O2_aq)*number_conc*kgm3_to_ppm) / &
+                (K_eq_H2O2*M_to_ppm + 1.0d0)
+        equil_H2O2_aq = (true_conc(0,idx_H2O2)/kgm3_to_ppm/number_conc + &
+                true_conc(0,idx_H2O2_aq)) / &
+                (1.0d0 + 1.0d0/(K_eq_H2O2*M_to_ppm))
+      end if
 
       ! Set the initial state in the model
       camp_state%state_var(:) = model_conc(0,:)
@@ -514,16 +577,30 @@ contains
         ! [A_aero] = ([A_init_aero] - [A_eq_aero])
         !     * exp(-t * (k_f + k_b)) + [A_eq_aero]
         time = i_time * time_step
-        true_conc(i_time,idx_O3) = (true_conc(0,idx_O3) - equil_O3) * &
-                exp(-time * (k_O3_forward + k_O3_backward)) + equil_O3
-        true_conc(i_time,idx_O3_aq) = (true_conc(0,idx_O3_aq) - equil_O3_aq) * &
-                exp(-time * (k_O3_forward + k_O3_backward)) + equil_O3_aq
-        true_conc(i_time,idx_H2O2) = (true_conc(0,idx_H2O2) - equil_H2O2) * &
-                exp(-time * (k_H2O2_forward + k_H2O2_backward)) + equil_H2O2
-        true_conc(i_time,idx_H2O2_aq) = &
-                (true_conc(0,idx_H2O2_aq) - equil_H2O2_aq) * &
-                exp(-time * (k_H2O2_forward + k_H2O2_backward)) + equil_H2O2_aq
-        true_conc(i_time,idx_H2O_aq) = true_conc(0,idx_H2O_aq)
+        if (scenario.eq.1) then
+          true_conc(i_time,idx_O3) = (true_conc(0,idx_O3) - equil_O3) * &
+                  exp(-time * (k_O3_forward + k_O3_backward)) + equil_O3
+          true_conc(i_time,idx_O3_aq_layer1) = (true_conc(0,idx_O3_aq_layer1) - equil_O3_aq) * &
+                  exp(-time * (k_O3_forward + k_O3_backward)) + equil_O3_aq
+          true_conc(i_time,idx_H2O2) = (true_conc(0,idx_H2O2) - equil_H2O2) * &
+                  exp(-time * (k_H2O2_forward + k_H2O2_backward)) + equil_H2O2
+          true_conc(i_time,idx_H2O2_aq_layer1) = &
+                  (true_conc(0,idx_H2O2_aq_layer1) - equil_H2O2_aq) * &
+                  exp(-time * (k_H2O2_forward + k_H2O2_backward)) + equil_H2O2_aq
+          true_conc(i_time,idx_H2O_aq_layer1) = true_conc(0,idx_H2O_aq_layer1)
+          true_conc(i_time,idx_H2O_aq_layer2) = true_conc(0,idx_H2O_aq_layer2) 
+        else if (scenario.eq.2) then
+          true_conc(i_time,idx_O3) = (true_conc(0,idx_O3) - equil_O3) * &
+                  exp(-time * (k_O3_forward + k_O3_backward)) + equil_O3
+          true_conc(i_time,idx_O3_aq) = (true_conc(0,idx_O3_aq) - equil_O3_aq) * &
+                  exp(-time * (k_O3_forward + k_O3_backward)) + equil_O3_aq
+          true_conc(i_time,idx_H2O2) = (true_conc(0,idx_H2O2) - equil_H2O2) * &
+                  exp(-time * (k_H2O2_forward + k_H2O2_backward)) + equil_H2O2
+          true_conc(i_time,idx_H2O2_aq) = &
+                  (true_conc(0,idx_H2O2_aq) - equil_H2O2_aq) * &
+                  exp(-time * (k_H2O2_forward + k_H2O2_backward)) + equil_H2O2_aq
+          true_conc(i_time,idx_H2O_aq) = true_conc(0,idx_H2O_aq)
+        end if
       end do
 
       ! Save the results
@@ -539,14 +616,20 @@ contains
           write(7,*) i_time*time_step, &
               ' ', true_conc(i_time, idx_O3), &
               ' ', model_conc(i_time, idx_O3), &
-              ' ', true_conc(i_time, idx_O3_aq),&
-              ' ', model_conc(i_time, idx_O3_aq), &
+              ' ', true_conc(i_time, idx_O3_aq_layer1),&
+              ' ', model_conc(i_time, idx_O3_aq_layer1), &
+              ' ', true_conc(i_time, idx_O3_aq_layer2),&
+              ' ', model_conc(i_time, idx_O3_aq_layer2), &
               ' ', true_conc(i_time, idx_H2O2), &
               ' ', model_conc(i_time, idx_H2O2), &
-              ' ', true_conc(i_time, idx_H2O2_aq), &
-              ' ', model_conc(i_time, idx_H2O2_aq), &
-              ' ', true_conc(i_time, idx_H2O_aq), &
-              ' ', model_conc(i_time, idx_H2O_aq)
+              ' ', true_conc(i_time, idx_H2O2_aq_layer1), &
+              ' ', model_conc(i_time, idx_H2O2_aq_layer1), &
+              ' ', true_conc(i_time, idx_H2O2_aq_layer2), &
+              ' ', model_conc(i_time, idx_H2O2_aq_layer2), &
+              ' ', true_conc(i_time, idx_H2O_aq_layer1), &
+              ' ', model_conc(i_time, idx_H2O_aq_layer1), &
+              ' ', true_conc(i_time, idx_H2O_aq_layer2), &
+              ' ', model_conc(i_time, idx_H2O_aq_layer2)
         end do
       else if (scenario.eq.2) then
         do i_time = 0, NUM_TIME_STEP

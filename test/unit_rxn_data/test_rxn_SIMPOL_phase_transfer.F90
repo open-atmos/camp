@@ -226,13 +226,13 @@ contains
         idx_prefix = "P1."
         key = "ethanol"
         idx_ethanol = chem_spec_data%gas_state_id(key);
-        key = idx_prefix//"one_layer.aqueous aerosol.ethanol_aq"
+        key = idx_prefix//"one layer.aqueous aerosol.ethanol_aq"
         idx_ethanol_aq_layer1 = aero_rep_ptr%spec_state_id(key);
-        key = idx_prefix//"one_layer.aqueous aerosol.H2O_aq"
+        key = idx_prefix//"one layer.aqueous aerosol.H2O_aq"
         idx_H2O_aq_layer1 = aero_rep_ptr%spec_state_id(key);
-        key = idx_prefix//"two_layer.aqueous aerosol.ethanol_aq"
+        key = idx_prefix//"two layer.aqueous aerosol.ethanol_aq"
         idx_ethanol_aq_layer2 = aero_rep_ptr%spec_state_id(key);
-        key = idx_prefix//"two_layer.aqueous aerosol.H2O_aq"
+        key = idx_prefix//"two layer.aqueous aerosol.H2O_aq"
         idx_H2O_aq_layer2 = aero_rep_ptr%spec_state_id(key);
         ! Make sure the expected species are in the model
         call assert(884352514, idx_ethanol.gt.0)
