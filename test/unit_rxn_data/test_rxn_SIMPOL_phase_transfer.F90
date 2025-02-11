@@ -555,7 +555,8 @@ contains
             (model_conc(i_time, i_spec).lt.1.2*model_conc(NUM_TIME_STEP, i_spec).and. &
             true_conc(i_time, i_spec).lt.1.2*true_conc(NUM_TIME_STEP, i_spec)).or. &
             (model_conc(i_time, i_spec).lt.1e-2*model_conc(1, i_spec).and. &
-            true_conc(i_time, i_spec).lt.1e-2*true_conc(1, i_spec)), &
+            true_conc(i_time, i_spec).lt.1e-2*true_conc(1, i_spec)) .and. &
+            model_conc(i_time,idx_ethanol_aq_layer2).eq.model_conc(i_time,idx_ethanol_aq_layer2), &
             "time: "//trim(to_string(i_time))//"; species: "// &
             trim(to_string(i_spec))//"; mod: "// &
             trim(to_string(model_conc(i_time, i_spec)))//"; true: "// &
