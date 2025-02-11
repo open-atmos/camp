@@ -512,7 +512,6 @@ contains
         equil_O3 = (true_conc(0,idx_O3) + &
                 true_conc(0,idx_O3_aq_layer1)*number_conc*kgm3_to_ppm) / &
                 (K_eq_O3*M_to_ppm + 1.0d0)
-        !!! EDIT HERE !!!
         equil_O3_aq = (true_conc(0,idx_O3)/kgm3_to_ppm/number_conc + &
                 true_conc(0,idx_O3_aq_layer1)) / &
                 (1.0d0 + 1.0d0/(K_eq_O3*M_to_ppm))
