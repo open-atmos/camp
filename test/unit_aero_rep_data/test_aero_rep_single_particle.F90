@@ -210,7 +210,7 @@ contains
 
         call assert(768528274, aero_rep%phase_state_size(layer=3,phase=1) .eq. 3)
 
-        ! test phase_ids and rum_phase_instances funtion
+        ! test phase_ids and num_phase_instances funtion
         ! test for jam (one instance in particle)
         phase_name_test = "jam"
         num_jam = 0
