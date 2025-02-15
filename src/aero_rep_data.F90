@@ -511,17 +511,7 @@ contains
 
     integer(kind=i_kind) :: num_instances, i_instance, i_phase
 
-    if (present(is_at_surface)) then
-      if (is_at_surface) then
-        num_instances = this%num_phase_instances(phase_name, &
-                 is_at_surface = .true.)
-      else
-        num_instances = this%num_phase_instances(phase_name, &
-                 is_at_surface = .false.)
-      end if
-    else
-      num_instances = this%num_phase_instances(phase_name)
-    end if
+    num_instances = this%num_phase_instances(phase_name, is_at_surface)
 
     allocate(phase_ids(num_instances))
     if (present(is_at_surface)) then
