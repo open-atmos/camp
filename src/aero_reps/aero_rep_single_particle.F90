@@ -664,13 +664,14 @@ contains
     if (present(is_at_surface)) then
       do i_layer = 1, NUM_LAYERS_
         do i_phase = LAYER_PHASE_START_(i_layer), LAYER_PHASE_END_(i_layer)
-          if (this%aero_phase(i_phase)%val%name() .eq. phase_name .and. &
-              this%aero_phase_is_at_surface(i_phase) .eqv. is_at_surface) then
-              num_phase_instances = num_phase_instances + 1
+          if (this%aero_phase(i_phase)%val%name() .eq. phase_name) then
+            if (.not. present(is_at_surface) .or. &
+               this%aero_phase_is_at_surface(i_phase) .eqv. is_at_surface) then
+               num_phase_instances = num_phase_instances + 1
+            end if
           end if
         end do
       end do
-
     else
       do i_layer = 1, NUM_LAYERS_
         do i_phase = LAYER_PHASE_START_(i_layer), LAYER_PHASE_END_(i_layer)

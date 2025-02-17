@@ -512,7 +512,6 @@ contains
     integer(kind=i_kind) :: num_instances, i_instance, i_phase
 
     num_instances = this%num_phase_instances(phase_name, is_at_surface)
-
     allocate(phase_ids(num_instances))
     if (present(is_at_surface)) then
       if (is_at_surface) then
