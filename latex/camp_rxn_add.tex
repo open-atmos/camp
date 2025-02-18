@@ -38,7 +38,7 @@ The module should be placed in the {\ttfamily /src/rxns} folder and extent the a
 \DoxyCodeLine{\textcolor{keyword}{end\ module\ }camp\_rxn\_foo}
 
 \end{DoxyCode}
-\hypertarget{camp_rxn_add_autotoc_md12}{}\doxysubsection{\texorpdfstring{Step 2. Add the reaction to the \textbackslash{}c camp\+\_\+rxn\+\_\+factory module}{Step 2. Add the reaction to the \textbackslash{}c camp\_rxn\_factory module}}\label{camp_rxn_add_autotoc_md12}
+\hypertarget{camp_rxn_add_autotoc_md12}{}\doxysubsection{\texorpdfstring{Step 2. Add the reaction to the {\ttfamily camp\+\_\+rxn\+\_\+factory} module}{Step 2. Add the reaction to the {\ttfamily camp\+\_\+rxn\+\_\+factory} module}}\label{camp_rxn_add_autotoc_md12}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{module}\ \mbox{\hyperlink{namespacecamp__rxn__factory}{camp\_rxn\_factory}}}
@@ -63,7 +63,7 @@ The module should be placed in the {\ttfamily /src/rxns} folder and extent the a
 \DoxyCodeLine{\ \ \ ...}
 \DoxyCodeLine{\ \ \ \textcolor{keywordflow}{select\ case}\ (type\_name)}
 \DoxyCodeLine{\ \ \ \ \ ...}
-\DoxyCodeLine{\ \ \ \ \ \textcolor{keywordflow}{case}\ (\textcolor{stringliteral}{"{}FOO"{}})}
+\DoxyCodeLine{\ \ \ \ \ \textcolor{keywordflow}{case}\ ()}
 \DoxyCodeLine{\ \ \ \ \ \ \ new\_obj\ =>\ rxn\_foo\_t()}
 \DoxyCodeLine{\ \ \ ...}
 \DoxyCodeLine{\ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__rxn__factory_a3975ec0b65f653a90ffc1e44d7b7353c}{create}}}
@@ -97,7 +97,7 @@ The module should be placed in the {\ttfamily /src/rxns} folder and extent the a
 \DoxyCodeLine{\textcolor{keyword}{end\ module\ }camp\_rxn\_factory}
 
 \end{DoxyCode}
-\hypertarget{camp_rxn_add_autotoc_md13}{}\doxysection{\texorpdfstring{Step 4. Add the new module to the CMake\+List file in the root directory.}{Step 4. Add the new module to the CMakeList file in the root directory.}}\label{camp_rxn_add_autotoc_md13}
+\hypertarget{camp_rxn_add_autotoc_md13}{}\doxysection{\texorpdfstring{Step 4. Add the new module to the CMake\+List file in the root directory.}{Step 4. Add the new module to the CMake\+List file in the root directory.}}\label{camp_rxn_add_autotoc_md13}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{...}
@@ -112,20 +112,20 @@ The module should be placed in the {\ttfamily /src/rxns} folder and extent the a
 \DoxyCodeLine{...}
 
 \end{DoxyCode}
-\hypertarget{camp_rxn_add_autotoc_md14}{}\doxysubsection{\texorpdfstring{Step 5. Add unit tests for the new \textbackslash{}c rxn\+\_\+foo\+\_\+t type}{Step 5. Add unit tests for the new \textbackslash{}c rxn\_foo\_t type}}\label{camp_rxn_add_autotoc_md14}
-Unit testing should cover, at minimum, the initialization, time derivative and Jacbian matrix functions, and in general 80\% code coverage is recommended. Some examples can be found in the {\ttfamily /src/test} folder.\hypertarget{camp_rxn_add_autotoc_md15}{}\doxysubsection{\texorpdfstring{Step 6.  Update documentation}{Step 6.  Update documentation}}\label{camp_rxn_add_autotoc_md15}
+\hypertarget{camp_rxn_add_autotoc_md14}{}\doxysubsection{\texorpdfstring{Step 5. Add unit tests for the new {\ttfamily rxn\+\_\+foo\+\_\+t} type}{Step 5. Add unit tests for the new {\ttfamily rxn\+\_\+foo\+\_\+t} type}}\label{camp_rxn_add_autotoc_md14}
+Unit testing should cover, at minimum, the initialization, time derivative and Jacbian matrix functions, and in general 80\% code coverage is recommended. Some examples can be found in the {\ttfamily /src/test} folder.\hypertarget{camp_rxn_add_autotoc_md15}{}\doxysubsection{\texorpdfstring{Step 6. Update documentation}{Step 6. Update documentation}}\label{camp_rxn_add_autotoc_md15}
 TODO finish...\hypertarget{camp_rxn_add_autotoc_md16}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{camp_rxn_add_autotoc_md16}
 The new \doxylink{camp_rxn}{reaction type} is now ready to use. To include a reaction of this type in a \doxylink{camp_mechanism}{mechanism}, add a \doxylink{input_format_rxn}{reaction object} to a new or existing \doxylink{input_format_camp_config}{camp-\/chem configuration file} as part of a \doxylink{input_format_mechanism}{mechanism object}. The reaction should have a {\bfseries{type}} corresponding to the newly created reaction type, along with any required parameters\+:
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\{\ "{}camp-\/data"{}\ :\ [}
+\DoxyCodeLine{\{\ \ :\ [}
 \DoxyCodeLine{\ \ \{}
-\DoxyCodeLine{\ \ \ \ "{}name"{}\ :\ "{}my\ mechanism"{},}
-\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}MECHANISM"{},}
-\DoxyCodeLine{\ \ \ \ "{}reactions"{}\ :\ [}
+\DoxyCodeLine{\ \ \ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ \ \ :\ [}
 \DoxyCodeLine{\ \ \ \ \ \ \{}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}type"{}\ :\ "{}FOO"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ :\ ,}
 \DoxyCodeLine{\ \ \ \ \ \ \ \ ...}
 \DoxyCodeLine{\ \ \ \ \ \ \},}
 \DoxyCodeLine{\ \ \ \ \ \ ...}

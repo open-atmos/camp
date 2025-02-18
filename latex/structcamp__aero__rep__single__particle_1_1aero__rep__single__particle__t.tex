@@ -1,4 +1,4 @@
-\doxysection{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t Interface Reference}
+\doxysection{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t Type Reference}
 \hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 
 
@@ -38,13 +38,13 @@ procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep_
 \begin{DoxyCompactList}\small\item\em Get the size of the section of the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}} array required for this aerosol representation. \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a481246ceac4541eadd3df3448a174f79}{per\+\_\+particle\+\_\+size}} (this)
 \begin{DoxyCompactList}\small\item\em Get the number of state variables per-\/particle. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_acfeff9b900fed714957336a9eeeec0a9}{unique\+\_\+names}} (this, phase\+\_\+name, tracer\+\_\+type, \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\+\_\+name}})
+procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_adbe009bfbd11c4e47118081ca656f495}{unique\+\_\+names}} (this, phase\+\_\+name, tracer\+\_\+type, \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\+\_\+name}}, phase\+\_\+is\+\_\+at\+\_\+surface)
 \begin{DoxyCompactList}\small\item\em Get a list of unique names for each element on the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}} array for this aerosol representation. The list may be restricted to a particular phase and/or aerosol species by including the phase\+\_\+name and spec\+\_\+name arguments. \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a40ddff870df3f28130531511d335fc0d}{spec\+\_\+state\+\_\+id}} (this, unique\+\_\+name)
 \begin{DoxyCompactList}\small\item\em Get a species id on the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}} array by its unique name. These are unique ids for each element on the state array for this \doxylink{camp_aero_rep}{aerosol representation} and are numbered\+: \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a88988dc63e9de3b694d69968f36b686e}{spec\+\_\+name}} (this, unique\+\_\+name)
 \begin{DoxyCompactList}\small\item\em Get the non-\/unique name of a species by its unique name. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ae2a201d8cdd69c2e390591a171801cd8}{num\+\_\+phase\+\_\+instances}} (this, phase\+\_\+name)
+procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a79f830ad705c50548be43238fcde7f1d}{num\+\_\+phase\+\_\+instances}} (this, phase\+\_\+name, is\+\_\+at\+\_\+surface)
 \begin{DoxyCompactList}\small\item\em Get the number of instances of an aerosol phase in this representation. \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a75948f806ce6048bc7ac68f0dff2e544}{num\+\_\+jac\+\_\+elem}} (this, phase\+\_\+id)
 \begin{DoxyCompactList}\small\item\em Get the number of \doxylink{struct_jacobian}{Jacobian} elements used in calculations of aerosol mass, volume, number, etc. for a particular phase. \end{DoxyCompactList}\item 
@@ -125,16 +125,16 @@ Single particle aerosol representation.
 
 Time-\/invariant data related to a single particle aerosol representation. 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00076}{76}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00150}{150}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a55d2b7725ea41f5a352e4d6b7edb6f77}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a55d2b7725ea41f5a352e4d6b7edb6f77} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!finalize@{finalize}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a55d2b7725ea41f5a352e4d6b7edb6f77}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily final camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [final]}}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a55d2b7725ea41f5a352e4d6b7edb6f77} 
+final camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(inout)}]{this}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [final]}}
 
 
 
@@ -160,11 +160,11 @@ Here is the call graph for this function\+:
 
 
 \doxysubsection{Member Function/\+Subroutine Documentation}
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ad898431af10a7697ad426d48fbe2ab72}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ad898431af10a7697ad426d48fbe2ab72} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!finalize\_array@{finalize\_array}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ad898431af10a7697ad426d48fbe2ab72}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!finalize\_array@{finalize\_array}}
 \index{finalize\_array@{finalize\_array}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
-{\footnotesize\ttfamily camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), dimension(\+:), intent(inout)}]{this\+\_\+array }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ad898431af10a7697ad426d48fbe2ab72} 
+camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), dimension(\+:), intent(inout)}]{this\+\_\+array}{}\end{DoxyParamCaption})}
 
 
 
@@ -179,11 +179,11 @@ Finalize the aerosol representation array.
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00146}{146}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_abae962a36eef9f53d555cf6045144424}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_abae962a36eef9f53d555cf6045144424} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!initialize@{initialize}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_abae962a36eef9f53d555cf6045144424}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::initialize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(inout)}]{this,  }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+phase\+\_\+set,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{spec\+\_\+state\+\_\+id }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_abae962a36eef9f53d555cf6045144424} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::initialize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+phase\+\_\+set}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{spec\+\_\+state\+\_\+id}{}\end{DoxyParamCaption})}
 
 
 
@@ -202,11 +202,11 @@ Initialize the aerosol representation data, validating component data and loadin
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00091}{91}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ab4f55fe9623a38c582a336e174361254}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ab4f55fe9623a38c582a336e174361254} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!maximum\_computational\_particles@{maximum\_computational\_particles}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ab4f55fe9623a38c582a336e174361254}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!maximum\_computational\_particles@{maximum\_computational\_particles}}
 \index{maximum\_computational\_particles@{maximum\_computational\_particles}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{maximum\_computational\_particles()}{maximum\_computational\_particles()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::maximum\+\_\+computational\+\_\+particles (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ab4f55fe9623a38c582a336e174361254} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::maximum\+\_\+computational\+\_\+particles (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this}{}\end{DoxyParamCaption})}
 
 
 
@@ -221,11 +221,11 @@ Returns the maximum number of computational particles.
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00093}{93}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a75948f806ce6048bc7ac68f0dff2e544}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a75948f806ce6048bc7ac68f0dff2e544} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!num\_jac\_elem@{num\_jac\_elem}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a75948f806ce6048bc7ac68f0dff2e544}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!num\_jac\_elem@{num\_jac\_elem}}
 \index{num\_jac\_elem@{num\_jac\_elem}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{num\_jac\_elem()}{num\_jac\_elem()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::num\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{phase\+\_\+id }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a75948f806ce6048bc7ac68f0dff2e544} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::num\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{phase\+\_\+id}{}\end{DoxyParamCaption})}
 
 
 
@@ -245,11 +245,11 @@ Number of \doxylink{struct_jacobian}{Jacobian} elements used
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00138}{138}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_abffa2f44652a68e0209d28034d254f0f}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_abffa2f44652a68e0209d28034d254f0f} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!num\_layers@{num\_layers}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_abffa2f44652a68e0209d28034d254f0f}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!num\_layers@{num\_layers}}
 \index{num\_layers@{num\_layers}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{num\_layers()}{num\_layers()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::num\+\_\+layers (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_abffa2f44652a68e0209d28034d254f0f} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::num\+\_\+layers (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this}{}\end{DoxyParamCaption})}
 
 
 
@@ -264,11 +264,11 @@ Returns the number of layers.
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00140}{140}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ae2a201d8cdd69c2e390591a171801cd8}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ae2a201d8cdd69c2e390591a171801cd8} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!num\_phase\_instances@{num\_phase\_instances}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a79f830ad705c50548be43238fcde7f1d}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!num\_phase\_instances@{num\_phase\_instances}}
 \index{num\_phase\_instances@{num\_phase\_instances}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{num\_phase\_instances()}{num\_phase\_instances()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::num\+\_\+phase\+\_\+instances (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{phase\+\_\+name }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a79f830ad705c50548be43238fcde7f1d} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::num\+\_\+phase\+\_\+instances (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{phase\+\_\+name}{, }\item[{logical, intent(in), optional}]{is\+\_\+at\+\_\+surface}{}\end{DoxyParamCaption})}
 
 
 
@@ -280,16 +280,18 @@ Get the number of instances of an aerosol phase in this representation.
 \hline
 \mbox{\texttt{ in}}  & {\em phase\+\_\+name} & Aerosol phase name \\
 \hline
+\mbox{\texttt{ in}}  & {\em is\+\_\+at\+\_\+surface} & Indicates if aerosol phase is at the surface of particle \\
+\hline
 \end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00135}{135}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_aa7fdfab645000c3e96e7df238fc0917a}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_aa7fdfab645000c3e96e7df238fc0917a} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!num\_phases@{num\_phases}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_aa7fdfab645000c3e96e7df238fc0917a}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!num\_phases@{num\_phases}}
 \index{num\_phases@{num\_phases}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{num\_phases()}{num\_phases()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::num\+\_\+phases (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this,  }\item[{integer, intent(in), optional}]{layer }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_aa7fdfab645000c3e96e7df238fc0917a} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::num\+\_\+phases (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this}{, }\item[{integer, intent(in), optional}]{layer}{}\end{DoxyParamCaption})}
 
 
 
@@ -306,11 +308,11 @@ Returns the number of phases in a layer or overall.
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00142}{142}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a481246ceac4541eadd3df3448a174f79}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a481246ceac4541eadd3df3448a174f79} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!per\_particle\_size@{per\_particle\_size}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a481246ceac4541eadd3df3448a174f79}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!per\_particle\_size@{per\_particle\_size}}
 \index{per\_particle\_size@{per\_particle\_size}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{per\_particle\_size()}{per\_particle\_size()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::per\+\_\+particle\+\_\+size (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a481246ceac4541eadd3df3448a174f79} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::per\+\_\+particle\+\_\+size (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this}{}\end{DoxyParamCaption})}
 
 
 
@@ -320,11 +322,11 @@ Calling functions can assume each particle has the same size on the state array,
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00109}{109}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a30f6d36c875d72339b0241f903ffcc4e}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a30f6d36c875d72339b0241f903ffcc4e} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!phase\_state\_size@{phase\_state\_size}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a30f6d36c875d72339b0241f903ffcc4e}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!phase\_state\_size@{phase\_state\_size}}
 \index{phase\_state\_size@{phase\_state\_size}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{phase\_state\_size()}{phase\_state\_size()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::phase\+\_\+state\+\_\+size (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this,  }\item[{integer, intent(in), optional}]{layer,  }\item[{integer, intent(in), optional}]{phase }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a30f6d36c875d72339b0241f903ffcc4e} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::phase\+\_\+state\+\_\+size (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this}{, }\item[{integer, intent(in), optional}]{layer}{, }\item[{integer, intent(in), optional}]{phase}{}\end{DoxyParamCaption})}
 
 
 
@@ -343,11 +345,11 @@ Returns the number of state variables for a layer and phase.
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00144}{144}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a20089693efbf2fa26cc5a4aad7e68b1d}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a20089693efbf2fa26cc5a4aad7e68b1d} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!size@{size}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a20089693efbf2fa26cc5a4aad7e68b1d}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!size@{size}}
 \index{size@{size}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{size()}{size()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::size (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a20089693efbf2fa26cc5a4aad7e68b1d} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::size (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this}{}\end{DoxyParamCaption})}
 
 
 
@@ -357,11 +359,11 @@ For a single particle representation, the size will correspond to the the sum of
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00103}{103}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a88988dc63e9de3b694d69968f36b686e}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a88988dc63e9de3b694d69968f36b686e} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!spec\_name@{spec\_name}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a88988dc63e9de3b694d69968f36b686e}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!spec\_name@{spec\_name}}
 \index{spec\_name@{spec\_name}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{spec\_name()}{spec\_name()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::spec\+\_\+name (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{unique\+\_\+name }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a88988dc63e9de3b694d69968f36b686e} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::spec\+\_\+name (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{unique\+\_\+name}{}\end{DoxyParamCaption})}
 
 
 
@@ -381,11 +383,11 @@ Chemical species name
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00133}{133}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a40ddff870df3f28130531511d335fc0d}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a40ddff870df3f28130531511d335fc0d} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!spec\_state\_id@{spec\_state\_id}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a40ddff870df3f28130531511d335fc0d}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!spec\_state\_id@{spec\_state\_id}}
 \index{spec\_state\_id@{spec\_state\_id}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{spec\_state\_id()}{spec\_state\_id()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::spec\+\_\+state\+\_\+id (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{unique\+\_\+name }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a40ddff870df3f28130531511d335fc0d} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::spec\+\_\+state\+\_\+id (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{unique\+\_\+name}{}\end{DoxyParamCaption})}
 
 
 
@@ -397,11 +399,11 @@ where $x_u$ is the id of the element corresponding to the species with unique na
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00131}{131}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_acfeff9b900fed714957336a9eeeec0a9}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_acfeff9b900fed714957336a9eeeec0a9} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!unique\_names@{unique\_names}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_adbe009bfbd11c4e47118081ca656f495}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!unique\_names@{unique\_names}}
 \index{unique\_names@{unique\_names}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{unique\_names()}{unique\_names()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::unique\+\_\+names (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in), optional}]{phase\+\_\+name,  }\item[{integer(kind=i\+\_\+kind), intent(in), optional}]{tracer\+\_\+type,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in), optional}]{spec\+\_\+name }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_adbe009bfbd11c4e47118081ca656f495} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::unique\+\_\+names (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in), optional}]{phase\+\_\+name}{, }\item[{integer(kind=i\+\_\+kind), intent(in), optional}]{tracer\+\_\+type}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in), optional}]{spec\+\_\+name}{, }\item[{logical, intent(in), optional}]{phase\+\_\+is\+\_\+at\+\_\+surface}{}\end{DoxyParamCaption})}
 
 
 
@@ -411,11 +413,11 @@ For a single particle representation, the unique names will be the phase name wi
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00117}{117}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a189510ab0ff2bc63350f8210018fe95c}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a189510ab0ff2bc63350f8210018fe95c} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!update\_data\_initialize\_number@{update\_data\_initialize\_number}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a189510ab0ff2bc63350f8210018fe95c}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!update\_data\_initialize\_number@{update\_data\_initialize\_number}}
 \index{update\_data\_initialize\_number@{update\_data\_initialize\_number}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{update\_data\_initialize\_number()}{update\_data\_initialize\_number()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::update\+\_\+data\+\_\+initialize\+\_\+number (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(inout)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t}}), intent(out)}]{update\+\_\+data,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{aero\+\_\+rep\+\_\+type }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a189510ab0ff2bc63350f8210018fe95c} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::update\+\_\+data\+\_\+initialize\+\_\+number (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(inout)}]{this}{, }\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t}}), intent(out)}]{update\+\_\+data}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{aero\+\_\+rep\+\_\+type}{}\end{DoxyParamCaption})}
 
 
 
@@ -437,11 +439,11 @@ Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00
 
 
 \doxysubsection{Member Data Documentation}
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_adeb3a403c3f4a6433090d5daa6e8493d}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_adeb3a403c3f4a6433090d5daa6e8493d} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!layer\_names\_@{layer\_names\_}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_adeb3a403c3f4a6433090d5daa6e8493d}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!layer\_names\_@{layer\_names\_}}
 \index{layer\_names\_@{layer\_names\_}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{layer\_names\_}{layer\_names\_}}
-{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), dimension(\+:), allocatable, private camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::layer\+\_\+names\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_adeb3a403c3f4a6433090d5daa6e8493d} 
+type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), dimension(\+:), allocatable, private camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::layer\+\_\+names\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -451,11 +453,11 @@ Layer names, ordered inner-\/most to outer-\/most.
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00081}{81}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a64bcfbe34e5947e167cc6e48afb1b075}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a64bcfbe34e5947e167cc6e48afb1b075} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!state\_id\_start@{state\_id\_start}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a64bcfbe34e5947e167cc6e48afb1b075}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!state\_id\_start@{state\_id\_start}}
 \index{state\_id\_start@{state\_id\_start}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{state\_id\_start}{state\_id\_start}}
-{\footnotesize\ttfamily integer(kind=i\+\_\+kind) camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::state\+\_\+id\+\_\+start = -\/99999}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a64bcfbe34e5947e167cc6e48afb1b075} 
+integer(kind=i\+\_\+kind) camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::state\+\_\+id\+\_\+start = -\/99999}
 
 
 
@@ -465,11 +467,11 @@ First state id for the representation (only used during initialization)
 
 Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00083}{83}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_adcd3f700e1d5ca5dff2a0f43cae5042d}\label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_adcd3f700e1d5ca5dff2a0f43cae5042d} 
-\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!unique\_names\_@{unique\_names\_}}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_adcd3f700e1d5ca5dff2a0f43cae5042d}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!unique\_names\_@{unique\_names\_}}
 \index{unique\_names\_@{unique\_names\_}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{unique\_names\_}{unique\_names\_}}
-{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), dimension(\+:), allocatable, private camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::unique\+\_\+names\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_adcd3f700e1d5ca5dff2a0f43cae5042d} 
+type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), dimension(\+:), allocatable, private camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::unique\+\_\+names\+\_\+\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -481,6 +483,6 @@ Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00
 
 
 
-The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+The documentation for this type was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{aero__rep__single__particle_8_f90}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}\end{DoxyCompactItemize}

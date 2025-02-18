@@ -5,35 +5,35 @@ Surface reactions transform gas-\/phase species into gas-\/phase products accord
 For surface reactions of the gas phase species X, the reaction rate is calculated assuming large particles (continuum regime) as\+:
 
 \[
-   r_{surface} = k_{surface}\mbox{[X]}
- \]
+      r_{surface} = k_{surface}\mbox{[X]}
+    \]
 
 where $[\mbox{X}]$ is the gas-\/phase concentration of species X \mbox{[}ppm\mbox{]} and the rate constant $k_{surface}$ \mbox{[}1/s\mbox{]} is calculated as\+:
 
 \[
- k_{surface} = \frac{4N_a \pi r^2_e}{\left(\frac{r_e}{D_g} + \frac{4}{v(T)\gamma}\right)}
- \]
+    k_{surface} = \frac{4N_a \pi r^2_e}{\left(\frac{r_e}{D_g} + \frac{4}{v(T)\gamma}\right)}
+    \]
 
 where $N_a$ is the number concentration of particles \mbox{[}particles $\mbox{m}^{-3}$\mbox{]}, $r_e$ is the effective particle radius \mbox{[}m\mbox{]}, $D_g$ is the gas-\/phase diffusion coefficient of the reactant \mbox{[} $\mbox{m}^2\mbox{s}^{-1}$\mbox{]}, $\gamma$ is the reaction probability \mbox{[}unitless\mbox{]}, and v is the mean free speed of the gas-\/phase reactant\+:
 
 \[
-   v = \sqrt{\frac{8RT}{\pi MW}}
- \]
+      v = \sqrt{\frac{8RT}{\pi MW}}
+    \]
 
-where R is the ideal gas constant \mbox{[} $\mbox{J}\, \mbox{K}^{-1}\,
- \mbox{mol}^{-1}$\mbox{]}, T is temperature \mbox{[}K\mbox{]}, and MW is the molecular weight of the gas-\/phase reactant \mbox{[} $\mbox{kg}\, \mbox{mol}^{-1}$\mbox{]}
+where R is the ideal gas constant \mbox{[}  $\mbox{J}\, \mbox{K}^{-1}\,
+    \mbox{mol}^{-1}$\mbox{]}, T is temperature \mbox{[}K\mbox{]}, and MW is the molecular weight of the gas-\/phase reactant \mbox{[} $\mbox{kg}\, \mbox{mol}^{-1}$\mbox{]}
 
 Input data for surface reactions have the following format \+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\{}
-\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}SURFACE"{},}
-\DoxyCodeLine{\ \ "{}gas-\/phase\ reactant"{}\ :\ "{}my\ gas\ species"{},}
-\DoxyCodeLine{\ \ "{}reaction\ probability"{}\ :\ 0.2,}
-\DoxyCodeLine{\ \ "{}gas-\/phase\ products"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ \ "{}my\ other\ gas\ species"{}\ :\ \{\ \},}
-\DoxyCodeLine{\ \ \ \ \ "{}another\ gas\ species"{}\ :\ \{\ "{}yield"{}\ :\ 0.3\ \}}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ 0.2,}
+\DoxyCodeLine{\ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ :\ \{\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ :\ \{\ \ :\ 0.3\ \}}
 \DoxyCodeLine{\ \ \},}
-\DoxyCodeLine{\ \ "{}areosol\ phase"{}\ :\ "{}my\ aqueous\ phase"{}}
+\DoxyCodeLine{\ \ \ :\ }
 \DoxyCodeLine{\}}
 
 \end{DoxyCode}

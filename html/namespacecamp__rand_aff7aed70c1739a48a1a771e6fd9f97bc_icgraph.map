@@ -7,7 +7,7 @@
 <area shape="poly" id="edge24_Node000001_Node000005" title=" " alt="" coords="729,259,682,231,627,205,570,187,511,173,401,154,402,149,512,168,572,182,629,200,685,226,732,255"/>
 <area shape="rect" id="Node000007" href="$namespacecamp__rand.html#a8317841f695b0c19583c216170857572" title="Sample the given discrete probability density function." alt="" coords="215,203,404,229"/>
 <area shape="poly" id="edge25_Node000001_Node000007" title=" " alt="" coords="719,262,675,245,628,232,571,223,512,218,404,215,404,210,513,212,571,218,629,227,677,240,720,257"/>
-<area shape="rect" id="Node000008" href="$namespacecamp__rand.html#a4ff2053765052f38c615a8bce9ff7365" title="Round val to floor(val) or ceiling(val) with probability proportional to the relative distance from v..." alt="" coords="463,266,618,292"/>
+<area shape="rect" id="Node000008" href="$namespacecamp__rand.html#a4ff2053765052f38c615a8bce9ff7365" title="Round val to floor(val) or ceiling(val) with probability proportional to the relative distance from v..." alt="" coords="462,266,618,292"/>
 <area shape="poly" id="edge13_Node000001_Node000008" title=" " alt="" coords="661,281,618,281,618,276,661,276"/>
 <area shape="rect" id="Node000009" href="$namespacecamp__rand.html#a613b0c64aa5bdface8e6d5aa30cec7c4" title="Generate a Binomial&#45;distributed random number with the given parameters." alt="" coords="224,317,395,342"/>
 <area shape="poly" id="edge15_Node000001_Node000009" title=" " alt="" coords="684,298,629,307,507,320,396,328,395,322,506,314,628,301,683,292"/>
@@ -32,7 +32,7 @@
 <area shape="poly" id="edge16_Node000009_Node000009" title=" " alt="" coords="348,304,335,298,309,295,286,297,273,302,270,307,276,315,272,318,265,308,269,298,284,292,309,290,337,293,351,299"/>
 <area shape="poly" id="edge18_Node000010_Node000009" title=" " alt="" coords="490,388,403,357,362,345,364,340,405,352,491,383"/>
 <area shape="poly" id="edge19_Node000010_Node000010" title=" " alt="" coords="579,379,566,372,540,370,517,372,504,377,501,382,507,389,503,393,496,383,500,373,515,367,540,365,567,367,581,374"/>
-<area shape="rect" id="Node000011" href="$namespacecamp__rand.html#ad3032643d586f9de792d5f6858223704" title="Generates a vector of normally distributed random numbers with the given means and standard deviation..." alt="" coords="228,366,391,407"/>
+<area shape="rect" id="Node000011" href="$namespacecamp__rand.html#ad3032643d586f9de792d5f6858223704" title="Generates a vector of normally distributed random numbers with the given means and standard deviation..." alt="" coords="228,366,390,407"/>
 <area shape="poly" id="edge20_Node000010_Node000011" title=" " alt="" coords="443,399,391,396,391,390,444,394"/>
 <area shape="poly" id="edge21_Node000010_Node000012" title=" " alt="" coords="477,424,359,457,358,452,476,419"/>
 <area shape="poly" id="edge22_Node000012_Node000012" title=" " alt="" coords="348,443,335,436,309,434,286,436,273,441,270,446,276,453,272,457,265,447,269,437,284,431,309,429,337,431,351,438"/>

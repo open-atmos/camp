@@ -15,7 +15,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <math.h>}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}../rxns.h"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{rxns_8h}{../rxns.h}}"{}}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00015}00015\ }
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00016}00016\ \textcolor{comment}{//\ TODO\ Lookup\ environmental\ indicies\ during\ initialization}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00017}\mbox{\hyperlink{rxn__first__order__loss_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{00017}}\ \textcolor{preprocessor}{\#define\ TEMPERATURE\_K\_\ env\_data[0]}}
@@ -210,7 +210,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00206}00206\ \textcolor{comment}{\ *\ \(\backslash\)return\ Pointer\ to\ a\ new\ rate\ update\ data\ object}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00207}00207\ \textcolor{comment}{\ */}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00208}\mbox{\hyperlink{rxns_8h_aaecb66d7db7eb472bb74b796e17d1ed9}{00208}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{rxn__first__order__loss_8c_aaecb66d7db7eb472bb74b796e17d1ed9}{rxn\_first\_order\_loss\_create\_rate\_update\_data}}()\ \{}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00209}00209\ \ \ \textcolor{keywordtype}{int}\ *update\_data\ =\ (\textcolor{keywordtype}{int}\ *)malloc(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ +\ \textcolor{keyword}{sizeof}(double));}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00209}00209\ \ \ \textcolor{keywordtype}{int}\ *update\_data\ =\ (\textcolor{keywordtype}{int}\ *)malloc(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ +\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{double}));}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00210}00210\ \ \ \textcolor{keywordflow}{if}\ (update\_data\ ==\ NULL)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00211}00211\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ first-\/order\ loss\ update\ data\(\backslash\)n\(\backslash\)n"{}});}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00212}00212\ \ \ \ \ exit(1);}

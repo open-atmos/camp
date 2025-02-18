@@ -1,13 +1,13 @@
 <map id="camp_rand::rand_poisson" name="camp_rand::rand_poisson">
 <area shape="rect" id="Node000001" title="Generate a Poisson&#45;distributed random number with the given mean." alt="" coords="5,74,174,100"/>
 <area shape="poly" id="edge10_Node000001_Node000001" title=" " alt="" coords="54,75,47,66,51,56,66,50,90,48,116,50,129,57,127,62,114,55,89,53,67,55,55,60,52,65,58,72"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="459,13,578,39"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="459,13,578,38"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,71,165,51,221,35,279,26,338,21,444,20,444,25,338,26,280,31,222,40,167,56,120,76"/>
 <area shape="rect" id="Node000005" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="432,100,605,125"/>
 <area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="148,98,222,110,322,115,416,114,416,120,322,120,221,115,147,103"/>
 <area shape="rect" id="Node000006" href="$namespacecamp__rand.html#ac20e458bc43a3e432568ea44c054778e" title="Generates a normally distributed random number with the given mean and standard deviation." alt="" coords="222,74,384,100"/>
 <area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="174,84,206,84,206,90,174,90"/>
-<area shape="rect" id="Node000003" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="653,13,805,39"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="653,13,805,38"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="579,23,638,23,638,28,579,28"/>
 <area shape="rect" id="Node000004" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="853,5,975,46"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="805,23,837,23,837,28,805,28"/>

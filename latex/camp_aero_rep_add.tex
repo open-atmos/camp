@@ -1,6 +1,6 @@
 \chapter{CAMP\+: Adding an Aerosol Representation}
 \hypertarget{camp_aero_rep_add}{}\label{camp_aero_rep_add}\index{CAMP: Adding an Aerosol Representation@{CAMP: Adding an Aerosol Representation}}
-NOTE\+: These instructions are out-\/of-\/date. TODO update.
+NOTE\+: These instructions are out-\/of-\/date. TODO update
 
 Adding an \doxylink{camp_aero_rep}{aerosol representation} to the \doxysectlink{index}{camp-\/chem}{0} module can be done in the following steps\+:\hypertarget{camp_aero_rep_add_autotoc_md0}{}\doxysubsection{\texorpdfstring{Step 1. Create a new aerosol representation module}{Step 1. Create a new aerosol representation module}}\label{camp_aero_rep_add_autotoc_md0}
 The module should be placed in the {\ttfamily /src/aero\+\_\+reps} folder and extend the abstract {\ttfamily \doxylink{structcamp__aero__rep__data_1_1aero__rep__data__t}{camp\+\_\+aero\+\_\+rep\+\_\+data\+::aero\+\_\+rep\+\_\+data\+\_\+t}} type, overriding all deferred functions, and providing a constructor that returns a pointer to a newly allocated instance of the new type\+:
@@ -70,7 +70,7 @@ The module should also be placed in the {\ttfamily /src/aero\+\_\+reps} folder a
 \DoxyCodeLine{\textcolor{keyword}{end\ module\ }camp\_aero\_rep\_foo\_state}
 
 \end{DoxyCode}
-\hypertarget{camp_aero_rep_add_autotoc_md2}{}\doxysubsection{\texorpdfstring{Step 3. Add the aerosol representation to the \textbackslash{}c  camp\+\_\+aero\+\_\+rep\+\_\+factory module}{Step 3. Add the aerosol representation to the \textbackslash{}c  camp\_aero\_rep\_factory module}}\label{camp_aero_rep_add_autotoc_md2}
+\hypertarget{camp_aero_rep_add_autotoc_md2}{}\doxysubsection{\texorpdfstring{Step 3. Add the aerosol representation to the {\ttfamily camp\+\_\+aero\+\_\+rep\+\_\+factory} module}{Step 3. Add the aerosol representation to the {\ttfamily camp\+\_\+aero\+\_\+rep\+\_\+factory} module}}\label{camp_aero_rep_add_autotoc_md2}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\textcolor{keyword}{module}\ \mbox{\hyperlink{namespacecamp__aero__rep__factory}{camp\_aero\_rep\_factory}}}
@@ -95,7 +95,7 @@ The module should also be placed in the {\ttfamily /src/aero\+\_\+reps} folder a
 \DoxyCodeLine{\ \ \ ...}
 \DoxyCodeLine{\ \ \ \textcolor{keywordflow}{select\ case}\ (type\_name)}
 \DoxyCodeLine{\ \ \ \ \ ...}
-\DoxyCodeLine{\ \ \ \ \ \textcolor{keywordflow}{case}\ (\textcolor{stringliteral}{"{}AERO\_REP\_FOO"{}})}
+\DoxyCodeLine{\ \ \ \ \ \textcolor{keywordflow}{case}\ ()}
 \DoxyCodeLine{\ \ \ \ \ \ \ new\_obj\ =>\ aero\_rep\_foo\_t()}
 \DoxyCodeLine{\ \ \ ...}
 \DoxyCodeLine{\ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__aero__rep__factory_a05ad0c111be18449a3b8f850f9a1e0ac}{create}}}
@@ -128,7 +128,7 @@ The module should also be placed in the {\ttfamily /src/aero\+\_\+reps} folder a
 \DoxyCodeLine{\textcolor{keyword}{end\ module\ }camp\_aero\_rep\_factory}
 
 \end{DoxyCode}
-\hypertarget{camp_aero_rep_add_autotoc_md3}{}\doxysubsection{\texorpdfstring{Step 4. Add the new module to the CMake\+List file in the root directory.}{Step 4. Add the new module to the CMakeList file in the root directory.}}\label{camp_aero_rep_add_autotoc_md3}
+\hypertarget{camp_aero_rep_add_autotoc_md3}{}\doxysubsection{\texorpdfstring{Step 4. Add the new module to the CMake\+List file in the root directory.}{Step 4. Add the new module to the CMake\+List file in the root directory.}}\label{camp_aero_rep_add_autotoc_md3}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{...}
@@ -144,15 +144,15 @@ The module should also be placed in the {\ttfamily /src/aero\+\_\+reps} folder a
 \DoxyCodeLine{...}
 
 \end{DoxyCode}
-\hypertarget{camp_aero_rep_add_autotoc_md4}{}\doxysubsection{\texorpdfstring{Step 5. Add unit tests for the new \textbackslash{}c aero\+\_\+rep\+\_\+foo\+\_\+t and \textbackslash{}c aero\+\_\+rep\+\_\+foo\+\_\+state\+\_\+t types}{Step 5. Add unit tests for the new \textbackslash{}c aero\_rep\_foo\_t and \textbackslash{}c aero\_rep\_foo\_state\_t types}}\label{camp_aero_rep_add_autotoc_md4}
+\hypertarget{camp_aero_rep_add_autotoc_md4}{}\doxysubsection{\texorpdfstring{Step 5. Add unit tests for the new {\ttfamily aero\+\_\+rep\+\_\+foo\+\_\+t} and {\ttfamily aero\+\_\+rep\+\_\+foo\+\_\+state\+\_\+t} types}{Step 5. Add unit tests for the new {\ttfamily aero\+\_\+rep\+\_\+foo\+\_\+t} and {\ttfamily aero\+\_\+rep\+\_\+foo\+\_\+state\+\_\+t} types}}\label{camp_aero_rep_add_autotoc_md4}
 Unit testing should be based on the actual functions of the new module, but in general 80\% code coverage is recommended. Some examples can be found in the {\ttfamily /src/test} folder\hypertarget{camp_aero_rep_add_autotoc_md5}{}\doxysubsection{\texorpdfstring{Usage}{Usage}}\label{camp_aero_rep_add_autotoc_md5}
 The new \doxylink{camp_aero_rep}{aerosol representation} is now ready to use. To include it in a {\ttfamily \doxylink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+camp\+\_\+core\+::camp\+\_\+core\+\_\+t}} instance, add an \doxylink{input_format_aero_rep}{aerosol representation object} to a new or existing \doxylink{input_format_camp_config}{camp-\/chem configuration file} with a {\bfseries{type}} corresponding to the newly created type, along with any required parameters\+:
 
 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\{\ "{}camp-\/data"{}\ :\ [}
+\DoxyCodeLine{\{\ \ :\ [}
 \DoxyCodeLine{\ \ \{}
-\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}AERO\_REP\_FOO"{},}
+\DoxyCodeLine{\ \ \ \ \ :\ ,}
 \DoxyCodeLine{\ \ \ \ ...}
 \DoxyCodeLine{\ \ \},}
 \DoxyCodeLine{\ \ ...}

@@ -3,11 +3,11 @@
 <area shape="rect" id="Node000002" href="$namespacecamp__rand.html#ac20e458bc43a3e432568ea44c054778e" title="Generates a normally distributed random number with the given mean and standard deviation." alt="" coords="216,50,378,76"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,60,200,60,200,66,168,66"/>
 <area shape="poly" id="edge7_Node000002_Node000002" title=" " alt="" coords="262,51,255,42,259,32,273,26,297,24,323,26,336,33,333,38,321,31,297,29,275,31,263,36,260,41,266,48"/>
-<area shape="rect" id="Node000003" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="453,13,572,39"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="453,13,572,38"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="375,47,437,36,438,41,376,52"/>
 <area shape="rect" id="Node000006" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="426,86,599,112"/>
 <area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="378,74,417,80,416,86,377,79"/>
-<area shape="rect" id="Node000004" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="647,13,799,39"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="647,13,799,38"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="573,23,632,23,632,28,573,28"/>
 <area shape="rect" id="Node000005" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="847,5,969,46"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="799,23,831,23,831,28,799,28"/>

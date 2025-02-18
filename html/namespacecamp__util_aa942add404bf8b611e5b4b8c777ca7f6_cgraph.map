@@ -1,8 +1,8 @@
 <map id="camp_util::die" name="camp_util::die">
-<area shape="rect" id="Node000001" title="Error immediately." alt="" coords="5,13,106,39"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="154,13,273,39"/>
+<area shape="rect" id="Node000001" title="Error immediately." alt="" coords="5,13,106,38"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="154,13,273,38"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,23,138,23,138,28,106,28"/>
-<area shape="rect" id="Node000003" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="321,13,472,39"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="321,13,472,38"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="273,23,305,23,305,28,273,28"/>
 <area shape="rect" id="Node000004" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="520,5,643,46"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="473,23,505,23,505,28,473,28"/>

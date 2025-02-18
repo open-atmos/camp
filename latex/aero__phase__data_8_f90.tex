@@ -8,7 +8,7 @@ The \doxylink{namespacecamp__aero__phase__data}{camp\+\_\+aero\+\_\+phase\+\_\+d
 \doxysubsubsection*{Data Types}
 \begin{DoxyCompactItemize}
 \item 
-interface \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t}}
+type \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+t}}
 \begin{DoxyCompactList}\small\item\em Aerosol phase data type. \end{DoxyCompactList}\item 
 type \mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{camp\+\_\+aero\+\_\+phase\+\_\+data\+::aero\+\_\+phase\+\_\+data\+\_\+ptr}}
 \begin{DoxyCompactList}\small\item\em Pointer type for building arrays. \end{DoxyCompactList}\end{DoxyCompactItemize}
@@ -26,11 +26,11 @@ module \mbox{\hyperlink{namespacecamp__aero__phase__data}{camp\+\_\+aero\+\_\+ph
 \item 
 \#define \mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}~0
 \item 
-\#define \mbox{\hyperlink{aero__phase__data_8_f90_a5abfc86c868793576be1eb6acec4d966}{SPEC\+\_\+\+TYPE\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+x)
+\#define \mbox{\hyperlink{aero__phase__data_8_f90_a5abfc86c868793576be1eb6acec4d966}{SPEC\+\_\+\+TYPE\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{aero__phase__data_8_f90_a533cad7ef28f4059577d632870ed98d7}{MW\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+x)
+\#define \mbox{\hyperlink{aero__phase__data_8_f90_a533cad7ef28f4059577d632870ed98d7}{MW\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{aero__phase__data_8_f90_a43a841814e566347ca15f79747286d39}{DENSITY\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{aero__phase__data_8_f90_a5b96d96acf980c9d12118897b1cf8585}{NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+}}+x)
+\#define \mbox{\hyperlink{aero__phase__data_8_f90_a43a841814e566347ca15f79747286d39}{DENSITY\+\_\+}}(x)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
@@ -94,39 +94,54 @@ Definition in file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+ph
 
 
 \doxysubsection{Macro Definition Documentation}
-\Hypertarget{aero__phase__data_8_f90_a43a841814e566347ca15f79747286d39}\label{aero__phase__data_8_f90_a43a841814e566347ca15f79747286d39} 
-\index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!DENSITY\_@{DENSITY\_}}
+\Hypertarget{aero__phase__data_8_f90_a43a841814e566347ca15f79747286d39}\index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!DENSITY\_@{DENSITY\_}}
 \index{DENSITY\_@{DENSITY\_}!aero\_phase\_data.F90@{aero\_phase\_data.F90}}
 \doxysubsubsection{\texorpdfstring{DENSITY\_}{DENSITY\_}}
-{\footnotesize\ttfamily \#define DENSITY\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{aero__phase__data_8_f90_a5b96d96acf980c9d12118897b1cf8585}{NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+}}+x)}
+{\footnotesize\ttfamily \label{aero__phase__data_8_f90_a43a841814e566347ca15f79747286d39} 
+\#define DENSITY\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
-\Hypertarget{aero__phase__data_8_f90_a533cad7ef28f4059577d632870ed98d7}\label{aero__phase__data_8_f90_a533cad7ef28f4059577d632870ed98d7} 
-\index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!MW\_@{MW\_}}
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ this\%condensed\_data\_real(num\_real\_prop\_+num\_state\_var\_+x)}
+
+\end{DoxyCode}
+\Hypertarget{aero__phase__data_8_f90_a533cad7ef28f4059577d632870ed98d7}\index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!MW\_@{MW\_}}
 \index{MW\_@{MW\_}!aero\_phase\_data.F90@{aero\_phase\_data.F90}}
 \doxysubsubsection{\texorpdfstring{MW\_}{MW\_}}
-{\footnotesize\ttfamily \#define MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}}+x)}
+{\footnotesize\ttfamily \label{aero__phase__data_8_f90_a533cad7ef28f4059577d632870ed98d7} 
+\#define MW\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
-\Hypertarget{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
-\index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ this\%condensed\_data\_real(num\_real\_prop\_+x)}
+
+\end{DoxyCode}
+\Hypertarget{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
 \index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!aero\_phase\_data.F90@{aero\_phase\_data.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~1}
+{\footnotesize\ttfamily \label{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
+\#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~1}
 
-\Hypertarget{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}\label{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b} 
-\index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}}
+\Hypertarget{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}\index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}}
 \index{NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}!aero\_phase\_data.F90@{aero\_phase\_data.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_REAL\_PROP\_}{NUM\_REAL\_PROP\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+~0}
+{\footnotesize\ttfamily \label{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b} 
+\#define NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+~0}
 
-\Hypertarget{aero__phase__data_8_f90_a5b96d96acf980c9d12118897b1cf8585}\label{aero__phase__data_8_f90_a5b96d96acf980c9d12118897b1cf8585} 
-\index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!NUM\_STATE\_VAR\_@{NUM\_STATE\_VAR\_}}
+\Hypertarget{aero__phase__data_8_f90_a5b96d96acf980c9d12118897b1cf8585}\index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!NUM\_STATE\_VAR\_@{NUM\_STATE\_VAR\_}}
 \index{NUM\_STATE\_VAR\_@{NUM\_STATE\_VAR\_}!aero\_phase\_data.F90@{aero\_phase\_data.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_STATE\_VAR\_}{NUM\_STATE\_VAR\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+~this\%condensed\+\_\+data\+\_\+int(1)}
+{\footnotesize\ttfamily \label{aero__phase__data_8_f90_a5b96d96acf980c9d12118897b1cf8585} 
+\#define NUM\+\_\+\+STATE\+\_\+\+VAR\+\_\+~this\%condensed\+\_\+data\+\_\+int(1)}
 
-\Hypertarget{aero__phase__data_8_f90_a5abfc86c868793576be1eb6acec4d966}\label{aero__phase__data_8_f90_a5abfc86c868793576be1eb6acec4d966} 
-\index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!SPEC\_TYPE\_@{SPEC\_TYPE\_}}
+\Hypertarget{aero__phase__data_8_f90_a5abfc86c868793576be1eb6acec4d966}\index{aero\_phase\_data.F90@{aero\_phase\_data.F90}!SPEC\_TYPE\_@{SPEC\_TYPE\_}}
 \index{SPEC\_TYPE\_@{SPEC\_TYPE\_}!aero\_phase\_data.F90@{aero\_phase\_data.F90}}
 \doxysubsubsection{\texorpdfstring{SPEC\_TYPE\_}{SPEC\_TYPE\_}}
-{\footnotesize\ttfamily \#define SPEC\+\_\+\+TYPE\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+x)}
+{\footnotesize\ttfamily \label{aero__phase__data_8_f90_a5abfc86c868793576be1eb6acec4d966} 
+\#define SPEC\+\_\+\+TYPE\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ this\%condensed\_data\_int(num\_int\_prop\_+x)}
+
+\end{DoxyCode}

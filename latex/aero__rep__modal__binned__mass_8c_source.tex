@@ -15,9 +15,9 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <math.h>}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}../aero\_phase\_solver.h"{}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}../aero\_reps.h"{}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00016}00016\ \textcolor{preprocessor}{\#include\ "{}../camp\_solver.h"{}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{aero__phase__solver_8h}{../aero\_phase\_solver.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{aero__reps_8h}{../aero\_reps.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00016}00016\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{camp__solver_8h}{../camp\_solver.h}}"{}}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00017}00017\ }
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00018}00018\ \textcolor{comment}{//\ TODO\ Lookup\ environmental\ indicies\ during\ initialization}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00019}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{00019}}\ \textcolor{preprocessor}{\#define\ TEMPERATURE\_K\_\ env\_data[0]}}
@@ -679,7 +679,7 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00675}00675\ \textcolor{comment}{\ *\ \(\backslash\)return\ Pointer\ to\ a\ new\ GMD\ update\ data\ object}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00676}00676\ \textcolor{comment}{\ */}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00677}\mbox{\hyperlink{aero__reps_8h_aaf5da9bfa677ccfbbe2e5d9154ddce44}{00677}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aaf5da9bfa677ccfbbe2e5d9154ddce44}{aero\_rep\_modal\_binned\_mass\_create\_gmd\_update\_data}}()\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00678}00678\ \ \ \textcolor{keywordtype}{int}\ *update\_data\ =\ (\textcolor{keywordtype}{int}\ *)malloc(3\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ +\ \textcolor{keyword}{sizeof}(double));}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00678}00678\ \ \ \textcolor{keywordtype}{int}\ *update\_data\ =\ (\textcolor{keywordtype}{int}\ *)malloc(3\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ +\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{double}));}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00679}00679\ \ \ \textcolor{keywordflow}{if}\ (update\_data\ ==\ NULL)\ \{}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00680}00680\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ GMD\ update\ data.\(\backslash\)n\(\backslash\)n"{}});}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00681}00681\ \ \ \ \ exit(1);}
@@ -713,7 +713,7 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00709}00709\ \textcolor{comment}{\ *\ \(\backslash\)return\ Pointer\ to\ a\ new\ GSD\ update\ data\ object}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00710}00710\ \textcolor{comment}{\ */}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00711}\mbox{\hyperlink{aero__reps_8h_af0d3a3c6cbefde94669a1af1ac9e2937}{00711}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_af0d3a3c6cbefde94669a1af1ac9e2937}{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data}}()\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00712}00712\ \ \ \textcolor{keywordtype}{int}\ *update\_data\ =\ (\textcolor{keywordtype}{int}\ *)malloc(3\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ +\ \textcolor{keyword}{sizeof}(double));}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00712}00712\ \ \ \textcolor{keywordtype}{int}\ *update\_data\ =\ (\textcolor{keywordtype}{int}\ *)malloc(3\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ +\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{double}));}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00713}00713\ \ \ \textcolor{keywordflow}{if}\ (update\_data\ ==\ NULL)\ \{}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00714}00714\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ GSD\ update\ data.\(\backslash\)n\(\backslash\)n"{}});}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00715}00715\ \ \ \ \ exit(1);}

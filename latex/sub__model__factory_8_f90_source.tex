@@ -31,8 +31,8 @@
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00027}00027\ }
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00028}00028\ \ \ \textcolor{comment}{!\ Use\ all\ sub-\/models}}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00029}00029\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__sub__model__pdfite}{camp\_sub\_model\_pdfite}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00030}00030\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__sub__model__unifac}{camp\_sub\_model\_unifac}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00031}00031\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__sub__model__zsr__aerosol__water}{camp\_sub\_model\_zsr\_aerosol\_water}}}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00030}00030\ \ \ \textcolor{keywordtype}{use\ }camp\_sub\_model\_unifac}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00031}00031\ \ \ \textcolor{keywordtype}{use\ }camp\_sub\_model\_zsr\_aerosol\_water}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00032}00032\ }
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00033}00033\ \ \ \textcolor{keywordtype}{implicit\ none}}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00034}00034\ \ \ \textcolor{keywordtype}{private}}
@@ -86,9 +86,9 @@
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00082}00082\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\textcolor{stringliteral}{"{}SUB\_MODEL\_PDFITE"{}})}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00083}00083\ \ \ \ \ \ \ \ \ new\_obj\ =>\ \mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\_model\_pdfite\_t}}()}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00084}00084\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\textcolor{stringliteral}{"{}SUB\_MODEL\_UNIFAC"{}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00085}00085\ \ \ \ \ \ \ \ \ new\_obj\ =>\ \mbox{\hyperlink{structcamp__sub__model__unifac_1_1sub__model__unifac__t}{sub\_model\_unifac\_t}}()}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00085}00085\ \ \ \ \ \ \ \ \ new\_obj\ =>\ sub\_model\_unifac\_t()}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00086}00086\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\textcolor{stringliteral}{"{}SUB\_MODEL\_ZSR\_AEROSOL\_WATER"{}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00087}00087\ \ \ \ \ \ \ \ \ new\_obj\ =>\ \mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\_model\_zsr\_aerosol\_water\_t}}()}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00087}00087\ \ \ \ \ \ \ \ \ new\_obj\ =>\ sub\_model\_zsr\_aerosol\_water\_t()}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00088}00088\ \textcolor{keywordflow}{\ \ \ \ \ \ case\ default}}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(293855421,\ \textcolor{stringliteral}{"{}Unknown\ sub-\/model\ type:\ "{}}//type\_name)}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00090}00090\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
@@ -156,9 +156,9 @@
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00152}00152\ \ \ \ \ \textcolor{keywordflow}{select\ type}\ (sub\_model)}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00153}00153\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\_model\_pdfite\_t}})}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00154}00154\ \ \ \ \ \ \ \ \ sub\_model\_data\_type\ =\ \mbox{\hyperlink{namespacecamp__sub__model__factory_af261d5964ec6583b19d2a631486e1cc8}{sub\_model\_pdfite}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00155}00155\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__sub__model__unifac_1_1sub__model__unifac__t}{sub\_model\_unifac\_t}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00155}00155\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (sub\_model\_unifac\_t)}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00156}00156\ \ \ \ \ \ \ \ \ sub\_model\_data\_type\ =\ \mbox{\hyperlink{namespacecamp__sub__model__factory_acd9a6a58701b54a28cab0579cacaec20}{sub\_model\_unifac}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00157}00157\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\_model\_zsr\_aerosol\_water\_t}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00157}00157\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (sub\_model\_zsr\_aerosol\_water\_t)}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00158}00158\ \ \ \ \ \ \ \ \ sub\_model\_data\_type\ =\ \mbox{\hyperlink{namespacecamp__sub__model__factory_ac306069c30a21681076df001460db8fd}{sub\_model\_zsr\_aerosol\_water}}}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00159}00159\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00160}00160\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(695653684,\ \textcolor{stringliteral}{"{}Unknown\ sub-\/model\ type"{}})}
@@ -225,9 +225,9 @@
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00221}00221\ \ \ \ \ \textcolor{keywordflow}{select\ type}\ (sub\_model)}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00222}00222\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\_model\_pdfite\_t}})}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00223}00223\ \ \ \ \ \ \ \ \ sub\_model\_data\_type\ =\ \mbox{\hyperlink{namespacecamp__sub__model__factory_af261d5964ec6583b19d2a631486e1cc8}{sub\_model\_pdfite}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00224}00224\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__sub__model__unifac_1_1sub__model__unifac__t}{sub\_model\_unifac\_t}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00224}00224\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (sub\_model\_unifac\_t)}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00225}00225\ \ \ \ \ \ \ \ \ sub\_model\_data\_type\ =\ \mbox{\hyperlink{namespacecamp__sub__model__factory_acd9a6a58701b54a28cab0579cacaec20}{sub\_model\_unifac}}}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00226}00226\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (\mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\_model\_zsr\_aerosol\_water\_t}})}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00226}00226\ \textcolor{keywordflow}{\ \ \ \ \ \ type\ is}\ (sub\_model\_zsr\_aerosol\_water\_t)}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00227}00227\ \ \ \ \ \ \ \ \ sub\_model\_data\_type\ =\ \mbox{\hyperlink{namespacecamp__sub__model__factory_ac306069c30a21681076df001460db8fd}{sub\_model\_zsr\_aerosol\_water}}}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00228}00228\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00229}00229\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(850922257,\ \textcolor{stringliteral}{"{}Trying\ to\ pack\ sub-\/model\ of\ unknown\ type."{}})}
@@ -265,9 +265,9 @@
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00261}00261\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\mbox{\hyperlink{namespacecamp__sub__model__factory_af261d5964ec6583b19d2a631486e1cc8}{sub\_model\_pdfite}})}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00262}00262\ \ \ \ \ \ \ \ \ sub\_model\ =>\ \mbox{\hyperlink{structcamp__sub__model__pdfite_1_1sub__model__pdfite__t}{sub\_model\_pdfite\_t}}()}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00263}00263\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\mbox{\hyperlink{namespacecamp__sub__model__factory_acd9a6a58701b54a28cab0579cacaec20}{sub\_model\_unifac}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00264}00264\ \ \ \ \ \ \ \ \ sub\_model\ =>\ \mbox{\hyperlink{structcamp__sub__model__unifac_1_1sub__model__unifac__t}{sub\_model\_unifac\_t}}()}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00264}00264\ \ \ \ \ \ \ \ \ sub\_model\ =>\ sub\_model\_unifac\_t()}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00265}00265\ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\mbox{\hyperlink{namespacecamp__sub__model__factory_ac306069c30a21681076df001460db8fd}{sub\_model\_zsr\_aerosol\_water}})}
-\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00266}00266\ \ \ \ \ \ \ \ \ sub\_model\ =>\ \mbox{\hyperlink{structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t}{sub\_model\_zsr\_aerosol\_water\_t}}()}
+\DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00266}00266\ \ \ \ \ \ \ \ \ sub\_model\ =>\ sub\_model\_zsr\_aerosol\_water\_t()}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00267}00267\ \textcolor{keywordflow}{\ \ \ \ \ \ case\ default}}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00268}00268\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(786366152,\ \textcolor{stringliteral}{"{}Trying\ to\ unpack\ sub-\/model\ of\ unknown\ "{}}//\ \&}
 \DoxyCodeLine{\Hypertarget{sub__model__factory_8_f90_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}type:\ "{}}//trim(\mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}(sub\_model\_data\_type)))}

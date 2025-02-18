@@ -15,7 +15,7 @@
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <math.h>}}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
-\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}../rxns.h"{}}}
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{rxns_8h}{../rxns.h}}"{}}}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00015}00015\ }
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00016}00016\ \textcolor{comment}{//\ TODO\ Lookup\ environmental\ indicies\ during\ initialization}}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00017}\mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{00017}}\ \textcolor{preprocessor}{\#define\ TEMPERATURE\_K\_\ env\_data[0]}}
@@ -131,7 +131,7 @@
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00127}00127\ \ \ \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_a6d62af2f44a112ef5b324cf406a830c2}{RATE\_CONSTANT\_}}\ =}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00128}00128\ \ \ \ \ \ \ (\mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_a6edaf985fb5047909411bbce5a225274}{k0\_A\_}}\ *\ (\mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_a7bdbb692960fcef6053e741ad7bcd772}{k0\_C\_}}\ ==\ 0.0\ ?\ 1.0\ :\ exp(\mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_a7bdbb692960fcef6053e741ad7bcd772}{k0\_C\_}}\ /\ \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{TEMPERATURE\_K\_}}))\ *}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00129}00129\ \ \ \ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_a16624a96c403b0f24590c34b773235d7}{k0\_B\_}}\ ==\ 0.0\ ?\ 1.0\ :\ pow(\mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{TEMPERATURE\_K\_}}\ /\ ((\textcolor{keywordtype}{double})300.0),\ \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_a16624a96c403b0f24590c34b773235d7}{k0\_B\_}}))\ +}
-\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00130}00130\ \ \ \ \ \ \ \ k3\ /\ (((\textcolor{keywordtype}{double})1.0)\ +\ k3\ /\ k2))\ *}
+\DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00130}00130\ \ \ \ \ \ \ \ k3\ /\ (((double)1.0)\ +\ k3\ /\ k2))\ *}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00131}00131\ \ \ \ \ \ \ pow(conv,\ \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}\ -\/\ 1)\ *\ \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8c_a1757f332a0485799c2ee77edff00c38a}{SCALING\_}};}
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00132}00132\ }
 \DoxyCodeLine{\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8c_source_l00133}00133\ \ \ \textcolor{keywordflow}{return};}

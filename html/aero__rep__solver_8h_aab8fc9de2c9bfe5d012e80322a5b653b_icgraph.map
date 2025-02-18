@@ -16,17 +16,17 @@
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="817,249,728,276,727,271,816,244"/>
 <area shape="rect" id="Node000011" href="$rxn__solver_8c.html#a066fddd15835cba3a8b519fb734bd552" title="Calculate the time derivative &#160;for only some specific types." alt="" coords="604,209,759,250"/>
 <area shape="poly" id="edge13_Node000002_Node000011" title=" " alt="" coords="808,228,760,230,759,224,808,222"/>
-<area shape="rect" id="Node000004" href="$camp__solver_8c.html#ac55302bc18db0d68d78f543aad6a16c4" title="Compute the time derivative f(t,y)" alt="" coords="517,253,556,279"/>
+<area shape="rect" id="Node000004" href="$camp__solver_8c.html#ac55302bc18db0d68d78f543aad6a16c4" title="Compute the time derivative f(t,y)" alt="" coords="517,253,556,278"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="613,280,556,271,557,266,614,274"/>
-<area shape="rect" id="Node000005" href="$camp__solver_8c.html#ad45be595da1a1d6fd40179d9743a9a65" title="Check a Jacobian for accuracy." alt="" coords="339,178,423,204"/>
+<area shape="rect" id="Node000005" href="$camp__solver_8c.html#ad45be595da1a1d6fd40179d9743a9a65" title="Check a Jacobian for accuracy." alt="" coords="338,178,423,204"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="503,246,468,225,422,206,424,202,471,221,506,241"/>
-<area shape="rect" id="Node000006" href="$camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="182,128,225,153"/>
+<area shape="rect" id="Node000006" href="$camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="182,128,224,153"/>
 <area shape="poly" id="edge9_Node000004_Node000006" title=" " alt="" coords="523,240,501,201,486,183,468,168,437,153,404,143,335,133,272,134,225,139,225,134,272,129,335,128,405,137,439,148,471,163,490,179,506,198,527,237"/>
 <area shape="rect" id="Node000007" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,178,115,204"/>
 <area shape="poly" id="edge11_Node000004_Node000007" title=" " alt="" coords="502,263,115,202,115,197,503,258"/>
 <area shape="rect" id="Node000008" href="$camp__solver_8c.html#a51bc2a16028d4c72dd39669c31f6fc17" title="Determine if there is anything to solve." alt="" coords="292,280,469,305"/>
 <area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="502,274,460,282,459,276,501,269"/>
-<area shape="rect" id="Node000009" href="$camp__solver_8c.html#afc5ec8680b419e7ab49530d53a76cee4" title="Solve for a given timestep." alt="" coords="163,305,244,331"/>
+<area shape="rect" id="Node000009" href="$camp__solver_8c.html#afc5ec8680b419e7ab49530d53a76cee4" title="Solve for a given timestep." alt="" coords="163,305,244,330"/>
 <area shape="poly" id="edge12_Node000004_Node000009" title=" " alt="" coords="514,292,494,308,470,320,410,334,348,337,291,334,244,328,245,323,292,329,348,332,409,329,468,315,491,303,511,288"/>
 <area shape="rect" id="Node000010" href="$camp__debug_8h.html#a0352ebf153678772ffbeb405834c141d" title="Evaluate the derivative and Jacobian near a given state for a specified species." alt="" coords="318,380,444,421"/>
 <area shape="poly" id="edge10_Node000004_Node000010" title=" " alt="" coords="525,293,502,329,471,364,443,382,440,377,468,360,498,326,520,291"/>
@@ -39,7 +39,7 @@
 <area shape="rect" id="Node000014" href="$rxn__solver_8c.html#a40f9caeb40a6630edd3d61544ee29922" title="Calculate the Jacobian for only some specific types." alt="" coords="609,13,754,54"/>
 <area shape="poly" id="edge18_Node000012_Node000014" title=" " alt="" coords="808,32,754,34,754,28,808,26"/>
 <area shape="poly" id="edge17_Node000013_Node000006" title=" " alt="" coords="620,99,292,132,225,140,225,135,292,127,619,94"/>
-<area shape="poly" id="edge19_Node000014_Node000006" title=" " alt="" coords="594,46,452,68,371,85,293,106,226,133,224,128,291,100,370,80,451,63,594,41"/>
+<area shape="poly" id="edge19_Node000014_Node000006" title=" " alt="" coords="594,45,452,67,371,83,293,104,226,132,224,127,291,99,370,78,451,62,593,40"/>
 <area shape="poly" id="edge21_Node000015_Node000003" title=" " alt="" coords="792,290,734,290,734,284,792,284"/>
 <area shape="poly" id="edge22_Node000015_Node000011" title=" " alt="" coords="806,265,759,253,760,247,807,260"/>
 <area shape="poly" id="edge24_Node000016_Node000013" title=" " alt="" coords="792,94,728,94,728,88,792,88"/>

@@ -23,7 +23,7 @@ We\textquotesingle{}ll see in later parts of the tutorial how these objects are 
 
 \label{camp_tutorial_part_0_bc0_ss_runtime_config}%
 \Hypertarget{camp_tutorial_part_0_bc0_ss_runtime_config}%
-\hypertarget{camp_tutorial_part_0_autotoc_md18}{}\doxysubsection{\texorpdfstring{Run-\/time configuration}{Run-time configuration}}\label{camp_tutorial_part_0_autotoc_md18}
+\hypertarget{camp_tutorial_part_0_autotoc_md18}{}\doxysubsection{\texorpdfstring{Run-\/time configuration}{Run-\/time configuration}}\label{camp_tutorial_part_0_autotoc_md18}
 Another key feature of CAMP is its run-\/time configurability. As a stand-\/alone library, you don\textquotesingle{}t need to modify any of the CAMP source code to incorporate CAMP into a new model, but you do need to tell CAMP about the chemical system you want to solve and how your model describes aerosol systems. This is primarily done at run-\/time using a collection of {\ttfamily JSON} input files (\doxylink{camp_tutorial_part_0_bc0_fig_json}{Fig. 3}). (There are also ways to update certain CAMP parameters during a model run, like emissions and photolysis rates.) This opens up many exciting possibilities. To start, you can change the chemical mechanism without any changes to the model source code. Data assimilation and model sensitivity analyses can take advantage of the ability to adjust a wide variety of model parameters (everything from activation energies for Arrhenius reactions to ion-\/pair interaction parameters in activity calculations) without any changes to source code or recompilation of the model.
 
  \label{camp_tutorial_part_0_bc0_fig_json}%
@@ -44,11 +44,11 @@ Fig. 4. How modal (top) binned (middle) and single-\/particle (bottom) aerosol r
 \label{camp_tutorial_part_0_bc0_ss_example}%
 \Hypertarget{camp_tutorial_part_0_bc0_ss_example}%
 \hypertarget{camp_tutorial_part_0_autotoc_md20}{}\doxysubsection{\texorpdfstring{How you might CAMP}{How you might CAMP}}\label{camp_tutorial_part_0_autotoc_md20}
-To demonstrate how CAMP functionality can be used in a real-\/world scenario, imagine you are a reasearch chemist who just discovered a new gas-\/phase reaction\+:  \[\ce{
-   A + OH -> B
- }\] Species B can partition to an aqueous phase where it reacts with nitrate\+:  \[\ce{
-   B + NO3- -> C
- }\] Species C can then repartition back to the gas-\/phase.
+To demonstrate how CAMP functionality can be used in a real-\/world scenario, imagine you are a reasearch chemist who just discovered a new gas-\/phase reaction\+:   \[\ce{
+      A + OH -> B
+    }\] Species B can partition to an aqueous phase where it reacts with nitrate\+:   \[\ce{
+      B + NO3- -> C
+    }\] Species C can then repartition back to the gas-\/phase.
 
 You first try this out in a box model running CAMP with a standard gas and aerosol phase mechansim by adding a single {\ttfamily JSON} file to the CAMP input file list. Your new file has three \doxylink{input_format_species}{chemical species}, one \doxylink{camp_rxn_arrhenius}{gas-\/phase Arrhenius} reaction, one \doxylink{camp_rxn_HL_phase_transfer}{Henry\textquotesingle{}s law phase transfer} reaction, and one \doxylink{camp_rxn_condensed_phase_arrhenius}{condensed-\/phase Arrhenius} reaction. The only modification to the existing mechanism input files you make is to add species C to the "{}aequeous"{} aerosol phase. You evaluate the model results and tweak the reaction parameters until you\textquotesingle{}re able to fit your experimental results.
 
@@ -57,4 +57,4 @@ Next, you take your mechanism input files and run them in a \href{https://github
 So lace-\/up your hiking boots and stay hydrated. It\textquotesingle{}s time to start \doxysectlink{camp_tutorial_part_1}{the first stage of Boot CAMP}{0}!
 
 \DoxyHorRuler{0}
-  \doxysectlink{camp_tutorial}{Index}{0} b Next\+:  \doxysectlink{camp_tutorial_part_1}{Boot CAMP\+: Part 1 -\/ Box Model}{0} {\bfseries{ \texorpdfstring{$>$}{>} }} 
+  \doxysectlink{camp_tutorial}{Index}{0} {\bfseries{ Next\+: }} \doxysectlink{camp_tutorial_part_1}{Boot CAMP\+: Part 1 -\/ Box Model}{0} {\bfseries{ \texorpdfstring{$>$}{>} }} 

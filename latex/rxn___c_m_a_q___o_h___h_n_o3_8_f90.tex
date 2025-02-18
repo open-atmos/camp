@@ -8,7 +8,7 @@ The camp\+\_\+rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3 module.
 \doxysubsubsection*{Data Types}
 \begin{DoxyCompactItemize}
 \item 
-interface \mbox{\hyperlink{structcamp__rxn__cmaq__oh__hno3_1_1rxn__cmaq__oh__hno3__t}{camp\+\_\+rxn\+\_\+cmaq\+\_\+oh\+\_\+hno3\+::rxn\+\_\+cmaq\+\_\+oh\+\_\+hno3\+\_\+t}}
+type \mbox{\hyperlink{structcamp__rxn__cmaq__oh__hno3_1_1rxn__cmaq__oh__hno3__t}{camp\+\_\+rxn\+\_\+cmaq\+\_\+oh\+\_\+hno3\+::rxn\+\_\+cmaq\+\_\+oh\+\_\+hno3\+\_\+t}}
 \begin{DoxyCompactList}\small\item\em Generic test reaction data type. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Modules}
 \begin{DoxyCompactItemize}
@@ -50,15 +50,15 @@ module \mbox{\hyperlink{namespacecamp__rxn__cmaq__oh__hno3}{camp\+\_\+rxn\+\_\+c
 \item 
 \#define \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~1
 \item 
-\#define \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_ae761e39657aac155d83eae9b338be571}{REACT\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x)
+\#define \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_ae761e39657aac155d83eae9b338be571}{REACT\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x)
+\#define \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x)
+\#define \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2\texorpdfstring{$\ast$}{*}(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x)
+\#define \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}} + x)
+\#define \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
@@ -83,129 +83,154 @@ Definition in file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_source}{r
 
 
 \doxysubsection{Macro Definition Documentation}
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a91cd74713029c0906e8136c8628d548d}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a91cd74713029c0906e8136c8628d548d} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!CONV\_@{CONV\_}}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a91cd74713029c0906e8136c8628d548d}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!CONV\_@{CONV\_}}
 \index{CONV\_@{CONV\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{CONV\_}{CONV\_}}
-{\footnotesize\ttfamily \#define CONV\+\_\+~this\%condensed\+\_\+data\+\_\+real(11)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a91cd74713029c0906e8136c8628d548d} 
+\#define CONV\+\_\+~this\%condensed\+\_\+data\+\_\+real(11)}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_af9fc34858d09e71d3cffd88cf942bdf9}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_af9fc34858d09e71d3cffd88cf942bdf9} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!DERIV\_ID\_@{DERIV\_ID\_}}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_af9fc34858d09e71d3cffd88cf942bdf9}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!DERIV\_ID\_@{DERIV\_ID\_}}
 \index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
-{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_af9fc34858d09e71d3cffd88cf942bdf9} 
+\#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_ab831aae98d4453927c63a93f55ee5a86}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_ab831aae98d4453927c63a93f55ee5a86} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!JAC\_ID\_@{JAC\_ID\_}}
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ this\%condensed\_data\_int(num\_int\_prop\_\ +\ num\_react\_\ +\ num\_prod\_\ +\ x)}
+
+\end{DoxyCode}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_ab831aae98d4453927c63a93f55ee5a86}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!JAC\_ID\_@{JAC\_ID\_}}
 \index{JAC\_ID\_@{JAC\_ID\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2\texorpdfstring{$\ast$}{*}(\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_ab831aae98d4453927c63a93f55ee5a86} 
+\#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a6edaf985fb5047909411bbce5a225274}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a6edaf985fb5047909411bbce5a225274} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k0\_A\_@{k0\_A\_}}
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ this\%condensed\_data\_int(num\_int\_prop\_\ +\ 2*(num\_react\_\ +\ num\_prod\_)\ +\ x)}
+
+\end{DoxyCode}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a6edaf985fb5047909411bbce5a225274}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k0\_A\_@{k0\_A\_}}
 \index{k0\_A\_@{k0\_A\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{k0\_A\_}{k0\_A\_}}
-{\footnotesize\ttfamily \#define k0\+\_\+\+A\+\_\+~this\%condensed\+\_\+data\+\_\+real(1)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a6edaf985fb5047909411bbce5a225274} 
+\#define k0\+\_\+\+A\+\_\+~this\%condensed\+\_\+data\+\_\+real(1)}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a16624a96c403b0f24590c34b773235d7}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a16624a96c403b0f24590c34b773235d7} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k0\_B\_@{k0\_B\_}}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a16624a96c403b0f24590c34b773235d7}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k0\_B\_@{k0\_B\_}}
 \index{k0\_B\_@{k0\_B\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{k0\_B\_}{k0\_B\_}}
-{\footnotesize\ttfamily \#define k0\+\_\+\+B\+\_\+~this\%condensed\+\_\+data\+\_\+real(2)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a16624a96c403b0f24590c34b773235d7} 
+\#define k0\+\_\+\+B\+\_\+~this\%condensed\+\_\+data\+\_\+real(2)}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a7bdbb692960fcef6053e741ad7bcd772}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a7bdbb692960fcef6053e741ad7bcd772} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k0\_C\_@{k0\_C\_}}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a7bdbb692960fcef6053e741ad7bcd772}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k0\_C\_@{k0\_C\_}}
 \index{k0\_C\_@{k0\_C\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{k0\_C\_}{k0\_C\_}}
-{\footnotesize\ttfamily \#define k0\+\_\+\+C\+\_\+~this\%condensed\+\_\+data\+\_\+real(3)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a7bdbb692960fcef6053e741ad7bcd772} 
+\#define k0\+\_\+\+C\+\_\+~this\%condensed\+\_\+data\+\_\+real(3)}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a70c29a18f162c9a83914bba9b1e1206e}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a70c29a18f162c9a83914bba9b1e1206e} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k2\_A\_@{k2\_A\_}}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a70c29a18f162c9a83914bba9b1e1206e}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k2\_A\_@{k2\_A\_}}
 \index{k2\_A\_@{k2\_A\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{k2\_A\_}{k2\_A\_}}
-{\footnotesize\ttfamily \#define k2\+\_\+\+A\+\_\+~this\%condensed\+\_\+data\+\_\+real(4)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a70c29a18f162c9a83914bba9b1e1206e} 
+\#define k2\+\_\+\+A\+\_\+~this\%condensed\+\_\+data\+\_\+real(4)}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a60be7ab754b46342b1fa3b91760c4c2a}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a60be7ab754b46342b1fa3b91760c4c2a} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k2\_B\_@{k2\_B\_}}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a60be7ab754b46342b1fa3b91760c4c2a}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k2\_B\_@{k2\_B\_}}
 \index{k2\_B\_@{k2\_B\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{k2\_B\_}{k2\_B\_}}
-{\footnotesize\ttfamily \#define k2\+\_\+\+B\+\_\+~this\%condensed\+\_\+data\+\_\+real(5)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a60be7ab754b46342b1fa3b91760c4c2a} 
+\#define k2\+\_\+\+B\+\_\+~this\%condensed\+\_\+data\+\_\+real(5)}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a3c3ebe2b0fdababa4fcb32c28461ae7e}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a3c3ebe2b0fdababa4fcb32c28461ae7e} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k2\_C\_@{k2\_C\_}}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a3c3ebe2b0fdababa4fcb32c28461ae7e}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k2\_C\_@{k2\_C\_}}
 \index{k2\_C\_@{k2\_C\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{k2\_C\_}{k2\_C\_}}
-{\footnotesize\ttfamily \#define k2\+\_\+\+C\+\_\+~this\%condensed\+\_\+data\+\_\+real(6)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a3c3ebe2b0fdababa4fcb32c28461ae7e} 
+\#define k2\+\_\+\+C\+\_\+~this\%condensed\+\_\+data\+\_\+real(6)}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a8de19e803884115cbb1907ebc3877529}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a8de19e803884115cbb1907ebc3877529} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k3\_A\_@{k3\_A\_}}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a8de19e803884115cbb1907ebc3877529}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k3\_A\_@{k3\_A\_}}
 \index{k3\_A\_@{k3\_A\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{k3\_A\_}{k3\_A\_}}
-{\footnotesize\ttfamily \#define k3\+\_\+\+A\+\_\+~this\%condensed\+\_\+data\+\_\+real(7)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a8de19e803884115cbb1907ebc3877529} 
+\#define k3\+\_\+\+A\+\_\+~this\%condensed\+\_\+data\+\_\+real(7)}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a082da1dd102aa12e513383183e15e267}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a082da1dd102aa12e513383183e15e267} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k3\_B\_@{k3\_B\_}}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a082da1dd102aa12e513383183e15e267}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k3\_B\_@{k3\_B\_}}
 \index{k3\_B\_@{k3\_B\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{k3\_B\_}{k3\_B\_}}
-{\footnotesize\ttfamily \#define k3\+\_\+\+B\+\_\+~this\%condensed\+\_\+data\+\_\+real(8)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a082da1dd102aa12e513383183e15e267} 
+\#define k3\+\_\+\+B\+\_\+~this\%condensed\+\_\+data\+\_\+real(8)}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a55a59529331163678ff70d6aeb1554c4}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a55a59529331163678ff70d6aeb1554c4} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k3\_C\_@{k3\_C\_}}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a55a59529331163678ff70d6aeb1554c4}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!k3\_C\_@{k3\_C\_}}
 \index{k3\_C\_@{k3\_C\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{k3\_C\_}{k3\_C\_}}
-{\footnotesize\ttfamily \#define k3\+\_\+\+C\+\_\+~this\%condensed\+\_\+data\+\_\+real(9)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a55a59529331163678ff70d6aeb1554c4} 
+\#define k3\+\_\+\+C\+\_\+~this\%condensed\+\_\+data\+\_\+real(9)}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
 \index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~1}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a1f68a3544ae39a7815cbb5c09dfdeff0} 
+\#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~1}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
 \index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~2}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
+\#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~2}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_acf951e890da75cd2d503ed6ce8211fc2}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_acf951e890da75cd2d503ed6ce8211fc2} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!NUM\_PROD\_@{NUM\_PROD\_}}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_acf951e890da75cd2d503ed6ce8211fc2}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!NUM\_PROD\_@{NUM\_PROD\_}}
 \index{NUM\_PROD\_@{NUM\_PROD\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_PROD\_}{NUM\_PROD\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+PROD\+\_\+~this\%condensed\+\_\+data\+\_\+int(2)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_acf951e890da75cd2d503ed6ce8211fc2} 
+\#define NUM\+\_\+\+PROD\+\_\+~this\%condensed\+\_\+data\+\_\+int(2)}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a05ef845cf6ed7ab9a774440c42af34fa} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!NUM\_REACT\_@{NUM\_REACT\_}}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a05ef845cf6ed7ab9a774440c42af34fa}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!NUM\_REACT\_@{NUM\_REACT\_}}
 \index{NUM\_REACT\_@{NUM\_REACT\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_REACT\_}{NUM\_REACT\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+REACT\+\_\+~this\%condensed\+\_\+data\+\_\+int(1)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a05ef845cf6ed7ab9a774440c42af34fa} 
+\#define NUM\+\_\+\+REACT\+\_\+~this\%condensed\+\_\+data\+\_\+int(1)}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}}
 \index{NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_REAL\_PROP\_}{NUM\_REAL\_PROP\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+~11}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b} 
+\#define NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+~11}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a9fda90058c6a41b1dda6ded03321c4da}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a9fda90058c6a41b1dda6ded03321c4da} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!PROD\_@{PROD\_}}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a9fda90058c6a41b1dda6ded03321c4da}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!PROD\_@{PROD\_}}
 \index{PROD\_@{PROD\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{PROD\_}{PROD\_}}
-{\footnotesize\ttfamily \#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a9fda90058c6a41b1dda6ded03321c4da} 
+\#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_ae761e39657aac155d83eae9b338be571}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_ae761e39657aac155d83eae9b338be571} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!REACT\_@{REACT\_}}
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ this\%condensed\_data\_int(num\_int\_prop\_\ +\ num\_react\_\ +\ x)}
+
+\end{DoxyCode}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_ae761e39657aac155d83eae9b338be571}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!REACT\_@{REACT\_}}
 \index{REACT\_@{REACT\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{REACT\_}{REACT\_}}
-{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_ae761e39657aac155d83eae9b338be571} 
+\#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a1757f332a0485799c2ee77edff00c38a}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a1757f332a0485799c2ee77edff00c38a} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!SCALING\_@{SCALING\_}}
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ this\%condensed\_data\_int(num\_int\_prop\_\ +\ x)}
+
+\end{DoxyCode}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a1757f332a0485799c2ee77edff00c38a}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!SCALING\_@{SCALING\_}}
 \index{SCALING\_@{SCALING\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{SCALING\_}{SCALING\_}}
-{\footnotesize\ttfamily \#define SCALING\+\_\+~this\%condensed\+\_\+data\+\_\+real(10)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a1757f332a0485799c2ee77edff00c38a} 
+\#define SCALING\+\_\+~this\%condensed\+\_\+data\+\_\+real(10)}
 
-\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a9ae244708fd9c438bf840ed319733651}\label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a9ae244708fd9c438bf840ed319733651} 
-\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!YIELD\_@{YIELD\_}}
+\Hypertarget{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a9ae244708fd9c438bf840ed319733651}\index{rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}!YIELD\_@{YIELD\_}}
 \index{YIELD\_@{YIELD\_}!rxn\_CMAQ\_OH\_HNO3.F90@{rxn\_CMAQ\_OH\_HNO3.F90}}
 \doxysubsubsection{\texorpdfstring{YIELD\_}{YIELD\_}}
-{\footnotesize\ttfamily \#define YIELD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+real(\mbox{\hyperlink{aero__phase__data_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}{NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+}} + x)}
+{\footnotesize\ttfamily \label{rxn___c_m_a_q___o_h___h_n_o3_8_f90_a9ae244708fd9c438bf840ed319733651} 
+\#define YIELD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ this\%condensed\_data\_real(num\_real\_prop\_\ +\ x)}
+
+\end{DoxyCode}

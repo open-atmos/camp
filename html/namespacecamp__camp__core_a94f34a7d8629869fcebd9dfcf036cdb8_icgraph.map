@@ -1,5 +1,5 @@
 <map id="camp_camp_core::initialize_rxn_update_object" name="camp_camp_core::initialize_rxn_update_object">
 <area shape="rect" id="Node000001" title="Initialize an update data object for a reaction." alt="" coords="216,13,392,54"/>
 <area shape="rect" id="Node000002" href="$structcamp__camp__core_1_1camp__core__t.html#a5a3f135a6fdb7b0cc5848cd0a8ecd37f" title="Initialize an update_data object." alt="" coords="5,5,168,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,36,168,36,168,31,200,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,36,168,36,168,30,200,30"/>
 </map>

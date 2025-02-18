@@ -1,8 +1,8 @@
 <map id="camp_util::open_file_write" name="camp_util::open_file_write">
-<area shape="rect" id="Node000001" title="Open a file for writing with an automatically assigned unit and test that it succeeds...." alt="" coords="5,73,140,113"/>
+<area shape="rect" id="Node000001" title="Open a file for writing with an automatically assigned unit and test that it succeeds...." alt="" coords="5,72,140,113"/>
 <area shape="rect" id="Node000002" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="545,80,697,106"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,90,530,90,530,96,140,96"/>
-<area shape="rect" id="Node000003" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="745,98,867,139"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="745,98,867,138"/>
 <area shape="poly" id="edge7_Node000001_Node000003" title=" " alt="" coords="140,95,323,106,545,116,730,117,729,122,545,121,323,111,140,100"/>
 <area shape="rect" id="Node000004" href="$namespacecamp__util.html#a43662260b71cb7e4b72fe49ccb8cee94" title="Returns an available unit number. This should be freed by free_unit()." alt="" coords="188,29,317,55"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="140,71,189,57,190,62,141,76"/>

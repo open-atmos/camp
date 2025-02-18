@@ -1,7 +1,7 @@
 <map id="rxn_calc_jac_specific_types" name="rxn_calc_jac_specific_types">
 <area shape="rect" id="Node000001" title="Calculate the Jacobian for only some specific types." alt="" coords="253,5,397,46"/>
-<area shape="rect" id="Node000002" href="$camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="163,13,205,39"/>
+<area shape="rect" id="Node000002" href="$camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="163,13,205,38"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="237,28,205,28,205,23,237,23"/>
-<area shape="rect" id="Node000003" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,13,115,39"/>
+<area shape="rect" id="Node000003" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,13,115,38"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="147,28,115,28,115,23,147,23"/>
 </map>

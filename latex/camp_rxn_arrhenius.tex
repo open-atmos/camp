@@ -3,29 +3,29 @@
 Arrhenius-\/like reaction rate constant equations are calculated as follows\+:
 
 \[
-   Ae^{(\frac{-E_a}{k_bT})}(\frac{T}{D})^B(1.0+E*P)
- \]
+      Ae^{(\frac{-E_a}{k_bT})}(\frac{T}{D})^B(1.0+E*P)
+    \]
 
 where $A$ is the pre-\/exponential factor (\# $(\mbox{cm}^{-3})^{-(n-1)}\mbox{s}^{-1}$), $n$ is the number of reactants, $E_a$ is the activation energy (J), $k_b$ is the Boltzmann constant (J/K), $D$ (K), $B$ (unitless) and $E$ ( $Pa^{-1}$) are reaction parameters, $T$ is the temperature (K), and $P$ is the pressure (Pa). The first two terms are described in Finlayson-\/\+Pitts and Pitts (2000) {\bfseries [Finlayson-\/\+Pitts2000]} . The final term is included to accomodate CMAQ EBI solver type 7 rate constants.
 
 Input data for Arrhenius equations has the following format\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\{}
-\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}ARRHENIUS"{},}
-\DoxyCodeLine{\ \ "{}A"{}\ :\ 123.45,}
-\DoxyCodeLine{\ \ "{}Ea"{}\ :\ 123.45,}
-\DoxyCodeLine{\ \ "{}B"{}\ \ :\ 1.3,}
-\DoxyCodeLine{\ \ "{}D"{}\ \ :\ 300.0,}
-\DoxyCodeLine{\ \ "{}E"{}\ \ :\ 0.6E-\/5,}
-\DoxyCodeLine{\ \ "{}time\ unit"{}\ :\ "{}MIN"{},}
-\DoxyCodeLine{\ \ "{}reactants"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ "{}spec1"{}\ :\ \{\},}
-\DoxyCodeLine{\ \ \ \ "{}spec2"{}\ :\ \{\ "{}qty"{}\ :\ 2\ \},}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ 123.45,}
+\DoxyCodeLine{\ \ \ :\ 123.45,}
+\DoxyCodeLine{\ \ \ \ :\ 1.3,}
+\DoxyCodeLine{\ \ \ \ :\ 300.0,}
+\DoxyCodeLine{\ \ \ \ :\ 0.6E-\/5,}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\ \ :\ 2\ \},}
 \DoxyCodeLine{\ \ \ \ ...}
 \DoxyCodeLine{\ \ \},}
-\DoxyCodeLine{\ \ "{}products"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ "{}spec3"{}\ :\ \{\},}
-\DoxyCodeLine{\ \ \ \ "{}spec4"{}\ :\ \{\ "{}yield"{}\ :\ 0.65\ \},}
+\DoxyCodeLine{\ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\ \ :\ 0.65\ \},}
 \DoxyCodeLine{\ \ \ \ ...}
 \DoxyCodeLine{\ \ \}}
 \DoxyCodeLine{\}}

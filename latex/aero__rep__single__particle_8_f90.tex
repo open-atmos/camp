@@ -8,7 +8,7 @@ The \doxylink{namespacecamp__aero__rep__single__particle}{camp\+\_\+aero\+\_\+re
 \doxysubsubsection*{Data Types}
 \begin{DoxyCompactItemize}
 \item 
-interface \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}
+type \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}
 \begin{DoxyCompactList}\small\item\em Single particle aerosol representation. \end{DoxyCompactList}\item 
 type \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t}}
 \begin{DoxyCompactList}\small\item\em Single particle update number concentration object. \end{DoxyCompactList}\item 
@@ -40,19 +40,19 @@ module \mbox{\hyperlink{namespacecamp__aero__rep__single__particle}{camp\+\_\+ae
 \item 
 \#define \mbox{\hyperlink{aero__rep__single__particle_8_f90_a2d7fef4d8f0324361a6d7817c1561e79}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+\+PER\+\_\+\+PARTICLE\+\_\+}}~1
 \item 
-\#define \mbox{\hyperlink{aero__rep__single__particle_8_f90_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+l)
+\#define \mbox{\hyperlink{aero__rep__single__particle_8_f90_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)
 \item 
-\#define \mbox{\hyperlink{aero__rep__single__particle_8_f90_ad7b8ff651402a06142748ac4600fd62c}{LAYER\+\_\+\+PHASE\+\_\+\+END\+\_\+}}(l)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}+l)
+\#define \mbox{\hyperlink{aero__rep__single__particle_8_f90_ad7b8ff651402a06142748ac4600fd62c}{LAYER\+\_\+\+PHASE\+\_\+\+END\+\_\+}}(l)
 \item 
 \#define \mbox{\hyperlink{aero__rep__single__particle_8_f90_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\+\_\+\+NUM\+\_\+\+PHASES\+\_\+}}~(\mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\+\_\+\+PHASE\+\_\+\+END\+\_\+}}(\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}))
 \item 
-\#define \mbox{\hyperlink{aero__rep__single__particle_8_f90_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\+\_\+\+PHASES\+\_\+}}(l)~(\mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\+\_\+\+PHASE\+\_\+\+END\+\_\+}}(l)-\/\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)+1)
+\#define \mbox{\hyperlink{aero__rep__single__particle_8_f90_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\+\_\+\+PHASES\+\_\+}}(l)
 \item 
-\#define \mbox{\hyperlink{aero__rep__single__particle_8_f90_ab3956491dbbbf0687d3c0ae80d483ebf}{PHASE\+\_\+\+STATE\+\_\+\+ID\+\_\+}}(l,  p)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)+p-\/1)
+\#define \mbox{\hyperlink{aero__rep__single__particle_8_f90_ab3956491dbbbf0687d3c0ae80d483ebf}{PHASE\+\_\+\+STATE\+\_\+\+ID\+\_\+}}(l,  p)
 \item 
-\#define \mbox{\hyperlink{aero__rep__single__particle_8_f90_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\+\_\+\+MODEL\+\_\+\+DATA\+\_\+\+ID\+\_\+}}(l,  p)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\+\_\+\+NUM\+\_\+\+PHASES\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)+p-\/1)
+\#define \mbox{\hyperlink{aero__rep__single__particle_8_f90_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\+\_\+\+MODEL\+\_\+\+DATA\+\_\+\+ID\+\_\+}}(l,  p)
 \item 
-\#define \mbox{\hyperlink{aero__rep__single__particle_8_f90_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\+\_\+\+NUM\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(l,  p)~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\+\_\+\+NUM\+\_\+\+PHASES\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)+p-\/1)
+\#define \mbox{\hyperlink{aero__rep__single__particle_8_f90_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\+\_\+\+NUM\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(l,  p)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Functions/\+Subroutines}
 \begin{DoxyCompactItemize}
@@ -67,13 +67,13 @@ integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__rep__si
 \begin{DoxyCompactList}\small\item\em Get the size of the section of the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}} array required for this aerosol representation. \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a40012fbd02ff260db569f8fb7a46f629}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::per\+\_\+particle\+\_\+size}} (this)
 \begin{DoxyCompactList}\small\item\em Get the number of state variables per-\/particle. \end{DoxyCompactList}\item 
-type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a323b44d748ba160155fc7fdd1286aacf}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::unique\+\_\+names}} (this, phase\+\_\+name, tracer\+\_\+type, \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\+\_\+name}})
+type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a3f7d169b54c82706afa1943608219e7e}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::unique\+\_\+names}} (this, phase\+\_\+name, tracer\+\_\+type, \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\+\_\+name}}, phase\+\_\+is\+\_\+at\+\_\+surface)
 \begin{DoxyCompactList}\small\item\em Get a list of unique names for each element on the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}} array for this aerosol representation. The list may be restricted to a particular phase and/or aerosol species by including the phase\+\_\+name and spec\+\_\+name arguments. \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_ac936685fd2f3a70ccef00a58d320823a}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::spec\+\_\+state\+\_\+id}} (this, unique\+\_\+name)
 \begin{DoxyCompactList}\small\item\em Get a species id on the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}} array by its unique name. These are unique ids for each element on the state array for this \doxylink{camp_aero_rep}{aerosol representation} and are numbered\+: \end{DoxyCompactList}\item 
 character(len=\+:) function, allocatable \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_ae3e10c5d3d4888772ff0419137ea38e0}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::spec\+\_\+name}} (this, unique\+\_\+name)
 \begin{DoxyCompactList}\small\item\em Get the non-\/unique name of a species in this aerosol representation by id. \end{DoxyCompactList}\item 
-integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_af405fb40be3bf5a147a96432335aa10c}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::num\+\_\+phase\+\_\+instances}} (this, phase\+\_\+name)
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a25c3f008127e408e7a14b063d3a60a26}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::num\+\_\+phase\+\_\+instances}} (this, phase\+\_\+name, is\+\_\+at\+\_\+surface)
 \begin{DoxyCompactList}\small\item\em Get the number of instances of a specified aerosol phase. In the single particle representation with layers, a phase can exist in multiple layers in one particle. ~\newline
  \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_acc4ef7983a239d005c14fbbf4b75e5f6}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::num\+\_\+jac\+\_\+elem}} (this, phase\+\_\+id)
@@ -121,87 +121,117 @@ Definition in file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{ae
 
 
 \doxysubsection{Macro Definition Documentation}
-\Hypertarget{aero__rep__single__particle_8_f90_a7f41adc102bb4117dcf37be9d4580b0a}\label{aero__rep__single__particle_8_f90_a7f41adc102bb4117dcf37be9d4580b0a} 
-\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!AERO\_REP\_ID\_@{AERO\_REP\_ID\_}}
+\Hypertarget{aero__rep__single__particle_8_f90_a7f41adc102bb4117dcf37be9d4580b0a}\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!AERO\_REP\_ID\_@{AERO\_REP\_ID\_}}
 \index{AERO\_REP\_ID\_@{AERO\_REP\_ID\_}!aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}}
 \doxysubsubsection{\texorpdfstring{AERO\_REP\_ID\_}{AERO\_REP\_ID\_}}
-{\footnotesize\ttfamily \#define AERO\+\_\+\+REP\+\_\+\+ID\+\_\+~this\%condensed\+\_\+data\+\_\+int(2)}
+{\footnotesize\ttfamily \label{aero__rep__single__particle_8_f90_a7f41adc102bb4117dcf37be9d4580b0a} 
+\#define AERO\+\_\+\+REP\+\_\+\+ID\+\_\+~this\%condensed\+\_\+data\+\_\+int(2)}
 
-\Hypertarget{aero__rep__single__particle_8_f90_ad7b8ff651402a06142748ac4600fd62c}\label{aero__rep__single__particle_8_f90_ad7b8ff651402a06142748ac4600fd62c} 
-\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!LAYER\_PHASE\_END\_@{LAYER\_PHASE\_END\_}}
+\Hypertarget{aero__rep__single__particle_8_f90_ad7b8ff651402a06142748ac4600fd62c}\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!LAYER\_PHASE\_END\_@{LAYER\_PHASE\_END\_}}
 \index{LAYER\_PHASE\_END\_@{LAYER\_PHASE\_END\_}!aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}}
 \doxysubsubsection{\texorpdfstring{LAYER\_PHASE\_END\_}{LAYER\_PHASE\_END\_}}
-{\footnotesize\ttfamily \#define LAYER\+\_\+\+PHASE\+\_\+\+END\+\_\+(\begin{DoxyParamCaption}\item[{}]{l }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}+l)}
+{\footnotesize\ttfamily \label{aero__rep__single__particle_8_f90_ad7b8ff651402a06142748ac4600fd62c} 
+\#define LAYER\+\_\+\+PHASE\+\_\+\+END\+\_\+(\begin{DoxyParamCaption}\item[{}]{l}{}\end{DoxyParamCaption})}
 
-\Hypertarget{aero__rep__single__particle_8_f90_aa4e0d141752bdc2ada9292d63f26ba9e}\label{aero__rep__single__particle_8_f90_aa4e0d141752bdc2ada9292d63f26ba9e} 
-\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!LAYER\_PHASE\_START\_@{LAYER\_PHASE\_START\_}}
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ this\%condensed\_data\_int(num\_int\_prop\_+num\_layers\_+l)}
+
+\end{DoxyCode}
+\Hypertarget{aero__rep__single__particle_8_f90_aa4e0d141752bdc2ada9292d63f26ba9e}\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!LAYER\_PHASE\_START\_@{LAYER\_PHASE\_START\_}}
 \index{LAYER\_PHASE\_START\_@{LAYER\_PHASE\_START\_}!aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}}
 \doxysubsubsection{\texorpdfstring{LAYER\_PHASE\_START\_}{LAYER\_PHASE\_START\_}}
-{\footnotesize\ttfamily \#define LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+(\begin{DoxyParamCaption}\item[{}]{l }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+l)}
+{\footnotesize\ttfamily \label{aero__rep__single__particle_8_f90_aa4e0d141752bdc2ada9292d63f26ba9e} 
+\#define LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+(\begin{DoxyParamCaption}\item[{}]{l}{}\end{DoxyParamCaption})}
 
-\Hypertarget{aero__rep__single__particle_8_f90_a9a8f20dcd00b20eb44f20a23b8483562}\label{aero__rep__single__particle_8_f90_a9a8f20dcd00b20eb44f20a23b8483562} 
-\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!MAX\_PARTICLES\_@{MAX\_PARTICLES\_}}
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ this\%condensed\_data\_int(num\_int\_prop\_+l)}
+
+\end{DoxyCode}
+\Hypertarget{aero__rep__single__particle_8_f90_a9a8f20dcd00b20eb44f20a23b8483562}\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!MAX\_PARTICLES\_@{MAX\_PARTICLES\_}}
 \index{MAX\_PARTICLES\_@{MAX\_PARTICLES\_}!aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}}
 \doxysubsubsection{\texorpdfstring{MAX\_PARTICLES\_}{MAX\_PARTICLES\_}}
-{\footnotesize\ttfamily \#define MAX\+\_\+\+PARTICLES\+\_\+~this\%condensed\+\_\+data\+\_\+int(3)}
+{\footnotesize\ttfamily \label{aero__rep__single__particle_8_f90_a9a8f20dcd00b20eb44f20a23b8483562} 
+\#define MAX\+\_\+\+PARTICLES\+\_\+~this\%condensed\+\_\+data\+\_\+int(3)}
 
-\Hypertarget{aero__rep__single__particle_8_f90_a2d7fef4d8f0324361a6d7817c1561e79}\label{aero__rep__single__particle_8_f90_a2d7fef4d8f0324361a6d7817c1561e79} 
-\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!NUM\_ENV\_PARAM\_PER\_PARTICLE\_@{NUM\_ENV\_PARAM\_PER\_PARTICLE\_}}
+\Hypertarget{aero__rep__single__particle_8_f90_a2d7fef4d8f0324361a6d7817c1561e79}\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!NUM\_ENV\_PARAM\_PER\_PARTICLE\_@{NUM\_ENV\_PARAM\_PER\_PARTICLE\_}}
 \index{NUM\_ENV\_PARAM\_PER\_PARTICLE\_@{NUM\_ENV\_PARAM\_PER\_PARTICLE\_}!aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_PER\_PARTICLE\_}{NUM\_ENV\_PARAM\_PER\_PARTICLE\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+\+PER\+\_\+\+PARTICLE\+\_\+~1}
+{\footnotesize\ttfamily \label{aero__rep__single__particle_8_f90_a2d7fef4d8f0324361a6d7817c1561e79} 
+\#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+\+PER\+\_\+\+PARTICLE\+\_\+~1}
 
-\Hypertarget{aero__rep__single__particle_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{aero__rep__single__particle_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
-\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
+\Hypertarget{aero__rep__single__particle_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
 \index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~4}
+{\footnotesize\ttfamily \label{aero__rep__single__particle_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
+\#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~4}
 
-\Hypertarget{aero__rep__single__particle_8_f90_ad48ca302910c2a8aad81f046147e1a89}\label{aero__rep__single__particle_8_f90_ad48ca302910c2a8aad81f046147e1a89} 
-\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!NUM\_LAYERS\_@{NUM\_LAYERS\_}}
+\Hypertarget{aero__rep__single__particle_8_f90_ad48ca302910c2a8aad81f046147e1a89}\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!NUM\_LAYERS\_@{NUM\_LAYERS\_}}
 \index{NUM\_LAYERS\_@{NUM\_LAYERS\_}!aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_LAYERS\_}{NUM\_LAYERS\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+LAYERS\+\_\+~this\%condensed\+\_\+data\+\_\+int(1)}
+{\footnotesize\ttfamily \label{aero__rep__single__particle_8_f90_ad48ca302910c2a8aad81f046147e1a89} 
+\#define NUM\+\_\+\+LAYERS\+\_\+~this\%condensed\+\_\+data\+\_\+int(1)}
 
-\Hypertarget{aero__rep__single__particle_8_f90_a3921ba6f631d8716adc5c5ff9e52cf44}\label{aero__rep__single__particle_8_f90_a3921ba6f631d8716adc5c5ff9e52cf44} 
-\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!NUM\_PHASES\_@{NUM\_PHASES\_}}
+\Hypertarget{aero__rep__single__particle_8_f90_a3921ba6f631d8716adc5c5ff9e52cf44}\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!NUM\_PHASES\_@{NUM\_PHASES\_}}
 \index{NUM\_PHASES\_@{NUM\_PHASES\_}!aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_PHASES\_}{NUM\_PHASES\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+PHASES\+\_\+(\begin{DoxyParamCaption}\item[{}]{l }\end{DoxyParamCaption})~(\mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\+\_\+\+PHASE\+\_\+\+END\+\_\+}}(l)-\/\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)+1)}
+{\footnotesize\ttfamily \label{aero__rep__single__particle_8_f90_a3921ba6f631d8716adc5c5ff9e52cf44} 
+\#define NUM\+\_\+\+PHASES\+\_\+(\begin{DoxyParamCaption}\item[{}]{l}{}\end{DoxyParamCaption})}
 
-\Hypertarget{aero__rep__single__particle_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}\label{aero__rep__single__particle_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b} 
-\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}}
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ (layer\_phase\_end\_(l)-\/layer\_phase\_start\_(l)+1)}
+
+\end{DoxyCode}
+\Hypertarget{aero__rep__single__particle_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b}\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}}
 \index{NUM\_REAL\_PROP\_@{NUM\_REAL\_PROP\_}!aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}}
 \doxysubsubsection{\texorpdfstring{NUM\_REAL\_PROP\_}{NUM\_REAL\_PROP\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+~0}
+{\footnotesize\ttfamily \label{aero__rep__single__particle_8_f90_aa9808eb54fa06bcf890dd1aa1fc6ca5b} 
+\#define NUM\+\_\+\+REAL\+\_\+\+PROP\+\_\+~0}
 
-\Hypertarget{aero__rep__single__particle_8_f90_a5362f2b785d3da92675466d9256f3cfd}\label{aero__rep__single__particle_8_f90_a5362f2b785d3da92675466d9256f3cfd} 
-\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!PARTICLE\_STATE\_SIZE\_@{PARTICLE\_STATE\_SIZE\_}}
+\Hypertarget{aero__rep__single__particle_8_f90_a5362f2b785d3da92675466d9256f3cfd}\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!PARTICLE\_STATE\_SIZE\_@{PARTICLE\_STATE\_SIZE\_}}
 \index{PARTICLE\_STATE\_SIZE\_@{PARTICLE\_STATE\_SIZE\_}!aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}}
 \doxysubsubsection{\texorpdfstring{PARTICLE\_STATE\_SIZE\_}{PARTICLE\_STATE\_SIZE\_}}
-{\footnotesize\ttfamily \#define PARTICLE\+\_\+\+STATE\+\_\+\+SIZE\+\_\+~this\%condensed\+\_\+data\+\_\+int(4)}
+{\footnotesize\ttfamily \label{aero__rep__single__particle_8_f90_a5362f2b785d3da92675466d9256f3cfd} 
+\#define PARTICLE\+\_\+\+STATE\+\_\+\+SIZE\+\_\+~this\%condensed\+\_\+data\+\_\+int(4)}
 
-\Hypertarget{aero__rep__single__particle_8_f90_ab1cd2d82d1a9128509fa78a239be7ad9}\label{aero__rep__single__particle_8_f90_ab1cd2d82d1a9128509fa78a239be7ad9} 
-\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!PHASE\_MODEL\_DATA\_ID\_@{PHASE\_MODEL\_DATA\_ID\_}}
+\Hypertarget{aero__rep__single__particle_8_f90_ab1cd2d82d1a9128509fa78a239be7ad9}\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!PHASE\_MODEL\_DATA\_ID\_@{PHASE\_MODEL\_DATA\_ID\_}}
 \index{PHASE\_MODEL\_DATA\_ID\_@{PHASE\_MODEL\_DATA\_ID\_}!aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}}
 \doxysubsubsection{\texorpdfstring{PHASE\_MODEL\_DATA\_ID\_}{PHASE\_MODEL\_DATA\_ID\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+MODEL\+\_\+\+DATA\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{l,  }\item[{}]{p }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\+\_\+\+NUM\+\_\+\+PHASES\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)+p-\/1)}
+{\footnotesize\ttfamily \label{aero__rep__single__particle_8_f90_ab1cd2d82d1a9128509fa78a239be7ad9} 
+\#define PHASE\+\_\+\+MODEL\+\_\+\+DATA\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{l}{, }\item[{}]{p}{}\end{DoxyParamCaption})}
 
-\Hypertarget{aero__rep__single__particle_8_f90_a6a458d59ce6542ae6e65394e2757c5c9}\label{aero__rep__single__particle_8_f90_a6a458d59ce6542ae6e65394e2757c5c9} 
-\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!PHASE\_NUM\_JAC\_ELEM\_@{PHASE\_NUM\_JAC\_ELEM\_}}
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ this\%condensed\_data\_int(num\_int\_prop\_+2*num\_layers\_+total\_num\_phases\_+layer\_phase\_start\_(l)+p-\/1)}
+
+\end{DoxyCode}
+\Hypertarget{aero__rep__single__particle_8_f90_a6a458d59ce6542ae6e65394e2757c5c9}\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!PHASE\_NUM\_JAC\_ELEM\_@{PHASE\_NUM\_JAC\_ELEM\_}}
 \index{PHASE\_NUM\_JAC\_ELEM\_@{PHASE\_NUM\_JAC\_ELEM\_}!aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}}
 \doxysubsubsection{\texorpdfstring{PHASE\_NUM\_JAC\_ELEM\_}{PHASE\_NUM\_JAC\_ELEM\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+NUM\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{l,  }\item[{}]{p }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\+\_\+\+NUM\+\_\+\+PHASES\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)+p-\/1)}
+{\footnotesize\ttfamily \label{aero__rep__single__particle_8_f90_a6a458d59ce6542ae6e65394e2757c5c9} 
+\#define PHASE\+\_\+\+NUM\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{l}{, }\item[{}]{p}{}\end{DoxyParamCaption})}
 
-\Hypertarget{aero__rep__single__particle_8_f90_ab3956491dbbbf0687d3c0ae80d483ebf}\label{aero__rep__single__particle_8_f90_ab3956491dbbbf0687d3c0ae80d483ebf} 
-\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!PHASE\_STATE\_ID\_@{PHASE\_STATE\_ID\_}}
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ this\%condensed\_data\_int(num\_int\_prop\_+2*num\_layers\_+2*total\_num\_phases\_+layer\_phase\_start\_(l)+p-\/1)}
+
+\end{DoxyCode}
+\Hypertarget{aero__rep__single__particle_8_f90_ab3956491dbbbf0687d3c0ae80d483ebf}\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!PHASE\_STATE\_ID\_@{PHASE\_STATE\_ID\_}}
 \index{PHASE\_STATE\_ID\_@{PHASE\_STATE\_ID\_}!aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}}
 \doxysubsubsection{\texorpdfstring{PHASE\_STATE\_ID\_}{PHASE\_STATE\_ID\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+STATE\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{l,  }\item[{}]{p }\end{DoxyParamCaption})~this\%condensed\+\_\+data\+\_\+int(\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}}+2\texorpdfstring{$\ast$}{*}\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}+\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\+\_\+\+PHASE\+\_\+\+START\+\_\+}}(l)+p-\/1)}
+{\footnotesize\ttfamily \label{aero__rep__single__particle_8_f90_ab3956491dbbbf0687d3c0ae80d483ebf} 
+\#define PHASE\+\_\+\+STATE\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{l}{, }\item[{}]{p}{}\end{DoxyParamCaption})}
 
-\Hypertarget{aero__rep__single__particle_8_f90_ab37e3edc0c0f19448dd1cbf98a0d7bad}\label{aero__rep__single__particle_8_f90_ab37e3edc0c0f19448dd1cbf98a0d7bad} 
-\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!TOTAL\_NUM\_PHASES\_@{TOTAL\_NUM\_PHASES\_}}
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ this\%condensed\_data\_int(num\_int\_prop\_+2*num\_layers\_+layer\_phase\_start\_(l)+p-\/1)}
+
+\end{DoxyCode}
+\Hypertarget{aero__rep__single__particle_8_f90_ab37e3edc0c0f19448dd1cbf98a0d7bad}\index{aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}!TOTAL\_NUM\_PHASES\_@{TOTAL\_NUM\_PHASES\_}}
 \index{TOTAL\_NUM\_PHASES\_@{TOTAL\_NUM\_PHASES\_}!aero\_rep\_single\_particle.F90@{aero\_rep\_single\_particle.F90}}
 \doxysubsubsection{\texorpdfstring{TOTAL\_NUM\_PHASES\_}{TOTAL\_NUM\_PHASES\_}}
-{\footnotesize\ttfamily \#define TOTAL\+\_\+\+NUM\+\_\+\+PHASES\+\_\+~(\mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\+\_\+\+PHASE\+\_\+\+END\+\_\+}}(\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}))}
+{\footnotesize\ttfamily \label{aero__rep__single__particle_8_f90_ab37e3edc0c0f19448dd1cbf98a0d7bad} 
+\#define TOTAL\+\_\+\+NUM\+\_\+\+PHASES\+\_\+~(\mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\+\_\+\+PHASE\+\_\+\+END\+\_\+}}(\mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\+\_\+\+LAYERS\+\_\+}}))}
 

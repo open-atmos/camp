@@ -3,30 +3,30 @@
 Aqueous equilibrium reactions are calculated as forward and reverse reactions. The reverse rate constant must be provided as part of the input data and the forward rate constant is calculated using the provided reverse rate constant and an equilibrium constant of the following format\+:
 
 \[
-   Ae^{C({1/T-1/298})}
- \]
+      Ae^{C({1/T-1/298})}
+    \]
 
 where $A$ is the pre-\/exponential factor ( $s^{-1}$), $C$ is a constant and $T$ is the temperature (K).
 
 Input data for aqueous equilibrium equations should take the form \+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\{}
-\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}AQUEOUS\_EQUILIBRIUM"{},}
-\DoxyCodeLine{\ \ "{}A"{}\ :\ 123.45,}
-\DoxyCodeLine{\ \ "{}C"{}\ :\ 123.45,}
-\DoxyCodeLine{\ \ "{}k\_reverse"{}\ :\ 123.45,}
-\DoxyCodeLine{\ \ "{}phase"{}\ :\ "{}my\ aqueous\ phase"{},}
-\DoxyCodeLine{\ \ "{}time\ unit"{}\ :\ "{}MIN"{},}
-\DoxyCodeLine{\ \ "{}aqueous-\/phase\ water"{}\ :\ "{}H2O\_aq"{},}
-\DoxyCodeLine{\ \ "{}ion\ pair"{}\ :\ "{}spec3-\/spec4"{},}
-\DoxyCodeLine{\ \ "{}reactants"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ "{}spec1"{}\ :\ \{\},}
-\DoxyCodeLine{\ \ \ \ "{}spec2"{}\ :\ \{\ "{}qty"{}\ :\ 2\ \},}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ 123.45,}
+\DoxyCodeLine{\ \ \ :\ 123.45,}
+\DoxyCodeLine{\ \ \ :\ 123.45,}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\ \ :\ 2\ \},}
 \DoxyCodeLine{\ \ \ \ ...}
 \DoxyCodeLine{\ \ \},}
-\DoxyCodeLine{\ \ "{}products"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ "{}spec3"{}\ :\ \{\},}
-\DoxyCodeLine{\ \ \ \ "{}spec4"{}\ :\ \{\ "{}qty"{}\ :\ 0.65\ \},}
+\DoxyCodeLine{\ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\ \ :\ 0.65\ \},}
 \DoxyCodeLine{\ \ \ \ ...}
 \DoxyCodeLine{\ \ \}}
 \DoxyCodeLine{\ \ ...}

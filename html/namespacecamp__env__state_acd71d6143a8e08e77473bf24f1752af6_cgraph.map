@@ -8,11 +8,11 @@
 <area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="360,37,402,44,401,50,359,42"/>
 <area shape="rect" id="Node000004" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="828,5,975,46"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="780,23,812,23,812,28,780,28"/>
-<area shape="rect" id="Node000005" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="1023,13,1123,39"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="1023,13,1123,38"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="975,23,1008,23,1008,28,975,28"/>
-<area shape="rect" id="Node000006" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="1171,13,1291,39"/>
+<area shape="rect" id="Node000006" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="1171,13,1291,38"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1124,23,1156,23,1156,28,1124,28"/>
-<area shape="rect" id="Node000007" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1339,13,1490,39"/>
+<area shape="rect" id="Node000007" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1339,13,1490,38"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1291,23,1323,23,1323,28,1291,28"/>
 <area shape="rect" id="Node000008" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1538,5,1660,46"/>
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="1490,23,1522,23,1522,28,1490,28"/>

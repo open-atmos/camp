@@ -1,7 +1,7 @@
 <map id="camp_aero_rep_factory::pack_size" name="camp_aero_rep_factory::pack_size">
 <area shape="rect" id="Node000001" title="Determine the size of a binary required to pack an aerosol representation." alt="" coords="5,33,162,74"/>
 <area shape="rect" id="Node000002" href="$namespacecamp__mpi.html#abfca35b6c1f158dcb853326861d7e558" title="Determines the number of bytes required to pack the given value." alt="" coords="615,29,763,70"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,40,210,35,567,36,600,38,600,44,567,42,210,40,162,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,40,209,35,388,28,567,35,600,37,600,43,567,40,388,34,210,40,162,45"/>
 <area shape="rect" id="Node000009" href="$namespacecamp__aero__rep__data.html#a4a1d35f1a4f0f3a24aae257c90eb7d7b" title="Determine the size of a binary required to pack the aerosol representation data." alt="" coords="210,73,352,114"/>
 <area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="163,67,195,74,194,79,162,72"/>
 <area shape="poly" id="edge8_Node000002_Node000002" title=" " alt="" coords="652,29,650,19,656,10,669,5,689,3,710,5,723,11,721,16,709,10,689,8,671,10,659,15,655,20,657,28"/>

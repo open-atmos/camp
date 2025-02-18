@@ -1,38 +1,36 @@
 \doxysubsection{Input JSON Object Format\+: Reaction (general)}
 \hypertarget{input_format_rxn}{}\label{input_format_rxn}\index{Input JSON Object Format: Reaction (general)@{Input JSON Object Format: Reaction (general)}}
-A {\ttfamily json} object containing information about a chemical reaction or physical process in the gas phase, in an \doxylink{camp_aero_phase}{aerosol phase}, or between two phases (phase-\/transfer). \doxylink{camp_rxn}{Reactions} are used to build \doxylink{camp_mechanism}{mechanisms} and are only found within an input \doxylink{input_format_mechanism}{mechanism object} in an array labelled {\bfseries{reactions}}.
-
-
+A {\ttfamily json} object containing information about a chemical reaction or physical process in the gas phase, in an \doxylink{camp_aero_phase}{aerosol phase}, or between two phases (phase-\/transfer). \doxylink{camp_rxn}{Reactions} are used to build \doxylink{camp_mechanism}{mechanisms} and are only found within an input \doxylink{input_format_mechanism}{mechanism object} in an array labelled {\bfseries{reactions}}. 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\{\ "{}camp-\/data"{}\ :\ [}
+\DoxyCodeLine{\{\ \ :\ [}
 \DoxyCodeLine{\ \ \{}
-\DoxyCodeLine{\ \ \ \ "{}name"{}\ :\ "{}my\ mechanism"{},}
-\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}MECHANISM"{},}
-\DoxyCodeLine{\ \ \ \ "{}reactions"{}\ :\ [}
+\DoxyCodeLine{\ \ \ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ \ \ :\ [}
 \DoxyCodeLine{\ \ \ \ \{}
-\DoxyCodeLine{\ \ \ \ \ \ "{}type"{}\ :\ "{}REACTION\_TYPE"{},}
-\DoxyCodeLine{\ \ \ \ \ \ "{}reactants"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}some\ species"{}\ :\ \{\},}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}another\ species"{}\ :\ \{\ "{}qty"{}\ :\ 2\ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ \ \ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ :\ \{\ \ :\ 2\ \}}
 \DoxyCodeLine{\ \ \ \ \ \ \},}
-\DoxyCodeLine{\ \ \ \ \ \ "{}products"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}product\ species"{}\ :\ \{\ "{}yield"{}\ :\ 0.42\ \},}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}another\ prod\ species"{}\ :\ \{\}}
+\DoxyCodeLine{\ \ \ \ \ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ :\ \{\ \ :\ 0.42\ \},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ :\ \{\}}
 \DoxyCodeLine{\ \ \ \ \ \ \},}
-\DoxyCodeLine{\ \ \ \ \ \ "{}some\ parameter"{}\ :\ 123.34,}
-\DoxyCodeLine{\ \ \ \ \ \ "{}some\ other\ parameter"{}\ :\ true,}
-\DoxyCodeLine{\ \ \ \ \ \ "{}nested\ parameters"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ \ "{}sub\ param\ 1"{}\ :\ 12.43,}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ \ "{}sub\ param\ other"{}\ :\ "{}some\ text"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ :\ 123.34,}
+\DoxyCodeLine{\ \ \ \ \ \ \ :\ true,}
+\DoxyCodeLine{\ \ \ \ \ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ :\ 12.43,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ \ :\ }
 \DoxyCodeLine{\ \ \ \ \ \ \},}
 \DoxyCodeLine{\ \ \ \ \ \ ...}
 \DoxyCodeLine{\ \ \ \ \},}
 \DoxyCodeLine{\ \ \ \ \{}
-\DoxyCodeLine{\ \ \ \ \ \ "{}type"{}\ :\ "{}REACTION\_TYPE"{},}
-\DoxyCodeLine{\ \ \ \ \ \ "{}reactants"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}that\ one\ species"{}\ :\ \{\ "{}qty"{}\ :\ 3\ \}}
+\DoxyCodeLine{\ \ \ \ \ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ \ \ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ :\ \{\ \ :\ 3\ \}}
 \DoxyCodeLine{\ \ \ \ \ \ \},}
-\DoxyCodeLine{\ \ \ \ \ \ "{}some\ parameter"{}\ :\ 123.34,}
+\DoxyCodeLine{\ \ \ \ \ \ \ :\ 123.34,}
 \DoxyCodeLine{\ \ \ \ \ \ ...}
 \DoxyCodeLine{\ \ \ \ \},}
 \DoxyCodeLine{\ \ \ \ ...}

@@ -1,8 +1,0 @@
-<map id="camp_sub_model_unifac::sub_model_unifac_t::finalize" name="camp_sub_model_unifac::sub_model_unifac_t::finalize">
-<area shape="rect" id="Node000001" title="Finalize the sub&#45;model." alt="" coords="5,5,171,61"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__aero__phase__data.html#a8eebec681f9d24bd7741bb357f7c4e43" title="Finalize the aerosol phase data." alt="" coords="426,13,585,54"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,28,219,27,378,27,410,27,410,33,378,32,219,32,171,33"/>
-<area shape="rect" id="Node000003" href="$namespacecamp__aero__phase__data.html#a0e828293ef8b5cc169dfe653abed14e8" title="Finalize the aerosol phase data." alt="" coords="219,41,378,82"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="171,42,203,46,203,51,170,47"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="378,48,410,43,411,49,379,53"/>
-</map>

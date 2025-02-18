@@ -5,11 +5,11 @@
 <area shape="rect" id="Node000007" href="$namespacecamp__rand.html#a1411d895e3c99da9dc1c4d9062ae5288" title="Generate a random hexadecimal character." alt="" coords="198,88,373,113"/>
 <area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="150,73,196,82,195,87,150,79"/>
 <area shape="poly" id="edge5_Node000002_Node000002" title=" " alt="" coords="472,51,465,42,469,32,484,26,509,24,536,26,550,33,548,38,535,31,509,29,486,31,473,36,470,41,476,48"/>
-<area shape="rect" id="Node000003" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="672,13,792,39"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="672,13,792,38"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="590,47,657,36,658,41,590,52"/>
 <area shape="rect" id="Node000006" href="$namespacecamp__rand.html#aff7aed70c1739a48a1a771e6fd9f97bc" title="Returns a random number between 0 and 1." alt="" coords="645,86,819,112"/>
 <area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="593,74,634,80,633,86,592,79"/>
-<area shape="rect" id="Node000004" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="867,13,1018,39"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="867,13,1018,38"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="792,23,851,23,851,28,792,28"/>
 <area shape="rect" id="Node000005" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1066,5,1188,46"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1018,23,1050,23,1050,28,1018,28"/>

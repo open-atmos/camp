@@ -60,31 +60,31 @@ Include dependency graph for rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c\+:
 \item 
 \#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~4
 \item 
-\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]}
+\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 1 + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]}
+\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 + 6 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a1b01f1bcaa27c6a585133a578d29b09c}{PHASE\+\_\+\+REAL\+\_\+\+LOC\+\_\+}}(x)~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 + 7 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a1b01f1bcaa27c6a585133a578d29b09c}{PHASE\+\_\+\+REAL\+\_\+\+LOC\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ae48ddb0f7413fdc02e903919be964576}{AERO\+\_\+\+SPEC\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x)\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ae48ddb0f7413fdc02e903919be964576}{AERO\+\_\+\+SPEC\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_af826dbd552fa27734f003ac81d4efd35}{AERO\+\_\+\+WATER\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_af826dbd552fa27734f003ac81d4efd35}{AERO\+\_\+\+WATER\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a491372e10f325a8f35f58fcd969f3f37}{AERO\+\_\+\+PHASE\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a491372e10f325a8f35f58fcd969f3f37}{AERO\+\_\+\+PHASE\+\_\+\+ID\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ae0d4c34a858d8d08096ddba79e3e394d}{AERO\+\_\+\+REP\+\_\+\+ID\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x) + 3\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ae0d4c34a858d8d08096ddba79e3e394d}{AERO\+\_\+\+REP\+\_\+\+ID\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x) + 4\mbox{]})
+\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\+\_\+\+JAC\+\_\+\+ID\+\_\+}}(x,  s,  e)~  int\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x) + 5 + (s) \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}
+\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_abdf4e3795c943871823b78eaf5da21fc}{PHASE\+\_\+\+JAC\+\_\+\+ID\+\_\+}}(x,  s,  e)
 \item 
-\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a21721f706408d9a4a6e1b02c537c5c8b}{SMALL\+\_\+\+WATER\+\_\+\+CONC\+\_\+}}(x)~(float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a1b01f1bcaa27c6a585133a578d29b09c}{PHASE\+\_\+\+REAL\+\_\+\+LOC\+\_\+}}(x)\mbox{]})
+\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a21721f706408d9a4a6e1b02c537c5c8b}{SMALL\+\_\+\+WATER\+\_\+\+CONC\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ae144b859674c9147443a7cf505ddac6a}{EFF\+\_\+\+RAD\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x,  e)~float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a1b01f1bcaa27c6a585133a578d29b09c}{PHASE\+\_\+\+REAL\+\_\+\+LOC\+\_\+}}(x) + 1 + e\mbox{]}
+\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ae144b859674c9147443a7cf505ddac6a}{EFF\+\_\+\+RAD\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x,  e)
 \item 
-\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_af1b210da8b9553848904995262873236}{NUM\+\_\+\+CONC\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x,  e)~  float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a1b01f1bcaa27c6a585133a578d29b09c}{PHASE\+\_\+\+REAL\+\_\+\+LOC\+\_\+}}(x) + 1 + \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}
+\#define \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_af1b210da8b9553848904995262873236}{NUM\+\_\+\+CONC\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x,  e)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
@@ -113,351 +113,416 @@ Definition in file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\
 
 
 \doxysubsection{Macro Definition Documentation}
-\Hypertarget{rxn___h_l__phase__transfer_8c_a71700f5633db3f99b43c798b09c60bd2}\label{rxn___h_l__phase__transfer_8c_a71700f5633db3f99b43c798b09c60bd2} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!A\_@{A\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a71700f5633db3f99b43c798b09c60bd2}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!A\_@{A\_}}
 \index{A\_@{A\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{A\_}{A\_}}
-{\footnotesize\ttfamily \#define A\+\_\+~float\+\_\+data\mbox{[}4\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a71700f5633db3f99b43c798b09c60bd2} 
+\#define A\+\_\+~float\+\_\+data\mbox{[}4\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00034}{34}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a491372e10f325a8f35f58fcd969f3f37}\label{rxn___h_l__phase__transfer_8c_a491372e10f325a8f35f58fcd969f3f37} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!AERO\_PHASE\_ID\_@{AERO\_PHASE\_ID\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a491372e10f325a8f35f58fcd969f3f37}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!AERO\_PHASE\_ID\_@{AERO\_PHASE\_ID\_}}
 \index{AERO\_PHASE\_ID\_@{AERO\_PHASE\_ID\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{AERO\_PHASE\_ID\_}{AERO\_PHASE\_ID\_}}
-{\footnotesize\ttfamily \#define AERO\+\_\+\+PHASE\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x) + 2\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a491372e10f325a8f35f58fcd969f3f37} 
+\#define AERO\+\_\+\+PHASE\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{(int\_data[\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\_INT\_LOC\_}}(x)\ +\ 2]\ -\/\ 1)}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00055}{55}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_ae0d4c34a858d8d08096ddba79e3e394d}\label{rxn___h_l__phase__transfer_8c_ae0d4c34a858d8d08096ddba79e3e394d} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!AERO\_REP\_ID\_@{AERO\_REP\_ID\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_ae0d4c34a858d8d08096ddba79e3e394d}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!AERO\_REP\_ID\_@{AERO\_REP\_ID\_}}
 \index{AERO\_REP\_ID\_@{AERO\_REP\_ID\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{AERO\_REP\_ID\_}{AERO\_REP\_ID\_}}
-{\footnotesize\ttfamily \#define AERO\+\_\+\+REP\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x) + 3\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_ae0d4c34a858d8d08096ddba79e3e394d} 
+\#define AERO\+\_\+\+REP\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{(int\_data[\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\_INT\_LOC\_}}(x)\ +\ 3]\ -\/\ 1)}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00056}{56}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_ae48ddb0f7413fdc02e903919be964576}\label{rxn___h_l__phase__transfer_8c_ae48ddb0f7413fdc02e903919be964576} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!AERO\_SPEC\_@{AERO\_SPEC\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_ae48ddb0f7413fdc02e903919be964576}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!AERO\_SPEC\_@{AERO\_SPEC\_}}
 \index{AERO\_SPEC\_@{AERO\_SPEC\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{AERO\_SPEC\_}{AERO\_SPEC\_}}
-{\footnotesize\ttfamily \#define AERO\+\_\+\+SPEC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x)\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_ae48ddb0f7413fdc02e903919be964576} 
+\#define AERO\+\_\+\+SPEC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{(int\_data[\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\_INT\_LOC\_}}(x)]\ -\/\ 1)}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00053}{53}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_af826dbd552fa27734f003ac81d4efd35}\label{rxn___h_l__phase__transfer_8c_af826dbd552fa27734f003ac81d4efd35} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!AERO\_WATER\_@{AERO\_WATER\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_af826dbd552fa27734f003ac81d4efd35}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!AERO\_WATER\_@{AERO\_WATER\_}}
 \index{AERO\_WATER\_@{AERO\_WATER\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{AERO\_WATER\_}{AERO\_WATER\_}}
-{\footnotesize\ttfamily \#define AERO\+\_\+\+WATER\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x) + 1\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_af826dbd552fa27734f003ac81d4efd35} 
+\#define AERO\+\_\+\+WATER\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{(int\_data[\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\_INT\_LOC\_}}(x)\ +\ 1]\ -\/\ 1)}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00054}{54}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a945178497a1e51aa0ed9721f7244462b}\label{rxn___h_l__phase__transfer_8c_a945178497a1e51aa0ed9721f7244462b} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!ALPHA\_@{ALPHA\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a945178497a1e51aa0ed9721f7244462b}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!ALPHA\_@{ALPHA\_}}
 \index{ALPHA\_@{ALPHA\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{ALPHA\_}{ALPHA\_}}
-{\footnotesize\ttfamily \#define ALPHA\+\_\+~rxn\+\_\+env\+\_\+data\mbox{[}1\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a945178497a1e51aa0ed9721f7244462b} 
+\#define ALPHA\+\_\+~rxn\+\_\+env\+\_\+data\mbox{[}1\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00041}{41}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_ad010fec48ee67af5ba75e0ec6c3f5ce4}\label{rxn___h_l__phase__transfer_8c_ad010fec48ee67af5ba75e0ec6c3f5ce4} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!C\_@{C\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_ad010fec48ee67af5ba75e0ec6c3f5ce4}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!C\_@{C\_}}
 \index{C\_@{C\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{C\_}{C\_}}
-{\footnotesize\ttfamily \#define C\+\_\+~float\+\_\+data\mbox{[}5\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_ad010fec48ee67af5ba75e0ec6c3f5ce4} 
+\#define C\+\_\+~float\+\_\+data\mbox{[}5\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00035}{35}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a91cd74713029c0906e8136c8628d548d}\label{rxn___h_l__phase__transfer_8c_a91cd74713029c0906e8136c8628d548d} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!CONV\_@{CONV\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a91cd74713029c0906e8136c8628d548d}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!CONV\_@{CONV\_}}
 \index{CONV\_@{CONV\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{CONV\_}{CONV\_}}
-{\footnotesize\ttfamily \#define CONV\+\_\+~float\+\_\+data\mbox{[}6\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a91cd74713029c0906e8136c8628d548d} 
+\#define CONV\+\_\+~float\+\_\+data\mbox{[}6\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00036}{36}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a09624d8114b9fb402d826522a25db2ac}\label{rxn___h_l__phase__transfer_8c_a09624d8114b9fb402d826522a25db2ac} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!DELTA\_H\_@{DELTA\_H\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a09624d8114b9fb402d826522a25db2ac}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!DELTA\_H\_@{DELTA\_H\_}}
 \index{DELTA\_H\_@{DELTA\_H\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{DELTA\_H\_}{DELTA\_H\_}}
-{\footnotesize\ttfamily \#define DELTA\+\_\+\+H\+\_\+~float\+\_\+data\mbox{[}0\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a09624d8114b9fb402d826522a25db2ac} 
+\#define DELTA\+\_\+\+H\+\_\+~float\+\_\+data\mbox{[}0\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00030}{30}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_af0068e97c7ad3aa856c1216cd0690208}\label{rxn___h_l__phase__transfer_8c_af0068e97c7ad3aa856c1216cd0690208} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!DELTA\_S\_@{DELTA\_S\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_af0068e97c7ad3aa856c1216cd0690208}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!DELTA\_S\_@{DELTA\_S\_}}
 \index{DELTA\_S\_@{DELTA\_S\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{DELTA\_S\_}{DELTA\_S\_}}
-{\footnotesize\ttfamily \#define DELTA\+\_\+\+S\+\_\+~float\+\_\+data\mbox{[}1\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_af0068e97c7ad3aa856c1216cd0690208} 
+\#define DELTA\+\_\+\+S\+\_\+~float\+\_\+data\mbox{[}1\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00031}{31}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_af9fc34858d09e71d3cffd88cf942bdf9}\label{rxn___h_l__phase__transfer_8c_af9fc34858d09e71d3cffd88cf942bdf9} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!DERIV\_ID\_@{DERIV\_ID\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_af9fc34858d09e71d3cffd88cf942bdf9}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!DERIV\_ID\_@{DERIV\_ID\_}}
 \index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
-{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_af9fc34858d09e71d3cffd88cf942bdf9} 
+\#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{int\_data[\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\_INT\_PROP\_}}\ +\ x]}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00047}{47}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_ad2592ccc6a86c367ee03ea636d62396e}\label{rxn___h_l__phase__transfer_8c_ad2592ccc6a86c367ee03ea636d62396e} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!DIFF\_COEFF\_@{DIFF\_COEFF\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_ad2592ccc6a86c367ee03ea636d62396e}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!DIFF\_COEFF\_@{DIFF\_COEFF\_}}
 \index{DIFF\_COEFF\_@{DIFF\_COEFF\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{DIFF\_COEFF\_}{DIFF\_COEFF\_}}
-{\footnotesize\ttfamily \#define DIFF\+\_\+\+COEFF\+\_\+~float\+\_\+data\mbox{[}2\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_ad2592ccc6a86c367ee03ea636d62396e} 
+\#define DIFF\+\_\+\+COEFF\+\_\+~float\+\_\+data\mbox{[}2\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00032}{32}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_ae144b859674c9147443a7cf505ddac6a}\label{rxn___h_l__phase__transfer_8c_ae144b859674c9147443a7cf505ddac6a} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!EFF\_RAD\_JAC\_ELEM\_@{EFF\_RAD\_JAC\_ELEM\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_ae144b859674c9147443a7cf505ddac6a}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!EFF\_RAD\_JAC\_ELEM\_@{EFF\_RAD\_JAC\_ELEM\_}}
 \index{EFF\_RAD\_JAC\_ELEM\_@{EFF\_RAD\_JAC\_ELEM\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{EFF\_RAD\_JAC\_ELEM\_}{EFF\_RAD\_JAC\_ELEM\_}}
-{\footnotesize\ttfamily \#define EFF\+\_\+\+RAD\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{e }\end{DoxyParamCaption})~float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a1b01f1bcaa27c6a585133a578d29b09c}{PHASE\+\_\+\+REAL\+\_\+\+LOC\+\_\+}}(x) + 1 + e\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_ae144b859674c9147443a7cf505ddac6a} 
+\#define EFF\+\_\+\+RAD\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{, }\item[{}]{e}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{float\_data[\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a1b01f1bcaa27c6a585133a578d29b09c}{PHASE\_REAL\_LOC\_}}(x)\ +\ 1\ +\ e]}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00061}{61}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a5fa7569f459909fc28b36525e99c7505}\label{rxn___h_l__phase__transfer_8c_a5fa7569f459909fc28b36525e99c7505} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!EQUIL\_CONST\_@{EQUIL\_CONST\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a5fa7569f459909fc28b36525e99c7505}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!EQUIL\_CONST\_@{EQUIL\_CONST\_}}
 \index{EQUIL\_CONST\_@{EQUIL\_CONST\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{EQUIL\_CONST\_}{EQUIL\_CONST\_}}
-{\footnotesize\ttfamily \#define EQUIL\+\_\+\+CONST\+\_\+~rxn\+\_\+env\+\_\+data\mbox{[}2\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a5fa7569f459909fc28b36525e99c7505} 
+\#define EQUIL\+\_\+\+CONST\+\_\+~rxn\+\_\+env\+\_\+data\mbox{[}2\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00042}{42}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a99507342c9880a219c57e942a0bb3d9f}\label{rxn___h_l__phase__transfer_8c_a99507342c9880a219c57e942a0bb3d9f} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!GAS\_SPEC\_@{GAS\_SPEC\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a99507342c9880a219c57e942a0bb3d9f}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!GAS\_SPEC\_@{GAS\_SPEC\_}}
 \index{GAS\_SPEC\_@{GAS\_SPEC\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{GAS\_SPEC\_}{GAS\_SPEC\_}}
-{\footnotesize\ttfamily \#define GAS\+\_\+\+SPEC\+\_\+~(int\+\_\+data\mbox{[}1\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a99507342c9880a219c57e942a0bb3d9f} 
+\#define GAS\+\_\+\+SPEC\+\_\+~(int\+\_\+data\mbox{[}1\mbox{]} -\/ 1)}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00039}{39}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a0238a265f9302a6769033eb761982df9}\label{rxn___h_l__phase__transfer_8c_a0238a265f9302a6769033eb761982df9} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!JAC\_AERO@{JAC\_AERO}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a0238a265f9302a6769033eb761982df9}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!JAC\_AERO@{JAC\_AERO}}
 \index{JAC\_AERO@{JAC\_AERO}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{JAC\_AERO}{JAC\_AERO}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+AERO~1}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a0238a265f9302a6769033eb761982df9} 
+\#define JAC\+\_\+\+AERO~1}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00028}{28}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a10616e57088ad8a225505cae2b8f4be5}\label{rxn___h_l__phase__transfer_8c_a10616e57088ad8a225505cae2b8f4be5} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!JAC\_GAS@{JAC\_GAS}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a10616e57088ad8a225505cae2b8f4be5}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!JAC\_GAS@{JAC\_GAS}}
 \index{JAC\_GAS@{JAC\_GAS}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{JAC\_GAS}{JAC\_GAS}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+GAS~0}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a10616e57088ad8a225505cae2b8f4be5} 
+\#define JAC\+\_\+\+GAS~0}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00027}{27}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_ab831aae98d4453927c63a93f55ee5a86}\label{rxn___h_l__phase__transfer_8c_ab831aae98d4453927c63a93f55ee5a86} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!JAC\_ID\_@{JAC\_ID\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_ab831aae98d4453927c63a93f55ee5a86}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!JAC\_ID\_@{JAC\_ID\_}}
 \index{JAC\_ID\_@{JAC\_ID\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 1 + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_ab831aae98d4453927c63a93f55ee5a86} 
+\#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{int\_data[\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\_INT\_PROP\_}}\ +\ 1\ +\ \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}}\ +\ x]}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00048}{48}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a8d5415cebe81f0e5a02548a7ba3b9922}\label{rxn___h_l__phase__transfer_8c_a8d5415cebe81f0e5a02548a7ba3b9922} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!KGM3\_TO\_PPM\_@{KGM3\_TO\_PPM\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a8d5415cebe81f0e5a02548a7ba3b9922}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!KGM3\_TO\_PPM\_@{KGM3\_TO\_PPM\_}}
 \index{KGM3\_TO\_PPM\_@{KGM3\_TO\_PPM\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{KGM3\_TO\_PPM\_}{KGM3\_TO\_PPM\_}}
-{\footnotesize\ttfamily \#define KGM3\+\_\+\+TO\+\_\+\+PPM\+\_\+~rxn\+\_\+env\+\_\+data\mbox{[}3\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a8d5415cebe81f0e5a02548a7ba3b9922} 
+\#define KGM3\+\_\+\+TO\+\_\+\+PPM\+\_\+~rxn\+\_\+env\+\_\+data\mbox{[}3\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00043}{43}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a84d132929d7766943c5791fcc442e431}\label{rxn___h_l__phase__transfer_8c_a84d132929d7766943c5791fcc442e431} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!MFP\_M\_@{MFP\_M\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a84d132929d7766943c5791fcc442e431}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!MFP\_M\_@{MFP\_M\_}}
 \index{MFP\_M\_@{MFP\_M\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{MFP\_M\_}{MFP\_M\_}}
-{\footnotesize\ttfamily \#define MFP\+\_\+\+M\+\_\+~rxn\+\_\+env\+\_\+data\mbox{[}0\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a84d132929d7766943c5791fcc442e431} 
+\#define MFP\+\_\+\+M\+\_\+~rxn\+\_\+env\+\_\+data\mbox{[}0\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00040}{40}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a4bbdf0ebb220103f51252a2b56f22cdf}\label{rxn___h_l__phase__transfer_8c_a4bbdf0ebb220103f51252a2b56f22cdf} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!MIN\_WATER\_@{MIN\_WATER\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a4bbdf0ebb220103f51252a2b56f22cdf}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!MIN\_WATER\_@{MIN\_WATER\_}}
 \index{MIN\_WATER\_@{MIN\_WATER\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{MIN\_WATER\_}{MIN\_WATER\_}}
-{\footnotesize\ttfamily \#define MIN\+\_\+\+WATER\+\_\+~1.\+0e-\/4}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a4bbdf0ebb220103f51252a2b56f22cdf} 
+\#define MIN\+\_\+\+WATER\+\_\+~1.\+0e-\/4}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00024}{24}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a0d46bfe32dd963cb15caf2ff1f2892a1}\label{rxn___h_l__phase__transfer_8c_a0d46bfe32dd963cb15caf2ff1f2892a1} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!MW\_@{MW\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a0d46bfe32dd963cb15caf2ff1f2892a1}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!MW\_@{MW\_}}
 \index{MW\_@{MW\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{MW\_}{MW\_}}
-{\footnotesize\ttfamily \#define MW\+\_\+~float\+\_\+data\mbox{[}7\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a0d46bfe32dd963cb15caf2ff1f2892a1} 
+\#define MW\+\_\+~float\+\_\+data\mbox{[}7\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00037}{37}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_adf4b84135880d5ac73ce37df877d91fb}\label{rxn___h_l__phase__transfer_8c_adf4b84135880d5ac73ce37df877d91fb} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!NUM\_AERO\_PHASE\_@{NUM\_AERO\_PHASE\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_adf4b84135880d5ac73ce37df877d91fb}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!NUM\_AERO\_PHASE\_@{NUM\_AERO\_PHASE\_}}
 \index{NUM\_AERO\_PHASE\_@{NUM\_AERO\_PHASE\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_AERO\_PHASE\_}{NUM\_AERO\_PHASE\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+~int\+\_\+data\mbox{[}0\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_adf4b84135880d5ac73ce37df877d91fb} 
+\#define NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+~int\+\_\+data\mbox{[}0\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00038}{38}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}\label{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!NUM\_AERO\_PHASE\_JAC\_ELEM\_@{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!NUM\_AERO\_PHASE\_JAC\_ELEM\_@{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}
 \index{NUM\_AERO\_PHASE\_JAC\_ELEM\_@{NUM\_AERO\_PHASE\_JAC\_ELEM\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_AERO\_PHASE\_JAC\_ELEM\_}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x) + 4\mbox{]})}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf} 
+\#define NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{(int\_data[\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\_INT\_LOC\_}}(x)\ +\ 4])}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00057}{57}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_af1b210da8b9553848904995262873236}\label{rxn___h_l__phase__transfer_8c_af1b210da8b9553848904995262873236} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!NUM\_CONC\_JAC\_ELEM\_@{NUM\_CONC\_JAC\_ELEM\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_af1b210da8b9553848904995262873236}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!NUM\_CONC\_JAC\_ELEM\_@{NUM\_CONC\_JAC\_ELEM\_}}
 \index{NUM\_CONC\_JAC\_ELEM\_@{NUM\_CONC\_JAC\_ELEM\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_CONC\_JAC\_ELEM\_}{NUM\_CONC\_JAC\_ELEM\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+CONC\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{e }\end{DoxyParamCaption})~  float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a1b01f1bcaa27c6a585133a578d29b09c}{PHASE\+\_\+\+REAL\+\_\+\+LOC\+\_\+}}(x) + 1 + \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_af1b210da8b9553848904995262873236} 
+\#define NUM\+\_\+\+CONC\+\_\+\+JAC\+\_\+\+ELEM\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{, }\item[{}]{e}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ float\_data[\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a1b01f1bcaa27c6a585133a578d29b09c}{PHASE\_REAL\_LOC\_}}(x)\ +\ 1\ +\ \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}(x)\ +\ e]}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00062}{62}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn___h_l__phase__transfer_8c_a1f68a3544ae39a7815cbb5c09dfdeff0} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
 \index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~4}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a1f68a3544ae39a7815cbb5c09dfdeff0} 
+\#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~4}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00046}{46}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{rxn___h_l__phase__transfer_8c_a0e9ae6000e4ed18f5938bddaddb13d1b} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
 \index{NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_FLOAT\_PROP\_}{NUM\_FLOAT\_PROP\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+~8}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a0e9ae6000e4ed18f5938bddaddb13d1b} 
+\#define NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+~8}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00045}{45}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn___h_l__phase__transfer_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
 \index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~2}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
+\#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~2}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00044}{44}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}\label{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!PHASE\_INT\_LOC\_@{PHASE\_INT\_LOC\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!PHASE\_INT\_LOC\_@{PHASE\_INT\_LOC\_}}
 \index{PHASE\_INT\_LOC\_@{PHASE\_INT\_LOC\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_INT\_LOC\_}{PHASE\_INT\_LOC\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 + 6 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329} 
+\#define PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ (int\_data[\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\_INT\_PROP\_}}\ +\ 2\ +\ 6\ *\ \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}}\ +\ x]\ -\/\ 1)}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00049}{49}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_abdf4e3795c943871823b78eaf5da21fc}\label{rxn___h_l__phase__transfer_8c_abdf4e3795c943871823b78eaf5da21fc} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!PHASE\_JAC\_ID\_@{PHASE\_JAC\_ID\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_abdf4e3795c943871823b78eaf5da21fc}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!PHASE\_JAC\_ID\_@{PHASE\_JAC\_ID\_}}
 \index{PHASE\_JAC\_ID\_@{PHASE\_JAC\_ID\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_JAC\_ID\_}{PHASE\_JAC\_ID\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x,  }\item[{}]{s,  }\item[{}]{e }\end{DoxyParamCaption})~  int\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\+\_\+\+INT\+\_\+\+LOC\+\_\+}}(x) + 5 + (s) \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+\+JAC\+\_\+\+ELEM\+\_\+}}(x) + e\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_abdf4e3795c943871823b78eaf5da21fc} 
+\#define PHASE\+\_\+\+JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{, }\item[{}]{s}{, }\item[{}]{e}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ int\_data[\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a04869ea36d5403968bd6f5e6fd4bf329}{PHASE\_INT\_LOC\_}}(x)\ +\ 5\ +\ (s)\ *\ \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_ace9066b2ec147811e0f1206738cc2adf}{NUM\_AERO\_PHASE\_JAC\_ELEM\_}}(x)\ +\ e]}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00058}{58}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a1b01f1bcaa27c6a585133a578d29b09c}\label{rxn___h_l__phase__transfer_8c_a1b01f1bcaa27c6a585133a578d29b09c} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!PHASE\_REAL\_LOC\_@{PHASE\_REAL\_LOC\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a1b01f1bcaa27c6a585133a578d29b09c}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!PHASE\_REAL\_LOC\_@{PHASE\_REAL\_LOC\_}}
 \index{PHASE\_REAL\_LOC\_@{PHASE\_REAL\_LOC\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{PHASE\_REAL\_LOC\_}{PHASE\_REAL\_LOC\_}}
-{\footnotesize\ttfamily \#define PHASE\+\_\+\+REAL\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~  (int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 + 7 \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\+\_\+\+AERO\+\_\+\+PHASE\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a1b01f1bcaa27c6a585133a578d29b09c} 
+\#define PHASE\+\_\+\+REAL\+\_\+\+LOC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\ \ (int\_data[\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\_INT\_PROP\_}}\ +\ 2\ +\ 7\ *\ \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}}\ +\ x]\ -\/\ 1)}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00051}{51}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a772f3ab05f096be4aeee2864282dffc4}\label{rxn___h_l__phase__transfer_8c_a772f3ab05f096be4aeee2864282dffc4} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!PRE\_C\_AVG\_@{PRE\_C\_AVG\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a772f3ab05f096be4aeee2864282dffc4}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!PRE\_C\_AVG\_@{PRE\_C\_AVG\_}}
 \index{PRE\_C\_AVG\_@{PRE\_C\_AVG\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{PRE\_C\_AVG\_}{PRE\_C\_AVG\_}}
-{\footnotesize\ttfamily \#define PRE\+\_\+\+C\+\_\+\+AVG\+\_\+~float\+\_\+data\mbox{[}3\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a772f3ab05f096be4aeee2864282dffc4} 
+\#define PRE\+\_\+\+C\+\_\+\+AVG\+\_\+~float\+\_\+data\mbox{[}3\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00033}{33}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{rxn___h_l__phase__transfer_8c_a32cc078fd8ca9ad0684c48ae0aad7135} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!PRESSURE\_PA\_@{PRESSURE\_PA\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!PRESSURE\_PA\_@{PRESSURE\_PA\_}}
 \index{PRESSURE\_PA\_@{PRESSURE\_PA\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{PRESSURE\_PA\_}{PRESSURE\_PA\_}}
-{\footnotesize\ttfamily \#define PRESSURE\+\_\+\+PA\+\_\+~env\+\_\+data\mbox{[}1\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a32cc078fd8ca9ad0684c48ae0aad7135} 
+\#define PRESSURE\+\_\+\+PA\+\_\+~env\+\_\+data\mbox{[}1\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00020}{20}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_a21721f706408d9a4a6e1b02c537c5c8b}\label{rxn___h_l__phase__transfer_8c_a21721f706408d9a4a6e1b02c537c5c8b} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!SMALL\_WATER\_CONC\_@{SMALL\_WATER\_CONC\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a21721f706408d9a4a6e1b02c537c5c8b}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!SMALL\_WATER\_CONC\_@{SMALL\_WATER\_CONC\_}}
 \index{SMALL\_WATER\_CONC\_@{SMALL\_WATER\_CONC\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{SMALL\_WATER\_CONC\_}{SMALL\_WATER\_CONC\_}}
-{\footnotesize\ttfamily \#define SMALL\+\_\+\+WATER\+\_\+\+CONC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(float\+\_\+data\mbox{[}\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a1b01f1bcaa27c6a585133a578d29b09c}{PHASE\+\_\+\+REAL\+\_\+\+LOC\+\_\+}}(x)\mbox{]})}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a21721f706408d9a4a6e1b02c537c5c8b} 
+\#define SMALL\+\_\+\+WATER\+\_\+\+CONC\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{(float\_data[\mbox{\hyperlink{rxn___h_l__phase__transfer_8c_a1b01f1bcaa27c6a585133a578d29b09c}{PHASE\_REAL\_LOC\_}}(x)])}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00060}{60}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+c}}.
 
-\Hypertarget{rxn___h_l__phase__transfer_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{rxn___h_l__phase__transfer_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!TEMPERATURE\_K\_@{TEMPERATURE\_K\_}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!TEMPERATURE\_K\_@{TEMPERATURE\_K\_}}
 \index{TEMPERATURE\_K\_@{TEMPERATURE\_K\_}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{TEMPERATURE\_K\_}{TEMPERATURE\_K\_}}
-{\footnotesize\ttfamily \#define TEMPERATURE\+\_\+\+K\+\_\+~env\+\_\+data\mbox{[}0\mbox{]}}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60} 
+\#define TEMPERATURE\+\_\+\+K\+\_\+~env\+\_\+data\mbox{[}0\mbox{]}}
 
 
 
@@ -466,11 +531,11 @@ Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8c_source_l00019}
 
 
 \doxysubsection{Function Documentation}
-\Hypertarget{rxn___h_l__phase__transfer_8c_aa82a07e921e3d22fda1d52073b16219d}\label{rxn___h_l__phase__transfer_8c_aa82a07e921e3d22fda1d52073b16219d} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!rxn\_HL\_phase\_transfer\_calc\_deriv\_contrib@{rxn\_HL\_phase\_transfer\_calc\_deriv\_contrib}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_aa82a07e921e3d22fda1d52073b16219d}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!rxn\_HL\_phase\_transfer\_calc\_deriv\_contrib@{rxn\_HL\_phase\_transfer\_calc\_deriv\_contrib}}
 \index{rxn\_HL\_phase\_transfer\_calc\_deriv\_contrib@{rxn\_HL\_phase\_transfer\_calc\_deriv\_contrib}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_HL\_phase\_transfer\_calc\_deriv\_contrib()}{rxn\_HL\_phase\_transfer\_calc\_deriv\_contrib()}}
-{\footnotesize\ttfamily void rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_aa82a07e921e3d22fda1d52073b16219d} 
+void rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
@@ -515,11 +580,11 @@ Here is the caller graph for this function\+:
 \includegraphics[width=350pt]{rxn___h_l__phase__transfer_8c_aa82a07e921e3d22fda1d52073b16219d_icgraph}
 \end{center}
 \end{figure}
-\Hypertarget{rxn___h_l__phase__transfer_8c_a4e04c50da5215b9886991e6f0c98cccc}\label{rxn___h_l__phase__transfer_8c_a4e04c50da5215b9886991e6f0c98cccc} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!rxn\_HL\_phase\_transfer\_calc\_jac\_contrib@{rxn\_HL\_phase\_transfer\_calc\_jac\_contrib}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a4e04c50da5215b9886991e6f0c98cccc}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!rxn\_HL\_phase\_transfer\_calc\_jac\_contrib@{rxn\_HL\_phase\_transfer\_calc\_jac\_contrib}}
 \index{rxn\_HL\_phase\_transfer\_calc\_jac\_contrib@{rxn\_HL\_phase\_transfer\_calc\_jac\_contrib}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_HL\_phase\_transfer\_calc\_jac\_contrib()}{rxn\_HL\_phase\_transfer\_calc\_jac\_contrib()}}
-{\footnotesize\ttfamily void rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a4e04c50da5215b9886991e6f0c98cccc} 
+void rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
@@ -560,11 +625,11 @@ Here is the caller graph for this function\+:
 \includegraphics[width=350pt]{rxn___h_l__phase__transfer_8c_a4e04c50da5215b9886991e6f0c98cccc_icgraph}
 \end{center}
 \end{figure}
-\Hypertarget{rxn___h_l__phase__transfer_8c_a6397153ebdffc297c0c43cb7dfb0e9ba}\label{rxn___h_l__phase__transfer_8c_a6397153ebdffc297c0c43cb7dfb0e9ba} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!rxn\_HL\_phase\_transfer\_get\_used\_jac\_elem@{rxn\_HL\_phase\_transfer\_get\_used\_jac\_elem}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a6397153ebdffc297c0c43cb7dfb0e9ba}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!rxn\_HL\_phase\_transfer\_get\_used\_jac\_elem@{rxn\_HL\_phase\_transfer\_get\_used\_jac\_elem}}
 \index{rxn\_HL\_phase\_transfer\_get\_used\_jac\_elem@{rxn\_HL\_phase\_transfer\_get\_used\_jac\_elem}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_HL\_phase\_transfer\_get\_used\_jac\_elem()}{rxn\_HL\_phase\_transfer\_get\_used\_jac\_elem()}}
-{\footnotesize\ttfamily void rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a6397153ebdffc297c0c43cb7dfb0e9ba} 
+void rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
 
 
 
@@ -601,11 +666,11 @@ Here is the caller graph for this function\+:
 \includegraphics[width=350pt]{rxn___h_l__phase__transfer_8c_a6397153ebdffc297c0c43cb7dfb0e9ba_icgraph}
 \end{center}
 \end{figure}
-\Hypertarget{rxn___h_l__phase__transfer_8c_a23271841c897d7d4047b73e4fbc0e748}\label{rxn___h_l__phase__transfer_8c_a23271841c897d7d4047b73e4fbc0e748} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!rxn\_HL\_phase\_transfer\_print@{rxn\_HL\_phase\_transfer\_print}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a23271841c897d7d4047b73e4fbc0e748}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!rxn\_HL\_phase\_transfer\_print@{rxn\_HL\_phase\_transfer\_print}}
 \index{rxn\_HL\_phase\_transfer\_print@{rxn\_HL\_phase\_transfer\_print}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_HL\_phase\_transfer\_print()}{rxn\_HL\_phase\_transfer\_print()}}
-{\footnotesize\ttfamily void rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer\+\_\+print (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a23271841c897d7d4047b73e4fbc0e748} 
+void rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer\+\_\+print (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -630,11 +695,11 @@ Here is the caller graph for this function\+:
 \includegraphics[width=350pt]{rxn___h_l__phase__transfer_8c_a23271841c897d7d4047b73e4fbc0e748_icgraph}
 \end{center}
 \end{figure}
-\Hypertarget{rxn___h_l__phase__transfer_8c_a53a6e2e8532852ea1b23266b2ff3db12}\label{rxn___h_l__phase__transfer_8c_a53a6e2e8532852ea1b23266b2ff3db12} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!rxn\_HL\_phase\_transfer\_update\_env\_state@{rxn\_HL\_phase\_transfer\_update\_env\_state}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a53a6e2e8532852ea1b23266b2ff3db12}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!rxn\_HL\_phase\_transfer\_update\_env\_state@{rxn\_HL\_phase\_transfer\_update\_env\_state}}
 \index{rxn\_HL\_phase\_transfer\_update\_env\_state@{rxn\_HL\_phase\_transfer\_update\_env\_state}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_HL\_phase\_transfer\_update\_env\_state()}{rxn\_HL\_phase\_transfer\_update\_env\_state()}}
-{\footnotesize\ttfamily void rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a53a6e2e8532852ea1b23266b2ff3db12} 
+void rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -673,11 +738,11 @@ Here is the caller graph for this function\+:
 \includegraphics[width=350pt]{rxn___h_l__phase__transfer_8c_a53a6e2e8532852ea1b23266b2ff3db12_icgraph}
 \end{center}
 \end{figure}
-\Hypertarget{rxn___h_l__phase__transfer_8c_a87cbf996d29d4ab5cf38c3cc0cea6427}\label{rxn___h_l__phase__transfer_8c_a87cbf996d29d4ab5cf38c3cc0cea6427} 
-\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!rxn\_HL\_phase\_transfer\_update\_ids@{rxn\_HL\_phase\_transfer\_update\_ids}}
+\Hypertarget{rxn___h_l__phase__transfer_8c_a87cbf996d29d4ab5cf38c3cc0cea6427}\index{rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}!rxn\_HL\_phase\_transfer\_update\_ids@{rxn\_HL\_phase\_transfer\_update\_ids}}
 \index{rxn\_HL\_phase\_transfer\_update\_ids@{rxn\_HL\_phase\_transfer\_update\_ids}!rxn\_HL\_phase\_transfer.c@{rxn\_HL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_HL\_phase\_transfer\_update\_ids()}{rxn\_HL\_phase\_transfer\_update\_ids()}}
-{\footnotesize\ttfamily void rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{rxn___h_l__phase__transfer_8c_a87cbf996d29d4ab5cf38c3cc0cea6427} 
+void rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 

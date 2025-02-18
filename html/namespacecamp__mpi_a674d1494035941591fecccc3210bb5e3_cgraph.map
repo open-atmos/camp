@@ -3,7 +3,7 @@
 <area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="41,39,39,29,45,20,59,14,79,12,101,14,114,21,111,25,99,20,79,17,60,19,49,24,44,30,46,37"/>
 <area shape="rect" id="Node000002" href="$namespacecamp__mpi.html#ab37aad21478f091075eec8c9dfd0ae8b" title="Computes the maximum of val across all processes, storing the result in val_max on all processes." alt="" coords="201,5,358,46"/>
 <area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="152,44,185,39,186,44,153,49"/>
-<area shape="rect" id="Node000009" href="$namespacecamp__mpi.html#a15b9ff05c0c07284139bcdb991416d1e" title="Computes the minimum of val across all processes, storing the result in val_min on all processes." alt="" coords="202,71,357,111"/>
+<area shape="rect" id="Node000009" href="$namespacecamp__mpi.html#a15b9ff05c0c07284139bcdb991416d1e" title="Computes the minimum of val across all processes, storing the result in val_min on all processes." alt="" coords="202,71,356,111"/>
 <area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="153,68,187,74,186,79,152,73"/>
 <area shape="rect" id="Node000003" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="406,39,553,79"/>
 <area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="359,36,391,42,390,47,358,41"/>

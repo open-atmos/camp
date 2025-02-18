@@ -3,27 +3,27 @@
 Wennberg tunneling reaction rate constant equations are calculated as follows\+:
 
 \[
-   Ae^{(\frac{-B}{T})}e^{(\frac{C}{T^3})}
- \]
+      Ae^{(\frac{-B}{T})}e^{(\frac{C}{T^3})}
+    \]
 
 where $A$ is the pre-\/exponential factor ( $(\mbox{#}\,\mbox{cm}^{-3})^{-(n-1)}\mbox{s}^{-1}$), and $B$ and $C$ are parameters that capture the temperature dependence as described in Wennberg et al. (2018) {\bfseries [Wennberg2018]} .
 
 Input data for Wennberg tunneling equations has the following format\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\{}
-\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}WENNBERG\_TUNNELING"{},}
-\DoxyCodeLine{\ \ "{}A"{}\ :\ 123.45,}
-\DoxyCodeLine{\ \ "{}B"{}\ \ :\ 1200.0,}
-\DoxyCodeLine{\ \ "{}C"{}\ \ :\ 1.0e8,}
-\DoxyCodeLine{\ \ "{}time\ unit"{}\ :\ "{}MIN"{},}
-\DoxyCodeLine{\ \ "{}reactants"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ "{}spec1"{}\ :\ \{\},}
-\DoxyCodeLine{\ \ \ \ "{}spec2"{}\ :\ \{\ "{}qty"{}\ :\ 2\ \},}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ 123.45,}
+\DoxyCodeLine{\ \ \ \ :\ 1200.0,}
+\DoxyCodeLine{\ \ \ \ :\ 1.0e8,}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\ \ :\ 2\ \},}
 \DoxyCodeLine{\ \ \ \ ...}
 \DoxyCodeLine{\ \ \},}
-\DoxyCodeLine{\ \ "{}products"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ "{}spec3"{}\ :\ \{\},}
-\DoxyCodeLine{\ \ \ \ "{}spec4"{}\ :\ \{\ "{}yield"{}\ :\ 0.65\ \},}
+\DoxyCodeLine{\ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\ \ :\ 0.65\ \},}
 \DoxyCodeLine{\ \ \ \ ...}
 \DoxyCodeLine{\ \ \}}
 \DoxyCodeLine{\}}

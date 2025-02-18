@@ -1,7 +1,7 @@
 <map id="camp_rxn_data::rxn_update_data_pack_size" name="camp_rxn_data::rxn_update_data_pack_size">
 <area shape="rect" id="Node000001" title="Determine the size of a binary required to pack the reaction data." alt="" coords="5,33,170,74"/>
 <area shape="rect" id="Node000002" href="$namespacecamp__mpi.html#abfca35b6c1f158dcb853326861d7e558" title="Determines the number of bytes required to pack the given value." alt="" coords="623,29,771,70"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,39,218,35,575,36,608,38,608,44,575,42,218,40,170,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,39,217,35,396,28,575,35,608,37,608,43,575,40,396,34,218,40,170,45"/>
 <area shape="rect" id="Node000009" href="$namespacecamp__aero__rep__data.html#a4a1d35f1a4f0f3a24aae257c90eb7d7b" title="Determine the size of a binary required to pack the aerosol representation data." alt="" coords="218,73,360,114"/>
 <area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="171,67,203,74,202,79,170,73"/>
 <area shape="poly" id="edge8_Node000002_Node000002" title=" " alt="" coords="660,29,658,19,664,10,677,5,697,3,718,5,731,11,729,16,717,10,697,8,679,10,667,15,663,20,665,28"/>

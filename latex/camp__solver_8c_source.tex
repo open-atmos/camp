@@ -144,7 +144,7 @@
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00140}00140\ \ \ \textcolor{comment}{//\ of\ reactions\ (including\ one\ int\ for\ the\ number\ of\ reactions}}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00141}00141\ \ \ \textcolor{comment}{//\ and\ one\ int\ per\ reaction\ to\ store\ the\ reaction\ type)}}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00142}00142\ \ \ sd-\/>\mbox{\hyperlink{struct_solver_data_addacaed7357d35a1c6f521a86845121d}{model\_data}}.\mbox{\hyperlink{struct_model_data_a8a9c65041e8df53b121da0ce7c796c62}{rxn\_int\_data}}\ =}
-\DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00143}00143\ \ \ \ \ \ \ (\textcolor{keywordtype}{int}\ *)malloc((n\_rxn\_int\_param\ +\ n\_rxn)\ *\ \textcolor{keyword}{sizeof}(int));}
+\DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00143}00143\ \ \ \ \ \ \ (\textcolor{keywordtype}{int}\ *)malloc((n\_rxn\_int\_param\ +\ n\_rxn)\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00144}00144\ \ \ \textcolor{keywordflow}{if}\ (sd-\/>\mbox{\hyperlink{struct_solver_data_addacaed7357d35a1c6f521a86845121d}{model\_data}}.\mbox{\hyperlink{struct_model_data_a8a9c65041e8df53b121da0ce7c796c62}{rxn\_int\_data}}\ ==\ NULL)\ \{}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00145}00145\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ reaction\ integer\ data\(\backslash\)n\(\backslash\)n"{}});}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00146}00146\ \ \ \ \ exit(EXIT\_FAILURE);}
@@ -175,7 +175,7 @@
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00171}00171\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ reaction\ float\ indices\(\backslash\)n\(\backslash\)n"{}});}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00172}00172\ \ \ \ \ exit(EXIT\_FAILURE);}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00173}00173\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00174}00174\ \ \ sd-\/>\mbox{\hyperlink{struct_solver_data_addacaed7357d35a1c6f521a86845121d}{model\_data}}.\mbox{\hyperlink{struct_model_data_a5f59e33ce8ca3bffd368e6b3d4266c1a}{rxn\_env\_idx}}\ =\ (\textcolor{keywordtype}{int}\ *)malloc((n\_rxn\ +\ 1)\ *\ \textcolor{keyword}{sizeof}(int));}
+\DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00174}00174\ \ \ sd-\/>\mbox{\hyperlink{struct_solver_data_addacaed7357d35a1c6f521a86845121d}{model\_data}}.\mbox{\hyperlink{struct_model_data_a5f59e33ce8ca3bffd368e6b3d4266c1a}{rxn\_env\_idx}}\ =\ (\textcolor{keywordtype}{int}\ *)malloc((n\_rxn\ +\ 1)\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00175}00175\ \ \ \textcolor{keywordflow}{if}\ (sd-\/>\mbox{\hyperlink{struct_solver_data_addacaed7357d35a1c6f521a86845121d}{model\_data}}.\mbox{\hyperlink{struct_model_data_a5f59e33ce8ca3bffd368e6b3d4266c1a}{rxn\_env\_idx}}\ ==\ NULL)\ \{}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00176}00176\ \ \ \ \ printf(}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00177}00177\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ reaction\ environment-\/dependent\ "{}}}
@@ -193,7 +193,7 @@
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00189}00189\ \ \ \textcolor{comment}{//\ If\ there\ are\ no\ reactions,\ flag\ the\ solver\ not\ to\ run}}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00190}00190\ \ \ sd-\/>\mbox{\hyperlink{struct_solver_data_a1cb9c841b43b83f5b203419388fc45d5}{no\_solve}}\ =\ (n\_rxn\ ==\ 0);}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00191}00191\ }
-\DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00192}00192\ \ \ \textcolor{comment}{//\ Allocate\ space\ for\ the\ aerosol\ phase\ data\ and\ st\ the\ number}}
+\DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00192}00192\ \ \ \textcolor{comment}{//\ Allocate\ space\ for\ the\ aerosol\ phase\ data\ and\ set\ the\ number}}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00193}00193\ \ \ \textcolor{comment}{//\ of\ aerosol\ phases\ (including\ one\ int\ for\ the\ number\ of}}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00194}00194\ \ \ \textcolor{comment}{//\ phases)}}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00195}00195\ \ \ sd-\/>\mbox{\hyperlink{struct_solver_data_addacaed7357d35a1c6f521a86845121d}{model\_data}}.\mbox{\hyperlink{struct_model_data_ae82127c5877fe3987f2bbb2636516a47}{aero\_phase\_int\_data}}\ =}
@@ -236,7 +236,7 @@
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00232}00232\ \ \ \textcolor{comment}{//\ aerosol\ representation\ to\ store\ the\ aerosol\ representation}}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00233}00233\ \ \ \textcolor{comment}{//\ type)}}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00234}00234\ \ \ sd-\/>\mbox{\hyperlink{struct_solver_data_addacaed7357d35a1c6f521a86845121d}{model\_data}}.\mbox{\hyperlink{struct_model_data_aa8b643835763bea7fb798a5ebaf591d5}{aero\_rep\_int\_data}}\ =}
-\DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00235}00235\ \ \ \ \ \ \ (\textcolor{keywordtype}{int}\ *)malloc((n\_aero\_rep\_int\_param\ +\ n\_aero\_rep)\ *\ \textcolor{keyword}{sizeof}(int));}
+\DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00235}00235\ \ \ \ \ \ \ (\textcolor{keywordtype}{int}\ *)malloc((n\_aero\_rep\_int\_param\ +\ n\_aero\_rep)\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00236}00236\ \ \ \textcolor{keywordflow}{if}\ (sd-\/>\mbox{\hyperlink{struct_solver_data_addacaed7357d35a1c6f521a86845121d}{model\_data}}.\mbox{\hyperlink{struct_model_data_aa8b643835763bea7fb798a5ebaf591d5}{aero\_rep\_int\_data}}\ ==\ NULL)\ \{}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00237}00237\ \ \ \ \ printf(}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00238}00238\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ aerosol\ representation\ integer\ "{}}}
@@ -274,7 +274,7 @@
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00270}00270\ \ \ \ \ exit(EXIT\_FAILURE);}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00271}00271\ \ \ \}}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00272}00272\ \ \ sd-\/>\mbox{\hyperlink{struct_solver_data_addacaed7357d35a1c6f521a86845121d}{model\_data}}.\mbox{\hyperlink{struct_model_data_a0b6a1ff7d6550e3a887e550a46f6986c}{aero\_rep\_env\_idx}}\ =}
-\DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00273}00273\ \ \ \ \ \ \ (\textcolor{keywordtype}{int}\ *)malloc((n\_aero\_rep\ +\ 1)\ *\ \textcolor{keyword}{sizeof}(int));}
+\DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00273}00273\ \ \ \ \ \ \ (\textcolor{keywordtype}{int}\ *)malloc((n\_aero\_rep\ +\ 1)\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00274}00274\ \ \ \textcolor{keywordflow}{if}\ (sd-\/>\mbox{\hyperlink{struct_solver_data_addacaed7357d35a1c6f521a86845121d}{model\_data}}.\mbox{\hyperlink{struct_model_data_a0b6a1ff7d6550e3a887e550a46f6986c}{aero\_rep\_env\_idx}}\ ==\ NULL)\ \{}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00275}00275\ \ \ \ \ printf(}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00276}00276\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ aerosol\ representation\ "{}}}
@@ -293,7 +293,7 @@
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00289}00289\ \ \ \textcolor{comment}{//\ (including\ one\ int\ for\ the\ number\ of\ sub\ models\ and\ one\ int\ per\ sub}}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00290}00290\ \ \ \textcolor{comment}{//\ model\ to\ store\ the\ sub\ model\ type)}}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00291}00291\ \ \ sd-\/>\mbox{\hyperlink{struct_solver_data_addacaed7357d35a1c6f521a86845121d}{model\_data}}.\mbox{\hyperlink{struct_model_data_a05fc229efdc542ddec6f0530b9265545}{sub\_model\_int\_data}}\ =}
-\DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00292}00292\ \ \ \ \ \ \ (\textcolor{keywordtype}{int}\ *)malloc((n\_sub\_model\_int\_param\ +\ n\_sub\_model)\ *\ \textcolor{keyword}{sizeof}(int));}
+\DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00292}00292\ \ \ \ \ \ \ (\textcolor{keywordtype}{int}\ *)malloc((n\_sub\_model\_int\_param\ +\ n\_sub\_model)\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00293}00293\ \ \ \textcolor{keywordflow}{if}\ (sd-\/>\mbox{\hyperlink{struct_solver_data_addacaed7357d35a1c6f521a86845121d}{model\_data}}.\mbox{\hyperlink{struct_model_data_a05fc229efdc542ddec6f0530b9265545}{sub\_model\_int\_data}}\ ==\ NULL)\ \{}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00294}00294\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ sub\ model\ integer\ data\(\backslash\)n\(\backslash\)n"{}});}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00295}00295\ \ \ \ \ exit(EXIT\_FAILURE);}
@@ -327,7 +327,7 @@
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00323}00323\ \ \ \ \ exit(EXIT\_FAILURE);}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00324}00324\ \ \ \}}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00325}00325\ \ \ sd-\/>\mbox{\hyperlink{struct_solver_data_addacaed7357d35a1c6f521a86845121d}{model\_data}}.\mbox{\hyperlink{struct_model_data_ae3387a11501ce652f3a90697fc17152e}{sub\_model\_env\_idx}}\ =}
-\DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00326}00326\ \ \ \ \ \ \ (\textcolor{keywordtype}{int}\ *)malloc((n\_sub\_model\ +\ 1)\ *\ \textcolor{keyword}{sizeof}(int));}
+\DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00326}00326\ \ \ \ \ \ \ (\textcolor{keywordtype}{int}\ *)malloc((n\_sub\_model\ +\ 1)\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int}));}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00327}00327\ \ \ \textcolor{keywordflow}{if}\ (sd-\/>\mbox{\hyperlink{struct_solver_data_addacaed7357d35a1c6f521a86845121d}{model\_data}}.\mbox{\hyperlink{struct_model_data_ae3387a11501ce652f3a90697fc17152e}{sub\_model\_env\_idx}}\ ==\ NULL)\ \{}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00328}00328\ \ \ \ \ printf(}
 \DoxyCodeLine{\Hypertarget{camp__solver_8c_source_l00329}00329\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ sub\ model\ environment-\/dependent\ "{}}}

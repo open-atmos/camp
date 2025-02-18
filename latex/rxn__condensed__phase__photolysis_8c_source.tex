@@ -15,7 +15,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8c_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <math.h>}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8c_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}../rxns.h"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{rxns_8h}{../rxns.h}}"{}}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8c_source_l00015}00015\ }
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8c_source_l00016}\mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}{00016}}\ \textcolor{preprocessor}{\#define\ NUM\_REACT\_\ int\_data[0]}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8c_source_l00017}\mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_acf951e890da75cd2d503ed6ce8211fc2}{00017}}\ \textcolor{preprocessor}{\#define\ NUM\_PROD\_\ int\_data[1]}}
@@ -466,7 +466,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8c_source_l00462}00462\ \textcolor{comment}{\ *\ \(\backslash\)return\ Pointer\ to\ a\ new\ rate\ update\ data\ object}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8c_source_l00463}00463\ \textcolor{comment}{\ */}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8c_source_l00464}\mbox{\hyperlink{rxns_8h_a014ce6da4626f4ecf16d79f420a46788}{00464}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_a014ce6da4626f4ecf16d79f420a46788}{rxn\_condensed\_phase\_photolysis\_create\_rate\_update\_data}}()\ \{}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8c_source_l00465}00465\ \ \ \textcolor{keywordtype}{int}\ *update\_data\ =\ (\textcolor{keywordtype}{int}\ *)malloc(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ +\ \textcolor{keyword}{sizeof}(double));}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8c_source_l00465}00465\ \ \ \textcolor{keywordtype}{int}\ *update\_data\ =\ (\textcolor{keywordtype}{int}\ *)malloc(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ +\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{double}));}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8c_source_l00466}00466\ \ \ \textcolor{keywordflow}{if}\ (update\_data\ ==\ NULL)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8c_source_l00467}00467\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ condensded\ phase\ photolysis\ update\ data\(\backslash\)n\(\backslash\)n"{}});}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8c_source_l00468}00468\ \ \ \ \ exit(1);}

@@ -1,10 +1,10 @@
 <map id="camp_mpi::camp_mpi_abort" name="camp_mpi::camp_mpi_abort">
 <area shape="rect" id="Node000001" title="Abort the program." alt="" coords="5,5,153,46"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="201,13,301,39"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="201,13,301,38"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,23,185,23,185,28,153,28"/>
-<area shape="rect" id="Node000003" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="349,13,468,39"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="349,13,468,38"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="301,23,333,23,333,28,301,28"/>
-<area shape="rect" id="Node000004" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="516,13,668,39"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="516,13,668,38"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="469,23,501,23,501,28,469,28"/>
 <area shape="rect" id="Node000005" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="716,5,838,46"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="668,23,700,23,700,28,668,28"/>

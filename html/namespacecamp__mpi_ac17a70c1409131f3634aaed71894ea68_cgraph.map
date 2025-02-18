@@ -6,11 +6,11 @@
 <area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="168,37,210,44,209,50,167,42"/>
 <area shape="rect" id="Node000003" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="635,5,783,46"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="588,23,619,23,619,28,588,28"/>
-<area shape="rect" id="Node000004" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="831,13,931,39"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="831,13,931,38"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="783,23,815,23,815,28,783,28"/>
-<area shape="rect" id="Node000005" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="979,13,1098,39"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="979,13,1098,38"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="931,23,963,23,963,28,931,28"/>
-<area shape="rect" id="Node000006" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1146,13,1298,39"/>
+<area shape="rect" id="Node000006" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1146,13,1298,38"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1099,23,1131,23,1131,28,1099,28"/>
 <area shape="rect" id="Node000007" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1346,5,1468,46"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1298,23,1330,23,1330,28,1298,28"/>

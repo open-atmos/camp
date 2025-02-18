@@ -3,8 +3,8 @@
 Condensed-\/\+Phase Photolysis reactions take the form\+:
 
 \[\ce{
-   X + h $\nu$ -> Y_1 ( + Y_2 \dots )
- }\]
+      X + h $\nu$ -> Y_1 ( + Y_2 \dots )
+    }\]
 
 where $\ce{X}$ is the species being photolyzed, and $\ce{Y_n}$ are the photolysis products.
 
@@ -13,21 +13,21 @@ The reaction rate can be scaled by providing the "{}scaling factor"{} keyword in
 Input data for condensed-\/phase Photolysis reactions have the following format\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\{}
-\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}CONDENSED\_PHASE\_PHOTOLYSIS"{},}
-\DoxyCodeLine{\ \ "{}rate"{}\ :\ 123.45,}
-\DoxyCodeLine{\ \ "{}units"{}\ :\ "{}M"{},}
-\DoxyCodeLine{\ \ "{}aerosol\ phase"{}\ :\ "{}my\ aqueous\ phase"{},}
-\DoxyCodeLine{\ \ "{}aerosol-\/phase\ water"{}\ :\ "{}H2O\_aq"{},}
-\DoxyCodeLine{\ \ "{}reactants"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ "{}spec1"{}\ :\ \{\},}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ 123.45,}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\},}
 \DoxyCodeLine{\ \ \ \ ...}
 \DoxyCodeLine{\ \ \},}
-\DoxyCodeLine{\ \ "{}products"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ "{}spec3"{}\ :\ \{\},}
-\DoxyCodeLine{\ \ \ \ "{}spec4"{}\ :\ \{\ "{}yield"{}\ :\ 0.65\ \},}
+\DoxyCodeLine{\ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\ \ :\ 0.65\ \},}
 \DoxyCodeLine{\ \ \ \ ...}
 \DoxyCodeLine{\ \ \},}
-\DoxyCodeLine{\ \ "{}scaling\ factor"{}:\ 11.20}
+\DoxyCodeLine{\ \ :\ 11.20}
 \DoxyCodeLine{\}}
 
 \end{DoxyCode}

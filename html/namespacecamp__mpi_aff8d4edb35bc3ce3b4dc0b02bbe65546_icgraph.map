@@ -1,6 +1,6 @@
 <map id="camp_mpi::camp_mpi_pack_string" name="camp_mpi::camp_mpi_pack_string">
 <area shape="rect" id="Node000001" title="Packs the given value into the buffer, advancing position." alt="" coords="580,35,728,75"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__mpi.html#a34ebf62e438a0c46fd37cd9ecd374a40" title="Packs the given value into the buffer, advancing position." alt="" coords="371,5,518,46"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__mpi.html#a34ebf62e438a0c46fd37cd9ecd374a40" title="Packs the given value into the buffer, advancing position." alt="" coords="370,5,518,46"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="565,45,518,39,519,33,566,40"/>
 <area shape="rect" id="Node000003" href="$namespacecamp__mpi.html#a3a40947a78223499aaa9b9a2c5e32c89" title="Perform basic sanity checks on send/receive." alt="" coords="356,70,532,96"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="566,69,533,74,533,69,565,64"/>

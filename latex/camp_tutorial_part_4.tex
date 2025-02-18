@@ -66,7 +66,7 @@ Next, let\textquotesingle{}s initialize MPI and wrap some of our existing code i
 \DoxyCodeLine{\ \ \textcolor{keywordflow}{if}(\ \mbox{\hyperlink{namespacecamp__mpi_a071b987e3ccab55010a23029249b73a4}{camp\_mpi\_rank}}(\ )\ .eq.\ 0\ )\ \textcolor{keywordflow}{then}}
 \DoxyCodeLine{\textcolor{preprocessor}{\#endif}}
 \DoxyCodeLine{\textcolor{preprocessor}{}}
-\DoxyCodeLine{\ \ \ \ camp\_core\ =>\ camp\_core\_t(\ \textcolor{stringliteral}{"{}my\_config\_file.json"{}}\ )}
+\DoxyCodeLine{\ \ \ \ camp\_core\ =>\ \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\_core\_t}}(\ \textcolor{stringliteral}{"{}my\_config\_file.json"{}}\ )}
 \DoxyCodeLine{\ \ \ \ \textcolor{keyword}{call\ }camp\_core\%initialize(\ )}
 
 \end{DoxyCodeInclude}
@@ -133,7 +133,7 @@ Next, we\textquotesingle{}ll unpack the objects on the secondary processes\+:
 \begin{DoxyCodeInclude}{0}
 \DoxyCodeLine{\ \ \textcolor{keywordflow}{if}(\ \mbox{\hyperlink{namespacecamp__mpi_a071b987e3ccab55010a23029249b73a4}{camp\_mpi\_rank}}(\ )\ .gt.\ 0\ )\ \textcolor{keywordflow}{then}}
 \DoxyCodeLine{}
-\DoxyCodeLine{\ \ \ \ camp\_core\ =>\ camp\_core\_t(\ )}
+\DoxyCodeLine{\ \ \ \ camp\_core\ =>\ \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\_core\_t}}(\ )}
 \DoxyCodeLine{\ \ \ \ pos\ =\ 0}
 \DoxyCodeLine{\ \ \ \ \textcolor{keyword}{call\ }camp\_core\%bin\_unpack(\ \ \ \ \ \ buffer,\ pos\ )}
 \DoxyCodeLine{\ \ \ \ \textcolor{keyword}{call\ }no2\_photolysis\%bin\_unpack(\ buffer,\ pos\ )}

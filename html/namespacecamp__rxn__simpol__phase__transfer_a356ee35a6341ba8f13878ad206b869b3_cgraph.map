@@ -1,6 +1,6 @@
 <map id="camp_rxn_simpol_phase_transfer::initialize" name="camp_rxn_simpol_phase_transfer::initialize">
 <area shape="rect" id="Node000001" title="Initialize the reaction data, validating component data and loading any required information into the..." alt="" coords="5,5,170,46"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="398,13,549,39"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="398,13,549,38"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,23,383,23,383,28,170,28"/>
 <area shape="rect" id="Node000004" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="218,38,350,64"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="170,34,203,38,202,43,169,39"/>

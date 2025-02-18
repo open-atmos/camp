@@ -3,8 +3,8 @@
 Photolysis reactions take the form\+:
 
 \[\ce{
-   X + h $\nu$ -> Y_1 ( + Y_2 \dots )
- }\]
+      X + h $\nu$ -> Y_1 ( + Y_2 \dots )
+    }\]
 
 where $\ce{X}$ is the species being photolyzed, and $\ce{Y_n}$ are the photolysis products.
 
@@ -13,16 +13,16 @@ Photolysis rate constants (including the $\ce{h $\nu$}$ term) can be constant or
 Input data for photolysis reactions have the following format \+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\{}
-\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}PHOTOLYSIS"{},}
-\DoxyCodeLine{\ \ "{}reactants"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ "{}spec1"{}\ :\ \{\}}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\}}
 \DoxyCodeLine{\ \ \},}
-\DoxyCodeLine{\ \ "{}products"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ "{}spec2"{}\ :\ \{\},}
-\DoxyCodeLine{\ \ \ \ "{}spec3"{}\ :\ \{\ "{}yield"{}\ :\ 0.65\ \},}
+\DoxyCodeLine{\ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\ \ :\ 0.65\ \},}
 \DoxyCodeLine{\ \ \ \ ...}
 \DoxyCodeLine{\ \ \},}
-\DoxyCodeLine{\ \ "{}scaling\ factor"{}\ :\ 1.2,}
+\DoxyCodeLine{\ \ \ :\ 1.2,}
 \DoxyCodeLine{\ \ ...}
 \DoxyCodeLine{\}}
 

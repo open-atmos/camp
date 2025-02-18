@@ -1,29 +1,27 @@
 \doxysubsubsection{CAMP\+: Modal/\+Binned Mass Aerosol Representation}
 \hypertarget{camp_aero_rep_modal_binned_mass}{}\label{camp_aero_rep_modal_binned_mass}\index{CAMP: Modal/Binned Mass Aerosol Representation@{CAMP: Modal/Binned Mass Aerosol Representation}}
-The modal/binned mass aerosol representation includes a set of sections/bins that are made up of one or more \doxylink{camp_aero_phase}{aerosol phases.} The {\ttfamily json} object for this \doxylink{camp_aero_rep}{aerosol representation} has the following format\+:
-
-
+The modal/binned mass aerosol representation includes a set of sections/bins that are made up of one or more \doxylink{camp_aero_phase}{aerosol phases.} The {\ttfamily json} object for this \doxylink{camp_aero_rep}{aerosol representation} has the following format\+: 
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\{\ "{}camp-\/data"{}\ :\ [}
+\DoxyCodeLine{\{\ \ :\ [}
 \DoxyCodeLine{\ \ \{}
-\DoxyCodeLine{\ \ \ \ "{}name"{}\ :\ "{}my\ modal/binned\ aero\ rep"{},}
-\DoxyCodeLine{\ \ \ \ "{}type"{}\ :\ "{}AERO\_REP\_MODAL\_BINNED\_MASS"{},}
-\DoxyCodeLine{\ \ \ \ "{}modes/bins"{}\ :}
+\DoxyCodeLine{\ \ \ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ \ \ :}
 \DoxyCodeLine{\ \ \ \ \{}
-\DoxyCodeLine{\ \ \ \ \ \ "{}dust"{}\ :}
+\DoxyCodeLine{\ \ \ \ \ \ \ :}
 \DoxyCodeLine{\ \ \ \ \ \ \{}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}type"{}\ :\ "{}BINNED"{},}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}phases"{}\ :\ [\ "{}insoluble"{},\ "{}organic"{},\ "{}aqueous"{}\ ],}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}bins"{}\ :\ 8,}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}minimum\ diameter\ [m]"{}\ :\ 0.8e-\/9,}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}maximum\ diameter\ [m]"{}\ :\ 1.0e-\/6,}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}scale"{}\ :\ "{}LOG"{}}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ :\ [\ ,\ ,\ \ ],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ :\ 8,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ :\ 0.8e-\/9,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ :\ 1.0e-\/6,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ :\ }
 \DoxyCodeLine{\ \ \ \ \ \ \},}
-\DoxyCodeLine{\ \ \ \ \ \ "{}depeche"{}\ :}
+\DoxyCodeLine{\ \ \ \ \ \ \ :}
 \DoxyCodeLine{\ \ \ \ \ \ \{}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}type"{}\ :\ "{}MODAL"{},}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}phases"{}\ :\ [\ "{}moody"{},\ "{}listless"{}\ ],}
-\DoxyCodeLine{\ \ \ \ \ \ \ \ "{}shape"{}\ :\ "{}LOG\_NORMAL"{},}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ :\ [\ ,\ \ ],}
+\DoxyCodeLine{\ \ \ \ \ \ \ \ \ :\ ,}
 \DoxyCodeLine{\ \ \ \ \ \ \}}
 \DoxyCodeLine{\ \ \ \ \}}
 \DoxyCodeLine{\ \ \},}

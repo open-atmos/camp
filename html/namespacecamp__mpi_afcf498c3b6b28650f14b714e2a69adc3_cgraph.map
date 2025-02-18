@@ -7,11 +7,11 @@
 <area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="154,62,186,69,185,74,153,67"/>
 <area shape="rect" id="Node000003" href="$namespacecamp__mpi.html#a7c0deeecbf4c64fe7fcade1797e1aab8" title="Abort the program." alt="" coords="591,29,739,70"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="544,47,575,47,575,52,544,52"/>
-<area shape="rect" id="Node000004" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="787,37,887,63"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="787,37,887,62"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="739,47,771,47,771,52,739,52"/>
-<area shape="rect" id="Node000005" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="935,37,1054,63"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="935,37,1054,62"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="887,47,919,47,919,52,887,52"/>
-<area shape="rect" id="Node000006" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1102,37,1254,63"/>
+<area shape="rect" id="Node000006" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1102,37,1254,62"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1055,47,1087,47,1087,52,1055,52"/>
 <area shape="rect" id="Node000007" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1302,29,1424,70"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1254,47,1286,47,1286,52,1254,52"/>

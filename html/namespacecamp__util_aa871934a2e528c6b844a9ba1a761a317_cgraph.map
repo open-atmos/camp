@@ -2,7 +2,7 @@
 <area shape="rect" id="Node000001" title="Open a file for reading with an automatically assigned unit and test that it succeeds...." alt="" coords="5,80,172,106"/>
 <area shape="rect" id="Node000002" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="577,80,729,106"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="172,90,561,90,561,96,172,96"/>
-<area shape="rect" id="Node000003" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="777,98,899,139"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="777,98,899,138"/>
 <area shape="poly" id="edge7_Node000001_Node000003" title=" " alt="" coords="172,96,358,107,577,116,762,117,761,122,577,121,357,112,172,101"/>
 <area shape="rect" id="Node000004" href="$namespacecamp__util.html#a43662260b71cb7e4b72fe49ccb8cee94" title="Returns an available unit number. This should be freed by free_unit()." alt="" coords="220,29,349,55"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="140,77,217,57,218,62,142,82"/>

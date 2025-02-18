@@ -1,19 +1,19 @@
 <map id="camp_mpi::camp_mpi_size" name="camp_mpi::camp_mpi_size">
-<area shape="rect" id="Node000001" title="Returns the total number of processes." alt="" coords="485,209,662,235"/>
+<area shape="rect" id="Node000001" title="Returns the total number of processes." alt="" coords="485,209,662,234"/>
 <area shape="poly" id="edge11_Node000001_Node000001" title=" " alt="" coords="615,196,601,190,574,187,549,190,535,194,532,200,539,207,535,210,527,200,532,190,548,184,574,182,602,185,617,192"/>
 <area shape="rect" id="Node000002" href="$namespacecamp__mpi.html#a6095279d2c51301de4488595f4c6e75c" title="Does an allgather of integer arrays (must be the same size on all processes)." alt="" coords="260,5,418,46"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="555,197,507,129,473,93,435,61,413,49,416,44,439,57,477,89,511,126,559,194"/>
-<area shape="rect" id="Node000003" href="$namespacecamp__mpi.html#aeae6a117fdd28992d6a8aa8c73adf618" title="Does an allgather of real arrays (must be the same size on all processes)." alt="" coords="265,71,413,111"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__mpi.html#aeae6a117fdd28992d6a8aa8c73adf618" title="Does an allgather of real arrays (must be the same size on all processes)." alt="" coords="265,71,412,111"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="544,201,495,163,436,127,408,114,410,109,438,122,498,159,547,197"/>
 <area shape="rect" id="Node000004" href="$namespacecamp__mpi.html#ac17a70c1409131f3634aaed71894ea68" title="Computes the average of val across all processes, storing the result in val_avg on all processes." alt="" coords="258,136,420,177"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="509,207,414,180,415,175,511,202"/>
 <area shape="rect" id="Node000006" href="$namespacecamp__mpi.html#ab2993869e65db724f98a587c4e5c0c12" title="Computes the average of val across all processes, storing the result in val_avg on all processes." alt="" coords="241,201,437,242"/>
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="470,224,437,224,437,219,470,219"/>
-<area shape="rect" id="Node000007" href="$namespacecamp__mpi.html#a96549d22ee106f1fa29af89dcaa0ab71" title="Computes the average of val across all processes, storing the result in val_avg on the root process." alt="" coords="265,267,413,307"/>
+<area shape="rect" id="Node000007" href="$namespacecamp__mpi.html#a96549d22ee106f1fa29af89dcaa0ab71" title="Computes the average of val across all processes, storing the result in val_avg on the root process." alt="" coords="265,267,412,307"/>
 <area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="511,242,414,269,412,264,509,237"/>
 <area shape="rect" id="Node000010" href="$namespacecamp__mpi.html#a83a928ea74ddb2233d7cca985db067bf" title="Computes the average of val across all processes, storing the result in val_avg on the root process." alt="" coords="260,332,418,373"/>
 <area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="547,247,498,284,438,321,410,334,408,329,436,317,495,280,544,242"/>
-<area shape="rect" id="Node000011" href="$namespacecamp__mpi.html#a32da3f90f515b60042273b5480ede57f" title="Computes the average of val across all processes, storing the result in val_avg on the root process." alt="" coords="249,397,429,438"/>
+<area shape="rect" id="Node000011" href="$namespacecamp__mpi.html#a32da3f90f515b60042273b5480ede57f" title="Computes the average of val across all processes, storing the result in val_avg on the root process." alt="" coords="249,397,428,438"/>
 <area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="559,250,511,318,477,354,439,387,416,399,413,394,435,382,473,351,507,314,555,247"/>
 <area shape="rect" id="Node000005" href="$namespacecamp__env__state.html#acd71d6143a8e08e77473bf24f1752af6" title="Average val over all processes." alt="" coords="27,136,171,177"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="243,159,172,159,172,154,243,154"/>

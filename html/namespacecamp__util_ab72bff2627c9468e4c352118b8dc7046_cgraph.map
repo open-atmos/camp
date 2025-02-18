@@ -1,5 +1,5 @@
 <map id="camp_util::warn_msg" name="camp_util::warn_msg">
-<area shape="rect" id="Node000001" title="Prints a warning message." alt="" coords="5,13,149,39"/>
+<area shape="rect" id="Node000001" title="Prints a warning message." alt="" coords="5,13,149,38"/>
 <area shape="rect" id="Node000002" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="197,5,319,46"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,23,181,23,181,28,149,28"/>
 </map>

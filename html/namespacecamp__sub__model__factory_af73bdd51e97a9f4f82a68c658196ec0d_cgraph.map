@@ -1,7 +1,7 @@
 <map id="camp_sub_model_factory::pack_size" name="camp_sub_model_factory::pack_size">
 <area shape="rect" id="Node000001" title="Determine the size of a binary required to pack a sub&#45;model." alt="" coords="5,33,175,74"/>
 <area shape="rect" id="Node000002" href="$namespacecamp__mpi.html#abfca35b6c1f158dcb853326861d7e558" title="Determines the number of bytes required to pack the given value." alt="" coords="641,29,789,70"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,39,223,35,593,36,626,38,626,44,593,42,223,40,176,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,39,222,35,408,28,593,35,626,37,626,43,593,40,408,34,223,40,176,45"/>
 <area shape="rect" id="Node000009" href="$namespacecamp__sub__model__data.html#a428e7081801d630bdf8d9f544842a2a3" title="Determine the size of a binary required to pack the reaction data." alt="" coords="223,73,378,114"/>
 <area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="176,67,208,73,207,79,175,72"/>
 <area shape="poly" id="edge8_Node000002_Node000002" title=" " alt="" coords="678,29,676,19,682,10,695,5,715,3,736,5,749,11,747,16,735,10,715,8,697,10,685,15,681,20,683,28"/>

@@ -8,23 +8,23 @@ Get the number of instances of a specified aerosol phase.
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-integer(kind=i\+\_\+kind) function \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1num__phase__instances_a3446a3c237cf84e249d1e0d46cd00fee}{num\+\_\+phase\+\_\+instances}} (this, phase\+\_\+name)
+integer(kind=i\+\_\+kind) function \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1num__phase__instances_ac370a6920160d44670cc5fe4a24d0361}{num\+\_\+phase\+\_\+instances}} (this, phase\+\_\+name, is\+\_\+at\+\_\+surface)
 \end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
 Get the number of instances of a specified aerosol phase. 
 
-Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00345}{345}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00348}{348}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\Hypertarget{interfacecamp__aero__rep__data_1_1num__phase__instances_a3446a3c237cf84e249d1e0d46cd00fee}\label{interfacecamp__aero__rep__data_1_1num__phase__instances_a3446a3c237cf84e249d1e0d46cd00fee} 
-\index{camp\_aero\_rep\_data::num\_phase\_instances@{camp\_aero\_rep\_data::num\_phase\_instances}!num\_phase\_instances@{num\_phase\_instances}}
+\Hypertarget{interfacecamp__aero__rep__data_1_1num__phase__instances_ac370a6920160d44670cc5fe4a24d0361}\index{camp\_aero\_rep\_data::num\_phase\_instances@{camp\_aero\_rep\_data::num\_phase\_instances}!num\_phase\_instances@{num\_phase\_instances}}
 \index{num\_phase\_instances@{num\_phase\_instances}!camp\_aero\_rep\_data::num\_phase\_instances@{camp\_aero\_rep\_data::num\_phase\_instances}}
 \doxysubsubsection{\texorpdfstring{num\_phase\_instances()}{num\_phase\_instances()}}
-{\footnotesize\ttfamily integer(kind=i\+\_\+kind) function camp\+\_\+aero\+\_\+rep\+\_\+data\+::num\+\_\+phase\+\_\+instances\+::num\+\_\+phase\+\_\+instances (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\+\_\+rep\+\_\+data\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{phase\+\_\+name }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{interfacecamp__aero__rep__data_1_1num__phase__instances_ac370a6920160d44670cc5fe4a24d0361} 
+integer(kind=i\+\_\+kind) function camp\+\_\+aero\+\_\+rep\+\_\+data\+::num\+\_\+phase\+\_\+instances\+::num\+\_\+phase\+\_\+instances (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\+\_\+rep\+\_\+data\+\_\+t}}), intent(in)}]{this}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{phase\+\_\+name}{, }\item[{logical, intent(in), optional}]{is\+\_\+at\+\_\+surface}{}\end{DoxyParamCaption})}
 
 \begin{DoxyReturn}{Returns}
 Number of instances of the aerosol phase
@@ -33,12 +33,14 @@ Number of instances of the aerosol phase
 \begin{DoxyParams}[1]{Parameters}
 \mbox{\texttt{ in}}  & {\em this} & Aerosol representation data\\
 \hline
-\mbox{\texttt{ in}}  & {\em phase\+\_\+name} & Aerosol phase name \\
+\mbox{\texttt{ in}}  & {\em phase\+\_\+name} & Aerosol phase name\\
+\hline
+\mbox{\texttt{ in}}  & {\em is\+\_\+at\+\_\+surface} & Indicates if aerosol phase is at the surface of particle \\
 \hline
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00345}{345}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__data_8_f90_source_l00348}{348}} of file \mbox{\hyperlink{aero__rep__data_8_f90_source}{aero\+\_\+rep\+\_\+data.\+F90}}.
 
 
 

@@ -38,15 +38,15 @@ Include dependency graph for rxn\+\_\+photolysis.\+c\+:
 \item 
 \#define \mbox{\hyperlink{rxn__photolysis_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}{NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+}}~2
 \item 
-\#define \mbox{\hyperlink{rxn__photolysis_8c_ae761e39657aac155d83eae9b338be571}{REACT\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn__photolysis_8c_ae761e39657aac155d83eae9b338be571}{REACT\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn__photolysis_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)
+\#define \mbox{\hyperlink{rxn__photolysis_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn__photolysis_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}
+\#define \mbox{\hyperlink{rxn__photolysis_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\+\_\+\+ID\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn__photolysis_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 \texorpdfstring{$\ast$}{*} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}
+\#define \mbox{\hyperlink{rxn__photolysis_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\+\_\+\+ID\+\_\+}}(x)
 \item 
-\#define \mbox{\hyperlink{rxn__photolysis_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)~float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}
+\#define \mbox{\hyperlink{rxn__photolysis_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\+\_\+}}(x)
 \end{DoxyCompactItemize}
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
@@ -81,162 +81,187 @@ Definition in file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolys
 
 
 \doxysubsection{Macro Definition Documentation}
-\Hypertarget{rxn__photolysis_8c_a8a6abdf49f8b3b17aea4f4595bcbc0cc}\label{rxn__photolysis_8c_a8a6abdf49f8b3b17aea4f4595bcbc0cc} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!BASE\_RATE\_@{BASE\_RATE\_}}
+\Hypertarget{rxn__photolysis_8c_a8a6abdf49f8b3b17aea4f4595bcbc0cc}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!BASE\_RATE\_@{BASE\_RATE\_}}
 \index{BASE\_RATE\_@{BASE\_RATE\_}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{BASE\_RATE\_}{BASE\_RATE\_}}
-{\footnotesize\ttfamily \#define BASE\+\_\+\+RATE\+\_\+~(rxn\+\_\+env\+\_\+data\mbox{[}1\mbox{]})}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_a8a6abdf49f8b3b17aea4f4595bcbc0cc} 
+\#define BASE\+\_\+\+RATE\+\_\+~(rxn\+\_\+env\+\_\+data\mbox{[}1\mbox{]})}
 
 
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00025}{25}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
-\Hypertarget{rxn__photolysis_8c_af9fc34858d09e71d3cffd88cf942bdf9}\label{rxn__photolysis_8c_af9fc34858d09e71d3cffd88cf942bdf9} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!DERIV\_ID\_@{DERIV\_ID\_}}
+\Hypertarget{rxn__photolysis_8c_af9fc34858d09e71d3cffd88cf942bdf9}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!DERIV\_ID\_@{DERIV\_ID\_}}
 \index{DERIV\_ID\_@{DERIV\_ID\_}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{DERIV\_ID\_}{DERIV\_ID\_}}
-{\footnotesize\ttfamily \#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}} + x\mbox{]}}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_af9fc34858d09e71d3cffd88cf942bdf9} 
+\#define DERIV\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{int\_data[\mbox{\hyperlink{rxn__photolysis_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\_INT\_PROP\_}}\ +\ \mbox{\hyperlink{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}\ +\ \mbox{\hyperlink{rxn__photolysis_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}}\ +\ x]}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00031}{31}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
-\Hypertarget{rxn__photolysis_8c_ab831aae98d4453927c63a93f55ee5a86}\label{rxn__photolysis_8c_ab831aae98d4453927c63a93f55ee5a86} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!JAC\_ID\_@{JAC\_ID\_}}
+\Hypertarget{rxn__photolysis_8c_ab831aae98d4453927c63a93f55ee5a86}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!JAC\_ID\_@{JAC\_ID\_}}
 \index{JAC\_ID\_@{JAC\_ID\_}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{JAC\_ID\_}{JAC\_ID\_}}
-{\footnotesize\ttfamily \#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + 2 \texorpdfstring{$\ast$}{*} (\mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\+\_\+\+PROD\+\_\+}}) + x\mbox{]}}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_ab831aae98d4453927c63a93f55ee5a86} 
+\#define JAC\+\_\+\+ID\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{int\_data[\mbox{\hyperlink{rxn__photolysis_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\_INT\_PROP\_}}\ +\ 2\ *\ (\mbox{\hyperlink{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}\ +\ \mbox{\hyperlink{rxn__photolysis_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}})\ +\ x]}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00032}{32}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
-\Hypertarget{rxn__photolysis_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}\label{rxn__photolysis_8c_a1f68a3544ae39a7815cbb5c09dfdeff0} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
+\Hypertarget{rxn__photolysis_8c_a1f68a3544ae39a7815cbb5c09dfdeff0}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}}
 \index{NUM\_ENV\_PARAM\_@{NUM\_ENV\_PARAM\_}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_ENV\_PARAM\_}{NUM\_ENV\_PARAM\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~2}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_a1f68a3544ae39a7815cbb5c09dfdeff0} 
+\#define NUM\+\_\+\+ENV\+\_\+\+PARAM\+\_\+~2}
 
 
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00028}{28}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
-\Hypertarget{rxn__photolysis_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\label{rxn__photolysis_8c_a0e9ae6000e4ed18f5938bddaddb13d1b} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
+\Hypertarget{rxn__photolysis_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}}
 \index{NUM\_FLOAT\_PROP\_@{NUM\_FLOAT\_PROP\_}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_FLOAT\_PROP\_}{NUM\_FLOAT\_PROP\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+~1}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_a0e9ae6000e4ed18f5938bddaddb13d1b} 
+\#define NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+~1}
 
 
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00027}{27}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
-\Hypertarget{rxn__photolysis_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\label{rxn__photolysis_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
+\Hypertarget{rxn__photolysis_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}}
 \index{NUM\_INT\_PROP\_@{NUM\_INT\_PROP\_}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_INT\_PROP\_}{NUM\_INT\_PROP\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~3}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f} 
+\#define NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+~3}
 
 
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00026}{26}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
-\Hypertarget{rxn__photolysis_8c_acf951e890da75cd2d503ed6ce8211fc2}\label{rxn__photolysis_8c_acf951e890da75cd2d503ed6ce8211fc2} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!NUM\_PROD\_@{NUM\_PROD\_}}
+\Hypertarget{rxn__photolysis_8c_acf951e890da75cd2d503ed6ce8211fc2}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!NUM\_PROD\_@{NUM\_PROD\_}}
 \index{NUM\_PROD\_@{NUM\_PROD\_}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_PROD\_}{NUM\_PROD\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+PROD\+\_\+~int\+\_\+data\mbox{[}1\mbox{]}}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_acf951e890da75cd2d503ed6ce8211fc2} 
+\#define NUM\+\_\+\+PROD\+\_\+~int\+\_\+data\mbox{[}1\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00021}{21}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
-\Hypertarget{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}\label{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!NUM\_REACT\_@{NUM\_REACT\_}}
+\Hypertarget{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!NUM\_REACT\_@{NUM\_REACT\_}}
 \index{NUM\_REACT\_@{NUM\_REACT\_}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{NUM\_REACT\_}{NUM\_REACT\_}}
-{\footnotesize\ttfamily \#define NUM\+\_\+\+REACT\+\_\+~int\+\_\+data\mbox{[}0\mbox{]}}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa} 
+\#define NUM\+\_\+\+REACT\+\_\+~int\+\_\+data\mbox{[}0\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00020}{20}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
-\Hypertarget{rxn__photolysis_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\label{rxn__photolysis_8c_a32cc078fd8ca9ad0684c48ae0aad7135} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!PRESSURE\_PA\_@{PRESSURE\_PA\_}}
+\Hypertarget{rxn__photolysis_8c_a32cc078fd8ca9ad0684c48ae0aad7135}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!PRESSURE\_PA\_@{PRESSURE\_PA\_}}
 \index{PRESSURE\_PA\_@{PRESSURE\_PA\_}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{PRESSURE\_PA\_}{PRESSURE\_PA\_}}
-{\footnotesize\ttfamily \#define PRESSURE\+\_\+\+PA\+\_\+~env\+\_\+data\mbox{[}1\mbox{]}}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_a32cc078fd8ca9ad0684c48ae0aad7135} 
+\#define PRESSURE\+\_\+\+PA\+\_\+~env\+\_\+data\mbox{[}1\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00018}{18}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
-\Hypertarget{rxn__photolysis_8c_a9fda90058c6a41b1dda6ded03321c4da}\label{rxn__photolysis_8c_a9fda90058c6a41b1dda6ded03321c4da} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!PROD\_@{PROD\_}}
+\Hypertarget{rxn__photolysis_8c_a9fda90058c6a41b1dda6ded03321c4da}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!PROD\_@{PROD\_}}
 \index{PROD\_@{PROD\_}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{PROD\_}{PROD\_}}
-{\footnotesize\ttfamily \#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + \mbox{\hyperlink{rxn__aqueous__equilibrium_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\+\_\+\+REACT\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_a9fda90058c6a41b1dda6ded03321c4da} 
+\#define PROD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{(int\_data[\mbox{\hyperlink{rxn__photolysis_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\_INT\_PROP\_}}\ +\ \mbox{\hyperlink{rxn__photolysis_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}\ +\ x]\ -\/\ 1)}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00030}{30}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
-\Hypertarget{rxn__photolysis_8c_a6d62af2f44a112ef5b324cf406a830c2}\label{rxn__photolysis_8c_a6d62af2f44a112ef5b324cf406a830c2} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!RATE\_CONSTANT\_@{RATE\_CONSTANT\_}}
+\Hypertarget{rxn__photolysis_8c_a6d62af2f44a112ef5b324cf406a830c2}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!RATE\_CONSTANT\_@{RATE\_CONSTANT\_}}
 \index{RATE\_CONSTANT\_@{RATE\_CONSTANT\_}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{RATE\_CONSTANT\_}{RATE\_CONSTANT\_}}
-{\footnotesize\ttfamily \#define RATE\+\_\+\+CONSTANT\+\_\+~(rxn\+\_\+env\+\_\+data\mbox{[}0\mbox{]})}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_a6d62af2f44a112ef5b324cf406a830c2} 
+\#define RATE\+\_\+\+CONSTANT\+\_\+~(rxn\+\_\+env\+\_\+data\mbox{[}0\mbox{]})}
 
 
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00024}{24}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
-\Hypertarget{rxn__photolysis_8c_ae761e39657aac155d83eae9b338be571}\label{rxn__photolysis_8c_ae761e39657aac155d83eae9b338be571} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!REACT\_@{REACT\_}}
+\Hypertarget{rxn__photolysis_8c_ae761e39657aac155d83eae9b338be571}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!REACT\_@{REACT\_}}
 \index{REACT\_@{REACT\_}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{REACT\_}{REACT\_}}
-{\footnotesize\ttfamily \#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~(int\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__data_8_f90_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\+\_\+\+INT\+\_\+\+PROP\+\_\+}} + x\mbox{]} -\/ 1)}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_ae761e39657aac155d83eae9b338be571} 
+\#define REACT\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{(int\_data[\mbox{\hyperlink{rxn__photolysis_8c_a13ba1b28e3d8a5e60eec52ce6bbabe4f}{NUM\_INT\_PROP\_}}\ +\ x]\ -\/\ 1)}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00029}{29}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
-\Hypertarget{rxn__photolysis_8c_a90cc89c1a8af0668561f9fc8cdbb9dde}\label{rxn__photolysis_8c_a90cc89c1a8af0668561f9fc8cdbb9dde} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!RXN\_ID\_@{RXN\_ID\_}}
+\Hypertarget{rxn__photolysis_8c_a90cc89c1a8af0668561f9fc8cdbb9dde}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!RXN\_ID\_@{RXN\_ID\_}}
 \index{RXN\_ID\_@{RXN\_ID\_}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{RXN\_ID\_}{RXN\_ID\_}}
-{\footnotesize\ttfamily \#define RXN\+\_\+\+ID\+\_\+~int\+\_\+data\mbox{[}2\mbox{]}}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_a90cc89c1a8af0668561f9fc8cdbb9dde} 
+\#define RXN\+\_\+\+ID\+\_\+~int\+\_\+data\mbox{[}2\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00022}{22}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
-\Hypertarget{rxn__photolysis_8c_a1757f332a0485799c2ee77edff00c38a}\label{rxn__photolysis_8c_a1757f332a0485799c2ee77edff00c38a} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!SCALING\_@{SCALING\_}}
+\Hypertarget{rxn__photolysis_8c_a1757f332a0485799c2ee77edff00c38a}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!SCALING\_@{SCALING\_}}
 \index{SCALING\_@{SCALING\_}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{SCALING\_}{SCALING\_}}
-{\footnotesize\ttfamily \#define SCALING\+\_\+~float\+\_\+data\mbox{[}0\mbox{]}}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_a1757f332a0485799c2ee77edff00c38a} 
+\#define SCALING\+\_\+~float\+\_\+data\mbox{[}0\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00023}{23}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
-\Hypertarget{rxn__photolysis_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\label{rxn__photolysis_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!TEMPERATURE\_K\_@{TEMPERATURE\_K\_}}
+\Hypertarget{rxn__photolysis_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!TEMPERATURE\_K\_@{TEMPERATURE\_K\_}}
 \index{TEMPERATURE\_K\_@{TEMPERATURE\_K\_}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{TEMPERATURE\_K\_}{TEMPERATURE\_K\_}}
-{\footnotesize\ttfamily \#define TEMPERATURE\+\_\+\+K\+\_\+~env\+\_\+data\mbox{[}0\mbox{]}}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60} 
+\#define TEMPERATURE\+\_\+\+K\+\_\+~env\+\_\+data\mbox{[}0\mbox{]}}
 
 
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00017}{17}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
-\Hypertarget{rxn__photolysis_8c_a9ae244708fd9c438bf840ed319733651}\label{rxn__photolysis_8c_a9ae244708fd9c438bf840ed319733651} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!YIELD\_@{YIELD\_}}
+\Hypertarget{rxn__photolysis_8c_a9ae244708fd9c438bf840ed319733651}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!YIELD\_@{YIELD\_}}
 \index{YIELD\_@{YIELD\_}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{YIELD\_}{YIELD\_}}
-{\footnotesize\ttfamily \#define YIELD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~float\+\_\+data\mbox{[}\mbox{\hyperlink{aero__phase__solver_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\+\_\+\+FLOAT\+\_\+\+PROP\+\_\+}} + x\mbox{]}}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_a9ae244708fd9c438bf840ed319733651} 
+\#define YIELD\+\_\+(\begin{DoxyParamCaption}\item[{}]{x}{}\end{DoxyParamCaption})}
 
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{float\_data[\mbox{\hyperlink{rxn__photolysis_8c_a0e9ae6000e4ed18f5938bddaddb13d1b}{NUM\_FLOAT\_PROP\_}}\ +\ x]}
+
+\end{DoxyCode}
 
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00033}{33}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
@@ -244,11 +269,11 @@ Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00033}{33}} of fi
 
 
 \doxysubsection{Function Documentation}
-\Hypertarget{rxn__photolysis_8c_a821ebabf2abba0aa6b465747178f33d6}\label{rxn__photolysis_8c_a821ebabf2abba0aa6b465747178f33d6} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_calc\_deriv\_contrib@{rxn\_photolysis\_calc\_deriv\_contrib}}
+\Hypertarget{rxn__photolysis_8c_a821ebabf2abba0aa6b465747178f33d6}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_calc\_deriv\_contrib@{rxn\_photolysis\_calc\_deriv\_contrib}}
 \index{rxn\_photolysis\_calc\_deriv\_contrib@{rxn\_photolysis\_calc\_deriv\_contrib}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_photolysis\_calc\_deriv\_contrib()}{rxn\_photolysis\_calc\_deriv\_contrib()}}
-{\footnotesize\ttfamily void rxn\+\_\+photolysis\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_a821ebabf2abba0aa6b465747178f33d6} 
+void rxn\+\_\+photolysis\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
@@ -289,11 +314,11 @@ Here is the caller graph for this function\+:
 \includegraphics[width=350pt]{rxn__photolysis_8c_a821ebabf2abba0aa6b465747178f33d6_icgraph}
 \end{center}
 \end{figure}
-\Hypertarget{rxn__photolysis_8c_a12201d188bd114013b835e74912fdf53}\label{rxn__photolysis_8c_a12201d188bd114013b835e74912fdf53} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_calc\_jac\_contrib@{rxn\_photolysis\_calc\_jac\_contrib}}
+\Hypertarget{rxn__photolysis_8c_a12201d188bd114013b835e74912fdf53}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_calc\_jac\_contrib@{rxn\_photolysis\_calc\_jac\_contrib}}
 \index{rxn\_photolysis\_calc\_jac\_contrib@{rxn\_photolysis\_calc\_jac\_contrib}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_photolysis\_calc\_jac\_contrib()}{rxn\_photolysis\_calc\_jac\_contrib()}}
-{\footnotesize\ttfamily void rxn\+\_\+photolysis\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data,  }\item[{realtype}]{time\+\_\+step }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_a12201d188bd114013b835e74912fdf53} 
+void rxn\+\_\+photolysis\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
@@ -334,11 +359,11 @@ Here is the caller graph for this function\+:
 \includegraphics[width=350pt]{rxn__photolysis_8c_a12201d188bd114013b835e74912fdf53_icgraph}
 \end{center}
 \end{figure}
-\Hypertarget{rxn__photolysis_8c_a7e9d33d9fa28139e1c87566f0179fd51}\label{rxn__photolysis_8c_a7e9d33d9fa28139e1c87566f0179fd51} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_create\_rate\_update\_data@{rxn\_photolysis\_create\_rate\_update\_data}}
+\Hypertarget{rxn__photolysis_8c_a7e9d33d9fa28139e1c87566f0179fd51}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_create\_rate\_update\_data@{rxn\_photolysis\_create\_rate\_update\_data}}
 \index{rxn\_photolysis\_create\_rate\_update\_data@{rxn\_photolysis\_create\_rate\_update\_data}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_photolysis\_create\_rate\_update\_data()}{rxn\_photolysis\_create\_rate\_update\_data()}}
-{\footnotesize\ttfamily void \texorpdfstring{$\ast$}{*} rxn\+\_\+photolysis\+\_\+create\+\_\+rate\+\_\+update\+\_\+data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_a7e9d33d9fa28139e1c87566f0179fd51} 
+void \texorpdfstring{$\ast$}{*} rxn\+\_\+photolysis\+\_\+create\+\_\+rate\+\_\+update\+\_\+data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
 
 
 
@@ -351,11 +376,11 @@ Pointer to a new rate update data object
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00262}{262}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
-\Hypertarget{rxn__photolysis_8c_ab3c375e49f672106491c96e4b4455745}\label{rxn__photolysis_8c_ab3c375e49f672106491c96e4b4455745} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_get\_used\_jac\_elem@{rxn\_photolysis\_get\_used\_jac\_elem}}
+\Hypertarget{rxn__photolysis_8c_ab3c375e49f672106491c96e4b4455745}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_get\_used\_jac\_elem@{rxn\_photolysis\_get\_used\_jac\_elem}}
 \index{rxn\_photolysis\_get\_used\_jac\_elem@{rxn\_photolysis\_get\_used\_jac\_elem}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_photolysis\_get\_used\_jac\_elem()}{rxn\_photolysis\_get\_used\_jac\_elem()}}
-{\footnotesize\ttfamily void rxn\+\_\+photolysis\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_ab3c375e49f672106491c96e4b4455745} 
+void rxn\+\_\+photolysis\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
 
 
 
@@ -390,11 +415,11 @@ Here is the caller graph for this function\+:
 \includegraphics[width=350pt]{rxn__photolysis_8c_ab3c375e49f672106491c96e4b4455745_icgraph}
 \end{center}
 \end{figure}
-\Hypertarget{rxn__photolysis_8c_aebf6ecbc65d08e278100b817110e7018}\label{rxn__photolysis_8c_aebf6ecbc65d08e278100b817110e7018} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_print@{rxn\_photolysis\_print}}
+\Hypertarget{rxn__photolysis_8c_aebf6ecbc65d08e278100b817110e7018}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_print@{rxn\_photolysis\_print}}
 \index{rxn\_photolysis\_print@{rxn\_photolysis\_print}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_photolysis\_print()}{rxn\_photolysis\_print()}}
-{\footnotesize\ttfamily void rxn\+\_\+photolysis\+\_\+print (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_aebf6ecbc65d08e278100b817110e7018} 
+void rxn\+\_\+photolysis\+\_\+print (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -419,11 +444,11 @@ Here is the caller graph for this function\+:
 \includegraphics[width=294pt]{rxn__photolysis_8c_aebf6ecbc65d08e278100b817110e7018_icgraph}
 \end{center}
 \end{figure}
-\Hypertarget{rxn__photolysis_8c_aff89be509538350520f38c29bce5e5f0}\label{rxn__photolysis_8c_aff89be509538350520f38c29bce5e5f0} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_set\_rate\_update\_data@{rxn\_photolysis\_set\_rate\_update\_data}}
+\Hypertarget{rxn__photolysis_8c_aff89be509538350520f38c29bce5e5f0}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_set\_rate\_update\_data@{rxn\_photolysis\_set\_rate\_update\_data}}
 \index{rxn\_photolysis\_set\_rate\_update\_data@{rxn\_photolysis\_set\_rate\_update\_data}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_photolysis\_set\_rate\_update\_data()}{rxn\_photolysis\_set\_rate\_update\_data()}}
-{\footnotesize\ttfamily void rxn\+\_\+photolysis\+\_\+set\+\_\+rate\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{update\+\_\+data,  }\item[{int}]{photo\+\_\+id,  }\item[{double}]{base\+\_\+rate }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_aff89be509538350520f38c29bce5e5f0} 
+void rxn\+\_\+photolysis\+\_\+set\+\_\+rate\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{update\+\_\+data}{, }\item[{int}]{photo\+\_\+id}{, }\item[{double}]{base\+\_\+rate}{}\end{DoxyParamCaption})}
 
 
 
@@ -442,11 +467,11 @@ Set rate update data.
 
 Definition at line \mbox{\hyperlink{rxn__photolysis_8c_source_l00277}{277}} of file \mbox{\hyperlink{rxn__photolysis_8c_source}{rxn\+\_\+photolysis.\+c}}.
 
-\Hypertarget{rxn__photolysis_8c_a6a060bc8fc2eedb3117ad3c8a768c880}\label{rxn__photolysis_8c_a6a060bc8fc2eedb3117ad3c8a768c880} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_update\_data@{rxn\_photolysis\_update\_data}}
+\Hypertarget{rxn__photolysis_8c_a6a060bc8fc2eedb3117ad3c8a768c880}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_update\_data@{rxn\_photolysis\_update\_data}}
 \index{rxn\_photolysis\_update\_data@{rxn\_photolysis\_update\_data}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_photolysis\_update\_data()}{rxn\_photolysis\_update\_data()}}
-{\footnotesize\ttfamily bool rxn\+\_\+photolysis\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{update\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_a6a060bc8fc2eedb3117ad3c8a768c880} 
+bool rxn\+\_\+photolysis\+\_\+update\+\_\+data (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{update\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -486,11 +511,11 @@ Here is the caller graph for this function\+:
 \includegraphics[width=339pt]{rxn__photolysis_8c_a6a060bc8fc2eedb3117ad3c8a768c880_icgraph}
 \end{center}
 \end{figure}
-\Hypertarget{rxn__photolysis_8c_a7050f9c7df2b337474e90b49cd563d1d}\label{rxn__photolysis_8c_a7050f9c7df2b337474e90b49cd563d1d} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_update\_env\_state@{rxn\_photolysis\_update\_env\_state}}
+\Hypertarget{rxn__photolysis_8c_a7050f9c7df2b337474e90b49cd563d1d}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_update\_env\_state@{rxn\_photolysis\_update\_env\_state}}
 \index{rxn\_photolysis\_update\_env\_state@{rxn\_photolysis\_update\_env\_state}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_photolysis\_update\_env\_state()}{rxn\_photolysis\_update\_env\_state()}}
-{\footnotesize\ttfamily void rxn\+\_\+photolysis\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_a7050f9c7df2b337474e90b49cd563d1d} 
+void rxn\+\_\+photolysis\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -521,11 +546,11 @@ Here is the caller graph for this function\+:
 \includegraphics[width=350pt]{rxn__photolysis_8c_a7050f9c7df2b337474e90b49cd563d1d_icgraph}
 \end{center}
 \end{figure}
-\Hypertarget{rxn__photolysis_8c_af81c275e7f6f9ebe2a244235d0f6fd77}\label{rxn__photolysis_8c_af81c275e7f6f9ebe2a244235d0f6fd77} 
-\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_update\_ids@{rxn\_photolysis\_update\_ids}}
+\Hypertarget{rxn__photolysis_8c_af81c275e7f6f9ebe2a244235d0f6fd77}\index{rxn\_photolysis.c@{rxn\_photolysis.c}!rxn\_photolysis\_update\_ids@{rxn\_photolysis\_update\_ids}}
 \index{rxn\_photolysis\_update\_ids@{rxn\_photolysis\_update\_ids}!rxn\_photolysis.c@{rxn\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_photolysis\_update\_ids()}{rxn\_photolysis\_update\_ids()}}
-{\footnotesize\ttfamily void rxn\+\_\+photolysis\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data,  }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids,  }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac,  }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data,  }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{rxn__photolysis_8c_af81c275e7f6f9ebe2a244235d0f6fd77} 
+void rxn\+\_\+photolysis\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 

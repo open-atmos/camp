@@ -3,41 +3,41 @@
 Wennberg NO + RO2 reactions are branched reactions with one branch forming alkoxy radicals plus $\ce{NO2}$ and the other forming organic nitrates {\bfseries [Wennberg2018]} . The rate constants for each branch are based on an Arrhenius rate constant and a temperature-\/ and structure-\/dependent branching ratio calculated as\+:
 
 \begin{align}
-   k_{nitrate} & = \left(X e^{-Y/T}\right) \left(\frac{A(T, \mbox{[M]}, n)}{A(T, \mbox{[M]}, n) + Z}\right) \\
-   k_{alkoxy} & = \left(X e^{-Y/T}\right)\left(\frac{Z}{Z + A(T, \mbox{[M]}, n)}\right) \\
-   A(T, \mbox{[M]}, n) & = \frac{2 \times 10^{-22} e^n \mbox{[M]}}{1 + \frac{2 \times 10^{-22} e^n \mbox{[M]}}{0.43(T/298)^{-8}}} 0.41^{(1+[log( \frac{2 \times 10^{-22} e^n \mbox{[M]}}{0.43(T/298)^{-8}})]^2)^{-1}}
- \end{align}
+      k_{nitrate} & = \left(X e^{-Y/T}\right) \left(\frac{A(T, \mbox{[M]}, n)}{A(T, \mbox{[M]}, n) + Z}\right) \\
+      k_{alkoxy} & = \left(X e^{-Y/T}\right)\left(\frac{Z}{Z + A(T, \mbox{[M]}, n)}\right) \\
+      A(T, \mbox{[M]}, n) & = \frac{2 \times 10^{-22} e^n \mbox{[M]}}{1 + \frac{2 \times 10^{-22} e^n \mbox{[M]}}{0.43(T/298)^{-8}}} 0.41^{(1+[log( \frac{2 \times 10^{-22} e^n \mbox{[M]}}{0.43(T/298)^{-8}})]^2)^{-1}}
+    \end{align}
 
 where $T$ is temperature (K), \mbox{[}M\mbox{]} is the number density of air (molecules $\mbox{cm}^{-3}$), $X$ and $Y$ are Arrhenius parameters for the overall reaction, $n$ is the number of heavy atoms in the $\ce{RO2}$ reacting species (excluding the peroxy moiety), and $Z$ is defined as a function of two parameters ( $\alpha_0, n$)\+:
 
 \[
-   Z( \alpha_0, n) = A(T = 293 \mbox{K}, \mbox{[M]} = 2.45 \times 10^{19} \frac{\mbox{molec}}{\mbox{cm}^3}, n) \frac{(1-\alpha_0)}{\alpha_0}
- \]
+      Z( \alpha_0, n) = A(T = 293 \mbox{K}, \mbox{[M]} = 2.45 \times 10^{19} \frac{\mbox{molec}}{\mbox{cm}^3}, n) \frac{(1-\alpha_0)}{\alpha_0}
+    \]
 
 More details can be found in Wennberg et al. (2018) {\bfseries [Wennberg2018]} .
 
 Input data for Wennberg NO + RO2 equations has the following format\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\{}
-\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}WENNBERG\_NO\_RO2"{},}
-\DoxyCodeLine{\ \ "{}X"{}\ :\ 123.45,}
-\DoxyCodeLine{\ \ "{}Y"{}\ \ :\ 1200.0,}
-\DoxyCodeLine{\ \ "{}a0"{}\ \ :\ 1.0e8,}
-\DoxyCodeLine{\ \ "{}n"{}\ :\ 6,}
-\DoxyCodeLine{\ \ "{}time\ unit"{}\ :\ "{}MIN"{},}
-\DoxyCodeLine{\ \ "{}reactants"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ "{}spec1"{}\ :\ \{\},}
-\DoxyCodeLine{\ \ \ \ "{}spec2"{}\ :\ \{\ "{}qty"{}\ :\ 2\ \},}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ 123.45,}
+\DoxyCodeLine{\ \ \ \ :\ 1200.0,}
+\DoxyCodeLine{\ \ \ \ :\ 1.0e8,}
+\DoxyCodeLine{\ \ \ :\ 6,}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\ \ :\ 2\ \},}
 \DoxyCodeLine{\ \ \ \ ...}
 \DoxyCodeLine{\ \ \},}
-\DoxyCodeLine{\ \ "{}alkoxy\ products"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ "{}spec3"{}\ :\ \{\},}
-\DoxyCodeLine{\ \ \ \ "{}spec4"{}\ :\ \{\ "{}yield"{}\ :\ 0.65\ \},}
+\DoxyCodeLine{\ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\ \ :\ 0.65\ \},}
 \DoxyCodeLine{\ \ \ \ ...}
 \DoxyCodeLine{\ \ \},}
-\DoxyCodeLine{\ \ "{}nitrate\ products"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ "{}spec5"{}\ :\ \{\},}
-\DoxyCodeLine{\ \ \ \ "{}spec6"{}\ :\ \{\ "{}yield"{}\ :\ 0.32\ \},}
+\DoxyCodeLine{\ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\ \ :\ 0.32\ \},}
 \DoxyCodeLine{\ \ \ \ ...}
 \DoxyCodeLine{\ \ \}}
 \DoxyCodeLine{\}}

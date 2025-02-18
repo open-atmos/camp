@@ -6,14 +6,14 @@
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="249,491,249,538,243,538,243,491"/>
 <area shape="rect" id="Node000004" href="$structcamp__aero__phase__data_1_1aero__phase__data__t.html" title="Aerosol phase data type." alt="" coords="166,331,326,372"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="249,388,249,435,243,435,243,388"/>
-<area shape="rect" id="Node000005" href="$structcamp__util_1_1string__t.html" title="String type for building arrays of string of various size." alt="" coords="20,139,147,165"/>
+<area shape="rect" id="Node000005" href="$structcamp__util_1_1string__t.html" title="String type for building arrays of string of various size." alt="" coords="20,139,146,165"/>
 <area shape="poly" id="edge12_Node000001_Node000005" title=" " alt="" coords="61,177,36,208,28,227,25,247,25,560,27,579,35,596,57,626,53,630,30,599,22,580,19,561,19,246,23,225,32,206,56,173"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="82,180,82,224,87,246,97,267,114,287,135,304,181,328,179,333,132,308,110,291,92,270,82,248,77,224,77,180"/>
 <area shape="rect" id="Node000008" href="$structcamp__chem__spec__data_1_1chem__spec__data__t.html" title="Chemical species data." alt="" coords="177,228,336,268"/>
 <area shape="poly" id="edge9_Node000008_Node000005" title=" " alt="" coords="120,170,222,225,219,230,118,175"/>
 <area shape="rect" id="Node000006" href="$structcamp__property_1_1property__t.html" title="Property data." alt="" coords="289,139,459,165"/>
 <area shape="poly" id="edge11_Node000002_Node000006" title=" " alt="" coords="377,180,377,247,377,457,370,485,353,508,329,526,303,540,301,536,326,522,349,504,365,483,371,456,371,247,371,180"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="392,178,395,188,399,221,396,252,383,281,363,309,346,323,327,334,325,329,343,319,359,305,379,279,390,251,394,221,390,189,387,179"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="392,178,395,188,399,221,395,252,382,282,361,309,345,323,327,333,324,328,342,318,357,305,377,279,390,251,394,221,390,189,387,179"/>
 <area shape="poly" id="edge10_Node000008_Node000006" title=" " alt="" coords="309,173,283,191,271,208,263,228,258,226,266,206,279,187,306,169"/>
 <area shape="rect" id="Node000007" href="$structcamp__property_1_1property__link__t.html" title="Property link data." alt="" coords="295,5,453,46"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="377,61,377,138,371,138,371,61"/>

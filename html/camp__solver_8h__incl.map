@@ -1,6 +1,6 @@
 <map id="camp_solver.h" name="camp_solver.h">
 <area shape="rect" id="Node000001" title="Header file for solver functions." alt="" coords="584,5,689,31"/>
-<area shape="rect" id="Node000002" href="$camp__common_8h.html" title="Header file for common constants and structures." alt="" coords="577,79,697,105"/>
+<area shape="rect" id="Node000002" href="$camp__common_8h.html" title="Header file for common constants and structures." alt="" coords="576,79,697,105"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="639,31,639,63,634,63,634,31"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,160,79,186"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="576,97,482,102,361,112,226,129,92,155,85,157,84,152,91,150,225,124,360,107,482,97,576,92"/>
@@ -12,7 +12,7 @@
 <area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="576,106,456,127,316,155,302,158,301,153,315,150,455,122,576,100"/>
 <area shape="rect" id="Node000009" title=" " alt="" coords="435,160,540,186"/>
 <area shape="poly" id="edge10_Node000002_Node000009" title=" " alt="" coords="615,107,525,155,522,150,613,103"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="565,160,709,186"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="564,160,709,186"/>
 <area shape="poly" id="edge11_Node000002_Node000010" title=" " alt="" coords="639,105,639,144,634,144,634,105"/>
 <area shape="rect" id="Node000011" title=" " alt="" coords="733,160,892,186"/>
 <area shape="poly" id="edge12_Node000002_Node000011" title=" " alt="" coords="665,103,773,151,771,156,663,108"/>

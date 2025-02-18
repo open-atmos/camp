@@ -1,6 +1,6 @@
 <map id="camp_mpi::camp_mpi_unpack_real" name="camp_mpi::camp_mpi_unpack_real">
 <area shape="rect" id="Node000001" title="Unpacks the given value from the buffer, advancing position." alt="" coords="580,63,728,103"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__camp__core.html#a672a6ddc1f764207c4b6aa80b72ea203" title="Unpack the given value from the buffer, advancing position." alt="" coords="371,5,518,46"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__camp__core.html#a672a6ddc1f764207c4b6aa80b72ea203" title="Unpack the given value from the buffer, advancing position." alt="" coords="370,5,518,46"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="565,62,518,48,519,43,567,56"/>
 <area shape="rect" id="Node000003" href="$namespacecamp__mpi.html#a3a40947a78223499aaa9b9a2c5e32c89" title="Perform basic sanity checks on send/receive." alt="" coords="356,70,532,96"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="565,86,533,86,533,80,565,80"/>

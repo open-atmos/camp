@@ -3,32 +3,32 @@
 Troe (fall-\/off) reaction rate constant equations take the form\+:
 
 \[
-   \frac{k_0[\mbox{M}]}{1+k_0[\mbox{M}]/k_{\inf}}F_C^{(1+1/N[log_{10}(k_0[\mbox{M}]/k_{\inf})]^2)^{-1}}
- \]
+      \frac{k_0[\mbox{M}]}{1+k_0[\mbox{M}]/k_{\inf}}F_C^{(1+1/N[log_{10}(k_0[\mbox{M}]/k_{\inf})]^2)^{-1}}
+    \]
 
 where $k_0$ is the low-\/pressure limiting rate constant, $k_{\inf}$ is the high-\/pressure limiting rate constant, $[\mbox{M}]$ is the density of air, and $F_C$ and $N$ are parameters that determine the shape of the fall-\/off curve, and are typically 0.\+6 and 1.\+0, respectively {\bfseries [Finlayson-\/\+Pitts2000]} {\bfseries [Gipson]}. $k_0$ and $k_{\inf}$ are calculated as \doxylink{camp_rxn_arrhenius}{Arrhenius} rate constants with $D=300$ and $E=0$.
 
 Input data for Troe reactions have the following format \+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\{}
-\DoxyCodeLine{\ \ "{}type"{}\ :\ "{}TROE"{},}
-\DoxyCodeLine{\ \ "{}k0\_A"{}\ :\ 5.6E-\/12,}
-\DoxyCodeLine{\ \ "{}k0\_B"{}\ :\ -\/1.8,}
-\DoxyCodeLine{\ \ "{}k0\_C"{}\ :\ 180.0,}
-\DoxyCodeLine{\ \ "{}kinf\_A"{}\ :\ 3.4E-\/12,}
-\DoxyCodeLine{\ \ "{}kinf\_B"{}\ :\ -\/1.6,}
-\DoxyCodeLine{\ \ "{}kinf\_C"{}\ :\ 104.1,}
-\DoxyCodeLine{\ \ "{}Fc"{}\ \ :\ 0.7,}
-\DoxyCodeLine{\ \ "{}N"{}\ \ :\ 0.9,}
-\DoxyCodeLine{\ \ "{}time\ unit"{}\ :\ "{}MIN"{},}
-\DoxyCodeLine{\ \ "{}reactants"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ "{}spec1"{}\ :\ \{\},}
-\DoxyCodeLine{\ \ \ \ "{}spec2"{}\ :\ \{\ "{}qty"{}\ :\ 2\ \},}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ 5.6E-\/12,}
+\DoxyCodeLine{\ \ \ :\ -\/1.8,}
+\DoxyCodeLine{\ \ \ :\ 180.0,}
+\DoxyCodeLine{\ \ \ :\ 3.4E-\/12,}
+\DoxyCodeLine{\ \ \ :\ -\/1.6,}
+\DoxyCodeLine{\ \ \ :\ 104.1,}
+\DoxyCodeLine{\ \ \ \ :\ 0.7,}
+\DoxyCodeLine{\ \ \ \ :\ 0.9,}
+\DoxyCodeLine{\ \ \ :\ ,}
+\DoxyCodeLine{\ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\ \ :\ 2\ \},}
 \DoxyCodeLine{\ \ \ \ ...}
 \DoxyCodeLine{\ \ \},}
-\DoxyCodeLine{\ \ "{}products"{}\ :\ \{}
-\DoxyCodeLine{\ \ \ \ "{}spec3"{}\ :\ \{\},}
-\DoxyCodeLine{\ \ \ \ "{}spec4"{}\ :\ \{\ "{}yield"{}\ :\ 0.65\ \},}
+\DoxyCodeLine{\ \ \ :\ \{}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\},}
+\DoxyCodeLine{\ \ \ \ \ :\ \{\ \ :\ 0.65\ \},}
 \DoxyCodeLine{\ \ \ \ ...}
 \DoxyCodeLine{\ \ \}}
 \DoxyCodeLine{\}}

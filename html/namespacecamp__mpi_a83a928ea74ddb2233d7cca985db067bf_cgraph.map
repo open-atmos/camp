@@ -1,6 +1,6 @@
 <map id="camp_mpi::camp_mpi_reduce_avg_real_array" name="camp_mpi::camp_mpi_reduce_avg_real_array">
 <area shape="rect" id="Node000001" title="Computes the average of val across all processes, storing the result in val_avg on the root process." alt="" coords="5,73,164,114"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="978,21,1097,46"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="978,20,1097,46"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,70,220,48,310,26,410,9,511,3,709,3,844,9,963,21,962,26,844,14,709,8,511,8,411,15,311,32,221,53,148,75"/>
 <area shape="rect" id="Node000005" href="$namespacecamp__mpi.html#adb95beaf933131229f017a03af8352ad" title="Dies if ierr is not ok." alt="" coords="439,93,586,134"/>
 <area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="164,80,272,73,332,74,391,79,431,86,430,91,391,84,332,79,272,79,164,86"/>
@@ -8,7 +8,7 @@
 <area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="164,104,208,112,207,117,163,110"/>
 <area shape="rect" id="Node000009" href="$namespacecamp__mpi.html#ac12772749475620730de7ac0fd2f88d7" title="Returns the total number of processes." alt="" coords="213,191,390,217"/>
 <area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="127,112,262,181,259,186,125,117"/>
-<area shape="rect" id="Node000003" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1145,21,1297,46"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="1145,20,1297,46"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1098,31,1130,31,1130,36,1098,36"/>
 <area shape="rect" id="Node000004" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="1345,13,1467,54"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="1297,31,1329,31,1329,36,1297,36"/>

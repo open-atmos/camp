@@ -1,5 +1,5 @@
 <map id="camp_property::link_constructor" name="camp_property::link_constructor">
-<area shape="rect" id="Node000001" title="Constructor for property_link_t." alt="" coords="5,22,138,63"/>
+<area shape="rect" id="Node000001" title="Constructor for property_link_t." alt="" coords="5,22,138,62"/>
 <area shape="rect" id="Node000002" href="$namespacecamp__property.html#a52abce158c4eccd039de4f875d697869" title="Get the key name of a property." alt="" coords="186,29,318,55"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="138,40,170,40,170,45,138,45"/>
 <area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="221,30,215,21,219,11,232,5,252,3,274,5,285,12,283,16,272,10,252,8,233,10,223,15,221,20,226,28"/>

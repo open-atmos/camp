@@ -18,7 +18,7 @@
 <area shape="rect" id="Node000005" href="$namespacecamp__util.html#a3a68d4a7d1b28dd132909a12c83d3c21" title="Frees a unit number returned by get_unit()." alt="" coords="412,44,545,70"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="327,85,396,71,397,76,328,90"/>
 <area shape="poly" id="edge7_Node000006_Node000002" title=" " alt="" coords="344,185,394,181,501,178,584,180,667,189,772,205,820,214,819,219,771,210,666,194,583,186,501,183,394,186,344,190"/>
-<area shape="poly" id="edge12_Node000006_Node000003" title=" " alt="" coords="303,180,346,168,394,160,564,147,734,146,886,152,1004,160,1003,166,886,157,734,151,564,152,394,165,347,174,304,185"/>
+<area shape="poly" id="edge12_Node000006_Node000003" title=" " alt="" coords="305,180,394,161,564,149,734,147,886,153,1004,161,1003,166,886,158,734,153,564,154,394,166,306,185"/>
 <area shape="rect" id="Node000007" href="$namespacecamp__util.html#a43662260b71cb7e4b72fe49ccb8cee94" title="Returns an available unit number. This should be freed by free_unit()." alt="" coords="414,220,543,246"/>
 <area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="340,207,398,217,398,222,339,212"/>
 <area shape="poly" id="edge11_Node000007_Node000007" title=" " alt="" coords="443,222,436,212,440,202,454,196,478,194,504,196,518,203,515,208,503,201,478,199,456,201,444,206,441,211,447,218"/>

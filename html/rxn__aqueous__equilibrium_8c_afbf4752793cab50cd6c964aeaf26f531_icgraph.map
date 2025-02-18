@@ -1,5 +1,5 @@
 <map id="calc_standard_rate" name="calc_standard_rate">
-<area shape="rect" id="Node000001" title="Calculate the reaction rate for a set of conditions using the standard equation per mixing ratio of w..." alt="" coords="217,13,348,39"/>
+<area shape="rect" id="Node000001" title="Calculate the reaction rate for a set of conditions using the standard equation per mixing ratio of w..." alt="" coords="217,13,348,38"/>
 <area shape="rect" id="Node000002" href="$rxn__aqueous__equilibrium_8c.html#a71247df341cf33530652f240a86e8e22" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="5,5,169,46"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,28,169,28,169,23,201,23"/>
 </map>

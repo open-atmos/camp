@@ -1,4 +1,4 @@
-\doxysection{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t Interface Reference}
+\doxysection{camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t Type Reference}
 \hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{}\label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}
 
 
@@ -38,13 +38,13 @@ procedure \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__r
 \begin{DoxyCompactList}\small\item\em Get an id for a mode or bin in the aerosol representation by name for use with updates from external modules. \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a19f733204f0335af695472646d6872bb}{size}} (this)
 \begin{DoxyCompactList}\small\item\em Get the size of the section of the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}} array required for this aerosol representation. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_ad6a371a5921b1139e5ee7687fa303e49}{unique\+\_\+names}} (this, phase\+\_\+name, tracer\+\_\+type, \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\+\_\+name}})
+procedure \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a6102b314e30fb0e547a699eb271e55cc}{unique\+\_\+names}} (this, phase\+\_\+name, tracer\+\_\+type, \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\+\_\+name}}, phase\+\_\+is\+\_\+at\+\_\+surface)
 \begin{DoxyCompactList}\small\item\em Get a list of unique names for each element on the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}} array for this aerosol representation. The list may be restricted to a particular phase and/or aerosol species by including the phase\+\_\+name and spec\+\_\+name arguments. \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a4ec0ae1515c2dfadbd214af7186db95e}{spec\+\_\+state\+\_\+id}} (this, unique\+\_\+name)
 \begin{DoxyCompactList}\small\item\em Get a species id on the {\ttfamily \doxylink{structcamp__camp__state_1_1camp__state__t_a5405d5023175234c25e2c2371d924c67}{camp\+\_\+camp\+\_\+state\+::camp\+\_\+state\+\_\+t\+::state\+\_\+var}} array by its unique name. These are unique ids for each element on the state array for this \doxylink{camp_aero_rep}{aerosol representation} and are numbered\+: \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_addb28957631efbb22d6408aa60350431}{spec\+\_\+name}} (this, unique\+\_\+name)
 \begin{DoxyCompactList}\small\item\em Get the non-\/unique name of a species by its unique name. \end{DoxyCompactList}\item 
-procedure \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_ae8a0efeee1ea7c0f3dfff934da260925}{num\+\_\+phase\+\_\+instances}} (this, phase\+\_\+name)
+procedure \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a653b1fbb695f2bbc6cd325d52d5e1bb9}{num\+\_\+phase\+\_\+instances}} (this, phase\+\_\+name, is\+\_\+at\+\_\+surface)
 \begin{DoxyCompactList}\small\item\em Get the number of instances of an aerosol phase in this representation. \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a2329d10644fd2f8b2e73104561e0812b}{num\+\_\+jac\+\_\+elem}} (this, phase\+\_\+id)
 \begin{DoxyCompactList}\small\item\em Get the number of \doxylink{struct_jacobian}{Jacobian} elements used in calculations of aerosol mass, volume, number, etc. for a particular phase. \end{DoxyCompactList}\item 
@@ -114,16 +114,16 @@ Modal mass aerosol representation.
 
 Time-\/invariant data related to a modal/binned mass aerosol representation. 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00142}{142}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00208}{208}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a849c52dc43e0cbe38fd5a32bdf613c5c}\label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a849c52dc43e0cbe38fd5a32bdf613c5c} 
-\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!finalize@{finalize}}
+\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a849c52dc43e0cbe38fd5a32bdf613c5c}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}
 \doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
-{\footnotesize\ttfamily final camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(inout)}]{this }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [final]}}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a849c52dc43e0cbe38fd5a32bdf613c5c} 
+final camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(inout)}]{this}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [final]}}
 
 
 
@@ -149,11 +149,11 @@ Here is the call graph for this function\+:
 
 
 \doxysubsection{Member Function/\+Subroutine Documentation}
-\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a3310e0b4d0d79b8180af1585638f715b}\label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a3310e0b4d0d79b8180af1585638f715b} 
-\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!finalize\_array@{finalize\_array}}
+\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a3310e0b4d0d79b8180af1585638f715b}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!finalize\_array@{finalize\_array}}
 \index{finalize\_array@{finalize\_array}!camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}
 \doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
-{\footnotesize\ttfamily camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), dimension(\+:), intent(inout)}]{aero\+\_\+reps }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a3310e0b4d0d79b8180af1585638f715b} 
+camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::finalize\+\_\+array (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), dimension(\+:), intent(inout)}]{aero\+\_\+reps}{}\end{DoxyParamCaption})}
 
 
 
@@ -168,11 +168,11 @@ Finalize the aerosol representation array.
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00203}{203}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a3a150a32595a8fe4d107af27b9cf8c8c}\label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a3a150a32595a8fe4d107af27b9cf8c8c} 
-\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!get\_section\_id@{get\_section\_id}}
+\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a3a150a32595a8fe4d107af27b9cf8c8c}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!get\_section\_id@{get\_section\_id}}
 \index{get\_section\_id@{get\_section\_id}!camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}
 \doxysubsubsection{\texorpdfstring{get\_section\_id()}{get\_section\_id()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::get\+\_\+section\+\_\+id (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{section\+\_\+name,  }\item[{integer(kind=i\+\_\+kind), intent(out)}]{section\+\_\+id }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a3a150a32595a8fe4d107af27b9cf8c8c} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::get\+\_\+section\+\_\+id (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{section\+\_\+name}{, }\item[{integer(kind=i\+\_\+kind), intent(out)}]{section\+\_\+id}{}\end{DoxyParamCaption})}
 
 
 
@@ -194,11 +194,11 @@ Flag indicating whether the mode/bin was found
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00161}{161}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a24284d596d2c9ffc75a6b461d29d87af}\label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a24284d596d2c9ffc75a6b461d29d87af} 
-\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!initialize@{initialize}}
+\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a24284d596d2c9ffc75a6b461d29d87af}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::initialize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(inout)}]{this,  }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+phase\+\_\+set,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{spec\+\_\+state\+\_\+id }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a24284d596d2c9ffc75a6b461d29d87af} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::initialize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+phase\+\_\+set}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{spec\+\_\+state\+\_\+id}{}\end{DoxyParamCaption})}
 
 
 
@@ -217,11 +217,11 @@ Initialize the aerosol representation data, validating component data and loadin
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00154}{154}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a2329d10644fd2f8b2e73104561e0812b}\label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a2329d10644fd2f8b2e73104561e0812b} 
-\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!num\_jac\_elem@{num\_jac\_elem}}
+\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a2329d10644fd2f8b2e73104561e0812b}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!num\_jac\_elem@{num\_jac\_elem}}
 \index{num\_jac\_elem@{num\_jac\_elem}!camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}
 \doxysubsubsection{\texorpdfstring{num\_jac\_elem()}{num\_jac\_elem()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::num\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{phase\+\_\+id }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a2329d10644fd2f8b2e73104561e0812b} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::num\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{phase\+\_\+id}{}\end{DoxyParamCaption})}
 
 
 
@@ -241,11 +241,11 @@ Number of \doxylink{struct_jacobian}{Jacobian} elements used
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00201}{201}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_ae8a0efeee1ea7c0f3dfff934da260925}\label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_ae8a0efeee1ea7c0f3dfff934da260925} 
-\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!num\_phase\_instances@{num\_phase\_instances}}
+\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a653b1fbb695f2bbc6cd325d52d5e1bb9}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!num\_phase\_instances@{num\_phase\_instances}}
 \index{num\_phase\_instances@{num\_phase\_instances}!camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}
 \doxysubsubsection{\texorpdfstring{num\_phase\_instances()}{num\_phase\_instances()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::num\+\_\+phase\+\_\+instances (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{phase\+\_\+name }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a653b1fbb695f2bbc6cd325d52d5e1bb9} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::num\+\_\+phase\+\_\+instances (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{phase\+\_\+name}{, }\item[{logical, intent(in), optional}]{is\+\_\+at\+\_\+surface}{}\end{DoxyParamCaption})}
 
 
 
@@ -260,16 +260,18 @@ Number of instances of the aerosol phase
 \hline
 \mbox{\texttt{ in}}  & {\em phase\+\_\+name} & Aerosol phase name \\
 \hline
+\mbox{\texttt{ in}}  & {\em is\+\_\+at\+\_\+surface} & Indicates if aerosol phase is at the surface of particle \\
+\hline
 \end{DoxyParams}
 
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00198}{198}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a19f733204f0335af695472646d6872bb}\label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a19f733204f0335af695472646d6872bb} 
-\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!size@{size}}
+\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a19f733204f0335af695472646d6872bb}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!size@{size}}
 \index{size@{size}!camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}
 \doxysubsubsection{\texorpdfstring{size()}{size()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::size (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a19f733204f0335af695472646d6872bb} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::size (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this}{}\end{DoxyParamCaption})}
 
 
 
@@ -279,11 +281,11 @@ For a modal/binned mass representation, the size will correspond to the the sum 
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00169}{169}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_addb28957631efbb22d6408aa60350431}\label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_addb28957631efbb22d6408aa60350431} 
-\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!spec\_name@{spec\_name}}
+\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_addb28957631efbb22d6408aa60350431}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!spec\_name@{spec\_name}}
 \index{spec\_name@{spec\_name}!camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}
 \doxysubsubsection{\texorpdfstring{spec\_name()}{spec\_name()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::spec\+\_\+name (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{unique\+\_\+name }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_addb28957631efbb22d6408aa60350431} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::spec\+\_\+name (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{unique\+\_\+name}{}\end{DoxyParamCaption})}
 
 
 
@@ -303,11 +305,11 @@ Chemical species name
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00196}{196}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a4ec0ae1515c2dfadbd214af7186db95e}\label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a4ec0ae1515c2dfadbd214af7186db95e} 
-\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!spec\_state\_id@{spec\_state\_id}}
+\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a4ec0ae1515c2dfadbd214af7186db95e}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!spec\_state\_id@{spec\_state\_id}}
 \index{spec\_state\_id@{spec\_state\_id}!camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}
 \doxysubsubsection{\texorpdfstring{spec\_state\_id()}{spec\_state\_id()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::spec\+\_\+state\+\_\+id (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{unique\+\_\+name }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a4ec0ae1515c2dfadbd214af7186db95e} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::spec\+\_\+state\+\_\+id (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{unique\+\_\+name}{}\end{DoxyParamCaption})}
 
 
 
@@ -319,11 +321,11 @@ where $x_u$ is the id of the element corresponding to the species with unique na
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00194}{194}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_ad6a371a5921b1139e5ee7687fa303e49}\label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_ad6a371a5921b1139e5ee7687fa303e49} 
-\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!unique\_names@{unique\_names}}
+\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a6102b314e30fb0e547a699eb271e55cc}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!unique\_names@{unique\_names}}
 \index{unique\_names@{unique\_names}!camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}
 \doxysubsubsection{\texorpdfstring{unique\_names()}{unique\_names()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::unique\+\_\+names (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in), optional}]{phase\+\_\+name,  }\item[{integer(kind=i\+\_\+kind), intent(in), optional}]{tracer\+\_\+type,  }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in), optional}]{spec\+\_\+name }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a6102b314e30fb0e547a699eb271e55cc} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::unique\+\_\+names (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in), optional}]{phase\+\_\+name}{, }\item[{integer(kind=i\+\_\+kind), intent(in), optional}]{tracer\+\_\+type}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in), optional}]{spec\+\_\+name}{, }\item[{logical, intent(in), optional}]{phase\+\_\+is\+\_\+at\+\_\+surface}{}\end{DoxyParamCaption})}
 
 
 
@@ -341,11 +343,11 @@ For a modal/binned mass representation, the unique names for bins are\+:
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00180}{180}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a4eac79e1cca00dd70a1911062501bae7}\label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a4eac79e1cca00dd70a1911062501bae7} 
-\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!update\_data\_initialize\_gmd@{update\_data\_initialize\_gmd}}
+\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a4eac79e1cca00dd70a1911062501bae7}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!update\_data\_initialize\_gmd@{update\_data\_initialize\_gmd}}
 \index{update\_data\_initialize\_gmd@{update\_data\_initialize\_gmd}!camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}
 \doxysubsubsection{\texorpdfstring{update\_data\_initialize\_gmd()}{update\_data\_initialize\_gmd()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::update\+\_\+data\+\_\+initialize\+\_\+gmd (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(inout)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gmd\+\_\+t}}), intent(out)}]{update\+\_\+data,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{aero\+\_\+rep\+\_\+type }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a4eac79e1cca00dd70a1911062501bae7} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::update\+\_\+data\+\_\+initialize\+\_\+gmd (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(inout)}]{this}{, }\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gmd\+\_\+t}}), intent(out)}]{update\+\_\+data}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{aero\+\_\+rep\+\_\+type}{}\end{DoxyParamCaption})}
 
 
 
@@ -364,11 +366,11 @@ Initialize an update data GMD object.
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00158}{158}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_ad697b465361558e2b01faac9623522b6}\label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_ad697b465361558e2b01faac9623522b6} 
-\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!update\_data\_initialize\_gsd@{update\_data\_initialize\_gsd}}
+\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_ad697b465361558e2b01faac9623522b6}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!update\_data\_initialize\_gsd@{update\_data\_initialize\_gsd}}
 \index{update\_data\_initialize\_gsd@{update\_data\_initialize\_gsd}!camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}
 \doxysubsubsection{\texorpdfstring{update\_data\_initialize\_gsd()}{update\_data\_initialize\_gsd()}}
-{\footnotesize\ttfamily procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::update\+\_\+data\+\_\+initialize\+\_\+gsd (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(inout)}]{this,  }\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gsd\+\_\+t}}), intent(out)}]{update\+\_\+data,  }\item[{integer(kind=i\+\_\+kind), intent(in)}]{aero\+\_\+rep\+\_\+type }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_ad697b465361558e2b01faac9623522b6} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::update\+\_\+data\+\_\+initialize\+\_\+gsd (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(inout)}]{this}{, }\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+gsd\+\_\+t}}), intent(out)}]{update\+\_\+data}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{aero\+\_\+rep\+\_\+type}{}\end{DoxyParamCaption})}
 
 
 
@@ -390,11 +392,11 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_
 
 
 \doxysubsection{Member Data Documentation}
-\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a1b392ebf03a134ef49fb726a5552cdb4}\label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a1b392ebf03a134ef49fb726a5552cdb4} 
-\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!phase\_state\_id@{phase\_state\_id}}
+\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a1b392ebf03a134ef49fb726a5552cdb4}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!phase\_state\_id@{phase\_state\_id}}
 \index{phase\_state\_id@{phase\_state\_id}!camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}
 \doxysubsubsection{\texorpdfstring{phase\_state\_id}{phase\_state\_id}}
-{\footnotesize\ttfamily integer(kind=i\+\_\+kind), dimension(\+:), allocatable camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::phase\+\_\+state\+\_\+id}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a1b392ebf03a134ef49fb726a5552cdb4} 
+integer(kind=i\+\_\+kind), dimension(\+:), allocatable camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::phase\+\_\+state\+\_\+id}
 
 
 
@@ -404,11 +406,11 @@ Phase state id (only used during initialization)
 
 Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00146}{146}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
-\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_aaca4ed60ca9b1ac04710b1a9e6c6d195}\label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_aaca4ed60ca9b1ac04710b1a9e6c6d195} 
-\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!section\_name@{section\_name}}
+\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_aaca4ed60ca9b1ac04710b1a9e6c6d195}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!section\_name@{section\_name}}
 \index{section\_name@{section\_name}!camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}
 \doxysubsubsection{\texorpdfstring{section\_name}{section\_name}}
-{\footnotesize\ttfamily type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), dimension(\+:), allocatable camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::section\+\_\+name}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_aaca4ed60ca9b1ac04710b1a9e6c6d195} 
+type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), dimension(\+:), allocatable camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::section\+\_\+name}
 
 
 
@@ -420,6 +422,6 @@ Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_
 
 
 
-The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+The documentation for this type was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
 \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}\end{DoxyCompactItemize}
