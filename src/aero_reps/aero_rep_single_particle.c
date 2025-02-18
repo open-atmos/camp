@@ -296,8 +296,8 @@ void aero_rep_single_particle_get_aero_phase_mass__kg_m3(
         double *state = (double *)(model_data->grid_cell_state);
         state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase);
         double mw;
-        aero_phase_get_mass__kg_m3(model_data, aero_phase_idx, state,
-                                     aero_phase_mass, &mw, partial_deriv, NULL);
+        aero_phase_get_mass__kg_m3(model_data, PHASE_MODEL_DATA_ID_(i_layer,i_phase),
+                                   state, aero_phase_mass, &mw, partial_deriv, NULL);
         if (partial_deriv) partial_deriv += PHASE_NUM_JAC_ELEM_(i_layer,i_phase);
       } else if (partial_deriv) {
         for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_layer,i_phase); ++i_spec)
@@ -345,8 +345,8 @@ void aero_rep_single_particle_get_aero_phase_avg_MW__kg_mol(
         double *state = (double *)(model_data->grid_cell_state);
         state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase);
         double mass;
-        aero_phase_get_mass__kg_m3(model_data, aero_phase_idx, state, &mass,
-                                   aero_phase_avg_MW, NULL, partial_deriv);
+        aero_phase_get_mass__kg_m3(model_data, PHASE_MODEL_DATA_ID_(i_layer,i_phase),
+                                   state, &mass, aero_phase_avg_MW, NULL, partial_deriv);
         if (partial_deriv) partial_deriv += PHASE_NUM_JAC_ELEM_(i_layer,i_phase);
       } else if (partial_deriv) {
         for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_layer,i_phase); ++i_spec)
@@ -423,6 +423,8 @@ void aero_rep_single_particle_print(int *aero_rep_int_data,
   printf("\nParticle state size: %d", PARTICLE_STATE_SIZE_);
   for(int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer){
     printf("\nLayer: %d", i_layer);
+    printf("\n  Start phase: %d End phase: %d", LAYER_PHASE_START_(i_layer), LAYER_PHASE_END_(i_layer));
+    printf("\n  Number of phases: %d", NUM_PHASES_(i_layer));
     printf("\n\n   - Phases -");
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
       printf("\n  state id: %d model data id: %d num Jac elements: %d",

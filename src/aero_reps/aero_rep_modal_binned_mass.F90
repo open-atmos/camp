@@ -734,7 +734,8 @@ contains
   !!
   !! ... and for modes are:
   !!   - "mode name.phase name.species name"
-  function unique_names(this, phase_name, tracer_type, spec_name)
+  function unique_names(this, phase_name, tracer_type, spec_name,             &
+      phase_is_at_surface)
 
     !> List of unique names
     type(string_t), allocatable :: unique_names(:)
@@ -746,6 +747,8 @@ contains
     integer(kind=i_kind), optional, intent(in) :: tracer_type
     !> Aerosol-phase species name
     character(len=*), optional, intent(in) :: spec_name
+    !> Aerosol-phase species is at surface
+    logical, optional, intent(in) :: phase_is_at_surface
 
     integer(kind=i_kind) :: num_spec, i_spec, j_spec, i_phase, j_phase, &
                             i_section, i_bin
@@ -762,6 +765,12 @@ contains
       if (present(phase_name)) then
         curr_phase_name = this%aero_phase(i_phase)%val%name()
         if (phase_name.ne.curr_phase_name) cycle
+      end if
+
+      ! Filter by phase is at surface
+      if (present(phase_is_at_surface)) then
+        if (phase_is_at_surface .neqv.                                          &
+            this%aero_phase_is_at_surface(i_phase)) cycle
       end if
 
       ! Filter by spec name and/or tracer type
@@ -805,6 +814,15 @@ contains
         ! Filter by phase name
         if (present(phase_name)) then
           if (phase_name.ne.curr_phase_name) then
+            i_phase = i_phase + NUM_BINS_(i_section)
+            cycle
+          end if
+        end if
+
+        ! Filter by phase is at surface
+        if (present(phase_is_at_surface)) then
+          if (phase_is_at_surface .neqv.                                      &
+              this%aero_phase_is_at_surface(i_phase)) then
             i_phase = i_phase + NUM_BINS_(i_section)
             cycle
           end if
@@ -941,7 +959,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get the number of instances of a specified aerosol phase.
-  function num_phase_instances(this, phase_name)
+  function num_phase_instances(this, phase_name, is_at_surface)
 
     !> Number of instances of the aerosol phase
     integer(kind=i_kind) :: num_phase_instances
@@ -949,15 +967,37 @@ contains
     class(aero_rep_modal_binned_mass_t), intent(in) :: this
     !> Aerosol phase name
     character(len=*), intent(in) :: phase_name
+    !> Indicates if aerosol phase is at the surface of particle
+    logical, intent(in), optional :: is_at_surface
 
     integer(kind=i_kind) :: i_phase
 
     num_phase_instances = 0
-    do i_phase = 1, size(this%aero_phase)
-      if (this%aero_phase(i_phase)%val%name().eq.phase_name) then
-        num_phase_instances = num_phase_instances + 1
+    if (present(is_at_surface)) then
+      if (is_at_surface) then
+        do i_phase = 1, size(this%aero_phase)
+          if (this%aero_phase(i_phase)%val%name().eq.phase_name .and. &
+              this%aero_phase_is_at_surface(i_phase)) then
+            num_phase_instances = num_phase_instances + 1
+          end if
+        end do
+      else
+        do i_phase = 1, size(this%aero_phase)
+          if (this%aero_phase(i_phase)%val%name().eq.phase_name .and. &
+              .not. this%aero_phase_is_at_surface(i_phase)) then
+            call die_msg(507144607, "Species must exist at surface "// &
+                "in modal/binned mass aerosol representation '"// &
+                this%rep_name//"'")    
+          end if
+        end do 
       end if
-    end do
+    else
+      do i_phase = 1, size(this%aero_phase)
+        if (this%aero_phase(i_phase)%val%name().eq.phase_name) then
+          num_phase_instances = num_phase_instances + 1
+        end if
+      end do
+    end if 
 
   end function num_phase_instances
 

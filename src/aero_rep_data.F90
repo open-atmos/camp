@@ -276,7 +276,8 @@ interface
   !> Get a list of unique names for each element on the
   !! \c camp_camp_state::camp_state_t::state_var array for this aerosol
   !! representation.
-  function unique_names(this, phase_name, tracer_type, spec_name)
+  function unique_names(this, phase_name, tracer_type, spec_name,             &
+      phase_is_at_surface)
     use camp_util,                                     only : string_t, i_kind
     import :: aero_rep_data_t
 
@@ -290,6 +291,8 @@ interface
     integer(kind=i_kind), optional, intent(in) :: tracer_type
     !> Aerosol-phase species name
     character(len=*), optional, intent(in) :: spec_name
+    !> Indicates if aerosol phase is at the surface of particle
+    logical, optional, intent(in) :: phase_is_at_surface
 
   end function unique_names
 
@@ -342,7 +345,7 @@ interface
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get the number of instances of a specified aerosol phase
-  function num_phase_instances(this, phase_name)
+  function num_phase_instances(this, phase_name, is_at_surface)
     use camp_util,                                       only : i_kind
     import :: aero_rep_data_t
 
@@ -352,6 +355,8 @@ interface
     class(aero_rep_data_t), intent(in) :: this
     !> Aerosol phase name
     character(len=*), intent(in) :: phase_name
+    !> Indicates if aerosol phase is at the surface of particle
+    logical, intent(in), optional :: is_at_surface
 
   end function num_phase_instances
 
@@ -506,7 +511,7 @@ contains
 
     integer(kind=i_kind) :: num_instances, i_instance, i_phase
 
-    num_instances = this%num_phase_instances(phase_name)
+    num_instances = this%num_phase_instances(phase_name, is_at_surface)
     allocate(phase_ids(num_instances))
     if (present(is_at_surface)) then
       if (is_at_surface) then
@@ -537,6 +542,7 @@ contains
         end if
       end do
     end if
+    call assert(642387392, num_instances == i_instance-1)
 
   end function phase_ids
 

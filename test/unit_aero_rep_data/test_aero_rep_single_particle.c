@@ -17,7 +17,7 @@
 #define AERO_REP_IDX 0
 
 // test computational particle
-#define TEST_PARTICLE 2
+#define TEST_PARTICLE_1 2
 
 // number of computational particles in the test
 #define N_COMP_PARTICLES 3
@@ -25,8 +25,11 @@
 // number of aerosol phases per particle
 #define NUM_AERO_PHASE 4
 
-// index for the test phase (test-particle phase 2)
-#define AERO_PHASE_IDX ((TEST_PARTICLE-1)*NUM_AERO_PHASE+1)
+// index for the test phase
+// (test-particle phase 2 : middle layer, jam)
+#define AERO_PHASE_IDX_1 ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+1)
+// (test-particle phase 4 : top layer, bread)
+#define AERO_PHASE_IDX_2 ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+3)
 
 // number of Jacobian elements used for the test phase
 #define N_JAC_ELEM 12
@@ -40,10 +43,6 @@
 #define CONC_sugar 6.0
 #define CONC_lemon 7.0
 #define CONC_almonds 8.0
-#define CONC_sugarB 9.0
-#define CONC_wheatB 10.0
-#define CONC_waterB 11.0
-#define CONC_saltB 12.0
 
 // Molecular weight (kg/mol) of test species (must match json file)
 #define MW_wheat 1.0
@@ -79,13 +78,17 @@
 int test_effective_radius(ModelData * model_data, N_Vector state) {
 
   int ret_val = 0;
-  double partial_deriv[N_JAC_ELEM+2];
-  double eff_rad = -999.9;
+  double partial_deriv_1[N_JAC_ELEM+2];
+  double partial_deriv_2[N_JAC_ELEM+2];
+  double eff_rad_1 = -999.9;
+  double eff_rad_2 = -999.9;
 
-  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv[i] = 999.9;
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_1[i] = 999.9;
 
   aero_rep_get_effective_radius__m(model_data, AERO_REP_IDX,
-                                AERO_PHASE_IDX, &eff_rad, &(partial_deriv[1]));
+                                AERO_PHASE_IDX_1, &eff_rad_1, &(partial_deriv_1[1]));
+  aero_rep_get_effective_radius__m(model_data, AERO_REP_IDX,
+                                AERO_PHASE_IDX_2, &eff_rad_2, &(partial_deriv_2[1]));
 
   double volume_density = ( CONC_wheat / DENSITY_wheat +
                             CONC_water / DENSITY_water +
@@ -95,45 +98,47 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
                             CONC_sugar / DENSITY_sugar +
                             CONC_lemon / DENSITY_lemon +
                             CONC_almonds / DENSITY_almonds + 
-                            CONC_sugarB / DENSITY_sugar +
-                            CONC_wheatB / DENSITY_wheat +
-                            CONC_waterB / DENSITY_water +
-                            CONC_saltB / DENSITY_salt ); // volume density (m3/m3)
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt ); // volume density (m3/m3)
   
   double eff_rad_expected = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density ), 1.0/3.0 );
-  ret_val += ASSERT_MSG(fabs(eff_rad-eff_rad_expected) < 1.0e-6*eff_rad_expected,
+  ret_val += ASSERT_MSG(fabs(eff_rad_1-eff_rad_expected) < 1.0e-6*eff_rad_expected,
+                        "Bad effective radius");
+  ret_val += ASSERT_MSG(fabs(eff_rad_2-eff_rad_expected) < 1.0e-6*eff_rad_expected,
                         "Bad effective radius");
 
-  ret_val += ASSERT_MSG(partial_deriv[0] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_1[0] = 999.9,
                         "Bad Jacobian (-1)");
   double d_eff_rad_dx = 1.0 / 4.0 / 3.14159265359 *
                         pow( 3.0 / 4.0 / 3.14159265359 * volume_density, -2.0/3.0 );
 
-  ret_val += ASSERT_MSG(fabs(partial_deriv[1] - d_eff_rad_dx / DENSITY_wheat) <
-                        1.0e-10 * partial_deriv[1], "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[2] - d_eff_rad_dx / DENSITY_water) <
-                        1.0e-10 * partial_deriv[2], "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[3] - d_eff_rad_dx / DENSITY_salt) <
-                        1.0e-10 * partial_deriv[3], "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[4] - d_eff_rad_dx / DENSITY_rasberry) <
-                        1.0e-10 * partial_deriv[4], "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[5] - d_eff_rad_dx / DENSITY_honey) <
-                        1.0e-10 * partial_deriv[5], "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[6] - d_eff_rad_dx / DENSITY_sugar) <
-                        1.0e-10 * partial_deriv[6], "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[7] - d_eff_rad_dx / DENSITY_lemon) <
-                        1.0e-10 * partial_deriv[7], "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[8] - d_eff_rad_dx / DENSITY_almonds) <
-                        1.0e-10 * partial_deriv[8], "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[9] - d_eff_rad_dx / DENSITY_sugar) <
-                        1.0e-10 * partial_deriv[9], "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[10] - d_eff_rad_dx / DENSITY_wheat) <
-                        1.0e-10 * partial_deriv[10], "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[11] - d_eff_rad_dx / DENSITY_water) <
-                        1.0e-10 * partial_deriv[11], "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[12] - d_eff_rad_dx / DENSITY_salt) <
-                        1.0e-10 * partial_deriv[12], "Bad Jacobian element");
-  ret_val += ASSERT_MSG(partial_deriv[N_JAC_ELEM+1] = 999.9,
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[1] - d_eff_rad_dx / DENSITY_wheat) <
+                        1.0e-10 * partial_deriv_1[1], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[2] - d_eff_rad_dx / DENSITY_water) <
+                        1.0e-10 * partial_deriv_1[2], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[3] - d_eff_rad_dx / DENSITY_salt) <
+                        1.0e-10 * partial_deriv_1[3], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[4] - d_eff_rad_dx / DENSITY_rasberry) <
+                        1.0e-10 * partial_deriv_1[4], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[5] - d_eff_rad_dx / DENSITY_honey) <
+                        1.0e-10 * partial_deriv_1[5], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[6] - d_eff_rad_dx / DENSITY_sugar) <
+                        1.0e-10 * partial_deriv_1[6], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[7] - d_eff_rad_dx / DENSITY_lemon) <
+                        1.0e-10 * partial_deriv_1[7], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[8] - d_eff_rad_dx / DENSITY_almonds) <
+                        1.0e-10 * partial_deriv_1[8], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[9] - d_eff_rad_dx / DENSITY_sugar) <
+                        1.0e-10 * partial_deriv_1[9], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[10] - d_eff_rad_dx / DENSITY_wheat) <
+                        1.0e-10 * partial_deriv_1[10], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[11] - d_eff_rad_dx / DENSITY_water) <
+                        1.0e-10 * partial_deriv_1[11], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[12] - d_eff_rad_dx / DENSITY_salt) <
+                        1.0e-10 * partial_deriv_1[12], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(partial_deriv_1[N_JAC_ELEM+1] = 999.9,
                         "Bad Jacobian (end+1)");
 
   return ret_val;
@@ -154,8 +159,9 @@ int test_number_concentration(ModelData * model_data, N_Vector state) {
   for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv[i] = 999.9;
 
   aero_rep_get_number_conc__n_m3(model_data, AERO_REP_IDX,
-                           AERO_PHASE_IDX, &num_conc, &(partial_deriv[1]));
+                           AERO_PHASE_IDX_1, &num_conc, &(partial_deriv[1]));
 
+  printf("\nnumber conc : %f", num_conc);
   ret_val += ASSERT_MSG(fabs(num_conc-PART_NUM_CONC) < 1.0e-10*PART_NUM_CONC,
                         "Bad number concentration");
 
@@ -179,38 +185,65 @@ int test_number_concentration(ModelData * model_data, N_Vector state) {
 int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
 
   int ret_val = 0;
-  double partial_deriv[N_JAC_ELEM+2];
-  double phase_mass = -999.9;
+  double partial_deriv_1[N_JAC_ELEM+2];
+  double partial_deriv_2[N_JAC_ELEM+2];
+  double phase_mass_1 = -999.9;
+  double phase_mass_2 = -999.9;
 
-  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv[i] = 999.9;
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_1[i] = 999.9;
 
-  aero_rep_get_aero_phase_mass__kg_m3(model_data, AERO_REP_IDX, AERO_PHASE_IDX,
-                               &phase_mass, &(partial_deriv[1]));
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_2[i] = 999.9;
 
-  double mass = CONC_rasberry + CONC_honey + CONC_sugar + CONC_lemon;
+  aero_rep_get_aero_phase_mass__kg_m3(model_data, AERO_REP_IDX, AERO_PHASE_IDX_1,
+                               &phase_mass_1, &(partial_deriv_1[1]));
 
-  ret_val += ASSERT_MSG(fabs(phase_mass-mass) < 1.0e-10*mass,
+  aero_rep_get_aero_phase_mass__kg_m3(model_data, AERO_REP_IDX, AERO_PHASE_IDX_2,
+                               &phase_mass_2, &(partial_deriv_2[1]));
+
+  double mass_1 = CONC_rasberry + CONC_honey + CONC_sugar + CONC_lemon;
+  double mass_2 = CONC_wheat + CONC_water + CONC_salt;
+
+  ret_val += ASSERT_MSG(fabs(phase_mass_1-mass_1) < 1.0e-10*mass_1,
                         "Bad aerosol phase mass");
 
-  ret_val += ASSERT_MSG(partial_deriv[0] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_1[0] = 999.9,
                         "Bad Jacobian (-1)");
   for( int i = 1; i < 4; ++i )
-    ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
+    ret_val += ASSERT_MSG(partial_deriv_1[i] == ZERO,
                           "Bad Jacobian element");
   for( int i = 4; i < 8; ++i )
-    ret_val += ASSERT_MSG(partial_deriv[i] == ONE,
+    ret_val += ASSERT_MSG(partial_deriv_1[i] == ONE,
                           "Bad Jacobian element");
   for( int i = 8; i < 10; ++i )
-    ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
+    ret_val += ASSERT_MSG(partial_deriv_1[i] == ZERO,
                           "Bad Jacobian element");
   for( int i = 10; i < N_JAC_ELEM+1; ++i )
-    ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
+    ret_val += ASSERT_MSG(partial_deriv_1[i] == ZERO,
                           "Bad Jacobian element");
-  ret_val += ASSERT_MSG(partial_deriv[N_JAC_ELEM+1] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_1[N_JAC_ELEM+1] = 999.9,
+                        "Bad Jacobian (end+1)");
+
+  ret_val += ASSERT_MSG(fabs(phase_mass_2-mass_2) < 1.0e-10*mass_2,
+                        "Bad aerosol phase mass");
+  printf("\nphase_mass_2 : %f", phase_mass_2);
+  ret_val += ASSERT_MSG(partial_deriv_2[0] = 999.9,
+                        "Bad Jacobian (-1)");
+  for( int i = 1; i < 4; ++i )
+    ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
+                          "Bad Jacobian element");
+  for( int i = 4; i < 8; ++i )
+    ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
+                          "Bad Jacobian element");
+  for( int i = 8; i < 10; ++i )
+    ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
+                          "Bad Jacobian element");
+  for( int i = 10; i < N_JAC_ELEM+1; ++i )
+    ret_val += ASSERT_MSG(partial_deriv_2[i] == ONE,
+                          "Bad Jacobian element");
+  ret_val += ASSERT_MSG(partial_deriv_2[N_JAC_ELEM+1] = 999.9,
                         "Bad Jacobian (end+1)");
 
   return ret_val;
-
 }
 
 /** \brief Test the aerosol phase average molecular weight function
@@ -222,44 +255,73 @@ int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
 int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
 
   int ret_val = 0;
-  double partial_deriv[N_JAC_ELEM+2];
-  double avg_mw = -999.9;
+  double partial_deriv_1[N_JAC_ELEM+2];
+  double partial_deriv_2[N_JAC_ELEM+2];
+  double avg_mw_1 = -999.9;
+  double avg_mw_2 = -999.9;
 
-  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv[i] = 999.9;
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_1[i] = 999.9;
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_2[i] = 999.9;
 
-  aero_rep_get_aero_phase_avg_MW__kg_mol(model_data, AERO_REP_IDX, AERO_PHASE_IDX,
-                                 &avg_mw, &(partial_deriv[1]));
+  aero_rep_get_aero_phase_avg_MW__kg_mol(model_data, AERO_REP_IDX, AERO_PHASE_IDX_1,
+                                 &avg_mw_1, &(partial_deriv_1[1]));
+  aero_rep_get_aero_phase_avg_MW__kg_mol(model_data, AERO_REP_IDX, AERO_PHASE_IDX_2,
+                                 &avg_mw_2, &(partial_deriv_2[1]));
 
-  double mass = CONC_rasberry + CONC_honey + CONC_sugar + CONC_lemon;
-  double moles = CONC_rasberry / MW_rasberry + CONC_honey / MW_honey + CONC_sugar / MW_sugar + CONC_lemon / MW_lemon;
-  double avg_mw_real = mass / moles;
-  double dMW_drasberry = ONE / moles - mass / (moles * moles * MW_rasberry);
-  double dMW_dhoney = ONE / moles - mass / (moles * moles * MW_honey);
-  double dMW_dsugar = ONE / moles - mass / (moles * moles * MW_sugar);
-  double dMW_dlemon = ONE / moles - mass / (moles * moles * MW_lemon);
+  double mass_1 = CONC_rasberry + CONC_honey + CONC_sugar + CONC_lemon;
+  double moles_1 = CONC_rasberry / MW_rasberry + CONC_honey / MW_honey + CONC_sugar / MW_sugar + CONC_lemon / MW_lemon;
+  double avg_mw_real_1 = mass_1 / moles_1;
+  double dMW_drasberry = ONE / moles_1 - mass_1 / (moles_1 * moles_1 * MW_rasberry);
+  double dMW_dhoney = ONE / moles_1 - mass_1 / (moles_1 * moles_1 * MW_honey);
+  double dMW_dsugar = ONE / moles_1 - mass_1 / (moles_1 * moles_1 * MW_sugar);
+  double dMW_dlemon = ONE / moles_1 - mass_1 / (moles_1 * moles_1 * MW_lemon);
 
-  ret_val += ASSERT_MSG(fabs(avg_mw-avg_mw_real) < 1.0e-10*avg_mw_real,
+  double mass_2 = CONC_wheat + CONC_water + CONC_salt;
+  double moles_2 = CONC_wheat / MW_wheat + CONC_water / MW_water + CONC_salt / MW_salt; 
+  double avg_mw_real_2 = mass_2 / moles_2;
+  double dMW_dwheat = ONE / moles_2 - mass_2 / (moles_2 * moles_2 * MW_wheat);
+  double dMW_dwater = ONE / moles_2 - mass_2 / (moles_2 * moles_2 * MW_water);
+  double dMW_dsalt = ONE / moles_2 - mass_2 / (moles_2 * moles_2 * MW_salt);
+
+  ret_val += ASSERT_MSG(fabs(avg_mw_1-avg_mw_real_1) < 1.0e-10*avg_mw_real_1,
                         "Bad average MW");
 
-  ret_val += ASSERT_MSG(partial_deriv[0] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_1[0] = 999.9,
                         "Bad Jacobian (-1)");
   for( int i = 1; i < 4; ++i )
-    ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
+    ret_val += ASSERT_MSG(partial_deriv_1[i] == ZERO,
                           "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[4]-dMW_drasberry) < 1.0e-10*fabs(dMW_drasberry),
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[4]-dMW_drasberry) < 1.0e-10*fabs(dMW_drasberry),
                         "Bad Jacobian (-1)");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[5]-dMW_dhoney) < 1.0e-10*fabs(dMW_dhoney),
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[5]-dMW_dhoney) < 1.0e-10*fabs(dMW_dhoney),
                         "Bad Jacobian (-1)");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[6]-dMW_dsugar) < 1.0e-10*fabs(dMW_dsugar),
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[6]-dMW_dsugar) < 1.0e-10*fabs(dMW_dsugar),
                         "Bad Jacobian (-1)");
-  ret_val += ASSERT_MSG(fabs(partial_deriv[7]-dMW_dlemon) < 1.0e-10*fabs(dMW_dlemon),
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[7]-dMW_dlemon) < 1.0e-10*fabs(dMW_dlemon),
                         "Bad Jacobian (-1)");
   for( int i = 8; i < N_JAC_ELEM+1; ++i )
-    ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
+    ret_val += ASSERT_MSG(partial_deriv_1[i] == ZERO,
                           "Bad Jacobian element");
-  ret_val += ASSERT_MSG(partial_deriv[N_JAC_ELEM+1] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_1[N_JAC_ELEM+1] = 999.9,
                         "Bad Jacobian (end+1)");
 
+
+  ret_val += ASSERT_MSG(fabs(avg_mw_2-avg_mw_real_2) < 1.0e-10*avg_mw_real_2,
+                        "Bad average MW");
+
+  ret_val += ASSERT_MSG(partial_deriv_2[0] = 999.9,
+                        "Bad Jacobian (-1)");
+  for( int i = 1; i < 9; ++i )
+    ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
+                          "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[10]-dMW_dwheat) < 1.0e-10*fabs(dMW_dwheat),
+                        "Bad Jacobian (-1)");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[11]-dMW_dwater) < 1.0e-10*fabs(dMW_dwater),
+                        "Bad Jacobian (-1)");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[12]-dMW_dsalt) < 1.0e-10*fabs(dMW_dsalt),
+                        "Bad Jacobian (-1)");
+  ret_val += ASSERT_MSG(partial_deriv_2[N_JAC_ELEM+1] = 999.9,
+                        "Bad Jacobian (end+1)");
   return ret_val;
 }
 
@@ -295,7 +357,7 @@ int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, doubl
 
   for (int i_var=0; i_var<n_solver_var; ++i_var) jac_struct[i_var] = false;
 
-  int aero_phase_idx = AERO_PHASE_IDX;   // phase 2
+  int aero_phase_idx = AERO_PHASE_IDX_2;   // phase 2
   int aero_rep_idx   = AERO_REP_IDX;     // only one aero rep in the test
 
   int n_jac_elem = aero_rep_get_used_jac_elem(model_data, aero_rep_idx,
@@ -307,18 +369,18 @@ int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, doubl
 
 
   // set concentrations of test particle species
-  NV_DATA_S(solver_state)[(TEST_PARTICLE-1)*12+0] = state[(TEST_PARTICLE-1)*12+0] = CONC_wheat; // layer one, phase one 
-  NV_DATA_S(solver_state)[(TEST_PARTICLE-1)*12+1] = state[(TEST_PARTICLE-1)*12+1] = CONC_water; // layer one, phase one
-  NV_DATA_S(solver_state)[(TEST_PARTICLE-1)*12+2] = state[(TEST_PARTICLE-1)*12+2] = CONC_salt; // layer one, phase one
-  NV_DATA_S(solver_state)[(TEST_PARTICLE-1)*12+3] = state[(TEST_PARTICLE-1)*12+3] = CONC_rasberry; // layer two, phase one
-  NV_DATA_S(solver_state)[(TEST_PARTICLE-1)*12+4] = state[(TEST_PARTICLE-1)*12+4] = CONC_honey; // layer two, phase one
-  NV_DATA_S(solver_state)[(TEST_PARTICLE-1)*12+5] = state[(TEST_PARTICLE-1)*12+5] = CONC_sugar; // layer two, phase one
-  NV_DATA_S(solver_state)[(TEST_PARTICLE-1)*12+6] = state[(TEST_PARTICLE-1)*12+6] = CONC_lemon; // layer two, phase one
-  NV_DATA_S(solver_state)[(TEST_PARTICLE-1)*12+7] = state[(TEST_PARTICLE-1)*12+7] = CONC_almonds; // layer two, phase two
-  NV_DATA_S(solver_state)[(TEST_PARTICLE-1)*12+8] = state[(TEST_PARTICLE-1)*12+8] = CONC_sugarB; // layer two, phase two
-  NV_DATA_S(solver_state)[(TEST_PARTICLE-1)*12+9] = state[(TEST_PARTICLE-1)*12+9] = CONC_wheatB; // layer three, phase one
-  NV_DATA_S(solver_state)[(TEST_PARTICLE-1)*12+10] = state[(TEST_PARTICLE-1)*12+10] = CONC_waterB; // layer three, phase one
-  NV_DATA_S(solver_state)[(TEST_PARTICLE-1)*12+11] = state[(TEST_PARTICLE-1)*12+11] = CONC_saltB; // layer three, phase one
+  NV_DATA_S(solver_state)[(TEST_PARTICLE_1-1)*12+0] = state[(TEST_PARTICLE_1-1)*12+0] = CONC_wheat; // layer one, phase one 
+  NV_DATA_S(solver_state)[(TEST_PARTICLE_1-1)*12+1] = state[(TEST_PARTICLE_1-1)*12+1] = CONC_water; // layer one, phase one
+  NV_DATA_S(solver_state)[(TEST_PARTICLE_1-1)*12+2] = state[(TEST_PARTICLE_1-1)*12+2] = CONC_salt; // layer one, phase one
+  NV_DATA_S(solver_state)[(TEST_PARTICLE_1-1)*12+3] = state[(TEST_PARTICLE_1-1)*12+3] = CONC_rasberry; // layer two, phase one
+  NV_DATA_S(solver_state)[(TEST_PARTICLE_1-1)*12+4] = state[(TEST_PARTICLE_1-1)*12+4] = CONC_honey; // layer two, phase one
+  NV_DATA_S(solver_state)[(TEST_PARTICLE_1-1)*12+5] = state[(TEST_PARTICLE_1-1)*12+5] = CONC_sugar; // layer two, phase one
+  NV_DATA_S(solver_state)[(TEST_PARTICLE_1-1)*12+6] = state[(TEST_PARTICLE_1-1)*12+6] = CONC_lemon; // layer two, phase one
+  NV_DATA_S(solver_state)[(TEST_PARTICLE_1-1)*12+7] = state[(TEST_PARTICLE_1-1)*12+7] = CONC_almonds; // layer two, phase two
+  NV_DATA_S(solver_state)[(TEST_PARTICLE_1-1)*12+8] = state[(TEST_PARTICLE_1-1)*12+8] = CONC_sugar; // layer two, phase two
+  NV_DATA_S(solver_state)[(TEST_PARTICLE_1-1)*12+9] = state[(TEST_PARTICLE_1-1)*12+9] = CONC_wheat; // layer three, phase one
+  NV_DATA_S(solver_state)[(TEST_PARTICLE_1-1)*12+10] = state[(TEST_PARTICLE_1-1)*12+10] = CONC_water; // layer three, phase one
+  NV_DATA_S(solver_state)[(TEST_PARTICLE_1-1)*12+11] = state[(TEST_PARTICLE_1-1)*12+11] = CONC_salt; // layer three, phase one
 
   // Set the environment-dependent parameter pointer to the first grid cell
   model_data->grid_cell_aero_rep_env_data = model_data->aero_rep_env_data;
@@ -326,6 +388,8 @@ int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, doubl
   // Update the environmental and concentration states
   aero_rep_update_env_state(model_data);
   aero_rep_update_state(model_data);
+
+  aero_rep_print_data(sd);
 
   // Run the property tests
   ret_val += test_effective_radius(model_data, solver_state);
