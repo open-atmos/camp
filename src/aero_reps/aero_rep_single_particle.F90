@@ -68,7 +68,7 @@ module camp_aero_rep_single_particle
 
   public :: aero_rep_single_particle_t, &
             aero_rep_update_data_single_particle_number_t, &
-            ordered_layer_ids
+            ordered_layer_ids, index_pair_t
 
   !> Single particle aerosol representation
   !!
@@ -142,9 +142,16 @@ module camp_aero_rep_single_particle
     procedure :: num_phases
     !> Returns the number of state variables for a layer and phase
     procedure :: phase_state_size
+    !> Returns index_pair_t type with phase_ids of adjacent phases
+    procedure :: adjacent_phases
     !> Finalize the aerosol representation
     final :: finalize, finalize_array
   end type aero_rep_single_particle_t
+
+  type :: index_pair_t
+    integer :: first_ = -9999
+    integer :: second_ = -9999
+  end type index_pair_t
 
   ! Constructor for aero_rep_single_particle_t
   interface aero_rep_single_particle_t
@@ -784,6 +791,42 @@ contains
 
     end function phase_state_size
 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    !> Determine is specified phase(s) exist in adjacent layers. Returns array
+    !! of phase_ids for adjacent phases first and second.
+
+    function adjacent_phases(this, phase_id_first, &
+                             phase_id_second) result(index_pairs)
+
+      !> Aerosol representation data
+      class(aero_rep_single_particle_t), intent(in) :: this
+      integer, intent(in) :: phase_id_first
+      integer, intent(in) :: phase_id_second
+      type(index_pair_t), allocatable :: index_pairs(:)
+
+      integer(kind=i_kind) :: i_layer 
+      integer :: layer_first = -9999 
+      integer :: layer_second = -9999
+
+      do i_layer = 1, NUM_LAYERS_
+        if (LAYER_PHASE_START_(i_layer) .le. phase_id_first .and. &
+          phase_id_first .le. LAYER_PHASE_END_(i_layer)) then
+          layer_first = i_layer
+        else if (LAYER_PHASE_START_(i_layer) .le. phase_id_second .and. &
+          phase_id_second .le. LAYER_PHASE_END_(i_layer)) then
+          layer_second = i_layer
+        end if
+      end do
+
+      allocate(index_pairs(1))
+      if ((layer_first+1) .eq. layer_second .or. &
+         (layer_second+1) .eq. layer_first) then
+        index_pairs%first_ = phase_id_first
+        index_pairs%second_ = phase_id_second
+      end if
+
+    end function adjacent_phases
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the aerosol representation

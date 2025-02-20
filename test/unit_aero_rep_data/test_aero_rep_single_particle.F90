@@ -67,6 +67,7 @@ program camp_test_aero_rep_data
   ! New-line character
   character(len=*), parameter :: new_line = char(10)
 
+
   !> initialize mpi
   call camp_mpi_init()
 
@@ -160,6 +161,8 @@ contains
     character(len=:), allocatable :: rep_name, phase_name_test
     integer :: i_name, num_bread, max_part, bread_phase_instance
     integer :: num_jam, jam_phase_instance
+    type(index_pair_t), allocatable :: adjacent_phases(:)
+    integer :: phase_id_first, phase_id_second
     integer, dimension(3) :: bread_phase_id, jam_phase_id
     integer, allocatable :: jam_phase_id_correct(:), bread_phase_id_correct(:)
 
@@ -241,6 +244,20 @@ contains
         call assert(799763568, bread_phase_id(3) .eq. bread_phase_id_correct(3))
         call assert(734138496, bread_phase_instance .eq. aero_rep%num_phase_instances(phase_name_test, &
                                                          is_at_surface = .true.))
+        ! test adjacent_phases function
+        phase_id_first = 1
+        phase_id_second = 3
+        adjacent_phases = aero_rep%adjacent_phases(phase_id_first,phase_id_second)
+        call assert(715901353, adjacent_phases(1)%first_ .eq. 1)
+        call assert(304969793, adjacent_phases(1)%second_ .eq. 3)
+        
+        phase_id_first = 2
+        phase_id_second = 3
+        adjacent_phases = aero_rep%adjacent_phases(phase_id_first,phase_id_second)
+        print *, adjacent_phases(1)%first_
+        print *, adjacent_phases(1)%second_
+        call assert(629022975, adjacent_phases(1)%first_ .eq. -9999)
+        call assert(453784946, adjacent_phases(1)%second_ .eq. -9999)
 
       class default
         call die_msg(519535557, rep_name)
