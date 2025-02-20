@@ -803,7 +803,7 @@ contains
       class(aero_rep_single_particle_t), intent(in) :: this
       integer, intent(in) :: phase_id_first
       integer, intent(in) :: phase_id_second
-      type(index_pair_t), allocatable :: index_pairs(:)
+      type(index_pair_t) :: index_pairs
 
       integer(kind=i_kind) :: i_layer 
       integer :: layer_first = -9999 
@@ -819,7 +819,6 @@ contains
         end if
       end do
 
-      allocate(index_pairs(1))
       if ((layer_first+1) .eq. layer_second .or. &
          (layer_second+1) .eq. layer_first) then
         index_pairs%first_ = phase_id_first
