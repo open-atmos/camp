@@ -796,34 +796,52 @@ contains
     !> Determine is specified phase(s) exist in adjacent layers. Returns array
     !! of phase_ids for adjacent phases first and second.
 
-    function adjacent_phases(this, phase_id_first, &
-                             phase_id_second) result(index_pairs)
+    function adjacent_phases(this, phase_name_first, &
+                             phase_name_second) result(index_pairs)
 
       !> Aerosol representation data
       class(aero_rep_single_particle_t), intent(in) :: this
-      integer, intent(in) :: phase_id_first
-      integer, intent(in) :: phase_id_second
-      type(index_pair_t) :: index_pairs
+      character(len=*), intent(in) :: phase_name_first
+      character(len=*), intent(in) :: phase_name_second
+      type(index_pair_t), allocatable :: index_pairs(:)
 
-      integer(kind=i_kind) :: i_layer 
-      integer :: layer_first = -9999 
-      integer :: layer_second = -9999
+      integer(kind=i_kind) :: i_layer, i_phase, i_instance
+      character(len=*), allocatable :: layer_first(:)
+      character(len=*), allocatable :: layer_second(:)
+      integer, allocatable :: phase_ids_
 
+      allocate(layer_first(NUM_LAYERS_))
+      allocate(layer_second(NUM_LAYERS_))
+      allocate(phase_id_(NUM_LAYERS_))
+
+      i_instance = 1
       do i_layer = 1, NUM_LAYERS_
-        if (LAYER_PHASE_START_(i_layer) .le. phase_id_first .and. &
-          phase_id_first .le. LAYER_PHASE_END_(i_layer)) then
-          layer_first = i_layer
-        else if (LAYER_PHASE_START_(i_layer) .le. phase_id_second .and. &
-          phase_id_second .le. LAYER_PHASE_END_(i_layer)) then
-          layer_second = i_layer
-        end if
+        do i_phase = LAYER_PHASE_START_(i_layer), LAYER_PHASE_END_(i_layer)
+          if (this%aero_phase(i_phase)%val%name() .eq. phase_name_first) then
+            layer_first(i_layer) = phase_name_first
+            phase_id_(i_layer) = i_instance
+          else if (this%aero_phase(i_phase)%val%name() .eq. phase_name_second) then
+            layer_second(i_layer) = phase_name_second
+            phase_id_(i_layer) = i_instance
+          end if
+          i_instace = i_instance + 1
+        end do
       end do
 
-      if ((layer_first+1) .eq. layer_second .or. &
-         (layer_second+1) .eq. layer_first) then
-        index_pairs%first_ = phase_id_first
-        index_pairs%second_ = phase_id_second
-      end if
+      i_instance = 1
+      do i_layer = 1, NUM_LAYERS_
+        if (layer_first(i_layer) .eq. phase_name_first .and. &
+           layer_second(i_layer+1) .eq. phase_name_second) then
+          index_pair(i_instance)%first_ = phase_id_(i_layer)
+          index_pair(i_instance)%second_ = phase_id_(i_layer+1)
+          i_instance = i_instance + 1
+        else if (layer_second(i_layer) .eq. phase_name_second .and. &
+           layer_first(i_layer+1) .eq. phase_name_first) then
+          index_pair(i_instance)%first_ = phase_id_(i_layer)
+          index_pair(i_instance)%second_ = phase_id_(i_layer+1)
+          i_instance = i_instance + 1
+        end if
+      end do
 
     end function adjacent_phases
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
