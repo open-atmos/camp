@@ -805,42 +805,53 @@ contains
       character(len=*), intent(in) :: phase_name_second
       type(index_pair_t), allocatable :: index_pairs(:)
 
-      integer(kind=i_kind) :: i_layer, i_phase, i_instance
-      character(len=*), allocatable :: layer_first(:)
-      character(len=*), allocatable :: layer_second(:)
-      integer, allocatable :: phase_ids_
+      integer(kind=i_kind), allocatable :: layer_first(:)
+      integer(kind=i_kind), allocatable :: layer_second(:)
+      integer(kind=i_kind), allocatable :: phase_id_(:)
+      integer(kind=i_kind) :: i_layer, i_phase, i_instance, j_phase
 
       allocate(layer_first(NUM_LAYERS_))
       allocate(layer_second(NUM_LAYERS_))
       allocate(phase_id_(NUM_LAYERS_))
-
+      allocate(index_pairs(NUM_LAYERS_))
+      layer_first = -9999
+      layer_second = -9999
+      phase_id_ = -9999
+  
       i_instance = 1
       do i_layer = 1, NUM_LAYERS_
-        do i_phase = LAYER_PHASE_START_(i_layer), LAYER_PHASE_END_(i_layer)
-          if (this%aero_phase(i_phase)%val%name() .eq. phase_name_first) then
-            layer_first(i_layer) = phase_name_first
+        do i_phase = 1, NUM_PHASES_(i_layer)
+          if (this%aero_phase(i_instance)%val%name() .eq. phase_name_first) then
+            layer_first(i_layer) = PHASE_MODEL_DATA_ID_(i_layer, i_phase)
             phase_id_(i_layer) = i_instance
-          else if (this%aero_phase(i_phase)%val%name() .eq. phase_name_second) then
-            layer_second(i_layer) = phase_name_second
+          else if (this%aero_phase(i_instance)%val%name() .eq. phase_name_second) then
+            layer_second(i_layer) = PHASE_MODEL_DATA_ID_(i_layer, i_phase)
             phase_id_(i_layer) = i_instance
           end if
-          i_instace = i_instance + 1
+          i_instance = i_instance + 1
         end do
       end do
 
+      print *, "layer_first", layer_first(:)
+      print *, "layer_second", layer_second(:)
+      print *, "phase_id_", phase_id_(:)
       i_instance = 1
       do i_layer = 1, NUM_LAYERS_
-        if (layer_first(i_layer) .eq. phase_name_first .and. &
-           layer_second(i_layer+1) .eq. phase_name_second) then
-          index_pair(i_instance)%first_ = phase_id_(i_layer)
-          index_pair(i_instance)%second_ = phase_id_(i_layer+1)
-          i_instance = i_instance + 1
-        else if (layer_second(i_layer) .eq. phase_name_second .and. &
-           layer_first(i_layer+1) .eq. phase_name_first) then
-          index_pair(i_instance)%first_ = phase_id_(i_layer)
-          index_pair(i_instance)%second_ = phase_id_(i_layer+1)
-          i_instance = i_instance + 1
-        end if
+        do i_phase = 1, NUM_PHASES_(i_layer) 
+          do j_phase = 1, NUM_PHASES_(i_layer)
+            if (layer_first(i_layer) .eq. PHASE_MODEL_DATA_ID_(i_layer, i_phase) .and. &
+               layer_second(i_layer+1) .eq. PHASE_MODEL_DATA_ID_(i_layer+1, j_phase)) then
+              index_pairs(i_instance)%first_ = phase_id_(i_instance)
+              index_pairs(i_instance)%second_ = phase_id_(i_instance+1)
+              i_instance = i_instance +1
+            else if (layer_second(i_layer) .eq. PHASE_MODEL_DATA_ID_(i_layer, i_phase) .and. &
+               layer_first(i_layer+1) .eq. PHASE_MODEL_DATA_ID_(i_layer+1, j_phase)) then
+              index_pairs(i_instance)%first_ = phase_id_(i_instance)
+              index_pairs(i_instance)%second_ = phase_id_(i_instance+1)
+              i_instance = i_instance + 1
+            end if
+          end do
+        end do
       end do
 
     end function adjacent_phases

@@ -161,8 +161,8 @@ contains
     character(len=:), allocatable :: rep_name, phase_name_test
     integer :: i_name, num_bread, max_part, bread_phase_instance
     integer :: num_jam, jam_phase_instance
-    type(index_pair_t) :: adjacent_phases
-    integer :: phase_id_first, phase_id_second
+    type(index_pair_t), allocatable :: adjacent_phases(:)
+    character(len=:), allocatable :: phase_name_first, phase_name_second
     integer, dimension(3) :: bread_phase_id, jam_phase_id
     integer, allocatable :: jam_phase_id_correct(:), bread_phase_id_correct(:)
 
@@ -245,17 +245,21 @@ contains
         call assert(734138496, bread_phase_instance .eq. aero_rep%num_phase_instances(phase_name_test, &
                                                          is_at_surface = .true.))
         ! test adjacent_phases function
-        phase_id_first = 1
-        phase_id_second = 3
-        adjacent_phases = aero_rep%adjacent_phases(phase_id_first,phase_id_second)
-        call assert(715901353, adjacent_phases%first_ .eq. 1)
-        call assert(304969793, adjacent_phases%second_ .eq. 3)
+        phase_name_first = "bread"
+        phase_name_second = "jam"
+        allocate(adjacent_phases(2))
+        adjacent_phases = aero_rep%adjacent_phases(phase_name_first,phase_name_second)
+        print *, adjacent_phases(2)%first_
+        call assert(715901353, adjacent_phases(1)%first_ .eq. 1)
+        call assert(304969793, adjacent_phases(1)%second_ .eq. 2)
+        call assert(618519693, adjacent_phases(2)%first_ .eq. 2)
+        call assert(175736438, adjacent_phases(2)%second_ .eq. 4)
         
-        phase_id_first = 2
-        phase_id_second = 3
-        adjacent_phases = aero_rep%adjacent_phases(phase_id_first,phase_id_second)
-        call assert(629022975, adjacent_phases%first_ .eq. -9999)
-        call assert(453784946, adjacent_phases%second_ .eq. -9999)
+        phase_name_first = "jam"
+        phase_name_second = "almond butter"
+        adjacent_phases = aero_rep%adjacent_phases(phase_name_first,phase_name_second)
+        call assert(629022975, adjacent_phases(1)%first_ .eq. -9999)
+        call assert(453784946, adjacent_phases(1)%second_ .eq. -9999)
 
       class default
         call die_msg(519535557, rep_name)
