@@ -261,6 +261,12 @@ contains
         call assert(629022975, adjacent_phases(1)%first_ .eq. -9999)
         call assert(453784946, adjacent_phases(1)%second_ .eq. -9999)
 
+        phase_name_first = "bread"
+        phase_name_second = "bread"
+        adjacent_phases = aero_rep%adjacent_phases(phase_name_first,phase_name_second)
+        call assert(805908796, adjacent_phases(1)%first_ .eq. -9999)
+        call assert(586407829, adjacent_phases(1)%second_ .eq. -9999)
+
       class default
         call die_msg(519535557, rep_name)
     end select

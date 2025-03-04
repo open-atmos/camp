@@ -821,12 +821,19 @@ contains
       i_instance = 1
       do i_layer = 1, NUM_LAYERS_
         do i_phase = 1, NUM_PHASES_(i_layer)
-          if (this%aero_phase(i_instance)%val%name() .eq. phase_name_first) then
-            layer_first(i_layer) = PHASE_MODEL_DATA_ID_(i_layer, i_phase)
-            phase_id_(i_layer) = i_instance
-          else if (this%aero_phase(i_instance)%val%name() .eq. phase_name_second) then
-            layer_second(i_layer) = PHASE_MODEL_DATA_ID_(i_layer, i_phase)
-            phase_id_(i_layer) = i_instance
+          if (phase_name_first .eq. phase_name_second) then
+            if (this%aero_phase(i_instance)%val%name() .eq. phase_name_first) then
+              layer_first(i_layer) = PHASE_MODEL_DATA_ID_(i_layer, i_phase)
+              phase_id_(i_layer) = i_instance
+            end if
+          else 
+            if (this%aero_phase(i_instance)%val%name() .eq. phase_name_first) then
+              layer_first(i_layer) = PHASE_MODEL_DATA_ID_(i_layer, i_phase)
+              phase_id_(i_layer) = i_instance
+            else if (this%aero_phase(i_instance)%val%name() .eq. phase_name_second) then
+              layer_second(i_layer) = PHASE_MODEL_DATA_ID_(i_layer, i_phase)
+              phase_id_(i_layer) = i_instance
+            end if
           end if
           i_instance = i_instance + 1
         end do
@@ -839,16 +846,25 @@ contains
       do i_layer = 1, NUM_LAYERS_
         do i_phase = 1, NUM_PHASES_(i_layer) 
           do j_phase = 1, NUM_PHASES_(i_layer)
-            if (layer_first(i_layer) .eq. PHASE_MODEL_DATA_ID_(i_layer, i_phase) .and. &
-               layer_second(i_layer+1) .eq. PHASE_MODEL_DATA_ID_(i_layer+1, j_phase)) then
-              index_pairs(i_instance)%first_ = phase_id_(i_instance)
-              index_pairs(i_instance)%second_ = phase_id_(i_instance+1)
-              i_instance = i_instance +1
-            else if (layer_second(i_layer) .eq. PHASE_MODEL_DATA_ID_(i_layer, i_phase) .and. &
-               layer_first(i_layer+1) .eq. PHASE_MODEL_DATA_ID_(i_layer+1, j_phase)) then
-              index_pairs(i_instance)%first_ = phase_id_(i_instance)
-              index_pairs(i_instance)%second_ = phase_id_(i_instance+1)
-              i_instance = i_instance + 1
+            if (phase_name_first .eq. phase_name_second) then
+              if (layer_first(i_layer) .eq. PHASE_MODEL_DATA_ID_(i_layer,i_phase) .and. &
+                 layer_first(i_layer+1) .eq. PHASE_MODEL_DATA_ID_(i_layer+1,j_phase)) then
+                index_pairs(i_instance)%first_ = phase_id_(i_instance)
+                index_pairs(i_instance)%second_ = phase_id_(i_instance+1)
+                i_instance = i_instance + 1
+              end if
+            else
+              if (layer_first(i_layer) .eq. PHASE_MODEL_DATA_ID_(i_layer, i_phase) .and. &
+                 layer_second(i_layer+1) .eq. PHASE_MODEL_DATA_ID_(i_layer+1, j_phase)) then
+                index_pairs(i_instance)%first_ = phase_id_(i_instance)
+                index_pairs(i_instance)%second_ = phase_id_(i_instance+1)
+                i_instance = i_instance + 1
+              else if (layer_second(i_layer) .eq. PHASE_MODEL_DATA_ID_(i_layer, i_phase) .and. &
+                 layer_first(i_layer+1) .eq. PHASE_MODEL_DATA_ID_(i_layer+1, j_phase)) then
+                index_pairs(i_instance)%first_ = phase_id_(i_instance)
+                index_pairs(i_instance)%second_ = phase_id_(i_instance+1)
+                i_instance = i_instance + 1
+              end if
             end if
           end do
         end do
