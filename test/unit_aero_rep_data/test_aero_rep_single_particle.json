@@ -15,7 +15,8 @@
                                 {
                                         "name": "bottom bread",
                                         "phases": [
-                                                "bread"
+                                                "bread",
+                                                "almond butter"
                                         ],
                                         "covers": "none"
                                 },

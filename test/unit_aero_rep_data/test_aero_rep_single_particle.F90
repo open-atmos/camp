@@ -34,16 +34,16 @@ program camp_test_aero_rep_data
   integer(kind=i_kind), parameter :: NUM_COMP_PARTICLES = 3
 
   ! Number of aerosol phases per particle
-  integer(kind=i_kind), parameter :: NUM_AERO_PHASE = 4
+  integer(kind=i_kind), parameter :: NUM_AERO_PHASE = 5
 
   ! Index for the test phase 
   ! (test-particle 1 phase 2 : middle layer, jam)
-  integer(kind=i_kind), parameter :: AERO_PHASE_IDX_1 = ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+2)
+  integer(kind=i_kind), parameter :: AERO_PHASE_IDX_1 = ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+3)
   ! (test-particle 1 phase 4 : top layer, top bread)
-  integer(kind=i_kind), parameter :: AERO_PHASE_IDX_2 = ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+4)
+  integer(kind=i_kind), parameter :: AERO_PHASE_IDX_2 = ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+5)
 
   ! Number of expected Jacobian elements for the test phase
-  integer(kind=i_kind), parameter :: NUM_JAC_ELEM = 12
+  integer(kind=i_kind), parameter :: NUM_JAC_ELEM = 14
 
   ! Externally set properties
   real(kind=dp), parameter :: PART_NUM_CONC = 1.23e3
@@ -120,32 +120,29 @@ contains
 
     use camp_aero_rep_single_particle, only : ordered_layer_ids
 
-    type(string_t), dimension(4) :: layer_names, correct_layer_names
-    type(string_t), dimension(4) :: cover_names
+    type(string_t), dimension(3) :: layer_names, correct_layer_names
+    type(string_t), dimension(3) :: cover_names
     integer, allocatable :: ordered_ids(:)
 
     ! Assemble input arguments
-    layer_names(1)%string = 'almond butter'
+    layer_names(1)%string = 'filling'
     layer_names(2)%string = 'top bread'
-    layer_names(3)%string = 'jam'
-    layer_names(4)%string = 'bottom bread'
+    layer_names(3)%string = 'bottom bread'
     cover_names(1)%string = 'bottom bread'
-    cover_names(2)%string = 'jam'
-    cover_names(3)%string = 'almond butter'
-    cover_names(4)%string = 'none'
+    cover_names(2)%string = 'filling'
+    cover_names(3)%string = 'none'
     correct_layer_names(1)%string = 'bottom bread'
-    correct_layer_names(2)%string = 'almond butter'
-    correct_layer_names(3)%string = 'jam'
-    correct_layer_names(4)%string = 'top bread'
+    correct_layer_names(2)%string = 'filling'
+    correct_layer_names(3)%string = 'top bread'
 
     ! Call the function and enter inputs 
     ordered_ids = ordered_layer_ids(layer_names, cover_names)
     ! check individual values:
-    call assert(476179048, size(ordered_ids) .eq. 4)
+    call assert(476179048, size(ordered_ids) .eq. 3)
     call assert(903386486, layer_names(ordered_ids(1))%string .eq. correct_layer_names(1)%string)
     call assert(468777371, layer_names(ordered_ids(2))%string .eq. correct_layer_names(2)%string)
     call assert(487966491, layer_names(ordered_ids(3))%string .eq. correct_layer_names(3)%string)
-    call assert(721784428, layer_names(ordered_ids(4))%string .eq. correct_layer_names(4)%string)
+
   end subroutine test_ordered_layer_ids
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -184,42 +181,45 @@ contains
 
         ! check dimensions of the system
         call assert(118129615, aero_rep%num_layers() .eq. 3)
-        call assert(792039685, aero_rep%num_phases() .eq. 4)
-        call assert(958837816, aero_rep%num_phases(1) .eq. 1)
+        call assert(792039685, aero_rep%num_phases() .eq. 5)
+        call assert(958837816, aero_rep%num_phases(1) .eq. 2)
         call assert(230900255, aero_rep%num_phases(2) .eq. 2)
         call assert(113317603, aero_rep%num_phases(3) .eq. 1)
-        call assert(902904791, aero_rep%phase_state_size() .eq. 12)
-        call assert(154362297, aero_rep%phase_state_size(layer=1) .eq. 3)
+        call assert(902904791, aero_rep%phase_state_size() .eq. 14)
+        call assert(154362297, aero_rep%phase_state_size(layer=1) .eq. 5)
         call assert(266680642, aero_rep%phase_state_size(layer=2) .eq. 6)
         call assert(714048488, aero_rep%phase_state_size(layer=3) .eq. 3)
         call assert(326424735, aero_rep%phase_state_size(layer=1,phase=1) .eq. 3)
+        call assert(685919840, aero_rep%phase_state_size(layer=1,phase=2) .eq. 2)
         call assert(491317332, aero_rep%phase_state_size(layer=2,phase=1) .eq. 4)
         call assert(603635677, aero_rep%phase_state_size(layer=2,phase=2) .eq. 2)
         call assert(768528274, aero_rep%phase_state_size(layer=3,phase=1) .eq. 3)
 
         ! check boolean surface array 
         call assert(438901931, aero_rep%aero_phase_is_at_surface(1) .eqv. .false.)
-        call assert(545268641, aero_rep%aero_phase_is_at_surface(2) .eqv. .false.)
-        call assert(450505920, aero_rep%aero_phase_is_at_surface(3) .eqv. .false.)
-        call assert(160921440, aero_rep%aero_phase_is_at_surface(4) .eqv. .true.)
-        call assert(013254644, aero_rep%aero_phase_is_at_surface(5) .eqv. .false.)
-        call assert(691645657, aero_rep%aero_phase_is_at_surface(6) .eqv. .false.)
-        call assert(916896739, aero_rep%aero_phase_is_at_surface(7) .eqv. .false.)
-        call assert(668436322, aero_rep%aero_phase_is_at_surface(8) .eqv. .true.)
-        call assert(952270724, aero_rep%aero_phase_is_at_surface(9) .eqv. .false.)
-        call assert(410924438, aero_rep%aero_phase_is_at_surface(10) .eqv. .false.)
-        call assert(266324037, aero_rep%aero_phase_is_at_surface(11) .eqv. .false.)
-        call assert(008760891, aero_rep%aero_phase_is_at_surface(12) .eqv. .true.)
+        call assert(941424729, aero_rep%aero_phase_is_at_surface(2) .eqv. .false.)
+        call assert(545268641, aero_rep%aero_phase_is_at_surface(3) .eqv. .false.)
+        call assert(450505920, aero_rep%aero_phase_is_at_surface(4) .eqv. .false.)
+        call assert(160921440, aero_rep%aero_phase_is_at_surface(5) .eqv. .true.)
+        call assert(268476951, aero_rep%aero_phase_is_at_surface(6) .eqv. .false.)
+        call assert(013254644, aero_rep%aero_phase_is_at_surface(7) .eqv. .false.)
+        call assert(691645657, aero_rep%aero_phase_is_at_surface(8) .eqv. .false.)
+        call assert(916896739, aero_rep%aero_phase_is_at_surface(9) .eqv. .false.)
+        call assert(668436322, aero_rep%aero_phase_is_at_surface(10) .eqv. .true.)
+        call assert(056736946, aero_rep%aero_phase_is_at_surface(11) .eqv. .false.)
+        call assert(952270724, aero_rep%aero_phase_is_at_surface(12) .eqv. .false.)
+        call assert(410924438, aero_rep%aero_phase_is_at_surface(13) .eqv. .false.)
+        call assert(266324037, aero_rep%aero_phase_is_at_surface(14) .eqv. .false.)
+        call assert(008760891, aero_rep%aero_phase_is_at_surface(15) .eqv. .true.)
 
-        call assert(768528274, aero_rep%phase_state_size(layer=3,phase=1) .eq. 3)
 
         ! test phase_ids and num_phase_instances function
         ! test for jam (one instance in particle)
         phase_name_test = "jam"
         num_jam = 0
-        jam_phase_id(1) = 2
-        jam_phase_id(2) = 6
-        jam_phase_id(3) = 10
+        jam_phase_id(1) = 3
+        jam_phase_id(2) = 8
+        jam_phase_id(3) = 13
         max_part = aero_rep%maximum_computational_particles()
         jam_phase_instance = 0 
         !check value
@@ -233,9 +233,9 @@ contains
         ! check for bread (two instances but only one at surface)
         phase_name_test = "bread"
         num_bread = 1
-        bread_phase_id(1) = 4
-        bread_phase_id(2) = 8
-        bread_phase_id(3) = 12
+        bread_phase_id(1) = 5
+        bread_phase_id(2) = 10
+        bread_phase_id(3) = 15
         bread_phase_instance = num_bread * max_part
         !check values
         bread_phase_id_correct = aero_rep%phase_ids(phase_name_test, is_at_surface = .true.)
@@ -251,64 +251,70 @@ contains
         adjacent_phases = aero_rep%adjacent_phases(phase_name_first,phase_name_second)
         print *, adjacent_phases(2)%first_
         call assert(715901353, adjacent_phases(1)%first_ .eq. 1)
-        call assert(304969793, adjacent_phases(1)%second_ .eq. 2)
-        call assert(618519693, adjacent_phases(2)%first_ .eq. 2)
-        call assert(175736438, adjacent_phases(2)%second_ .eq. 4)
+        call assert(304969793, adjacent_phases(1)%second_ .eq. 3)
+        call assert(618519693, adjacent_phases(2)%first_ .eq. 3)
+        call assert(175736438, adjacent_phases(2)%second_ .eq. 5)
         
         phase_name_first = "jam"
         phase_name_second = "almond butter"
         adjacent_phases = aero_rep%adjacent_phases(phase_name_first,phase_name_second)
-        call assert(629022975, adjacent_phases(1)%first_ .eq. -9999)
-        call assert(453784946, adjacent_phases(1)%second_ .eq. -9999)
+        call assert(629022975, adjacent_phases(1)%first_ .eq. 2)
+        call assert(453784946, adjacent_phases(1)%second_ .eq. 3)
 
-        phase_name_first = "bread"
-        phase_name_second = "bread"
+        phase_name_first = "almond butter"
+        phase_name_second = "almond butter"
         adjacent_phases = aero_rep%adjacent_phases(phase_name_first,phase_name_second)
-        call assert(805908796, adjacent_phases(1)%first_ .eq. -9999)
-        call assert(586407829, adjacent_phases(1)%second_ .eq. -9999)
+        call assert(805908796, adjacent_phases(1)%first_ .eq. 2)
+        call assert(586407829, adjacent_phases(1)%second_ .eq. 4)
 
       class default
         call die_msg(519535557, rep_name)
     end select
     
     unique_names = aero_rep%unique_names()
-    call assert(551749649, size( unique_names ) .eq. 36)
+    call assert(551749649, size( unique_names ) .eq. 42)
     call assert(112328249, unique_names(1)%string .eq. "P1.bottom bread.bread.wheat")
     call assert(124534441, unique_names(2)%string .eq. "P1.bottom bread.bread.water")
     call assert(519328035, unique_names(3)%string .eq. "P1.bottom bread.bread.salt")
-    call assert(349171131, unique_names(4)%string .eq. "P1.filling.jam.rasberry")
-    call assert(179014227, unique_names(5)%string .eq. "P1.filling.jam.honey")
-    call assert(626382073, unique_names(6)%string .eq. "P1.filling.jam.sugar")
-    call assert(173749920, unique_names(7)%string .eq. "P1.filling.jam.lemon")
-    call assert(286068265, unique_names(8)%string .eq. "P1.filling.almond butter.almonds")
-    call assert(680861859, unique_names(9)%string .eq. "P1.filling.almond butter.sugar")
-    call assert(293238106, unique_names(10)%string .eq. "P1.top bread.bread.wheat")
-    call assert(405556451, unique_names(11)%string .eq. "P1.top bread.bread.water")
-    call assert(235399547, unique_names(12)%string .eq. "P1.top bread.bread.salt")
-    call assert(347717892, unique_names(13)%string .eq. "P2.bottom bread.bread.wheat")
-    call assert(512610489, unique_names(14)%string .eq. "P2.bottom bread.bread.water")
-    call assert(342453585, unique_names(15)%string .eq. "P2.bottom bread.bread.salt")
-    call assert(737247179, unique_names(16)%string .eq. "P2.filling.jam.rasberry")
-    call assert(567090275, unique_names(17)%string .eq. "P2.filling.jam.honey")
-    call assert(114458122, unique_names(18)%string .eq. "P2.filling.jam.sugar")
-    call assert(844301217, unique_names(19)%string .eq. "P2.filling.jam.lemon")
-    call assert(109193815, unique_names(20)%string .eq. "P2.filling.almond butter.almonds")
-    call assert(339094812, unique_names(21)%string .eq. "P2.filling.almond butter.sugar")
-    call assert(168937908, unique_names(22)%string .eq. "P2.top bread.bread.wheat")
-    call assert(616305754, unique_names(23)%string .eq. "P2.top bread.bread.water")
-    call assert(676049847, unique_names(24)%string .eq. "P2.top bread.bread.salt")
-    call assert(505892943, unique_names(25)%string .eq. "P3.bottom bread.bread.wheat")
-    call assert(670785540, unique_names(26)%string .eq. "P3.bottom bread.bread.water")
-    call assert(900686537, unique_names(27)%string .eq. "P3.bottom bread.bread.salt")
-    call assert(730529633, unique_names(28)%string .eq. "P3.filling.jam.rasberry")
-    call assert(612946981, unique_names(29)%string .eq. "P3.filling.jam.honey")
-    call assert(225323228, unique_names(30)%string .eq. "P3.filling.jam.sugar")
-    call assert(672691074, unique_names(31)%string .eq. "P3.filling.jam.lemon")
-    call assert(837583671, unique_names(32)%string .eq. "P3.filling.almond butter.almonds")
-    call assert(102476269, unique_names(33)%string .eq. "P3.filling.almond butter.sugar")
-    call assert(614852515, unique_names(34)%string .eq. "P3.top bread.bread.wheat")
-    call assert(779745112, unique_names(35)%string .eq. "P3.top bread.bread.water")
-    call assert(109646110, unique_names(36)%string .eq. "P3.top bread.bread.salt")
+    call assert(964730222, unique_names(4)%string .eq. "P1.bottom bread.almond butter.almonds")
+    call assert(789367832, unique_names(5)%string .eq. "P1.bottom bread.almond butter.sugar")
+    call assert(349171131, unique_names(6)%string .eq. "P1.filling.jam.rasberry")
+    call assert(179014227, unique_names(7)%string .eq. "P1.filling.jam.honey")
+    call assert(626382073, unique_names(8)%string .eq. "P1.filling.jam.sugar")
+    call assert(173749920, unique_names(9)%string .eq. "P1.filling.jam.lemon")
+    call assert(286068265, unique_names(10)%string .eq. "P1.filling.almond butter.almonds")
+    call assert(680861859, unique_names(11)%string .eq. "P1.filling.almond butter.sugar")
+    call assert(293238106, unique_names(12)%string .eq. "P1.top bread.bread.wheat")
+    call assert(405556451, unique_names(13)%string .eq. "P1.top bread.bread.water")
+    call assert(235399547, unique_names(14)%string .eq. "P1.top bread.bread.salt")
+    call assert(830115084, unique_names(15)%string .eq. "P2.bottom bread.almond butter.almonds")
+    call assert(662926083, unique_names(16)%string .eq. "P2.bottom bread.almond butter.sugar")
+    call assert(347717892, unique_names(17)%string .eq. "P2.bottom bread.bread.wheat")
+    call assert(512610489, unique_names(18)%string .eq. "P2.bottom bread.bread.water")
+    call assert(342453585, unique_names(19)%string .eq. "P2.bottom bread.bread.salt")
+    call assert(737247179, unique_names(20)%string .eq. "P2.filling.jam.rasberry")
+    call assert(567090275, unique_names(21)%string .eq. "P2.filling.jam.honey")
+    call assert(114458122, unique_names(22)%string .eq. "P2.filling.jam.sugar")
+    call assert(844301217, unique_names(23)%string .eq. "P2.filling.jam.lemon")
+    call assert(109193815, unique_names(24)%string .eq. "P2.filling.almond butter.almonds")
+    call assert(339094812, unique_names(25)%string .eq. "P2.filling.almond butter.sugar")
+    call assert(168937908, unique_names(26)%string .eq. "P2.top bread.bread.wheat")
+    call assert(616305754, unique_names(27)%string .eq. "P2.top bread.bread.water")
+    call assert(676049847, unique_names(28)%string .eq. "P2.top bread.bread.salt")
+    call assert(505892943, unique_names(29)%string .eq. "P3.bottom bread.bread.wheat")
+    call assert(670785540, unique_names(30)%string .eq. "P3.bottom bread.bread.water")
+    call assert(900686537, unique_names(31)%string .eq. "P3.bottom bread.bread.salt")
+    call assert(721702249, unique_names(32)%string .eq. "P3.bottom bread.almond butter.almonds")
+    call assert(372487989, unique_names(33)%string .eq. "P3.bottom bread.almond butter.sugar")
+    call assert(730529633, unique_names(34)%string .eq. "P3.filling.jam.rasberry")
+    call assert(612946981, unique_names(35)%string .eq. "P3.filling.jam.honey")
+    call assert(225323228, unique_names(36)%string .eq. "P3.filling.jam.sugar")
+    call assert(672691074, unique_names(37)%string .eq. "P3.filling.jam.lemon")
+    call assert(837583671, unique_names(38)%string .eq. "P3.filling.almond butter.almonds")
+    call assert(102476269, unique_names(39)%string .eq. "P3.filling.almond butter.sugar")
+    call assert(614852515, unique_names(40)%string .eq. "P3.top bread.bread.wheat")
+    call assert(779745112, unique_names(41)%string .eq. "P3.top bread.bread.water")
+    call assert(109646110, unique_names(42)%string .eq. "P3.top bread.bread.salt")
 
     ! Test the unique names function with phase_is_at_surface flag
     phase_name_test = "bread"
@@ -324,6 +330,7 @@ contains
     call assert(862917237, unique_names_surface(8)%string .eq. "P3.top bread.bread.water")
     call assert(521426951, unique_names_surface(9)%string .eq. "P3.top bread.bread.salt")
 #endif
+
   end subroutine test_config_read
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -380,7 +387,7 @@ contains
       ! Check the unique name functions
       unique_names = aero_rep%unique_names()
       call assert_msg(885541843, allocated(unique_names), rep_name)
-      call assert_msg(206819761, size(unique_names).eq.NUM_COMP_PARTICLES*12, &
+      call assert_msg(206819761, size(unique_names).eq.NUM_COMP_PARTICLES*14, &
                       rep_name)
       do i_spec = 1, size(unique_names)
         call assert_msg(142263656, aero_rep%spec_state_id(&
@@ -408,155 +415,182 @@ contains
       i_spec = aero_rep%spec_state_id(unique_names(3)%string)
       call assert_msg(420214016, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 3.5
-      phase_name = "jam"
-      spec_name = "rasberry"
-      i_spec = aero_rep%spec_state_id(unique_names(4)%string)
-      call assert_msg(416855243, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 4.5
-      spec_name = "honey"
-      i_spec = aero_rep%spec_state_id(unique_names(5)%string)
-      call assert_msg(578389067, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 5.5
-      spec_name = "sugar"
-      i_spec = aero_rep%spec_state_id(unique_names(6)%string)
-      call assert_msg(147314014, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 6.5
-      spec_name = "lemon"
-      i_spec = aero_rep%spec_state_id(unique_names(7)%string)
-      call assert_msg(307593804, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 7.5
       phase_name = "almond butter"
       spec_name = "almonds"
-      i_spec = aero_rep%spec_state_id(unique_names(8)%string)
-      call assert_msg(401514617, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 8.5
+      i_spec = aero_rep%spec_state_id(unique_names(4)%string)
+      call assert_msg(717816750, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 4.5
       spec_name = "sugar"
+      i_spec = aero_rep%spec_state_id(unique_names(5)%string)
+      call assert_msg(482104738, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 5.5
+      phase_name = "jam"
+      spec_name = "rasberry"
+      i_spec = aero_rep%spec_state_id(unique_names(6)%string)
+      call assert_msg(416855243, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 6.5
+      spec_name = "honey"
+      i_spec = aero_rep%spec_state_id(unique_names(7)%string)
+      call assert_msg(578389067, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 7.5
+      spec_name = "sugar"
+      i_spec = aero_rep%spec_state_id(unique_names(8)%string)
+      call assert_msg(147314014, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 8.5
+      spec_name = "lemon"
       i_spec = aero_rep%spec_state_id(unique_names(9)%string)
-      call assert_msg(291101806, i_spec.gt.0, rep_name)
+      call assert_msg(307593804, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 9.5
+      phase_name = "almond butter"
+      spec_name = "almonds"
+      i_spec = aero_rep%spec_state_id(unique_names(10)%string)
+      call assert_msg(401514617, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 10.5
+      spec_name = "sugar"
+      i_spec = aero_rep%spec_state_id(unique_names(11)%string)
+      call assert_msg(291101806, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 11.5
       phase_name = "bottom bread"
       spec_name = "wheat"
-      i_spec = aero_rep%spec_state_id(unique_names(10)%string)
-      call assert_msg(362839472, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 10.5
-      spec_name = "water"
-      i_spec = aero_rep%spec_state_id(unique_names(11)%string)
-      call assert_msg(980708489, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 11.5
-      spec_name = "salt"
       i_spec = aero_rep%spec_state_id(unique_names(12)%string)
-      call assert_msg(149863598, i_spec.gt.0, rep_name)
+      call assert_msg(362839472, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 12.5
+      spec_name = "water"
+      i_spec = aero_rep%spec_state_id(unique_names(13)%string)
+      call assert_msg(980708489, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 13.5
+      spec_name = "salt"
+      i_spec = aero_rep%spec_state_id(unique_names(14)%string)
+      call assert_msg(149863598, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 14.5
 
       ! Set the species concentrations (P2)
       phase_name = "top bread"
       spec_name = "wheat"
       unique_names = aero_rep%unique_names()
-      i_spec = aero_rep%spec_state_id(unique_names(13)%string)
+      i_spec = aero_rep%spec_state_id(unique_names(15)%string)
       call assert_msg(752656273, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 1.5
       spec_name = "water"
-      i_spec = aero_rep%spec_state_id(unique_names(14)%string)
+      i_spec = aero_rep%spec_state_id(unique_names(16)%string)
       call assert_msg(491172859, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 2.5
       spec_name = "salt"
-      i_spec = aero_rep%spec_state_id(unique_names(15)%string)
+      i_spec = aero_rep%spec_state_id(unique_names(17)%string)
       call assert_msg(903979796, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 3.5
-      phase_name = "jam"
-      spec_name = "rasberry"
-      i_spec = aero_rep%spec_state_id(unique_names(16)%string)
-      call assert_msg(094588550, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 4.5
-      spec_name = "honey"
-      i_spec = aero_rep%spec_state_id(unique_names(17)%string)
-      call assert_msg(203341280, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 5.5
-      spec_name = "sugar"
-      i_spec = aero_rep%spec_state_id(unique_names(18)%string)
-      call assert_msg(010697815, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 6.5
-      spec_name = "lemon"
-      i_spec = aero_rep%spec_state_id(unique_names(19)%string)
-      call assert_msg(437481598, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 7.5
       phase_name = "almond butter"
       spec_name = "almonds"
-      i_spec = aero_rep%spec_state_id(unique_names(20)%string)
-      call assert_msg(471657965, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 8.5
+      i_spec = aero_rep%spec_state_id(unique_names(18)%string)
+      call assert_msg(616769376, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 4.5
       spec_name = "sugar"
+      i_spec = aero_rep%spec_state_id(unique_names(19)%string)
+      call assert_msg(798724143, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 5.5
+      phase_name = "jam"
+      spec_name = "rasberry"
+      i_spec = aero_rep%spec_state_id(unique_names(20)%string)
+      call assert_msg(094588550, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 6.5
+      spec_name = "honey"
       i_spec = aero_rep%spec_state_id(unique_names(21)%string)
-      call assert_msg(494073104, i_spec.gt.0, rep_name)
+      call assert_msg(203341280, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 7.5
+      spec_name = "sugar"
+      i_spec = aero_rep%spec_state_id(unique_names(22)%string)
+      call assert_msg(010697815, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 8.5
+      spec_name = "lemon"
+      i_spec = aero_rep%spec_state_id(unique_names(23)%string)
+      call assert_msg(437481598, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 9.5
+      phase_name = "almond butter"
+      spec_name = "almonds"
+      i_spec = aero_rep%spec_state_id(unique_names(24)%string)
+      call assert_msg(471657965, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 10.5
+      spec_name = "sugar"
+      i_spec = aero_rep%spec_state_id(unique_names(25)%string)
+      call assert_msg(494073104, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 11.5
       phase_name = "bottom bread"
       spec_name = "wheat"
-      i_spec = aero_rep%spec_state_id(unique_names(22)%string)
+      i_spec = aero_rep%spec_state_id(unique_names(26)%string)
       call assert_msg(390101312, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 10.5
-      spec_name = "water"
-      i_spec = aero_rep%spec_state_id(unique_names(23)%string)
-      call assert_msg(320239819, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 11.5
-      spec_name = "salt"
-      i_spec = aero_rep%spec_state_id(unique_names(24)%string)
-      call assert_msg(501204067, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 12.5
+      spec_name = "water"
+      i_spec = aero_rep%spec_state_id(unique_names(27)%string)
+      call assert_msg(320239819, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 13.5
+      spec_name = "salt"
+      i_spec = aero_rep%spec_state_id(unique_names(28)%string)
+      call assert_msg(501204067, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 14.5
 
       ! Set the species concentrations (P3)
       phase_name = "top bread"
       spec_name = "wheat"
       unique_names = aero_rep%unique_names()
-      i_spec = aero_rep%spec_state_id(unique_names(25)%string)
+      i_spec = aero_rep%spec_state_id(unique_names(29)%string)
       call assert_msg(189910318, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 1.5
       spec_name = "water"
-      i_spec = aero_rep%spec_state_id(unique_names(26)%string)
+      i_spec = aero_rep%spec_state_id(unique_names(30)%string)
       call assert_msg(704399585, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 2.5
       spec_name = "salt"
-      i_spec = aero_rep%spec_state_id(unique_names(27)%string)
+      i_spec = aero_rep%spec_state_id(unique_names(31)%string)
       call assert_msg(418977803, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 3.5
-      phase_name = "jam"
-      spec_name = "rasberry"
-      i_spec = aero_rep%spec_state_id(unique_names(28)%string)
-      call assert_msg(888754404, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 4.5
-      spec_name = "honey"
-      i_spec = aero_rep%spec_state_id(unique_names(29)%string)
-      call assert_msg(006633311, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 5.5
-      spec_name = "sugar"
-      i_spec = aero_rep%spec_state_id(unique_names(30)%string)
-      call assert_msg(701211482, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 6.5
-      spec_name = "lemon"
-      i_spec = aero_rep%spec_state_id(unique_names(31)%string)
-      call assert_msg(818017683, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 7.5
       phase_name = "almond butter"
       spec_name = "almonds"
       i_spec = aero_rep%spec_state_id(unique_names(32)%string)
-      call assert_msg(735591255, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 8.5
+      call assert_msg(373650206, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 4.5
       spec_name = "sugar"
       i_spec = aero_rep%spec_state_id(unique_names(33)%string)
-      call assert_msg(467138849, i_spec.gt.0, rep_name)
+      call assert_msg(382600868, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 5.5
+      phase_name = "jam"
+      spec_name = "rasberry"
+      i_spec = aero_rep%spec_state_id(unique_names(34)%string)
+      call assert_msg(888754404, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 6.5
+      spec_name = "honey"
+      i_spec = aero_rep%spec_state_id(unique_names(35)%string)
+      call assert_msg(006633311, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 7.5
+      spec_name = "sugar"
+      i_spec = aero_rep%spec_state_id(unique_names(36)%string)
+      call assert_msg(701211482, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 8.5
+      spec_name = "lemon"
+      i_spec = aero_rep%spec_state_id(unique_names(37)%string)
+      call assert_msg(818017683, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 9.5
+      phase_name = "almond butter"
+      spec_name = "almonds"
+      i_spec = aero_rep%spec_state_id(unique_names(38)%string)
+      call assert_msg(735591255, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 10.5
+      spec_name = "sugar"
+      i_spec = aero_rep%spec_state_id(unique_names(39)%string)
+      call assert_msg(467138849, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 11.5
       phase_name = "bottom bread"
       spec_name = "wheat"
-      i_spec = aero_rep%spec_state_id(unique_names(34)%string)
+      i_spec = aero_rep%spec_state_id(unique_names(40)%string)
       call assert_msg(373107037, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 10.5
-      spec_name = "water"
-      i_spec = aero_rep%spec_state_id(unique_names(35)%string)
-      call assert_msg(498732740, i_spec.gt.0, rep_name)
-      camp_state%state_var(i_spec) = 11.5
-      spec_name = "salt"
-      i_spec = aero_rep%spec_state_id(unique_names(36)%string)
-      call assert_msg(165886615, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 12.5
+      spec_name = "water"
+      i_spec = aero_rep%spec_state_id(unique_names(41)%string)
+      call assert_msg(498732740, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 13.5
+      spec_name = "salt"
+      i_spec = aero_rep%spec_state_id(unique_names(42)%string)
+      call assert_msg(165886615, i_spec.gt.0, rep_name)
+      camp_state%state_var(i_spec) = 14.5
 
 
     end do
