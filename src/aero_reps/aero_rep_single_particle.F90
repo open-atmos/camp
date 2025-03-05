@@ -829,10 +829,10 @@ contains
           else 
             if (this%aero_phase(i_instance)%val%name() .eq. phase_name_first) then
               layer_first(i_layer) = PHASE_MODEL_DATA_ID_(i_layer, i_phase)
-              phase_id_(i_layer) = i_instance
+              if (phase_id_(i_layer) .eq. -9999) phase_id_(i_layer) = i_instance   
             else if (this%aero_phase(i_instance)%val%name() .eq. phase_name_second) then
               layer_second(i_layer) = PHASE_MODEL_DATA_ID_(i_layer, i_phase)
-              phase_id_(i_layer) = i_instance
+              if (phase_id_(i_layer) .eq. -9999) phase_id_(i_layer) = i_instance
             end if
           end if
           i_instance = i_instance + 1

@@ -255,8 +255,8 @@ contains
         call assert(618519693, adjacent_phases(2)%first_ .eq. 3)
         call assert(175736438, adjacent_phases(2)%second_ .eq. 5)
         
-        phase_name_first = "jam"
-        phase_name_second = "almond butter"
+        phase_name_first = "almond butter"
+        phase_name_second = "jam"
         adjacent_phases = aero_rep%adjacent_phases(phase_name_first,phase_name_second)
         call assert(629022975, adjacent_phases(1)%first_ .eq. 2)
         call assert(453784946, adjacent_phases(1)%second_ .eq. 3)
@@ -287,11 +287,11 @@ contains
     call assert(293238106, unique_names(12)%string .eq. "P1.top bread.bread.wheat")
     call assert(405556451, unique_names(13)%string .eq. "P1.top bread.bread.water")
     call assert(235399547, unique_names(14)%string .eq. "P1.top bread.bread.salt")
-    call assert(830115084, unique_names(15)%string .eq. "P2.bottom bread.almond butter.almonds")
-    call assert(662926083, unique_names(16)%string .eq. "P2.bottom bread.almond butter.sugar")
-    call assert(347717892, unique_names(17)%string .eq. "P2.bottom bread.bread.wheat")
-    call assert(512610489, unique_names(18)%string .eq. "P2.bottom bread.bread.water")
-    call assert(342453585, unique_names(19)%string .eq. "P2.bottom bread.bread.salt")
+    call assert(347717892, unique_names(15)%string .eq. "P2.bottom bread.bread.wheat")
+    call assert(512610489, unique_names(16)%string .eq. "P2.bottom bread.bread.water")
+    call assert(342453585, unique_names(17)%string .eq. "P2.bottom bread.bread.salt")
+    call assert(830115084, unique_names(18)%string .eq. "P2.bottom bread.almond butter.almonds")
+    call assert(662926083, unique_names(19)%string .eq. "P2.bottom bread.almond butter.sugar")
     call assert(737247179, unique_names(20)%string .eq. "P2.filling.jam.rasberry")
     call assert(567090275, unique_names(21)%string .eq. "P2.filling.jam.honey")
     call assert(114458122, unique_names(22)%string .eq. "P2.filling.jam.sugar")
