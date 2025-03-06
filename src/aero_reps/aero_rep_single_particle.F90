@@ -821,6 +821,7 @@ contains
       i_instance = 1
       do i_layer = 1, NUM_LAYERS_
         do i_phase = 1, NUM_PHASES_(i_layer)
+          print *, "PMDI", PHASE_MODEL_DATA_ID_(i_layer, i_phase)
           if (phase_name_first .eq. phase_name_second) then
             if (this%aero_phase(i_instance)%val%name() .eq. phase_name_first) then
               layer_first(i_layer) = PHASE_MODEL_DATA_ID_(i_layer, i_phase)
@@ -843,7 +844,7 @@ contains
       print *, "layer_second", layer_second(:)
       print *, "phase_id_", phase_id_(:)
       i_instance = 1
-      do i_layer = 1, NUM_LAYERS_
+      do i_layer = 1, NUM_LAYERS_-1
         do i_phase = 1, NUM_PHASES_(i_layer) 
           do j_phase = 1, NUM_PHASES_(i_layer)
             if (phase_name_first .eq. phase_name_second) then

@@ -245,18 +245,17 @@ contains
         call assert(734138496, bread_phase_instance .eq. aero_rep%num_phase_instances(phase_name_test, &
                                                          is_at_surface = .true.))
         ! test adjacent_phases function
-        phase_name_first = "bread"
-        phase_name_second = "jam"
+        phase_name_first = "almond butter"
+        phase_name_second = "bread"
         allocate(adjacent_phases(2))
         adjacent_phases = aero_rep%adjacent_phases(phase_name_first,phase_name_second)
-        print *, adjacent_phases(2)%first_
         call assert(715901353, adjacent_phases(1)%first_ .eq. 1)
-        call assert(304969793, adjacent_phases(1)%second_ .eq. 3)
-        call assert(618519693, adjacent_phases(2)%first_ .eq. 3)
+        call assert(304969793, adjacent_phases(1)%second_ .eq. 4)
+        call assert(618519693, adjacent_phases(2)%first_ .eq. 4)
         call assert(175736438, adjacent_phases(2)%second_ .eq. 5)
         
-        phase_name_first = "almond butter"
-        phase_name_second = "jam"
+        phase_name_first = "jam"
+        phase_name_second = "almond butter"
         adjacent_phases = aero_rep%adjacent_phases(phase_name_first,phase_name_second)
         call assert(629022975, adjacent_phases(1)%first_ .eq. 2)
         call assert(453784946, adjacent_phases(1)%second_ .eq. 3)
