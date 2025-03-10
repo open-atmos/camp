@@ -8,6 +8,7 @@
                                 {
                                         "name": "top bread",
                                         "phases": [
+                                                "almond butter",
                                                 "bread"
                                         ],
                                         "covers": "filling"
@@ -24,7 +25,8 @@
                                         "name": "filling",
                                         "phases": [
                                                 "jam",
-                                                "almond butter"
+                                                "almond butter",
+                                                "bread"
                                         ],
                                         "covers": "bottom bread"
                                 }
