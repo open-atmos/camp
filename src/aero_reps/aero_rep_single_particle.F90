@@ -803,7 +803,7 @@ contains
       class(aero_rep_single_particle_t), intent(in) :: this
       character(len=*), intent(in) :: phase_name_first
       character(len=*), intent(in) :: phase_name_second
-      type(index_pair_t), allocatable :: index_pairs(:)
+      type(index_pair_t), allocatable :: temp_index_pairs(:), index_pairs(:)
 
       integer(kind=i_kind), allocatable :: layer_first(:)
       integer(kind=i_kind), allocatable :: layer_second(:)
@@ -816,11 +816,7 @@ contains
       allocate(phase_id_first_(NUM_LAYERS_))
       allocate(phase_id_second_(NUM_LAYERS_))
 
-      !layer_first = -9999
-      !layer_second = -9999
-      !phase_id_first_ = -9999
-      !phase_id_second_ = -9999
-  
+      ! Loop over layers and phases to determine where each input phase exists
       i_instance = 1
       do i_layer = 1, NUM_LAYERS_
         do i_phase = 1, NUM_PHASES_(i_layer)
@@ -841,8 +837,9 @@ contains
           i_instance = i_instance + 1
         end do
       end do
-      
-      allocate(index_pairs(i_instance))
+
+      ! Find out where the pairs exist and assign to temp_index_pairs
+      allocate(temp_index_pairs(i_instance))
       i_instance = 1
       do i_layer = 1, NUM_LAYERS_-1
         do i_phase = 1, NUM_PHASES_(i_layer) 
@@ -850,26 +847,30 @@ contains
             if (phase_name_first .eq. phase_name_second) then
               if (layer_first(i_layer) .eq. PHASE_MODEL_DATA_ID_(i_layer,i_phase) .and. &
                  layer_first(i_layer+1) .eq. PHASE_MODEL_DATA_ID_(i_layer+1,j_phase)) then
-                index_pairs(i_instance)%first_ = phase_id_first_(i_layer)
-                index_pairs(i_instance)%second_ = phase_id_first_(i_layer+1)
+                temp_index_pairs(i_instance)%first_ = phase_id_first_(i_layer)
+                temp_index_pairs(i_instance)%second_ = phase_id_first_(i_layer+1)
                 i_instance = i_instance + 1
               end if
             else
               if (layer_first(i_layer) .eq. PHASE_MODEL_DATA_ID_(i_layer, i_phase) .and. &
                  layer_second(i_layer+1) .eq. PHASE_MODEL_DATA_ID_(i_layer+1, j_phase)) then
-                index_pairs(i_instance)%first_ = phase_id_first_(i_layer)
-                index_pairs(i_instance)%second_ = phase_id_second_(i_layer+1)
+                temp_index_pairs(i_instance)%first_ = phase_id_first_(i_layer)
+                temp_index_pairs(i_instance)%second_ = phase_id_second_(i_layer+1)
                 i_instance = i_instance + 1
               else if (layer_second(i_layer) .eq. PHASE_MODEL_DATA_ID_(i_layer, i_phase) .and. &
                  layer_first(i_layer+1) .eq. PHASE_MODEL_DATA_ID_(i_layer+1, j_phase)) then
-                index_pairs(i_instance)%first_ = phase_id_second_(i_layer)
-                index_pairs(i_instance)%second_ = phase_id_first_(i_layer+1)
+                temp_index_pairs(i_instance)%first_ = phase_id_second_(i_layer)
+                temp_index_pairs(i_instance)%second_ = phase_id_first_(i_layer+1)
                 i_instance = i_instance + 1
               end if
             end if
           end do
         end do
       end do
+      
+      allocate(index_pairs(i_instance-1))
+      index_pairs(:)%first_ = temp_index_pairs(1:i_instance-1)%first_
+      index_pairs(:)%second_ = temp_index_pairs(1:i_instance-1)%second_
 
     end function adjacent_phases
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

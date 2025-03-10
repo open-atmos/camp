@@ -60,6 +60,14 @@
                         ]
                 },
                 {
+                        "name": "pickles",
+                        "type": "AERO_PHASE",
+                        "species": [
+                                "cucumber",
+                                "water"
+                        ]
+                },
+                {
                         "name": "wheat",
                         "type": "CHEM_SPEC",
                         "phase": "AEROSOL",
@@ -114,6 +122,13 @@
                         "phase": "AEROSOL",
                         "density [kg m-3]": 7.0,
                         "molecular weight [kg mol-1]": 72.3
+                },
+                {
+                        "name": "cucumber",
+                        "type": "CHEM_SPEC",
+                        "phase": "AEROSOL",
+                        "density [kg m-3]": 8.0,
+                        "molecular weight [kg mol-1]": 40.4
                 }
         ]
 }

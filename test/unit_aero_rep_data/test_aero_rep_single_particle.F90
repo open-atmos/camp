@@ -283,6 +283,11 @@ contains
         call assert(148468645, adjacent_phases(2)%first_ .eq. 4)
         call assert(479227854, adjacent_phases(2)%second_ .eq. 6)
 
+        phase_name_first = "pickles"
+        phase_name_second = "almond butter"
+        adjacent_phases = aero_rep%adjacent_phases(phase_name_first,phase_name_second)
+        call assert(688720528, size(adjacent_phases) .eq. 0)
+
       class default
         call die_msg(519535557, rep_name)
     end select
