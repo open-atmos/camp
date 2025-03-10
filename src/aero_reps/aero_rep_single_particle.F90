@@ -815,6 +815,10 @@ contains
       allocate(layer_second(NUM_LAYERS_))
       allocate(phase_id_first_(NUM_LAYERS_))
       allocate(phase_id_second_(NUM_LAYERS_))
+      layer_first = -9999
+      layer_second = -9999
+      phase_id_first_ = -9999
+      phase_id_second_ = -9999
 
       ! Loop over layers and phases to determine where each input phase exists
       i_instance = 1
