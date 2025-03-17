@@ -8,6 +8,7 @@
                                 {
                                         "name": "top bread",
                                         "phases": [
+                                                "almond butter",
                                                 "bread"
                                         ],
                                         "covers": "filling"
@@ -15,7 +16,8 @@
                                 {
                                         "name": "bottom bread",
                                         "phases": [
-                                                "bread"
+                                                "bread",
+                                                "almond butter"
                                         ],
                                         "covers": "none"
                                 },
@@ -23,7 +25,8 @@
                                         "name": "filling",
                                         "phases": [
                                                 "jam",
-                                                "almond butter"
+                                                "almond butter",
+                                                "bread"
                                         ],
                                         "covers": "bottom bread"
                                 }
@@ -54,6 +57,14 @@
                         "species": [
                                 "almonds",
                                 "sugar"
+                        ]
+                },
+                {
+                        "name": "pickles",
+                        "type": "AERO_PHASE",
+                        "species": [
+                                "cucumber",
+                                "water"
                         ]
                 },
                 {
@@ -111,6 +122,13 @@
                         "phase": "AEROSOL",
                         "density [kg m-3]": 7.0,
                         "molecular weight [kg mol-1]": 72.3
+                },
+                {
+                        "name": "cucumber",
+                        "type": "CHEM_SPEC",
+                        "phase": "AEROSOL",
+                        "density [kg m-3]": 8.0,
+                        "molecular weight [kg mol-1]": 40.4
                 }
         ]
 }
