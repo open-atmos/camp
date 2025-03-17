@@ -156,6 +156,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a30f6d36c875d72339b0241f903ffcc4e" id="r_a30f6d36c875d72339b0241f903ffcc4e"><td class="memItemLeft" align="right" valign="top">procedure&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30f6d36c875d72339b0241f903ffcc4e">phase_state_size</a> (this, layer, phase)</td></tr>
 <tr class="memdesc:a30f6d36c875d72339b0241f903ffcc4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of state variables for a layer and phase.  <br /></td></tr>
 <tr class="separator:a30f6d36c875d72339b0241f903ffcc4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6e78a74681e80c04dd672d294a506d1" id="r_ab6e78a74681e80c04dd672d294a506d1"><td class="memItemLeft" align="right" valign="top">procedure&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab6e78a74681e80c04dd672d294a506d1">adjacent_phases</a> (this, phase_name_first, phase_name_second)</td></tr>
+<tr class="memdesc:ab6e78a74681e80c04dd672d294a506d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <a class="el" href="structcamp__aero__rep__single__particle_1_1index__pair__t.html">index_pair_t</a> type with phase_ids of adjacent phases.  <br /></td></tr>
+<tr class="separator:ab6e78a74681e80c04dd672d294a506d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55d2b7725ea41f5a352e4d6b7edb6f77" id="r_a55d2b7725ea41f5a352e4d6b7edb6f77"><td class="memItemLeft" align="right" valign="top">final&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a55d2b7725ea41f5a352e4d6b7edb6f77">finalize</a> (this)</td></tr>
 <tr class="memdesc:a55d2b7725ea41f5a352e4d6b7edb6f77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the aerosol representation.  <br /></td></tr>
 <tr class="separator:a55d2b7725ea41f5a352e4d6b7edb6f77"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -247,7 +250,7 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><p>Single particle aerosol representation. </p>
 <p>Time-invariant data related to a single particle aerosol representation. </p>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00150">150</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00157">157</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a55d2b7725ea41f5a352e4d6b7edb6f77" name="a55d2b7725ea41f5a352e4d6b7edb6f77"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a55d2b7725ea41f5a352e4d6b7edb6f77">&#9670;&#160;</a></span>finalize()</h2>
@@ -280,7 +283,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00146">146</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00148">148</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -298,6 +301,42 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Function/Subroutine Documentation</h2>
+<a id="ab6e78a74681e80c04dd672d294a506d1" name="ab6e78a74681e80c04dd672d294a506d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6e78a74681e80c04dd672d294a506d1">&#9670;&#160;</a></span>adjacent_phases()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">procedure camp_aero_rep_single_particle::aero_rep_single_particle_t::adjacent_phases </td>
+          <td>(</td>
+          <td class="paramtype">class(<a class="el" href="structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t.html">aero_rep_single_particle_t</a>), intent(in)</td>          <td class="paramname"><span class="paramname"><em>this</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">character(len=*), intent(in)</td>          <td class="paramname"><span class="paramname"><em>phase_name_first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">character(len=*), intent(in)</td>          <td class="paramname"><span class="paramname"><em>phase_name_second</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns <a class="el" href="structcamp__aero__rep__single__particle_1_1index__pair__t.html">index_pair_t</a> type with phase_ids of adjacent phases. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">this</td><td>Aerosol representation data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00146">146</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+
+</div>
+</div>
 <a id="ad898431af10a7697ad426d48fbe2ab72" name="ad898431af10a7697ad426d48fbe2ab72"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad898431af10a7697ad426d48fbe2ab72">&#9670;&#160;</a></span>finalize_array()</h2>
 
@@ -321,7 +360,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00146">146</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00148">148</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 
 </div>
 </div>

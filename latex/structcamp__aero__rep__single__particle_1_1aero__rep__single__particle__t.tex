@@ -54,6 +54,8 @@ procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep_
 \begin{DoxyCompactList}\small\item\em Returns the number of phases in a layer or overall. \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a30f6d36c875d72339b0241f903ffcc4e}{phase\+\_\+state\+\_\+size}} (this, layer, phase)
 \begin{DoxyCompactList}\small\item\em Returns the number of state variables for a layer and phase. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ab6e78a74681e80c04dd672d294a506d1}{adjacent\+\_\+phases}} (this, phase\+\_\+name\+\_\+first, phase\+\_\+name\+\_\+second)
+\begin{DoxyCompactList}\small\item\em Returns \doxylink{structcamp__aero__rep__single__particle_1_1index__pair__t}{index\+\_\+pair\+\_\+t} type with phase\+\_\+ids of adjacent phases. \end{DoxyCompactList}\item 
 final \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_a55d2b7725ea41f5a352e4d6b7edb6f77}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the aerosol representation. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ad898431af10a7697ad426d48fbe2ab72}{finalize\+\_\+array}} (this\+\_\+array)
@@ -125,7 +127,7 @@ Single particle aerosol representation.
 
 Time-\/invariant data related to a single particle aerosol representation. 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00150}{150}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00157}{157}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
 
 
@@ -147,7 +149,7 @@ Finalize the aerosol representation.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00146}{146}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00148}{148}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -160,6 +162,25 @@ Here is the call graph for this function\+:
 
 
 \doxysubsection{Member Function/\+Subroutine Documentation}
+\Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ab6e78a74681e80c04dd672d294a506d1}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!adjacent\_phases@{adjacent\_phases}}
+\index{adjacent\_phases@{adjacent\_phases}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
+\doxysubsubsection{\texorpdfstring{adjacent\_phases()}{adjacent\_phases()}}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ab6e78a74681e80c04dd672d294a506d1} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t\+::adjacent\+\_\+phases (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}), intent(in)}]{this}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{phase\+\_\+name\+\_\+first}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{phase\+\_\+name\+\_\+second}{}\end{DoxyParamCaption})}
+
+
+
+Returns \doxylink{structcamp__aero__rep__single__particle_1_1index__pair__t}{index\+\_\+pair\+\_\+t} type with phase\+\_\+ids of adjacent phases. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00146}{146}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
+
 \Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_ad898431af10a7697ad426d48fbe2ab72}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!finalize\_array@{finalize\_array}}
 \index{finalize\_array@{finalize\_array}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
 \doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
@@ -177,7 +198,7 @@ Finalize the aerosol representation array.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00146}{146}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8_f90_source_l00148}{148}} of file \mbox{\hyperlink{aero__rep__single__particle_8_f90_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+F90}}.
 
 \Hypertarget{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t_abae962a36eef9f53d555cf6045144424}\index{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t@{camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t}}
