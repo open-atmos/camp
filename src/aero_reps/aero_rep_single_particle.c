@@ -189,6 +189,11 @@ void aero_rep_single_particle_get_effective_radius__m(
 
 /** \brief Get the surface area of specified particle layer \f$r_{eff}\f$ (m)
  *
+ * Solve for the surface area of the interfacial layer that exists between the 
+ * two phases considered in aerosol phase mass tranfer between layers. When more
+ * than one phase exists in a layer, a random overlap configuration is applied (see 
+ * CAMP Github Documentation for details. 
+ * 
  * \param model_data Pointer to the model data, including the state array
  * \param aero_phase_idx_first Index of the first aerosol phase within the representation
  * \param aero_phase_idx_second Index of the second aerosol phase within the representation
@@ -214,18 +219,51 @@ void aero_rep_single_particle_get_interface_layer_surface_area__m2(
   int layer_first = -1;
   int layer_second = -1;
   int layer_interface = -1;
+  int phase_model_data_id_first = -1;
+  int phase_model_data_id_second = -1;
   double radius;
   
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
     if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx_first && 
         aero_phase_idx_first <= LAYER_PHASE_END_(i_layer)) {
       layer_first = i_layer;
+      phase_model_data_id_first = PHASE_MODEL_DATA_ID_(i_layer, aero_phase_idx_first);
     } else if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx_second &&
                aero_phase_idx_second <= LAYER_PHASE_END_(i_layer)) {
       layer_second = i_layer;
+      phase_model_data_id_second = PHASE_MODEL_DATA_ID_(i_layer, aero_phase_idx_second);
     }
   }
   layer_interface = layer_first > layer_second ? layer_second : layer_first;
+  
+  printf("\n\n phase_model_data_id_first %d",phase_model_data_id_first);
+  printf("\n\n phase_model_data_id_second %d",phase_model_data_id_second);
+  double total_volume_layer_first = 0.0;
+  double total_volume_layer_second = 0.0;
+  double volume_phase_first = 0.0;
+  double volume_phase_second = 0.0;
+  for (int i_layer = 0; i_layer <= layer_second; ++i_layer) {
+    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
+      double *state = (double *)(model_data->grid_cell_state);
+      state += PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase);
+      double volume;
+      aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_layer,i_phase),
+                                   state, &(volume), curr_partial);
+      if (i_layer == layer_first) total_volume_layer_first += volume;
+      if (PHASE_MODEL_DATA_ID_(layer_first, i_phase) == phase_model_data_id_first) volume_phase_first = volume;
+      if (i_layer == layer_second) total_volume_layer_second += volume;
+      if (PHASE_MODEL_DATA_ID_(layer_second, i_phase) == phase_model_data_id_second) volume_phase_second = volume;
+    }
+  }
+  printf("\n\n total_volume_layer_first %f",total_volume_layer_first);
+  printf("\n total_volume_layer_second %f",total_volume_layer_second);
+  printf("\n volume_phase_first %f", volume_phase_first);
+  printf("\n volume_phase_second %f", volume_phase_second);
+  double f_first = volume_phase_first / total_volume_layer_first;
+  double f_second = volume_phase_second / total_volume_layer_second;
+
+  printf("\n f_first %f", f_first);
+  printf("\n f_second %f", f_second);
 
   double total_volume = 0.0;
   if (partial_deriv) curr_partial = partial_deriv;
@@ -241,7 +279,7 @@ void aero_rep_single_particle_get_interface_layer_surface_area__m2(
     }
   }
   radius = pow(((total_volume) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
-  *surface_area_layer = 4 * 3.14159265359 * pow(radius, 2.0);
+  *surface_area_layer = f_first * f_second * 4 * 3.14159265359 * pow(radius, 2.0);
   if (!partial_deriv) return;
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {

@@ -199,9 +199,41 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
                             CONC_salt / DENSITY_salt +
                             CONC_sugar / DENSITY_sugar ); // volume density (m3/m3)
 
-  double eff_rad_expected = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density ), 1.0/3.0 );
+  double volume_density_jam = ( CONC_rasberry / DENSITY_rasberry +
+                            CONC_honey / DENSITY_honey +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_lemon / DENSITY_lemon ); // volume density of jam (m3/m3)
 
-  double eff_sa_expected = 4.0 * 3.14159265359 * pow( eff_rad_expected, 2.0 );
+  double volume_density_layer_2 = ( CONC_almonds / DENSITY_almonds +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_rasberry / DENSITY_rasberry +
+                            CONC_honey / DENSITY_honey +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_lemon / DENSITY_lemon +
+                            CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt ); // volume density of layer 2 (m3/m3)
+
+  double volume_density_bread = ( CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt ); // volume density of bread (m3/m3)
+
+  double volume_density_layer_3 = ( CONC_almonds / DENSITY_almonds +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt ); // volume density of layer 3 (m3/m3)
+
+  double eff_rad_expected = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density ), 1.0/3.0 );
+  double rad_jam = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density_jam ), 1.0/3.0 );
+  double rad_layer_2 = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density_layer_2 ), 1.0/3.0 );
+  double f_jam = rad_jam / rad_layer_2;
+  double f_bread = volume_density_bread / volume_density_layer_3;
+
+  double eff_sa_expected = f_jam * f_bread* 4.0 * 3.14159265359 * pow( eff_rad_expected, 2.0 );
+  printf("\n\neff_sa_expected %f",eff_sa_expected);
+  printf("\nf_jam %f",f_jam);
+  printf("\n\nf_bread %f",f_bread);
   ret_val += ASSERT_MSG(fabs(eff_sa-eff_sa_expected) < 1.0e-4*eff_sa_expected,
                         "Bad surface area layer");
 
