@@ -226,7 +226,6 @@ void aero_rep_single_particle_get_interface_layer_surface_area__m2(
   int i_phase_count = 0;
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
-      printf("\n\n PHASE_MOD_DATA_ID_(i_layer,i_phase): %d", PHASE_MODEL_DATA_ID_(i_layer, i_phase));
       if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx_first && 
           aero_phase_idx_first <= LAYER_PHASE_END_(i_layer) && 
           i_phase_count == aero_phase_idx_first) {
@@ -243,15 +242,11 @@ void aero_rep_single_particle_get_interface_layer_surface_area__m2(
   }
   layer_interface = layer_first > layer_second ? layer_second : layer_first;
 
-  printf("\n\n layer_first %d",layer_first);
-  printf("\n\n layer_second %d",layer_second);
-  printf("\n\n PMI_first %d",phase_model_data_id_first);
-  printf("\n\n PMI_second %d",phase_model_data_id_second);
-  
   double total_volume_layer_first = 0.0;
   double total_volume_layer_second = 0.0;
   double volume_phase_first = 0.0;
   double volume_phase_second = 0.0;
+  i_phase_count = 0;
   for (int i_layer = 0; i_layer <= layer_second; ++i_layer) {
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
       double *state = (double *)(model_data->grid_cell_state);
@@ -260,21 +255,18 @@ void aero_rep_single_particle_get_interface_layer_surface_area__m2(
       aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_layer,i_phase),
                                    state, &(volume), curr_partial);
       if (i_layer == layer_first) total_volume_layer_first += volume;
-      if (PHASE_MODEL_DATA_ID_(i_layer, i_phase) == phase_model_data_id_first) volume_phase_first = volume;
+      if (i_phase_count == aero_phase_idx_first && 
+          PHASE_MODEL_DATA_ID_(i_layer, i_phase) == 
+          phase_model_data_id_first) volume_phase_first = volume;
       if (i_layer == layer_second) total_volume_layer_second += volume;
-      if (PHASE_MODEL_DATA_ID_(i_layer, i_phase) == phase_model_data_id_second) volume_phase_second = volume;
+      if (i_phase_count == aero_phase_idx_second && 
+          PHASE_MODEL_DATA_ID_(i_layer, i_phase) == 
+          phase_model_data_id_second) volume_phase_second = volume;
+      ++i_phase_count;
     }
   }
-  printf("\n\n total_volume_layer_first %f",total_volume_layer_first);
-  printf("\n total_volume_layer_second %f",total_volume_layer_second);
-  printf("\n volume_phase_first %f", volume_phase_first);
-  printf("\n volume_phase_second %f", volume_phase_second);
   double f_first = volume_phase_first / total_volume_layer_first;
   double f_second = volume_phase_second / total_volume_layer_second;
-
-  printf("\n f_first %f", f_first);
-  printf("\n f_second %f", f_second);
-
   double total_volume = 0.0;
   if (partial_deriv) curr_partial = partial_deriv;
   for (int i_layer = 0; i_layer <= layer_interface; ++i_layer) {

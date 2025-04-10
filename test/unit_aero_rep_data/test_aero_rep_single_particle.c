@@ -199,13 +199,11 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
                             CONC_salt / DENSITY_salt +
                             CONC_sugar / DENSITY_sugar ); // volume density (m3/m3)
 
-//  double volume_density_jam = ( CONC_rasberry / DENSITY_rasberry +
-//                            CONC_honey / DENSITY_honey +
-//                            CONC_sugar / DENSITY_sugar +
-//                            CONC_lemon / DENSITY_lemon ); // volume density of jam (m3/m3)
+  double volume_density_jam = ( CONC_rasberry / DENSITY_rasberry +
+                            CONC_honey / DENSITY_honey +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_lemon / DENSITY_lemon ); // volume density of jam (m3/m3)
 
-  double volume_density_jam = ( CONC_almonds / DENSITY_almonds +
-                            CONC_sugar / DENSITY_sugar );
   double volume_density_layer_2 = ( CONC_almonds / DENSITY_almonds +
                             CONC_sugar / DENSITY_sugar +
                             CONC_rasberry / DENSITY_rasberry +
@@ -230,13 +228,7 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
   double f_jam = volume_density_jam / volume_density_layer_2;
   double f_bread = volume_density_bread / volume_density_layer_3;
 
-  printf("\n\nvolume_density_jam %f",volume_density_jam);
-  printf("\n\nvolume_density_layer_2 %f",volume_density_layer_2);
-
   double eff_sa_expected = f_jam * f_bread * 4.0 * 3.14159265359 * pow( eff_rad_expected, 2.0 );
-  printf("\n\neff_sa_expected %f",eff_sa_expected);
-  printf("\nf_jam %f",f_jam);
-  printf("\n\nf_bread %f",f_bread);
   ret_val += ASSERT_MSG(fabs(eff_sa-eff_sa_expected) < 1.0e-4*eff_sa_expected,
                         "Bad surface area layer");
 
