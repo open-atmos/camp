@@ -223,21 +223,31 @@ void aero_rep_single_particle_get_interface_layer_surface_area__m2(
   int phase_model_data_id_second = -1;
   double radius;
   
+  int i_phase_count = 0;
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
-    if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx_first && 
-        aero_phase_idx_first <= LAYER_PHASE_END_(i_layer)) {
-      layer_first = i_layer;
-      phase_model_data_id_first = PHASE_MODEL_DATA_ID_(i_layer, aero_phase_idx_first);
-    } else if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx_second &&
-               aero_phase_idx_second <= LAYER_PHASE_END_(i_layer)) {
-      layer_second = i_layer;
-      phase_model_data_id_second = PHASE_MODEL_DATA_ID_(i_layer, aero_phase_idx_second);
+    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
+      printf("\n\n PHASE_MOD_DATA_ID_(i_layer,i_phase): %d", PHASE_MODEL_DATA_ID_(i_layer, i_phase));
+      if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx_first && 
+          aero_phase_idx_first <= LAYER_PHASE_END_(i_layer) && 
+          i_phase_count == aero_phase_idx_first) {
+        layer_first = i_layer;
+        phase_model_data_id_first = PHASE_MODEL_DATA_ID_(i_layer, i_phase);
+      } else if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx_second &&
+                 aero_phase_idx_second <= LAYER_PHASE_END_(i_layer) &&
+                 i_phase_count == aero_phase_idx_second) {
+        layer_second = i_layer;
+        phase_model_data_id_second = PHASE_MODEL_DATA_ID_(i_layer, i_phase);
+      }
+      ++i_phase_count;
     }
   }
   layer_interface = layer_first > layer_second ? layer_second : layer_first;
+
+  printf("\n\n layer_first %d",layer_first);
+  printf("\n\n layer_second %d",layer_second);
+  printf("\n\n PMI_first %d",phase_model_data_id_first);
+  printf("\n\n PMI_second %d",phase_model_data_id_second);
   
-  printf("\n\n phase_model_data_id_first %d",phase_model_data_id_first);
-  printf("\n\n phase_model_data_id_second %d",phase_model_data_id_second);
   double total_volume_layer_first = 0.0;
   double total_volume_layer_second = 0.0;
   double volume_phase_first = 0.0;
@@ -250,9 +260,9 @@ void aero_rep_single_particle_get_interface_layer_surface_area__m2(
       aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_layer,i_phase),
                                    state, &(volume), curr_partial);
       if (i_layer == layer_first) total_volume_layer_first += volume;
-      if (PHASE_MODEL_DATA_ID_(layer_first, i_phase) == phase_model_data_id_first) volume_phase_first = volume;
+      if (PHASE_MODEL_DATA_ID_(i_layer, i_phase) == phase_model_data_id_first) volume_phase_first = volume;
       if (i_layer == layer_second) total_volume_layer_second += volume;
-      if (PHASE_MODEL_DATA_ID_(layer_second, i_phase) == phase_model_data_id_second) volume_phase_second = volume;
+      if (PHASE_MODEL_DATA_ID_(i_layer, i_phase) == phase_model_data_id_second) volume_phase_second = volume;
     }
   }
   printf("\n\n total_volume_layer_first %f",total_volume_layer_first);

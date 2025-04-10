@@ -199,11 +199,13 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
                             CONC_salt / DENSITY_salt +
                             CONC_sugar / DENSITY_sugar ); // volume density (m3/m3)
 
-  double volume_density_jam = ( CONC_rasberry / DENSITY_rasberry +
-                            CONC_honey / DENSITY_honey +
-                            CONC_sugar / DENSITY_sugar +
-                            CONC_lemon / DENSITY_lemon ); // volume density of jam (m3/m3)
+//  double volume_density_jam = ( CONC_rasberry / DENSITY_rasberry +
+//                            CONC_honey / DENSITY_honey +
+//                            CONC_sugar / DENSITY_sugar +
+//                            CONC_lemon / DENSITY_lemon ); // volume density of jam (m3/m3)
 
+  double volume_density_jam = ( CONC_almonds / DENSITY_almonds +
+                            CONC_sugar / DENSITY_sugar );
   double volume_density_layer_2 = ( CONC_almonds / DENSITY_almonds +
                             CONC_sugar / DENSITY_sugar +
                             CONC_rasberry / DENSITY_rasberry +
@@ -225,12 +227,13 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
                             CONC_salt / DENSITY_salt ); // volume density of layer 3 (m3/m3)
 
   double eff_rad_expected = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density ), 1.0/3.0 );
-  double rad_jam = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density_jam ), 1.0/3.0 );
-  double rad_layer_2 = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density_layer_2 ), 1.0/3.0 );
-  double f_jam = rad_jam / rad_layer_2;
+  double f_jam = volume_density_jam / volume_density_layer_2;
   double f_bread = volume_density_bread / volume_density_layer_3;
 
-  double eff_sa_expected = f_jam * f_bread* 4.0 * 3.14159265359 * pow( eff_rad_expected, 2.0 );
+  printf("\n\nvolume_density_jam %f",volume_density_jam);
+  printf("\n\nvolume_density_layer_2 %f",volume_density_layer_2);
+
+  double eff_sa_expected = f_jam * f_bread * 4.0 * 3.14159265359 * pow( eff_rad_expected, 2.0 );
   printf("\n\neff_sa_expected %f",eff_sa_expected);
   printf("\nf_jam %f",f_jam);
   printf("\n\nf_bread %f",f_bread);
@@ -320,7 +323,6 @@ int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
 
   ret_val += ASSERT_MSG(fabs(phase_mass_2-mass_2) < 1.0e-10*mass_2,
                         "Bad aerosol phase mass");
-  printf("\nphase_mass_2 : %f", phase_mass_2);
   ret_val += ASSERT_MSG(partial_deriv_2[0] = 999.9,
                         "Bad Jacobian (-1)");
   for( int i = 1; i < 6; ++i )
