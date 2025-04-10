@@ -232,6 +232,43 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
   ret_val += ASSERT_MSG(fabs(eff_sa-eff_sa_expected) < 1.0e-4*eff_sa_expected,
                         "Bad surface area layer");
 
+  ret_val += ASSERT_MSG(partial_deriv[0] = 999.9,
+                        "Bad Jacobian (-1)");
+
+  double d_eff_sa_dx = 2.0 * f_jam * f_bread * 
+                       pow(volume_density * 3.0 / 4.0 / 3.14159265359, -1.0 / 3.0) ;
+
+  ret_val += ASSERT_MSG(fabs(partial_deriv[1] - d_eff_sa_dx / DENSITY_wheat) <
+                        1.0e-10 * partial_deriv[1], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[2] - d_eff_sa_dx / DENSITY_water) <
+                        1.0e-10 * partial_deriv[2], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[3] - d_eff_sa_dx / DENSITY_salt) <
+                        1.0e-10 * partial_deriv[3], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[4] - d_eff_sa_dx / DENSITY_almonds) <
+                        1.0e-10 * partial_deriv[4], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[5] - d_eff_sa_dx / DENSITY_sugar) <
+                        1.0e-10 * partial_deriv[5], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[6] - d_eff_sa_dx / DENSITY_rasberry) <
+                        1.0e-10 * partial_deriv[6], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[7] - d_eff_sa_dx / DENSITY_honey) <
+                        1.0e-10 * partial_deriv[7], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[8] - d_eff_sa_dx / DENSITY_sugar) <
+                        1.0e-10 * partial_deriv[8], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[9] - d_eff_sa_dx / DENSITY_lemon) <
+                        1.0e-10 * partial_deriv[9], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[10] - d_eff_sa_dx / DENSITY_almonds) <
+                        1.0e-10 * partial_deriv[10], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[11] - d_eff_sa_dx / DENSITY_sugar) <
+                        1.0e-10 * partial_deriv[11], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[12] - d_eff_sa_dx / DENSITY_wheat) <
+                        1.0e-10 * partial_deriv[12], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[13] - d_eff_sa_dx / DENSITY_water) <
+                        1.0e-10 * partial_deriv[13], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[14] - d_eff_sa_dx / DENSITY_salt) <
+                        1.0e-10 * partial_deriv[14], "Bad Jacobian element");
+  for( int i = 15; i < N_JAC_ELEM+1; ++i )
+    ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
+                          "Bad Jacobian element");
   return ret_val;
 }
 
