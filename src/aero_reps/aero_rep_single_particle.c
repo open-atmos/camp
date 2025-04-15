@@ -191,8 +191,8 @@ void aero_rep_single_particle_get_effective_radius__m(
  *
  * Solve for the surface area of the interfacial layer that exists between the 
  * two phases considered in aerosol phase mass tranfer between layers. When more
- * than one phase exists in a layer, a random overlap configuration is applied (see 
- * CAMP Github Documentation for details. 
+ * than one phase exists in a layer, a "fractional volume overlap" configuration 
+ * is applied (see CAMP Github Documentation for details).
  * 
  * \param model_data Pointer to the model data, including the state array
  * \param aero_phase_idx_first Index of the first aerosol phase within the representation

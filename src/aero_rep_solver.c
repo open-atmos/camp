@@ -263,7 +263,7 @@ void aero_rep_get_interface_layer_surface_area__m2(ModelData *model_data, int ae
   // Get the aerosol representation type
   int aero_rep_type = *(aero_rep_int_data++);
 
-  // Get the particle radius and set of partial derivatives
+  // Get the interfacial layer surface area and set of partial derivatives
   switch (aero_rep_type) {
     case AERO_REP_SINGLE_PARTICLE:
       aero_rep_single_particle_get_interface_layer_surface_area__m2(

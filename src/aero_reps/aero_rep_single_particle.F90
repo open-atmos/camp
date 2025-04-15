@@ -20,9 +20,9 @@
 !!  ]}
 !! \endcode
 !! The key-value pair \b type is required and must be \b
-!! AERO_REP_SINGLE_PARTICLE. This representation assumes that every \ref
-!! input_format_aero_phase "aerosol phase" available will be present
-!! once in each particle.
+!! AERO_REP_SINGLE_PARTICLE. In this representation, particles are divided
+!! into layers. Phases in each layer are specified by the user. Phase configuration
+!! within each layer follows "fractional volume overlap".  
 !!
 !! The number concentration for each particle must be
 !! set from an external model using
