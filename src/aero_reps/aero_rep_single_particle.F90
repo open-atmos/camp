@@ -21,8 +21,18 @@
 !! \endcode
 !! The key-value pair \b type is required and must be \b
 !! AERO_REP_SINGLE_PARTICLE. In this representation, particles are divided
-!! into layers. Phases in each layer are specified by the user. Phase configuration
-!! within each layer follows "fractional volume overlap".  
+!! into layers. Phases in each layer are specified by the user. 
+!!
+!! Phase configuration within particles follows "fractional volume overlap". 
+!! The shared surface area between phases in adjacent layers is scaled by phase 
+!! volume fraction within respective layers.
+!! In this configuration, the surface area of the layer interface between two phases
+!! is calculated as f_first * f_second * total_interface_surface_area where 
+!! the first and second subscripts refer to the two phases in adjacent layers and
+!!  
+!!   f_first = volume_phase_first / volume_total_layer_first
+!!   f_second = volume_phase_second / volume_total_layer_second
+!!
 !!
 !! The number concentration for each particle must be
 !! set from an external model using
