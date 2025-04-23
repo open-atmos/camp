@@ -179,7 +179,7 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
 
   for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv[i] = 999.9;
 
-  aero_rep_get_interface_layer_surface_area__m2(model_data, AERO_REP_IDX,
+  aero_rep_get_interface_surface_area__m2(model_data, AERO_REP_IDX,
                                 AERO_PHASE_IDX_1 - NUM_AERO_PHASE, 
                                 AERO_PHASE_IDX_2 - NUM_AERO_PHASE, 
                                 &eff_sa, &(partial_deriv[1]));

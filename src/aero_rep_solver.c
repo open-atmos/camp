@@ -246,7 +246,7 @@ void aero_rep_get_effective_radius__m(ModelData *model_data, int aero_rep_idx,
  *                      calculated \f$\frac{\partial A}{\partial y}\f$,
  *                      or a NULL pointer if no partial derivatives are needed
  */
-void aero_rep_get_interface_layer_surface_area__m2(ModelData *model_data, int aero_rep_idx,
+void aero_rep_get_interface_surface_area__m2(ModelData *model_data, int aero_rep_idx,
                                       int aero_phase_idx_first, int aero_phase_idx_second, 
                                       double *surface_area_layer, double *partial_deriv) {
   // Get pointers to the aerosol data
@@ -266,7 +266,7 @@ void aero_rep_get_interface_layer_surface_area__m2(ModelData *model_data, int ae
   // Get the interfacial layer surface area and set of partial derivatives
   switch (aero_rep_type) {
     case AERO_REP_SINGLE_PARTICLE:
-      aero_rep_single_particle_get_interface_layer_surface_area__m2(
+      aero_rep_single_particle_get_interface_surface_area__m2(
           model_data, aero_phase_idx_first, aero_phase_idx_second, surface_area_layer, 
           partial_deriv, aero_rep_int_data, aero_rep_float_data, aero_rep_env_data);
       break;

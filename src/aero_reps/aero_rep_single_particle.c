@@ -208,7 +208,7 @@ void aero_rep_single_particle_get_effective_radius__m(
  * \param surf_area_layer Surface area of specified layer (m2)
  */
 
-void aero_rep_single_particle_get_interface_layer_surface_area__m2(
+void aero_rep_single_particle_get_interface_surface_area__m2(
     ModelData *model_data, int aero_phase_idx_first, int aero_phase_idx_second, 
     double *surface_area_layer, double *partial_deriv, 
     int *aero_rep_int_data, double *aero_rep_float_data, double *aero_rep_env_data) {
