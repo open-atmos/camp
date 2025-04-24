@@ -265,6 +265,11 @@ void aero_rep_get_interface_surface_area__m2(ModelData *model_data, int aero_rep
 
   // Get the interfacial layer surface area and set of partial derivatives
   switch (aero_rep_type) {
+    case AERO_REP_MODAL_BINNED_MASS:
+      aero_rep_modal_binned_mass_get_interface_surface_area__m2(
+          model_data, aero_phase_idx, surface_area, partial_deriv, aero_rep_int_data,
+          aero_rep_float_data, aero_rep_env_data);
+      break;
     case AERO_REP_SINGLE_PARTICLE:
       aero_rep_single_particle_get_interface_surface_area__m2(
           model_data, aero_phase_idx_first, aero_phase_idx_second, surface_area_layer, 
