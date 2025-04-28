@@ -96,6 +96,40 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
   return ret_val;
 }
 
+/** \brief Test the surface area function
+ *
+ * \param model_data Pointer to the model data
+ * \param state Solver state
+ */
+int test_surface_area(ModelData * model_data, N_Vector state) {
+
+  int ret_val = 0;
+  double partial_deriv[N_JAC_ELEM+2];
+  double partial_deriv_2[N_JAC_ELEM_2+2];
+  double eff_sa = -999.9;
+
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv[i] = 999.9;
+  for( int i = 0; i < N_JAC_ELEM_2+2; ++i ) partial_deriv_2[i] = 999.9;
+
+  aero_rep_get_interface_surface_area__m2(model_data, AERO_REP_IDX,
+                                AERO_PHASE_IDX, AERO_PHASE_IDX_2,
+                                &eff_sa, &(partial_deriv[1]));
+
+  double real_sa = 0.0;
+  ret_val += ASSERT_MSG(eff_sa==real_sa,
+                        "Bad surface area");
+
+  ret_val += ASSERT_MSG(partial_deriv[0] == 999.9,
+                        "Bad Jacobian index (-1)");
+  for( int i = 1; i < N_JAC_ELEM+1; ++i )
+    ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
+                          "Bad Jacobian element");
+  ret_val += ASSERT_MSG(partial_deriv[N_JAC_ELEM+1] == 999.9,
+                        "Bad Jacobian index (end+1)");
+
+  return ret_val;
+}
+
 /** \brief Test the number concentration function
  *
  * \param model_data Pointer to the model data
@@ -343,6 +377,7 @@ int run_aero_rep_modal_c_tests(void *solver_data, double *state, double *env) {
 
   // Run the property tests
   ret_val += test_effective_radius(model_data, solver_state);
+  //ret_val += test_surface_area(model_data, solver_state);
   ret_val += test_aero_phase_mass(model_data, solver_state);
   ret_val += test_aero_phase_avg_MW(model_data, solver_state);
   ret_val += test_number_conc(model_data, solver_state);

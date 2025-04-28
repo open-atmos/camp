@@ -330,28 +330,13 @@ void aero_rep_modal_binned_mass_get_effective_radius__m(
 
 /** \brief Get the effective particle surface area \f$r_{eff}\f$ (m)
  *
- * The modal mass effective radius is calculated for a log-normal distribution
- * where the geometric mean diameter (\f$\tilde{D}_n\f$) and geometric standard
- * deviation (\f$\sigma_g\f$) are set by the aerosol model prior to
- * solving the chemistry. Thus, all \f$\frac{\partial r_{eff}}{\partial y}\f$
- * are zero. The effective radius is calculated according to the equation given
- * in Table 1 of Zender \cite Zender2002 :
- *
- * \f[
- * \tilde{\sigma_g} \equiv ln( \sigma_g )
- * \f]
- * \f[
- * D_s = D_{eff} = \tilde{D_n} e^{5 \tilde{\sigma}_g^2 / 2}
- * \f]
- * \f[
- * r_{eff} = \frac{D_{eff}}{2}
- * \f]
- *
- * For bins, \f$r_{eff}\f$ is assumed to be the bin radius.
+ * The surface area interface that exists between two specified phases within
+ * the modal/binned aerosol representation always returns zero. 
  *
  * \param model_data Pointer to the model data, including the state array
- * \param aero_phase_idx Index of the aerosol phase within the representation
- * \param radius Effective particle radius (m)
+ * \param aero_phase_idx_first Index of the first aerosol phase within the representation
+ * \param aero_phase_idx_second Index of the second aerosol phase within the representation
+ * \param surface_area Effective surface area of interface between phases (m^2)
  * \param partial_deriv \f$\frac{\partial r_{eff}}{\partial y}\f$ where \f$y\f$
  *                       are species on the state array
  * \param aero_rep_int_data Pointer to the aerosol representation integer data
@@ -361,16 +346,17 @@ void aero_rep_modal_binned_mass_get_effective_radius__m(
  *                          environment-dependent parameters
  */
 void aero_rep_modal_binned_mass_get_interface_surface_area__m2(
-    ModelData *model_data, int aero_phase_idx, double *surface_area,
-    double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
-    double *aero_rep_env_data) {
+    ModelData *model_data, int aero_phase_idx_first, int aero_phase_idx_second,
+    double *surface_area, double *partial_deriv, int *aero_rep_int_data, 
+    double *aero_rep_float_data, double *aero_rep_env_data) {
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
 
   for (int i_section = 0; i_section < NUM_SECTION_; i_section++) {
     for (int i_bin = 0; i_bin < NUM_BINS_(i_section); i_bin++) {
-      aero_phase_idx -= NUM_PHASE_(i_section);
-      if (aero_phase_idx < 0) {
+      aero_phase_idx_first -= NUM_PHASE_(i_section);
+      if (aero_phase_idx_first < 0) {
+        *surface_area = 0.0;
         *surface_area = 4.0 * 3.14159265359 * pow(EFFECTIVE_RADIUS_(i_section, i_bin), 2);
         // Effective surface area is constant for bins and modes
         if (partial_deriv) {

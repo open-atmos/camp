@@ -197,7 +197,7 @@ void aero_rep_single_particle_get_effective_radius__m(
  * \param model_data Pointer to the model data, including the state array
  * \param aero_phase_idx_first Index of the first aerosol phase within the representation
  * \param aero_phase_idx_second Index of the second aerosol phase within the representation
- * \param surface_area_layer Pointer to surface area of inner layer (m^2)
+ * \param surface_area Pointer to surface area of inner layer (m^2)
  * \param partial_deriv \f$\frac{\partial r_{eff}}{\partial y}\f$ where \f$y\f$
  *                      are species on the state array
  * \param aero_rep_int_data Pointer to the aerosol representation integer data
@@ -210,7 +210,7 @@ void aero_rep_single_particle_get_effective_radius__m(
 
 void aero_rep_single_particle_get_interface_surface_area__m2(
     ModelData *model_data, int aero_phase_idx_first, int aero_phase_idx_second, 
-    double *surface_area_layer, double *partial_deriv, 
+    double *surface_area, double *partial_deriv, 
     int *aero_rep_int_data, double *aero_rep_float_data, double *aero_rep_env_data) {
 
   int *int_data = aero_rep_int_data;
@@ -281,7 +281,7 @@ void aero_rep_single_particle_get_interface_surface_area__m2(
     }
   }
   radius = pow(((total_volume) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
-  *surface_area_layer = f_first * f_second * 4 * 3.14159265359 * pow(radius, 2.0);
+  *surface_area = f_first * f_second * 4 * 3.14159265359 * pow(radius, 2.0);
   if (!partial_deriv) return;
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
