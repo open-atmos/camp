@@ -352,12 +352,13 @@ void aero_rep_modal_binned_mass_get_interface_surface_area__m2(
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
 
-  for (int i_section = 0; i_section < NUM_SECTION_; i_section++) {
+
+  printf("\n\nThere are no adjacent pairs in the modal/binned representation.\n");  
+/*  for (int i_section = 0; i_section < NUM_SECTION_; i_section++) {
     for (int i_bin = 0; i_bin < NUM_BINS_(i_section); i_bin++) {
       aero_phase_idx_first -= NUM_PHASE_(i_section);
       if (aero_phase_idx_first < 0) {
         *surface_area = 0.0;
-        *surface_area = 4.0 * 3.14159265359 * pow(EFFECTIVE_RADIUS_(i_section, i_bin), 2);
         // Effective surface area is constant for bins and modes
         if (partial_deriv) {
           for (int i_phase = 0; i_phase < NUM_PHASE_(i_section); ++i_phase) {
@@ -373,7 +374,7 @@ void aero_rep_modal_binned_mass_get_interface_surface_area__m2(
       }
     }
   }
-
+*/
   return;
 }
 

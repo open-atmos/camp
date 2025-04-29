@@ -113,6 +113,8 @@ contains
     character(len=:), allocatable :: phase_name_test
     integer, allocatable :: last_phase_id_correct(:)
     integer, dimension(9) :: last_phase_id
+    type(index_pair_t), allocatable :: adjacent_phases(:)
+    character(len=:), allocatable :: phase_name_first, phase_name_second
 #ifdef CAMP_USE_MPI
     type(string_t), allocatable :: rep_names(:)
     type(aero_rep_factory_t) :: aero_rep_factory
@@ -138,6 +140,12 @@ contains
     call assert_msg(575377987, associated(aero_rep), rep_name)
     select type (aero_rep)
       type is (aero_rep_modal_binned_mass_t)
+        !> Test the adjacent phases function
+        phase_name_first = "my test phase one"
+        phase_name_second = "my test phase two"
+        adjacent_phases = aero_rep%adjacent_phases(phase_name_first,phase_name_second)
+        call assert(919038338, size(adjacent_phases) .eq. 0)
+
       class default
         call die_msg(570113680, rep_name)
     end select

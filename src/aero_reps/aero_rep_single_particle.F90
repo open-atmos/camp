@@ -78,7 +78,7 @@ module camp_aero_rep_single_particle
 
   public :: aero_rep_single_particle_t, &
             aero_rep_update_data_single_particle_number_t, &
-            ordered_layer_ids, index_pair_t
+            ordered_layer_ids
 
   !> Single particle aerosol representation
   !!
@@ -157,11 +157,6 @@ module camp_aero_rep_single_particle
     !> Finalize the aerosol representation
     final :: finalize, finalize_array
   end type aero_rep_single_particle_t
-
-  type :: index_pair_t
-    integer :: first_ = -9999
-    integer :: second_ = -9999
-  end type index_pair_t
 
   ! Constructor for aero_rep_single_particle_t
   interface aero_rep_single_particle_t
@@ -887,6 +882,7 @@ contains
       index_pairs(:)%second_ = temp_index_pairs(1:i_instance-1)%second_
 
     end function adjacent_phases
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the aerosol representation
