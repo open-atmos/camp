@@ -113,21 +113,6 @@ int test_surface_area(ModelData * model_data, N_Vector state) {
   aero_rep_get_interface_surface_area__m2(model_data, AERO_REP_IDX,
                                 AERO_PHASE_IDX, AERO_PHASE_IDX_2,
                                 &eff_sa, &(partial_deriv[1]));
-
-/*  double real_sa = 0.0;
-  ret_val += ASSERT_MSG(eff_sa==real_sa,
-                        "Bad surface area");
-
-  ret_val += ASSERT_MSG(partial_deriv[0] == 999.9,
-                        "Bad Jacobian index (-1)");
-  for( int i = 1; i < N_JAC_ELEM+1; ++i )
-    ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
-                          "Bad Jacobian element");
-  ret_val += ASSERT_MSG(partial_deriv[N_JAC_ELEM+1] == 999.9,
-                        "Bad Jacobian index (end+1)");
-
-  return ret_val;
-*/
 }
 
 /** \brief Test the number concentration function

@@ -353,29 +353,8 @@ void aero_rep_modal_binned_mass_get_interface_surface_area__m2(
   double *float_data = aero_rep_float_data;
 
 
-  printf("\n\nThere are no adjacent pairs in the modal/binned representation.\n");  
-/*  for (int i_section = 0; i_section < NUM_SECTION_; i_section++) {
-    for (int i_bin = 0; i_bin < NUM_BINS_(i_section); i_bin++) {
-      aero_phase_idx_first -= NUM_PHASE_(i_section);
-      if (aero_phase_idx_first < 0) {
-        *surface_area = 0.0;
-        // Effective surface area is constant for bins and modes
-        if (partial_deriv) {
-          for (int i_phase = 0; i_phase < NUM_PHASE_(i_section); ++i_phase) {
-            for (int i_elem = 0;
-                 i_elem < PHASE_NUM_JAC_ELEM_(i_section, i_phase, i_bin);
-                 ++i_elem) {
-              *(partial_deriv++) = ZERO;
-            }
-          }
-        }
-        i_section = NUM_SECTION_;
-        break;
-      }
-    }
-  }
-*/
-  return;
+  printf("\n\nERROR There are no adjacent pairs in the modal/binned representation.\n\n");  
+  exit(1);
 }
 
 /** \brief Get the particle number concentration \f$n\f$

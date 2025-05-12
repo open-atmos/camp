@@ -235,8 +235,11 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
   ret_val += ASSERT_MSG(partial_deriv[0] = 999.9,
                         "Bad Jacobian (-1)");
 
-  double d_eff_sa_dx = 2.0 * f_jam * f_bread * 
-                       pow(volume_density * 3.0 / 4.0 / 3.14159265359, -1.0 / 3.0) ;
+  double d_eff_sa_dx = ((volume_density_layer_2 - volume_density_jam) *
+              pow(volume_density_layer_2, -2.0) * f_bread * eff_sa_expected) +
+              ((volume_density_layer_3 - volume_density_bread) *
+              pow(volume_density_layer_3, -2.0) * f_jam * eff_sa_expected) +
+              (2.0 * f_jam * f_bread * pow(volume_density * 3.0 / 4.0 / 3.14159265359, -1.0 / 3.0)) ;
 
   ret_val += ASSERT_MSG(fabs(partial_deriv[1] - d_eff_sa_dx / DENSITY_wheat) <
                         1.0e-10 * partial_deriv[1], "Bad Jacobian element");

@@ -288,7 +288,11 @@ void aero_rep_single_particle_get_interface_surface_area__m2(
       for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_layer,i_phase); ++i_spec) {
         if (i_layer <= layer_interface) {
           *partial_deriv =
-              2.0 * f_first * f_second * pow(radius, -1.0)  * (*partial_deriv);
+              (((total_volume_layer_first - volume_phase_first) * 
+              pow(total_volume_layer_first, -2.0) * f_second * (*surface_area)) +
+              ((total_volume_layer_second - volume_phase_second) *
+              pow(total_volume_layer_second, -2.0) * f_first * (*surface_area)) +
+              2.0 * f_first * f_second * pow(radius, -1.0))  * (*partial_deriv);
           ++partial_deriv;
         }
         else if (i_layer > layer_interface) *(partial_deriv++) = ZERO;
