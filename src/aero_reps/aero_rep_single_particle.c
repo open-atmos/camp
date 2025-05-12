@@ -192,20 +192,21 @@ void aero_rep_single_particle_get_effective_radius__m(
  * Solve for the surface area of the interfacial layer that exists between the 
  * two phases considered in aerosol phase mass tranfer between layers. When more
  * than one phase exists in a layer, a "fractional volume overlap" configuration 
- * is applied (see CAMP Github Documentation for details).
+ * is applied (see the single particle description in the Fortran script and 
+ * CAMP Github Documentation for details).
  * 
  * \param model_data Pointer to the model data, including the state array
  * \param aero_phase_idx_first Index of the first aerosol phase within the representation
  * \param aero_phase_idx_second Index of the second aerosol phase within the representation
  * \param surface_area Pointer to surface area of inner layer (m^2)
- * \param partial_deriv \f$\frac{\partial r_{eff}}{\partial y}\f$ where \f$y\f$
+ * \param partial_deriv \f$\frac{\partial sa_{eff}}{\partial y}\f$ where \f$y\f$
  *                      are species on the state array
  * \param aero_rep_int_data Pointer to the aerosol representation integer data
  * \param aero_rep_float_data Pointer to the aerosol representation
  *                            floating-point data
  * \param aero_rep_env_data Pointer to the aerosol representation
  *                          environment-dependent parameters
- * \param surf_area_layer Surface area of specified layer (m2)
+ * \param surface_area Surface area of specified layer (m2)
  */
 
 void aero_rep_single_particle_get_interface_surface_area__m2(
