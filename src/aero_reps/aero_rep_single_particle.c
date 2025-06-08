@@ -244,8 +244,6 @@ void aero_rep_single_particle_get_interface_surface_area__m2(
   }
   // Find the interface between the first and second layer
   layer_interface = layer_first > layer_second ? layer_second : layer_first;
-  printf("\n\nlayer_first %d", layer_first);
-  printf("\n\nlayer_second %d", layer_second);
 
   /* Solve for the total volume, total volume of the layer with the first phase, 
    * total volume of the layer with the second phase, volume of first phase (within
@@ -278,6 +276,7 @@ void aero_rep_single_particle_get_interface_surface_area__m2(
       ++i_phase_count;
     }
   }
+
   /* Calculate the fractional volume of first and second phase in their 
   * assocaited layers. Calculate the radius and surface area of the interface
   * between the first and second layer.
@@ -299,21 +298,19 @@ void aero_rep_single_particle_get_interface_surface_area__m2(
               (((total_volume_layer_first - volume_phase_first) * 
               pow(total_volume_layer_first, -2.0) * f_second * (*surface_area)) +
               2.0 * f_first * f_second * pow(radius, -1.0))  * (*partial_deriv);
-          printf("\npartial_deriv loop 1 %f", *partial_deriv);  
           ++partial_deriv;
         }
         // layer = layer_first, phase != aero_phase_idx_first
         if (i_layer == layer_first && i_phase_count != aero_phase_idx_first) {
           double *state = (double *)(model_data->grid_cell_state);
           state += PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase);
-          double volume_phase;
+          double volume_phase = 0.0;
           aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_layer,i_phase),
                                        state, &(volume_phase), curr_partial);
           *partial_deriv =
               (((-1 * volume_phase) * pow(total_volume_layer_first, -2.0) * 
               f_second * (*surface_area)) + 2.0 * f_first * f_second * 
               pow(radius, -1.0))  * (*partial_deriv);
-          printf("\npartial_deriv loop 2 %f", *partial_deriv);
           ++partial_deriv;
         }
         // layer = layer_second, phase = aero_phase_idx_second
@@ -322,7 +319,6 @@ void aero_rep_single_particle_get_interface_surface_area__m2(
               (((total_volume_layer_second - volume_phase_second) *
               pow(total_volume_layer_second, -2.0) * f_first * (*surface_area)) +
               2.0 * f_first * f_second * pow(radius, -1.0))  * (*partial_deriv);
-          printf("\npartial_deriv loop 3 %f", *partial_deriv);
           ++partial_deriv;
         }
         // layer = layer_second, phase != aero_phase_idx_second
@@ -336,13 +332,10 @@ void aero_rep_single_particle_get_interface_surface_area__m2(
               (((-1 * volume_phase) * pow(total_volume_layer_second, -2.0) *
               f_first * (*surface_area)) + 2.0 * f_first * f_second *
               pow(radius, -1.0))  * (*partial_deriv);
-          printf("\npartial_deriv loop 4 %f", *partial_deriv);
           ++partial_deriv;
         }
         // Set partial_derivative = 0 for all other layers. 
         else if (i_layer != layer_first && i_layer != layer_second) *(partial_deriv++) = ZERO;
-          printf("\npartial_deriv loop 5 %f", *partial_deriv);
-      printf("i_phase_count %d", i_phase_count);
       }
     ++i_phase_count;
     }
