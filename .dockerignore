@@ -3,6 +3,7 @@
 
 # add back things to copy
 !CMakeLists.txt
+!cmake/
 !data/
 !doc/
 !docker/
