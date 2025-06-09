@@ -11,7 +11,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../rxns.h"
+#include <camp/rxns.h>
 
 // TODO Lookup environmental indicies during initialization
 #define TEMPERATURE_K_ env_data[0]

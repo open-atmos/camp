@@ -1,15 +1,14 @@
-cmake_minimum_required(VERSION 3.0)
-# Require 2.6.4 due to -I/usr/include behavior:
-# http://www.cmake.org/Bug/view.php?id=8598
-# http://gcc.gnu.org/bugzilla/show_bug.cgi?id=35707
-# http://www.cmake.org/Bug/view.php?id=8408
-project(CAMP Fortran C)
+cmake_minimum_required(VERSION 3.21)
 
-set(PACKAGE_BUGREPORT "mattldawson@gmail.com")
-set(PACKAGE_NAME "CAMP")
-set(PACKAGE_STRING "CAMP 1.1.0")
-set(PACKAGE_TARNAME "camp")
-set(PACKAGE_VERSION "1.1.0")
+project(camp-distribution VERSION 1.1.0 LANGUAGES Fortran C)
+
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${PROJECT_SOURCE_DIR}/cmake")
+
+set(PROJECT_BUGREPORT "mattldawson@gmail.com")
+set(PROJECT_NAME "CAMP")
+set(PROJECT_STRING "CAMP 1.1.0")
+set(PROJECT_TARNAME "camp")
+set(PROJECT_VERSION "1.1.0")
 
 if ( "${CMAKE_SYSTEM_NAME}" MATCHES "Darwin" )
   set ( ENABLE_DYLIBS_USE_RPATH TRUE CACHE BOOL
@@ -24,6 +23,14 @@ else ()
     "${CMAKE_INSTALL_FULL_LIBDIR}" )
 endif ()
 
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release" CACHE STRING
+      "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel."
+      FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
+
+include(GNUInstallDirs)
+
 ######################################################################
 # options
 
@@ -37,11 +44,20 @@ mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 
 include(${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake)
 
+################################################################################
+# Projet wide setup variables 
+
+set(CAMP_INSTALL_INCLUDE_DIR ${CMAKE_INSTALL_INCLUDEDIR})
+set(CAMP_MOD_DIR ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR})
+set(CAMP_LIB_DIR ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
+set(CAMP_PROJECT_SRC_DIR ${PROJECT_SOURCE_DIR})
+set(camp_compile_definitions "")
+
 ######################################################################
-##CXX
+## Compiler settings
 
 if(ENABLE_CXX)
-  add_definitions(-DCAMP_USE_CXX)
+  list(APPEND camp_compile_definitions CAMP_USE_CXX)
   enable_language(CXX)
 endif()
 
@@ -49,7 +65,7 @@ endif()
 # GPU support
 
 if (ENABLE_GPU)
-  add_definitions(-DCAMP_USE_GPU)
+  list(APPEND camp_compile_definitions CAMP_USE_GPU)
   enable_language(CUDA)
 endif()
 
@@ -57,10 +73,10 @@ endif()
 # debugging options
 
 if (ENABLE_DEBUG)
-  add_definitions(-DCAMP_DEBUG)
+  list(APPEND camp_compile_definitions CAMP_DEBUG)
 endif()
 if (FAILURE_DETAIL)
-  add_definitions(-DFAILURE_DETAIL)
+  list(APPEND camp_compile_definitions FAILURE_DETAIL)
 endif()
 
 ######################################################################
@@ -144,187 +160,7 @@ add_test(camp_v1_paper_modal ${CMAKE_BINARY_DIR}/data_run/CAMP_v1_paper/modal/te
 ######################################################################
 # camp library
 
-set(STD_C_FLAGS "-std=c99 -Werror=format")
-set(STD_CUDA_FLAGS "-dc -arch=compute_70 -code=sm_70")
-
-if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
-  set(STD_F_FLAGS "-extend-source -warn truncated_source")
-elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
-  set(STD_F_FLAGS "-ffree-line-length-none")
-endif()
-
-set(REACTIONS_F_SRC
-	src/rxns/rxn_aqueous_equilibrium.F90
-	src/rxns/rxn_arrhenius.F90
-	src/rxns/rxn_CMAQ_H2O2.F90
-	src/rxns/rxn_CMAQ_OH_HNO3.F90
-	src/rxns/rxn_condensed_phase_arrhenius.F90
-	src/rxns/rxn_condensed_phase_photolysis.F90
-	src/rxns/rxn_emission.F90
-	src/rxns/rxn_first_order_loss.F90
-	src/rxns/rxn_HL_phase_transfer.F90
-	src/rxns/rxn_photolysis.F90
-  src/rxns/rxn_SIMPOL_phase_transfer.F90
-  src/rxns/rxn_surface.F90
-  src/rxns/rxn_ternary_chemical_activation.F90
-  src/rxns/rxn_troe.F90
-  src/rxns/rxn_wennberg_no_ro2.F90
-  src/rxns/rxn_wennberg_tunneling.F90
-  src/rxns/rxn_wet_deposition.F90)
-
-set(REACTIONS_C_SRC
-	src/rxns/rxn_aqueous_equilibrium.c
-	src/rxns/rxn_arrhenius.c
-	src/rxns/rxn_CMAQ_H2O2.c
-	src/rxns/rxn_CMAQ_OH_HNO3.c
-	src/rxns/rxn_condensed_phase_arrhenius.c
-	src/rxns/rxn_condensed_phase_photolysis.c
-	src/rxns/rxn_emission.c
-	src/rxns/rxn_first_order_loss.c
-	src/rxns/rxn_HL_phase_transfer.c
-	src/rxns/rxn_photolysis.c
-  src/rxns/rxn_SIMPOL_phase_transfer.c
-  src/rxns/rxn_surface.c
-  src/rxns/rxn_ternary_chemical_activation.c
-	src/rxns/rxn_troe.c
-  src/rxns/rxn_wennberg_no_ro2.c
-  src/rxns/rxn_wennberg_tunneling.c
-  src/rxns/rxn_wet_deposition.c)
-
-set_source_files_properties(${REACTIONS_F_SRC} PROPERTIES COMPILE_FLAGS
-        ${STD_F_FLAGS})
-
-set_source_files_properties(${REACTIONS_C_SRC} PROPERTIES COMPILE_FLAGS
-        ${STD_C_FLAGS})
-
-set(REACTIONS_SRC ${REACTIONS_F_SRC} ${REACTIONS_C_SRC})
-
-set(AEROSOL_REPS_F_SRC
-        src/aero_reps/aero_rep_modal_binned_mass.F90
-        src/aero_reps/aero_rep_single_particle.F90)
-
-set(AEROSOL_REPS_C_SRC
-        src/aero_reps/aero_rep_modal_binned_mass.c
-        src/aero_reps/aero_rep_single_particle.c)
-
-set_source_files_properties(${AEROSOL_REPS_F_SRC} PROPERTIES COMPILE_FLAGS
-        ${STD_F_FLAGS})
-
-set_source_files_properties(${AEROSOL_REPS_C_SRC} PROPERTIES COMPILE_FLAGS
-        ${STD_C_FLAGS})
-
-set(AEROSOL_REPS_SRC ${AEROSOL_REPS_F_SRC} ${AEROSOL_REPS_C_SRC})
-
-set(SUB_MODELS_F_SRC
-  src/sub_models/sub_model_PDFiTE.F90
-        src/sub_models/sub_model_UNIFAC.F90
-        src/sub_models/sub_model_ZSR_aerosol_water.F90)
-
-set(SUB_MODELS_C_SRC
-  src/sub_models/sub_model_PDFiTE.c
-        src/sub_models/sub_model_UNIFAC.c
-        src/sub_models/sub_model_ZSR_aerosol_water.c)
-
-set_source_files_properties(${SUB_MODELS_F_SRC} PROPERTIES COMPILE_FLAGS
-        ${STD_F_FLAGS})
-
-set_source_files_properties(${SUB_MODELS_C_SRC} PROPERTIES COMPILE_FLAGS
-        ${STD_C_FLAGS})
-
-set(SUB_MODELS_SRC ${SUB_MODELS_F_SRC} ${SUB_MODELS_C_SRC})
-
-set(CAMP_C_SRC
-        src/camp_solver.c src/rxn_solver.c src/aero_phase_solver.c
-        src/aero_rep_solver.c src/sub_model_solver.c
-        src/time_derivative.c src/Jacobian.c src/debug_diff_check.c)
-
-set_source_files_properties(${CAMP_C_SRC} PROPERTIES COMPILE_FLAGS
-        ${STD_C_FLAGS})
-
-set(CAMP_CXX_SRC "")
-
-if(ENABLE_GPU)
-  set(CAMP_CUDA_SRC
-          src/cuda/camp_gpu_solver.cu
-          src/cuda/rxns_gpu/rxn_aqueous_equilibrium.cu
-          src/cuda/rxns_gpu/rxn_arrhenius.cu
-          src/cuda/rxns_gpu/rxn_CMAQ_H2O2.cu
-          src/cuda/rxns_gpu/rxn_CMAQ_OH_HNO3.cu
-          src/cuda/rxns_gpu/rxn_condensed_phase_arrhenius.cu
-          src/cuda/rxns_gpu/rxn_emission.cu
-          src/cuda/rxns_gpu/rxn_first_order_loss.cu
-          src/cuda/rxns_gpu/rxn_HL_phase_transfer.cu
-          src/cuda/rxns_gpu/rxn_photolysis.cu
-          src/cuda/rxns_gpu/rxn_SIMPOL_phase_transfer.cu
-          src/cuda/rxns_gpu/rxn_troe.cu
-          src/cuda/rxns_gpu/rxn_wet_deposition.cu
-          src/cuda/aeros_gpu/aero_phase_solver.cu
-          src/cuda/aeros_gpu/aero_rep_solver.cu
-          src/cuda/aeros_gpu/sub_model_solver.cu
-          src/cuda/aero_reps_gpu/aero_rep_modal_binned_mass.cu
-          src/cuda/aero_reps_gpu/aero_rep_single_particle.cu)
-
-  set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES COMPILE_FLAGS
-        ${STD_CUDA_FLAGS})
-  set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES LANGUAGE CUDA)
-else()
-  set(CAMP_CUDA_SRC "")
-endif()
-
-set(CAMP_LIB_SRC
-  src/constants.F90
-  src/util.F90
-  src/mpi.F90
-  src/env_state.F90
-  src/rand.F90
-  src/property.F90 src/chem_spec_data.F90
-  src/rxn_data.F90 src/camp_state.F90 src/mechanism_data.F90
-  src/camp_core.F90 src/camp_solver_data.F90 src/aero_rep_data.F90
-  src/aero_phase_data.F90 src/aero_rep_factory.F90
-  src/rxn_factory.F90 src/sub_model_data.F90 src/sub_model_factory.F90
-  src/solver_stats.F90
-  src/debug_diff_check.F90
-  ${CAMP_C_SRC} ${AEROSOL_REPS_SRC} ${SUB_MODELS_SRC} ${REACTIONS_SRC}
-  ${CAMP_CUDA_SRC} ${CAMP_CXX_SRC} )
-
-add_library(camplib SHARED ${CAMP_LIB_SRC})
-add_library(camplib-static STATIC ${CAMP_LIB_SRC})
-
-target_link_libraries(camplib ${SUNDIALS_LIBS} ${JSON_LIB})
-target_link_libraries(camplib-static ${SUNDIALS_LIBS} ${JSON_LIB})
-
-set(MODULE_DIR "${CMAKE_BINARY_DIR}/include")
-
-set_target_properties(camplib PROPERTIES
-                         OUTPUT_NAME camp
-                         PREFIX lib
-                         VERSION ${PACKAGE_VERSION}
-                         SOVERSION ${PACKAGE_VERSION}
-                         LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-                         Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR})
-set_target_properties(camplib-static PROPERTIES
-                         OUTPUT_NAME camp
-                         PREFIX lib
-                         VERSION ${PACKAGE_VERSION}
-                         ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-                         Fortran_MODULE_DIRECTORY ${MODULE_DIR})
-
-######################################################################
-# Install options
-
-include(GNUInstallDirs)
-install(TARGETS camplib camplib-static
-        EXPORT camplib-targets
-        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-       )
-
-set(MOD_DIR_TO_INSTALL "${MODULE_DIR}")
-set(MOD_DESTINATION_DIR "${CMAKE_INSTALL_INCLUDEDIR}/camp")
-install(
-  CODE "file(GLOB_RECURSE MODULE_FILES \"${MOD_DIR_TO_INSTALL}/*.mod\")"
-  CODE "file(INSTALL \${MODULE_FILES} DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${MOD_DESTINATION_DIR}\")"
-  )
+add_subdirectory(src)
 
 ######################################################################
 # camp-chem box model
@@ -332,7 +168,7 @@ install(
 add_executable(camp_box_model test/camp_box_model_data.F90
                               test/camp_box_model.F90)
 
-target_link_libraries(camp_box_model camplib)
+target_link_libraries(camp_box_model camp::camp)
 
 ######################################################################
 # test_chemistry_cb05cl_ae5
@@ -384,7 +220,7 @@ add_executable(test_chemistry_cb05cl_ae5_big
         test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
         ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
         test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
+target_link_libraries(test_chemistry_cb05cl_ae5_big camp::camp)
 
 ######################################################################
 # MONARCH interface
@@ -392,7 +228,7 @@ target_link_libraries(test_chemistry_cb05cl_ae5_big camplib)
 if(NOT ${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
   add_executable(mock_monarch test/monarch/mock_monarch.F90
           test/monarch/camp_monarch_interface.F90)
-  target_link_libraries(mock_monarch camplib)
+  target_link_libraries(mock_monarch camp::camp)
 endif()
 
 ######################################################################
@@ -402,76 +238,76 @@ add_executable(test_chemistry_cb05cl_ae5
     test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
     ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
     test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(test_chemistry_cb05cl_ae5 camplib)
+target_link_libraries(test_chemistry_cb05cl_ae5 camp::camp)
 
 ######################################################################
 # test_property
 
 add_executable(unit_test_property test/unit_property/test_property.F90)
 
-target_link_libraries(unit_test_property camplib)
+target_link_libraries(unit_test_property camp::camp)
 
 ######################################################################
 # test_jacobian
 
 add_executable(unit_test_jacobian test/unit_jacobian/test_jacobian.c)
 
-target_link_libraries(unit_test_jacobian camplib)
+target_link_libraries(unit_test_jacobian camp::camp)
 
 ######################################################################
 # test_chem_spec_data
 
 add_executable(unit_test_chem_spec_data test/unit_chem_spec_data/test_chem_spec_data.F90)
 
-target_link_libraries(unit_test_chem_spec_data camplib)
+target_link_libraries(unit_test_chem_spec_data camp::camp)
 
 ######################################################################
 # test_rxn_data
 
 add_executable(test_rxn_aqueous_equilibrium test/unit_rxn_data/test_rxn_aqueous_equilibrium.F90)
-target_link_libraries(test_rxn_aqueous_equilibrium camplib)
+target_link_libraries(test_rxn_aqueous_equilibrium camp::camp)
 add_executable(test_rxn_CMAQ_H2O2 test/unit_rxn_data/test_rxn_CMAQ_H2O2.F90)
-target_link_libraries(test_rxn_CMAQ_H2O2 camplib)
+target_link_libraries(test_rxn_CMAQ_H2O2 camp::camp)
 add_executable(test_rxn_CMAQ_OH_HNO3 test/unit_rxn_data/test_rxn_CMAQ_OH_HNO3.F90)
-target_link_libraries(test_rxn_CMAQ_OH_HNO3 camplib)
+target_link_libraries(test_rxn_CMAQ_OH_HNO3 camp::camp)
 add_executable(test_rxn_condensed_phase_arrhenius test/unit_rxn_data/test_rxn_condensed_phase_arrhenius.F90)
-target_link_libraries(test_rxn_condensed_phase_arrhenius camplib)
+target_link_libraries(test_rxn_condensed_phase_arrhenius camp::camp)
 add_executable(test_rxn_condensed_phase_photolysis test/unit_rxn_data/test_rxn_condensed_phase_photolysis.F90)
-target_link_libraries(test_rxn_condensed_phase_photolysis camplib)
+target_link_libraries(test_rxn_condensed_phase_photolysis camp::camp)
 add_executable(test_rxn_emission test/unit_rxn_data/test_rxn_emission.F90)
-target_link_libraries(test_rxn_emission camplib)
+target_link_libraries(test_rxn_emission camp::camp)
 add_executable(test_rxn_first_order_loss test/unit_rxn_data/test_rxn_first_order_loss.F90)
-target_link_libraries(test_rxn_first_order_loss camplib)
+target_link_libraries(test_rxn_first_order_loss camp::camp)
 add_executable(test_rxn_HL_phase_transfer test/unit_rxn_data/test_rxn_HL_phase_transfer.F90)
-target_link_libraries(test_rxn_HL_phase_transfer camplib)
+target_link_libraries(test_rxn_HL_phase_transfer camp::camp)
 add_executable(test_rxn_photolysis test/unit_rxn_data/test_rxn_photolysis.F90)
-target_link_libraries(test_rxn_photolysis camplib)
+target_link_libraries(test_rxn_photolysis camp::camp)
 add_executable(test_rxn_SIMPOL_phase_transfer test/unit_rxn_data/test_rxn_SIMPOL_phase_transfer.F90)
-target_link_libraries(test_rxn_SIMPOL_phase_transfer camplib)
+target_link_libraries(test_rxn_SIMPOL_phase_transfer camp::camp)
 add_executable(test_rxn_surface test/unit_rxn_data/test_rxn_surface.F90)
-target_link_libraries(test_rxn_surface camplib)
+target_link_libraries(test_rxn_surface camp::camp)
 add_executable(test_rxn_ternary_chemical_activation test/unit_rxn_data/test_rxn_ternary_chemical_activation.F90)
-target_link_libraries(test_rxn_ternary_chemical_activation camplib)
+target_link_libraries(test_rxn_ternary_chemical_activation camp::camp)
 add_executable(test_rxn_troe test/unit_rxn_data/test_rxn_troe.F90)
-target_link_libraries(test_rxn_troe camplib)
+target_link_libraries(test_rxn_troe camp::camp)
 add_executable(test_rxn_wennberg_no_ro2 test/unit_rxn_data/test_rxn_wennberg_no_ro2.F90)
-target_link_libraries(test_rxn_wennberg_no_ro2 camplib)
+target_link_libraries(test_rxn_wennberg_no_ro2 camp::camp)
 add_executable(test_rxn_wennberg_tunneling test/unit_rxn_data/test_rxn_wennberg_tunneling.F90)
-target_link_libraries(test_rxn_wennberg_tunneling camplib)
+target_link_libraries(test_rxn_wennberg_tunneling camp::camp)
 add_executable(test_rxn_wet_deposition test/unit_rxn_data/test_rxn_wet_deposition.F90)
-target_link_libraries(test_rxn_wet_deposition camplib)
+target_link_libraries(test_rxn_wet_deposition camp::camp)
 
 ######################################################################
 # test_sub_model_data
 
 add_executable(test_sub_model_PDFiTE test/unit_sub_model_data/test_sub_model_PDFiTE.F90)
-target_link_libraries(test_sub_model_PDFiTE camplib)
+target_link_libraries(test_sub_model_PDFiTE camp::camp)
 add_executable(test_sub_model_UNIFAC test/unit_sub_model_data/test_sub_model_UNIFAC.F90)
-target_link_libraries(test_sub_model_UNIFAC camplib)
+target_link_libraries(test_sub_model_UNIFAC camp::camp)
 add_executable(test_sub_model_ZSR_aerosol_water
                test/unit_sub_model_data/test_sub_model_ZSR_aerosol_water.c
                test/unit_sub_model_data/test_sub_model_ZSR_aerosol_water.F90)
-target_link_libraries(test_sub_model_ZSR_aerosol_water camplib)
+target_link_libraries(test_sub_model_ZSR_aerosol_water camp::camp)
 
 ######################################################################
 # New unit tests (UNDER DEVELOPMENT)
@@ -492,10 +328,8 @@ if(NOT ${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
       "UNIT_TEST_MODULE_=camp_unit_test_rxn_arrhenius \
       ;UNIT_TEST_TYPE_=unit_test_rxn_arrhenius_t()")
   endif()
-  set_source_files_properties(${UNIT_TEST_RXN_ARRHENIUS_SRC} PROPERTIES COMPILE_FLAGS
-                              ${STD_F_FLAGS})
   add_executable(unit_test_rxn_arrhenius ${UNIT_TEST_RXN_ARRHENIUS_SRC})
-  target_link_libraries(unit_test_rxn_arrhenius camplib)
+  target_link_libraries(unit_test_rxn_arrhenius camp::camp)
 endif()
 
 ######################################################################
@@ -503,14 +337,14 @@ endif()
 
 add_executable(unit_test_camp_core test/unit_camp_core/test_camp_core.F90)
 
-target_link_libraries(unit_test_camp_core camplib)
+target_link_libraries(unit_test_camp_core camp::camp)
 
 ######################################################################
 # test_aero_phase_data
 
 add_executable(unit_test_aero_phase_data test/unit_aero_phase_data/test_aero_phase_data.F90)
 
-target_link_libraries(unit_test_aero_phase_data camplib)
+target_link_libraries(unit_test_aero_phase_data camp::camp)
 
 ######################################################################
 # test_aero_rep_single_particle
@@ -519,7 +353,7 @@ add_executable(unit_test_aero_rep_single_particle
 	test/unit_aero_rep_data/test_aero_rep_single_particle.c
 	test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
 
-target_link_libraries(unit_test_aero_rep_single_particle camplib)
+target_link_libraries(unit_test_aero_rep_single_particle camp::camp)
 
 ######################################################################
 # test_aero_rep_modal_binned_mass
@@ -528,14 +362,14 @@ add_executable(unit_test_aero_rep_modal_binned_mass
         test/unit_aero_rep_data/test_aero_rep_modal_binned_mass.c
 	test/unit_aero_rep_data/test_aero_rep_modal_binned_mass.F90)
 
-target_link_libraries(unit_test_aero_rep_modal_binned_mass camplib)
+target_link_libraries(unit_test_aero_rep_modal_binned_mass camp::camp)
 
 ######################################################################
 # test_chem_mech_solver
 
 add_executable(test_chem_mech_solver test/chemistry/test_chem_mech_solver.F90)
 
-target_link_libraries(test_chem_mech_solver camplib)
+target_link_libraries(test_chem_mech_solver camp::camp)
 
 ######################################################################
 # BootCAMP Tutorial Exercises
@@ -546,21 +380,21 @@ target_link_libraries(test_chem_mech_solver camplib)
 
 add_executable(boot_camp_part_1 doc/camp_tutorial/boot_camp/part_1_code/box_model.F90)
 
-target_link_libraries(boot_camp_part_1 camplib)
+target_link_libraries(boot_camp_part_1 camp::camp)
 
 ######################################################################
 # Part 3
 
 add_executable(boot_camp_part_3 doc/camp_tutorial/boot_camp/part_3_code/box_model.F90)
 
-target_link_libraries(boot_camp_part_3 camplib)
+target_link_libraries(boot_camp_part_3 camp::camp)
 
 ######################################################################
 # Part 4
 
 add_executable(boot_camp_part_4 doc/camp_tutorial/boot_camp/part_4_code/box_model.F90)
 
-target_link_libraries(boot_camp_part_4 camplib)
+target_link_libraries(boot_camp_part_4 camp::camp)
 
 ######################################################################
 # CAMP v1.0.0 paper configurations
@@ -569,13 +403,13 @@ target_link_libraries(boot_camp_part_4 camplib)
 add_executable(camp_v1_paper_binned data/CAMP_v1_paper/binned/camp_monarch_interface.F90
                                     data/CAMP_v1_paper/binned/mock_monarch.F90)
 
-target_link_libraries(camp_v1_paper_binned camplib)
+target_link_libraries(camp_v1_paper_binned camp::camp)
 
 ######################################################################
 
 add_executable(camp_v1_paper_modal data/CAMP_v1_paper/modal/camp_monarch_interface.F90
                                    data/CAMP_v1_paper/modal/mock_monarch.F90)
 
-target_link_libraries(camp_v1_paper_modal camplib)
+target_link_libraries(camp_v1_paper_modal camp::camp)
 
 ######################################################################

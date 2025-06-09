@@ -12,18 +12,18 @@
 /** \file
  * \brief Interface to c solvers for chemistry
  */
-#include "camp_solver.h"
+#include <camp/aero_rep_solver.h>
+#include <camp/camp_debug.h>
+#include <camp/camp_solver.h>
+#include <camp/rxn_solver.h>
+#include <camp/sub_model_solver.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "aero_rep_solver.h"
-#include "rxn_solver.h"
-#include "sub_model_solver.h"
 #ifdef CAMP_USE_GPU
-#include "cuda/camp_gpu_solver.h"
+#include <camp/cuda/camp_gpu_solver.h>
 #endif
-#include "camp_debug.h"
 
 // Default solver initial time step relative to total integration time
 #define DEFAULT_TIME_STEP 1.0

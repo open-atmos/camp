@@ -16,8 +16,8 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../Jacobian.h"
-#include "../sub_models.h"
+#include <camp/Jacobian.h>
+#include <camp/sub_models.h>
 
 // TODO Lookup environmental indicies during initialization
 #define TEMPERATURE_K_ env_data[0]

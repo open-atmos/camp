@@ -8,11 +8,11 @@
 /** \file
  * \brief Jacobian functions
  */
-#include "Jacobian.h"
+#include <camp/Jacobian.h>
+#include <camp/time_derivative.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "time_derivative.h"
 
 #define BUFFER_SIZE 10
 #define SMALL_NUMBER 1e-90

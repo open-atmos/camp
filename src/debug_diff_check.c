@@ -8,7 +8,7 @@
 /** \file
  * \brief model element data difference checker - NOT THREAD SAFE!
  */
-#include "debug_diff_check.h"
+#include <camp/debug_diff_check.h>
 
 /* Starting index for data for each model element (plus 1+the last value) */
 typedef struct {
