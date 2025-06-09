@@ -1,4 +1,4 @@
-FROM fedora:27
+FROM fedora:37
 
 RUN dnf -y update \
     && dnf -y install \
@@ -47,6 +47,7 @@ RUN tar -zxvf /camp/cvode-3.4-alpha.tar.gz \
              -D KLU_ENABLE:BOOL=TRUE \
              -D KLU_LIBRARY_DIR=/usr/local/lib \
              -D KLU_INCLUDE_DIR=/usr/local/include \
+             -D CAMP_ENABLE_MEMCHECK:BOOL=TRUE \
              .. \
     && make install
 

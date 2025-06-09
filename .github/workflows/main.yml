@@ -12,8 +12,12 @@ jobs:
     - name: Build the testing docker image
       run: docker build -t camp-test . -f Dockerfile.debug
     - name: Run the tests in the docker container
-      run: docker run -t camp-test bash -c 'cd /build; make test'
+      run: docker run -t camp-test bash -c 'cd /build; ctest --rerun-failed --output-on-failure . --verbose -j 10'
+    - name: Build the testing docker image
+      run: docker build -t camp-test . -f Dockerfile
+    - name: Run the tests in the docker container
+      run: docker run -t camp-test bash -c 'cd /build; ctest --rerun-failed --output-on-failure . --verbose -j 10'
     - name: Build the MPI testing docker image
       run: docker build -t camp-test-mpi . -f Dockerfile.mpi
     - name: Run the MPI tests in the docker container
-      run: docker run -t camp-test-mpi bash -c 'make test'
+      run: docker run -t camp-test-mpi bash -c 'ctest --rerun-failed --output-on-failure . --verbose -j 10'

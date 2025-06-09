@@ -13,3 +13,4 @@
 !tool/
 !mechanisms/
 !cvode*.tar.gz
+!valgrind.supp

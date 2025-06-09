@@ -1,4 +1,4 @@
-FROM fedora:27
+FROM fedora:37
 
 RUN dnf -y update \
     && dnf install -y sudo \
@@ -18,6 +18,7 @@ RUN sudo dnf -y install \
         lapack-devel \
         openblas-devel \
         cmake \
+        valgrind \
     && sudo dnf clean all
 ENV PATH="${PATH}:/usr/lib64/openmpi/bin/"
 
@@ -75,6 +76,7 @@ COPY . /home/test_user/camp/
              -D ENABLE_DEBUG:BOOL=TRUE \
              -D ENABLE_MPI:BOOL=TRUE \
              -D CMAKE_Fortran_COMPILER=/usr/lib64/openmpi/bin/mpif90 \
+             -D CAMP_ENABLE_MEMCHECK:BOOL=TRUE \
              ../camp \
     && make \
     && sudo make install

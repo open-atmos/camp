@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.21)
 project(camp-distribution VERSION 1.1.0 LANGUAGES Fortran C)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${PROJECT_SOURCE_DIR}/cmake")
+set(CMAKE_USER_MAKE_RULES_OVERRIDE ${PROJECT_SOURCE_DIR}/cmake/set_defaults.cmake)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 set(PROJECT_BUGREPORT "mattldawson@gmail.com")
 set(PROJECT_NAME "CAMP")
@@ -39,6 +41,7 @@ option(ENABLE_DEBUG "Compile debugging functions" OFF)
 option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
 option(ENABLE_CXX "Enable C++" OFF)
 option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
+option(CAMP_ENABLE_MEMCHECK "Enable memory checking with Valgrind" OFF)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 
@@ -85,15 +88,24 @@ endif()
 add_subdirectory(src)
 
 ######################################################################
+# copy dirs
+
+add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
+add_custom_target(copy_mechanism ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/mechanisms ${CMAKE_BINARY_DIR}/mechanisms_run)
+add_custom_target(copy_boot_camp ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc/camp_tutorial/boot_camp ${CMAKE_BINARY_DIR}/boot_camp_run)
+set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES mechanisms_run scenarios_run boot_camp_run)
+
+######################################################################
 # test
 
+enable_testing()
 add_subdirectory(test)
 
 
 
 
-######################################################################
-# Unit test macro
+
+
 
 macro(do_unit_test test_name result)
   if(ENABLE_MPI)
@@ -106,20 +118,10 @@ macro(do_unit_test test_name result)
 endmacro(do_unit_test)
 
 ######################################################################
-# copy dirs
-
-add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
-add_custom_target(copy_mechanism ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/mechanisms ${CMAKE_BINARY_DIR}/mechanisms_run)
-add_custom_target(copy_boot_camp ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc/camp_tutorial/boot_camp ${CMAKE_BINARY_DIR}/boot_camp_run)
-set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES mechanisms_run scenarios_run boot_camp_run)
-
-######################################################################
 # tests
 
-enable_testing()
 do_unit_test(property "PASS")
 do_unit_test(chem_spec_data "PASS")
-do_unit_test(aero_phase_data "PASS")
 do_unit_test(jacobian "PASS")
 do_unit_test(aero_rep_single_particle "PASS")
 do_unit_test(aero_rep_modal_binned_mass "PASS")
@@ -276,13 +278,6 @@ endif()
 add_executable(unit_test_camp_core test/unit_camp_core/test_camp_core.F90)
 
 target_link_libraries(unit_test_camp_core camp::camp)
-
-######################################################################
-# test_aero_phase_data
-
-add_executable(unit_test_aero_phase_data test/unit_aero_phase_data/test_aero_phase_data.F90)
-
-target_link_libraries(unit_test_aero_phase_data camp::camp)
 
 ######################################################################
 # test_aero_rep_single_particle
