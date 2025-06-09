@@ -80,6 +80,19 @@ if (FAILURE_DETAIL)
 endif()
 
 ######################################################################
+# camp library
+
+add_subdirectory(src)
+
+######################################################################
+# test
+
+add_subdirectory(test)
+
+
+
+
+######################################################################
 # Unit test macro
 
 macro(do_unit_test test_name result)
@@ -96,10 +109,9 @@ endmacro(do_unit_test)
 # copy dirs
 
 add_custom_target(copy_data ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/data ${CMAKE_BINARY_DIR}/data_run)
-add_custom_target(copy_test ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/test ${CMAKE_BINARY_DIR}/test_run)
 add_custom_target(copy_mechanism ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/mechanisms ${CMAKE_BINARY_DIR}/mechanisms_run)
 add_custom_target(copy_boot_camp ALL ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/doc/camp_tutorial/boot_camp ${CMAKE_BINARY_DIR}/boot_camp_run)
-set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES test_run mechanisms_run scenarios_run boot_camp_run)
+set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES mechanisms_run scenarios_run boot_camp_run)
 
 ######################################################################
 # tests
@@ -158,71 +170,6 @@ add_test(camp_v1_paper_binned ${CMAKE_BINARY_DIR}/data_run/CAMP_v1_paper/binned/
 add_test(camp_v1_paper_modal ${CMAKE_BINARY_DIR}/data_run/CAMP_v1_paper/modal/test_monarch_modal.sh ${MPI_TEST_FLAG})
 
 ######################################################################
-# camp library
-
-add_subdirectory(src)
-
-######################################################################
-# camp-chem box model
-
-add_executable(camp_box_model test/camp_box_model_data.F90
-                              test/camp_box_model.F90)
-
-target_link_libraries(camp_box_model camp::camp)
-
-######################################################################
-# test_chemistry_cb05cl_ae5
-
-set(CB5_EBI_SOLVER
-	test/chemistry/cb05cl_ae5/EXT-CONST_mod.F90
-	test/chemistry/cb05cl_ae5/ext-hrg2.F90
-	test/chemistry/cb05cl_ae5/ext-hrcalcks.F90
-	test/chemistry/cb05cl_ae5/ext-hrinit.F90
-	test/chemistry/cb05cl_ae5/ext-hrdata_mod.F90
-	test/chemistry/cb05cl_ae5/ext-hrg3.F90
-	test/chemistry/cb05cl_ae5/ext-hrprodloss.F90
-	test/chemistry/cb05cl_ae5/ext-hrg1.F90
-	test/chemistry/cb05cl_ae5/ext-hrg4.F90
-	test/chemistry/cb05cl_ae5/ext-hrrates.F90
-	test/chemistry/cb05cl_ae5/ext-hrsolver.F90
-	test/chemistry/cb05cl_ae5/EXT-RXCM_mod.F90
-	)
-
-set(CB5_KPP_SOLVER
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Function.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Global.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Initialize.f90
-        test/chemistry/cb05cl_ae5/cb05cl_ae5_Integrator.F90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Jacobian.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_JacobianSP.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_LinearAlgebra.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Model.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Monitor.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Parameters.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Precision.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Rates.f90
-	test/chemistry/cb05cl_ae5/cb05cl_ae5_Util.f90
-	)
-
-if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
-	set(CB5_EBI_FLAGS "-fixed -extend-source -warn truncated_source")
-elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
-	set(CB5_EBI_FLAGS "-ffixed-form -ffixed-line-length-none")
-endif()
-
-set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
-	${CB5_EBI_FLAGS})
-
-######################################################################
-# test_chemistry_cb05cl_ae5_big
-
-add_executable(test_chemistry_cb05cl_ae5_big
-        test/chemistry/cb05cl_ae5/test_cb05cl_ae5_big.F90
-        ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-        test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(test_chemistry_cb05cl_ae5_big camp::camp)
-
-######################################################################
 # MONARCH interface
 
 if(NOT ${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
@@ -230,15 +177,6 @@ if(NOT ${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
           test/monarch/camp_monarch_interface.F90)
   target_link_libraries(mock_monarch camp::camp)
 endif()
-
-######################################################################
-# test_chemistry_cb05cl_ae5
-
-add_executable(test_chemistry_cb05cl_ae5
-    test/chemistry/cb05cl_ae5/test_cb05cl_ae5.F90
-    ${CB5_EBI_SOLVER} ${CB5_KPP_SOLVER}
-    test/chemistry/cb05cl_ae5/module_BSC_CHEM_DATA.F90)
-target_link_libraries(test_chemistry_cb05cl_ae5 camp::camp)
 
 ######################################################################
 # test_property

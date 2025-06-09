@@ -83,6 +83,14 @@ target_include_directories(camp
 )
 
 ##############################################################################
+# CAMP box model
+
+add_executable(camp_box_model camp_box_model_data.F90
+                              camp_box_model.F90)
+
+target_link_libraries(camp_box_model camp::camp)
+
+##############################################################################
 # Subdirectories
 
 add_subdirectory(aero_reps)
