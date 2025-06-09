@@ -261,7 +261,7 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
   // test the partial derivatives 
   ret_val += ASSERT_MSG(partial_deriv[0] = 999.9,
                         "Bad Jacobian (-1)");
-/*
+
   for( int i = 1; i < 6; ++i )
     ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
                           "Bad Jacobian element");
@@ -284,6 +284,7 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
   ret_val += ASSERT_MSG(fabs(partial_deriv[14] - d_eff_sa_filling_bread_dx / DENSITY_salt) <
                         1.0e-10 * partial_deriv[14], "Bad Jacobian element");
   // the absolute value is needed here since the partial derivative is negative
+/*
   ret_val += ASSERT_MSG(fabs(partial_deriv[15] - d_eff_sa_top_bread_almond_butter_dx / DENSITY_almonds) <
                         1.0e-10 * fabs(partial_deriv[15]), "Bad Jacobian element");
   ret_val += ASSERT_MSG(fabs(partial_deriv[16] - d_eff_sa_top_bread_almond_butter_dx / DENSITY_sugar) <
