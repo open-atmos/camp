@@ -335,7 +335,7 @@ void aero_rep_single_particle_get_interface_surface_area__m2(
           ++partial_deriv;
         }
         // Set partial_derivative = 0 for all other layers. 
-        else if (i_layer != layer_first && i_layer != layer_second) *(partial_deriv++) = ZERO;
+        if (i_layer != layer_first && i_layer != layer_second) *(partial_deriv++) = ZERO;
       }
     ++i_phase_count;
     }
