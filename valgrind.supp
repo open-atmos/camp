@@ -237,3 +237,9 @@
    ...
    fun:clone
 }
+ {
+   <mpi_param_clone>
+   Memcheck:Param
+   ...
+   fun:clone
+}
