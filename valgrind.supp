@@ -244,3 +244,11 @@
    ...
    fun:clone
 }
+{
+   <PMPI_Bcast>
+   Memcheck:User
+   ...
+   fun:PMPI_Bcast
+   fun:MPI_BCAST
+   ...
+}
