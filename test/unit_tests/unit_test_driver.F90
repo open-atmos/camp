@@ -81,11 +81,11 @@ program unit_test_driver
     unit_test => UNIT_TEST_TYPE_
 
     ! Initialize the model for solving individual cells
-    one_cell_core => camp_core_t( unit_test%input_file_name( ) )
+    one_cell_core => camp_core_t( "input_files/"//unit_test%input_file_name( ) )
     call one_cell_core%initialize( )
 
     ! Initialize the model for solving multiple cells
-    multicell_core => camp_core_t( unit_test%input_file_name( ), N_CELLS )
+    multicell_core => camp_core_t( "input_files/"//unit_test%input_file_name( ), N_CELLS )
     call multicell_core%initialize( )
 
     ! Initialize the unit test

@@ -39,6 +39,12 @@ set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 	${CB5_EBI_FLAGS})
 
 ######################################################################
+# test_chem_mech_solver
+
+add_executable(test_chem_mech_solver test_chem_mech_solver.F90)
+target_link_libraries(test_chem_mech_solver camp::camp)
+
+######################################################################
 # test_chemistry_cb05cl_ae5_big
 
 add_executable(test_chemistry_cb05cl_ae5_big

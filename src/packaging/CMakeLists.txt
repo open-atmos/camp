@@ -62,7 +62,7 @@ install(
 if(NOT TARGET uninstall)
   configure_file(
     "${CAMP_PROJECT_SRC_DIR}/cmake/cmake_uninstall.cmake.in"
-    "${CAMP_PROJECT_BINARY_DIR}/cmake_uninstall.cmake"
+    "${PROJECT_BINARY_DIR}/cmake_uninstall.cmake"
     IMMEDIATE @ONLY
   )
   add_custom_target(uninstall

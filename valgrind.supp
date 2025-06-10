@@ -3,3 +3,13 @@
 # Valgrind suppressions
 #
 ##############################################################
+
+{
+   <Tutorial_string_bad_finalization>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   ...
+   fun:__camp_property_MOD_get_string
+   ...
+}

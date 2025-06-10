@@ -1,12 +1,6 @@
 ######################################################################
 # Utility functions for testing
 
-# Set the Valgrind suppressions file for tests
-if(CAMP_ENABLE_MEMCHECK)
-  find_program(MEMORYCHECK_COMMAND "valgrind")
-  set(MEMCHECK_SUPPRESS "--suppressions=${PROJECT_SOURCE_DIR}/valgrind.supp")
-endif()
-
 ######################################################################
 # build and add a standard test linked to the camp library
 function(create_standard_test)
@@ -32,7 +26,7 @@ function(create_standard_test)
     set(TEST_WORKING_DIRECTORY "${CMAKE_BINARY_DIR}")
   endif()
 
-  add_camp_test(${TEST_NAME} test_${TEST_NAME} "" ${TEST_WORKING_DIRECTORY} ${TEST_RESULT})
+  add_camp_test(${TEST_NAME} test_${TEST_NAME} "" ${TEST_WORKING_DIRECTORY} "${TEST_RESULT}")
 endfunction(create_standard_test)
 
 ######################################################################
