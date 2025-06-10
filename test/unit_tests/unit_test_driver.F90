@@ -60,7 +60,7 @@ program unit_test_driver
 
 #ifdef CAMP_USE_MPI
   character, allocatable :: buffer(:), buffer_copy(:)
-  integer(kind=i_kind) :: pack_size, pos, i_elem, results
+  integer(kind=i_kind) :: pack_size, pos, i_elem, results, rank_1_results
 #endif
 
   ! initialize MPI
@@ -320,10 +320,11 @@ program unit_test_driver
     else
       results = 1
     end if
+    rank_1_results = results
   end if
 
   ! Send the results back to the primary process
-  call camp_mpi_transfer_integer(results, results, 1, 0)
+  call camp_mpi_transfer_integer(rank_1_results, results, 1, 0)
 
   ! Convert the results back to a logical
   if( camp_mpi_rank( ) .eq. 0 ) then

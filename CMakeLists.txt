@@ -51,8 +51,6 @@ option(CAMP_ENABLE_MEMCHECK "Enable memory checking with Valgrind" OFF)
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 
-include(${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake)
-
 ################################################################################
 # Projet wide setup variables 
 
@@ -61,6 +59,8 @@ set(CAMP_MOD_DIR ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_INCLUDEDIR})
 set(CAMP_LIB_DIR ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
 set(CAMP_PROJECT_SRC_DIR ${PROJECT_SOURCE_DIR})
 set(camp_compile_definitions "")
+
+include(${PROJECT_SOURCE_DIR}/cmake/dependencies.cmake)
 
 ######################################################################
 ## Compiler settings

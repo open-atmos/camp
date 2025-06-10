@@ -11,7 +11,7 @@ include(CPack)
 # MPI
 
 if(ENABLE_MPI)
-  add_definitions(-DCAMP_USE_MPI)
+  list(APPEND camp_compile_definitions CAMP_USE_MPI)
 endif()
 
 ######################################################################
@@ -63,8 +63,8 @@ set(SUNDIALS_LIBS ${SUNDIALS_NVECSERIAL_LIB} ${SUNDIALS_CVODE_LIB}
   ${SUITE_SPARSE_COLAMD_LIB} ${SUITE_SPARSE_AMD_LIB} ${SUITE_SPARSE_BTF_LIB}
   ${SUITE_SPARSE_CONFIG_LIB})
 include_directories(${SUNDIALS_INCLUDE_DIR} ${SUITE_SPARSE_INCLUDE_DIR})
-add_definitions(-DCAMP_USE_SUNDIALS)
-add_definitions(-DCAMP_CUSTOM_CVODE)
+list(APPEND camp_compile_definitions CAMP_USE_SUNDIALS)
+list(APPEND camp_compile_definitions CAMP_CUSTOM_CVODE)
 
 ######################################################################
 # json-fortran
@@ -76,6 +76,6 @@ find_library(JSON_LIB jsonfortran
   DOC "json-fortran library"
   PATHS $ENV{JSON_FORTRAN_HOME}/lib /opt/local/lib /usr/local/lib)
 include_directories(${JSON_INCLUDE_DIR})
-add_definitions(-DCAMP_USE_JSON)
+list(APPEND camp_compile_definitions CAMP_USE_JSON)
 
 ######################################################################

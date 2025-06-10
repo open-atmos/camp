@@ -105,15 +105,13 @@ contains
     class(rxn_data_t), pointer :: rxn
 #ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
-    integer(kind=i_kind) :: pack_size, pos, i_elem, results
+    integer(kind=i_kind) :: pack_size, pos, i_elem, results, rank_1_results
 #endif
 
     type(solver_stats_t), target :: solver_stats
 
     integer(kind=i_kind) :: i_sect_unused, i_sect_the_mode
     type(aero_rep_factory_t) :: aero_rep_factory
-    type(aero_rep_update_data_modal_binned_mass_GMD_t) :: update_data_GMD
-    type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
     
     ! rate setting
     type(mechanism_data_t), pointer :: mechanism
@@ -214,15 +212,11 @@ contains
 #ifdef CAMP_USE_MPI
       ! pack the camp core
       pack_size = camp_core%pack_size() &
-                  + update_data_GMD%pack_size() &
-                  + update_data_GSD%pack_size() &
                   + rate_update_A%pack_size() &
                   + rate_update_B%pack_size()
       allocate(buffer(pack_size))
       pos = 0
       call camp_core%bin_pack(buffer, pos)
-      call update_data_GMD%bin_pack(buffer, pos)
-      call update_data_GSD%bin_pack(buffer, pos)
       call rate_update_A%bin_pack(buffer, pos)
       call rate_update_B%bin_pack(buffer, pos)
       call assert(636035849, pos.eq.pack_size)
@@ -252,16 +246,12 @@ contains
       camp_core => camp_core_t()
       pos = 0
       call camp_core%bin_unpack(buffer, pos)
-      call update_data_GMD%bin_unpack(buffer, pos)
-      call update_data_GSD%bin_unpack(buffer, pos)
       call rate_update_A%bin_unpack(buffer, pos)
       call rate_update_B%bin_unpack(buffer, pos)
       call assert(913246791, pos.eq.pack_size)
       allocate(buffer_copy(pack_size))
       pos = 0
       call camp_core%bin_pack(buffer_copy, pos)
-      call update_data_GMD%bin_pack(buffer_copy, pos)
-      call update_data_GSD%bin_pack(buffer_copy, pos)
       call rate_update_A%bin_pack(buffer_copy, pos)
       call rate_update_B%bin_pack(buffer_copy, pos)
       call assert(408040386, pos.eq.pack_size)
@@ -381,10 +371,11 @@ contains
       else
         results = 1
       end if
+      rank_1_results = results
     end if
 
     ! Send the results back to the primary process
-    call camp_mpi_transfer_integer(results, results, 1, 0)
+    call camp_mpi_transfer_integer(rank_1_results, results, 1, 0)
 
     ! convert the results back to a logical value
     if (camp_mpi_rank().eq.0) then

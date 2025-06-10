@@ -27,32 +27,48 @@ set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES boot_camp_run)
 ######################################################################
 # Part 1
 
-create_standard_test(NAME boot_camp_part_1
-  SOURCES ${PROJECT_SOURCE_DIR}/doc/camp_tutorial/boot_camp/part_1_code/box_model.F90
+add_executable(boot_camp_part_1
+  ${PROJECT_SOURCE_DIR}/doc/camp_tutorial/boot_camp/part_1_code/box_model.F90
+)
+target_link_libraries(boot_camp_part_1 camp::camp)
+add_test(NAME boot_camp_part_1
+  COMMAND boot_camp_part_1
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/boot_camp_run/part_1_code
 )
 
 ######################################################################
 # Part 2
 
-create_standard_test(NAME boot_camp_part_2
-  SOURCES ${PROJECT_SOURCE_DIR}/doc/camp_tutorial/boot_camp/part_2_code/box_model.F90
+add_executable(boot_camp_part_2
+  ${PROJECT_SOURCE_DIR}/doc/camp_tutorial/boot_camp/part_2_code/box_model.F90
+)
+target_link_libraries(boot_camp_part_2 camp::camp)
+add_test(NAME boot_camp_part_2
+  COMMAND boot_camp_part_2
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/boot_camp_run/part_2_code
 )
 
 ######################################################################
 # Part 3
 
-create_standard_test(NAME boot_camp_part_3
-  SOURCES ${PROJECT_SOURCE_DIR}/doc/camp_tutorial/boot_camp/part_3_code/box_model.F90
+add_executable(boot_camp_part_3
+  ${PROJECT_SOURCE_DIR}/doc/camp_tutorial/boot_camp/part_3_code/box_model.F90
+)
+target_link_libraries(boot_camp_part_3 camp::camp)
+add_test(NAME boot_camp_part_3
+  COMMAND boot_camp_part_3
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/boot_camp_run/part_3_code
 )
 
 ######################################################################
 # Part 4
 
-create_standard_test(NAME boot_camp_part_4
-  SOURCES ${PROJECT_SOURCE_DIR}/doc/camp_tutorial/boot_camp/part_4_code/box_model.F90
+add_executable(boot_camp_part_4
+  ${PROJECT_SOURCE_DIR}/doc/camp_tutorial/boot_camp/part_4_code/box_model.F90
+)
+target_link_libraries(boot_camp_part_4 camp::camp)
+add_test(NAME boot_camp_part_4
+  COMMAND boot_camp_part_4
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/boot_camp_run/part_4_code
 )
 
