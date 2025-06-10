@@ -17,6 +17,7 @@ jobs:
   gcc-release:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v1
     - name: Build the testing docker image in release mode
       run: docker build -t camp-test . -f Dockerfile
     - name: Run the release tests in the docker container
@@ -24,6 +25,7 @@ jobs:
   mpi-release:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v1
     - name: Build the MPI testing docker image
       run: docker build -t camp-test-mpi . -f Dockerfile.mpi
     - name: Run the MPI tests in the docker container
