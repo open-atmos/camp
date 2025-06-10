@@ -237,9 +237,10 @@
    ...
    fun:clone
 }
-{
+ {
    <mpi_param_clone>
    Memcheck:Param
+   writev(vector[1])
    ...
    fun:clone
 }
