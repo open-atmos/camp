@@ -9,13 +9,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Build the testing docker image
+    - name: Build the testing docker image in debug mode
       run: docker build -t camp-test . -f Dockerfile.debug
-    - name: Run the tests in the docker container
+    - name: Run the debug tests in the docker container
       run: docker run -t camp-test bash -c 'cd /build; ctest --rerun-failed --output-on-failure . --verbose -j 8'
-    - name: Build the testing docker image
+    - name: Build the testing docker image in release mode
       run: docker build -t camp-test . -f Dockerfile
-    - name: Run the tests in the docker container
+    - name: Run the release tests in the docker container
       run: docker run -t camp-test bash -c 'cd /build; ctest --rerun-failed --output-on-failure . --verbose -j 8'
     - name: Build the MPI testing docker image
       run: docker build -t camp-test-mpi . -f Dockerfile.mpi

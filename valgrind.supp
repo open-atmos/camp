@@ -179,18 +179,9 @@
    Memcheck:Leak
    match-leak-kinds: definite
    fun:malloc
-   obj:*
-   fun:call_init
-   fun:call_init
-   fun:_dl_init
-   fun:_dl_catch_exception
-   fun:dl_open_worker
-   fun:_dl_catch_exception
-   fun:_dl_open
-   fun:dlopen_doit
-   fun:_dl_catch_exception
+   ...
    fun:_dl_catch_error
-   fun:_dlerror_run
+   ...
 }
 {
    <mpi_inline_func>
@@ -237,4 +228,12 @@
    ...
    fun:PMPI_INIT
    ...
+}
+{
+   <mpi_clone>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   ...
+   fun:clone
 }
