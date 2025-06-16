@@ -1,0 +1,7 @@
+<map id="camp_camp_box_model_data::profile_t" name="camp_camp_box_model_data::profile_t">
+<area shape="rect" id="Node000001" title="Property time profile." alt="" coords="5,39,167,79"/>
+<area shape="rect" id="Node000002" href="$structcamp__camp__box__model__data_1_1aero__rep__profile__t.html" title="Aerosol representation time profile." alt="" coords="215,5,376,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,41,214,36,215,41,183,46"/>
+<area shape="rect" id="Node000003" href="$structcamp__camp__box__model__data_1_1rxn__profile__t.html" title="Reaction rate time profile." alt="" coords="215,71,376,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="183,71,215,76,214,81,182,76"/>
+</map>

@@ -1,40 +1,11 @@
 <map id="rxn_condensed_phase_photolysis.c" name="rxn_condensed_phase_photolysis.c">
-<area shape="rect" id="Node000001" title="Condensed Phase photolysis reaction solver functions." alt="" coords="1534,5,1684,46"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="1415,330,1475,356"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1534,34,1183,58,947,78,699,102,460,131,253,165,167,183,97,202,46,222,16,243,10,253,8,262,10,271,16,280,36,289,79,297,218,310,411,320,636,328,1089,336,1399,339,1399,344,1089,342,636,333,411,326,218,315,78,302,35,294,13,284,5,273,3,262,5,251,13,239,44,218,96,197,166,178,252,159,460,126,698,97,946,73,1183,53,1533,29"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="1686,94,1746,120"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1637,44,1689,82,1686,87,1634,49"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="1539,330,1602,356"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1618,46,1629,89,1639,149,1640,217,1636,250,1626,283,1615,304,1599,321,1595,318,1610,301,1621,281,1631,249,1635,216,1634,150,1624,91,1613,47"/>
-<area shape="rect" id="Node000005" href="$rxns_8h.html" title="Header file for reaction solver functions." alt="" coords="1538,94,1603,120"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1602,48,1586,81,1581,79,1597,45"/>
-<area shape="rect" id="Node000006" href="$_jacobian_8h.html" title="Header for the Jacobian structure and related functions." alt="" coords="1529,249,1612,274"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1573,120,1573,233,1568,233,1568,120"/>
-<area shape="rect" id="Node000007" href="$camp__common_8h.html" title="Header file for common constants and structures." alt="" coords="778,168,899,193"/>
-<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="1538,114,915,174,914,169,1537,109"/>
-<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="1553,277,1479,324,1476,319,1550,273"/>
-<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="1573,275,1573,314,1568,314,1568,275"/>
-<area shape="poly" id="edge11_Node000007_Node000006" title=" " alt="" coords="899,179,1015,182,1169,191,1343,209,1518,239,1527,241,1526,246,1517,244,1343,214,1169,197,1015,188,899,185"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="533,249,606,274"/>
-<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="789,197,619,244,614,246,612,241,618,239,787,191"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="630,249,687,274"/>
-<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="810,196,700,244,698,244,696,240,697,239,808,191"/>
-<area shape="rect" id="Node000010" href="$time__derivative_8h.html" title="Header for the time derivative structure and related functions." alt="" coords="1386,249,1505,274"/>
-<area shape="poly" id="edge12_Node000007_Node000010" title=" " alt="" coords="899,183,1110,202,1242,218,1374,239,1389,242,1388,247,1373,244,1241,223,1109,207,899,188"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="711,249,817,274"/>
-<area shape="poly" id="edge15_Node000007_Node000011" title=" " alt="" coords="829,196,788,239,784,235,825,192"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="841,249,985,274"/>
-<area shape="poly" id="edge16_Node000007_Node000012" title=" " alt="" coords="852,192,893,235,889,239,848,196"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="1010,249,1169,274"/>
-<area shape="poly" id="edge17_Node000007_Node000013" title=" " alt="" coords="878,191,1037,241,1036,246,876,196"/>
-<area shape="rect" id="Node000014" title=" " alt="" coords="1194,249,1361,274"/>
-<area shape="poly" id="edge18_Node000007_Node000014" title=" " alt="" coords="900,189,1182,239,1203,243,1202,248,1181,244,899,195"/>
-<area shape="rect" id="Node000015" title=" " alt="" coords="27,249,197,274"/>
-<area shape="poly" id="edge19_Node000007_Node000015" title=" " alt="" coords="778,188,529,207,369,223,208,244,183,248,183,243,207,239,369,218,528,202,778,183"/>
-<area shape="rect" id="Node000016" title=" " alt="" coords="220,241,348,282"/>
-<area shape="poly" id="edge20_Node000007_Node000016" title=" " alt="" coords="778,190,596,209,364,243,363,238,595,203,778,184"/>
-<area shape="rect" id="Node000017" title=" " alt="" coords="371,241,509,282"/>
-<area shape="poly" id="edge21_Node000007_Node000017" title=" " alt="" coords="778,195,524,243,523,238,777,190"/>
-<area shape="poly" id="edge13_Node000010_Node000002" title=" " alt="" coords="1448,275,1448,314,1443,314,1443,275"/>
-<area shape="poly" id="edge14_Node000010_Node000004" title=" " alt="" coords="1466,273,1540,319,1537,324,1463,277"/>
+<area shape="rect" id="Node000001" title="Condensed Phase photolysis reaction solver functions." alt="" coords="87,5,237,46"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,94,66,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,49,69,88,67,83,129,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="90,94,149,120"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="154,48,136,81,131,79,149,45"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="174,94,236,120"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="175,45,193,79,189,81,170,48"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="260,94,352,120"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="199,44,272,84,269,88,197,49"/>
 </map>

@@ -1,41 +1,13 @@
 <map id="sub_model_UNIFAC.c" name="sub_model_UNIFAC.c">
-<area shape="rect" id="Node000001" title="UNIFAC activity coefficient calculation." alt="" coords="1515,5,1666,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="1414,315,1474,341"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1514,26,1167,49,934,68,689,91,454,119,249,151,165,169,96,188,46,208,16,228,10,238,8,247,10,256,16,265,36,274,79,282,218,295,411,305,635,313,1088,321,1398,324,1398,329,1088,327,635,318,411,311,218,300,78,287,35,279,13,269,5,258,3,247,5,236,13,224,43,203,95,183,164,164,248,146,453,114,689,86,934,63,1167,44,1514,21"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="1696,79,1755,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1615,29,1690,69,1688,74,1612,34"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="1543,315,1606,341"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1599,30,1618,71,1638,130,1645,164,1648,199,1645,234,1636,268,1623,290,1606,307,1602,303,1618,286,1631,266,1640,233,1642,199,1640,165,1633,131,1613,73,1595,32"/>
-<area shape="rect" id="Node000005" href="$_jacobian_8h.html" title="Header for the Jacobian structure and related functions." alt="" coords="1528,234,1621,260"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1592,32,1579,219,1574,219,1587,31"/>
-<area shape="rect" id="Node000006" href="$sub__models_8h.html" title="Header file for sub model functions." alt="" coords="1442,79,1553,105"/>
-<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="1576,34,1526,72,1523,67,1573,29"/>
-<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="1556,262,1478,309,1476,304,1553,258"/>
-<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="1577,260,1577,299,1572,299,1572,260"/>
-<area shape="poly" id="edge8_Node000006_Node000005" title=" " alt="" coords="1506,104,1564,219,1559,221,1501,106"/>
-<area shape="rect" id="Node000007" href="$camp__common_8h.html" title="Header file for common constants and structures." alt="" coords="929,153,1049,178"/>
-<area shape="poly" id="edge9_Node000006_Node000007" title=" " alt="" coords="1441,104,1065,156,1065,151,1441,98"/>
-<area shape="poly" id="edge12_Node000007_Node000005" title=" " alt="" coords="1050,167,1258,184,1387,200,1516,224,1527,226,1526,232,1515,229,1386,206,1257,189,1050,172"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="907,234,981,260"/>
-<area shape="poly" id="edge10_Node000007_Node000008" title=" " alt="" coords="985,180,961,222,956,219,980,177"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="1005,234,1061,260"/>
-<area shape="poly" id="edge11_Node000007_Node000009" title=" " alt="" coords="998,177,1021,219,1017,221,994,180"/>
-<area shape="rect" id="Node000010" href="$time__derivative_8h.html" title="Header for the time derivative structure and related functions." alt="" coords="1384,234,1504,260"/>
-<area shape="poly" id="edge13_Node000007_Node000010" title=" " alt="" coords="1050,172,1197,192,1372,224,1387,227,1386,232,1371,229,1197,198,1049,177"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="1086,234,1191,260"/>
-<area shape="poly" id="edge16_Node000007_Node000011" title=" " alt="" coords="1013,176,1104,224,1101,229,1011,181"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="1216,234,1360,260"/>
-<area shape="poly" id="edge17_Node000007_Node000012" title=" " alt="" coords="1036,176,1228,227,1227,232,1035,182"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="27,234,186,260"/>
-<area shape="poly" id="edge18_Node000007_Node000013" title=" " alt="" coords="929,171,615,188,408,205,199,229,174,233,174,228,198,224,408,199,615,182,928,166"/>
-<area shape="rect" id="Node000014" title=" " alt="" coords="211,234,378,260"/>
-<area shape="poly" id="edge19_Node000007_Node000014" title=" " alt="" coords="929,174,692,193,541,209,390,229,365,233,364,228,389,224,541,204,691,188,928,168"/>
-<area shape="rect" id="Node000015" title=" " alt="" coords="402,234,571,260"/>
-<area shape="poly" id="edge20_Node000007_Node000015" title=" " alt="" coords="929,177,772,199,583,229,560,233,559,228,582,224,771,194,928,172"/>
-<area shape="rect" id="Node000016" title=" " alt="" coords="595,226,722,267"/>
-<area shape="poly" id="edge21_Node000007_Node000016" title=" " alt="" coords="936,182,738,228,737,223,935,176"/>
-<area shape="rect" id="Node000017" title=" " alt="" coords="746,226,883,267"/>
-<area shape="poly" id="edge22_Node000007_Node000017" title=" " alt="" coords="963,181,873,222,871,217,961,176"/>
-<area shape="poly" id="edge14_Node000010_Node000002" title=" " alt="" coords="1447,260,1447,299,1441,299,1441,260"/>
-<area shape="poly" id="edge15_Node000010_Node000004" title=" " alt="" coords="1465,258,1543,304,1540,309,1462,262"/>
+<area shape="rect" id="Node000001" title="UNIFAC activity coefficient calculation." alt="" coords="129,5,280,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,66,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,34,80,75,77,70,175,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="90,79,149,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="192,34,147,71,144,67,189,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="174,79,236,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="208,31,208,63,202,63,202,31"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="260,79,379,105"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="226,29,288,68,286,73,223,34"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="403,79,540,105"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="251,29,412,72,411,77,249,34"/>
 </map>

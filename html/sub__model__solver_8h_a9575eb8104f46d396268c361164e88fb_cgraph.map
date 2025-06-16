@@ -1,9 +1,0 @@
-<map id="sub_model_get_jac_contrib" name="sub_model_get_jac_contrib">
-<area shape="rect" id="Node000001" title="Calculate the Jacobian constributions from sub model calculations." alt="" coords="5,78,185,104"/>
-<area shape="rect" id="Node000002" href="$sub__model___p_d_fi_t_e_8c.html#a50d2ccc5a5c4b40019447f6b7dd5feab" title="Add contributions to the Jacobian from derivates calculated using the output of this sub model." alt="" coords="235,5,396,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,75,229,48,231,54,142,80"/>
-<area shape="rect" id="Node000003" href="$sub__model___u_n_i_f_a_c_8c.html#a0301d06b09af90fcfe49f9a1ba7c6742" title="Add contributions to the Jacobian from derivates calculated using the output of this sub model." alt="" coords="233,71,399,111"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="185,88,217,88,217,94,185,94"/>
-<area shape="rect" id="Node000004" href="$sub__model___z_s_r__aerosol__water_8c.html#aa6bf886e4a9fadb02913dab07e19018b" title="Add contributions to the Jacobian from derivates calculated using the output of this sub model." alt="" coords="233,136,399,177"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="142,102,231,128,229,134,140,107"/>
-</map>

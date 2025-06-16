@@ -1,0 +1,10 @@
+<map id="camp_camp_box_model_data::rxn_profile_constructor" name="camp_camp_box_model_data::rxn_profile_constructor">
+<area shape="rect" id="Node000001" title="Constructor for rxn_profile_t." alt="" coords="5,5,195,46"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="423,13,574,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,23,407,23,407,28,195,28"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="243,38,375,64"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="195,35,227,38,227,44,194,40"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="622,5,745,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="575,23,607,23,607,28,575,28"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="375,39,407,35,408,40,376,45"/>
+</map>

@@ -20,8 +20,8 @@
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00016}00016\ \textcolor{preprocessor}{\#include\ <math.h>}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00017}00017\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00018}00018\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00019}00019\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_jacobian_8h}{../Jacobian.h}}"{}}}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00020}00020\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{sub__models_8h}{../sub\_models.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00019}00019\ \textcolor{preprocessor}{\#include\ <camp/Jacobian.h>}}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00020}00020\ \textcolor{preprocessor}{\#include\ <camp/sub\_models.h>}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00021}00021\ }
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00022}00022\ \textcolor{comment}{//\ TODO\ Lookup\ environmental\ indicies\ during\ initialization}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00023}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{00023}}\ \textcolor{preprocessor}{\#define\ TEMPERATURE\_K\_\ env\_data[0]}}
@@ -83,9 +83,9 @@
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00079}00079\ \textcolor{comment}{\ *\ \(\backslash\)param\ sub\_model\_float\_data\ Pointer\ to\ the\ sub\ model\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00080}00080\ \textcolor{comment}{\ *\ \(\backslash\)param\ jac\ Jacobian}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00081}00081\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00082}\mbox{\hyperlink{sub__models_8h_a6895ac51f6122ce830f30d8b1f09d052}{00082}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a6895ac51f6122ce830f30d8b1f09d052}{sub\_model\_UNIFAC\_get\_used\_jac\_elem}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00082}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a6895ac51f6122ce830f30d8b1f09d052}{00082}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a6895ac51f6122ce830f30d8b1f09d052}{sub\_model\_UNIFAC\_get\_used\_jac\_elem}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_float\_data,}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ *jac)\ \{}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Jacobian\ *jac)\ \{}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00085}00085\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ sub\_model\_int\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00086}00086\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ sub\_model\_float\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00087}00087\ }
@@ -107,9 +107,9 @@
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00103}00103\ \textcolor{comment}{\ *\ \(\backslash\)param\ deriv\_ids\ Indices\ for\ state\ array\ variables\ on\ the\ solver\ state\ array}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00104}00104\ \textcolor{comment}{\ *\ \(\backslash\)param\ jac\ Jacobian}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00105}00105\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00106}\mbox{\hyperlink{sub__models_8h_a2674d98846a9c4933d56156ec1f0deb5}{00106}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a2674d98846a9c4933d56156ec1f0deb5}{sub\_model\_UNIFAC\_update\_ids}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00106}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a2674d98846a9c4933d56156ec1f0deb5}{00106}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a2674d98846a9c4933d56156ec1f0deb5}{sub\_model\_UNIFAC\_update\_ids}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_float\_data,\ \textcolor{keywordtype}{int}\ *deriv\_ids,}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac)\ \{}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Jacobian\ jac)\ \{}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00109}00109\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ sub\_model\_int\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00110}00110\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ sub\_model\_float\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00111}00111\ }
@@ -130,13 +130,13 @@
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00126}00126\ \textcolor{comment}{\ *\ \(\backslash\)param\ sub\_model\_env\_data\ Pointer\ to\ the\ sub\ model\ environment-\/dependent\ data}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00127}00127\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00128}00128\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00129}\mbox{\hyperlink{sub__models_8h_a43f3628a20f1bf545034554576e9c85c}{00129}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a43f3628a20f1bf545034554576e9c85c}{sub\_model\_UNIFAC\_update\_env\_state}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00129}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a43f3628a20f1bf545034554576e9c85c}{00129}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a43f3628a20f1bf545034554576e9c85c}{sub\_model\_UNIFAC\_update\_env\_state}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_float\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_env\_data,}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00132}00132\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ModelData\ *model\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00133}00133\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ sub\_model\_int\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00134}00134\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ sub\_model\_float\_data;}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00135}00135\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00135}00135\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>grid\_cell\_env;}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00136}00136\ }
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00137}00137\ \ \ \textcolor{comment}{//\ Update\ the\ interaction\ parameters}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00138}00138\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ m\ =\ 0;\ m\ <\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ad6d3e263b5e54004fc858d109e79ef90}{NUM\_GROUP\_}};\ m++)}
@@ -227,14 +227,14 @@
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00223}00223\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data\ including\ the\ current\ state\ and}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00224}00224\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environmental\ conditions}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00225}00225\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00226}\mbox{\hyperlink{sub__models_8h_a91d55564c556bf61d6bf0ccac7b43e4b}{00226}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a91d55564c556bf61d6bf0ccac7b43e4b}{sub\_model\_UNIFAC\_calculate}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00226}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a91d55564c556bf61d6bf0ccac7b43e4b}{00226}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a91d55564c556bf61d6bf0ccac7b43e4b}{sub\_model\_UNIFAC\_calculate}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_float\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_env\_data,}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ModelData\ *model\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00230}00230\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ sub\_model\_int\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00231}00231\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ sub\_model\_float\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00232}00232\ }
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00233}00233\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00233}00233\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>grid\_cell\_state;}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00234}00234\ }
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00235}00235\ \ \ \textcolor{comment}{//\ Loop\ through\ each\ instance\ of\ each\ phase\ to\ calculate\ activity}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00236}00236\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3}{NUM\_UNIQUE\_PHASE\_}};\ ++i\_phase)\ \{}
@@ -576,15 +576,15 @@
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00572}00572\ \textcolor{comment}{\ *\ \(\backslash\)param\ time\_step\ Current\ time\ step\ [s]}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00573}00573\ \textcolor{comment}{\ */}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00574}00574\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_SUNDIALS}}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00575}\mbox{\hyperlink{sub__models_8h_a0301d06b09af90fcfe49f9a1ba7c6742}{00575}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0301d06b09af90fcfe49f9a1ba7c6742}{sub\_model\_UNIFAC\_get\_jac\_contrib}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00575}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0301d06b09af90fcfe49f9a1ba7c6742}{00575}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0301d06b09af90fcfe49f9a1ba7c6742}{sub\_model\_UNIFAC\_get\_jac\_contrib}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00576}00576\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_float\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00577}00577\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_env\_data,}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00578}00578\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ realtype\ *J,}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00578}00578\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ModelData\ *model\_data,\ realtype\ *J,}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00579}00579\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ time\_step)\ \{}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00580}00580\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ sub\_model\_int\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00581}00581\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ sub\_model\_float\_data;}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00582}00582\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00583}00583\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00582}00582\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>grid\_cell\_state;}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00583}00583\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>grid\_cell\_env;}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00584}00584\ }
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00585}00585\ \ \ \textcolor{comment}{//\ Loop\ through\ each\ instance\ of\ each\ phase\ to\ calculate\ activity}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00586}00586\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_aa97428673e94e122eea2cf55bdc0e8d3}{NUM\_UNIQUE\_PHASE\_}};\ ++i\_phase)\ \{}
@@ -772,7 +772,7 @@
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00768}00768\ \textcolor{comment}{\ *\ \(\backslash\)param\ sub\_model\_int\_data\ Pointer\ to\ the\ sub\ model\ integer\ data}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00769}00769\ \textcolor{comment}{\ *\ \(\backslash\)param\ sub\_model\_float\_data\ Pointer\ to\ the\ sub\ model\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00770}00770\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00771}\mbox{\hyperlink{sub__models_8h_ac47310b67585f52b71ff6aac1c603ba5}{00771}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac47310b67585f52b71ff6aac1c603ba5}{sub\_model\_UNIFAC\_print}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00771}\mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac47310b67585f52b71ff6aac1c603ba5}{00771}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac47310b67585f52b71ff6aac1c603ba5}{sub\_model\_UNIFAC\_print}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00772}00772\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_float\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00773}00773\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ sub\_model\_int\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___u_n_i_f_a_c_8c_source_l00774}00774\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ sub\_model\_float\_data;}

@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$interfacecamp__camp__solver__data_1_1aero__phase__add__condensed__data.html" title="Add condensed aerosol phase data to the solver data block." alt="" coords="5,5,230,46"/>
+<area shape="rect" id="Node000000" href="$structcamp__camp__box__model__data_1_1profile__t.html" title="Property time profile." alt="" coords="5,39,167,79"/>
+<area shape="rect" id="Node000001" href="$structcamp__camp__box__model__data_1_1aero__rep__profile__t.html" title="Aerosol representation time profile." alt="" coords="215,5,376,46"/>
+<area shape="poly" id="edge6_Node000000_Node000001" title=" " alt="" coords="182,41,214,36,215,41,183,46"/>
+<area shape="rect" id="Node000002" href="$structcamp__camp__box__model__data_1_1rxn__profile__t.html" title="Reaction rate time profile." alt="" coords="215,71,376,111"/>
+<area shape="poly" id="edge7_Node000000_Node000002" title=" " alt="" coords="183,71,215,76,214,81,182,76"/>
 </map>

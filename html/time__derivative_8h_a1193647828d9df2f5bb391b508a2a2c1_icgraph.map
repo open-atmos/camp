@@ -1,5 +1,0 @@
-<map id="time_derivative_free" name="time_derivative_free">
-<area shape="rect" id="Node000001" title="Free memory associated with a TimeDerivative." alt="" coords="139,5,277,31"/>
-<area shape="rect" id="Node000002" href="$camp__solver_8c.html#a946f57c971834de0c7cb185263cd3c78" title="Free a SolverData object." alt="" coords="5,5,91,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,21,91,21,91,16,123,16"/>
-</map>

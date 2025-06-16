@@ -41,15 +41,15 @@ int \mbox{\hyperlink{camp__solver_8c_afc5ec8680b419e7ab49530d53a76cee4}{solver\+
 \begin{DoxyCompactList}\small\item\em Solve for a given timestep. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{camp__solver_8c_a0de7bd46f75dd8496488b32c4983ec77}{solver\+\_\+get\+\_\+statistics}} (void \texorpdfstring{$\ast$}{*}solver\+\_\+data, int \texorpdfstring{$\ast$}{*}solver\+\_\+flag, int \texorpdfstring{$\ast$}{*}num\+\_\+steps, int \texorpdfstring{$\ast$}{*}RHS\+\_\+evals, int \texorpdfstring{$\ast$}{*}LS\+\_\+setups, int \texorpdfstring{$\ast$}{*}error\+\_\+test\+\_\+fails, int \texorpdfstring{$\ast$}{*}NLS\+\_\+iters, int \texorpdfstring{$\ast$}{*}NLS\+\_\+convergence\+\_\+fails, int \texorpdfstring{$\ast$}{*}DLS\+\_\+\+Jac\+\_\+evals, int \texorpdfstring{$\ast$}{*}DLS\+\_\+\+RHS\+\_\+evals, double \texorpdfstring{$\ast$}{*}last\+\_\+time\+\_\+step\+\_\+\+\_\+s, double \texorpdfstring{$\ast$}{*}next\+\_\+time\+\_\+step\+\_\+\+\_\+s, int \texorpdfstring{$\ast$}{*}Jac\+\_\+eval\+\_\+fails, int \texorpdfstring{$\ast$}{*}RHS\+\_\+evals\+\_\+total, int \texorpdfstring{$\ast$}{*}Jac\+\_\+evals\+\_\+total, double \texorpdfstring{$\ast$}{*}RHS\+\_\+time\+\_\+\+\_\+s, double \texorpdfstring{$\ast$}{*}Jac\+\_\+time\+\_\+\+\_\+s, double \texorpdfstring{$\ast$}{*}max\+\_\+loss\+\_\+precision)
 \begin{DoxyCompactList}\small\item\em Get solver statistics after an integration attempt. \end{DoxyCompactList}\item 
-int \mbox{\hyperlink{camp__solver_8c_a21373e1f8bad206f6437deeea571f51c}{camp\+\_\+solver\+\_\+update\+\_\+model\+\_\+state}} (N\+\_\+\+Vector solver\+\_\+state, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, realtype threshhold, realtype replacement\+\_\+value)
+int \mbox{\hyperlink{camp__solver_8c_a21373e1f8bad206f6437deeea571f51c}{camp\+\_\+solver\+\_\+update\+\_\+model\+\_\+state}} (N\+\_\+\+Vector solver\+\_\+state, Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, realtype threshhold, realtype replacement\+\_\+value)
 \begin{DoxyCompactList}\small\item\em Update the model state from the current solver state. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f}} (realtype t, N\+\_\+\+Vector y, N\+\_\+\+Vector deriv, void \texorpdfstring{$\ast$}{*}solver\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Compute the time derivative f(t,y) \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{camp__solver_8c_a13451d507558a61a2353adfed58db468}{Jac}} (realtype t, N\+\_\+\+Vector y, N\+\_\+\+Vector deriv, SUNMatrix J, void \texorpdfstring{$\ast$}{*}solver\+\_\+data, N\+\_\+\+Vector tmp1, N\+\_\+\+Vector tmp2, N\+\_\+\+Vector tmp3)
-\begin{DoxyCompactList}\small\item\em Compute the \doxylink{struct_jacobian}{Jacobian}. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Compute the Jacobian. \end{DoxyCompactList}\item 
 bool \mbox{\hyperlink{camp__solver_8c_ad45be595da1a1d6fd40179d9743a9a65}{check\+\_\+\+Jac}} (realtype t, N\+\_\+\+Vector y, SUNMatrix J, N\+\_\+\+Vector deriv, N\+\_\+\+Vector tmp, N\+\_\+\+Vector tmp1, void \texorpdfstring{$\ast$}{*}solver\+\_\+data)
-\begin{DoxyCompactList}\small\item\em Check a \doxylink{struct_jacobian}{Jacobian} for accuracy. \end{DoxyCompactList}\item 
-SUNMatrix \mbox{\hyperlink{camp__solver_8c_a5b485fa25356197023889f3795888e98}{get\+\_\+jac\+\_\+init}} (\mbox{\hyperlink{struct_solver_data}{Solver\+Data}} \texorpdfstring{$\ast$}{*}solver\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Check a Jacobian for accuracy. \end{DoxyCompactList}\item 
+SUNMatrix \mbox{\hyperlink{camp__solver_8c_a5b485fa25356197023889f3795888e98}{get\+\_\+jac\+\_\+init}} (Solver\+Data \texorpdfstring{$\ast$}{*}solver\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Try to improve guesses of y sent to the linear solver. \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{camp__solver_8c_a08519bb4526ffd3db7f49b33ba7600aa}{check\+\_\+flag}} (void \texorpdfstring{$\ast$}{*}flag\+\_\+value, char \texorpdfstring{$\ast$}{*}func\+\_\+name, int opt)
 \begin{DoxyCompactList}\small\item\em Check the return value of a SUNDIALS function. \end{DoxyCompactList}\item 
@@ -60,13 +60,13 @@ void \mbox{\hyperlink{camp__solver_8c_af081ac08d4a99b2ff2d02de98ecd01e0}{solver\
 static void \mbox{\hyperlink{camp__solver_8c_aa27659e81a1e22c9ab59889e8e7cd341}{solver\+\_\+print\+\_\+stats}} (void \texorpdfstring{$\ast$}{*}cvode\+\_\+mem)
 \begin{DoxyCompactList}\small\item\em Print solver statistics. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{camp__solver_8c_a946f57c971834de0c7cb185263cd3c78}{solver\+\_\+free}} (void \texorpdfstring{$\ast$}{*}solver\+\_\+data)
-\begin{DoxyCompactList}\small\item\em Free a \doxylink{struct_solver_data}{Solver\+Data} object. \end{DoxyCompactList}\item 
-bool \mbox{\hyperlink{camp__solver_8c_a51bc2a16028d4c72dd39669c31f6fc17}{is\+\_\+anything\+\_\+going\+\_\+on\+\_\+here}} (\mbox{\hyperlink{struct_solver_data}{Solver\+Data}} \texorpdfstring{$\ast$}{*}sd, realtype t\+\_\+initial, realtype t\+\_\+final)
+\begin{DoxyCompactList}\small\item\em Free a Solver\+Data object. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{camp__solver_8c_a51bc2a16028d4c72dd39669c31f6fc17}{is\+\_\+anything\+\_\+going\+\_\+on\+\_\+here}} (Solver\+Data \texorpdfstring{$\ast$}{*}sd, realtype t\+\_\+initial, realtype t\+\_\+final)
 \begin{DoxyCompactList}\small\item\em Determine if there is anything to solve. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{camp__solver_8c_ac1241091f152db7fd2aa734994c48b24}{error\+\_\+handler}} (int error\+\_\+code, const char \texorpdfstring{$\ast$}{*}module, const char \texorpdfstring{$\ast$}{*}function, char \texorpdfstring{$\ast$}{*}msg, void \texorpdfstring{$\ast$}{*}sd)
 \begin{DoxyCompactList}\small\item\em Custom error handling function. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{camp__solver_8c_a01ab307718c5b5304fc16472d23d999f}{model\+\_\+free}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} model\+\_\+data)
-\begin{DoxyCompactList}\small\item\em Free a \doxylink{struct_model_data}{Model\+Data} object. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{camp__solver_8c_a01ab307718c5b5304fc16472d23d999f}{model\+\_\+free}} (Model\+Data model\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Free a Model\+Data object. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{camp__solver_8c_a97135700d97a42ab3c8c1429513ecb28}{solver\+\_\+free\+\_\+update\+\_\+data}} (void \texorpdfstring{$\ast$}{*}update\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Free update data. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -158,7 +158,7 @@ Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00034}{34}} of file 
 \index{camp\_solver\_update\_model\_state@{camp\_solver\_update\_model\_state}!camp\_solver.c@{camp\_solver.c}}
 \doxysubsubsection{\texorpdfstring{camp\_solver\_update\_model\_state()}{camp\_solver\_update\_model\_state()}}
 {\footnotesize\ttfamily \label{camp__solver_8c_a21373e1f8bad206f6437deeea571f51c} 
-int camp\+\_\+solver\+\_\+update\+\_\+model\+\_\+state (\begin{DoxyParamCaption}\item[{N\+\_\+\+Vector}]{solver\+\_\+state}{, }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{realtype}]{threshhold}{, }\item[{realtype}]{replacement\+\_\+value}{}\end{DoxyParamCaption})}
+int camp\+\_\+solver\+\_\+update\+\_\+model\+\_\+state (\begin{DoxyParamCaption}\item[{N\+\_\+\+Vector}]{solver\+\_\+state}{, }\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{realtype}]{threshhold}{, }\item[{realtype}]{replacement\+\_\+value}{}\end{DoxyParamCaption})}
 
 
 
@@ -271,9 +271,9 @@ bool check\+\_\+\+Jac (\begin{DoxyParamCaption}\item[{realtype}]{t}{, }\item[{N\
 
 
 
-Check a \doxylink{struct_jacobian}{Jacobian} for accuracy. 
+Check a Jacobian for accuracy. 
 
-This function compares \doxylink{struct_jacobian}{Jacobian} elements against differences in derivative calculations for small changes to the state array\+:   \[
+This function compares Jacobian elements against differences in derivative calculations for small changes to the state array\+:   \[
   J_{ij}(x) = \frac{f_i(x+\sum_j e_j) - f_i(x)}{\epsilon}
 \] where $\epsilon_j = 10^{-8} \left|x_j\right|$
 
@@ -283,7 +283,7 @@ This function compares \doxylink{struct_jacobian}{Jacobian} elements against dif
 \hline
 {\em y} & Current state array \\
 \hline
-{\em J} & \doxylink{struct_jacobian}{Jacobian} matrix to evaluate \\
+{\em J} & Jacobian matrix to evaluate \\
 \hline
 {\em deriv} & Current derivative $f(y)$ \\
 \hline
@@ -295,7 +295,7 @@ This function compares \doxylink{struct_jacobian}{Jacobian} elements against dif
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-True if \doxylink{struct_jacobian}{Jacobian} values are accurate, false otherwise 
+True if Jacobian values are accurate, false otherwise 
 \end{DoxyReturn}
 
 
@@ -387,7 +387,7 @@ Here is the caller graph for this function\+:
 \index{get\_jac\_init@{get\_jac\_init}!camp\_solver.c@{camp\_solver.c}}
 \doxysubsubsection{\texorpdfstring{get\_jac\_init()}{get\_jac\_init()}}
 {\footnotesize\ttfamily \label{camp__solver_8c_a5b485fa25356197023889f3795888e98} 
-SUNMatrix get\+\_\+jac\+\_\+init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solver_data}{Solver\+Data}} \texorpdfstring{$\ast$}{*}}]{solver\+\_\+data}{}\end{DoxyParamCaption})}
+SUNMatrix get\+\_\+jac\+\_\+init (\begin{DoxyParamCaption}\item[{Solver\+Data \texorpdfstring{$\ast$}{*}}]{solver\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -423,18 +423,18 @@ This function checks if there are any negative guessed concentrations, and if th
 \begin{DoxyReturn}{Returns}
 1 if corrections were calculated, 0 if not
 \end{DoxyReturn}
-Create a sparse \doxylink{struct_jacobian}{Jacobian} matrix based on model data
+Create a sparse Jacobian matrix based on model data
 
 
 \begin{DoxyParams}{Parameters}
-{\em solver\+\_\+data} & A pointer to the \doxylink{struct_solver_data}{Solver\+Data} \\
+{\em solver\+\_\+data} & A pointer to the Solver\+Data \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Sparse \doxylink{struct_jacobian}{Jacobian} matrix with all possible non-\/zero elements intialize to 1.\+0 
+Sparse Jacobian matrix with all possible non-\/zero elements intialize to 1.\+0 
 \end{DoxyReturn}
 \begin{DoxyRefDesc}{Todo}
-\item[\mbox{\hyperlink{todo__todo000002}{Todo}}]Make the \doxylink{struct_jacobian}{Jacobian} mapping recursive for sub model parameters that depend on other sub model parameters \end{DoxyRefDesc}
+\item[\mbox{\hyperlink{todo__todo000003}{Todo}}]Make the Jacobian mapping recursive for sub model parameters that depend on other sub model parameters \end{DoxyRefDesc}
 
 
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l01278}{1278}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
@@ -459,7 +459,7 @@ Here is the caller graph for this function\+:
 \index{is\_anything\_going\_on\_here@{is\_anything\_going\_on\_here}!camp\_solver.c@{camp\_solver.c}}
 \doxysubsubsection{\texorpdfstring{is\_anything\_going\_on\_here()}{is\_anything\_going\_on\_here()}}
 {\footnotesize\ttfamily \label{camp__solver_8c_a51bc2a16028d4c72dd39669c31f6fc17} 
-bool is\+\_\+anything\+\_\+going\+\_\+on\+\_\+here (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_solver_data}{Solver\+Data}} \texorpdfstring{$\ast$}{*}}]{sd}{, }\item[{realtype}]{t\+\_\+initial}{, }\item[{realtype}]{t\+\_\+final}{}\end{DoxyParamCaption})}
+bool is\+\_\+anything\+\_\+going\+\_\+on\+\_\+here (\begin{DoxyParamCaption}\item[{Solver\+Data \texorpdfstring{$\ast$}{*}}]{sd}{, }\item[{realtype}]{t\+\_\+initial}{, }\item[{realtype}]{t\+\_\+final}{}\end{DoxyParamCaption})}
 
 
 
@@ -493,7 +493,7 @@ int Jac (\begin{DoxyParamCaption}\item[{realtype}]{t}{, }\item[{N\+\_\+\+Vector}
 
 
 
-Compute the \doxylink{struct_jacobian}{Jacobian}. 
+Compute the Jacobian. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -503,7 +503,7 @@ Compute the \doxylink{struct_jacobian}{Jacobian}.
 \hline
 {\em deriv} & Time derivative vector f(t,y) \\
 \hline
-{\em J} & \doxylink{struct_jacobian}{Jacobian} to calculate \\
+{\em J} & Jacobian to calculate \\
 \hline
 {\em solver\+\_\+data} & Pointer to the solver data \\
 \hline
@@ -518,7 +518,7 @@ Compute the \doxylink{struct_jacobian}{Jacobian}.
 Status code 
 \end{DoxyReturn}
 \begin{DoxyRefDesc}{Todo}
-\item[\mbox{\hyperlink{todo__todo000001}{Todo}}]\#83 Figure out how to stop CVODE from resizing the \doxylink{struct_jacobian}{Jacobian} during solving \end{DoxyRefDesc}
+\item[\mbox{\hyperlink{todo__todo000002}{Todo}}]\#83 Figure out how to stop CVODE from resizing the Jacobian during solving \end{DoxyRefDesc}
 
 
 Definition at line \mbox{\hyperlink{camp__solver_8c_source_l00962}{962}} of file \mbox{\hyperlink{camp__solver_8c_source}{camp\+\_\+solver.\+c}}.
@@ -543,15 +543,15 @@ Here is the caller graph for this function\+:
 \index{model\_free@{model\_free}!camp\_solver.c@{camp\_solver.c}}
 \doxysubsubsection{\texorpdfstring{model\_free()}{model\_free()}}
 {\footnotesize\ttfamily \label{camp__solver_8c_a01ab307718c5b5304fc16472d23d999f} 
-void model\+\_\+free (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}}}]{model\+\_\+data}{}\end{DoxyParamCaption})}
+void model\+\_\+free (\begin{DoxyParamCaption}\item[{Model\+Data}]{model\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
-Free a \doxylink{struct_model_data}{Model\+Data} object. 
+Free a Model\+Data object. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em model\+\_\+data} & Pointer to the \doxylink{struct_model_data}{Model\+Data} object to free \\
+{\em model\+\_\+data} & Pointer to the Model\+Data object to free \\
 \hline
 \end{DoxyParams}
 
@@ -574,11 +574,11 @@ void solver\+\_\+free (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast
 
 
 
-Free a \doxylink{struct_solver_data}{Solver\+Data} object. 
+Free a Solver\+Data object. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em solver\+\_\+data} & Pointer to the \doxylink{struct_solver_data}{Solver\+Data} object to free \\
+{\em solver\+\_\+data} & Pointer to the Solver\+Data object to free \\
 \hline
 \end{DoxyParams}
 
@@ -640,7 +640,7 @@ Get solver statistics after an integration attempt.
 \hline
 {\em NLS\+\_\+convergence\+\_\+fails} & Pointer to set to the non-\/linear solver convergence failures \\
 \hline
-{\em DLS\+\_\+\+Jac\+\_\+evals} & Pointer to set to the direct linear solver \doxylink{struct_jacobian}{Jacobian} evaluations \\
+{\em DLS\+\_\+\+Jac\+\_\+evals} & Pointer to set to the direct linear solver Jacobian evaluations \\
 \hline
 {\em DLS\+\_\+\+RHS\+\_\+evals} & Pointer to set to the direct linear solver right-\/hand side evaluations \\
 \hline
@@ -648,7 +648,7 @@ Get solver statistics after an integration attempt.
 \hline
 {\em next\+\_\+time\+\_\+step\+\_\+\+\_\+s} & Pointer to set to the next time step size \mbox{[}s\mbox{]} \\
 \hline
-{\em Jac\+\_\+eval\+\_\+fails} & Number of \doxylink{struct_jacobian}{Jacobian} evaluation failures \\
+{\em Jac\+\_\+eval\+\_\+fails} & Number of Jacobian evaluation failures \\
 \hline
 {\em RHS\+\_\+evals\+\_\+total} & Total calls to {\ttfamily \doxylink{camp__solver_8c_ac55302bc18db0d68d78f543aad6a16c4}{f()}} \\
 \hline
@@ -687,7 +687,7 @@ Allocate and initialize solver objects
 
 
 \begin{DoxyParams}{Parameters}
-{\em solver\+\_\+data} & Pointer to a \doxylink{struct_solver_data}{Solver\+Data} object \\
+{\em solver\+\_\+data} & Pointer to a Solver\+Data object \\
 \hline
 {\em abs\+\_\+tol} & Pointer to array of absolute tolerances \\
 \hline
@@ -720,7 +720,7 @@ void \texorpdfstring{$\ast$}{*} solver\+\_\+new (\begin{DoxyParamCaption}\item[{
 
 Get a new solver object. 
 
-Return a pointer to a new \doxylink{struct_solver_data}{Solver\+Data} object
+Return a pointer to a new Solver\+Data object
 
 
 \begin{DoxyParams}{Parameters}
@@ -762,7 +762,7 @@ Return a pointer to a new \doxylink{struct_solver_data}{Solver\+Data} object
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Pointer to the new \doxylink{struct_solver_data}{Solver\+Data} object 
+Pointer to the new Solver\+Data object 
 \end{DoxyReturn}
 
 
@@ -823,7 +823,7 @@ Reset the timers for solver functions.
 
 
 \begin{DoxyParams}{Parameters}
-{\em solver\+\_\+data} & Pointer to the \doxylink{struct_solver_data}{Solver\+Data} object with timers to reset \\
+{\em solver\+\_\+data} & Pointer to the Solver\+Data object with timers to reset \\
 \hline
 \end{DoxyParams}
 

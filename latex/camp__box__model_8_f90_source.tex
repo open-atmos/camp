@@ -1,0 +1,77 @@
+\doxysection{camp\+\_\+box\+\_\+model.\+F90}
+\hypertarget{camp__box__model_8_f90_source}{}\label{camp__box__model_8_f90_source}\index{camp\_box\_model.F90@{camp\_box\_model.F90}}
+\mbox{\hyperlink{camp__box__model_8_f90}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00001}00001\ \textcolor{comment}{!\ Copyright\ (C)\ 2021\ Barcelona\ Supercomputing\ Center\ and\ University\ of}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00002}00002\ \textcolor{comment}{!\ Illinois\ at\ Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00003}00003\ \textcolor{comment}{!\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00004}00004\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00005}00005\ \textcolor{comment}{!>\ \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00006}00006\ \textcolor{comment}{!>\ The\ camp\_camp\_box\_model\ program}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00007}00007\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00008}00008\ \textcolor{comment}{!>\ Driver\ for\ the\ \(\backslash\)ref\ index\ "{}CAMP"{}\ box\ model}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00009}\mbox{\hyperlink{camp__box__model_8_f90_a52c798c85483ce3a0a89e293edf2effc}{00009}}\ \textcolor{keyword}{program}\ \mbox{\hyperlink{camp__box__model_8_f90_a52c798c85483ce3a0a89e293edf2effc}{camp\_camp\_box\_model}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00010}00010\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00011}00011\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data}{camp\_camp\_box\_model\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00012}00012\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__util}{camp\_util}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00014}00014\ \ \ \textcolor{keywordtype}{implicit\ none}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00016}00016\ \ \ \textcolor{comment}{!\ New-\/line\ character}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00017}00017\ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{parameter}\ ::\ \mbox{\hyperlink{namespacecamp__camp__box__model__data_a379740ff02b3bc2ba3b0a87e44e88a26}{new\_line}}\ =\ char(10)}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00018}00018\ \ \ \textcolor{comment}{!\ Output\ file\ unit}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00019}00019\ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{parameter}\ ::\ output\_file\_unit\ =\ 7}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00021}00021\ \ \ \textcolor{comment}{!\ Config\ file\ list\ path}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00022}00022\ \ \ \textcolor{keywordtype}{character(len=300)}\ ::\ config\_file\_arg}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00023}00023\ \ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ config\_file}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00024}00024\ \ \ \textcolor{comment}{!\ Output\ file\ name}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00025}00025\ \ \ \textcolor{keywordtype}{character(len=300)}\ ::\ output\_file\_arg}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00026}00026\ \ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ output\_file\_prefix,\ output\_file}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00028}00028\ \ \ \textcolor{comment}{!\ The\ box\ model\ data}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00029}00029\ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\_box\_model\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ \mbox{\hyperlink{part__1__code_2box__model_8_f90_a3f8c0234515cc17b2f3e366868b8646b}{box\_model}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00031}00031\ \ \ \textcolor{comment}{!\ Get\ the\ configuration\ and\ output\ file\ names}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00032}00032\ \ \ \textcolor{keywordflow}{if}\ (\ command\_argument\_count(\ )\ /=\ 2\ )\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00033}00033\ \ \ \ \ \textcolor{keyword}{write}(*,*)\ \textcolor{stringliteral}{"{}Usage:\ camp\_box\_model\ box\_model\_config.json\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}output\_file\_prefix"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00035}00035\ \ \ \ \ \textcolor{keyword}{write}(*,*)\ \textcolor{stringliteral}{"{}Output\ files\ created"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00036}00036\ \ \ \ \ \textcolor{keyword}{write}(*,*)\ \textcolor{stringliteral}{"{}\ \ \ output\_file\_prefix\_results.txt:\ Box\ model\ results"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00037}00037\ \ \ \ \ \textcolor{keyword}{write}(*,*)\ \textcolor{stringliteral}{"{}\ \ \ output\_file\_prefix.conf:\ GNU\ Plot\ configuration\ file\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00038}00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}for\ plotting\ results"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00039}00039\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(\ 695622653,\ \textcolor{stringliteral}{"{}Incorrect\ number\ of\ command\ line\ arguments"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00040}00040\ \textcolor{keywordflow}{\ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00041}00041\ \ \ \textcolor{keyword}{call\ }get\_command\_argument(\ 1,\ config\_file\_arg\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00042}00042\ \ \ \textcolor{keyword}{call\ }get\_command\_argument(\ 2,\ output\_file\_arg\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00043}00043\ \ \ config\_file\ \ \ \ \ \ \ \ =\ trim(\ config\_file\_arg\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00044}00044\ \ \ output\_file\_prefix\ =\ trim(\ output\_file\_arg\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00046}00046\ \ \ \textcolor{comment}{!\ Create\ a\ new\ box\ model}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00047}00047\ \ \ \mbox{\hyperlink{part__1__code_2box__model_8_f90_a3f8c0234515cc17b2f3e366868b8646b}{box\_model}}\ =>\ \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\_box\_model\_data\_t}}(\ config\_file\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00049}00049\ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{part__1__code_2box__model_8_f90_a3f8c0234515cc17b2f3e366868b8646b}{box\_model}}\%print(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00051}00051\ \ \ \textcolor{comment}{!\ Open\ the\ output\ file}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00052}00052\ \ \ output\_file\ =\ output\_file\_prefix//\textcolor{stringliteral}{"{}\_results.txt"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00053}00053\ \ \ \textcolor{keyword}{open}(\ unit\ =\ output\_file\_unit,\ file\ =\ output\_file,\ status\ =\ \textcolor{stringliteral}{"{}replace"{}},\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00054}00054\ \ \ \ \ \ \ \ \ action\ =\ \textcolor{stringliteral}{"{}write"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00056}00056\ \ \ \textcolor{comment}{!\ Run\ the\ camp-\/chem\ box\ model}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00057}00057\ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{part__1__code_2box__model_8_f90_a3f8c0234515cc17b2f3e366868b8646b}{box\_model}}\%run(\ output\_file\_unit\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00059}00059\ \ \ \textcolor{comment}{!\ Close\ the\ output\ file}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00060}00060\ \ \ \textcolor{keyword}{close}(\ output\_file\_unit\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00062}00062\ \ \ \textcolor{comment}{!\ Create\ the\ GNU\ Plot\ config\ file}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00063}00063\ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{part__1__code_2box__model_8_f90_a3f8c0234515cc17b2f3e366868b8646b}{box\_model}}\%create\_gnuplot\_config\_file(\ output\_file\_prefix\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00065}00065\ \ \ \textcolor{comment}{!\ Free\ the\ box\ model\ and\ local\ variables}}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00066}00066\ \ \ \textcolor{keyword}{deallocate}(\ \mbox{\hyperlink{part__1__code_2box__model_8_f90_a3f8c0234515cc17b2f3e366868b8646b}{box\_model}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00067}00067\ \ \ \textcolor{keyword}{deallocate}(\ config\_file\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00068}00068\ \ \ \textcolor{keyword}{deallocate}(\ output\_file\_prefix\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00069}00069\ \ \ \textcolor{keyword}{deallocate}(\ output\_file\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model_8_f90_source_l00071}00071\ \textcolor{keyword}{end\ program\ }\mbox{\hyperlink{camp__box__model_8_f90_a52c798c85483ce3a0a89e293edf2effc}{camp\_camp\_box\_model}}}
+
+\end{DoxyCode}

@@ -15,8 +15,8 @@
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <math.h>}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_jacobian_8h}{../Jacobian.h}}"{}}}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{sub__models_8h}{../sub\_models.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ <camp/Jacobian.h>}}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00015}00015\ \textcolor{preprocessor}{\#include\ <camp/sub\_models.h>}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00016}00016\ }
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00017}00017\ \textcolor{comment}{//\ TODO\ Lookup\ environmental\ indices\ during\ initialization}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00018}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{00018}}\ \textcolor{preprocessor}{\#define\ TEMPERATURE\_K\_\ env\_data[0]}}
@@ -82,9 +82,9 @@
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00078}00078\ \textcolor{comment}{\ *\ \(\backslash\)param\ sub\_model\_float\_data\ Pointer\ to\ the\ sub\ model\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00079}00079\ \textcolor{comment}{\ *\ \(\backslash\)param\ jac\ Jacobian}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00080}00080\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00081}\mbox{\hyperlink{sub__models_8h_a0c47a7f4b91fa19f71a1a69237a6754e}{00081}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a0c47a7f4b91fa19f71a1a69237a6754e}{sub\_model\_ZSR\_aerosol\_water\_get\_used\_jac\_elem}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00081}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a0c47a7f4b91fa19f71a1a69237a6754e}{00081}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a0c47a7f4b91fa19f71a1a69237a6754e}{sub\_model\_ZSR\_aerosol\_water\_get\_used\_jac\_elem}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_float\_data,}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ *jac)\ \{}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Jacobian\ *jac)\ \{}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00084}00084\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ sub\_model\_int\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00085}00085\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ sub\_model\_float\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00086}00086\ }
@@ -134,9 +134,9 @@
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00130}00130\ \textcolor{comment}{\ *\ \(\backslash\)param\ deriv\_ids\ Indices\ for\ state\ array\ variables\ on\ the\ solver\ state\ array}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00131}00131\ \textcolor{comment}{\ *\ \(\backslash\)param\ jac\ Jacobian}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00132}00132\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00133}\mbox{\hyperlink{sub__models_8h_af42c83e6bae3321e17f4bf21620e36ed}{00133}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_af42c83e6bae3321e17f4bf21620e36ed}{sub\_model\_ZSR\_aerosol\_water\_update\_ids}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00133}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_af42c83e6bae3321e17f4bf21620e36ed}{00133}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_af42c83e6bae3321e17f4bf21620e36ed}{sub\_model\_ZSR\_aerosol\_water\_update\_ids}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00134}00134\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_float\_data,}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *deriv\_ids,\ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac)\ \{}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00135}00135\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *deriv\_ids,\ Jacobian\ jac)\ \{}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00136}00136\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ sub\_model\_int\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00137}00137\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ sub\_model\_float\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00138}00138\ }
@@ -190,13 +190,13 @@
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00186}00186\ \textcolor{comment}{\ *\ \(\backslash\)param\ sub\_model\_env\_data\ Pointer\ to\ the\ sub\ model\ environment-\/dependent\ data}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00187}00187\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00188}00188\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00189}\mbox{\hyperlink{sub__models_8h_a915b2885008bfb4bd6c9c37efd6e8d82}{00189}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a915b2885008bfb4bd6c9c37efd6e8d82}{sub\_model\_ZSR\_aerosol\_water\_update\_env\_state}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00189}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a915b2885008bfb4bd6c9c37efd6e8d82}{00189}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a915b2885008bfb4bd6c9c37efd6e8d82}{sub\_model\_ZSR\_aerosol\_water\_update\_env\_state}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_float\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_env\_data,}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ModelData\ *model\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00193}00193\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ sub\_model\_int\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00194}00194\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ sub\_model\_float\_data;}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00195}00195\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00195}00195\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>grid\_cell\_env;}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00196}00196\ }
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00197}00197\ \ \ \textcolor{comment}{//\ Calculate\ PPM\_TO\_RH\_}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00198}00198\ \ \ \textcolor{comment}{//\ From\ MOSAIC\ code\ -\/\ reference\ to\ Seinfeld\ \&\ Pandis\ page\ 181}}
@@ -217,11 +217,11 @@
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00213}00213\ \textcolor{comment}{\ *\ \(\backslash\)param\ sub\_model\_env\_data\ Pointer\ to\ the\ sub\ model\ environment-\/dependent\ data}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00214}00214\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00215}00215\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00216}\mbox{\hyperlink{sub__models_8h_a6639a32646d84e02917b64167f36ea89}{00216}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a6639a32646d84e02917b64167f36ea89}{sub\_model\_ZSR\_aerosol\_water\_calculate}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00216}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a6639a32646d84e02917b64167f36ea89}{00216}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a6639a32646d84e02917b64167f36ea89}{sub\_model\_ZSR\_aerosol\_water\_calculate}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_float\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_env\_data,}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data)\ \{}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00220}00220\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ModelData\ *model\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00220}00220\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>grid\_cell\_state;}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00221}00221\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ sub\_model\_int\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00222}00222\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ sub\_model\_float\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00223}00223\ }
@@ -315,16 +315,16 @@
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00311}00311\ \textcolor{comment}{\ *\ \(\backslash\)param\ time\_step\ Current\ time\ step\ [s]}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00312}00312\ \textcolor{comment}{\ */}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00313}00313\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_SUNDIALS}}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00314}\mbox{\hyperlink{sub__models_8h_aa6bf886e4a9fadb02913dab07e19018b}{00314}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aa6bf886e4a9fadb02913dab07e19018b}{sub\_model\_ZSR\_aerosol\_water\_get\_jac\_contrib}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00314}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aa6bf886e4a9fadb02913dab07e19018b}{00314}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_aa6bf886e4a9fadb02913dab07e19018b}{sub\_model\_ZSR\_aerosol\_water\_get\_jac\_contrib}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_float\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_env\_data,}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ModelData\ *model\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ realtype\ *J,}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ time\_step)\ \{}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00320}00320\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ sub\_model\_int\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00321}00321\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ sub\_model\_float\_data;}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00322}00322\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00323}00323\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00322}00322\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>grid\_cell\_state;}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00323}00323\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>grid\_cell\_env;}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00324}00324\ }
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00325}00325\ \ \ \textcolor{comment}{//\ Calculate\ the\ water\ activity-\/-\/-\/i.e.,\ relative\ humidity\ (0-\/1)}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00326}00326\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ a\_w\ =\ \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a895b6a254902b0817da027532796db35}{PPM\_TO\_RH\_}}\ *\ state[\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a75ac531220686f1130f21aca98adf72f}{GAS\_WATER\_ID\_}}];}
@@ -446,7 +446,7 @@
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00442}00442\ \textcolor{comment}{\ *\ \(\backslash\)param\ sub\_model\_int\_data\ Pointer\ to\ the\ sub\ model\ integer\ data}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00443}00443\ \textcolor{comment}{\ *\ \(\backslash\)param\ sub\_model\_float\_data\ Pointer\ to\ the\ sub\ model\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00444}00444\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00445}\mbox{\hyperlink{sub__models_8h_a74a95ee9cc01c0905493fcb19e00c8b0}{00445}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a74a95ee9cc01c0905493fcb19e00c8b0}{sub\_model\_ZSR\_aerosol\_water\_print}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
+\DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00445}\mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a74a95ee9cc01c0905493fcb19e00c8b0}{00445}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{sub__model___z_s_r__aerosol__water_8c_a74a95ee9cc01c0905493fcb19e00c8b0}{sub\_model\_ZSR\_aerosol\_water\_print}}(\textcolor{keywordtype}{int}\ *sub\_model\_int\_data,}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00446}00446\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *sub\_model\_float\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00447}00447\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ sub\_model\_int\_data;}
 \DoxyCodeLine{\Hypertarget{sub__model___z_s_r__aerosol__water_8c_source_l00448}00448\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ sub\_model\_float\_data;}

@@ -15,7 +15,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <math.h>}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{rxns_8h}{../rxns.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ <camp/rxns.h>}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00015}00015\ }
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00016}00016\ \textcolor{comment}{//\ TODO\ Lookup\ environmental\ indices\ during\ initialization}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00017}\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{00017}}\ \textcolor{preprocessor}{\#define\ TEMPERATURE\_K\_\ env\_data[0]}}
@@ -52,9 +52,9 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00048}00048\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00049}00049\ \textcolor{comment}{\ *\ \(\backslash\)param\ jac\ Jacobian}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00050}00050\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00051}\mbox{\hyperlink{rxns_8h_a5160c5060999537531f810c0651dd641}{00051}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a5160c5060999537531f810c0651dd641}{rxn\_condensed\_phase\_arrhenius\_get\_used\_jac\_elem}}(\textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00051}\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a5160c5060999537531f810c0651dd641}{00051}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a5160c5060999537531f810c0651dd641}{rxn\_condensed\_phase\_arrhenius\_get\_used\_jac\_elem}}(\textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ *jac)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Jacobian\ *jac)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00054}00054\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00055}00055\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00056}00056\ }
@@ -95,8 +95,8 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00091}00091\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_int\_data\ Pointer\ to\ the\ reaction\ integer\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00092}00092\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00093}00093\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00094}\mbox{\hyperlink{rxns_8h_ab83f8527d3603f1aab12d721d33eb214}{00094}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_ab83f8527d3603f1aab12d721d33eb214}{rxn\_condensed\_phase\_arrhenius\_update\_ids}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *deriv\_ids,\ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac,}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00094}\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_ab83f8527d3603f1aab12d721d33eb214}{00094}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_ab83f8527d3603f1aab12d721d33eb214}{rxn\_condensed\_phase\_arrhenius\_update\_ids}}(ModelData\ *model\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *deriv\_ids,\ Jacobian\ jac,}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00098}00098\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
@@ -157,13 +157,13 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00153}00153\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00154}00154\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_env\_data\ Pointer\ to\ the\ environment-\/dependent\ parameters}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00155}00155\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00156}\mbox{\hyperlink{rxns_8h_a7c243d69c88a04756e539c34fef8d8b1}{00156}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a7c243d69c88a04756e539c34fef8d8b1}{rxn\_condensed\_phase\_arrhenius\_update\_env\_state}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00156}\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a7c243d69c88a04756e539c34fef8d8b1}{00156}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a7c243d69c88a04756e539c34fef8d8b1}{rxn\_condensed\_phase\_arrhenius\_update\_env\_state}}(ModelData\ *model\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_env\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00160}00160\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00161}00161\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00162}00162\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00162}00162\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>grid\_cell\_env;}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00163}00163\ }
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00164}00164\ \ \ \textcolor{comment}{//\ Calculate\ the\ rate\ constant\ in\ (M\ or\ mol/m3)}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00165}00165\ \ \ \textcolor{comment}{//\ k\ =\ A*exp(C/T)\ *\ (T/D)\string^B\ *\ (1+E*P)}}
@@ -186,12 +186,12 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00182}00182\ \textcolor{comment}{\ */}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00183}00183\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_SUNDIALS}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00184}\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a4186c08bd2d6635c4e80c28482bc5df6}{00184}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a4186c08bd2d6635c4e80c28482bc5df6}{rxn\_condensed\_phase\_arrhenius\_calc\_deriv\_contrib}}(}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00185}00185\ \ \ \ \ \mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ \mbox{\hyperlink{struct_time_derivative}{TimeDerivative}}\ time\_deriv,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00185}00185\ \ \ \ \ ModelData\ *model\_data,\ TimeDerivative\ time\_deriv,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00186}00186\ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,\ \textcolor{keywordtype}{double}\ *rxn\_env\_data,\ \textcolor{keywordtype}{double}\ time\_step)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00187}00187\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00188}00188\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00189}00189\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00190}00190\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00189}00189\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>grid\_cell\_state;}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00190}00190\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>grid\_cell\_env;}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00191}00191\ }
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00192}00192\ \ \ \textcolor{comment}{//\ Calculate\ derivative\ contributions\ for\ each\ aerosol\ phase}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00193}00193\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0,\ i\_deriv\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}};\ i\_phase++)\ \{}
@@ -202,7 +202,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00198}00198\ }
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00199}00199\ \ \ \ \ \ \ \textcolor{comment}{//\ For\ aqueous\ reactions,\ if\ no\ aerosol\ water\ is\ present,\ no\ reaction}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00200}00200\ \ \ \ \ \ \ \textcolor{comment}{//\ occurs}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00201}00201\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (unit\_conv\ <=\ \mbox{\hyperlink{camp__common_8h_ac328e551bde3d39b6d7b8cc9e048d941}{ZERO}})\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00201}00201\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (unit\_conv\ <=\ ZERO)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00202}00202\ \ \ \ \ \ \ \ \ i\_deriv\ +=\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}\ +\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00203}00203\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00204}00204\ \ \ \ \ \ \ \}}
@@ -254,12 +254,12 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00250}00250\ \textcolor{comment}{\ */}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00251}00251\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_SUNDIALS}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00252}\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a670e87785981a83efecb80fa1c56ff0e}{00252}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a670e87785981a83efecb80fa1c56ff0e}{rxn\_condensed\_phase\_arrhenius\_calc\_jac\_contrib}}(}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00253}00253\ \ \ \ \ \mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00253}00253\ \ \ \ \ ModelData\ *model\_data,\ Jacobian\ jac,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00254}00254\ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,\ \textcolor{keywordtype}{double}\ *rxn\_env\_data,\ \textcolor{keywordtype}{double}\ time\_step)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00255}00255\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00256}00256\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00257}00257\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00258}00258\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00257}00257\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>grid\_cell\_state;}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00258}00258\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>grid\_cell\_env;}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00259}00259\ }
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00260}00260\ \ \ \textcolor{comment}{//\ Calculate\ Jacobian\ contributions\ for\ each\ aerosol\ phase}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00261}00261\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0,\ i\_jac\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_adf4b84135880d5ac73ce37df877d91fb}{NUM\_AERO\_PHASE\_}};\ i\_phase++)\ \{}
@@ -270,7 +270,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00266}00266\ }
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00267}00267\ \ \ \ \ \ \ \textcolor{comment}{//\ For\ aqueous\ reactions,\ if\ no\ aerosol\ water\ is\ present,\ no\ reaction}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00268}00268\ \ \ \ \ \ \ \textcolor{comment}{//\ occurs}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00269}00269\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (unit\_conv\ <=\ \mbox{\hyperlink{camp__common_8h_ac328e551bde3d39b6d7b8cc9e048d941}{ZERO}})\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00269}00269\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (unit\_conv\ <=\ ZERO)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00270}00270\ \ \ \ \ \ \ \ \ i\_jac\ +=\ (\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}\ +\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}})\ *\ (\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}\ +\ 1);}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00271}00271\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00272}00272\ \ \ \ \ \ \ \}}
@@ -298,7 +298,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ i\_jac++;}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00296}00296\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00297}00297\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++),\ \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}},}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00297}00297\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++),\ JACOBIAN\_LOSS,}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rate\ /\ (\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a32583318a6f42e1992ca6faf76d8c6bf}{KGM3\_TO\_MOLM3\_}}(i\_react\_dep)\ *\ unit\_conv));}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00299}00299\ \ \ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00300}00300\ \ \ \ \ \ \ \textcolor{comment}{//\ For\ product\ dependence\ on\ reactants}}
@@ -308,7 +308,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00304}00304\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00305}00305\ \ \ \ \ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00306}00306\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++),\ \mbox{\hyperlink{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}{JACOBIAN\_PRODUCTION}},}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++),\ JACOBIAN\_PRODUCTION,}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ rate\ *\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\_}}(i\_prod\_dep)\ /}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a32583318a6f42e1992ca6faf76d8c6bf}{KGM3\_TO\_MOLM3\_}}(\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}\ +\ i\_prod\_dep)\ *\ unit\_conv));}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00310}00310\ \ \ \ \ \ \ \}}
@@ -335,7 +335,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00331}00331\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00332}00332\ \ \ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00333}00333\ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++),\ \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}},}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++),\ JACOBIAN\_LOSS,}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ -\/(\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}\ -\/\ 1)\ *\ rate\ /\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a32583318a6f42e1992ca6faf76d8c6bf}{KGM3\_TO\_MOLM3\_}}(i\_react\_dep));}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00336}00336\ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00337}00337\ \ \ \ \ \textcolor{comment}{//\ Dependence\ of\ products\ on\ aerosol-\/phase\ water}}
@@ -345,7 +345,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00341}00341\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00342}00342\ \ \ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00343}00343\ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_jac++),}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}{JACOBIAN\_PRODUCTION}},}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ JACOBIAN\_PRODUCTION,}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/(\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}\ -\/\ 1)\ *\ rate\ *\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\_}}(i\_prod\_dep)\ /}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00346}00346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a32583318a6f42e1992ca6faf76d8c6bf}{KGM3\_TO\_MOLM3\_}}(\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}}\ +\ i\_prod\_dep));}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00347}00347\ \ \ \ \ \}}
@@ -360,7 +360,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00356}00356\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_int\_data\ Pointer\ to\ the\ reaction\ integer\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00357}00357\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00358}00358\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00359}\mbox{\hyperlink{rxns_8h_aadd9ba2b3db5f9cb8f3420663bd7fa48}{00359}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_aadd9ba2b3db5f9cb8f3420663bd7fa48}{rxn\_condensed\_phase\_arrhenius\_print}}(\textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00359}\mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_aadd9ba2b3db5f9cb8f3420663bd7fa48}{00359}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__condensed__phase__arrhenius_8c_aadd9ba2b3db5f9cb8f3420663bd7fa48}{rxn\_condensed\_phase\_arrhenius\_print}}(\textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00361}00361\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__arrhenius_8c_source_l00362}00362\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}

@@ -10,7 +10,7 @@ Include dependency graph for rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+c\+
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{rxn__condensed__phase__photolysis_8c__incl}
+\includegraphics[width=340pt]{rxn__condensed__phase__photolysis_8c__incl}
 \end{center}
 \end{figure}
 \doxysubsubsection*{Macros}
@@ -53,18 +53,18 @@ Include dependency graph for rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+c\+
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_a84c0567001266ea44726aba908ef7ad8}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
-\begin{DoxyCompactList}\small\item\em Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_aa418e878e03cc2a119b01b2e6d9f0556}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
+void \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_a84c0567001266ea44726aba908ef7ad8}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, Jacobian \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Flag Jacobian elements used by this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_aa418e878e03cc2a119b01b2e6d9f0556}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+update\+\_\+ids}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, Jacobian jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
 bool \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_ae0f542358a2ae57790d3cc2e9ca4c689}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+update\+\_\+data}} (void \texorpdfstring{$\ast$}{*}update\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update reaction data. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_a78cd0a76091e335b5a34b63caae7eec0}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_a78cd0a76091e335b5a34b63caae7eec0}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+update\+\_\+env\+\_\+state}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update reaction data for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_a488a8468d88330e5b1a1ace8eba89278}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, double time\+\_\+step)
+void \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_a488a8468d88330e5b1a1ace8eba89278}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+calc\+\_\+deriv\+\_\+contrib}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Time\+Derivative time\+\_\+deriv, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, double time\+\_\+step)
 \begin{DoxyCompactList}\small\item\em Calculate contributions to the time derivative f(t,y) from this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_ade5f8de096d11339d18eaf86b4d28c4a}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, double time\+\_\+step)
-\begin{DoxyCompactList}\small\item\em Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_ade5f8de096d11339d18eaf86b4d28c4a}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+calc\+\_\+jac\+\_\+contrib}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Jacobian jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the Jacobian from this reaction. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_a40bd1e295c7eb3d8d84e84bda99497d3}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+print}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the Condensed Phase photolysis reaction parameters. \end{DoxyCompactList}\item 
 void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_a014ce6da4626f4ecf16d79f420a46788}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+create\+\_\+rate\+\_\+update\+\_\+data}} ()
@@ -296,7 +296,7 @@ Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_source_
 \index{rxn\_condensed\_phase\_photolysis\_calc\_deriv\_contrib@{rxn\_condensed\_phase\_photolysis\_calc\_deriv\_contrib}!rxn\_condensed\_phase\_photolysis.c@{rxn\_condensed\_phase\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_photolysis\_calc\_deriv\_contrib()}{rxn\_condensed\_phase\_photolysis\_calc\_deriv\_contrib()}}
 {\footnotesize\ttfamily \label{rxn__condensed__phase__photolysis_8c_a488a8468d88330e5b1a1ace8eba89278} 
-void rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{double}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Time\+Derivative}]{time\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{double}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
@@ -306,7 +306,7 @@ Calculate contributions to the time derivative f(t,y) from this reaction.
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data, including the state array \\
 \hline
-{\em time\+\_\+deriv} & \doxylink{struct_time_derivative}{Time\+Derivative} object \\
+{\em time\+\_\+deriv} & Time\+Derivative object \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -329,21 +329,29 @@ Here is the call graph for this function\+:
 \includegraphics[width=333pt]{rxn__condensed__phase__photolysis_8c_a488a8468d88330e5b1a1ace8eba89278_cgraph}
 \end{center}
 \end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__condensed__phase__photolysis_8c_a488a8468d88330e5b1a1ace8eba89278_icgraph}
+\end{center}
+\end{figure}
 \Hypertarget{rxn__condensed__phase__photolysis_8c_ade5f8de096d11339d18eaf86b4d28c4a}\index{rxn\_condensed\_phase\_photolysis.c@{rxn\_condensed\_phase\_photolysis.c}!rxn\_condensed\_phase\_photolysis\_calc\_jac\_contrib@{rxn\_condensed\_phase\_photolysis\_calc\_jac\_contrib}}
 \index{rxn\_condensed\_phase\_photolysis\_calc\_jac\_contrib@{rxn\_condensed\_phase\_photolysis\_calc\_jac\_contrib}!rxn\_condensed\_phase\_photolysis.c@{rxn\_condensed\_phase\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_photolysis\_calc\_jac\_contrib()}{rxn\_condensed\_phase\_photolysis\_calc\_jac\_contrib()}}
 {\footnotesize\ttfamily \label{rxn__condensed__phase__photolysis_8c_ade5f8de096d11339d18eaf86b4d28c4a} 
-void rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{double}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Jacobian}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{double}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
-Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. 
+Calculate contributions to the Jacobian from this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em jac} & Reaction \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Reaction Jacobian \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -364,6 +372,14 @@ Here is the call graph for this function\+:
 \begin{center}
 \leavevmode
 \includegraphics[width=330pt]{rxn__condensed__phase__photolysis_8c_ade5f8de096d11339d18eaf86b4d28c4a_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__condensed__phase__photolysis_8c_ade5f8de096d11339d18eaf86b4d28c4a_icgraph}
 \end{center}
 \end{figure}
 \Hypertarget{rxn__condensed__phase__photolysis_8c_a014ce6da4626f4ecf16d79f420a46788}\index{rxn\_condensed\_phase\_photolysis.c@{rxn\_condensed\_phase\_photolysis.c}!rxn\_condensed\_phase\_photolysis\_create\_rate\_update\_data@{rxn\_condensed\_phase\_photolysis\_create\_rate\_update\_data}}
@@ -387,11 +403,11 @@ Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8c_source_
 \index{rxn\_condensed\_phase\_photolysis\_get\_used\_jac\_elem@{rxn\_condensed\_phase\_photolysis\_get\_used\_jac\_elem}!rxn\_condensed\_phase\_photolysis.c@{rxn\_condensed\_phase\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_photolysis\_get\_used\_jac\_elem()}{rxn\_condensed\_phase\_photolysis\_get\_used\_jac\_elem()}}
 {\footnotesize\ttfamily \label{rxn__condensed__phase__photolysis_8c_a84c0567001266ea44726aba908ef7ad8} 
-void rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
+void rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{Jacobian \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
 
 
 
-Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. 
+Flag Jacobian elements used by this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -399,7 +415,7 @@ Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction.
 \hline
 {\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 \end{DoxyParams}
 
@@ -522,7 +538,7 @@ Here is the caller graph for this function\+:
 \index{rxn\_condensed\_phase\_photolysis\_update\_env\_state@{rxn\_condensed\_phase\_photolysis\_update\_env\_state}!rxn\_condensed\_phase\_photolysis.c@{rxn\_condensed\_phase\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_photolysis\_update\_env\_state()}{rxn\_condensed\_phase\_photolysis\_update\_env\_state()}}
 {\footnotesize\ttfamily \label{rxn__condensed__phase__photolysis_8c_a78cd0a76091e335b5a34b63caae7eec0} 
-void rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
+void rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -557,7 +573,7 @@ Here is the caller graph for this function\+:
 \index{rxn\_condensed\_phase\_photolysis\_update\_ids@{rxn\_condensed\_phase\_photolysis\_update\_ids}!rxn\_condensed\_phase\_photolysis.c@{rxn\_condensed\_phase\_photolysis.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_condensed\_phase\_photolysis\_update\_ids()}{rxn\_condensed\_phase\_photolysis\_update\_ids()}}
 {\footnotesize\ttfamily \label{rxn__condensed__phase__photolysis_8c_aa418e878e03cc2a119b01b2e6d9f0556} 
-void rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
+void rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{Jacobian}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -569,7 +585,7 @@ Update the time derivative and Jacbobian array indices.
 \hline
 {\em deriv\+\_\+ids} & Id of each state variable in the derivative array \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline

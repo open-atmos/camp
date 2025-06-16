@@ -10,7 +10,7 @@ Include dependency graph for rxn\+\_\+first\+\_\+order\+\_\+loss.\+c\+:
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{rxn__first__order__loss_8c__incl}
+\includegraphics[width=340pt]{rxn__first__order__loss_8c__incl}
 \end{center}
 \end{figure}
 \doxysubsubsection*{Macros}
@@ -43,18 +43,18 @@ Include dependency graph for rxn\+\_\+first\+\_\+order\+\_\+loss.\+c\+:
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{rxn__first__order__loss_8c_a73e9594a2ad684000b2cbef37ab6f195}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
-\begin{DoxyCompactList}\small\item\em Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__first__order__loss_8c_ae3eced0147f7ef45e55762930c86bf56}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
+void \mbox{\hyperlink{rxn__first__order__loss_8c_a73e9594a2ad684000b2cbef37ab6f195}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, Jacobian \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Flag Jacobian elements used by this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__first__order__loss_8c_ae3eced0147f7ef45e55762930c86bf56}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+update\+\_\+ids}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, Jacobian jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
 bool \mbox{\hyperlink{rxn__first__order__loss_8c_aeb0a48270ecb60c44746b4c5fce85017}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+update\+\_\+data}} (void \texorpdfstring{$\ast$}{*}update\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update reaction data. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__first__order__loss_8c_ac31fd29a881698e3bb9f30b4b91ffddb}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{rxn__first__order__loss_8c_ac31fd29a881698e3bb9f30b4b91ffddb}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+update\+\_\+env\+\_\+state}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update reaction data for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__first__order__loss_8c_ac1d2c5d3bf68d6adcdc4183ba340175d}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+void \mbox{\hyperlink{rxn__first__order__loss_8c_ac1d2c5d3bf68d6adcdc4183ba340175d}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+calc\+\_\+deriv\+\_\+contrib}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Time\+Derivative time\+\_\+deriv, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
 \begin{DoxyCompactList}\small\item\em Calculate contributions to the time derivative $f(t,y)$ from this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__first__order__loss_8c_a07413cad7e1d96989ea035941a53e915}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
-\begin{DoxyCompactList}\small\item\em Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__first__order__loss_8c_a07413cad7e1d96989ea035941a53e915}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+calc\+\_\+jac\+\_\+contrib}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Jacobian jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the Jacobian from this reaction. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{rxn__first__order__loss_8c_a5ee9277b28f90b141ec018e086fc5fa3}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+print}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the reaction parameters. \end{DoxyCompactList}\item 
 void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{rxn__first__order__loss_8c_aaecb66d7db7eb472bb74b796e17d1ed9}{rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+create\+\_\+rate\+\_\+update\+\_\+data}} ()
@@ -200,7 +200,7 @@ Definition at line \mbox{\hyperlink{rxn__first__order__loss_8c_source_l00017}{17
 \index{rxn\_first\_order\_loss\_calc\_deriv\_contrib@{rxn\_first\_order\_loss\_calc\_deriv\_contrib}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_first\_order\_loss\_calc\_deriv\_contrib()}{rxn\_first\_order\_loss\_calc\_deriv\_contrib()}}
 {\footnotesize\ttfamily \label{rxn__first__order__loss_8c_ac1d2c5d3bf68d6adcdc4183ba340175d} 
-void rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Time\+Derivative}]{time\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
@@ -210,7 +210,7 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data, including the state array \\
 \hline
-{\em time\+\_\+deriv} & \doxylink{struct_time_derivative}{Time\+Derivative} object \\
+{\em time\+\_\+deriv} & Time\+Derivative object \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -245,17 +245,17 @@ Here is the caller graph for this function\+:
 \index{rxn\_first\_order\_loss\_calc\_jac\_contrib@{rxn\_first\_order\_loss\_calc\_jac\_contrib}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_first\_order\_loss\_calc\_jac\_contrib()}{rxn\_first\_order\_loss\_calc\_jac\_contrib()}}
 {\footnotesize\ttfamily \label{rxn__first__order__loss_8c_a07413cad7e1d96989ea035941a53e915} 
-void rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Jacobian}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
-Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. 
+Calculate contributions to the Jacobian from this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em jac} & Reaction \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Reaction Jacobian \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -307,11 +307,11 @@ Definition at line \mbox{\hyperlink{rxn__first__order__loss_8c_source_l00208}{20
 \index{rxn\_first\_order\_loss\_get\_used\_jac\_elem@{rxn\_first\_order\_loss\_get\_used\_jac\_elem}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_first\_order\_loss\_get\_used\_jac\_elem()}{rxn\_first\_order\_loss\_get\_used\_jac\_elem()}}
 {\footnotesize\ttfamily \label{rxn__first__order__loss_8c_a73e9594a2ad684000b2cbef37ab6f195} 
-void rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
+void rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{Jacobian \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
 
 
 
-Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. 
+Flag Jacobian elements used by this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -319,7 +319,7 @@ Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction.
 \hline
 {\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 \end{DoxyParams}
 
@@ -442,7 +442,7 @@ Here is the caller graph for this function\+:
 \index{rxn\_first\_order\_loss\_update\_env\_state@{rxn\_first\_order\_loss\_update\_env\_state}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_first\_order\_loss\_update\_env\_state()}{rxn\_first\_order\_loss\_update\_env\_state()}}
 {\footnotesize\ttfamily \label{rxn__first__order__loss_8c_ac31fd29a881698e3bb9f30b4b91ffddb} 
-void rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
+void rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -477,7 +477,7 @@ Here is the caller graph for this function\+:
 \index{rxn\_first\_order\_loss\_update\_ids@{rxn\_first\_order\_loss\_update\_ids}!rxn\_first\_order\_loss.c@{rxn\_first\_order\_loss.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_first\_order\_loss\_update\_ids()}{rxn\_first\_order\_loss\_update\_ids()}}
 {\footnotesize\ttfamily \label{rxn__first__order__loss_8c_ae3eced0147f7ef45e55762930c86bf56} 
-void rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
+void rxn\+\_\+first\+\_\+order\+\_\+loss\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{Jacobian}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -489,7 +489,7 @@ Update the time derivative and Jacbobian array indices.
 \hline
 {\em deriv\+\_\+ids} & Id of each state variable in the derivative array \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline

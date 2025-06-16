@@ -1,9 +1,0 @@
-<map id="sub_model_print_data" name="sub_model_print_data">
-<area shape="rect" id="Node000001" title="Print the sub model data." alt="" coords="5,55,154,80"/>
-<area shape="rect" id="Node000002" href="$sub__model___p_d_fi_t_e_8c.html#a57f2820ce385881014fed09a82ae5364" title="Print the PDFiTE Activity sub model parameters." alt="" coords="204,5,372,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,51,215,33,217,38,138,57"/>
-<area shape="rect" id="Node000003" href="$sub__model___u_n_i_f_a_c_8c.html#ac47310b67585f52b71ff6aac1c603ba5" title="Print the sub model data." alt="" coords="202,55,375,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="154,65,186,65,186,70,154,70"/>
-<area shape="rect" id="Node000004" href="$sub__model___z_s_r__aerosol__water_8c.html#a74a95ee9cc01c0905493fcb19e00c8b0" title="Print the ZSR Aerosol Water sub model parameters." alt="" coords="205,104,372,145"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="130,78,198,97,196,102,128,84"/>
-</map>

@@ -1,0 +1,323 @@
+\doxysection{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t Type Reference}
+\hypertarget{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{}\label{structcamp__camp__box__model__data_1_1camp__box__model__data__t}\index{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}}
+
+
+CAMP Box model.  
+
+
+
+
+Collaboration diagram for camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{structcamp__camp__box__model__data_1_1camp__box__model__data__t__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a37bc380f44c70232c81955a9fc6e8121}{run}} (this, output\+\_\+file\+\_\+unit)
+\begin{DoxyCompactList}\small\item\em Run the box model. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a2a62bfdd73b71d1296ef7de2d7bb5731}{create\+\_\+gnuplot\+\_\+config\+\_\+file}} (this, file\+\_\+prefix)
+\begin{DoxyCompactList}\small\item\em Create a plotting script for the results. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a0316058c854ee1eae8c2dfc20d7ef405}{print}} (this, file\+\_\+unit)
+\begin{DoxyCompactList}\small\item\em Print the box model configuration. \end{DoxyCompactList}\item 
+final \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_ad3755a4c5a62c31db52bdc50edd14311}{finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the box model. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+type(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+state\+\_\+t}}), pointer \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_aa7b3e8cff278ff5551df841b581ae955}{camp\+\_\+state}}
+\begin{DoxyCompactList}\small\item\em CAMP state. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+state\+\_\+t}}), pointer \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a968ad9789d9dffadca9c8a0d66533aa2}{initial\+\_\+camp\+\_\+state}}
+\begin{DoxyCompactList}\small\item\em Initial CAMP state. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), dimension(\+:), allocatable \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a46e29d47d9a0027e4b7454beda08b605}{spec\+\_\+names}}
+\begin{DoxyCompactList}\small\item\em State species names. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a3e88b76ca346b3760da516e87224d7a3}{num\+\_\+steps}}
+\begin{DoxyCompactList}\small\item\em Number of time steps. \end{DoxyCompactList}\item 
+real(kind=dp) \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_af40319cbc6a518546158445f39d3e0a1}{time\+\_\+step\+\_\+\+\_\+s}}
+\begin{DoxyCompactList}\small\item\em Time step length \mbox{[}s\mbox{]}. \end{DoxyCompactList}\item 
+real(kind=dp) \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a9f8506dfbe12391e4236243d8a0c2ff7}{total\+\_\+time\+\_\+\+\_\+s}}
+\begin{DoxyCompactList}\small\item\em Total integration time \mbox{[}s\mbox{]}. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\+\_\+t}}) \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_adf0b9fbe6d541b74610f4b0414340e3e}{temperature\+\_\+\+\_\+k}}
+\begin{DoxyCompactList}\small\item\em Temperature \mbox{[}K\mbox{]} profile. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\+\_\+t}}) \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a59d863145f041556e85a5b3a38d7b95a}{pressure\+\_\+\+\_\+pa}}
+\begin{DoxyCompactList}\small\item\em Pressure \mbox{[}Pa\mbox{]} profile. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1rxn__profile__t}{rxn\+\_\+profile\+\_\+t}}), dimension(\+:), allocatable \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_ade315f8e34288ac856f15de4ca096bde}{rxn\+\_\+profiles}}
+\begin{DoxyCompactList}\small\item\em Reaction profiles. \end{DoxyCompactList}\item 
+type(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{aero\+\_\+rep\+\_\+profile\+\_\+t}}), dimension(\+:), allocatable \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_ad2630734faa71cf2748c64422a5e8589}{aero\+\_\+rep\+\_\+profiles}}
+\begin{DoxyCompactList}\small\item\em Aerosol representation profiles. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+type(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), pointer \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a687ae68564811b525538fed49e64a554}{camp\+\_\+core}}
+\begin{DoxyCompactList}\small\item\em CAMP core. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+CAMP Box model. 
+
+Constructor for \doxylink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t}. 
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00136}{136}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structcamp__camp__box__model__data_1_1camp__box__model__data__t_ad3755a4c5a62c31db52bdc50edd14311}\index{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}!finalize@{finalize}}
+\index{finalize@{finalize}!camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}}
+\doxysubsubsection{\texorpdfstring{finalize()}{finalize()}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1camp__box__model__data__t_ad3755a4c5a62c31db52bdc50edd14311} 
+final camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t\+::finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t}}), intent(inout)}]{this}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [final]}}
+
+
+
+Finalize the box model. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & CAMP box model \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00132}{132}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{structcamp__camp__box__model__data_1_1camp__box__model__data__t_ad3755a4c5a62c31db52bdc50edd14311_cgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\Hypertarget{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a2a62bfdd73b71d1296ef7de2d7bb5731}\index{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}!create\_gnuplot\_config\_file@{create\_gnuplot\_config\_file}}
+\index{create\_gnuplot\_config\_file@{create\_gnuplot\_config\_file}!camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}}
+\doxysubsubsection{\texorpdfstring{create\_gnuplot\_config\_file()}{create\_gnuplot\_config\_file()}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a2a62bfdd73b71d1296ef7de2d7bb5731} 
+procedure camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t\+::create\+\_\+gnuplot\+\_\+config\+\_\+file (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t}}), intent(in)}]{this}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{file\+\_\+prefix}{}\end{DoxyParamCaption})}
+
+
+
+Create a plotting script for the results. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Box model data \\
+\hline
+\mbox{\texttt{ in}}  & {\em file\+\_\+prefix} & Prefix for the results file (assumes a results file name of `\textquotesingle{}file\+\_\+prefix'\+\_\+results.\+txt\`{}) \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00128}{128}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a0316058c854ee1eae8c2dfc20d7ef405}\index{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}!print@{print}}
+\index{print@{print}!camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}}
+\doxysubsubsection{\texorpdfstring{print()}{print()}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a0316058c854ee1eae8c2dfc20d7ef405} 
+procedure camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t\+::print (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t}}), intent(in)}]{this}{, }\item[{integer(kind=i\+\_\+kind), intent(in), optional}]{file\+\_\+unit}{}\end{DoxyParamCaption})}
+
+
+
+Print the box model configuration. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Box model data \\
+\hline
+\mbox{\texttt{ in}}  & {\em file\+\_\+unit} & Output file unit \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00130}{130}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a37bc380f44c70232c81955a9fc6e8121}\index{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}!run@{run}}
+\index{run@{run}!camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}}
+\doxysubsubsection{\texorpdfstring{run()}{run()}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a37bc380f44c70232c81955a9fc6e8121} 
+procedure camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t\+::run (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t}}), intent(inout)}]{this}{, }\item[{integer(kind=i\+\_\+kind), intent(in), optional}]{output\+\_\+file\+\_\+unit}{}\end{DoxyParamCaption})}
+
+
+
+Run the box model. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & CAMP box model \\
+\hline
+\mbox{\texttt{ in}}  & {\em output\+\_\+file\+\_\+unit} & Output file unit \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00126}{126}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structcamp__camp__box__model__data_1_1camp__box__model__data__t_ad2630734faa71cf2748c64422a5e8589}\index{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}!aero\_rep\_profiles@{aero\_rep\_profiles}}
+\index{aero\_rep\_profiles@{aero\_rep\_profiles}!camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_profiles}{aero\_rep\_profiles}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1camp__box__model__data__t_ad2630734faa71cf2748c64422a5e8589} 
+type(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{aero\+\_\+rep\+\_\+profile\+\_\+t}}), dimension(\+:), allocatable camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t\+::aero\+\_\+rep\+\_\+profiles}
+
+
+
+Aerosol representation profiles. 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00123}{123}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a687ae68564811b525538fed49e64a554}\index{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}!camp\_core@{camp\_core}}
+\index{camp\_core@{camp\_core}!camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}}
+\doxysubsubsection{\texorpdfstring{camp\_core}{camp\_core}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a687ae68564811b525538fed49e64a554} 
+type(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), pointer camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t\+::camp\+\_\+core\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+CAMP core. 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00103}{103}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1camp__box__model__data__t_aa7b3e8cff278ff5551df841b581ae955}\index{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}!camp\_state@{camp\_state}}
+\index{camp\_state@{camp\_state}!camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}}
+\doxysubsubsection{\texorpdfstring{camp\_state}{camp\_state}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1camp__box__model__data__t_aa7b3e8cff278ff5551df841b581ae955} 
+type(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+state\+\_\+t}}), pointer camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t\+::camp\+\_\+state}
+
+
+
+CAMP state. 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00105}{105}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a968ad9789d9dffadca9c8a0d66533aa2}\index{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}!initial\_camp\_state@{initial\_camp\_state}}
+\index{initial\_camp\_state@{initial\_camp\_state}!camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}}
+\doxysubsubsection{\texorpdfstring{initial\_camp\_state}{initial\_camp\_state}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a968ad9789d9dffadca9c8a0d66533aa2} 
+type(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\+\_\+state\+\_\+t}}), pointer camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t\+::initial\+\_\+camp\+\_\+state}
+
+
+
+Initial CAMP state. 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00107}{107}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a3e88b76ca346b3760da516e87224d7a3}\index{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}!num\_steps@{num\_steps}}
+\index{num\_steps@{num\_steps}!camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}}
+\doxysubsubsection{\texorpdfstring{num\_steps}{num\_steps}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a3e88b76ca346b3760da516e87224d7a3} 
+integer(kind=i\+\_\+kind) camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t\+::num\+\_\+steps}
+
+
+
+Number of time steps. 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00111}{111}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a59d863145f041556e85a5b3a38d7b95a}\index{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}!pressure\_\_pa@{pressure\_\_pa}}
+\index{pressure\_\_pa@{pressure\_\_pa}!camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}}
+\doxysubsubsection{\texorpdfstring{pressure\_\_pa}{pressure\_\_pa}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a59d863145f041556e85a5b3a38d7b95a} 
+type(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\+\_\+t}}) camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t\+::pressure\+\_\+\+\_\+pa}
+
+
+
+Pressure \mbox{[}Pa\mbox{]} profile. 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00119}{119}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1camp__box__model__data__t_ade315f8e34288ac856f15de4ca096bde}\index{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}!rxn\_profiles@{rxn\_profiles}}
+\index{rxn\_profiles@{rxn\_profiles}!camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}}
+\doxysubsubsection{\texorpdfstring{rxn\_profiles}{rxn\_profiles}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1camp__box__model__data__t_ade315f8e34288ac856f15de4ca096bde} 
+type(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1rxn__profile__t}{rxn\+\_\+profile\+\_\+t}}), dimension(\+:), allocatable camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t\+::rxn\+\_\+profiles}
+
+
+
+Reaction profiles. 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00121}{121}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a46e29d47d9a0027e4b7454beda08b605}\index{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}!spec\_names@{spec\_names}}
+\index{spec\_names@{spec\_names}!camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}}
+\doxysubsubsection{\texorpdfstring{spec\_names}{spec\_names}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a46e29d47d9a0027e4b7454beda08b605} 
+type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}), dimension(\+:), allocatable camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t\+::spec\+\_\+names}
+
+
+
+State species names. 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00109}{109}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1camp__box__model__data__t_adf0b9fbe6d541b74610f4b0414340e3e}\index{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}!temperature\_\_k@{temperature\_\_k}}
+\index{temperature\_\_k@{temperature\_\_k}!camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}}
+\doxysubsubsection{\texorpdfstring{temperature\_\_k}{temperature\_\_k}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1camp__box__model__data__t_adf0b9fbe6d541b74610f4b0414340e3e} 
+type(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\+\_\+t}}) camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t\+::temperature\+\_\+\+\_\+k}
+
+
+
+Temperature \mbox{[}K\mbox{]} profile. 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00117}{117}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1camp__box__model__data__t_af40319cbc6a518546158445f39d3e0a1}\index{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}!time\_step\_\_s@{time\_step\_\_s}}
+\index{time\_step\_\_s@{time\_step\_\_s}!camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}}
+\doxysubsubsection{\texorpdfstring{time\_step\_\_s}{time\_step\_\_s}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1camp__box__model__data__t_af40319cbc6a518546158445f39d3e0a1} 
+real(kind=dp) camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t\+::time\+\_\+step\+\_\+\+\_\+s}
+
+
+
+Time step length \mbox{[}s\mbox{]}. 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00113}{113}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a9f8506dfbe12391e4236243d8a0c2ff7}\index{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}!total\_time\_\_s@{total\_time\_\_s}}
+\index{total\_time\_\_s@{total\_time\_\_s}!camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t@{camp\_camp\_box\_model\_data::camp\_box\_model\_data\_t}}
+\doxysubsubsection{\texorpdfstring{total\_time\_\_s}{total\_time\_\_s}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a9f8506dfbe12391e4236243d8a0c2ff7} 
+real(kind=dp) camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::camp\+\_\+box\+\_\+model\+\_\+data\+\_\+t\+::total\+\_\+time\+\_\+\+\_\+s}
+
+
+
+Total integration time \mbox{[}s\mbox{]}. 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00115}{115}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+
+
+The documentation for this type was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{camp__box__model__data_8_f90}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}\end{DoxyCompactItemize}

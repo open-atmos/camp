@@ -2,16 +2,16 @@
 \hypertarget{todo}{}\label{todo}\index{Todo List@{Todo List}}
 
 \begin{DoxyRefList}
-\item[Member \doxylink{util_8h_af0918da54a73bf30e7079908caea2efd}{d\+\_\+transition\+\_\+regime\+\_\+correction\+\_\+factor\+\_\+d\+\_\+radius} (double mean\+\_\+free\+\_\+path\+\_\+\+\_\+m, double radius\+\_\+\+\_\+m, double alpha)]\hfill \\
-\label{todo__todo000003}%
-\Hypertarget{todo__todo000003}%
-double check the correction factor derivative equation where the Knudsen Number $K_n = \lambda / r$ (where $\lambda$ is the mean free path \mbox{[}m\mbox{]} of the gas-\/phase species and $r$ is the effective radius of the particles \mbox{[}m\mbox{]}), and $ \alpha $ is the mass accomodation coefficient, which is typically assumed to equal 0.\+1 {\bfseries [Zaveri2008]}. 
-\item[Member \doxylink{camp__solver_8h_a5b485fa25356197023889f3795888e98}{get\+\_\+jac\+\_\+init} (\doxylink{struct_solver_data}{Solver\+Data} \texorpdfstring{$\ast$}{*}solver\+\_\+data)]\hfill \\
-\label{todo__todo000002}%
-\Hypertarget{todo__todo000002}%
-Make the \doxylink{struct_jacobian}{Jacobian} mapping recursive for sub model parameters that depend on other sub model parameters  
-\item[Member \doxylink{camp__solver_8h_a78e694c3221a39e0b96a5f40fa0fc0dd}{Jac} (realtype t, N\+\_\+\+Vector y, N\+\_\+\+Vector deriv, SUNMatrix J, void \texorpdfstring{$\ast$}{*}model\+\_\+data, N\+\_\+\+Vector tmp1, N\+\_\+\+Vector tmp2, N\+\_\+\+Vector tmp3)]\hfill \\
+\item[Module \doxylink{namespacecamp__camp__box__model__data}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data} ]\hfill \\
 \label{todo__todo000001}%
 \Hypertarget{todo__todo000001}%
-\#83 Figure out how to stop CVODE from resizing the \doxylink{struct_jacobian}{Jacobian} during solving 
+  
+\item[Member \doxylink{camp__solver_8c_a5b485fa25356197023889f3795888e98}{get\+\_\+jac\+\_\+init} (Solver\+Data \texorpdfstring{$\ast$}{*}solver\+\_\+data)]\hfill \\
+\label{todo__todo000003}%
+\Hypertarget{todo__todo000003}%
+Make the Jacobian mapping recursive for sub model parameters that depend on other sub model parameters  
+\item[Member \doxylink{camp__solver_8c_a13451d507558a61a2353adfed58db468}{Jac} (realtype t, N\+\_\+\+Vector y, N\+\_\+\+Vector deriv, SUNMatrix J, void \texorpdfstring{$\ast$}{*}solver\+\_\+data, N\+\_\+\+Vector tmp1, N\+\_\+\+Vector tmp2, N\+\_\+\+Vector tmp3)]\hfill \\
+\label{todo__todo000002}%
+\Hypertarget{todo__todo000002}%
+\#83 Figure out how to stop CVODE from resizing the Jacobian during solving 
 \end{DoxyRefList}

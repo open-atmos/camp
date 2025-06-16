@@ -15,7 +15,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <math.h>}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{rxns_8h}{../rxns.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ <camp/rxns.h>}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00015}00015\ }
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00016}00016\ \textcolor{comment}{//\ TODO\ Lookup\ environmental\ indicies\ during\ initialization}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00017}\mbox{\hyperlink{rxn__wet__deposition_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{00017}}\ \textcolor{preprocessor}{\#define\ TEMPERATURE\_K\_\ env\_data[0]}}
@@ -39,9 +39,9 @@
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00035}00035\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00036}00036\ \textcolor{comment}{\ *\ \(\backslash\)param\ jac\ Jacobian}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00037}00037\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00038}\mbox{\hyperlink{rxns_8h_a083ddf02453025334ced6c65d78d60e1}{00038}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__wet__deposition_8c_a083ddf02453025334ced6c65d78d60e1}{rxn\_wet\_deposition\_get\_used\_jac\_elem}}(\textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00038}\mbox{\hyperlink{rxn__wet__deposition_8c_a083ddf02453025334ced6c65d78d60e1}{00038}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__wet__deposition_8c_a083ddf02453025334ced6c65d78d60e1}{rxn\_wet\_deposition\_get\_used\_jac\_elem}}(\textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ *jac)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Jacobian\ *jac)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00041}00041\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00042}00042\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00043}00043\ }
@@ -60,8 +60,8 @@
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00056}00056\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_int\_data\ Pointer\ to\ the\ reaction\ integer\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00057}00057\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00058}00058\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00059}\mbox{\hyperlink{rxns_8h_a544634ece257f580b822e9851e37b73d}{00059}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__wet__deposition_8c_a544634ece257f580b822e9851e37b73d}{rxn\_wet\_deposition\_update\_ids}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ \textcolor{keywordtype}{int}\ *deriv\_ids,}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00059}\mbox{\hyperlink{rxn__wet__deposition_8c_a544634ece257f580b822e9851e37b73d}{00059}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__wet__deposition_8c_a544634ece257f580b822e9851e37b73d}{rxn\_wet\_deposition\_update\_ids}}(ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ *deriv\_ids,}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Jacobian\ jac,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00062}00062\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00063}00063\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
@@ -96,7 +96,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00092}00092\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_env\_data\ Pointer\ to\ the\ environment-\/dependent\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00093}00093\ \textcolor{comment}{\ *\ \(\backslash\)return\ Flag\ indicating\ whether\ this\ is\ the\ reaction\ to\ update}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00094}00094\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00095}\mbox{\hyperlink{rxns_8h_a8702d84bdb799c83a7f8b9feb1f72701}{00095}}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{rxn__wet__deposition_8c_a8702d84bdb799c83a7f8b9feb1f72701}{rxn\_wet\_deposition\_update\_data}}(\textcolor{keywordtype}{void}\ *update\_data,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00095}\mbox{\hyperlink{rxn__wet__deposition_8c_a8702d84bdb799c83a7f8b9feb1f72701}{00095}}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{rxn__wet__deposition_8c_a8702d84bdb799c83a7f8b9feb1f72701}{rxn\_wet\_deposition\_update\_data}}(\textcolor{keywordtype}{void}\ *update\_data,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_env\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00098}00098\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
@@ -125,13 +125,13 @@
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00121}00121\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00122}00122\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_env\_data\ Pointer\ to\ the\ environment-\/dependent\ parameters}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00123}00123\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00124}\mbox{\hyperlink{rxns_8h_a639ae40ecdc8940c3c36a240738092df}{00124}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__wet__deposition_8c_a639ae40ecdc8940c3c36a240738092df}{rxn\_wet\_deposition\_update\_env\_state}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00124}\mbox{\hyperlink{rxn__wet__deposition_8c_a639ae40ecdc8940c3c36a240738092df}{00124}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__wet__deposition_8c_a639ae40ecdc8940c3c36a240738092df}{rxn\_wet\_deposition\_update\_env\_state}}(ModelData\ *model\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_env\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00128}00128\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00129}00129\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00130}00130\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00130}00130\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>grid\_cell\_env;}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00131}00131\ }
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00132}00132\ \ \ \textcolor{comment}{//\ Calculate\ the\ rate\ constant\ in\ (1/s)}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00133}00133\ \ \ \mbox{\hyperlink{rxn__wet__deposition_8c_a6d62af2f44a112ef5b324cf406a830c2}{RATE\_CONSTANT\_}}\ =\ \mbox{\hyperlink{rxn__wet__deposition_8c_a1757f332a0485799c2ee77edff00c38a}{SCALING\_}}\ *\ \mbox{\hyperlink{rxn__wet__deposition_8c_a8a6abdf49f8b3b17aea4f4595bcbc0cc}{BASE\_RATE\_}};}
@@ -150,13 +150,13 @@
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00146}00146\ \textcolor{comment}{\ *\ \(\backslash\)param\ time\_step\ Current\ time\ step\ being\ computed\ (s)}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00147}00147\ \textcolor{comment}{\ */}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00148}00148\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_SUNDIALS}}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00149}\mbox{\hyperlink{rxns_8h_a6aec5e3d4cbb3a9e0d993a1780c42ecd}{00149}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__wet__deposition_8c_a6aec5e3d4cbb3a9e0d993a1780c42ecd}{rxn\_wet\_deposition\_calc\_deriv\_contrib}}(}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00150}00150\ \ \ \ \ \mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ \mbox{\hyperlink{struct_time_derivative}{TimeDerivative}}\ time\_deriv,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00149}\mbox{\hyperlink{rxn__wet__deposition_8c_a6aec5e3d4cbb3a9e0d993a1780c42ecd}{00149}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__wet__deposition_8c_a6aec5e3d4cbb3a9e0d993a1780c42ecd}{rxn\_wet\_deposition\_calc\_deriv\_contrib}}(}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00150}00150\ \ \ \ \ ModelData\ *model\_data,\ TimeDerivative\ time\_deriv,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00151}00151\ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,\ \textcolor{keywordtype}{double}\ *rxn\_env\_data,\ realtype\ time\_step)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00152}00152\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00153}00153\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00154}00154\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00155}00155\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00154}00154\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>grid\_cell\_state;}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00155}00155\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>grid\_cell\_env;}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00156}00156\ }
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00157}00157\ \ \ \textcolor{comment}{//\ Add\ contributions\ to\ the\ time\ derivative}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00158}00158\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_spec\ =\ 0;\ i\_spec\ <\ \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\_SPEC\_}};\ i\_spec++)\ \{}
@@ -180,20 +180,20 @@
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00176}00176\ \textcolor{comment}{\ *\ \(\backslash\)param\ time\_step\ Current\ time\ step\ being\ calculated\ (s)}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00177}00177\ \textcolor{comment}{\ */}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00178}00178\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_SUNDIALS}}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00179}\mbox{\hyperlink{rxns_8h_ad84c0373895c3b2bfad55408c9066f16}{00179}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__wet__deposition_8c_ad84c0373895c3b2bfad55408c9066f16}{rxn\_wet\_deposition\_calc\_jac\_contrib}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac,}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00179}\mbox{\hyperlink{rxn__wet__deposition_8c_ad84c0373895c3b2bfad55408c9066f16}{00179}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__wet__deposition_8c_ad84c0373895c3b2bfad55408c9066f16}{rxn\_wet\_deposition\_calc\_jac\_contrib}}(ModelData\ *model\_data,\ Jacobian\ jac,}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00180}00180\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00181}00181\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_env\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ realtype\ time\_step)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00184}00184\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00185}00185\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00186}00186\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00187}00187\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00186}00186\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>grid\_cell\_state;}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00187}00187\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>grid\_cell\_env;}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00188}00188\ }
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00189}00189\ \ \ \textcolor{comment}{//\ Add\ contributions\ to\ the\ Jacobian}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00190}00190\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_spec\ =\ 0;\ i\_spec\ <\ \mbox{\hyperlink{rxn__wet__deposition_8c_a633b13446295bae13643bf30401199b4}{NUM\_SPEC\_}};\ i\_spec++)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00191}00191\ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{rxn__wet__deposition_8c_a0b740ccc4f77b017cbd76c8e3a040df6}{JAC\_ID\_}}(i\_spec)\ >=\ 0)}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00192}00192\ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__wet__deposition_8c_a0b740ccc4f77b017cbd76c8e3a040df6}{JAC\_ID\_}}(i\_spec),\ \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}},}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00192}00192\ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__wet__deposition_8c_a0b740ccc4f77b017cbd76c8e3a040df6}{JAC\_ID\_}}(i\_spec),\ JACOBIAN\_LOSS,}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__wet__deposition_8c_a6d62af2f44a112ef5b324cf406a830c2}{RATE\_CONSTANT\_}});}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00194}00194\ \ \ \}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00195}00195\ }
@@ -206,7 +206,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00202}00202\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_int\_data\ Pointer\ to\ the\ reaction\ integer\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00203}00203\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00204}00204\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00205}\mbox{\hyperlink{rxns_8h_a76a5bf8613ce3116db76b077f0c15382}{00205}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__wet__deposition_8c_a76a5bf8613ce3116db76b077f0c15382}{rxn\_wet\_deposition\_print}}(\textcolor{keywordtype}{int}\ *rxn\_int\_data,\ \textcolor{keywordtype}{double}\ *rxn\_float\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00205}\mbox{\hyperlink{rxn__wet__deposition_8c_a76a5bf8613ce3116db76b077f0c15382}{00205}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__wet__deposition_8c_a76a5bf8613ce3116db76b077f0c15382}{rxn\_wet\_deposition\_print}}(\textcolor{keywordtype}{int}\ *rxn\_int\_data,\ \textcolor{keywordtype}{double}\ *rxn\_float\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00206}00206\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00207}00207\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00208}00208\ }
@@ -219,7 +219,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00215}00215\ \textcolor{comment}{\ *}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00216}00216\ \textcolor{comment}{\ *\ \(\backslash\)return\ Pointer\ to\ a\ new\ rate\ update\ data\ object}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00217}00217\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00218}\mbox{\hyperlink{rxns_8h_a3a2d565e303d68e825fdea7fa7c884c3}{00218}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{rxn__wet__deposition_8c_a3a2d565e303d68e825fdea7fa7c884c3}{rxn\_wet\_deposition\_create\_rate\_update\_data}}()\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00218}\mbox{\hyperlink{rxn__wet__deposition_8c_a3a2d565e303d68e825fdea7fa7c884c3}{00218}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{rxn__wet__deposition_8c_a3a2d565e303d68e825fdea7fa7c884c3}{rxn\_wet\_deposition\_create\_rate\_update\_data}}()\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00219}00219\ \ \ \textcolor{keywordtype}{int}\ *update\_data\ =\ (\textcolor{keywordtype}{int}\ *)malloc(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ +\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{double}));}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00220}00220\ \ \ \textcolor{keywordflow}{if}\ (update\_data\ ==\ NULL)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00221}00221\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ wet\ deposition\ update\ data\(\backslash\)n\(\backslash\)n"{}});}
@@ -234,7 +234,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00230}00230\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_id\ Id\ of\ wet\ deposition\ reactions\ to\ update}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00231}00231\ \textcolor{comment}{\ *\ \(\backslash\)param\ base\_rate\ New\ pre-\/scaling\ wet\ deposition\ rate}}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00232}00232\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00233}\mbox{\hyperlink{rxns_8h_ae689f16722acdff103f2b0570847b564}{00233}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__wet__deposition_8c_ae689f16722acdff103f2b0570847b564}{rxn\_wet\_deposition\_set\_rate\_update\_data}}(\textcolor{keywordtype}{void}\ *update\_data,\ \textcolor{keywordtype}{int}\ rxn\_id,}
+\DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00233}\mbox{\hyperlink{rxn__wet__deposition_8c_ae689f16722acdff103f2b0570847b564}{00233}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__wet__deposition_8c_ae689f16722acdff103f2b0570847b564}{rxn\_wet\_deposition\_set\_rate\_update\_data}}(\textcolor{keywordtype}{void}\ *update\_data,\ \textcolor{keywordtype}{int}\ rxn\_id,}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ base\_rate)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00235}00235\ \ \ \textcolor{keywordtype}{int}\ *new\_rxn\_id\ =\ (\textcolor{keywordtype}{int}\ *)update\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__wet__deposition_8c_source_l00236}00236\ \ \ \textcolor{keywordtype}{double}\ *new\_base\_rate\ =\ (\textcolor{keywordtype}{double}\ *)\&(new\_rxn\_id[1]);}

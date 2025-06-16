@@ -1,0 +1,180 @@
+\doxysection{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::aero\+\_\+rep\+\_\+profile\+\_\+t Type Reference}
+\hypertarget{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{}\label{structcamp__camp__box__model__data_1_1aero__rep__profile__t}\index{camp\_camp\_box\_model\_data::aero\_rep\_profile\_t@{camp\_camp\_box\_model\_data::aero\_rep\_profile\_t}}
+
+
+Aerosol representation time profile.  
+
+
+
+
+Inheritance diagram for camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::aero\+\_\+rep\+\_\+profile\+\_\+t\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=201pt]{structcamp__camp__box__model__data_1_1aero__rep__profile__t__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::aero\+\_\+rep\+\_\+profile\+\_\+t\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=201pt]{structcamp__camp__box__model__data_1_1aero__rep__profile__t__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t_a185d4b73e2d53161058c83dc163ae74f}{update\+\_\+aero\+\_\+rep}} (this, camp\+\_\+core)
+\begin{DoxyCompactList}\small\item\em Update the aerosol representation property of interest. \end{DoxyCompactList}\item 
+final \mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t_a574117db8ef654b67adda917b7f89f16}{aero\+\_\+rep\+\_\+profile\+\_\+finalize}} (this)
+\begin{DoxyCompactList}\small\item\em Finalize the profile. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::profile\+\_\+t}}}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_a5528388cd9694b020997071e092d787e}{reset}} (this)
+\begin{DoxyCompactList}\small\item\em Reset the profile. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_ab33a66ae79ca54a96ce854fdcba7a4b2}{advance}} (this)
+\begin{DoxyCompactList}\small\item\em Advance the profile by one time step. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_acf176eede9a8b041c24cf37cb73e54a9}{current\+\_\+value}} (this)
+\begin{DoxyCompactList}\small\item\em Get the current profile value. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_ad4d5784e0e2540e56abef1be63512ebb}{print}} (this, file\+\_\+unit)
+\begin{DoxyCompactList}\small\item\em Print the profile configuration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t_ac8cb254dd803f8b631fefda487c368cf}{update\+\_\+type}}
+\begin{DoxyCompactList}\small\item\em Index for update type. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t_a947da8383f885e86c41d0d479050985f}{section\+\_\+id}} = 0
+\begin{DoxyCompactList}\small\item\em Section id (modal/binned) \end{DoxyCompactList}\item 
+class(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__update__data__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+t}}), pointer \mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t_a0d6379c379c74facdf2fb9853c4a5947}{update\+\_\+data}}
+\begin{DoxyCompactList}\small\item\em Aerosol representation update object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes inherited from \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::profile\+\_\+t}}}
+\begin{DoxyCompactItemize}
+\item 
+character(len=\+:), allocatable \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_a32e34b2523b23f339184b97e598e8032}{name}}
+\begin{DoxyCompactList}\small\item\em Name of the profile. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_a73ae804b4c16239e634fddb93ceb0ae4}{curr\+\_\+time\+\_\+step}}
+\begin{DoxyCompactList}\small\item\em Current time step in the profile. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_a620b93340f7f64f7b2d48920f2951981}{curr\+\_\+transition}}
+\begin{DoxyCompactList}\small\item\em Index for the current position in the transition arrays. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), dimension(\+:), allocatable \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_af0396fb5ddeb1441aaae974e86a73445}{transition\+\_\+time\+\_\+step}}
+\begin{DoxyCompactList}\small\item\em Time step for the next transition, starting with 0 (initial conditions) \end{DoxyCompactList}\item 
+real(kind=dp), dimension(\+:), allocatable \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_a048891e70bb5be9b15dd07513f1c53bc}{transition\+\_\+value}}
+\begin{DoxyCompactList}\small\item\em New values for each transition, starting with the initial value. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Aerosol representation time profile. 
+
+Constructor for \doxylink{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{aero\+\_\+rep\+\_\+profile\+\_\+t}. 
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00094}{94}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{structcamp__camp__box__model__data_1_1aero__rep__profile__t_a574117db8ef654b67adda917b7f89f16}\index{camp\_camp\_box\_model\_data::aero\_rep\_profile\_t@{camp\_camp\_box\_model\_data::aero\_rep\_profile\_t}!aero\_rep\_profile\_finalize@{aero\_rep\_profile\_finalize}}
+\index{aero\_rep\_profile\_finalize@{aero\_rep\_profile\_finalize}!camp\_camp\_box\_model\_data::aero\_rep\_profile\_t@{camp\_camp\_box\_model\_data::aero\_rep\_profile\_t}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_profile\_finalize()}{aero\_rep\_profile\_finalize()}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1aero__rep__profile__t_a574117db8ef654b67adda917b7f89f16} 
+final camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::aero\+\_\+rep\+\_\+profile\+\_\+t\+::aero\+\_\+rep\+\_\+profile\+\_\+finalize (\begin{DoxyParamCaption}\item[{type(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{aero\+\_\+rep\+\_\+profile\+\_\+t}}), intent(inout)}]{this}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [final]}}
+
+
+
+Finalize the profile. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Aerosol representation profile \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00089}{89}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{structcamp__camp__box__model__data_1_1aero__rep__profile__t_a574117db8ef654b67adda917b7f89f16_cgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\Hypertarget{structcamp__camp__box__model__data_1_1aero__rep__profile__t_a185d4b73e2d53161058c83dc163ae74f}\index{camp\_camp\_box\_model\_data::aero\_rep\_profile\_t@{camp\_camp\_box\_model\_data::aero\_rep\_profile\_t}!update\_aero\_rep@{update\_aero\_rep}}
+\index{update\_aero\_rep@{update\_aero\_rep}!camp\_camp\_box\_model\_data::aero\_rep\_profile\_t@{camp\_camp\_box\_model\_data::aero\_rep\_profile\_t}}
+\doxysubsubsection{\texorpdfstring{update\_aero\_rep()}{update\_aero\_rep()}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1aero__rep__profile__t_a185d4b73e2d53161058c83dc163ae74f} 
+procedure camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::aero\+\_\+rep\+\_\+profile\+\_\+t\+::update\+\_\+aero\+\_\+rep (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{aero\+\_\+rep\+\_\+profile\+\_\+t}})}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\+\_\+core\+\_\+t}}), intent(inout)}]{camp\+\_\+core}{}\end{DoxyParamCaption})}
+
+
+
+Update the aerosol representation property of interest. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+ & {\em this} & Aerosol representation profile \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em camp\+\_\+core} & CAMP core \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00087}{87}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structcamp__camp__box__model__data_1_1aero__rep__profile__t_a947da8383f885e86c41d0d479050985f}\index{camp\_camp\_box\_model\_data::aero\_rep\_profile\_t@{camp\_camp\_box\_model\_data::aero\_rep\_profile\_t}!section\_id@{section\_id}}
+\index{section\_id@{section\_id}!camp\_camp\_box\_model\_data::aero\_rep\_profile\_t@{camp\_camp\_box\_model\_data::aero\_rep\_profile\_t}}
+\doxysubsubsection{\texorpdfstring{section\_id}{section\_id}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1aero__rep__profile__t_a947da8383f885e86c41d0d479050985f} 
+integer(kind=i\+\_\+kind) camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::aero\+\_\+rep\+\_\+profile\+\_\+t\+::section\+\_\+id = 0}
+
+
+
+Section id (modal/binned) 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00082}{82}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1aero__rep__profile__t_a0d6379c379c74facdf2fb9853c4a5947}\index{camp\_camp\_box\_model\_data::aero\_rep\_profile\_t@{camp\_camp\_box\_model\_data::aero\_rep\_profile\_t}!update\_data@{update\_data}}
+\index{update\_data@{update\_data}!camp\_camp\_box\_model\_data::aero\_rep\_profile\_t@{camp\_camp\_box\_model\_data::aero\_rep\_profile\_t}}
+\doxysubsubsection{\texorpdfstring{update\_data}{update\_data}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1aero__rep__profile__t_a0d6379c379c74facdf2fb9853c4a5947} 
+class(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__update__data__t}{aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+t}}), pointer camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::aero\+\_\+rep\+\_\+profile\+\_\+t\+::update\+\_\+data}
+
+
+
+Aerosol representation update object. 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00084}{84}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1aero__rep__profile__t_ac8cb254dd803f8b631fefda487c368cf}\index{camp\_camp\_box\_model\_data::aero\_rep\_profile\_t@{camp\_camp\_box\_model\_data::aero\_rep\_profile\_t}!update\_type@{update\_type}}
+\index{update\_type@{update\_type}!camp\_camp\_box\_model\_data::aero\_rep\_profile\_t@{camp\_camp\_box\_model\_data::aero\_rep\_profile\_t}}
+\doxysubsubsection{\texorpdfstring{update\_type}{update\_type}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1aero__rep__profile__t_ac8cb254dd803f8b631fefda487c368cf} 
+integer(kind=i\+\_\+kind) camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::aero\+\_\+rep\+\_\+profile\+\_\+t\+::update\+\_\+type}
+
+
+
+Index for update type. 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00080}{80}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+
+
+The documentation for this type was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{camp__box__model__data_8_f90}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}\end{DoxyCompactItemize}

@@ -1,7 +1,0 @@
-<map id="rxn_HL_phase_transfer_update_env_state" name="rxn_HL_phase_transfer_update_env_state">
-<area shape="rect" id="Node000001" title="Update reaction data for new environmental conditions." alt="" coords="5,5,162,46"/>
-<area shape="rect" id="Node000002" href="$util_8h.html#ae1c969544a10c17746622cf73186835c" title=" " alt="" coords="210,13,349,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,23,194,23,194,28,162,28"/>
-<area shape="rect" id="Node000003" href="$util_8h.html#a77fbb355dc943308c5632fe698e81363" title=" " alt="" coords="397,13,531,38"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="350,23,382,23,382,28,350,28"/>
-</map>

@@ -12,261 +12,261 @@
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00008}00008\ \textcolor{comment}{/**\ \(\backslash\)file}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00009}00009\ \textcolor{comment}{\ *\ \(\backslash\)brief\ Jacobian\ functions}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00010}00010\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_jacobian_8h}{Jacobian.h}}"{}}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <math.h>}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00015}00015\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{time__derivative_8h}{time\_derivative.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <camp/Jacobian.h>}}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <camp/time\_derivative.h>}}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00015}00015\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00016}00016\ }
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00017}\mbox{\hyperlink{_jacobian_8c_a6b20d41d6252e9871430c242cb1a56e7}{00017}}\ \textcolor{preprocessor}{\#define\ BUFFER\_SIZE\ 10}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00018}\mbox{\hyperlink{_jacobian_8c_a4b9c2c17b44d318829df5e1bd7e50f1d}{00018}}\ \textcolor{preprocessor}{\#define\ SMALL\_NUMBER\ 1e-\/90}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00019}00019\ }
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00020}\mbox{\hyperlink{_jacobian_8c_a3ea16d25b8523ab15b3f505fe00e2ed2}{00020}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_jacobian_8c_a3ea16d25b8523ab15b3f505fe00e2ed2}{jacobian\_initialize\_empty}}(\mbox{\hyperlink{struct_jacobian}{Jacobian}}\ *jac,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ num\_spec)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00021}00021\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}{num\_spec}}\ =\ num\_spec;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00022}00022\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_a3577814faff1b9ab50d0f08df9a4c736}{num\_elem}}\ =\ 0;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00023}00023\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}\ =\ (\mbox{\hyperlink{struct_jacobian_column_elements}{JacobianColumnElements}}\ *)malloc(}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00024}00024\ \ \ \ \ \ \ num\_spec\ *\ \textcolor{keyword}{sizeof}(\mbox{\hyperlink{struct_jacobian_column_elements}{JacobianColumnElements}}));}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00025}00025\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}})\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00020}\mbox{\hyperlink{_jacobian_8c_a3ea16d25b8523ab15b3f505fe00e2ed2}{00020}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_jacobian_8c_a3ea16d25b8523ab15b3f505fe00e2ed2}{jacobian\_initialize\_empty}}(Jacobian\ *jac,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ num\_spec)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00021}00021\ \ \ jac-\/>num\_spec\ =\ num\_spec;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00022}00022\ \ \ jac-\/>num\_elem\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00023}00023\ \ \ jac-\/>elements\ =\ (JacobianColumnElements\ *)malloc(}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00024}00024\ \ \ \ \ \ \ num\_spec\ *\ \textcolor{keyword}{sizeof}(JacobianColumnElements));}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00025}00025\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>elements)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00026}00026\ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8}{jacobian\_free}}(jac);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00027}00027\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00028}00028\ \ \ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00029}00029\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_col\ =\ 0;\ i\_col\ <\ num\_spec;\ ++i\_col)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00030}00030\ \ \ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}[i\_col].\mbox{\hyperlink{struct_jacobian_column_elements_ae126565edf49f09e73686cd4e22d3738}{array\_size}}\ =\ \mbox{\hyperlink{_jacobian_8c_a6b20d41d6252e9871430c242cb1a56e7}{BUFFER\_SIZE}};}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00031}00031\ \ \ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}[i\_col].\mbox{\hyperlink{struct_jacobian_column_elements_aa9d00250ee3e413e9797e2e2bbb97a1d}{number\_of\_elements}}\ =\ 0;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00032}00032\ \ \ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}[i\_col].\mbox{\hyperlink{struct_jacobian_column_elements_aaa35ae8a5aab1aae34f298443bcb07ee}{row\_ids}}\ =}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00030}00030\ \ \ \ \ jac-\/>elements[i\_col].array\_size\ =\ \mbox{\hyperlink{_jacobian_8c_a6b20d41d6252e9871430c242cb1a56e7}{BUFFER\_SIZE}};}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00031}00031\ \ \ \ \ jac-\/>elements[i\_col].number\_of\_elements\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00032}00032\ \ \ \ \ jac-\/>elements[i\_col].row\_ids\ =}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00033}00033\ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)malloc(\mbox{\hyperlink{_jacobian_8c_a6b20d41d6252e9871430c242cb1a56e7}{BUFFER\_SIZE}}\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}));}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00034}00034\ \ \ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}[i\_col].\mbox{\hyperlink{struct_jacobian_column_elements_aaa35ae8a5aab1aae34f298443bcb07ee}{row\_ids}})\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00034}00034\ \ \ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>elements[i\_col].row\_ids)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00035}00035\ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8}{jacobian\_free}}(jac);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00036}00036\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00037}00037\ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00038}00038\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00039}00039\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}}\ =\ NULL;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00040}00040\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\_ids}}\ =\ NULL;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00041}00041\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}{production\_partials}}\ =\ NULL;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00042}00042\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_af0f149e4515991698c959c8484202a79}{loss\_partials}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00039}00039\ \ \ jac-\/>col\_ptrs\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00040}00040\ \ \ jac-\/>row\_ids\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00041}00041\ \ \ jac-\/>production\_partials\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00042}00042\ \ \ jac-\/>loss\_partials\ =\ NULL;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00043}00043\ \ \ \textcolor{keywordflow}{return}\ 1;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00044}00044\ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00045}00045\ }
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00046}\mbox{\hyperlink{_jacobian_8c_a6c379e74bb2572ce65119dbbe0206e65}{00046}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_jacobian_8c_a6c379e74bb2572ce65119dbbe0206e65}{jacobian\_initialize}}(\mbox{\hyperlink{struct_jacobian}{Jacobian}}\ *jac,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ num\_spec,}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00046}\mbox{\hyperlink{_jacobian_8c_a6c379e74bb2572ce65119dbbe0206e65}{00046}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_jacobian_8c_a6c379e74bb2572ce65119dbbe0206e65}{jacobian\_initialize}}(Jacobian\ *jac,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ num\_spec,}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ **jac\_struct)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00048}00048\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ num\_elem\ =\ 0;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00049}00049\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_col\ =\ 0;\ i\_col\ <\ num\_spec;\ ++i\_col)}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00050}00050\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_row\ =\ 0;\ i\_row\ <\ num\_spec;\ ++i\_row)}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00051}00051\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (jac\_struct[i\_col][i\_row]\ ==\ 1)\ ++num\_elem;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00052}00052\ }
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00053}00053\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}{num\_spec}}\ =\ num\_spec;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00054}00054\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_a3577814faff1b9ab50d0f08df9a4c736}{num\_elem}}\ =\ num\_elem;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00055}00055\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}}\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)malloc((num\_spec\ +\ 1)\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}));}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00056}00056\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}})\ \textcolor{keywordflow}{return}\ 0;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00057}00057\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\_ids}}\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)malloc(num\_elem\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}));}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00058}00058\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>\mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\_ids}})\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00059}00059\ \ \ \ \ free(jac-\/>\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}});}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00053}00053\ \ \ jac-\/>num\_spec\ =\ num\_spec;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00054}00054\ \ \ jac-\/>num\_elem\ =\ num\_elem;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00055}00055\ \ \ jac-\/>col\_ptrs\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)malloc((num\_spec\ +\ 1)\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}));}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00056}00056\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>col\_ptrs)\ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00057}00057\ \ \ jac-\/>row\_ids\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)malloc(num\_elem\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}));}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00058}00058\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>row\_ids)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00059}00059\ \ \ \ \ free(jac-\/>col\_ptrs);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00060}00060\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00061}00061\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00062}00062\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}{production\_partials}}\ =}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00062}00062\ \ \ jac-\/>production\_partials\ =}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00063}00063\ \ \ \ \ \ \ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ *)malloc(num\_elem\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}));}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00064}00064\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>\mbox{\hyperlink{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}{production\_partials}})\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00065}00065\ \ \ \ \ free(jac-\/>\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}});}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00066}00066\ \ \ \ \ free(jac-\/>\mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\_ids}});}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00064}00064\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>production\_partials)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00065}00065\ \ \ \ \ free(jac-\/>col\_ptrs);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00066}00066\ \ \ \ \ free(jac-\/>row\_ids);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00067}00067\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00068}00068\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00069}00069\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_af0f149e4515991698c959c8484202a79}{loss\_partials}}\ =\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ *)malloc(num\_elem\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}));}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00070}00070\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>\mbox{\hyperlink{struct_jacobian_af0f149e4515991698c959c8484202a79}{loss\_partials}})\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00071}00071\ \ \ \ \ free(jac-\/>\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}});}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00072}00072\ \ \ \ \ free(jac-\/>\mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\_ids}});}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00073}00073\ \ \ \ \ free(jac-\/>\mbox{\hyperlink{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}{production\_partials}});}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00069}00069\ \ \ jac-\/>loss\_partials\ =\ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ *)malloc(num\_elem\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}));}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00070}00070\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>loss\_partials)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00071}00071\ \ \ \ \ free(jac-\/>col\_ptrs);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00072}00072\ \ \ \ \ free(jac-\/>row\_ids);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00073}00073\ \ \ \ \ free(jac-\/>production\_partials);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00074}00074\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00075}00075\ \ \ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00076}00076\ }
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00077}00077\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_elem\ =\ 0;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00078}00078\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_col\ =\ 0;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00079}00079\ \ \ \textcolor{keywordflow}{for}\ (;\ i\_col\ <\ num\_spec;\ ++i\_col)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00080}00080\ \ \ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}}[i\_col]\ =\ i\_elem;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00080}00080\ \ \ \ \ jac-\/>col\_ptrs[i\_col]\ =\ i\_elem;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00081}00081\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_row\ =\ 0;\ i\_row\ <\ num\_spec;\ ++i\_row)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00082}00082\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (jac\_struct[i\_row][i\_col]\ ==\ 1)\ jac-\/>\mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\_ids}}[i\_elem++]\ =\ i\_row;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00082}00082\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (jac\_struct[i\_row][i\_col]\ ==\ 1)\ jac-\/>row\_ids[i\_elem++]\ =\ i\_row;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00083}00083\ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00084}00084\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00085}00085\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}}[i\_col]\ =\ i\_elem;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00086}00086\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00085}00085\ \ \ jac-\/>col\_ptrs[i\_col]\ =\ i\_elem;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00086}00086\ \ \ jac-\/>elements\ =\ NULL;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00087}00087\ \ \ \textcolor{keywordflow}{return}\ 1;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00088}00088\ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00089}00089\ }
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00090}00090\ \textcolor{comment}{//\ Add\ buffer\ space\ for\ Jacobian\ column\ elements\ (returns\ 1\ on\ success,\ 0}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00091}00091\ \textcolor{comment}{//\ otherwise)}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00092}\mbox{\hyperlink{_jacobian_8c_ad9cda15d66705739c9d7bdf63c4636a3}{00092}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_jacobian_8c_ad9cda15d66705739c9d7bdf63c4636a3}{jacobian\_column\_elements\_add\_space}}(\mbox{\hyperlink{struct_jacobian_column_elements}{JacobianColumnElements}}\ *column)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00092}\mbox{\hyperlink{_jacobian_8c_ad9cda15d66705739c9d7bdf63c4636a3}{00092}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_jacobian_8c_ad9cda15d66705739c9d7bdf63c4636a3}{jacobian\_column\_elements\_add\_space}}(JacobianColumnElements\ *column)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00093}00093\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *temp\_ids;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00094}00094\ \ \ column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_ae126565edf49f09e73686cd4e22d3738}{array\_size}}\ +=\ \mbox{\hyperlink{_jacobian_8c_a6b20d41d6252e9871430c242cb1a56e7}{BUFFER\_SIZE}};}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00095}00095\ \ \ temp\_ids\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)malloc(column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_ae126565edf49f09e73686cd4e22d3738}{array\_size}}\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}));}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00094}00094\ \ \ column-\/>array\_size\ +=\ \mbox{\hyperlink{_jacobian_8c_a6b20d41d6252e9871430c242cb1a56e7}{BUFFER\_SIZE}};}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00095}00095\ \ \ temp\_ids\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)malloc(column-\/>array\_size\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}));}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00096}00096\ \ \ \textcolor{keywordflow}{if}\ (!temp\_ids)\ \textcolor{keywordflow}{return}\ 0;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00097}00097\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_elem\ =\ 0;\ i\_elem\ <\ column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_aa9d00250ee3e413e9797e2e2bbb97a1d}{number\_of\_elements}};\ ++i\_elem)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00098}00098\ \ \ \ \ temp\_ids[i\_elem]\ =\ column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_aaa35ae8a5aab1aae34f298443bcb07ee}{row\_ids}}[i\_elem];}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00097}00097\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_elem\ =\ 0;\ i\_elem\ <\ column-\/>number\_of\_elements;\ ++i\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00098}00098\ \ \ \ \ temp\_ids[i\_elem]\ =\ column-\/>row\_ids[i\_elem];}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00099}00099\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00100}00100\ \ \ free(column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_aaa35ae8a5aab1aae34f298443bcb07ee}{row\_ids}});}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00101}00101\ \ \ column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_aaa35ae8a5aab1aae34f298443bcb07ee}{row\_ids}}\ =\ temp\_ids;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00100}00100\ \ \ free(column-\/>row\_ids);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00101}00101\ \ \ column-\/>row\_ids\ =\ temp\_ids;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00102}00102\ \ \ \textcolor{keywordflow}{return}\ 1;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00103}00103\ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00104}00104\ }
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00105}\mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{00105}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(\mbox{\hyperlink{struct_jacobian}{Jacobian}}\ *jac,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dep\_id,}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00105}\mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{00105}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_jacobian_8c_aac51ac6b1cf239a84899308dab229441}{jacobian\_register\_element}}(Jacobian\ *jac,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dep\_id,}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ ind\_id)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00107}00107\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}})\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00107}00107\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>elements)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00108}00108\ \ \ \ \ printf(}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00109}00109\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ -\/\ Trying\ to\ register\ elements\ in\ a\ Jacobian\ that\ has\ "{}}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}already\ been\ built.\(\backslash\)n\(\backslash\)n"{}});}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00111}00111\ \ \ \ \ exit(EXIT\_FAILURE);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00112}00112\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00113}00113\ \ \ \mbox{\hyperlink{struct_jacobian_column_elements}{JacobianColumnElements}}\ *column\ =\ \&(jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}[ind\_id]);}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00114}00114\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_elem\ =\ 0;\ i\_elem\ <\ column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_aa9d00250ee3e413e9797e2e2bbb97a1d}{number\_of\_elements}};\ ++i\_elem)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00115}00115\ \ \ \ \ \textcolor{keywordflow}{if}\ (column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_aaa35ae8a5aab1aae34f298443bcb07ee}{row\_ids}}[i\_elem]\ ==\ dep\_id)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00113}00113\ \ \ JacobianColumnElements\ *column\ =\ \&(jac-\/>elements[ind\_id]);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00114}00114\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_elem\ =\ 0;\ i\_elem\ <\ column-\/>number\_of\_elements;\ ++i\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00115}00115\ \ \ \ \ \textcolor{keywordflow}{if}\ (column-\/>row\_ids[i\_elem]\ ==\ dep\_id)\ \textcolor{keywordflow}{return};}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00116}00116\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00117}00117\ \ \ \textcolor{keywordflow}{if}\ (column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_ae126565edf49f09e73686cd4e22d3738}{array\_size}}\ ==\ column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_aa9d00250ee3e413e9797e2e2bbb97a1d}{number\_of\_elements}})\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00117}00117\ \ \ \textcolor{keywordflow}{if}\ (column-\/>array\_size\ ==\ column-\/>number\_of\_elements)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00118}00118\ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_ad9cda15d66705739c9d7bdf63c4636a3}{jacobian\_column\_elements\_add\_space}}(column);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00119}00119\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00120}00120\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}[ind\_id].\mbox{\hyperlink{struct_jacobian_column_elements_aaa35ae8a5aab1aae34f298443bcb07ee}{row\_ids}}[jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}[ind\_id].\mbox{\hyperlink{struct_jacobian_column_elements_aa9d00250ee3e413e9797e2e2bbb97a1d}{number\_of\_elements}}]\ =}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00120}00120\ \ \ jac-\/>elements[ind\_id].row\_ids[jac-\/>elements[ind\_id].number\_of\_elements]\ =}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00121}00121\ \ \ \ \ \ \ dep\_id;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00122}00122\ \ \ ++(jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}[ind\_id].\mbox{\hyperlink{struct_jacobian_column_elements_aa9d00250ee3e413e9797e2e2bbb97a1d}{number\_of\_elements}});}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00122}00122\ \ \ ++(jac-\/>elements[ind\_id].number\_of\_elements);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00123}00123\ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00124}00124\ }
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00125}\mbox{\hyperlink{_jacobian_8c_a87200e2cb129a2b8d8436848760f63d5}{00125}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_jacobian_8c_a87200e2cb129a2b8d8436848760f63d5}{compare\_ids}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *a,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{void}\ *b)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00126}00126\ \ \ \textcolor{keywordflow}{return}\ (*(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)a\ -\/\ *(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)b);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00127}00127\ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00128}00128\ }
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00129}\mbox{\hyperlink{_jacobian_8c_a2e954524b21f4e097996b2dc0d3cf999}{00129}}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_jacobian_8c_a2e954524b21f4e097996b2dc0d3cf999}{jacobian\_build\_matrix}}(\mbox{\hyperlink{struct_jacobian}{Jacobian}}\ *jac)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00130}00130\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}})\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00129}\mbox{\hyperlink{_jacobian_8c_a2e954524b21f4e097996b2dc0d3cf999}{00129}}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_jacobian_8c_a2e954524b21f4e097996b2dc0d3cf999}{jacobian\_build\_matrix}}(Jacobian\ *jac)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00130}00130\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>elements)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00131}00131\ \ \ \ \ printf(}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00132}00132\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ -\/\ Trying\ to\ build\ a\ Jacobian\ that\ has\ already\ been\ "{}}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00133}00133\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}built.\(\backslash\)n\(\backslash\)n"{}});}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00134}00134\ \ \ \ \ exit(EXIT\_FAILURE);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00135}00135\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00136}00136\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_a3577814faff1b9ab50d0f08df9a4c736}{num\_elem}}\ =\ 0;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00137}00137\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_col\ =\ 0;\ i\_col\ <\ jac-\/>\mbox{\hyperlink{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}{num\_spec}};\ ++i\_col)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00138}00138\ \ \ \ \ \mbox{\hyperlink{struct_jacobian_column_elements}{JacobianColumnElements}}\ *column\ =\ \&(jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}[i\_col]);}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00139}00139\ \ \ \ \ qsort(column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_aaa35ae8a5aab1aae34f298443bcb07ee}{row\_ids}},\ column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_aa9d00250ee3e413e9797e2e2bbb97a1d}{number\_of\_elements}},\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}),}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00136}00136\ \ \ jac-\/>num\_elem\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00137}00137\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_col\ =\ 0;\ i\_col\ <\ jac-\/>num\_spec;\ ++i\_col)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00138}00138\ \ \ \ \ JacobianColumnElements\ *column\ =\ \&(jac-\/>elements[i\_col]);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00139}00139\ \ \ \ \ qsort(column-\/>row\_ids,\ column-\/>number\_of\_elements,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}),}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00140}00140\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a87200e2cb129a2b8d8436848760f63d5}{compare\_ids}});}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00141}00141\ \ \ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_a3577814faff1b9ab50d0f08df9a4c736}{num\_elem}}\ +=\ column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_aa9d00250ee3e413e9797e2e2bbb97a1d}{number\_of\_elements}};}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00141}00141\ \ \ \ \ jac-\/>num\_elem\ +=\ column-\/>number\_of\_elements;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00142}00142\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00143}00143\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}}\ =}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00144}00144\ \ \ \ \ \ \ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)malloc((jac-\/>\mbox{\hyperlink{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}{num\_spec}}\ +\ 1)\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}));}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00145}00145\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}})\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00143}00143\ \ \ jac-\/>col\_ptrs\ =}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00144}00144\ \ \ \ \ \ \ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)malloc((jac-\/>num\_spec\ +\ 1)\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}));}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00145}00145\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>col\_ptrs)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00146}00146\ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8}{jacobian\_free}}(jac);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00147}00147\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00148}00148\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00149}00149\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\_ids}}\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)malloc(jac-\/>\mbox{\hyperlink{struct_jacobian_a3577814faff1b9ab50d0f08df9a4c736}{num\_elem}}\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}));}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00150}00150\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>\mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\_ids}})\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00149}00149\ \ \ jac-\/>row\_ids\ =\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ *)malloc(jac-\/>num\_elem\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}));}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00150}00150\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>row\_ids)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00151}00151\ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8}{jacobian\_free}}(jac);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00152}00152\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00153}00153\ \ \ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00154}00154\ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_elem\ =\ 0;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00155}00155\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_col\ =\ 0;\ i\_col\ <\ jac-\/>\mbox{\hyperlink{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}{num\_spec}};\ ++i\_col)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00156}00156\ \ \ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}}[i\_col]\ =\ i\_elem;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00157}00157\ \ \ \ \ \mbox{\hyperlink{struct_jacobian_column_elements}{JacobianColumnElements}}\ *column\ =\ \&(jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}[i\_col]);}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00158}00158\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ j\_elem\ =\ 0;\ j\_elem\ <\ column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_aa9d00250ee3e413e9797e2e2bbb97a1d}{number\_of\_elements}};}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00155}00155\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_col\ =\ 0;\ i\_col\ <\ jac-\/>num\_spec;\ ++i\_col)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00156}00156\ \ \ \ \ jac-\/>col\_ptrs[i\_col]\ =\ i\_elem;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00157}00157\ \ \ \ \ JacobianColumnElements\ *column\ =\ \&(jac-\/>elements[i\_col]);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00158}00158\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ j\_elem\ =\ 0;\ j\_elem\ <\ column-\/>number\_of\_elements;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00159}00159\ \ \ \ \ \ \ \ \ \ ++j\_elem)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00160}00160\ \ \ \ \ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\_ids}}[i\_elem++]\ =\ column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_aaa35ae8a5aab1aae34f298443bcb07ee}{row\_ids}}[j\_elem];}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00160}00160\ \ \ \ \ \ \ jac-\/>row\_ids[i\_elem++]\ =\ column-\/>row\_ids[j\_elem];}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00161}00161\ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00162}00162\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00163}00163\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}}[jac-\/>\mbox{\hyperlink{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}{num\_spec}}]\ =\ i\_elem;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00164}00164\ \ \ \textcolor{keywordflow}{if}\ (i\_elem\ !=\ jac-\/>\mbox{\hyperlink{struct_jacobian_a3577814faff1b9ab50d0f08df9a4c736}{num\_elem}})\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00163}00163\ \ \ jac-\/>col\_ptrs[jac-\/>num\_spec]\ =\ i\_elem;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00164}00164\ \ \ \textcolor{keywordflow}{if}\ (i\_elem\ !=\ jac-\/>num\_elem)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00165}00165\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)n\ ERROR\ -\/\ Internal\ error\ building\ Jacobain\ matrix\ \%d\ \%d\(\backslash\)n\(\backslash\)n"{}},}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ i\_elem,\ jac-\/>\mbox{\hyperlink{struct_jacobian_a3577814faff1b9ab50d0f08df9a4c736}{num\_elem}});}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ i\_elem,\ jac-\/>num\_elem);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00167}00167\ \ \ \ \ exit(EXIT\_FAILURE);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00168}00168\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00169}00169\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}{production\_partials}}\ =}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00170}00170\ \ \ \ \ \ \ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ *)malloc(jac-\/>\mbox{\hyperlink{struct_jacobian_a3577814faff1b9ab50d0f08df9a4c736}{num\_elem}}\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}));}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00171}00171\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>\mbox{\hyperlink{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}{production\_partials}})\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00169}00169\ \ \ jac-\/>production\_partials\ =}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00170}00170\ \ \ \ \ \ \ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ *)malloc(jac-\/>num\_elem\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}));}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00171}00171\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>production\_partials)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00172}00172\ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8}{jacobian\_free}}(jac);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00173}00173\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00174}00174\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00175}00175\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_af0f149e4515991698c959c8484202a79}{loss\_partials}}\ =}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00176}00176\ \ \ \ \ \ \ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ *)malloc(jac-\/>\mbox{\hyperlink{struct_jacobian_a3577814faff1b9ab50d0f08df9a4c736}{num\_elem}}\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}));}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00177}00177\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>\mbox{\hyperlink{struct_jacobian_af0f149e4515991698c959c8484202a79}{loss\_partials}})\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00175}00175\ \ \ jac-\/>loss\_partials\ =}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00176}00176\ \ \ \ \ \ \ (\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ *)malloc(jac-\/>num\_elem\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}));}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00177}00177\ \ \ \textcolor{keywordflow}{if}\ (!jac-\/>loss\_partials)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00178}00178\ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8}{jacobian\_free}}(jac);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00179}00179\ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00180}00180\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00181}00181\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_col\ =\ 0;\ i\_col\ <\ jac-\/>\mbox{\hyperlink{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}{num\_spec}};\ ++i\_col)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00182}00182\ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a7bc2fe67ae132c04bf45e69934e6be1f}{jacobian\_column\_elements\_free}}(\&(jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}[i\_col]));}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00181}00181\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_col\ =\ 0;\ i\_col\ <\ jac-\/>num\_spec;\ ++i\_col)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00182}00182\ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a7bc2fe67ae132c04bf45e69934e6be1f}{jacobian\_column\_elements\_free}}(\&(jac-\/>elements[i\_col]));}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00183}00183\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00184}00184\ \ \ free(jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}});}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00185}00185\ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00184}00184\ \ \ free(jac-\/>elements);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00185}00185\ \ \ jac-\/>elements\ =\ NULL;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00186}00186\ \ \ \mbox{\hyperlink{_jacobian_8c_a9b50b1fb83f669391bf76726b9c81ead}{jacobian\_reset}}(*jac);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00187}00187\ \ \ \textcolor{keywordflow}{return}\ 1;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00188}00188\ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00189}00189\ }
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00190}\mbox{\hyperlink{_jacobian_8c_a797c57a02151acb880fba00b8afc57a3}{00190}}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_jacobian_8c_a797c57a02151acb880fba00b8afc57a3}{jacobian\_number\_of\_elements}}(\mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac)\ \{\ \textcolor{keywordflow}{return}\ jac.\mbox{\hyperlink{struct_jacobian_a3577814faff1b9ab50d0f08df9a4c736}{num\_elem}};\ \}}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00190}\mbox{\hyperlink{_jacobian_8c_a797c57a02151acb880fba00b8afc57a3}{00190}}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_jacobian_8c_a797c57a02151acb880fba00b8afc57a3}{jacobian\_number\_of\_elements}}(Jacobian\ jac)\ \{\ \textcolor{keywordflow}{return}\ jac.num\_elem;\ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00191}00191\ }
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00192}\mbox{\hyperlink{_jacobian_8c_a0a9b073f122e923fe6bad96d0611a4ac}{00192}}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_jacobian_8c_a0a9b073f122e923fe6bad96d0611a4ac}{jacobian\_column\_pointer\_value}}(\mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ col\_id)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00193}00193\ \ \ \textcolor{keywordflow}{return}\ jac.\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}}[col\_id];}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00192}\mbox{\hyperlink{_jacobian_8c_a0a9b073f122e923fe6bad96d0611a4ac}{00192}}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_jacobian_8c_a0a9b073f122e923fe6bad96d0611a4ac}{jacobian\_column\_pointer\_value}}(Jacobian\ jac,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ col\_id)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00193}00193\ \ \ \textcolor{keywordflow}{return}\ jac.col\_ptrs[col\_id];}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00194}00194\ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00195}00195\ }
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00196}\mbox{\hyperlink{_jacobian_8c_ae72fb841b0dd527b9e463e7ce208d856}{00196}}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_jacobian_8c_ae72fb841b0dd527b9e463e7ce208d856}{jacobian\_row\_index}}(\mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ elem\_id)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00197}00197\ \ \ \textcolor{keywordflow}{return}\ jac.\mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\_ids}}[elem\_id];}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00196}\mbox{\hyperlink{_jacobian_8c_ae72fb841b0dd527b9e463e7ce208d856}{00196}}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_jacobian_8c_ae72fb841b0dd527b9e463e7ce208d856}{jacobian\_row\_index}}(Jacobian\ jac,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ elem\_id)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00197}00197\ \ \ \textcolor{keywordflow}{return}\ jac.row\_ids[elem\_id];}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00198}00198\ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00199}00199\ }
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00200}\mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{00200}}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(\mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dep\_id,}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00200}\mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{00200}}\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb}{jacobian\_get\_element\_id}}(Jacobian\ jac,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ dep\_id,}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ ind\_id)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00202}00202\ \ \ \textcolor{keywordflow}{if}\ (ind\_id\ >=\ jac.\mbox{\hyperlink{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}{num\_spec}}\ ||\ ind\_id\ <\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00202}00202\ \ \ \textcolor{keywordflow}{if}\ (ind\_id\ >=\ jac.num\_spec\ ||\ ind\_id\ <\ 0)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00203}00203\ \ \ \ \ printf(}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)nError:\ Bad\ Jacobian\ column\ id:\ \%u.\ Expected\ value\ between\ 0\ and\ "{}}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00205}00205\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\%u\(\backslash\)n"{}},}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00206}00206\ \ \ \ \ \ \ \ \ ind\_id,\ jac.\mbox{\hyperlink{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}{num\_spec}});}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00206}00206\ \ \ \ \ \ \ \ \ ind\_id,\ jac.num\_spec);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00207}00207\ \ \ \ \ exit(EXIT\_FAILURE);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00208}00208\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00209}00209\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_elem\ =\ jac.\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}}[ind\_id];}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00210}00210\ \ \ \ \ \ \ \ i\_elem\ <\ jac.\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}}[ind\_id\ +\ 1];\ ++i\_elem)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00211}00211\ \ \ \ \ \textcolor{keywordflow}{if}\ (jac.\mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\_ids}}[i\_elem]\ ==\ dep\_id)\ \textcolor{keywordflow}{return}\ i\_elem;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00209}00209\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_elem\ =\ jac.col\_ptrs[ind\_id];}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00210}00210\ \ \ \ \ \ \ \ i\_elem\ <\ jac.col\_ptrs[ind\_id\ +\ 1];\ ++i\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00211}00211\ \ \ \ \ \textcolor{keywordflow}{if}\ (jac.row\_ids[i\_elem]\ ==\ dep\_id)\ \textcolor{keywordflow}{return}\ i\_elem;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00212}00212\ \ \ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00213}00213\ \ \ \textcolor{keywordflow}{return}\ -\/1;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00214}00214\ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00215}00215\ }
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00216}\mbox{\hyperlink{_jacobian_8c_a9b50b1fb83f669391bf76726b9c81ead}{00216}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_jacobian_8c_a9b50b1fb83f669391bf76726b9c81ead}{jacobian\_reset}}(\mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00217}00217\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_elem\ =\ 0;\ i\_elem\ <\ jac.\mbox{\hyperlink{struct_jacobian_a3577814faff1b9ab50d0f08df9a4c736}{num\_elem}};\ ++i\_elem)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00218}00218\ \ \ \ \ jac.\mbox{\hyperlink{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}{production\_partials}}[i\_elem]\ =\ 0.0;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00219}00219\ \ \ \ \ jac.\mbox{\hyperlink{struct_jacobian_af0f149e4515991698c959c8484202a79}{loss\_partials}}[i\_elem]\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00216}\mbox{\hyperlink{_jacobian_8c_a9b50b1fb83f669391bf76726b9c81ead}{00216}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_jacobian_8c_a9b50b1fb83f669391bf76726b9c81ead}{jacobian\_reset}}(Jacobian\ jac)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00217}00217\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_elem\ =\ 0;\ i\_elem\ <\ jac.num\_elem;\ ++i\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00218}00218\ \ \ \ \ jac.production\_partials[i\_elem]\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00219}00219\ \ \ \ \ jac.loss\_partials[i\_elem]\ =\ 0.0;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00220}00220\ \ \ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00221}00221\ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00222}00222\ }
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00223}\mbox{\hyperlink{_jacobian_8c_adcc6d47123aab80bc7b90bdcbb68c90d}{00223}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_jacobian_8c_adcc6d47123aab80bc7b90bdcbb68c90d}{jacobian\_output}}(\mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac,\ \textcolor{keywordtype}{double}\ *dest\_array)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00224}00224\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_col\ =\ 0;\ i\_col\ <\ jac.\mbox{\hyperlink{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}{num\_spec}};\ ++i\_col)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00225}00225\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_elem\ =\ jac.\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}}[i\_col];}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00226}00226\ \ \ \ \ \ \ \ \ \ i\_elem\ <\ jac.\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}}[i\_col\ +\ 1];\ ++i\_elem)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00227}00227\ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ drf\_dy\ =\ jac.\mbox{\hyperlink{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}{production\_partials}}[i\_elem];}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00228}00228\ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ drr\_dy\ =\ jac.\mbox{\hyperlink{struct_jacobian_af0f149e4515991698c959c8484202a79}{loss\_partials}}[i\_elem];}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00223}\mbox{\hyperlink{_jacobian_8c_adcc6d47123aab80bc7b90bdcbb68c90d}{00223}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_jacobian_8c_adcc6d47123aab80bc7b90bdcbb68c90d}{jacobian\_output}}(Jacobian\ jac,\ \textcolor{keywordtype}{double}\ *dest\_array)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00224}00224\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_col\ =\ 0;\ i\_col\ <\ jac.num\_spec;\ ++i\_col)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00225}00225\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_elem\ =\ jac.col\_ptrs[i\_col];}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00226}00226\ \ \ \ \ \ \ \ \ \ i\_elem\ <\ jac.col\_ptrs[i\_col\ +\ 1];\ ++i\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00227}00227\ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ drf\_dy\ =\ jac.production\_partials[i\_elem];}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00228}00228\ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ drr\_dy\ =\ jac.loss\_partials[i\_elem];}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00229}00229\ \ \ \ \ \ \ dest\_array[i\_elem]\ =\ drf\_dy\ -\/\ drr\_dy;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00230}00230\ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00231}00231\ \ \ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00232}00232\ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00233}00233\ }
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00234}\mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{00234}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(\mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ elem\_id,}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00234}\mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{00234}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(Jacobian\ jac,\ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ elem\_id,}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ prod\_or\_loss,}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ jac\_contribution)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00237}00237\ \ \ \textcolor{keywordflow}{if}\ (prod\_or\_loss\ ==\ \mbox{\hyperlink{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}{JACOBIAN\_PRODUCTION}})}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00238}00238\ \ \ \ \ jac.\mbox{\hyperlink{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}{production\_partials}}[elem\_id]\ +=\ jac\_contribution;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00239}00239\ \ \ \textcolor{keywordflow}{if}\ (prod\_or\_loss\ ==\ \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}})}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00240}00240\ \ \ \ \ jac.\mbox{\hyperlink{struct_jacobian_af0f149e4515991698c959c8484202a79}{loss\_partials}}[elem\_id]\ +=\ jac\_contribution;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00237}00237\ \ \ \textcolor{keywordflow}{if}\ (prod\_or\_loss\ ==\ JACOBIAN\_PRODUCTION)}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00238}00238\ \ \ \ \ jac.production\_partials[elem\_id]\ +=\ jac\_contribution;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00239}00239\ \ \ \textcolor{keywordflow}{if}\ (prod\_or\_loss\ ==\ JACOBIAN\_LOSS)}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00240}00240\ \ \ \ \ jac.loss\_partials[elem\_id]\ +=\ jac\_contribution;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00241}00241\ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00242}00242\ }
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00243}\mbox{\hyperlink{_jacobian_8c_adad0a11d68ed833045d81177b6b95baa}{00243}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_jacobian_8c_adad0a11d68ed833045d81177b6b95baa}{jacobian\_print}}(\mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00243}\mbox{\hyperlink{_jacobian_8c_adad0a11d68ed833045d81177b6b95baa}{00243}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_jacobian_8c_adad0a11d68ed833045d81177b6b95baa}{jacobian\_print}}(Jacobian\ jac)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00244}00244\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ \ ***\ Jacobian\ ***"{}});}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00245}00245\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nnumber\ of\ variables:\ \%d"{}},\ jac.\mbox{\hyperlink{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}{num\_spec}});}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00246}00246\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nnumber\ of\ non-\/zero\ Jacobian\ elements:\ \%d"{}},\ jac.\mbox{\hyperlink{struct_jacobian_a3577814faff1b9ab50d0f08df9a4c736}{num\_elem}});}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00247}00247\ \ \ \textcolor{keywordflow}{if}\ (!jac.\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}}\ \&\&\ !jac.\mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\_ids}}\ \&\&\ !jac.\mbox{\hyperlink{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}{production\_partials}}\ \&\&}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00248}00248\ \ \ \ \ \ \ !jac.\mbox{\hyperlink{struct_jacobian_af0f149e4515991698c959c8484202a79}{loss\_partials}}\ \&\&\ jac.\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}})\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00245}00245\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nnumber\ of\ variables:\ \%d"{}},\ jac.num\_spec);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00246}00246\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nnumber\ of\ non-\/zero\ Jacobian\ elements:\ \%d"{}},\ jac.num\_elem);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00247}00247\ \ \ \textcolor{keywordflow}{if}\ (!jac.col\_ptrs\ \&\&\ !jac.row\_ids\ \&\&\ !jac.production\_partials\ \&\&}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00248}00248\ \ \ \ \ \ \ !jac.loss\_partials\ \&\&\ jac.elements)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00249}00249\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nstatus:\ building\ Jacobian"{}});}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00250}00250\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_col\ =\ 0;\ i\_col\ <\ jac.\mbox{\hyperlink{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}{num\_spec}};\ ++i\_col)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00250}00250\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_col\ =\ 0;\ i\_col\ <\ jac.num\_spec;\ ++i\_col)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00251}00251\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_elem\ =\ 0;}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ i\_elem\ <\ jac.\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}[i\_col].\mbox{\hyperlink{struct_jacobian_column_elements_aa9d00250ee3e413e9797e2e2bbb97a1d}{number\_of\_elements}};\ ++i\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00252}00252\ \ \ \ \ \ \ \ \ \ \ \ i\_elem\ <\ jac.elements[i\_col].number\_of\_elements;\ ++i\_elem)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00253}00253\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ col\ =\ \%6d\ row\ =\ \%6d"{}},\ i\_col,}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jac.\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}[i\_col].\mbox{\hyperlink{struct_jacobian_column_elements_aaa35ae8a5aab1aae34f298443bcb07ee}{row\_ids}}[i\_elem]);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jac.elements[i\_col].row\_ids[i\_elem]);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00255}00255\ \ \ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00256}00256\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00257}00257\ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (jac.\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}}\ \&\&\ jac.\mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\_ids}}\ \&\&\ jac.\mbox{\hyperlink{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}{production\_partials}}\ \&\&}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ jac.\mbox{\hyperlink{struct_jacobian_af0f149e4515991698c959c8484202a79}{loss\_partials}})\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00257}00257\ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (jac.col\_ptrs\ \&\&\ jac.row\_ids\ \&\&\ jac.production\_partials\ \&\&}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \ jac.loss\_partials)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00259}00259\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nstatus:\ Jacobian\ built"{}});}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00260}00260\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_col\ =\ 0;\ i\_col\ <\ jac.\mbox{\hyperlink{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}{num\_spec}};\ ++i\_col)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00261}00261\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_elem\ =\ jac.\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}}[i\_col];}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ i\_elem\ <\ jac.\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}}[i\_col\ +\ 1];\ ++i\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00260}00260\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_col\ =\ 0;\ i\_col\ <\ jac.num\_spec;\ ++i\_col)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00261}00261\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_elem\ =\ jac.col\_ptrs[i\_col];}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ i\_elem\ <\ jac.col\_ptrs[i\_col\ +\ 1];\ ++i\_elem)\ \{}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00263}00263\ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ col\ =\ \%6d\ row\ =\ \%6d\ production\ =\ \%Le\ loss\ =\ \%Le"{}},\ i\_col,}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jac.\mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\_ids}}[i\_elem],\ jac.\mbox{\hyperlink{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}{production\_partials}}[i\_elem],}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00265}00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jac.\mbox{\hyperlink{struct_jacobian_af0f149e4515991698c959c8484202a79}{loss\_partials}}[i\_elem]);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jac.row\_ids[i\_elem],\ jac.production\_partials[i\_elem],}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00265}00265\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ jac.loss\_partials[i\_elem]);}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00266}00266\ \ \ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00267}00267\ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00268}00268\ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
@@ -275,36 +275,36 @@
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00271}00271\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ ***\ end\ Jacobian\ ***"{}});}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00272}00272\ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00273}00273\ }
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00274}\mbox{\hyperlink{_jacobian_8c_a7bc2fe67ae132c04bf45e69934e6be1f}{00274}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_jacobian_8c_a7bc2fe67ae132c04bf45e69934e6be1f}{jacobian\_column\_elements\_free}}(\mbox{\hyperlink{struct_jacobian_column_elements}{JacobianColumnElements}}\ *column)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00275}00275\ \ \ \textcolor{keywordflow}{if}\ (column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_aaa35ae8a5aab1aae34f298443bcb07ee}{row\_ids}})\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00276}00276\ \ \ \ \ free(column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_aaa35ae8a5aab1aae34f298443bcb07ee}{row\_ids}});}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00277}00277\ \ \ \ \ column-\/>\mbox{\hyperlink{struct_jacobian_column_elements_aaa35ae8a5aab1aae34f298443bcb07ee}{row\_ids}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00274}\mbox{\hyperlink{_jacobian_8c_a7bc2fe67ae132c04bf45e69934e6be1f}{00274}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_jacobian_8c_a7bc2fe67ae132c04bf45e69934e6be1f}{jacobian\_column\_elements\_free}}(JacobianColumnElements\ *column)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00275}00275\ \ \ \textcolor{keywordflow}{if}\ (column-\/>row\_ids)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00276}00276\ \ \ \ \ free(column-\/>row\_ids);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00277}00277\ \ \ \ \ column-\/>row\_ids\ =\ NULL;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00278}00278\ \ \ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00279}00279\ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00280}00280\ }
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00281}\mbox{\hyperlink{_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8}{00281}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8}{jacobian\_free}}(\mbox{\hyperlink{struct_jacobian}{Jacobian}}\ *jac)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00282}00282\ \ \ \textcolor{keywordflow}{if}\ (jac-\/>\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}})\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00283}00283\ \ \ \ \ free(jac-\/>\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}});}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00284}00284\ \ \ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_ae92f8a6b23f8d415d0daf7466c7adf61}{col\_ptrs}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00281}\mbox{\hyperlink{_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8}{00281}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8}{jacobian\_free}}(Jacobian\ *jac)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00282}00282\ \ \ \textcolor{keywordflow}{if}\ (jac-\/>col\_ptrs)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00283}00283\ \ \ \ \ free(jac-\/>col\_ptrs);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00284}00284\ \ \ \ \ jac-\/>col\_ptrs\ =\ NULL;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00285}00285\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00286}00286\ \ \ \textcolor{keywordflow}{if}\ (jac-\/>\mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\_ids}})\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00287}00287\ \ \ \ \ free(jac-\/>\mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\_ids}});}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00288}00288\ \ \ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_aadba4c89d14243d9efb2b4ada120835b}{row\_ids}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00286}00286\ \ \ \textcolor{keywordflow}{if}\ (jac-\/>row\_ids)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00287}00287\ \ \ \ \ free(jac-\/>row\_ids);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00288}00288\ \ \ \ \ jac-\/>row\_ids\ =\ NULL;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00289}00289\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00290}00290\ \ \ \textcolor{keywordflow}{if}\ (jac-\/>\mbox{\hyperlink{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}{production\_partials}})\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00291}00291\ \ \ \ \ free(jac-\/>\mbox{\hyperlink{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}{production\_partials}});}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00292}00292\ \ \ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_aa3769748bef6978d91dee0c35bec6c7e}{production\_partials}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00290}00290\ \ \ \textcolor{keywordflow}{if}\ (jac-\/>production\_partials)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00291}00291\ \ \ \ \ free(jac-\/>production\_partials);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00292}00292\ \ \ \ \ jac-\/>production\_partials\ =\ NULL;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00293}00293\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00294}00294\ \ \ \textcolor{keywordflow}{if}\ (jac-\/>\mbox{\hyperlink{struct_jacobian_af0f149e4515991698c959c8484202a79}{loss\_partials}})\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00295}00295\ \ \ \ \ free(jac-\/>\mbox{\hyperlink{struct_jacobian_af0f149e4515991698c959c8484202a79}{loss\_partials}});}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00296}00296\ \ \ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_af0f149e4515991698c959c8484202a79}{loss\_partials}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00294}00294\ \ \ \textcolor{keywordflow}{if}\ (jac-\/>loss\_partials)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00295}00295\ \ \ \ \ free(jac-\/>loss\_partials);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00296}00296\ \ \ \ \ jac-\/>loss\_partials\ =\ NULL;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00297}00297\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00298}00298\ \ \ \textcolor{keywordflow}{if}\ (jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}})\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00299}00299\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_col\ =\ 0;\ i\_col\ <\ jac-\/>\mbox{\hyperlink{struct_jacobian_ac23b460de84d71921aaf20f9605dce5c}{num\_spec}};\ ++i\_col)\ \{}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00300}00300\ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a7bc2fe67ae132c04bf45e69934e6be1f}{jacobian\_column\_elements\_free}}(\&(jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}[i\_col]));}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00298}00298\ \ \ \textcolor{keywordflow}{if}\ (jac-\/>elements)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00299}00299\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int}\ i\_col\ =\ 0;\ i\_col\ <\ jac-\/>num\_spec;\ ++i\_col)\ \{}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00300}00300\ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a7bc2fe67ae132c04bf45e69934e6be1f}{jacobian\_column\_elements\_free}}(\&(jac-\/>elements[i\_col]));}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00301}00301\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00302}00302\ \ \ \ \ free(jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}});}
-\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00303}00303\ \ \ \ \ jac-\/>\mbox{\hyperlink{struct_jacobian_a0ca22303fdf89f20c215b23ee59a6df3}{elements}}\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00302}00302\ \ \ \ \ free(jac-\/>elements);}
+\DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00303}00303\ \ \ \ \ jac-\/>elements\ =\ NULL;}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00304}00304\ \ \ \}}
 \DoxyCodeLine{\Hypertarget{_jacobian_8c_source_l00305}00305\ \}}
 

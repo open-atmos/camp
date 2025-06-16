@@ -1,5 +1,0 @@
-<map id="jacobian_free" name="jacobian_free">
-<area shape="rect" id="Node000001" title="Free memory associated with a Jacobian." alt="" coords="5,5,104,31"/>
-<area shape="rect" id="Node000002" href="$_jacobian_8c.html#a7bc2fe67ae132c04bf45e69934e6be1f" title="Free memory associated with a JacobianColumnElements." alt="" coords="152,5,359,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,16,136,16,136,21,104,21"/>
-</map>

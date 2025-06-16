@@ -1,5 +1,5 @@
 <map id="jacobian_column_pointer_value" name="jacobian_column_pointer_value">
-<area shape="rect" id="Node000001" title="Returns the value of a column pointer." alt="" coords="714,30,878,71"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="714,30,878,71"/>
 <area shape="rect" id="Node000002" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="163,38,250,64"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="698,39,665,35,481,11,401,9,298,21,267,29,238,40,237,35,266,24,298,16,400,4,481,6,666,29,699,33"/>
 <area shape="rect" id="Node000004" href="$sub__model__solver_8c.html#a4b1d9807c5fc6b0f2129eb420fa191ad" title="Get the Jacobian elements used by a particular sub model." alt="" coords="303,30,447,71"/>

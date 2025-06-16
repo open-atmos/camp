@@ -1,0 +1,11 @@
+<map id="camp_camp_box_model_data::update_rxn" name="camp_camp_box_model_data::update_rxn">
+<area shape="rect" id="Node000001" title="Update a reaction with the current rate from the profile." alt="" coords="5,5,167,46"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__util.html#aa942add404bf8b611e5b4b8c777ca7f6" title="Error immediately." alt="" coords="215,13,315,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,23,199,23,199,28,167,28"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="363,13,482,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="315,23,347,23,347,28,315,28"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="530,13,682,38"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="483,23,515,23,515,28,483,28"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="730,5,852,46"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="682,23,714,23,714,28,682,28"/>
+</map>

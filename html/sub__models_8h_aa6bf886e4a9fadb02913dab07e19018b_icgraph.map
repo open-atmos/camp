@@ -1,9 +1,0 @@
-<map id="sub_model_ZSR_aerosol_water_get_jac_contrib" name="sub_model_ZSR_aerosol_water_get_jac_contrib">
-<area shape="rect" id="Node000001" title="Add contributions to the Jacobian from derivates calculated using the output of this sub model." alt="" coords="480,5,647,46"/>
-<area shape="rect" id="Node000002" href="$sub__model__solver_8c.html#a9575eb8104f46d396268c361164e88fb" title="Calculate the Jacobian constributions from sub model calculations." alt="" coords="253,13,432,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="464,28,433,28,433,23,464,23"/>
-<area shape="rect" id="Node000003" href="$camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="163,13,205,38"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="238,28,205,28,205,23,238,23"/>
-<area shape="rect" id="Node000004" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,13,115,38"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="147,28,115,28,115,23,147,23"/>
-</map>

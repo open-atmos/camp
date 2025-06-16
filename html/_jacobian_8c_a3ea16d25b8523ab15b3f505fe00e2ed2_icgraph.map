@@ -1,5 +1,5 @@
 <map id="jacobian_initialize_empty" name="jacobian_initialize_empty">
-<area shape="rect" id="Node000001" title="Initialize the Jacobian." alt="" coords="714,28,836,69"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="714,28,836,69"/>
 <area shape="rect" id="Node000002" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="163,36,250,61"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="698,35,615,22,515,12,406,9,352,12,298,19,267,27,238,37,237,32,266,22,298,14,351,7,406,4,515,6,616,17,699,30"/>
 <area shape="rect" id="Node000004" href="$sub__model__solver_8c.html#a4b1d9807c5fc6b0f2129eb420fa191ad" title="Get the Jacobian elements used by a particular sub model." alt="" coords="303,28,447,69"/>

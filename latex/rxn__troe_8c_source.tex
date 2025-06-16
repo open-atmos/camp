@@ -15,7 +15,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <math.h>}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{rxns_8h}{../rxns.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ <camp/rxns.h>}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00015}00015\ }
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00016}00016\ \textcolor{comment}{//\ TODO\ Lookup\ environmental\ indicies\ during\ initialization}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00017}\mbox{\hyperlink{rxn__troe_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{00017}}\ \textcolor{preprocessor}{\#define\ TEMPERATURE\_K\_\ env\_data[0]}}
@@ -48,8 +48,8 @@
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00044}00044\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00045}00045\ \textcolor{comment}{\ *\ \(\backslash\)param\ jac\ Jacobian}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00046}00046\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00047}\mbox{\hyperlink{rxns_8h_a8d762626ae8950f250d052a06e996db3}{00047}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__troe_8c_a8d762626ae8950f250d052a06e996db3}{rxn\_troe\_get\_used\_jac\_elem}}(\textcolor{keywordtype}{int}\ *rxn\_int\_data,\ \textcolor{keywordtype}{double}\ *rxn\_float\_data,}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ *jac)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00047}\mbox{\hyperlink{rxn__troe_8c_a8d762626ae8950f250d052a06e996db3}{00047}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__troe_8c_a8d762626ae8950f250d052a06e996db3}{rxn\_troe\_get\_used\_jac\_elem}}(\textcolor{keywordtype}{int}\ *rxn\_int\_data,\ \textcolor{keywordtype}{double}\ *rxn\_float\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Jacobian\ *jac)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00049}00049\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00050}00050\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00051}00051\ }
@@ -73,7 +73,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00069}00069\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_int\_data\ Pointer\ to\ the\ reaction\ integer\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00070}00070\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00071}00071\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00072}\mbox{\hyperlink{rxns_8h_ab035a7b5e3990e133d055b13cbd74a08}{00072}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__troe_8c_ab035a7b5e3990e133d055b13cbd74a08}{rxn\_troe\_update\_ids}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ \textcolor{keywordtype}{int}\ *deriv\_ids,\ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac,}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00072}\mbox{\hyperlink{rxn__troe_8c_ab035a7b5e3990e133d055b13cbd74a08}{00072}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__troe_8c_ab035a7b5e3990e133d055b13cbd74a08}{rxn\_troe\_update\_ids}}(ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ *deriv\_ids,\ Jacobian\ jac,}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *rxn\_int\_data,\ \textcolor{keywordtype}{double}\ *rxn\_float\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00074}00074\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00075}00075\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
@@ -108,11 +108,11 @@
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00104}00104\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00105}00105\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_env\_data\ Pointer\ to\ the\ environment-\/dependent\ parameters}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00106}00106\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00107}\mbox{\hyperlink{rxns_8h_ad2f31b90abffa527604e554295d3a40f}{00107}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__troe_8c_ad2f31b90abffa527604e554295d3a40f}{rxn\_troe\_update\_env\_state}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00107}\mbox{\hyperlink{rxn__troe_8c_ad2f31b90abffa527604e554295d3a40f}{00107}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__troe_8c_ad2f31b90abffa527604e554295d3a40f}{rxn\_troe\_update\_env\_state}}(ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,\ \textcolor{keywordtype}{double}\ *rxn\_env\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00109}00109\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00110}00110\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00111}00111\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00111}00111\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>grid\_cell\_env;}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00112}00112\ }
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00113}00113\ \ \ \textcolor{comment}{//\ Calculate\ the\ rate\ constant\ in\ (\#/cc)}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00114}00114\ \ \ \textcolor{comment}{//\ k\ =\ (k0[M]\ /\ (1\ +\ k0[M]/kinf))\ *\ Fc\string^(1/(1+(1/N*log(k0[M]/kinf))\string^2))}}
@@ -144,14 +144,14 @@
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00140}00140\ \textcolor{comment}{\ *\ \(\backslash\)param\ time\_step\ Current\ time\ step\ being\ computed\ (s)}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00141}00141\ \textcolor{comment}{\ */}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00142}00142\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_SUNDIALS}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00143}\mbox{\hyperlink{rxns_8h_ae2174a745239e629f1c5480a52c3f6f2}{00143}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__troe_8c_ae2174a745239e629f1c5480a52c3f6f2}{rxn\_troe\_calc\_deriv\_contrib}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_time_derivative}{TimeDerivative}}\ time\_deriv,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00143}\mbox{\hyperlink{rxn__troe_8c_ae2174a745239e629f1c5480a52c3f6f2}{00143}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__troe_8c_ae2174a745239e629f1c5480a52c3f6f2}{rxn\_troe\_calc\_deriv\_contrib}}(ModelData\ *model\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ TimeDerivative\ time\_deriv,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,\ \textcolor{keywordtype}{double}\ *rxn\_env\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ realtype\ time\_step)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00147}00147\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00148}00148\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00149}00149\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00150}00150\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00149}00149\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>grid\_cell\_state;}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00150}00150\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>grid\_cell\_env;}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00151}00151\ }
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00152}00152\ \ \ \textcolor{comment}{//\ Calculate\ the\ reaction\ rate}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00153}00153\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ rate\ =\ \mbox{\hyperlink{rxn__troe_8c_a6d62af2f44a112ef5b324cf406a830c2}{RATE\_CONSTANT\_}};}
@@ -159,7 +159,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00155}00155\ \ \ \ \ rate\ *=\ state[\mbox{\hyperlink{rxn__troe_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_spec)];}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00156}00156\ }
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00157}00157\ \ \ \textcolor{comment}{//\ Add\ contributions\ to\ the\ time\ derivative}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00158}00158\ \ \ \textcolor{keywordflow}{if}\ (rate\ !=\ \mbox{\hyperlink{camp__common_8h_ac328e551bde3d39b6d7b8cc9e048d941}{ZERO}})\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00158}00158\ \ \ \textcolor{keywordflow}{if}\ (rate\ !=\ ZERO)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00159}00159\ \ \ \ \ \textcolor{keywordtype}{int}\ i\_dep\_var\ =\ 0;}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00160}00160\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_spec\ =\ 0;\ i\_spec\ <\ \mbox{\hyperlink{rxn__troe_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}};\ i\_spec++,\ i\_dep\_var++)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00161}00161\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{rxn__troe_8c_af9fc34858d09e71d3cffd88cf942bdf9}{DERIV\_ID\_}}(i\_dep\_var)\ <\ 0)\ \textcolor{keywordflow}{continue};}
@@ -190,13 +190,13 @@
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00186}00186\ \textcolor{comment}{\ *\ \(\backslash\)param\ time\_step\ Current\ time\ step\ being\ calculated\ (s)}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00187}00187\ \textcolor{comment}{\ */}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00188}00188\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_SUNDIALS}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00189}\mbox{\hyperlink{rxns_8h_a4f34c34a0b24bbbb11a127246e3fd35e}{00189}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__troe_8c_a4f34c34a0b24bbbb11a127246e3fd35e}{rxn\_troe\_calc\_jac\_contrib}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac,}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00189}\mbox{\hyperlink{rxn__troe_8c_a4f34c34a0b24bbbb11a127246e3fd35e}{00189}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__troe_8c_a4f34c34a0b24bbbb11a127246e3fd35e}{rxn\_troe\_calc\_jac\_contrib}}(ModelData\ *model\_data,\ Jacobian\ jac,}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *rxn\_int\_data,\ \textcolor{keywordtype}{double}\ *rxn\_float\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_env\_data,\ realtype\ time\_step)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00192}00192\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00193}00193\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00194}00194\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00195}00195\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00194}00194\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>grid\_cell\_state;}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00195}00195\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>grid\_cell\_env;}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00196}00196\ }
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00197}00197\ \ \ \textcolor{comment}{//\ Add\ contributions\ to\ the\ Jacobian}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00198}00198\ \ \ \textcolor{keywordtype}{int}\ i\_elem\ =\ 0;}
@@ -208,7 +208,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00204}00204\ }
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00205}00205\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_dep\ =\ 0;\ i\_dep\ <\ \mbox{\hyperlink{rxn__troe_8c_a05ef845cf6ed7ab9a774440c42af34fa}{NUM\_REACT\_}};\ i\_dep++,\ i\_elem++)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00206}00206\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{rxn__troe_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_elem)\ <\ 0)\ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00207}00207\ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__troe_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_elem),\ \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}},}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00207}00207\ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__troe_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_elem),\ JACOBIAN\_LOSS,}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rate);}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00209}00209\ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00210}00210\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_dep\ =\ 0;\ i\_dep\ <\ \mbox{\hyperlink{rxn__troe_8c_acf951e890da75cd2d503ed6ce8211fc2}{NUM\_PROD\_}};\ i\_dep++,\ i\_elem++)\ \{}
@@ -218,7 +218,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00214}00214\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (-\/rate\ *\ state[\mbox{\hyperlink{rxn__troe_8c_ae761e39657aac155d83eae9b338be571}{REACT\_}}(i\_ind)]\ *\ \mbox{\hyperlink{rxn__troe_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\_}}(i\_dep)\ *\ time\_step\ <=}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ state[\mbox{\hyperlink{rxn__troe_8c_a9fda90058c6a41b1dda6ded03321c4da}{PROD\_}}(i\_dep)])\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00216}00216\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__troe_8c_ab831aae98d4453927c63a93f55ee5a86}{JAC\_ID\_}}(i\_elem),}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{_jacobian_8h_ab017277870084c5c04c2cc8b9cccc22f}{JACOBIAN\_PRODUCTION}},\ \mbox{\hyperlink{rxn__troe_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\_}}(i\_dep)\ *\ rate);}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ JACOBIAN\_PRODUCTION,\ \mbox{\hyperlink{rxn__troe_8c_a9ae244708fd9c438bf840ed319733651}{YIELD\_}}(i\_dep)\ *\ rate);}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00218}00218\ \ \ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00219}00219\ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00220}00220\ \ \ \}}
@@ -232,7 +232,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00228}00228\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_int\_data\ Pointer\ to\ the\ reaction\ integer\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00229}00229\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00230}00230\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00231}\mbox{\hyperlink{rxns_8h_a7c9a6d7ecc68d520fa5dc35557a1c329}{00231}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__troe_8c_a7c9a6d7ecc68d520fa5dc35557a1c329}{rxn\_troe\_print}}(\textcolor{keywordtype}{int}\ *rxn\_int\_data,\ \textcolor{keywordtype}{double}\ *rxn\_float\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00231}\mbox{\hyperlink{rxn__troe_8c_a7c9a6d7ecc68d520fa5dc35557a1c329}{00231}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__troe_8c_a7c9a6d7ecc68d520fa5dc35557a1c329}{rxn\_troe\_print}}(\textcolor{keywordtype}{int}\ *rxn\_int\_data,\ \textcolor{keywordtype}{double}\ *rxn\_float\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00232}00232\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00233}00233\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8c_source_l00234}00234\ }

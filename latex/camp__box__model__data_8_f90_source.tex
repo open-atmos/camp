@@ -1,0 +1,948 @@
+\doxysection{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}
+\hypertarget{camp__box__model__data_8_f90_source}{}\label{camp__box__model__data_8_f90_source}\index{camp\_box\_model\_data.F90@{camp\_box\_model\_data.F90}}
+\mbox{\hyperlink{camp__box__model__data_8_f90}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00001}00001\ \textcolor{comment}{!\ Copyright\ (C)\ 2021\ Barcelona\ Supercomputing\ Center\ and\ University\ of}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00002}00002\ \textcolor{comment}{!\ Illinois\ at\ Urbana-\/Champaign}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00003}00003\ \textcolor{comment}{!\ SPDX-\/License-\/Identifier:\ MIT}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00004}00004\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00005}00005\ \textcolor{comment}{!>\ \(\backslash\)file}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00006}00006\ \textcolor{comment}{!>\ The\ camp\_camp\_box\_model\_data\_t\ type\ and\ related\ functions}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00007}00007\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00008}00008\ \textcolor{comment}{!>\ A\ simple\ box\ model\ for\ \(\backslash\)ref\ index\ "{}CAMP"{}\ mechanisms}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00009}00009\ \textcolor{comment}{!!\ \(\backslash\)todo\{\ Modify\ this\ to\ run\ full\ PartMC\ scenarios\ with\ CAMP\ enabled}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00010}00010\ \textcolor{comment}{!!\ \ \ \ \ \ \ \ so\ that\ aerosol\ physical\ processes\ can\ be\ included.\ \}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00011}\mbox{\hyperlink{namespacecamp__camp__box__model__data}{00011}}\ \textcolor{keyword}{module}\ \mbox{\hyperlink{namespacecamp__camp__box__model__data}{camp\_camp\_box\_model\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00013}00013\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__aero__rep__data}{camp\_aero\_rep\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00014}00014\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__camp__core}{camp\_camp\_core}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00015}00015\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__camp__state}{camp\_camp\_state}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00016}00016\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rxn__data}{camp\_rxn\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00017}00017\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__util}{camp\_util}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00019}00019\ \ \ \textcolor{keywordtype}{implicit\ none}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00020}00020\ \ \ \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00022}00022\ \ \ \textcolor{keywordtype}{public}\ ::\ \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\_box\_model\_data\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00024}00024\ \ \ \textcolor{comment}{!\ New-\/line\ character}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00025}\mbox{\hyperlink{namespacecamp__camp__box__model__data_a379740ff02b3bc2ba3b0a87e44e88a26}{00025}}\ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{parameter}\ ::\ \mbox{\hyperlink{namespacecamp__camp__box__model__data_a379740ff02b3bc2ba3b0a87e44e88a26}{new\_line}}\ =\ char(10)}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00026}00026\ \ \ \textcolor{comment}{!\ File\ unit\ to\ use\ for\ scipts\ output}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00027}\mbox{\hyperlink{namespacecamp__camp__box__model__data_a47676ba67feaf329c20b2b3852859054}{00027}}\ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{parameter}\ ::\ \mbox{\hyperlink{namespacecamp__camp__box__model__data_a47676ba67feaf329c20b2b3852859054}{scripts\_file\_unit}}\ =\ 8}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00028}00028\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00029}00029\ \textcolor{comment}{\ \ !>\ Property\ time\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00030}00030\ \ \ \textcolor{keyword}{type}\ ::\ \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00031}00031\ \textcolor{comment}{\ \ \ \ !>\ Name\ of\ the\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00032}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_a32e34b2523b23f339184b97e598e8032}{00032}}\ \ \ \ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ name\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00033}00033\ \textcolor{comment}{\ \ \ \ !>\ Current\ time\ step\ in\ the\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00034}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_a73ae804b4c16239e634fddb93ceb0ae4}{00034}}\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ curr\_time\_step\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00035}00035\ \textcolor{comment}{\ \ \ \ !>\ Index\ for\ the\ current\ position\ in\ the\ transition\ arrays}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00036}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_a620b93340f7f64f7b2d48920f2951981}{00036}}\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ curr\_transition\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00037}00037\ \textcolor{comment}{\ \ \ \ !>\ Time\ step\ for\ the\ next\ transition,\ starting\ with\ 0\ (initial\ conditions)}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00038}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_af0396fb5ddeb1441aaae974e86a73445}{00038}}\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{allocatable}\ ::\ transition\_time\_step(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00039}00039\ \textcolor{comment}{\ \ \ \ !>\ New\ values\ for\ each\ transition,\ starting\ with\ the\ initial\ value}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00040}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_a048891e70bb5be9b15dd07513f1c53bc}{00040}}\ \textcolor{keywordtype}{\ \ \ \ real}(kind=dp),\ \textcolor{keywordtype}{allocatable}\ ::\ transition\_value(:)}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00041}00041\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00042}00042\ \textcolor{comment}{\ \ \ \ !>\ Reset\ the\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00043}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_a5528388cd9694b020997071e092d787e}{00043}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__camp__box__model__data_a9b28d1449f2275a8fcfa9f6befc223db}{reset}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00044}00044\ \textcolor{comment}{\ \ \ \ !>\ Advance\ the\ profile\ by\ one\ time\ step}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00045}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_ab33a66ae79ca54a96ce854fdcba7a4b2}{00045}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__camp__box__model__data_a8448207c5ec228e265508f0bb2947ebf}{advance}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00046}00046\ \textcolor{comment}{\ \ \ \ !>\ Get\ the\ current\ profile\ value}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00047}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_acf176eede9a8b041c24cf37cb73e54a9}{00047}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__camp__box__model__data_ab29c50b53e313caecde7287bbcc0a6ae}{current\_value}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00048}00048\ \textcolor{comment}{\ \ \ \ !>\ Print\ the\ profile\ configuration}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00049}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_ad4d5784e0e2540e56abef1be63512ebb}{00049}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ print\ =>\ \mbox{\hyperlink{namespacecamp__camp__box__model__data_a287e225be62f3476fef790b5bba76a16}{profile\_do\_print}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00050}00050\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00052}00052\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_JSON}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00053}00053\ \textcolor{preprocessor}{}\textcolor{comment}{\ \ !>\ Constructor\ for\ profile\_t}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00054}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{00054}}\ \ \ \textcolor{keyword}{interface}\ \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00055}00055\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ profile\_constructor}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00056}00056\ \ \ \textcolor{keyword}{end\ interface\ }\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00057}00057\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00058}00058\ \textcolor{preprocessor}{}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00059}00059\ \textcolor{comment}{\ \ !>\ Reaction\ rate\ time\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00060}00060\ \ \ \textcolor{keyword}{type},\ \textcolor{keyword}{extends}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}})\ ::\ \mbox{\hyperlink{structcamp__camp__box__model__data_1_1rxn__profile__t}{rxn\_profile\_t}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00061}00061\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ update\ object}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00062}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1rxn__profile__t_a9e0e8a654ee398065e78d55e3468a02d}{00062}}\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__update__data__t}{rxn\_update\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ update\_data}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00063}00063\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00064}00064\ \textcolor{comment}{\ \ \ \ !>\ Update\ the\ reaction\ rate}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00065}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1rxn__profile__t_ac8a62a5729cf07978ee1399677a8efc6}{00065}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__camp__box__model__data_a61bdbd2a4ffa9c2ced4c2af8bc202547}{update\_rxn}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00066}00066\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ reaction\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00067}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1rxn__profile__t_aa4098149517cd886dab9efdf10f46ee5}{00067}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__box__model__data_a162f3ff794061e76de73793d4fbf32b6}{rxn\_profile\_finalize}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00068}00068\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__camp__box__model__data_1_1rxn__profile__t}{rxn\_profile\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00070}00070\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_JSON}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00071}00071\ \textcolor{preprocessor}{}\textcolor{comment}{\ \ !>\ Constructor\ for\ rxn\_profile\_t}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00072}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1rxn__profile__t}{00072}}\ \ \ \textcolor{keyword}{interface}\ \mbox{\hyperlink{structcamp__camp__box__model__data_1_1rxn__profile__t}{rxn\_profile\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00073}00073\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ rxn\_profile\_constructor}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00074}00074\ \ \ \textcolor{keyword}{end\ interface\ }\mbox{\hyperlink{structcamp__camp__box__model__data_1_1rxn__profile__t}{rxn\_profile\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00075}00075\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00076}00076\ \textcolor{preprocessor}{}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00077}00077\ \textcolor{comment}{\ \ !>\ Aerosol\ representation\ time\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00078}00078\ \ \ \textcolor{keyword}{type},\ \textcolor{keyword}{extends}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}})\ ::\ \mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{aero\_rep\_profile\_t}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00079}00079\ \textcolor{comment}{\ \ \ \ !>\ Index\ for\ update\ type}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00080}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t_ac8cb254dd803f8b631fefda487c368cf}{00080}}\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ update\_type\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00081}00081\ \textcolor{comment}{\ \ \ \ !>\ Section\ id\ (modal/binned)}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00082}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t_a947da8383f885e86c41d0d479050985f}{00082}}\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ section\_id\ =\ 0\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00083}00083\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ update\ object}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00084}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t_a0d6379c379c74facdf2fb9853c4a5947}{00084}}\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__update__data__t}{aero\_rep\_update\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ update\_data}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00085}00085\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00086}00086\ \textcolor{comment}{\ \ \ \ !>\ Update\ the\ aerosol\ representation\ property\ of\ interest}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00087}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t_a185d4b73e2d53161058c83dc163ae74f}{00087}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__camp__box__model__data_af768542102cf21c66f636348d8f4dcb7}{update\_aero\_rep}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00088}00088\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00089}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t_a574117db8ef654b67adda917b7f89f16}{00089}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__box__model__data_ae1391ed0195d773e7668e7ddce13880c}{aero\_rep\_profile\_finalize}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00090}00090\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{aero\_rep\_profile\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00092}00092\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_JSON}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00093}00093\ \textcolor{preprocessor}{}\textcolor{comment}{\ \ !>\ Constructor\ for\ aero\_rep\_profile\_t}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00094}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{00094}}\ \ \ \textcolor{keyword}{interface}\ \mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{aero\_rep\_profile\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00095}00095\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ aero\_rep\_profile\_constructor}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00096}00096\ \ \ \textcolor{keyword}{end\ interface\ }\mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{aero\_rep\_profile\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00097}00097\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00098}00098\ \textcolor{preprocessor}{}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00099}00099\ \textcolor{comment}{\ \ !>\ CAMP\ Box\ model}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00100}00100\ \ \ \textcolor{keyword}{type}\ ::\ \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\_box\_model\_data\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00101}00101\ \ \ \textcolor{keywordtype}{private}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00102}00102\ \textcolor{comment}{\ \ \ \ !>\ CAMP\ core}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00103}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a687ae68564811b525538fed49e64a554}{00103}}\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\_core\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ camp\_core\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00104}00104\ \textcolor{comment}{\ \ \ \ !>\ CAMP\ state}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00105}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_aa7b3e8cff278ff5551df841b581ae955}{00105}}\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\_state\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ camp\_state\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00106}00106\ \textcolor{comment}{\ \ \ \ !>\ Initial\ CAMP\ state}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00107}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a968ad9789d9dffadca9c8a0d66533aa2}{00107}}\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__state_1_1camp__state__t}{camp\_state\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ initial\_camp\_state\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00108}00108\ \textcolor{comment}{\ \ \ \ !>\ State\ species\ names}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00109}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a46e29d47d9a0027e4b7454beda08b605}{00109}}\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}}),\ \textcolor{keywordtype}{allocatable}\ ::\ spec\_names(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00110}00110\ \textcolor{comment}{\ \ \ \ !>\ Number\ of\ time\ steps}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00111}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a3e88b76ca346b3760da516e87224d7a3}{00111}}\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ num\_steps\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00112}00112\ \textcolor{comment}{\ \ \ \ !>\ Time\ step\ length\ [s]}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00113}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_af40319cbc6a518546158445f39d3e0a1}{00113}}\ \textcolor{keywordtype}{\ \ \ \ real}(kind=dp)\ ::\ time\_step\_\_s\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00114}00114\ \textcolor{comment}{\ \ \ \ !>\ Total\ integration\ time\ [s]}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00115}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a9f8506dfbe12391e4236243d8a0c2ff7}{00115}}\ \textcolor{keywordtype}{\ \ \ \ real}(kind=dp)\ ::\ total\_time\_\_s\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00116}00116\ \textcolor{comment}{\ \ \ \ !>\ Temperature\ [K]\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00117}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_adf0b9fbe6d541b74610f4b0414340e3e}{00117}}\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}})\ ::\ temperature\_\_k\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00118}00118\ \textcolor{comment}{\ \ \ \ !>\ Pressure\ [Pa]\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00119}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a59d863145f041556e85a5b3a38d7b95a}{00119}}\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}})\ ::\ pressure\_\_pa\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00120}00120\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ profiles}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00121}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_ade315f8e34288ac856f15de4ca096bde}{00121}}\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1rxn__profile__t}{rxn\_profile\_t}}),\ \textcolor{keywordtype}{allocatable}\ ::\ rxn\_profiles(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00122}00122\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ profiles}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00123}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_ad2630734faa71cf2748c64422a5e8589}{00123}}\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{aero\_rep\_profile\_t}}),\ \textcolor{keywordtype}{allocatable}\ ::\ aero\_rep\_profiles(:)}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00124}00124\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00125}00125\ \textcolor{comment}{\ \ \ \ !>\ Run\ the\ box\ model}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00126}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a37bc380f44c70232c81955a9fc6e8121}{00126}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__camp__box__model__data_ac872f407eff5828aa69a770df166ded7}{run}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00127}00127\ \textcolor{comment}{\ \ \ \ !>\ Create\ a\ plotting\ script\ for\ the\ results}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00128}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a2a62bfdd73b71d1296ef7de2d7bb5731}{00128}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__camp__box__model__data_ac7222c876f38e6bf3ebb65153e241fc1}{create\_gnuplot\_config\_file}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00129}00129\ \textcolor{comment}{\ \ \ \ !>\ Print\ the\ box\ model\ configuration}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00130}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_a0316058c854ee1eae8c2dfc20d7ef405}{00130}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ print\ =>\ \mbox{\hyperlink{namespacecamp__aero__rep__data_a361ddb02ca802bce038d2b9471f4b923}{do\_print}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00131}00131\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ box\ model}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00132}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t_ad3755a4c5a62c31db52bdc50edd14311}{00132}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__box__model__data_a52bcf1dd7a5c9063d24294d058bea6f3}{finalize}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00133}00133\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\_box\_model\_data\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00134}00134\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00135}00135\ \textcolor{comment}{\ \ !>\ Constructor\ for\ camp\_box\_model\_data\_t}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00136}\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{00136}}\ \ \ \textcolor{keyword}{interface}\ \mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\_box\_model\_data\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00137}00137\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ constructor}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00138}00138\ \ \ \textcolor{keyword}{end\ interface\ }\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\_box\_model\_data\_t}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00139}00139\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00140}00140\ \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00141}00141\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00142}00142\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00143}00143\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00144}00144\ \textcolor{comment}{\ \ !>\ Constructor\ for\ the\ CAMP\ box\ model}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00145}\mbox{\hyperlink{namespacecamp__camp__box__model__data_a28c4e7aaf799a85f02ec46f22c92703e}{00145}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a28c4e7aaf799a85f02ec46f22c92703e}{constructor}}(\ config\_file\ )\ \textcolor{keyword}{result}(\ new\_obj\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00146}00146\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00147}00147\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_JSON}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00148}00148\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{use\ }json\_module}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00149}00149\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00150}00150\ \textcolor{preprocessor}{}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00151}00151\ \textcolor{comment}{\ \ \ \ !>\ Pointer\ to\ a\ new\ box\ model\ object}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00152}00152\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\_box\_model\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_obj\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00153}00153\ \textcolor{comment}{\ \ \ \ !>\ Box\ model\ configuration\ file}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00154}00154\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{intent(in)}\ ::\ config\_file}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00155}00155\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_JSON}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00156}00156\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{type}(json\_core),\ \textcolor{keywordtype}{target}\ ::\ json}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00157}00157\ \ \ \ \ \textcolor{keywordtype}{type}(json\_file)\ ::\ j\_file}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00158}00158\ \ \ \ \ \textcolor{keywordtype}{type}(json\_value),\ \textcolor{keywordtype}{pointer}\ ::\ j\_obj,\ j\_next,\ j\_box\_config}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00159}00159\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00160}00160\ \ \ \ \ \textcolor{keywordtype}{logical(kind=json\_lk)}\ ::\ found,\ valid}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00161}00161\ \ \ \ \ \textcolor{keywordtype}{character(kind=json\_ck,\ len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ unicode\_str\_val}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00162}00162\ \ \ \ \ \textcolor{keywordtype}{character(kind=json\_ck,\ len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ json\_err\_msg}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00163}00163\ \ \ \ \ \textcolor{keywordtype}{character(kind=json\_ck,\ len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00164}00164\ \ \ \ \ \textcolor{keywordtype}{integer(kind=json\_ik)}\ ::\ int\_value}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00165}00165\ \textcolor{keywordtype}{\ \ \ \ real}(kind=json\_rk)\ ::\ real\_value}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00166}00166\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00167}00167\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ file\_exists}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00168}00168\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ num\_rates,\ i\_rate}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00169}00169\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ num\_aero\_reps,\ i\_aero\_rep}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00170}00170\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ spec\_id}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00171}00171\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00172}00172\ \ \ \ \ \textcolor{comment}{!\ Create\ the\ new\ box\ model}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00173}00173\ \ \ \ \ \textcolor{keyword}{allocate}(\ new\_obj\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00175}00175\ \ \ \ \ \textcolor{comment}{!\ Create\ the\ CAMP\ core}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00176}00176\ \ \ \ \ new\_obj\%camp\_core\ =>\ \mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\_core\_t}}(\ config\_file\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00177}00177\ \ \ \ \ \textcolor{keyword}{call\ }new\_obj\%camp\_core\%initialize(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00178}00178\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00179}00179\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ state\ species\ names}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00180}00180\ \ \ \ \ new\_obj\%spec\_names\ =\ new\_obj\%camp\_core\%unique\_names(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00182}00182\ \ \ \ \ \textcolor{comment}{!\ Load\ the\ configuration\ data\ from\ the\ json\ file}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00183}00183\ \ \ \ \ \textcolor{keyword}{call\ }j\_file\%initialize(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00184}00184\ \ \ \ \ \textcolor{keyword}{call\ }j\_file\%get\_core(\ json\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00185}00185\ \ \ \ \ json\_err\_msg\ =\ \textcolor{stringliteral}{"{}"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00186}00186\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(\ 135902099,\ trim(\ config\_file\ ).ne.\textcolor{stringliteral}{"{}"{}},\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Received\ empty\ string\ for\ file\ path"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00188}00188\ \ \ \ \ \textcolor{keyword}{inquire}(\ file\ =\ trim(\ config\_file\ ),\ exist\ =\ file\_exists\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00189}00189\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(\ 181758805,\ file\_exists,\ \textcolor{stringliteral}{"{}Cannot\ find\ file:\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(\ config\_file\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00191}00191\ \ \ \ \ \textcolor{keyword}{call\ }j\_file\%load\_file(\ filename\ =\ trim(\ config\_file\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00193}00193\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ box\ model\ configuration\ data}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00194}00194\ \ \ \ \ \textcolor{keyword}{call\ }j\_file\%get(\ \textcolor{stringliteral}{"{}camp-\/box-\/model"{}},\ j\_box\_config,\ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00195}00195\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(\ 198537480,\ found,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ 'camp-\/box-\/model'\ configuration\ data\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}in\ configuration\ file."{}})}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00198}00198\ \ \ \ \ \textcolor{keyword}{call\ }json\%validate(\ j\_box\_config,\ valid,\ json\_err\_msg\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00199}00199\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(\ 992222859,\ valid,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Bad\ JSON\ format\ in\ 'camp-\/box-\/model'\ configuration\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}data:\ "{}}//trim(\ json\_err\_msg\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00202}00202\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00203}00203\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ number\ of\ time\ steps}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00204}00204\ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_child(\ j\_box\_config,\ \textcolor{stringliteral}{"{}output\ time\ step\ [s]"{}},\ j\_obj,\ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00205}00205\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(\ 912341318,\ found,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ 'output\ time\ step\ [s]'\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}in\ box\ model\ data"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00208}00208\ \ \ \ \ \textcolor{keyword}{call\ }json\%get(\ j\_obj,\ real\_value\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00209}00209\ \ \ \ \ new\_obj\%time\_step\_\_s\ =\ real\_value}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00210}00210\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00211}00211\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ integration\ time}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00212}00212\ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_child(\ j\_box\_config,\ \textcolor{stringliteral}{"{}total\ integration\ time\ [s]"{}},\ j\_obj,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00214}00214\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(\ 442175882,\ found,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ 'total\ integration\ time\ [s]'\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}in\ box\ model\ data"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00217}00217\ \ \ \ \ \textcolor{keyword}{call\ }json\%get(\ j\_obj,\ real\_value\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00218}00218\ \ \ \ \ new\_obj\%num\_steps\ =\ ceiling(\ real\_value\ /\ new\_obj\%time\_step\_\_s\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00219}00219\ \ \ \ \ new\_obj\%total\_time\_\_s\ \ =\ real\_value}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00220}00220\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00221}00221\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ temperature\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00222}00222\ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_child(\ j\_box\_config,\ \textcolor{stringliteral}{"{}temperature\ [K]"{}},\ j\_obj,\ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00223}00223\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(\ 212013359,\ found,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ 'temperature\ [K]'\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}in\ box\ model\ data"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00226}00226\ \ \ \ \ new\_obj\%temperature\_\_K\ =\ \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}}(\ json,\ j\_obj\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00227}00227\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00228}00228\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ pressure\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00229}00229\ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_child(\ j\_box\_config,\ \textcolor{stringliteral}{"{}pressure\ [Pa]"{}},\ j\_obj,\ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00230}00230\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(\ 115322763,\ found,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ 'pressure\ [Pa]'\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}in\ box\ model\ data"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00233}00233\ \ \ \ \ new\_obj\%pressure\_\_Pa\ =\ \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}}(\ json,\ j\_obj\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00234}00234\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00235}00235\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ reaction\ rate\ profiles}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00236}00236\ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_child(\ j\_box\_config,\ \textcolor{stringliteral}{"{}rates"{}},\ j\_obj,\ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00237}00237\ \ \ \ \ \textcolor{keywordflow}{if}(\ found\ )\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00238}00238\ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%info(\ j\_obj,\ n\_children\ =\ num\_rates\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00239}00239\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(\ new\_obj\%rxn\_profiles(\ num\_rates\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00240}00240\ \ \ \ \ \ \ j\_next\ =>\ null(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00241}00241\ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get(\ j\_box\_config,\ \textcolor{stringliteral}{"{}rates(1)"{}},\ j\_obj,\ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00242}00242\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(\ 693229278,\ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00243}00243\ \ \ \ \ \ \ i\_rate\ =\ 0}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00244}00244\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}(\ \textcolor{keyword}{associated}(\ j\_obj\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00245}00245\ \ \ \ \ \ \ \ \ i\_rate\ =\ i\_rate\ +\ 1}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00246}00246\ \ \ \ \ \ \ \ \ new\_obj\%rxn\_profiles(\ i\_rate\ )\ =\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcamp__camp__box__model__data_1_1rxn__profile__t}{rxn\_profile\_t}}(\ new\_obj\%camp\_core,\ json,\ j\_obj\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00248}00248\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_next(\ j\_obj,\ j\_next\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00249}00249\ \ \ \ \ \ \ \ \ j\_obj\ =>\ j\_next}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00250}00250\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00251}00251\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(\ 763815888,\ i\_rate\ .eq.\ num\_rates)}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00252}00252\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00253}00253\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00254}00254\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ aerosol\ representation\ profiles}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00255}00255\ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_child(\ j\_box\_config,\ \textcolor{stringliteral}{"{}aerosol\ representations"{}},\ j\_obj,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00256}00256\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00257}00257\ \ \ \ \ \textcolor{keywordflow}{if}(\ found\ )\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00258}00258\ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%info(\ j\_obj,\ n\_children\ =\ num\_aero\_reps\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00259}00259\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(\ new\_obj\%aero\_rep\_profiles(\ num\_aero\_reps\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00260}00260\ \ \ \ \ \ \ j\_next\ =>\ null(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00261}00261\ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get(\ j\_box\_config,\ \textcolor{stringliteral}{"{}aerosol\ representations(1)"{}},\ j\_obj,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00263}00263\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(\ 877171198,\ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00264}00264\ \ \ \ \ \ \ i\_aero\_rep\ =\ 0}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00265}00265\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}(\ \textcolor{keyword}{associated}(\ j\_obj\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00266}00266\ \ \ \ \ \ \ \ \ i\_aero\_rep\ =\ i\_aero\_rep\ +\ 1}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00267}00267\ \ \ \ \ \ \ \ \ new\_obj\%aero\_rep\_profiles(\ i\_aero\_rep\ )\ =\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{aero\_rep\_profile\_t}}(\ new\_obj\%camp\_core,\ json,\ j\_obj\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00269}00269\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_next(\ j\_obj,\ j\_next\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00270}00270\ \ \ \ \ \ \ \ \ j\_obj\ =>\ j\_next}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00271}00271\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00272}00272\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(\ 472301285,\ i\_aero\_rep\ .eq.\ num\_aero\_reps\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00273}00273\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00274}00274\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00275}00275\ \ \ \ \ \textcolor{comment}{!\ Initialize\ the\ solver\ now\ that\ all\ the\ update\ data\ objects\ are\ attached}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00276}00276\ \ \ \ \ \textcolor{comment}{!\ to\ reactions}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00277}00277\ \ \ \ \ \textcolor{keyword}{call\ }new\_obj\%camp\_core\%solver\_initialize(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00278}00278\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00279}00279\ \ \ \ \ \textcolor{comment}{!\ Create\ a\ CAMP\ state\ for\ the\ box\ model\ runs\ and\ initial\ conditions}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00280}00280\ \ \ \ \ new\_obj\%camp\_state\ \ \ \ \ \ \ \ \ =>\ new\_obj\%camp\_core\%new\_state(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00281}00281\ \ \ \ \ new\_obj\%initial\_camp\_state\ =>\ new\_obj\%camp\_core\%new\_state(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00283}00283\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ initial\ species\ concentrations}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00284}00284\ \ \ \ \ \textcolor{keyword}{call\ }json\%get(\ j\_box\_config,\ \textcolor{stringliteral}{"{}initial\ state(1)"{}},\ j\_obj,\ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00285}00285\ \ \ \ \ \textcolor{keywordflow}{if}(\ found\ )\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00286}00286\ \ \ \ \ \ \ j\_next\ =>\ null(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00287}00287\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}(\ \textcolor{keyword}{associated}(\ j\_obj\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00288}00288\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%info(\ j\_obj,\ name\ =\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00289}00289\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get(\ j\_obj,\ real\_value\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00290}00290\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(\ 301872431,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_obj\%camp\_core\%spec\_state\_id(\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}},\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ spec\_id\ ),\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00293}00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Cannot\ find\ species\ '"{}}//trim(\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}\ )//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00294}00294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}'\ in\ the\ chemical\ mechanism"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00295}00295\ \ \ \ \ \ \ \ \ new\_obj\%initial\_camp\_state\%state\_var(\ spec\_id\ )\ =\ real\_value}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00296}00296\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_next(\ j\_obj,\ j\_next\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00297}00297\ \ \ \ \ \ \ \ \ j\_obj\ =>\ j\_next}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00298}00298\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00299}00299\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00300}00300\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00301}00301\ \ \ \ \ \textcolor{comment}{!\ Set\ the\ initial\ environtmental\ conditions}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00302}00302\ \ \ \ \ \textcolor{keyword}{call\ }new\_obj\%initial\_camp\_state\%env\_states(1)\%set\_temperature\_K(\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00303}00303\ \ \ \ \ \ \ new\_obj\%temperature\_\_K\%current\_value(\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00304}00304\ \ \ \ \ \textcolor{keyword}{call\ }new\_obj\%initial\_camp\_state\%env\_states(1)\%set\_pressure\_Pa(\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00305}00305\ \ \ \ \ \ \ new\_obj\%pressure\_\_Pa\%current\_value(\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00306}00306\ \ \ \ \ \textcolor{keyword}{call\ }new\_obj\%initial\_camp\_state\%update\_env\_state(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00307}00307\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00308}00308\ \ \ \ \ \textcolor{comment}{!\ free\ the\ json\ file}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00309}00309\ \ \ \ \ \textcolor{keyword}{call\ }j\_file\%destroy(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00310}00310\ \ \ \ \ \textcolor{keyword}{call\ }json\%destroy(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00311}00311\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00312}00312\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00313}00313\ \textcolor{preprocessor}{}\ \ \ \ new\_obj\ =>\ null(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00314}00314\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(\ 444795237,\ \textcolor{stringliteral}{"{}JSON\ must\ be\ enabled\ for\ the\ CAMP\ box\ model"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00315}00315\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00316}00316\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00317}00317\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a28c4e7aaf799a85f02ec46f22c92703e}{constructor}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00318}00318\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00319}00319\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00320}00320\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00321}00321\ \textcolor{comment}{\ \ !>\ Run\ the\ camp-\/chem\ box\ model}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00322}\mbox{\hyperlink{namespacecamp__camp__box__model__data_ac872f407eff5828aa69a770df166ded7}{00322}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_ac872f407eff5828aa69a770df166ded7}{run}}(\ this,\ output\_file\_unit\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00323}00323\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00324}00324\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__solver__stats}{camp\_solver\_stats}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00325}00325\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00326}00326\ \textcolor{comment}{\ \ \ \ !>\ CAMP\ box\ model}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00327}00327\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\_box\_model\_data\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00328}00328\ \textcolor{comment}{\ \ \ \ !>\ Output\ file\ unit}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00329}00329\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)},\ \textcolor{keywordtype}{optional}\ ::\ output\_file\_unit}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00330}00330\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00331}00331\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__solver__stats_1_1solver__stats__t}{solver\_stats\_t}})\ ::\ solver\_stats}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00332}00332\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00333}00333\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ f\_unit}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00334}00334\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_time,\ i\_rate}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00335}00335\ \textcolor{keywordtype}{\ \ \ \ real}(kind=dp)\ ::\ step\_size\_\_s,\ curr\_time\_\_s}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00336}00336\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00337}00337\ \ \ \ \ f\_unit\ =\ 6}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00338}00338\ \ \ \ \ \textcolor{keywordflow}{if}(\ \textcolor{keyword}{present}(\ output\_file\_unit\ )\ )\ f\_unit\ =\ output\_file\_unit}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00339}00339\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00340}00340\ \ \ \ \ \textcolor{comment}{!\ Initialize\ the\ model\ state}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00341}00341\ \ \ \ \ this\%camp\_state\%state\_var(\ :\ )\ =\ this\%initial\_camp\_state\%state\_var(\ :\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00342}00342\ \ \ \ \ this\%camp\_state\%env\_var(\ :\ )\ \ \ =\ this\%initial\_camp\_state\%env\_var(\ :\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00343}00343\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00344}00344\ \ \ \ \ \textcolor{comment}{!\ Output\ file\ header\ and\ intitial\ conditions}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00345}00345\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ 0.0,\ this\%camp\_state\%env\_var(\ :\ ),\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00346}00346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%camp\_state\%state\_var(\ :\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00347}00347\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00348}00348\ \ \ \ \ \textcolor{comment}{!\ Reset\ the\ profiles}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00349}00349\ \ \ \ \ \textcolor{keyword}{call\ }this\%temperature\_\_K\%reset(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00350}00350\ \ \ \ \ \textcolor{keyword}{call\ }this\%pressure\_\_Pa\%reset(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00351}00351\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_rate\ =\ 1,\ \textcolor{keyword}{size}(\ this\%rxn\_profiles\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00352}00352\ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%rxn\_profiles(\ i\_rate\ )\%reset(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00353}00353\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00354}00354\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00355}00355\ \ \ \ \ \textcolor{comment}{!\ Solve\ the\ box\ model}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00356}00356\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_time\ =\ 1,\ this\%num\_steps}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00357}00357\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00358}00358\ \ \ \ \ \ \ \textcolor{comment}{!\ Set\ the\ current\ time\ and\ step\ size}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00359}00359\ \ \ \ \ \ \ curr\_time\_\_s\ =\ i\_time\ *\ this\%time\_step\_\_s}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00360}00360\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ curr\_time\_\_s\ .gt.\ this\%total\_time\_\_s\ )\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00361}00361\ \ \ \ \ \ \ \ \ step\_size\_\_s\ =\ this\%time\_step\_\_s\ -\/\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00362}00362\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (curr\_time\_\_s\ -\/\ this\%total\_time\_\_s\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00363}00363\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00364}00364\ \ \ \ \ \ \ \ \ step\_size\_\_s\ =\ this\%time\_step\_\_s}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00365}00365\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00366}00366\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00367}00367\ \ \ \ \ \ \ \textcolor{comment}{!\ Update\ the\ model\ conditions}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00368}00368\ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%temperature\_\_K\%advance(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00369}00369\ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%camp\_state\%env\_states(1)\%set\_temperature\_K(\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00370}00370\ \ \ \ \ \ \ \ \ this\%temperature\_\_K\%current\_value(\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00371}00371\ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%pressure\_\_Pa\%advance(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00372}00372\ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%camp\_state\%env\_states(1)\%set\_pressure\_Pa(\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00373}00373\ \ \ \ \ \ \ \ \ this\%pressure\_\_Pa\%current\_value(\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00374}00374\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_rate\ =\ 1,\ \textcolor{keyword}{size}(\ this\%rxn\_profiles\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00375}00375\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%rxn\_profiles(\ i\_rate\ )\%advance(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00376}00376\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%rxn\_profiles(\ i\_rate\ )\%update\_rxn(\ this\%camp\_core\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00377}00377\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00378}00378\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00379}00379\ \ \ \ \ \ \ \textcolor{comment}{!\ Solve\ the\ chemistry}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00380}00380\ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%camp\_core\%solve(\ this\%camp\_state,\ step\_size\_\_s,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ solver\_stats\ =\ solver\_stats\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00382}00382\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00383}00383\ \ \ \ \ \ \ \textcolor{comment}{!\ Output\ the\ model\ state}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00384}00384\ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ curr\_time\_\_s,\ this\%camp\_state\%env\_var(\ :\ ),\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%camp\_state\%state\_var(\ :\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00386}00386\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00387}00387\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00388}00388\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00389}00389\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_ac872f407eff5828aa69a770df166ded7}{run}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00390}00390\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00391}00391\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00392}00392\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00393}00393\ \textcolor{comment}{\ \ !>\ Create\ a\ gnuplot\ configuration\ file\ for\ plotting\ box\ model\ results}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00394}\mbox{\hyperlink{namespacecamp__camp__box__model__data_ac7222c876f38e6bf3ebb65153e241fc1}{00394}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_ac7222c876f38e6bf3ebb65153e241fc1}{create\_gnuplot\_config\_file}}(\ this,\ file\_prefix\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00395}00395\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00396}00396\ \textcolor{comment}{\ \ \ \ !>\ Box\ model\ data}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00397}00397\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\_box\_model\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00398}00398\ \textcolor{comment}{\ \ \ \ !>\ Prefix\ for\ the\ results\ file\ (assumes\ a\ results\ file\ name\ of}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00399}00399\ \textcolor{comment}{\ \ \ \ !>\ \`{}'file\_prefix'\_results.txt`)}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00400}00400\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{intent(in)}\ ::\ file\_prefix}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00401}00401\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00402}00402\ \ \ \ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}},\ file\_name}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00403}00403\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ f\_unit,\ i\_char,\ i\_spec}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00404}00404\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00405}00405\ \ \ \ \ f\_unit\ =\ \mbox{\hyperlink{namespacecamp__camp__box__model__data_a47676ba67feaf329c20b2b3852859054}{scripts\_file\_unit}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00406}00406\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00407}00407\ \ \ \ \ \textcolor{comment}{!\ Create\ the\ gnuplot\ script}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00408}00408\ \ \ \ \ file\_name\ =\ file\_prefix//\textcolor{stringliteral}{"{}.conf"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00409}00409\ \ \ \ \ \textcolor{keyword}{open}(unit=f\_unit,\ file=file\_name,\ status=\textcolor{stringliteral}{"{}replace"{}},\ action=\textcolor{stringliteral}{"{}write"{}})}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00410}00410\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}\#\ GNU\ Plot\ configuration\ for\ CAMP\ box\ model\ output"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00411}00411\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}\#\ Run\ as:\ gnuplot\ "{}}//file\_name}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00412}00412\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}set\ terminal\ png\ truecolor"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00413}00413\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}set\ autoscale"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00414}00414\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}set\ xrange\ [\ 0.0:"{}},\ this\%total\_time\_\_s,\ \textcolor{stringliteral}{"{}]"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00415}00415\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00416}00416\ \ \ \ \ \textcolor{comment}{!\ output\ environmental\ conditions}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00417}00417\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}set\ output\ '"{}}//file\_prefix//\textcolor{stringliteral}{"{}\_temperature.png"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00418}00418\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}plot\(\backslash\)"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00419}00419\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}\ '"{}}//file\_prefix//\textcolor{stringliteral}{"{}\_results.txt'\(\backslash\)"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00420}00420\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}\ using\ 1:2\ title\ 'Temperature\ [K]'"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00421}00421\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}set\ output\ '"{}}//file\_prefix//\textcolor{stringliteral}{"{}\_pressure.png"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00422}00422\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}plot\(\backslash\)"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00423}00423\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}\ '"{}}//file\_prefix//\textcolor{stringliteral}{"{}\_results.txt'\(\backslash\)"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00424}00424\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}\ using\ 1:3\ title\ 'Pressure\ [Pa]'"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00425}00425\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00426}00426\ \ \ \ \ \textcolor{comment}{!\ output\ species\ concentrations\ and\ parameter\ values}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00427}00427\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_spec\ =\ 1,\ \textcolor{keyword}{size}(\ this\%spec\_names\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00428}00428\ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}\ =\ this\%spec\_names(\ i\_spec\ )\%string}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00429}00429\ \ \ \ \ \ \ \textcolor{keywordflow}{forall}(\ i\_char\ =\ 1\ :\ len(\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}\ ),\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00430}00430\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}(\ i\_char\ :\ i\_char\ )\ .eq.\ \textcolor{stringliteral}{'/'})\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00431}00431\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}(\ i\_char:i\_char\ )\ =\ \textcolor{stringliteral}{'\_'}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00432}00432\ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}set\ output\ '"{}}//file\_prefix//\textcolor{stringliteral}{"{}\_"{}}//\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}//\textcolor{stringliteral}{"{}.png'"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00433}00433\ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}plot\(\backslash\)"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00434}00434\ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}\ '"{}}//file\_prefix//\textcolor{stringliteral}{"{}\_results.txt'\(\backslash\)"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00435}00435\ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}\ using\ 1:"{}}//trim(\ \mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}(\ i\_spec\ +\ 3\ )\ )//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00436}00436\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\ title\ '"{}}//\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}//\textcolor{stringliteral}{"{}'"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00437}00437\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00438}00438\ \ \ \ \ \textcolor{keyword}{close}(f\_unit)}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00439}00439\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00440}00440\ \ \ \ \ \textcolor{keyword}{deallocate}(\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00441}00441\ \ \ \ \ \textcolor{keyword}{deallocate}(\ file\_name\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00442}00442\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00443}00443\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_ac7222c876f38e6bf3ebb65153e241fc1}{create\_gnuplot\_config\_file}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00444}00444\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00445}00445\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00446}00446\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00447}00447\ \textcolor{comment}{\ \ !>\ Print\ out\ the\ configuration\ of\ the\ box\ model}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00448}\mbox{\hyperlink{namespacecamp__camp__box__model__data_a9a5c677bdedd98c03e03896944eb4f03}{00448}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_a361ddb02ca802bce038d2b9471f4b923}{do\_print}}(\ this,\ file\_unit\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00449}00449\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00450}00450\ \textcolor{comment}{\ \ \ \ !>\ Box\ model\ data}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00451}00451\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\_box\_model\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00452}00452\ \textcolor{comment}{\ \ \ \ !>\ Output\ file\ unit}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00453}00453\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)},\ \textcolor{keywordtype}{optional}\ ::\ file\_unit}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00454}00454\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00455}00455\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{parameter}\ ::\ fmt\_blank\_line\ =\ \textcolor{stringliteral}{"{}('')"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00456}00456\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{parameter}\ ::\ fmt\_state\_hdr\ =\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00457}00457\ \ \ \ \ \ \ \textcolor{stringliteral}{"{}('\ |\ ',A50,'\ |\ ',A13,'\ |')"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00458}00458\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{parameter}\ ::\ fmt\_state\_data\ =\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00459}00459\ \ \ \ \ \ \ \textcolor{stringliteral}{"{}('\ |\ ',A50,'\ |\ ',ES13.3,'\ |')"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00460}00460\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ f\_unit,\ i\_rate,\ i\_spec}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00461}00461\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00462}00462\ \ \ \ \ f\_unit\ =\ 6}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00463}00463\ \ \ \ \ \textcolor{keywordflow}{if}(\ \textcolor{keyword}{present}(\ file\_unit\ )\ )\ f\_unit\ =\ file\_unit}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00464}00464\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00465}00465\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}**********************"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00466}00466\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}***\ CAMP\ Box\ Model\ ***"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00467}00467\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}**********************"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00468}00468\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,fmt\_blank\_line)}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00469}00469\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}total\ integration\ time"{}},\ this\%total\_time\_\_s,\ \textcolor{stringliteral}{"{}s"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00470}00470\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}time\ step\ size\ \ \ \ \ \ \ \ "{}},\ this\%time\_step\_\_s,\ \ \textcolor{stringliteral}{"{}s"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00471}00471\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}number\ of\ time\ steps\ \ "{}},\ this\%num\_steps}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00472}00472\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,fmt\_blank\_line)}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00473}00473\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}**\ temperature\ profile\ **"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00474}00474\ \ \ \ \ \textcolor{keyword}{call\ }this\%temperature\_\_K\%print(\ f\_unit\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00475}00475\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}**\ end\ temperature\ profile\ **"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00476}00476\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,fmt\_blank\_line)}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00477}00477\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}**\ pressure\ [Pa]\ profile\ **"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00478}00478\ \ \ \ \ \textcolor{keyword}{call\ }this\%pressure\_\_Pa\%print(\ f\_unit\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00479}00479\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}**\ end\ pressure\ [Pa]\ profile\ **"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00480}00480\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,fmt\_blank\_line)}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00481}00481\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}****************************"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00482}00482\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}**\ Reaction\ Rate\ Profiles\ **"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00483}00483\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}****************************"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00484}00484\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,fmt\_blank\_line)}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00485}00485\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_rate\ =\ 1,\ \textcolor{keyword}{size}(\ this\%rxn\_profiles\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00486}00486\ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%rxn\_profiles(\ i\_rate\ )\%print(\ f\_unit\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00487}00487\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,fmt\_blank\_line)}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00488}00488\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00489}00489\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}****************************"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00490}00490\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}**\ Reaction\ Rate\ Profiles\ **"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00491}00491\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}****************************"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00492}00492\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,fmt\_blank\_line)}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00493}00493\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}*******************"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00494}00494\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}**\ Initial\ State\ **"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00495}00495\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}*******************"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00496}00496\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,fmt\_blank\_line)}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00497}00497\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,fmt\_state\_hdr)\ \textcolor{stringliteral}{"{}Species"{}},\ \textcolor{stringliteral}{"{}Value"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00498}00498\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_spec\ =\ 1,\ \textcolor{keyword}{size}(\ this\%spec\_names\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00499}00499\ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,fmt\_state\_data)\ this\%spec\_names(\ i\_spec\ )\%string,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00500}00500\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%initial\_camp\_state\%state\_var(\ i\_spec\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00501}00501\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00502}00502\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,fmt\_blank\_line)}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00503}00503\ \ \ \ \ \textcolor{keyword}{call\ }this\%camp\_core\%print(\ f\_unit\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00504}00504\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,fmt\_blank\_line)}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00505}00505\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}***********************"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00506}00506\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}**\ End\ Initial\ State\ **"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00507}00507\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}***********************"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00508}00508\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,fmt\_blank\_line)}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00509}00509\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}**************************"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00510}00510\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}***\ End\ CAMP\ Box\ Model\ ***"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00511}00511\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}**************************"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00512}00512\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00513}00513\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__data_a361ddb02ca802bce038d2b9471f4b923}{do\_print}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00514}00514\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00515}00515\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00516}00516\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00517}00517\ \textcolor{comment}{\ \ !>\ Finalize\ the\ box\ model}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00518}\mbox{\hyperlink{namespacecamp__camp__box__model__data_a52bcf1dd7a5c9063d24294d058bea6f3}{00518}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a52bcf1dd7a5c9063d24294d058bea6f3}{finalize}}(\ this\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00519}00519\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00520}00520\ \textcolor{comment}{\ \ \ \ !>\ CAMP\ box\ model}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00521}00521\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1camp__box__model__data__t}{camp\_box\_model\_data\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00522}00522\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00523}00523\ \ \ \ \ \textcolor{keywordflow}{if}(\ \textcolor{keyword}{associated}(\ this\%camp\_core\ )\ )\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00524}00524\ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(\ this\%camp\_core\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00525}00525\ \ \ \ \ \textcolor{keywordflow}{if}(\ \textcolor{keyword}{associated}(\ this\%camp\_state\ )\ )\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00526}00526\ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(\ this\%camp\_state\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00527}00527\ \ \ \ \ \textcolor{keywordflow}{if}(\ \textcolor{keyword}{associated}(\ this\%initial\_camp\_state)\ )\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00528}00528\ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(\ this\%initial\_camp\_state\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00529}00529\ \ \ \ \ \textcolor{keywordflow}{if}(\ \textcolor{keyword}{allocated}(\ this\%spec\_names\ )\ )\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00530}00530\ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(\ this\%spec\_names\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00531}00531\ \ \ \ \ \textcolor{keywordflow}{if}(\ \textcolor{keyword}{allocated}(\ this\%rxn\_profiles\ )\ )\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00532}00532\ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(\ this\%rxn\_profiles\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00533}00533\ \ \ \ \ \textcolor{keywordflow}{if}(\ \textcolor{keyword}{allocated}(\ this\%aero\_rep\_profiles\ )\ )\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00534}00534\ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(\ this\%aero\_rep\_profiles\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00535}00535\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00536}00536\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a52bcf1dd7a5c9063d24294d058bea6f3}{finalize}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00537}00537\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00538}00538\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00539}00539\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00540}00540\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_JSON}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00541}00541\ \textcolor{preprocessor}{}\textcolor{comment}{\ \ !>\ Constructor\ for\ profile\_t}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00542}\mbox{\hyperlink{namespacecamp__camp__box__model__data_ae47b8629e7036728d9322f3b8b58e75b}{00542}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_ae47b8629e7036728d9322f3b8b58e75b}{profile\_constructor}}(\ json,\ j\_obj\ )\ \textcolor{keyword}{result}(\ new\_obj\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00543}00543\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00544}00544\ \ \ \ \ \textcolor{keywordtype}{use\ }json\_module}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00545}00545\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00546}00546\ \textcolor{comment}{\ \ \ \ !>\ New\ profile\_t\ object}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00547}00547\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}})\ ::\ new\_obj\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00548}00548\ \textcolor{comment}{\ \ \ \ !>\ JSON\ core}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00549}00549\ \ \ \ \ \textcolor{keywordtype}{type}(json\_core),\ \textcolor{keywordtype}{intent(inout)}\ ::\ json\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00550}00550\ \textcolor{comment}{\ \ \ \ !>\ JSON\ object\ to\ build\ profile\ from}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00551}00551\ \ \ \ \ \textcolor{keywordtype}{type}(json\_value),\ \textcolor{keywordtype}{pointer},\ \textcolor{keywordtype}{intent(inout)}\ \ ::\ j\_obj}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00552}00552\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00553}00553\ \ \ \ \ \textcolor{keywordtype}{type}(json\_value),\ \textcolor{keywordtype}{pointer}\ ::\ j\_child,\ j\_next,\ j\_val}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00554}00554\ \ \ \ \ \textcolor{keywordtype}{integer(kind=json\_ik)}\ ::\ num\_trans}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00555}00555\ \ \ \ \ \textcolor{keywordtype}{logical(kind=json\_lk)}\ ::\ found}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00556}00556\ \ \ \ \ \textcolor{keywordtype}{character(kind=json\_ck,\ len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ profile\_name}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00557}00557\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00558}00558\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_trans}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00559}00559\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00560}00560\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ name\ of\ the\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00561}00561\ \ \ \ \ \textcolor{keyword}{call\ }json\%info(\ j\_obj,\ name\ =\ profile\_name\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00562}00562\ \ \ \ \ new\_obj\%name\ =\ profile\_name}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00563}00563\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00564}00564\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ transitions}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00565}00565\ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_child(\ j\_obj,\ \textcolor{stringliteral}{"{}transitions"{}},\ j\_child,\ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00566}00566\ \ \ \ \ \textcolor{keywordflow}{if}(\ found\ )\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00567}00567\ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%info(\ j\_obj,\ n\_children\ =\ num\_trans\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00568}00568\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(\ new\_obj\%transition\_time\_step(\ 0:num\_trans\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00569}00569\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(\ new\_obj\%transition\_value(\ \ \ \ \ 0:num\_trans\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00570}00570\ \ \ \ \ \ \ j\_next\ =>\ null(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00571}00571\ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get(\ j\_obj,\ \textcolor{stringliteral}{"{}transitions(1)"{}},\ j\_child,\ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00572}00572\ \ \ \ \ \ \ i\_trans\ =\ 0}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00573}00573\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}(\ \textcolor{keyword}{associated}(\ j\_child\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00574}00574\ \ \ \ \ \ \ \ \ i\_trans\ =\ i\_trans\ +\ 1}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00575}00575\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00576}00576\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ get\ the\ time\ step}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00577}00577\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_child(\ j\_child,\ \textcolor{stringliteral}{"{}time\ step"{}},\ j\_val,\ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00578}00578\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(\ 325008338,\ found,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00579}00579\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ 'time\ step'\ from\ element\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00580}00580\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(\ \mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}(\ i\_trans\ )\ )//\textcolor{stringliteral}{"{}\ in\ transition\ '"{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00581}00581\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(\ new\_obj\%name\ )//\textcolor{stringliteral}{"{}'"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00582}00582\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get(\ j\_val,\ new\_obj\%transition\_time\_step(\ i\_trans\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00583}00583\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00584}00584\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ the\ value}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00585}00585\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_child(\ j\_child,\ \textcolor{stringliteral}{"{}value"{}},\ j\_val,\ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00586}00586\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(\ 483183389,\ found,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00587}00587\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ 'value'\ from\ element\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00588}00588\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(\ \mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}}(\ i\_trans\ )\ )//\textcolor{stringliteral}{"{}\ in\ transition\ '"{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00589}00589\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(\ new\_obj\%name\ )//\textcolor{stringliteral}{"{}'"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00590}00590\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get(\ j\_val,\ new\_obj\%transition\_value(\ i\_trans\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00591}00591\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_next(\ j\_child,\ j\_next\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00592}00592\ \ \ \ \ \ \ \ \ j\_child\ =>\ j\_next}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00593}00593\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00594}00594\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(\ 249923619,\ i\_trans\ .eq.\ num\_trans\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00595}00595\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00596}00596\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(\ new\_obj\%transition\_time\_step(\ 0:0\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00597}00597\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(\ new\_obj\%transition\_value(\ \ \ \ \ 0:0\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00598}00598\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00599}00599\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00600}00600\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ initial\ state}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00601}00601\ \ \ \ \ \textcolor{keyword}{call\ }json\%get\_child(\ j\_obj,\ \textcolor{stringliteral}{"{}initial"{}},\ j\_val,\ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00602}00602\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(\ 382107479,\ found,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00603}00603\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ 'initial'\ value\ in\ profile\ '"{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00604}00604\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(\ new\_obj\%name\ )//\textcolor{stringliteral}{"{}'"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00605}00605\ \ \ \ \ \textcolor{keyword}{call\ }json\%get(\ j\_val,\ new\_obj\%transition\_value(\ 0\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00606}00606\ \ \ \ \ new\_obj\%transition\_time\_step(\ 0\ )\ =\ 1}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00607}00607\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00608}00608\ \ \ \ \ \textcolor{keyword}{call\ }new\_obj\%reset(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00609}00609\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00610}00610\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_ae47b8629e7036728d9322f3b8b58e75b}{profile\_constructor}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00611}00611\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00612}00612\ \textcolor{preprocessor}{}\textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00613}00613\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00614}00614\ \textcolor{comment}{\ \ !>\ Reset\ the\ profile\ to\ the\ initial\ state}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00615}\mbox{\hyperlink{namespacecamp__camp__box__model__data_a9b28d1449f2275a8fcfa9f6befc223db}{00615}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a9b28d1449f2275a8fcfa9f6befc223db}{reset}}(\ this\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00616}00616\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00617}00617\ \textcolor{comment}{\ \ \ \ !>\ Property\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00618}00618\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00619}00619\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00620}00620\ \ \ \ \ this\%curr\_transition\ =\ 0}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00621}00621\ \ \ \ \ this\%curr\_time\_step\ \ =\ 1}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00622}00622\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00623}00623\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a9b28d1449f2275a8fcfa9f6befc223db}{reset}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00624}00624\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00625}00625\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00626}00626\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00627}00627\ \textcolor{comment}{\ \ !>\ Advance\ the\ profile\ by\ one\ time\ step}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00628}\mbox{\hyperlink{namespacecamp__camp__box__model__data_a8448207c5ec228e265508f0bb2947ebf}{00628}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a8448207c5ec228e265508f0bb2947ebf}{advance}}(\ this\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00629}00629\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00630}00630\ \textcolor{comment}{\ \ \ \ !>\ Property\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00631}00631\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00632}00632\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00633}00633\ \ \ \ \ this\%curr\_time\_step\ =\ this\%curr\_time\_step\ +\ 1}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00634}00634\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00635}00635\ \ \ \ \ \textcolor{keywordflow}{if}(\ this\%curr\_transition\ .eq.\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00636}00636\ \ \ \ \ \ \ \ \ \textcolor{keyword}{size}(\ this\%transition\_time\_step\ )\ -\/\ 1\ )\ \textcolor{keywordflow}{return}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00637}00637\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00638}00638\ \ \ \ \ \textcolor{keywordflow}{if}(\ this\%transition\_time\_step(\ this\%curr\_transition\ +\ 1\ )\ .eq.\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00639}00639\ \ \ \ \ \ \ \ \ this\%curr\_time\_step\ )\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00640}00640\ \ \ \ \ \ \ this\%curr\_transition\ =\ this\%curr\_transition\ +\ 1}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00641}00641\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00642}00642\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a8448207c5ec228e265508f0bb2947ebf}{advance}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00643}00643\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00644}00644\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00645}00645\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00646}00646\ \textcolor{comment}{\ \ !>\ Get\ the\ current\ value\ of\ the\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00647}\mbox{\hyperlink{namespacecamp__camp__box__model__data_ab29c50b53e313caecde7287bbcc0a6ae}{00647}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_ab29c50b53e313caecde7287bbcc0a6ae}{current\_value}}(\ this\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00648}00648\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00649}00649\ \textcolor{comment}{\ \ \ \ !>\ Current\ value\ of\ the\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00650}00650\ \textcolor{keywordtype}{\ \ \ \ real}(kind=dp)\ ::\ \mbox{\hyperlink{namespacecamp__camp__box__model__data_ab29c50b53e313caecde7287bbcc0a6ae}{current\_value}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00651}00651\ \textcolor{comment}{\ \ \ \ !>\ Property\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00652}00652\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00653}00653\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00654}00654\ \ \ \ \ \mbox{\hyperlink{namespacecamp__camp__box__model__data_ab29c50b53e313caecde7287bbcc0a6ae}{current\_value}}\ =\ this\%transition\_value(\ this\%curr\_transition\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00655}00655\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00656}00656\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_ab29c50b53e313caecde7287bbcc0a6ae}{current\_value}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00657}00657\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00658}00658\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00659}00659\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00660}00660\ \textcolor{comment}{\ \ !>\ Print\ the\ profile\ configuration}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00661}\mbox{\hyperlink{namespacecamp__camp__box__model__data_a287e225be62f3476fef790b5bba76a16}{00661}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a287e225be62f3476fef790b5bba76a16}{profile\_do\_print}}(\ this,\ file\_unit\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00662}00662\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00663}00663\ \textcolor{comment}{\ \ \ \ !>\ Property\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00664}00664\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00665}00665\ \textcolor{comment}{\ \ \ \ !>\ Output\ file\ unit}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00666}00666\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)},\ \textcolor{keywordtype}{optional}\ ::\ file\_unit}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00667}00667\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00668}00668\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{parameter}\ ::\ fmt\_trans\_hdr\ =\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00669}00669\ \ \ \ \ \ \ \textcolor{stringliteral}{"{}('\ \ \ |\ ',A13,'\ |\ ',A13,'\ |')"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00670}00670\ \ \ \ \ \textcolor{keywordtype}{character(len=*)},\ \textcolor{keywordtype}{parameter}\ ::\ fmt\_trans\_data\ =\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00671}00671\ \ \ \ \ \ \ \textcolor{stringliteral}{"{}('\ \ \ |\ ',I13,'\ |\ ',ES13.3,'\ |')"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00672}00672\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ f\_unit,\ i\_trans}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00673}00673\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00674}00674\ \ \ \ \ f\_unit\ =\ 6}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00675}00675\ \ \ \ \ \textcolor{keywordflow}{if}(\ \textcolor{keyword}{present}(\ file\_unit\ )\ )\ f\_unit\ =\ file\_unit}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00676}00676\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00677}00677\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}Profile\ name:\ "{}}//trim(this\%name)}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00678}00678\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}\ \ **\ Transitions\ \ \ \ \ **"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00679}00679\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,fmt\_trans\_hdr)\ \textcolor{stringliteral}{"{}Time\ Step"{}},\ \textcolor{stringliteral}{"{}Value"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00680}00680\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_trans\ =\ 0,\ \textcolor{keyword}{size}(\ this\%transition\_time\_step\ )\ -\/\ 1}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00681}00681\ \ \ \ \ \ \ \textcolor{keyword}{write}(f\_unit,fmt\_trans\_data)\ this\%transition\_time\_step(\ i\_trans\ ),\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00682}00682\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%transition\_value(\ i\_trans\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00683}00683\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00684}00684\ \ \ \ \ \textcolor{keyword}{write}(f\_unit,*)\ \textcolor{stringliteral}{"{}\ \ **\ End\ Transitions\ **"{}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00685}00685\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00686}00686\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a287e225be62f3476fef790b5bba76a16}{profile\_do\_print}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00687}00687\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00688}00688\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00689}00689\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_JSON}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00690}00690\ \textcolor{preprocessor}{}\textcolor{comment}{\ \ !>\ Constructor\ for\ rxn\_profile\_t}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00691}\mbox{\hyperlink{namespacecamp__camp__box__model__data_a97f1bc98fea4f3453a3d9a088a94cee7}{00691}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a97f1bc98fea4f3453a3d9a088a94cee7}{rxn\_profile\_constructor}}(\ camp\_core,\ json,\ j\_obj\ )\ \textcolor{keyword}{result}(\ new\_obj\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00692}00692\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00693}00693\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__mechanism__data}{camp\_mechanism\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00694}00694\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rxn__emission}{camp\_rxn\_emission}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00695}00695\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rxn__first__order__loss}{camp\_rxn\_first\_order\_loss}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00696}00696\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rxn__photolysis}{camp\_rxn\_photolysis}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00697}00697\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rxn__wet__deposition}{camp\_rxn\_wet\_deposition}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00698}00698\ \ \ \ \ \textcolor{keywordtype}{use\ }json\_module}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00699}00699\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00700}00700\ \textcolor{comment}{\ \ \ \ !>\ New\ reaction\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00701}00701\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1rxn__profile__t}{rxn\_profile\_t}})\ ::\ new\_obj\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00702}00702\ \textcolor{comment}{\ \ \ \ !>\ CAMP\ core}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00703}00703\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\_core\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ camp\_core\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00704}00704\ \textcolor{comment}{\ \ \ \ !>\ JSON\ core}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00705}00705\ \ \ \ \ \textcolor{keywordtype}{type}(json\_core),\ \textcolor{keywordtype}{intent(inout)}\ \ ::\ json\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00706}00706\ \textcolor{comment}{\ \ \ \ !>\ JSON\ object\ to\ build\ the\ profile\ from}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00707}00707\ \ \ \ \ \textcolor{keywordtype}{type}(json\_value),\ \textcolor{keywordtype}{pointer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ j\_obj}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00708}00708\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00709}00709\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__mechanism__data_1_1mechanism__data__t}{mechanism\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ mech}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00710}00710\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ rxn}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00711}00711\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}})\ ::\ base\_profile}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00712}00712\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00713}00713\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_mech,\ i\_rxn}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00714}00714\ \ \ \ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ rxn\_label}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00715}00715\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ found}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00716}00716\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00717}00717\ \ \ \ \ found\ =\ .false.}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00718}00718\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00719}00719\ \ \ \ \ \textcolor{comment}{!\ Load\ the\ standard\ profile\ data}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00720}00720\ \ \ \ \ base\_profile\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}}(\ json,\ j\_obj\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00721}00721\ \ \ \ \ new\_obj\%name\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ base\_profile\%name}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00722}00722\ \ \ \ \ new\_obj\%transition\_time\_step\ =\ base\_profile\%transition\_time\_step}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00723}00723\ \ \ \ \ new\_obj\%transition\_value\ \ \ \ \ =\ base\_profile\%transition\_value}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00724}00724\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00725}00725\ \ \ \ \ \textcolor{comment}{!\ Find\ the\ reaction\ and\ initialize\ the\ update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00726}00726\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_mech\ =\ 1,\ \textcolor{keyword}{size}(\ camp\_core\%mechanism\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00727}00727\ \ \ \ \ \ \ mech\ =>\ camp\_core\%mechanism(\ i\_mech\ )\%val}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00728}00728\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_rxn\ =\ 1,\ mech\%size(\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00729}00729\ \ \ \ \ \ \ \ \ rxn\ =>\ mech\%get\_rxn(\ i\_rxn\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00730}00730\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ .not.\ rxn\%property\_set\%get\_string(\ \textcolor{stringliteral}{"{}camp-\/box-\/model-\/id"{}},\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00731}00731\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rxn\_label\ )\ )\ cycle}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00732}00732\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ .not.\ trim(\ rxn\_label\ )\ .eq.\ new\_obj\%name\ )\ cycle}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00733}00733\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{select\ type}(\ rxn\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00734}00734\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ class\ is}(\ \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__emission__t}{rxn\_emission\_t}})}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00735}00735\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{allocate}(\ \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\_update\_data\_emission\_t}}::new\_obj\%update\_data\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00736}00736\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ class\ is}(\ \mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__first__order__loss__t}{rxn\_first\_order\_loss\_t}})}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00737}00737\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{allocate}(\ \mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t}{rxn\_update\_data\_first\_order\_loss\_t}}::new\_obj\%update\_data\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00738}00738\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ class\ is}(\ \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__photolysis__t}{rxn\_photolysis\_t}})}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00739}00739\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{allocate}(\ \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t}{rxn\_update\_data\_photolysis\_t}}::new\_obj\%update\_data\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00740}00740\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ class\ is}(\ \mbox{\hyperlink{structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t}{rxn\_wet\_deposition\_t}})}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00741}00741\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{allocate}(\ \mbox{\hyperlink{structcamp__rxn__wet__deposition_1_1rxn__update__data__wet__deposition__t}{rxn\_update\_data\_wet\_deposition\_t}}::new\_obj\%update\_data\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00742}00742\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00743}00743\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(\ 592455681,\ \textcolor{stringliteral}{"{}Invalid\ reaction\ for\ rate\ updates"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00744}00744\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00745}00745\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }camp\_core\%initialize\_update\_object(\ rxn,\ new\_obj\%update\_data\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00746}00746\ \ \ \ \ \ \ \ \ found\ =\ .true.}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00747}00747\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{exit}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00748}00748\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00749}00749\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ found\ )\ \textcolor{keywordflow}{exit}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00750}00750\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00751}00751\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00752}00752\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(\ 800298506,\ found,\ \textcolor{stringliteral}{"{}Could\ not\ find\ reaction\ label\ '"{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00753}00753\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(\ new\_obj\%name\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00754}00754\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00755}00755\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a97f1bc98fea4f3453a3d9a088a94cee7}{rxn\_profile\_constructor}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00756}00756\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00757}00757\ \textcolor{preprocessor}{}\textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00758}00758\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00759}00759\ \textcolor{comment}{\ \ !>\ Update\ a\ reaction\ with\ the\ current\ rate\ from\ the\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00760}\mbox{\hyperlink{namespacecamp__camp__box__model__data_a61bdbd2a4ffa9c2ced4c2af8bc202547}{00760}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a61bdbd2a4ffa9c2ced4c2af8bc202547}{update\_rxn}}(\ this,\ camp\_core\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00761}00761\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00762}00762\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rxn__emission}{camp\_rxn\_emission}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00763}00763\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rxn__first__order__loss}{camp\_rxn\_first\_order\_loss}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00764}00764\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rxn__photolysis}{camp\_rxn\_photolysis}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00765}00765\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rxn__wet__deposition}{camp\_rxn\_wet\_deposition}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00766}00766\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00767}00767\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ rate\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00768}00768\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1rxn__profile__t}{rxn\_profile\_t}})\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00769}00769\ \textcolor{comment}{\ \ \ \ !>\ CAMP\ core}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00770}00770\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\_core\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ camp\_core}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00771}00771\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00772}00772\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__update__data__t}{rxn\_update\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ ud}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00773}00773\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00774}00774\ \ \ \ \ \textcolor{keywordflow}{select\ type}(\ ud\ =>\ this\%update\_data\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00775}00775\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ is}(\ \mbox{\hyperlink{structcamp__rxn__emission_1_1rxn__update__data__emission__t}{rxn\_update\_data\_emission\_t}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00776}00776\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }ud\%set\_rate(\ this\%current\_value(\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00777}00777\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ is}(\ \mbox{\hyperlink{structcamp__rxn__first__order__loss_1_1rxn__update__data__first__order__loss__t}{rxn\_update\_data\_first\_order\_loss\_t}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00778}00778\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }ud\%set\_rate(\ this\%current\_value(\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00779}00779\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ is}(\ \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__update__data__photolysis__t}{rxn\_update\_data\_photolysis\_t}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00780}00780\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }ud\%set\_rate(\ this\%current\_value(\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00781}00781\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ is}(\ \mbox{\hyperlink{structcamp__rxn__wet__deposition_1_1rxn__update__data__wet__deposition__t}{rxn\_update\_data\_wet\_deposition\_t}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00782}00782\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }ud\%set\_rate(\ this\%current\_value(\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00783}00783\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00784}00784\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_aa942add404bf8b611e5b4b8c777ca7f6}{die}}(\ 497670619\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00785}00785\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00786}00786\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00787}00787\ \ \ \ \ \textcolor{keyword}{call\ }camp\_core\%update\_data(\ this\%update\_data\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00788}00788\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00789}00789\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a61bdbd2a4ffa9c2ced4c2af8bc202547}{update\_rxn}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00790}00790\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00791}00791\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00792}00792\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00793}00793\ \textcolor{comment}{\ \ !>\ Finalize\ the\ reaction\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00794}\mbox{\hyperlink{namespacecamp__camp__box__model__data_a162f3ff794061e76de73793d4fbf32b6}{00794}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a162f3ff794061e76de73793d4fbf32b6}{rxn\_profile\_finalize}}(\ this\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00795}00795\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00796}00796\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00797}00797\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1rxn__profile__t}{rxn\_profile\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00798}00798\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00799}00799\ \ \ \ \ \textcolor{keywordflow}{if}(\ \textcolor{keyword}{associated}(\ this\%update\_data\ )\ )\ \textcolor{keyword}{deallocate}(\ this\%update\_data\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00800}00800\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00801}00801\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a162f3ff794061e76de73793d4fbf32b6}{rxn\_profile\_finalize}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00802}00802\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00803}00803\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00804}00804\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_JSON}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00805}00805\ \textcolor{preprocessor}{}\textcolor{comment}{\ \ !>\ Constructor\ for\ aero\_rep\_profile\_t}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00806}\mbox{\hyperlink{namespacecamp__camp__box__model__data_a8af4bb4693b7646b5850d93fe7c638fd}{00806}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a8af4bb4693b7646b5850d93fe7c638fd}{aero\_rep\_profile\_constructor}}(\ camp\_core,\ json,\ j\_obj\ )\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00807}00807\ \ \ \ \ \ \ result(\ new\_obj\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00808}00808\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00809}00809\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__mechanism__data}{camp\_mechanism\_data}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00810}00810\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass}{camp\_aero\_rep\_modal\_binned\_mass}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00811}00811\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle}{camp\_aero\_rep\_single\_particle}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00812}00812\ \ \ \ \ \textcolor{keywordtype}{use\ }json\_module}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00813}00813\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00814}00814\ \textcolor{comment}{\ \ \ \ !>\ New\ aerosol\ representation\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00815}00815\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{aero\_rep\_profile\_t}})\ ::\ new\_obj\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00816}00816\ \textcolor{comment}{\ \ \ \ !>\ CAMP\ core}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00817}00817\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\_core\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ camp\_core\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00818}00818\ \textcolor{comment}{\ \ \ \ !>\ JSON\ core}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00819}00819\ \ \ \ \ \textcolor{keywordtype}{type}(json\_core),\ \textcolor{keywordtype}{intent(inout)}\ \ ::\ json\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00820}00820\ \textcolor{comment}{\ \ \ \ !>\ JSON\ object\ to\ build\ the\ profile\ from}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00821}00821\ \ \ \ \ \textcolor{keywordtype}{type}(json\_value),\ \textcolor{keywordtype}{pointer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ j\_obj}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00822}00822\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00823}00823\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__t}{aero\_rep\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ aero\_rep}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00824}00824\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}})\ ::\ base\_profile}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00825}00825\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00826}00826\ \ \ \ \ \textcolor{keywordtype}{character(kind=json\_ck,\ len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ update\_type}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00827}00827\ \ \ \ \ \textcolor{keywordtype}{character(kind=json\_ck,\ len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ section\_name}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00828}00828\ \ \ \ \ \textcolor{keywordtype}{logical(kind=json\_lk)}\ ::\ found}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00829}00829\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00830}00830\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_aero\_rep}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00831}00831\ \ \ \ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ aero\_rep\_label}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00832}00832\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00833}00833\ \ \ \ \ found\ =\ .false.}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00834}00834\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00835}00835\ \ \ \ \ \textcolor{comment}{!\ Load\ the\ standard\ profile\ data}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00836}00836\ \ \ \ \ base\_profile\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\_t}}(\ json,\ j\_obj\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00837}00837\ \ \ \ \ new\_obj\%name\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ =\ base\_profile\%name}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00838}00838\ \ \ \ \ new\_obj\%transition\_time\_step\ =\ base\_profile\%transition\_time\_step}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00839}00839\ \ \ \ \ new\_obj\%transition\_value\ \ \ \ \ =\ base\_profile\%transition\_value}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00840}00840\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00841}00841\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ type\ of\ value\ being\ updated}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00842}00842\ \ \ \ \ \textcolor{keyword}{call\ }json\%get(\ j\_obj,\ \textcolor{stringliteral}{"{}update\ type"{}},\ update\_type,\ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00843}00843\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(\ 591311579,\ found,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00844}00844\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ update\ type\ for\ aerosol\ representation\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00845}00845\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}profile\ '"{}}//new\_obj\%name//\textcolor{stringliteral}{"{}'"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00846}00846\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00847}00847\ \ \ \ \ \textcolor{comment}{!\ Find\ the\ reaction\ and\ initialize\ the\ update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00848}00848\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_aero\_rep\ =\ 1,\ \textcolor{keyword}{size}(\ camp\_core\%aero\_rep\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00849}00849\ \ \ \ \ \ \ aero\_rep\ =>\ camp\_core\%aero\_rep(\ i\_aero\_rep\ )\%val}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00850}00850\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ .not.\ aero\_rep\%property\_set\%get\_string(\ \textcolor{stringliteral}{"{}camp-\/box-\/model-\/id"{}},\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00851}00851\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aero\_rep\_label\ )\ )\ cycle}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00852}00852\ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\ .not.\ trim(\ aero\_rep\_label\ )\ .eq.\ new\_obj\%name\ )\ cycle}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00853}00853\ \ \ \ \ \ \ \textcolor{keywordflow}{select\ type}(\ aero\_rep\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00854}00854\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ class\ is}(\ \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\_rep\_modal\_binned\_mass\_t}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00855}00855\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00856}00856\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Modal/binned\ updates\ must\ include\ a\ section\ id}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00857}00857\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }json\%get(\ j\_obj,\ \textcolor{stringliteral}{"{}section\ name"{}},\ section\_name,\ found\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00858}00858\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(\ 454366901,\ found,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00859}00859\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ section\ name\ for\ modal/binned\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00860}00860\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}aerosol\ representation\ '"{}}//new\_obj\%name//\textcolor{stringliteral}{"{}'"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00861}00861\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(\ 112599854,\ aero\_rep\%get\_section\_id(\ section\_name,\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00862}00862\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_obj\%section\_id\ ),\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00863}00863\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Cannot\ find\ aerosol\ section\ '"{}}//section\_name//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00864}00864\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}'\ in\ aerosol\ representation\ '"{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00865}00865\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ new\_obj\%name//\textcolor{stringliteral}{"{}'"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00866}00866\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{select\ case}(\ update\_type\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00867}00867\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}(\ \textcolor{stringliteral}{"{}UPDATE\_GMD"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00868}00868\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{allocate}(\ \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t}{aero\_rep\_update\_data\_modal\_binned\_mass\_gmd\_t}}::new\_obj\%update\_data\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00869}00869\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}(\ \textcolor{stringliteral}{"{}UPDATE\_GSD"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00870}00870\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{allocate}(\ \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}{aero\_rep\_update\_data\_modal\_binned\_mass\_gsd\_t}}::new\_obj\%update\_data\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00871}00871\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ case\ default}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00872}00872\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(\ 513320382,\ \textcolor{stringliteral}{"{}Invalid\ update\ type\ for\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00873}00873\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}modal/binned\ aerosol\ rep:\ "{}}//update\_type\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00874}00874\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00875}00875\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ class\ is}(\ \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\_rep\_single\_particle\_t}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00876}00876\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{select\ case}(\ update\_type\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00877}00877\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}(\ \textcolor{stringliteral}{"{}UPDATE\_NUMBER"{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00878}00878\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{allocate}(\ \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}}::new\_obj\%update\_data\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00879}00879\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ case\ default}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00880}00880\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(\ 379396160,\ \textcolor{stringliteral}{"{}Invalid\ update\ type\ for\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00881}00881\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}single\ particle\ aerosol\ rep:\ "{}}//update\_type\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00882}00882\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00883}00883\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00884}00884\ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(\ 203974949,\ \textcolor{stringliteral}{"{}Invalid\ aerosol\ representation\ "{}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00885}00885\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00886}00886\ \ \ \ \ \ \ \textcolor{keyword}{call\ }camp\_core\%initialize\_update\_object(\ aero\_rep,\ new\_obj\%update\_data\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00887}00887\ \ \ \ \ \ \ found\ =\ .true.}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00888}00888\ \ \ \ \ \ \ \textcolor{keywordflow}{exit}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00889}00889\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00890}00890\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00891}00891\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(\ 712992422,\ found,\ \textcolor{stringliteral}{"{}Could\ not\ find\ aerosol\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00892}00892\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}representation\ label\ '"{}}//\ trim(\ new\_obj\%name\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00893}00893\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00894}00894\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_a8af4bb4693b7646b5850d93fe7c638fd}{aero\_rep\_profile\_constructor}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00895}00895\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00896}00896\ \textcolor{preprocessor}{}\textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00897}00897\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00898}00898\ \textcolor{comment}{\ \ !>\ Update\ a\ reaction\ with\ the\ current\ rate\ from\ the\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00899}\mbox{\hyperlink{namespacecamp__camp__box__model__data_af768542102cf21c66f636348d8f4dcb7}{00899}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_af768542102cf21c66f636348d8f4dcb7}{update\_aero\_rep}}(\ this,\ camp\_core\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00900}00900\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00901}00901\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__aero__rep__modal__binned__mass}{camp\_aero\_rep\_modal\_binned\_mass}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00902}00902\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle}{camp\_aero\_rep\_single\_particle}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00903}00903\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00904}00904\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00905}00905\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{aero\_rep\_profile\_t}})\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00906}00906\ \textcolor{comment}{\ \ \ \ !>\ CAMP\ core}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00907}00907\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__core_1_1camp__core__t}{camp\_core\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ camp\_core}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00908}00908\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00909}00909\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__update__data__t}{aero\_rep\_update\_data\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ ud}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00910}00910\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00911}00911\ \ \ \ \ \textcolor{keywordflow}{select\ type}(\ ud\ =>\ this\%update\_data\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00912}00912\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ is}(\ \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gmd__t}{aero\_rep\_update\_data\_modal\_binned\_mass\_gmd\_t}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00913}00913\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(\ 832366630,\ this\%section\_id.gt.0\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00914}00914\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }ud\%set\_GMD(\ this\%section\_id,\ this\%current\_value(\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00915}00915\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ is}(\ \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}{aero\_rep\_update\_data\_modal\_binned\_mass\_gsd\_t}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00916}00916\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(\ 264057359,\ this\%section\_id.gt.0\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00917}00917\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }ud\%set\_GSD(\ this\%section\_id,\ this\%current\_value(\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00918}00918\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ is}(\ \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}}\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00919}00919\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }ud\%set\_number\_\_n\_m3(\ 1,\ this\%current\_value(\ )\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00920}00920\ \textcolor{keywordflow}{\ \ \ \ \ \ class\ default}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00921}00921\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_aa942add404bf8b611e5b4b8c777ca7f6}{die}}(\ 623019372\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00922}00922\ \textcolor{keywordflow}{\ \ \ \ end\ select}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00923}00923\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00924}00924\ \ \ \ \ \textcolor{keyword}{call\ }camp\_core\%update\_data(\ this\%update\_data\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00925}00925\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00926}00926\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_af768542102cf21c66f636348d8f4dcb7}{update\_aero\_rep}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00927}00927\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00928}00928\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00929}00929\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00930}00930\ \textcolor{comment}{\ \ !>\ Finalize\ the\ aerosol\ representation\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00931}\mbox{\hyperlink{namespacecamp__camp__box__model__data_ae1391ed0195d773e7668e7ddce13880c}{00931}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_ae1391ed0195d773e7668e7ddce13880c}{aero\_rep\_profile\_finalize}}(\ this\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00932}00932\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00933}00933\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ profile}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00934}00934\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1aero__rep__profile__t}{aero\_rep\_profile\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00935}00935\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00936}00936\ \ \ \ \ \textcolor{keywordflow}{if}(\ \textcolor{keyword}{associated}(\ this\%update\_data\ )\ )\ \textcolor{keyword}{deallocate}(\ this\%update\_data\ )}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00937}00937\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00938}00938\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data_ae1391ed0195d773e7668e7ddce13880c}{aero\_rep\_profile\_finalize}}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00939}00939\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00940}00940\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00941}00941\ }
+\DoxyCodeLine{\Hypertarget{camp__box__model__data_8_f90_source_l00942}00942\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__camp__box__model__data}{camp\_camp\_box\_model\_data}}}
+
+\end{DoxyCode}

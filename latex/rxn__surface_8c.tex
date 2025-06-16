@@ -67,16 +67,16 @@ Include dependency graph for rxn\+\_\+surface.\+c\+:
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{rxn__surface_8c_a172e0e483115d10f868a1a68f7a664da}{rxn\+\_\+surface\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
-\begin{DoxyCompactList}\small\item\em Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__surface_8c_a61c79d96744201b051a10a6b891a7ea9}{rxn\+\_\+surface\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
+void \mbox{\hyperlink{rxn__surface_8c_a172e0e483115d10f868a1a68f7a664da}{rxn\+\_\+surface\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, Jacobian \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Flag Jacobian elements used by this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__surface_8c_a61c79d96744201b051a10a6b891a7ea9}{rxn\+\_\+surface\+\_\+update\+\_\+ids}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, Jacobian jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__surface_8c_a1f0c4bf256b37b3b7b054514a997deae}{rxn\+\_\+surface\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{rxn__surface_8c_a1f0c4bf256b37b3b7b054514a997deae}{rxn\+\_\+surface\+\_\+update\+\_\+env\+\_\+state}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update reaction data for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__surface_8c_a5bb30760087399bd04a9f9e16f0fab1f}{rxn\+\_\+surface\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+void \mbox{\hyperlink{rxn__surface_8c_a5bb30760087399bd04a9f9e16f0fab1f}{rxn\+\_\+surface\+\_\+calc\+\_\+deriv\+\_\+contrib}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Time\+Derivative time\+\_\+deriv, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
 \begin{DoxyCompactList}\small\item\em Calculate contributions to the time derivative $f(t,y)$ from this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__surface_8c_a8de73dc2a00c1bc5b91747cbb50086ad}{rxn\+\_\+surface\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
-\begin{DoxyCompactList}\small\item\em Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__surface_8c_a8de73dc2a00c1bc5b91747cbb50086ad}{rxn\+\_\+surface\+\_\+calc\+\_\+jac\+\_\+contrib}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Jacobian jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the Jacobian from this reaction. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{rxn__surface_8c_af4d5ba66d45ee435e1451b44eda87370}{rxn\+\_\+surface\+\_\+print}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the surface reaction parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -398,7 +398,7 @@ Definition at line \mbox{\hyperlink{rxn__surface_8c_source_l00044}{44}} of file 
 \index{rxn\_surface\_calc\_deriv\_contrib@{rxn\_surface\_calc\_deriv\_contrib}!rxn\_surface.c@{rxn\_surface.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_surface\_calc\_deriv\_contrib()}{rxn\_surface\_calc\_deriv\_contrib()}}
 {\footnotesize\ttfamily \label{rxn__surface_8c_a5bb30760087399bd04a9f9e16f0fab1f} 
-void rxn\+\_\+surface\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+surface\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Time\+Derivative}]{time\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
@@ -408,7 +408,7 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data, including the state array \\
 \hline
-{\em time\+\_\+deriv} & \doxylink{struct_time_derivative}{Time\+Derivative} object \\
+{\em time\+\_\+deriv} & Time\+Derivative object \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -443,17 +443,17 @@ Here is the caller graph for this function\+:
 \index{rxn\_surface\_calc\_jac\_contrib@{rxn\_surface\_calc\_jac\_contrib}!rxn\_surface.c@{rxn\_surface.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_surface\_calc\_jac\_contrib()}{rxn\_surface\_calc\_jac\_contrib()}}
 {\footnotesize\ttfamily \label{rxn__surface_8c_a8de73dc2a00c1bc5b91747cbb50086ad} 
-void rxn\+\_\+surface\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+surface\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Jacobian}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
-Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. 
+Calculate contributions to the Jacobian from this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em jac} & Reaction \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Reaction Jacobian \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -488,11 +488,11 @@ Here is the caller graph for this function\+:
 \index{rxn\_surface\_get\_used\_jac\_elem@{rxn\_surface\_get\_used\_jac\_elem}!rxn\_surface.c@{rxn\_surface.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_surface\_get\_used\_jac\_elem()}{rxn\_surface\_get\_used\_jac\_elem()}}
 {\footnotesize\ttfamily \label{rxn__surface_8c_a172e0e483115d10f868a1a68f7a664da} 
-void rxn\+\_\+surface\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
+void rxn\+\_\+surface\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{Jacobian \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
 
 
 
-Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. 
+Flag Jacobian elements used by this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -502,7 +502,7 @@ Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction.
 \hline
 {\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 \end{DoxyParams}
 
@@ -558,7 +558,7 @@ Here is the caller graph for this function\+:
 \index{rxn\_surface\_update\_env\_state@{rxn\_surface\_update\_env\_state}!rxn\_surface.c@{rxn\_surface.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_surface\_update\_env\_state()}{rxn\_surface\_update\_env\_state()}}
 {\footnotesize\ttfamily \label{rxn__surface_8c_a1f0c4bf256b37b3b7b054514a997deae} 
-void rxn\+\_\+surface\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
+void rxn\+\_\+surface\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -581,14 +581,6 @@ For surface reactions this only involves calculating the mean speed of the react
 
 Definition at line \mbox{\hyperlink{rxn__surface_8c_source_l00178}{178}} of file \mbox{\hyperlink{rxn__surface_8c_source}{rxn\+\_\+surface.\+c}}.
 
-Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=318pt]{rxn__surface_8c_a1f0c4bf256b37b3b7b054514a997deae_cgraph}
-\end{center}
-\end{figure}
 Here is the caller graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
@@ -601,7 +593,7 @@ Here is the caller graph for this function\+:
 \index{rxn\_surface\_update\_ids@{rxn\_surface\_update\_ids}!rxn\_surface.c@{rxn\_surface.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_surface\_update\_ids()}{rxn\_surface\_update\_ids()}}
 {\footnotesize\ttfamily \label{rxn__surface_8c_a61c79d96744201b051a10a6b891a7ea9} 
-void rxn\+\_\+surface\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
+void rxn\+\_\+surface\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{Jacobian}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -613,7 +605,7 @@ Update the time derivative and Jacbobian array indices.
 \hline
 {\em deriv\+\_\+ids} & Id of each state variable in the derivative array \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline

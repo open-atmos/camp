@@ -10,7 +10,7 @@ Include dependency graph for rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+c\
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{rxn__ternary__chemical__activation_8c__incl}
+\includegraphics[width=340pt]{rxn__ternary__chemical__activation_8c__incl}
 \end{center}
 \end{figure}
 \doxysubsubsection*{Macros}
@@ -63,16 +63,16 @@ Include dependency graph for rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+c\
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_a75c51d913c5d68b833f8fe7f0c078870}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
-\begin{DoxyCompactList}\small\item\em Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_a8f0167f1dcf9c3621f4f211b674b4698}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
+void \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_a75c51d913c5d68b833f8fe7f0c078870}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, Jacobian \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Flag Jacobian elements used by this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_a8f0167f1dcf9c3621f4f211b674b4698}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+update\+\_\+ids}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, Jacobian jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_a1aa5967c48da08c40704695d30025ab5}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_a1aa5967c48da08c40704695d30025ab5}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+update\+\_\+env\+\_\+state}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update reaction data for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_aab9c65ccd4b8614889c1462e2500e6b9}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+void \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_aab9c65ccd4b8614889c1462e2500e6b9}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+calc\+\_\+deriv\+\_\+contrib}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Time\+Derivative time\+\_\+deriv, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
 \begin{DoxyCompactList}\small\item\em Calculate contributions to the time derivative $f(t,y)$ from this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_a0e03361890588fa6e5b8d43b5f63d208}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
-\begin{DoxyCompactList}\small\item\em Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_a0e03361890588fa6e5b8d43b5f63d208}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+calc\+\_\+jac\+\_\+contrib}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Jacobian jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the Jacobian from this reaction. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_a0f9b43686938e15c04035c8b13f0de30}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+print}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the Ternary Chemical Activation reaction parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -339,7 +339,7 @@ Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8c_source
 \index{rxn\_ternary\_chemical\_activation\_calc\_deriv\_contrib@{rxn\_ternary\_chemical\_activation\_calc\_deriv\_contrib}!rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_ternary\_chemical\_activation\_calc\_deriv\_contrib()}{rxn\_ternary\_chemical\_activation\_calc\_deriv\_contrib()}}
 {\footnotesize\ttfamily \label{rxn__ternary__chemical__activation_8c_aab9c65ccd4b8614889c1462e2500e6b9} 
-void rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Time\+Derivative}]{time\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
@@ -349,7 +349,7 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data, including the state array \\
 \hline
-{\em time\+\_\+deriv} & \doxylink{struct_time_derivative}{Time\+Derivative} object \\
+{\em time\+\_\+deriv} & Time\+Derivative object \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -384,17 +384,17 @@ Here is the caller graph for this function\+:
 \index{rxn\_ternary\_chemical\_activation\_calc\_jac\_contrib@{rxn\_ternary\_chemical\_activation\_calc\_jac\_contrib}!rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_ternary\_chemical\_activation\_calc\_jac\_contrib()}{rxn\_ternary\_chemical\_activation\_calc\_jac\_contrib()}}
 {\footnotesize\ttfamily \label{rxn__ternary__chemical__activation_8c_a0e03361890588fa6e5b8d43b5f63d208} 
-void rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Jacobian}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
-Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. 
+Calculate contributions to the Jacobian from this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em jac} & Reaction \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Reaction Jacobian \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -429,11 +429,11 @@ Here is the caller graph for this function\+:
 \index{rxn\_ternary\_chemical\_activation\_get\_used\_jac\_elem@{rxn\_ternary\_chemical\_activation\_get\_used\_jac\_elem}!rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_ternary\_chemical\_activation\_get\_used\_jac\_elem()}{rxn\_ternary\_chemical\_activation\_get\_used\_jac\_elem()}}
 {\footnotesize\ttfamily \label{rxn__ternary__chemical__activation_8c_a75c51d913c5d68b833f8fe7f0c078870} 
-void rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
+void rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{Jacobian \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
 
 
 
-Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. 
+Flag Jacobian elements used by this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -441,7 +441,7 @@ Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction.
 \hline
 {\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 \end{DoxyParams}
 
@@ -497,7 +497,7 @@ Here is the caller graph for this function\+:
 \index{rxn\_ternary\_chemical\_activation\_update\_env\_state@{rxn\_ternary\_chemical\_activation\_update\_env\_state}!rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_ternary\_chemical\_activation\_update\_env\_state()}{rxn\_ternary\_chemical\_activation\_update\_env\_state()}}
 {\footnotesize\ttfamily \label{rxn__ternary__chemical__activation_8c_a1aa5967c48da08c40704695d30025ab5} 
-void rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
+void rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -532,7 +532,7 @@ Here is the caller graph for this function\+:
 \index{rxn\_ternary\_chemical\_activation\_update\_ids@{rxn\_ternary\_chemical\_activation\_update\_ids}!rxn\_ternary\_chemical\_activation.c@{rxn\_ternary\_chemical\_activation.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_ternary\_chemical\_activation\_update\_ids()}{rxn\_ternary\_chemical\_activation\_update\_ids()}}
 {\footnotesize\ttfamily \label{rxn__ternary__chemical__activation_8c_a8f0167f1dcf9c3621f4f211b674b4698} 
-void rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
+void rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{Jacobian}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -544,7 +544,7 @@ Update the time derivative and Jacbobian array indices.
 \hline
 {\em deriv\+\_\+ids} & Id of each state variable in the derivative array \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline

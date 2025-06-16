@@ -10,7 +10,7 @@ Include dependency graph for rxn\+\_\+wet\+\_\+deposition.\+c\+:
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{rxn__wet__deposition_8c__incl}
+\includegraphics[width=340pt]{rxn__wet__deposition_8c__incl}
 \end{center}
 \end{figure}
 \doxysubsubsection*{Macros}
@@ -45,18 +45,18 @@ Include dependency graph for rxn\+\_\+wet\+\_\+deposition.\+c\+:
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{rxn__wet__deposition_8c_a083ddf02453025334ced6c65d78d60e1}{rxn\+\_\+wet\+\_\+deposition\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
-\begin{DoxyCompactList}\small\item\em Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__wet__deposition_8c_a544634ece257f580b822e9851e37b73d}{rxn\+\_\+wet\+\_\+deposition\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
+void \mbox{\hyperlink{rxn__wet__deposition_8c_a083ddf02453025334ced6c65d78d60e1}{rxn\+\_\+wet\+\_\+deposition\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, Jacobian \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Flag Jacobian elements used by this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__wet__deposition_8c_a544634ece257f580b822e9851e37b73d}{rxn\+\_\+wet\+\_\+deposition\+\_\+update\+\_\+ids}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, Jacobian jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
 bool \mbox{\hyperlink{rxn__wet__deposition_8c_a8702d84bdb799c83a7f8b9feb1f72701}{rxn\+\_\+wet\+\_\+deposition\+\_\+update\+\_\+data}} (void \texorpdfstring{$\ast$}{*}update\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update reaction data. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__wet__deposition_8c_a639ae40ecdc8940c3c36a240738092df}{rxn\+\_\+wet\+\_\+deposition\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{rxn__wet__deposition_8c_a639ae40ecdc8940c3c36a240738092df}{rxn\+\_\+wet\+\_\+deposition\+\_\+update\+\_\+env\+\_\+state}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update reaction data for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__wet__deposition_8c_a6aec5e3d4cbb3a9e0d993a1780c42ecd}{rxn\+\_\+wet\+\_\+deposition\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+void \mbox{\hyperlink{rxn__wet__deposition_8c_a6aec5e3d4cbb3a9e0d993a1780c42ecd}{rxn\+\_\+wet\+\_\+deposition\+\_\+calc\+\_\+deriv\+\_\+contrib}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Time\+Derivative time\+\_\+deriv, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
 \begin{DoxyCompactList}\small\item\em Calculate contributions to the time derivative $f(t,y)$ from this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__wet__deposition_8c_ad84c0373895c3b2bfad55408c9066f16}{rxn\+\_\+wet\+\_\+deposition\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
-\begin{DoxyCompactList}\small\item\em Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__wet__deposition_8c_ad84c0373895c3b2bfad55408c9066f16}{rxn\+\_\+wet\+\_\+deposition\+\_\+calc\+\_\+jac\+\_\+contrib}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Jacobian jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the Jacobian from this reaction. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{rxn__wet__deposition_8c_a76a5bf8613ce3116db76b077f0c15382}{rxn\+\_\+wet\+\_\+deposition\+\_\+print}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the reaction parameters. \end{DoxyCompactList}\item 
 void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{rxn__wet__deposition_8c_a3a2d565e303d68e825fdea7fa7c884c3}{rxn\+\_\+wet\+\_\+deposition\+\_\+create\+\_\+rate\+\_\+update\+\_\+data}} ()
@@ -227,7 +227,7 @@ Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00017}{17}} 
 \index{rxn\_wet\_deposition\_calc\_deriv\_contrib@{rxn\_wet\_deposition\_calc\_deriv\_contrib}!rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_wet\_deposition\_calc\_deriv\_contrib()}{rxn\_wet\_deposition\_calc\_deriv\_contrib()}}
 {\footnotesize\ttfamily \label{rxn__wet__deposition_8c_a6aec5e3d4cbb3a9e0d993a1780c42ecd} 
-void rxn\+\_\+wet\+\_\+deposition\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+wet\+\_\+deposition\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Time\+Derivative}]{time\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
@@ -237,7 +237,7 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data, including the state array \\
 \hline
-{\em time\+\_\+deriv} & \doxylink{struct_time_derivative}{Time\+Derivative} object \\
+{\em time\+\_\+deriv} & Time\+Derivative object \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -272,17 +272,17 @@ Here is the caller graph for this function\+:
 \index{rxn\_wet\_deposition\_calc\_jac\_contrib@{rxn\_wet\_deposition\_calc\_jac\_contrib}!rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_wet\_deposition\_calc\_jac\_contrib()}{rxn\_wet\_deposition\_calc\_jac\_contrib()}}
 {\footnotesize\ttfamily \label{rxn__wet__deposition_8c_ad84c0373895c3b2bfad55408c9066f16} 
-void rxn\+\_\+wet\+\_\+deposition\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+wet\+\_\+deposition\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Jacobian}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
-Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. 
+Calculate contributions to the Jacobian from this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em jac} & Reaction \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Reaction Jacobian \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -334,11 +334,11 @@ Definition at line \mbox{\hyperlink{rxn__wet__deposition_8c_source_l00218}{218}}
 \index{rxn\_wet\_deposition\_get\_used\_jac\_elem@{rxn\_wet\_deposition\_get\_used\_jac\_elem}!rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_wet\_deposition\_get\_used\_jac\_elem()}{rxn\_wet\_deposition\_get\_used\_jac\_elem()}}
 {\footnotesize\ttfamily \label{rxn__wet__deposition_8c_a083ddf02453025334ced6c65d78d60e1} 
-void rxn\+\_\+wet\+\_\+deposition\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
+void rxn\+\_\+wet\+\_\+deposition\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{Jacobian \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
 
 
 
-Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. 
+Flag Jacobian elements used by this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -346,7 +346,7 @@ Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction.
 \hline
 {\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 \end{DoxyParams}
 
@@ -469,7 +469,7 @@ Here is the caller graph for this function\+:
 \index{rxn\_wet\_deposition\_update\_env\_state@{rxn\_wet\_deposition\_update\_env\_state}!rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_wet\_deposition\_update\_env\_state()}{rxn\_wet\_deposition\_update\_env\_state()}}
 {\footnotesize\ttfamily \label{rxn__wet__deposition_8c_a639ae40ecdc8940c3c36a240738092df} 
-void rxn\+\_\+wet\+\_\+deposition\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
+void rxn\+\_\+wet\+\_\+deposition\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -504,7 +504,7 @@ Here is the caller graph for this function\+:
 \index{rxn\_wet\_deposition\_update\_ids@{rxn\_wet\_deposition\_update\_ids}!rxn\_wet\_deposition.c@{rxn\_wet\_deposition.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_wet\_deposition\_update\_ids()}{rxn\_wet\_deposition\_update\_ids()}}
 {\footnotesize\ttfamily \label{rxn__wet__deposition_8c_a544634ece257f580b822e9851e37b73d} 
-void rxn\+\_\+wet\+\_\+deposition\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
+void rxn\+\_\+wet\+\_\+deposition\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{Jacobian}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -516,7 +516,7 @@ Update the time derivative and Jacbobian array indices.
 \hline
 {\em deriv\+\_\+ids} & Id of each state variable in the derivative array \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline

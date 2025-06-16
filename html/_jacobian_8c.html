@@ -73,28 +73,24 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="struct_jacobian.html">Jacobian</a> functions.  
+<p>Jacobian functions.  
 <a href="#details">More...</a></p>
 <div class="textblock"><div class="dynheader">
 Include dependency graph for Jacobian.c:</div>
 <div class="dyncontent">
 <div class="center"><img src="_jacobian_8c__incl.png" border="0" usemap="#a_jacobian_8c" alt=""/></div>
 <map name="a_jacobian_8c" id="a_jacobian_8c">
-<area shape="rect" title="Jacobian functions." alt="" coords="167,5,250,31"/>
-<area shape="rect" href="_jacobian_8h.html" title="Header for the Jacobian structure and related functions." alt="" coords="167,79,250,105"/>
-<area shape="poly" title=" " alt="" coords="211,31,211,63,206,63,206,31"/>
-<area shape="rect" title=" " alt="" coords="53,153,113,178"/>
-<area shape="poly" title=" " alt="" coords="167,21,128,25,86,34,45,52,28,65,13,80,9,97,15,113,30,128,49,142,46,146,27,132,11,116,3,97,9,78,24,61,43,47,84,29,127,19,166,16"/>
-<area shape="rect" title=" " alt="" coords="177,153,240,178"/>
-<area shape="poly" title=" " alt="" coords="227,30,242,44,257,62,266,83,264,105,253,126,237,144,233,140,248,123,259,104,261,84,252,65,239,48,223,34"/>
-<area shape="rect" title=" " alt="" coords="324,79,384,105"/>
-<area shape="poly" title=" " alt="" coords="234,29,317,69,314,74,232,34"/>
-<area shape="rect" href="time__derivative_8h.html" title="Header for the time derivative structure and related functions." alt="" coords="24,79,143,105"/>
-<area shape="poly" title=" " alt="" coords="189,34,119,73,116,69,186,29"/>
-<area shape="poly" title=" " alt="" coords="189,108,119,147,116,142,186,103"/>
-<area shape="poly" title=" " alt="" coords="211,105,211,137,206,137,206,105"/>
-<area shape="poly" title=" " alt="" coords="86,105,86,137,81,137,81,105"/>
-<area shape="poly" title=" " alt="" coords="106,103,175,142,173,147,103,108"/>
+<area shape="rect" title="Jacobian functions." alt="" coords="317,5,400,31"/>
+<area shape="rect" title=" " alt="" coords="5,79,125,105"/>
+<area shape="poly" title=" " alt="" coords="317,32,130,78,129,72,316,27"/>
+<area shape="rect" title=" " alt="" coords="149,79,304,105"/>
+<area shape="poly" title=" " alt="" coords="337,34,263,74,261,69,335,29"/>
+<area shape="rect" title=" " alt="" coords="328,79,388,105"/>
+<area shape="poly" title=" " alt="" coords="361,31,361,63,356,63,356,31"/>
+<area shape="rect" title=" " alt="" coords="413,79,472,105"/>
+<area shape="poly" title=" " alt="" coords="374,30,418,67,415,71,371,34"/>
+<area shape="rect" title=" " alt="" coords="496,79,559,105"/>
+<area shape="poly" title=" " alt="" coords="388,29,486,70,484,75,386,34"/>
 </map>
 </div>
 </div>
@@ -109,55 +105,41 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a3ea16d25b8523ab15b3f505fe00e2ed2" id="r_a3ea16d25b8523ab15b3f505fe00e2ed2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ea16d25b8523ab15b3f505fe00e2ed2">jacobian_initialize_empty</a> (<a class="el" href="struct_jacobian.html">Jacobian</a> *jac, unsigned int num_spec)</td></tr>
-<tr class="memdesc:a3ea16d25b8523ab15b3f505fe00e2ed2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the <a class="el" href="struct_jacobian.html">Jacobian</a>.  <br /></td></tr>
+<tr class="memitem:a3ea16d25b8523ab15b3f505fe00e2ed2" id="r_a3ea16d25b8523ab15b3f505fe00e2ed2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ea16d25b8523ab15b3f505fe00e2ed2">jacobian_initialize_empty</a> (Jacobian *jac, unsigned int num_spec)</td></tr>
 <tr class="separator:a3ea16d25b8523ab15b3f505fe00e2ed2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c379e74bb2572ce65119dbbe0206e65" id="r_a6c379e74bb2572ce65119dbbe0206e65"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c379e74bb2572ce65119dbbe0206e65">jacobian_initialize</a> (<a class="el" href="struct_jacobian.html">Jacobian</a> *jac, unsigned int num_spec, unsigned int **jac_struct)</td></tr>
-<tr class="memdesc:a6c379e74bb2572ce65119dbbe0206e65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the <a class="el" href="struct_jacobian.html">Jacobian</a>.  <br /></td></tr>
+<tr class="memitem:a6c379e74bb2572ce65119dbbe0206e65" id="r_a6c379e74bb2572ce65119dbbe0206e65"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c379e74bb2572ce65119dbbe0206e65">jacobian_initialize</a> (Jacobian *jac, unsigned int num_spec, unsigned int **jac_struct)</td></tr>
 <tr class="separator:a6c379e74bb2572ce65119dbbe0206e65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9cda15d66705739c9d7bdf63c4636a3" id="r_ad9cda15d66705739c9d7bdf63c4636a3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad9cda15d66705739c9d7bdf63c4636a3">jacobian_column_elements_add_space</a> (<a class="el" href="struct_jacobian_column_elements.html">JacobianColumnElements</a> *column)</td></tr>
+<tr class="memitem:ad9cda15d66705739c9d7bdf63c4636a3" id="r_ad9cda15d66705739c9d7bdf63c4636a3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad9cda15d66705739c9d7bdf63c4636a3">jacobian_column_elements_add_space</a> (JacobianColumnElements *column)</td></tr>
 <tr class="separator:ad9cda15d66705739c9d7bdf63c4636a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac51ac6b1cf239a84899308dab229441" id="r_aac51ac6b1cf239a84899308dab229441"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac51ac6b1cf239a84899308dab229441">jacobian_register_element</a> (<a class="el" href="struct_jacobian.html">Jacobian</a> *jac, unsigned int dep_id, unsigned int ind_id)</td></tr>
-<tr class="memdesc:aac51ac6b1cf239a84899308dab229441"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds an element to the sparse matrix.  <br /></td></tr>
+<tr class="memitem:aac51ac6b1cf239a84899308dab229441" id="r_aac51ac6b1cf239a84899308dab229441"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac51ac6b1cf239a84899308dab229441">jacobian_register_element</a> (Jacobian *jac, unsigned int dep_id, unsigned int ind_id)</td></tr>
 <tr class="separator:aac51ac6b1cf239a84899308dab229441"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87200e2cb129a2b8d8436848760f63d5" id="r_a87200e2cb129a2b8d8436848760f63d5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a87200e2cb129a2b8d8436848760f63d5">compare_ids</a> (const void *a, const void *b)</td></tr>
 <tr class="separator:a87200e2cb129a2b8d8436848760f63d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e954524b21f4e097996b2dc0d3cf999" id="r_a2e954524b21f4e097996b2dc0d3cf999"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e954524b21f4e097996b2dc0d3cf999">jacobian_build_matrix</a> (<a class="el" href="struct_jacobian.html">Jacobian</a> *jac)</td></tr>
-<tr class="memdesc:a2e954524b21f4e097996b2dc0d3cf999"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builds the sparse matrix with the registered elements.  <br /></td></tr>
+<tr class="memitem:a2e954524b21f4e097996b2dc0d3cf999" id="r_a2e954524b21f4e097996b2dc0d3cf999"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e954524b21f4e097996b2dc0d3cf999">jacobian_build_matrix</a> (Jacobian *jac)</td></tr>
 <tr class="separator:a2e954524b21f4e097996b2dc0d3cf999"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a797c57a02151acb880fba00b8afc57a3" id="r_a797c57a02151acb880fba00b8afc57a3"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a797c57a02151acb880fba00b8afc57a3">jacobian_number_of_elements</a> (<a class="el" href="struct_jacobian.html">Jacobian</a> jac)</td></tr>
-<tr class="memdesc:a797c57a02151acb880fba00b8afc57a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of elements in the <a class="el" href="struct_jacobian.html">Jacobian</a>.  <br /></td></tr>
+<tr class="memitem:a797c57a02151acb880fba00b8afc57a3" id="r_a797c57a02151acb880fba00b8afc57a3"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a797c57a02151acb880fba00b8afc57a3">jacobian_number_of_elements</a> (Jacobian jac)</td></tr>
 <tr class="separator:a797c57a02151acb880fba00b8afc57a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a9b073f122e923fe6bad96d0611a4ac" id="r_a0a9b073f122e923fe6bad96d0611a4ac"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a9b073f122e923fe6bad96d0611a4ac">jacobian_column_pointer_value</a> (<a class="el" href="struct_jacobian.html">Jacobian</a> jac, unsigned int col_id)</td></tr>
-<tr class="memdesc:a0a9b073f122e923fe6bad96d0611a4ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the value of a column pointer.  <br /></td></tr>
+<tr class="memitem:a0a9b073f122e923fe6bad96d0611a4ac" id="r_a0a9b073f122e923fe6bad96d0611a4ac"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a9b073f122e923fe6bad96d0611a4ac">jacobian_column_pointer_value</a> (Jacobian jac, unsigned int col_id)</td></tr>
 <tr class="separator:a0a9b073f122e923fe6bad96d0611a4ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae72fb841b0dd527b9e463e7ce208d856" id="r_ae72fb841b0dd527b9e463e7ce208d856"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae72fb841b0dd527b9e463e7ce208d856">jacobian_row_index</a> (<a class="el" href="struct_jacobian.html">Jacobian</a> jac, unsigned int elem_id)</td></tr>
-<tr class="memdesc:ae72fb841b0dd527b9e463e7ce208d856"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the row for a given <a class="el" href="struct_jacobian.html">Jacobian</a> element.  <br /></td></tr>
+<tr class="memitem:ae72fb841b0dd527b9e463e7ce208d856" id="r_ae72fb841b0dd527b9e463e7ce208d856"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae72fb841b0dd527b9e463e7ce208d856">jacobian_row_index</a> (Jacobian jac, unsigned int elem_id)</td></tr>
 <tr class="separator:ae72fb841b0dd527b9e463e7ce208d856"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b43d5884ec62826389d6d739b7f25eb" id="r_a7b43d5884ec62826389d6d739b7f25eb"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7b43d5884ec62826389d6d739b7f25eb">jacobian_get_element_id</a> (<a class="el" href="struct_jacobian.html">Jacobian</a> jac, unsigned int dep_id, unsigned int ind_id)</td></tr>
-<tr class="memdesc:a7b43d5884ec62826389d6d739b7f25eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an element id in the <a class="el" href="struct_jacobian.html">Jacobian</a> data arrays.  <br /></td></tr>
+<tr class="memitem:a7b43d5884ec62826389d6d739b7f25eb" id="r_a7b43d5884ec62826389d6d739b7f25eb"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7b43d5884ec62826389d6d739b7f25eb">jacobian_get_element_id</a> (Jacobian jac, unsigned int dep_id, unsigned int ind_id)</td></tr>
 <tr class="separator:a7b43d5884ec62826389d6d739b7f25eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b50b1fb83f669391bf76726b9c81ead" id="r_a9b50b1fb83f669391bf76726b9c81ead"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9b50b1fb83f669391bf76726b9c81ead">jacobian_reset</a> (<a class="el" href="struct_jacobian.html">Jacobian</a> jac)</td></tr>
-<tr class="memdesc:a9b50b1fb83f669391bf76726b9c81ead"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the <a class="el" href="struct_jacobian.html">Jacobian</a>.  <br /></td></tr>
+<tr class="memitem:a9b50b1fb83f669391bf76726b9c81ead" id="r_a9b50b1fb83f669391bf76726b9c81ead"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9b50b1fb83f669391bf76726b9c81ead">jacobian_reset</a> (Jacobian jac)</td></tr>
 <tr class="separator:a9b50b1fb83f669391bf76726b9c81ead"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adcc6d47123aab80bc7b90bdcbb68c90d" id="r_adcc6d47123aab80bc7b90bdcbb68c90d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adcc6d47123aab80bc7b90bdcbb68c90d">jacobian_output</a> (<a class="el" href="struct_jacobian.html">Jacobian</a> jac, double *dest_array)</td></tr>
-<tr class="memdesc:adcc6d47123aab80bc7b90bdcbb68c90d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Output the <a class="el" href="struct_jacobian.html">Jacobian</a>.  <br /></td></tr>
+<tr class="memitem:adcc6d47123aab80bc7b90bdcbb68c90d" id="r_adcc6d47123aab80bc7b90bdcbb68c90d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adcc6d47123aab80bc7b90bdcbb68c90d">jacobian_output</a> (Jacobian jac, double *dest_array)</td></tr>
 <tr class="separator:adcc6d47123aab80bc7b90bdcbb68c90d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a844d8b2784c48a794ada38d053b1d1b3" id="r_a844d8b2784c48a794ada38d053b1d1b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a844d8b2784c48a794ada38d053b1d1b3">jacobian_add_value</a> (<a class="el" href="struct_jacobian.html">Jacobian</a> jac, unsigned int elem_id, unsigned int prod_or_loss, long double jac_contribution)</td></tr>
-<tr class="memdesc:a844d8b2784c48a794ada38d053b1d1b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a contribution to the <a class="el" href="struct_jacobian.html">Jacobian</a>.  <br /></td></tr>
+<tr class="memitem:a844d8b2784c48a794ada38d053b1d1b3" id="r_a844d8b2784c48a794ada38d053b1d1b3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a844d8b2784c48a794ada38d053b1d1b3">jacobian_add_value</a> (Jacobian jac, unsigned int elem_id, unsigned int prod_or_loss, long double jac_contribution)</td></tr>
 <tr class="separator:a844d8b2784c48a794ada38d053b1d1b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adad0a11d68ed833045d81177b6b95baa" id="r_adad0a11d68ed833045d81177b6b95baa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adad0a11d68ed833045d81177b6b95baa">jacobian_print</a> (<a class="el" href="struct_jacobian.html">Jacobian</a> jac)</td></tr>
-<tr class="memdesc:adad0a11d68ed833045d81177b6b95baa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints the <a class="el" href="struct_jacobian.html">Jacobian</a> structure.  <br /></td></tr>
+<tr class="memitem:adad0a11d68ed833045d81177b6b95baa" id="r_adad0a11d68ed833045d81177b6b95baa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adad0a11d68ed833045d81177b6b95baa">jacobian_print</a> (Jacobian jac)</td></tr>
 <tr class="separator:adad0a11d68ed833045d81177b6b95baa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7bc2fe67ae132c04bf45e69934e6be1f" id="r_a7bc2fe67ae132c04bf45e69934e6be1f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7bc2fe67ae132c04bf45e69934e6be1f">jacobian_column_elements_free</a> (<a class="el" href="struct_jacobian_column_elements.html">JacobianColumnElements</a> *column)</td></tr>
-<tr class="memdesc:a7bc2fe67ae132c04bf45e69934e6be1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free memory associated with a <a class="el" href="struct_jacobian_column_elements.html">JacobianColumnElements</a>.  <br /></td></tr>
+<tr class="memitem:a7bc2fe67ae132c04bf45e69934e6be1f" id="r_a7bc2fe67ae132c04bf45e69934e6be1f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7bc2fe67ae132c04bf45e69934e6be1f">jacobian_column_elements_free</a> (JacobianColumnElements *column)</td></tr>
 <tr class="separator:a7bc2fe67ae132c04bf45e69934e6be1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c0108de18ada97dc46782f7223ceef8" id="r_a0c0108de18ada97dc46782f7223ceef8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0c0108de18ada97dc46782f7223ceef8">jacobian_free</a> (<a class="el" href="struct_jacobian.html">Jacobian</a> *jac)</td></tr>
-<tr class="memdesc:a0c0108de18ada97dc46782f7223ceef8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free memory associated with a <a class="el" href="struct_jacobian.html">Jacobian</a>.  <br /></td></tr>
+<tr class="memitem:a0c0108de18ada97dc46782f7223ceef8" id="r_a0c0108de18ada97dc46782f7223ceef8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0c0108de18ada97dc46782f7223ceef8">jacobian_free</a> (Jacobian *jac)</td></tr>
 <tr class="separator:a0c0108de18ada97dc46782f7223ceef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="struct_jacobian.html">Jacobian</a> functions. </p>
+<div class="textblock"><p>Jacobian functions. </p>
 
 <p class="definition">Definition in file <a class="el" href="_jacobian_8c_source.html">Jacobian.c</a>.</p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
@@ -220,7 +202,7 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="_jacobian_8c_a87200e2cb129a2b8d8436848760f63d5_icgraph.png" border="0" usemap="#a_jacobian_8c_a87200e2cb129a2b8d8436848760f63d5_icgraph" alt=""/></div>
 <map name="a_jacobian_8c_a87200e2cb129a2b8d8436848760f63d5_icgraph" id="a_jacobian_8c_a87200e2cb129a2b8d8436848760f63d5_icgraph">
 <area shape="rect" title=" " alt="" coords="907,38,1002,64"/>
-<area shape="rect" href="_jacobian_8c.html#a2e954524b21f4e097996b2dc0d3cf999" title="Builds the sparse matrix with the registered elements." alt="" coords="714,38,859,64"/>
+<area shape="rect" href="_jacobian_8c.html#a2e954524b21f4e097996b2dc0d3cf999" title=" " alt="" coords="714,38,859,64"/>
 <area shape="poly" title=" " alt="" coords="892,54,859,54,859,48,892,48"/>
 <area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="163,38,250,64"/>
 <area shape="poly" title=" " alt="" coords="698,39,665,35,481,11,401,9,298,21,267,29,238,40,237,35,266,24,298,16,400,4,482,6,666,30,699,34"/>
@@ -248,7 +230,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">void jacobian_add_value </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a></td>          <td class="paramname"><span class="paramname"><em>jac</em></span>, </td>
+          <td class="paramtype">Jacobian</td>          <td class="paramname"><span class="paramname"><em>jac</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -268,73 +250,73 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Add a contribution to the <a class="el" href="struct_jacobian.html">Jacobian</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">jac</td><td><a class="el" href="struct_jacobian.html">Jacobian</a> object </td></tr>
-    <tr><td class="paramname">elem_id</td><td>Index of the element to update in the data array </td></tr>
-    <tr><td class="paramname">prod_or_loss</td><td>Flag indicating whether to update the (0) production or (1) loss elements </td></tr>
-    <tr><td class="paramname">jac_contribution</td><td>Value to add to the <a class="el" href="struct_jacobian.html">Jacobian</a> element (contributions to loss elements should be positive if the contribution increases the loss) </td></tr>
-  </table>
-  </dd>
-</dl>
-
 <p class="definition">Definition at line <a class="el" href="_jacobian_8c_source.html#l00234">234</a> of file <a class="el" href="_jacobian_8c_source.html">Jacobian.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3_icgraph.png" border="0" usemap="#a_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3_icgraph" alt=""/></div>
 <map name="a_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3_icgraph" id="a_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3_icgraph">
-<area shape="rect" title="Add a contribution to the Jacobian." alt="" coords="683,532,818,557"/>
-<area shape="rect" href="rxn__aqueous__equilibrium_8c.html#a223e07042b82fc3b1391e1354acfdc5d" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="458,5,622,46"/>
-<area shape="poly" title=" " alt="" coords="743,517,730,416,707,280,692,210,674,148,654,96,633,61,618,48,621,44,637,57,659,94,679,146,697,209,712,279,735,415,749,516"/>
-<area shape="rect" href="rxn__arrhenius_8c.html#a94a77852fae3b39722aa865747915a95" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="475,71,605,111"/>
-<area shape="poly" title=" " alt="" coords="747,516,744,440,729,336,715,280,695,224,668,172,633,126,619,115,604,107,606,102,622,111,637,122,672,170,700,222,720,278,735,335,749,439,752,516"/>
-<area shape="rect" href="rxn___c_m_a_q___h2_o2_8c.html#acad0ab1be9adfd4d8ac11a772245434a" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="462,136,618,177"/>
-<area shape="poly" title=" " alt="" coords="745,516,739,450,721,364,707,317,688,272,663,229,633,192,617,179,620,175,637,188,668,226,692,270,712,316,726,362,744,449,751,515"/>
-<area shape="rect" href="rxn___c_m_a_q___o_h___h_n_o3_8c.html#a64502ded9861c3e462d29af918d08c04" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="447,201,633,242"/>
-<area shape="poly" title=" " alt="" coords="743,517,733,462,714,392,681,319,659,285,633,256,618,245,621,240,636,252,663,282,686,316,719,390,738,461,748,516"/>
-<area shape="rect" href="rxn__condensed__phase__arrhenius_8c.html#a670e87785981a83efecb80fa1c56ff0e" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="465,266,615,322"/>
-<area shape="poly" title=" " alt="" coords="738,518,723,478,701,429,671,380,633,336,614,322,617,318,636,332,675,376,706,427,728,476,743,516"/>
-<area shape="rect" href="rxn__condensed__phase__photolysis_8c.html#ade5f8de096d11339d18eaf86b4d28c4a" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="465,346,615,402"/>
-<area shape="poly" title=" " alt="" coords="730,520,689,468,662,440,633,416,614,404,617,399,636,412,666,437,693,465,734,517"/>
-<area shape="rect" href="rxn__first__order__loss_8c.html#a07413cad7e1d96989ea035941a53e915" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="473,556,607,597"/>
-<area shape="poly" title=" " alt="" coords="668,560,607,569,607,564,667,554"/>
-<area shape="rect" href="rxn___h_l__phase__transfer_8c.html#a4e04c50da5215b9886991e6f0c98cccc" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="462,425,618,466"/>
-<area shape="poly" title=" " alt="" coords="714,525,634,481,604,469,606,464,636,477,717,521"/>
-<area shape="rect" href="rxn__photolysis_8c.html#a12201d188bd114013b835e74912fdf53" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="473,621,607,662"/>
-<area shape="poly" title=" " alt="" coords="716,568,636,611,606,623,604,618,634,606,714,563"/>
-<area shape="rect" href="rxn___s_i_m_p_o_l__phase__transfer_8c.html#a2c6b4163ab0a9e65eec7dd8286d67885" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="445,491,635,531"/>
-<area shape="poly" title=" " alt="" coords="667,534,635,529,636,523,668,529"/>
-<area shape="rect" href="rxn__surface_8c.html#a8de73dc2a00c1bc5b91747cbb50086ad" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="468,687,612,727"/>
-<area shape="poly" title=" " alt="" coords="734,572,693,624,666,652,636,676,613,688,611,684,633,671,663,648,689,621,730,569"/>
-<area shape="rect" href="rxn__ternary__chemical__activation_8c.html#a0e03361890588fa6e5b8d43b5f63d208" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="468,751,612,807"/>
-<area shape="poly" title=" " alt="" coords="742,573,726,610,703,655,673,700,636,741,614,757,611,752,633,737,669,697,699,652,721,608,737,571"/>
-<area shape="rect" href="rxn__troe_8c.html#a4f34c34a0b24bbbb11a127246e3fd35e" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="456,832,624,857"/>
-<area shape="poly" title=" " alt="" coords="748,573,738,626,718,693,685,762,663,793,636,821,617,833,614,829,633,817,659,790,680,759,713,691,733,625,743,572"/>
-<area shape="rect" href="rxn__wennberg__no__ro2_8c.html#a548df130894fc55ab07d65f276e642e2" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="466,947,614,987"/>
-<area shape="poly" title=" " alt="" coords="752,573,747,645,731,741,716,793,696,844,670,893,637,936,615,951,612,947,633,932,666,890,692,842,711,791,726,740,742,644,746,573"/>
-<area shape="rect" href="rxn__wennberg__tunneling_8c.html#a685940f20236736828f6afb7416ea655" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="460,1012,620,1053"/>
-<area shape="poly" title=" " alt="" coords="748,573,734,668,710,795,678,918,658,967,637,1001,621,1014,618,1009,633,997,653,965,672,917,705,794,729,667,743,572"/>
-<area shape="rect" href="rxn__wet__deposition_8c.html#ad84c0373895c3b2bfad55408c9066f16" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="474,881,606,922"/>
-<area shape="poly" title=" " alt="" coords="750,573,742,634,723,714,708,756,690,798,666,837,636,872,608,890,605,886,633,868,661,834,685,795,703,754,718,712,736,633,744,572"/>
-<area shape="rect" href="rxn__solver_8c.html#ad44deb65b9845d05c6bd148e3378b42a" title="Calculate the Jacobian." alt="" coords="278,629,372,654"/>
-<area shape="poly" title=" " alt="" coords="459,604,371,631,370,626,458,599"/>
-<area shape="rect" href="camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="163,564,205,589"/>
-<area shape="poly" title=" " alt="" coords="281,624,204,588,207,583,283,619"/>
-<area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,564,115,589"/>
-<area shape="poly" title=" " alt="" coords="147,579,115,579,115,574,147,574"/>
-<area shape="poly" title=" " alt="" coords="454,476,447,481,338,630,334,627,443,477,451,472"/>
-<area shape="rect" href="rxn__solver_8c.html#a40f9caeb40a6630edd3d61544ee29922" title="Calculate the Jacobian for only some specific types." alt="" coords="253,491,397,531"/>
-<area shape="poly" title=" " alt="" coords="457,474,395,493,394,487,456,468"/>
-<area shape="poly" title=" " alt="" coords="267,541,207,569,204,564,265,536"/>
-<area shape="poly" title=" " alt="" coords="457,644,372,644,372,639,457,639"/>
-<area shape="poly" title=" " alt="" coords="458,541,447,547,386,590,341,630,338,626,383,586,444,542,456,536"/>
-<area shape="poly" title=" " alt="" coords="430,514,397,514,397,508,430,508"/>
-<area shape="poly" title=" " alt="" coords="456,684,369,658,371,653,457,679"/>
-<area shape="poly" title=" " alt="" coords="453,746,444,741,383,697,338,657,342,653,387,693,447,737,456,742"/>
-<area shape="poly" title=" " alt="" coords="452,827,444,821,401,781,368,734,344,689,329,656,334,654,348,687,372,731,405,778,447,817,455,822"/>
-<area shape="poly" title=" " alt="" coords="458,882,444,872,418,846,396,817,362,755,339,697,327,655,332,654,344,695,367,752,401,814,422,843,447,868,462,878"/>
+<area shape="rect" title=" " alt="" coords="683,516,818,542"/>
+<area shape="rect" href="rxn__aqueous__equilibrium_8c.html#a223e07042b82fc3b1391e1354acfdc5d" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="458,296,622,336"/>
+<area shape="poly" title=" " alt="" coords="736,503,721,468,698,427,669,386,633,350,616,339,618,334,636,346,673,382,703,424,725,466,741,501"/>
+<area shape="rect" href="rxn__arrhenius_8c.html#a94a77852fae3b39722aa865747915a95" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="475,606,605,647"/>
+<area shape="poly" title=" " alt="" coords="716,553,636,596,606,608,604,603,634,591,714,548"/>
+<area shape="rect" href="rxn___c_m_a_q___h2_o2_8c.html#acad0ab1be9adfd4d8ac11a772245434a" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="462,672,618,712"/>
+<area shape="poly" title=" " alt="" coords="734,557,693,609,666,637,636,661,613,673,611,669,633,656,663,633,689,605,730,554"/>
+<area shape="rect" href="rxn___c_m_a_q___o_h___h_n_o3_8c.html#a64502ded9861c3e462d29af918d08c04" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="447,737,633,778"/>
+<area shape="poly" title=" " alt="" coords="742,558,727,595,704,640,674,686,636,726,617,739,614,734,633,722,670,683,700,638,722,593,737,556"/>
+<area shape="rect" href="rxn__condensed__phase__arrhenius_8c.html#a670e87785981a83efecb80fa1c56ff0e" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="465,5,615,61"/>
+<area shape="poly" title=" " alt="" coords="747,501,745,419,731,306,717,245,697,184,669,127,633,75,614,59,617,55,637,71,674,124,702,182,722,244,737,305,751,419,753,500"/>
+<area shape="rect" href="rxn__condensed__phase__photolysis_8c.html#ade5f8de096d11339d18eaf86b4d28c4a" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="465,85,615,141"/>
+<area shape="poly" title=" " alt="" coords="746,501,739,433,722,341,708,291,689,243,664,196,633,155,614,140,617,136,637,151,668,194,693,240,713,290,727,340,745,432,751,501"/>
+<area shape="rect" href="rxn__first__order__loss_8c.html#a07413cad7e1d96989ea035941a53e915" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="473,802,607,843"/>
+<area shape="poly" title=" " alt="" coords="747,558,735,608,714,670,682,735,661,765,636,791,608,809,606,805,633,787,657,761,677,732,709,668,730,606,742,557"/>
+<area shape="rect" href="rxn___h_l__phase__transfer_8c.html#a4e04c50da5215b9886991e6f0c98cccc" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="462,165,618,206"/>
+<area shape="poly" title=" " alt="" coords="744,501,735,443,716,368,701,328,683,289,660,253,633,220,616,208,620,204,636,217,665,250,688,287,706,326,721,366,740,442,749,500"/>
+<area shape="rect" href="rxn__photolysis_8c.html#a12201d188bd114013b835e74912fdf53" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="473,868,607,908"/>
+<area shape="poly" title=" " alt="" coords="750,558,741,619,723,698,708,741,689,782,666,822,636,856,609,875,606,870,633,853,661,818,685,780,703,739,718,697,736,618,744,557"/>
+<area shape="rect" href="rxn___s_i_m_p_o_l__phase__transfer_8c.html#a2c6b4163ab0a9e65eec7dd8286d67885" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="445,230,635,271"/>
+<area shape="poly" title=" " alt="" coords="741,502,728,455,707,397,676,337,656,310,633,286,616,274,619,269,636,282,660,307,680,335,712,395,733,453,746,500"/>
+<area shape="rect" href="rxn__surface_8c.html#a8de73dc2a00c1bc5b91747cbb50086ad" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="468,933,612,974"/>
+<area shape="poly" title=" " alt="" coords="752,558,747,629,731,726,717,778,697,830,670,878,637,922,614,938,610,934,633,918,666,875,692,828,712,777,726,725,742,629,746,557"/>
+<area shape="rect" href="rxn__ternary__chemical__activation_8c.html#a0e03361890588fa6e5b8d43b5f63d208" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="468,997,612,1053"/>
+<area shape="poly" title=" " alt="" coords="753,558,751,640,737,753,722,815,702,876,674,934,637,987,614,1006,610,1001,633,983,669,932,697,874,717,813,731,752,745,639,747,558"/>
+<area shape="rect" href="rxn__troe_8c.html#a4f34c34a0b24bbbb11a127246e3fd35e" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="456,360,624,386"/>
+<area shape="poly" title=" " alt="" coords="731,505,691,452,664,424,633,401,608,389,611,384,636,396,667,420,695,448,735,502"/>
+<area shape="rect" href="rxn__wennberg__no__ro2_8c.html#a548df130894fc55ab07d65f276e642e2" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="466,410,614,451"/>
+<area shape="poly" title=" " alt="" coords="714,510,634,466,604,454,606,449,636,461,717,505"/>
+<area shape="rect" href="rxn__wennberg__tunneling_8c.html#a685940f20236736828f6afb7416ea655" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="460,476,620,516"/>
+<area shape="poly" title=" " alt="" coords="667,519,620,511,621,506,668,513"/>
+<area shape="rect" href="rxn__wet__deposition_8c.html#ad84c0373895c3b2bfad55408c9066f16" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="474,541,606,582"/>
+<area shape="poly" title=" " alt="" coords="667,544,607,554,606,548,667,539"/>
+<area shape="rect" href="rxn__solver_8c.html#ad44deb65b9845d05c6bd148e3378b42a" title="Calculate the Jacobian." alt="" coords="278,483,372,509"/>
+<area shape="poly" title=" " alt="" coords="453,346,447,350,409,383,377,420,336,484,331,481,373,417,406,379,444,346,450,341"/>
+<area shape="rect" href="rxn__solver_8c.html#a40f9caeb40a6630edd3d61544ee29922" title="Calculate the Jacobian for only some specific types." alt="" coords="253,198,397,239"/>
+<area shape="poly" title=" " alt="" coords="461,292,444,285,360,242,363,237,446,280,463,287"/>
+<area shape="rect" href="camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="163,360,205,386"/>
+<area shape="poly" title=" " alt="" coords="296,475,199,389,202,385,300,471"/>
+<area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,360,115,386"/>
+<area shape="poly" title=" " alt="" coords="147,376,115,376,115,370,147,370"/>
+<area shape="poly" title=" " alt="" coords="297,252,199,362,195,358,293,249"/>
+<area shape="poly" title=" " alt="" coords="460,604,444,595,383,552,338,511,341,507,386,548,447,591,462,599"/>
+<area shape="poly" title=" " alt="" coords="451,666,444,661,404,624,371,581,330,511,335,508,376,578,408,620,447,656,454,661"/>
+<area shape="poly" title=" " alt="" coords="449,730,444,726,418,700,397,671,362,609,340,551,327,510,332,509,345,550,367,607,401,668,423,697,447,722,452,726"/>
+<area shape="poly" title=" " alt="" coords="454,68,447,75,431,97,421,117,412,156,409,199,400,251,333,483,328,482,395,250,404,198,407,155,416,115,427,94,443,71,451,64"/>
+<area shape="poly" title=" " alt="" coords="453,71,447,75,413,105,384,139,341,199,337,196,380,135,410,101,444,71,450,67"/>
+<area shape="poly" title=" " alt="" coords="454,148,447,155,437,173,422,208,388,306,333,484,328,482,383,304,417,206,432,171,443,152,451,144"/>
+<area shape="poly" title=" " alt="" coords="458,150,447,156,364,200,361,195,444,151,455,145"/>
+<area shape="poly" title=" " alt="" coords="458,802,444,791,414,757,389,718,370,678,354,636,334,561,325,510,331,509,339,560,359,635,375,675,394,716,418,754,447,787,461,798"/>
+<area shape="poly" title=" " alt="" coords="452,216,447,220,419,252,396,287,377,326,361,364,341,434,331,483,326,482,335,433,356,362,372,323,391,285,415,249,443,217,449,212"/>
+<area shape="poly" title=" " alt="" coords="447,202,398,210,398,205,446,197"/>
+<area shape="poly" title=" " alt="" coords="458,868,443,856,409,814,382,765,362,714,347,663,330,571,324,509,330,509,335,570,352,662,367,713,387,763,414,811,447,853,461,864"/>
+<area shape="poly" title=" " alt="" coords="453,281,447,286,423,309,403,335,369,392,346,445,333,484,328,482,341,443,364,390,398,332,420,305,444,282,450,277"/>
+<area shape="poly" title=" " alt="" coords="430,237,397,232,398,227,430,231"/>
+<area shape="poly" title=" " alt="" coords="453,931,443,922,405,870,375,812,354,751,339,690,325,581,323,509,329,509,331,580,345,689,359,750,380,810,409,867,447,918,457,927"/>
+<area shape="poly" title=" " alt="" coords="454,997,443,987,420,947,398,889,380,820,363,745,338,603,325,509,331,509,344,602,368,744,385,819,404,888,425,945,447,984,457,993"/>
+<area shape="poly" title=" " alt="" coords="462,394,447,401,415,420,385,443,341,484,337,480,382,439,412,416,444,396,460,389"/>
+<area shape="poly" title=" " alt="" coords="457,458,371,485,369,480,456,453"/>
+<area shape="poly" title=" " alt="" coords="445,498,372,498,372,493,445,493"/>
+<area shape="poly" title=" " alt="" coords="458,539,369,512,371,507,460,534"/>
 </map>
 </div>
 
@@ -349,14 +331,11 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">unsigned int jacobian_build_matrix </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a> *</td>          <td class="paramname"><span class="paramname"><em>jac</em></span></td><td>)</td>
+          <td class="paramtype">Jacobian *</td>          <td class="paramname"><span class="paramname"><em>jac</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Builds the sparse matrix with the registered elements. </p>
-<dl class="section return"><dt>Returns</dt><dd>1 on success, 0 otherwise </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="_jacobian_8c_source.html#l00129">129</a> of file <a class="el" href="_jacobian_8c_source.html">Jacobian.c</a>.</p>
 <div class="dynheader">
@@ -364,14 +343,14 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="_jacobian_8c_a2e954524b21f4e097996b2dc0d3cf999_cgraph.png" border="0" usemap="#a_jacobian_8c_a2e954524b21f4e097996b2dc0d3cf999_cgraph" alt=""/></div>
 <map name="a_jacobian_8c_a2e954524b21f4e097996b2dc0d3cf999_cgraph" id="a_jacobian_8c_a2e954524b21f4e097996b2dc0d3cf999_cgraph">
-<area shape="rect" title="Builds the sparse matrix with the registered elements." alt="" coords="5,81,151,107"/>
+<area shape="rect" title=" " alt="" coords="5,81,151,107"/>
 <area shape="rect" href="_jacobian_8c.html#a87200e2cb129a2b8d8436848760f63d5" title=" " alt="" coords="204,5,299,31"/>
 <area shape="poly" title=" " alt="" coords="108,78,205,35,208,40,111,83"/>
-<area shape="rect" href="_jacobian_8c.html#a7bc2fe67ae132c04bf45e69934e6be1f" title="Free memory associated with a JacobianColumnElements." alt="" coords="352,81,559,107"/>
+<area shape="rect" href="_jacobian_8c.html#a7bc2fe67ae132c04bf45e69934e6be1f" title=" " alt="" coords="352,81,559,107"/>
 <area shape="poly" title=" " alt="" coords="151,92,336,92,336,97,151,97"/>
-<area shape="rect" href="_jacobian_8c.html#a0c0108de18ada97dc46782f7223ceef8" title="Free memory associated with a Jacobian." alt="" coords="202,107,300,132"/>
+<area shape="rect" href="_jacobian_8c.html#a0c0108de18ada97dc46782f7223ceef8" title=" " alt="" coords="202,107,300,132"/>
 <area shape="poly" title=" " alt="" coords="152,102,187,108,187,113,151,107"/>
-<area shape="rect" href="_jacobian_8c.html#a9b50b1fb83f669391bf76726b9c81ead" title="Reset the Jacobian." alt="" coords="199,156,304,182"/>
+<area shape="rect" href="_jacobian_8c.html#a9b50b1fb83f669391bf76726b9c81ead" title=" " alt="" coords="199,156,304,182"/>
 <area shape="poly" title=" " alt="" coords="111,105,206,147,204,152,109,110"/>
 <area shape="poly" title=" " alt="" coords="301,111,336,106,337,112,301,116"/>
 </map>
@@ -381,7 +360,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="_jacobian_8c_a2e954524b21f4e097996b2dc0d3cf999_icgraph.png" border="0" usemap="#a_jacobian_8c_a2e954524b21f4e097996b2dc0d3cf999_icgraph" alt=""/></div>
 <map name="a_jacobian_8c_a2e954524b21f4e097996b2dc0d3cf999_icgraph" id="a_jacobian_8c_a2e954524b21f4e097996b2dc0d3cf999_icgraph">
-<area shape="rect" title="Builds the sparse matrix with the registered elements." alt="" coords="714,38,859,64"/>
+<area shape="rect" title=" " alt="" coords="714,38,859,64"/>
 <area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="163,38,250,64"/>
 <area shape="poly" title=" " alt="" coords="698,39,665,35,481,11,401,9,298,21,267,29,238,40,237,35,266,24,298,16,400,4,482,6,666,30,699,34"/>
 <area shape="rect" href="sub__model__solver_8c.html#a4b1d9807c5fc6b0f2129eb420fa191ad" title="Get the Jacobian elements used by a particular sub model." alt="" coords="303,31,447,71"/>
@@ -408,7 +387,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">int jacobian_column_elements_add_space </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_jacobian_column_elements.html">JacobianColumnElements</a> *</td>          <td class="paramname"><span class="paramname"><em>column</em></span></td><td>)</td>
+          <td class="paramtype">JacobianColumnElements *</td>          <td class="paramname"><span class="paramname"><em>column</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -421,7 +400,7 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="_jacobian_8c_ad9cda15d66705739c9d7bdf63c4636a3_icgraph.png" border="0" usemap="#a_jacobian_8c_ad9cda15d66705739c9d7bdf63c4636a3_icgraph" alt=""/></div>
 <map name="a_jacobian_8c_ad9cda15d66705739c9d7bdf63c4636a3_icgraph" id="a_jacobian_8c_ad9cda15d66705739c9d7bdf63c4636a3_icgraph">
 <area shape="rect" title=" " alt="" coords="1171,669,1350,709"/>
-<area shape="rect" href="_jacobian_8c.html#aac51ac6b1cf239a84899308dab229441" title="Adds an element to the sparse matrix." alt="" coords="951,676,1123,702"/>
+<area shape="rect" href="_jacobian_8c.html#aac51ac6b1cf239a84899308dab229441" title=" " alt="" coords="951,676,1123,702"/>
 <area shape="poly" title=" " alt="" coords="1156,692,1124,692,1124,686,1156,686"/>
 <area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="163,825,250,851"/>
 <area shape="poly" title=" " alt="" coords="1032,661,1023,527,1001,338,984,243,962,156,934,87,919,61,901,43,878,26,855,15,833,9,812,8,766,19,715,43,655,81,598,126,547,176,499,230,455,288,415,348,347,470,294,588,254,692,213,826,208,824,249,690,289,586,343,468,411,345,451,285,495,227,543,172,595,122,651,77,712,39,764,14,811,3,834,4,857,10,881,22,905,39,923,58,939,85,967,155,989,242,1006,338,1028,527,1037,660"/>
@@ -510,19 +489,11 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">void jacobian_column_elements_free </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_jacobian_column_elements.html">JacobianColumnElements</a> *</td>          <td class="paramname"><span class="paramname"><em>column</em></span></td><td>)</td>
+          <td class="paramtype">JacobianColumnElements *</td>          <td class="paramname"><span class="paramname"><em>column</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Free memory associated with a <a class="el" href="struct_jacobian_column_elements.html">JacobianColumnElements</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">column</td><td><a class="el" href="struct_jacobian.html">Jacobian</a> column elements </td></tr>
-  </table>
-  </dd>
-</dl>
 
 <p class="definition">Definition at line <a class="el" href="_jacobian_8c_source.html#l00274">274</a> of file <a class="el" href="_jacobian_8c_source.html">Jacobian.c</a>.</p>
 <div class="dynheader">
@@ -530,10 +501,10 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="_jacobian_8c_a7bc2fe67ae132c04bf45e69934e6be1f_icgraph.png" border="0" usemap="#a_jacobian_8c_a7bc2fe67ae132c04bf45e69934e6be1f_icgraph" alt=""/></div>
 <map name="a_jacobian_8c_a7bc2fe67ae132c04bf45e69934e6be1f_icgraph" id="a_jacobian_8c_a7bc2fe67ae132c04bf45e69934e6be1f_icgraph">
-<area shape="rect" title="Free memory associated with a JacobianColumnElements." alt="" coords="1053,181,1261,207"/>
-<area shape="rect" href="_jacobian_8c.html#a2e954524b21f4e097996b2dc0d3cf999" title="Builds the sparse matrix with the registered elements." alt="" coords="714,232,859,258"/>
+<area shape="rect" title=" " alt="" coords="1053,181,1261,207"/>
+<area shape="rect" href="_jacobian_8c.html#a2e954524b21f4e097996b2dc0d3cf999" title=" " alt="" coords="714,232,859,258"/>
 <area shape="poly" title=" " alt="" coords="1043,212,860,237,859,232,1043,207"/>
-<area shape="rect" href="_jacobian_8c.html#a0c0108de18ada97dc46782f7223ceef8" title="Free memory associated with a Jacobian." alt="" coords="907,131,1005,156"/>
+<area shape="rect" href="_jacobian_8c.html#a0c0108de18ada97dc46782f7223ceef8" title=" " alt="" coords="907,131,1005,156"/>
 <area shape="poly" title=" " alt="" coords="1088,179,1005,158,1007,153,1089,174"/>
 <area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="163,117,250,143"/>
 <area shape="poly" title=" " alt="" coords="698,248,613,244,511,234,402,215,297,185,258,166,225,146,228,141,260,161,299,180,404,210,512,229,613,239,699,242"/>
@@ -551,7 +522,7 @@ Here is the caller graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="940,118,907,70,884,47,858,30,813,16,755,9,686,9,610,14,531,25,450,40,372,59,299,81,260,99,227,119,224,115,257,94,297,76,370,54,449,35,530,20,610,9,686,4,755,4,814,11,860,25,888,43,911,67,944,115"/>
 <area shape="poly" title=" " alt="" coords="897,163,859,171,753,184,655,189,655,184,752,178,859,166,896,158"/>
 <area shape="poly" title=" " alt="" coords="935,120,902,85,881,69,858,57,819,44,787,41,755,46,714,57,681,69,650,85,602,119,599,114,648,81,679,64,713,52,754,41,787,36,820,39,860,52,884,64,905,81,939,116"/>
-<area shape="rect" href="_jacobian_8c.html#a3ea16d25b8523ab15b3f505fe00e2ed2" title="Initialize the Jacobian." alt="" coords="725,66,848,106"/>
+<area shape="rect" href="_jacobian_8c.html#a3ea16d25b8523ab15b3f505fe00e2ed2" title=" " alt="" coords="725,66,848,106"/>
 <area shape="poly" title=" " alt="" coords="900,128,847,109,848,104,902,122"/>
 <area shape="rect" href="camp__solver_8c.html#a946f57c971834de0c7cb185263cd3c78" title="Free a SolverData object." alt="" coords="744,131,829,156"/>
 <area shape="poly" title=" " alt="" coords="892,146,829,146,829,141,892,141"/>
@@ -572,7 +543,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">unsigned int jacobian_column_pointer_value </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a></td>          <td class="paramname"><span class="paramname"><em>jac</em></span>, </td>
+          <td class="paramtype">Jacobian</td>          <td class="paramname"><span class="paramname"><em>jac</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -582,23 +553,13 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Returns the value of a column pointer. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">jac</td><td><a class="el" href="struct_jacobian.html">Jacobian</a> object </td></tr>
-    <tr><td class="paramname">col_id</td><td>Column index (0...number of columns) </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Column pointer value </dd></dl>
-
 <p class="definition">Definition at line <a class="el" href="_jacobian_8c_source.html#l00192">192</a> of file <a class="el" href="_jacobian_8c_source.html">Jacobian.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="_jacobian_8c_a0a9b073f122e923fe6bad96d0611a4ac_icgraph.png" border="0" usemap="#a_jacobian_8c_a0a9b073f122e923fe6bad96d0611a4ac_icgraph" alt=""/></div>
 <map name="a_jacobian_8c_a0a9b073f122e923fe6bad96d0611a4ac_icgraph" id="a_jacobian_8c_a0a9b073f122e923fe6bad96d0611a4ac_icgraph">
-<area shape="rect" title="Returns the value of a column pointer." alt="" coords="714,30,878,71"/>
+<area shape="rect" title=" " alt="" coords="714,30,878,71"/>
 <area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="163,38,250,64"/>
 <area shape="poly" title=" " alt="" coords="698,39,665,35,481,11,401,9,298,21,267,29,238,40,237,35,266,24,298,16,400,4,481,6,666,29,699,33"/>
 <area shape="rect" href="sub__model__solver_8c.html#a4b1d9807c5fc6b0f2129eb420fa191ad" title="Get the Jacobian elements used by a particular sub model." alt="" coords="303,30,447,71"/>
@@ -625,19 +586,11 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">void jacobian_free </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a> *</td>          <td class="paramname"><span class="paramname"><em>jac</em></span></td><td>)</td>
+          <td class="paramtype">Jacobian *</td>          <td class="paramname"><span class="paramname"><em>jac</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Free memory associated with a <a class="el" href="struct_jacobian.html">Jacobian</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">jac</td><td><a class="el" href="struct_jacobian.html">Jacobian</a> object </td></tr>
-  </table>
-  </dd>
-</dl>
 
 <p class="definition">Definition at line <a class="el" href="_jacobian_8c_source.html#l00281">281</a> of file <a class="el" href="_jacobian_8c_source.html">Jacobian.c</a>.</p>
 <div class="dynheader">
@@ -645,8 +598,8 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8_cgraph.png" border="0" usemap="#a_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8_cgraph" alt=""/></div>
 <map name="a_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8_cgraph" id="a_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8_cgraph">
-<area shape="rect" title="Free memory associated with a Jacobian." alt="" coords="5,5,104,31"/>
-<area shape="rect" href="_jacobian_8c.html#a7bc2fe67ae132c04bf45e69934e6be1f" title="Free memory associated with a JacobianColumnElements." alt="" coords="152,5,359,31"/>
+<area shape="rect" title=" " alt="" coords="5,5,104,31"/>
+<area shape="rect" href="_jacobian_8c.html#a7bc2fe67ae132c04bf45e69934e6be1f" title=" " alt="" coords="152,5,359,31"/>
 <area shape="poly" title=" " alt="" coords="104,16,136,16,136,21,104,21"/>
 </map>
 </div>
@@ -655,16 +608,16 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8_icgraph.png" border="0" usemap="#a_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8_icgraph" alt=""/></div>
 <map name="a_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8_icgraph" id="a_jacobian_8c_a0c0108de18ada97dc46782f7223ceef8_icgraph">
-<area shape="rect" title="Free memory associated with a Jacobian." alt="" coords="907,150,1005,176"/>
+<area shape="rect" title=" " alt="" coords="907,150,1005,176"/>
 <area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="163,121,250,147"/>
 <area shape="poly" title=" " alt="" coords="938,138,905,95,883,75,858,60,778,30,708,13,645,8,583,13,522,25,456,44,299,91,262,105,230,123,227,118,259,101,297,86,454,39,520,20,583,7,645,3,709,8,780,25,860,55,886,71,909,92,942,135"/>
-<area shape="rect" href="_jacobian_8c.html#a2e954524b21f4e097996b2dc0d3cf999" title="Builds the sparse matrix with the registered elements." alt="" coords="714,70,859,96"/>
+<area shape="rect" href="_jacobian_8c.html#a2e954524b21f4e097996b2dc0d3cf999" title=" " alt="" coords="714,70,859,96"/>
 <area shape="poly" title=" " alt="" coords="914,145,858,117,817,99,819,94,860,113,917,140"/>
 <area shape="rect" href="sub__model__solver_8c.html#a4b1d9807c5fc6b0f2129eb420fa191ad" title="Get the Jacobian elements used by a particular sub model." alt="" coords="511,113,655,154"/>
 <area shape="poly" title=" " alt="" coords="891,161,655,142,656,137,892,155"/>
 <area shape="rect" href="sub__model__solver_8c.html#a61bf1cc1ad435b59182e1db138cc1b53" title="Set the map for sub&#45;model interdependence." alt="" coords="500,229,666,255"/>
 <area shape="poly" title=" " alt="" coords="929,188,897,209,860,226,811,238,760,245,666,249,666,244,760,240,810,233,858,221,894,204,926,183"/>
-<area shape="rect" href="_jacobian_8c.html#a3ea16d25b8523ab15b3f505fe00e2ed2" title="Initialize the Jacobian." alt="" coords="725,171,848,211"/>
+<area shape="rect" href="_jacobian_8c.html#a3ea16d25b8523ab15b3f505fe00e2ed2" title=" " alt="" coords="725,171,848,211"/>
 <area shape="poly" title=" " alt="" coords="892,176,848,184,847,178,891,171"/>
 <area shape="rect" href="camp__solver_8c.html#a946f57c971834de0c7cb185263cd3c78" title="Free a SolverData object." alt="" coords="744,286,829,312"/>
 <area shape="poly" title=" " alt="" coords="938,190,904,230,861,269,826,288,824,283,857,265,901,226,934,187"/>
@@ -694,7 +647,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">unsigned int jacobian_get_element_id </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a></td>          <td class="paramname"><span class="paramname"><em>jac</em></span>, </td>
+          <td class="paramtype">Jacobian</td>          <td class="paramname"><span class="paramname"><em>jac</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -709,25 +662,13 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Get an element id in the <a class="el" href="struct_jacobian.html">Jacobian</a> data arrays. </p>
-<p>If the element is not included in the sparse matrix, -1 is returned.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">jac</td><td><a class="el" href="struct_jacobian.html">Jacobian</a> object </td></tr>
-    <tr><td class="paramname">dep_id</td><td>Dependent species index </td></tr>
-    <tr><td class="paramname">ind_id</td><td>Independent species index </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Index of <a class="el" href="struct_jacobian.html">Jacobian</a> element in the data array </dd></dl>
-
 <p class="definition">Definition at line <a class="el" href="_jacobian_8c_source.html#l00200">200</a> of file <a class="el" href="_jacobian_8c_source.html">Jacobian.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb_icgraph.png" border="0" usemap="#a_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb_icgraph" alt=""/></div>
 <map name="a_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb_icgraph" id="a_jacobian_8c_a7b43d5884ec62826389d6d739b7f25eb_icgraph">
-<area shape="rect" title="Get an element id in the Jacobian data arrays." alt="" coords="774,622,938,647"/>
+<area shape="rect" title=" " alt="" coords="774,622,938,647"/>
 <area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="163,654,250,679"/>
 <area shape="poly" title=" " alt="" coords="850,607,840,484,817,315,801,229,780,152,754,91,740,68,724,51,696,31,668,18,642,10,616,8,589,12,561,20,502,51,461,81,424,116,391,154,361,196,311,286,274,378,247,468,228,548,212,654,206,653,223,547,241,466,269,377,307,283,356,193,386,151,420,112,457,77,499,47,559,15,588,7,615,3,643,5,670,13,698,27,727,47,744,64,759,88,785,151,806,228,823,314,845,484,855,606"/>
 <area shape="rect" href="rxn__aqueous__equilibrium_8c.html#af61bf85579cdea2f2c8ee0ea4fd8a96d" title="Update the time derivative and Jacbobian array indices." alt="" coords="531,61,695,102"/>
@@ -813,7 +754,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">int jacobian_initialize </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a> *</td>          <td class="paramname"><span class="paramname"><em>jac</em></span>, </td>
+          <td class="paramtype">Jacobian *</td>          <td class="paramname"><span class="paramname"><em>jac</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -828,17 +769,6 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Initialize the <a class="el" href="struct_jacobian.html">Jacobian</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">jac</td><td>Pointer to the <a class="el" href="struct_jacobian.html">Jacobian</a> object </td></tr>
-    <tr><td class="paramname">num_spec</td><td>Number of species </td></tr>
-    <tr><td class="paramname">jac_struct</td><td>Dense matrix of flags indicating whether an element is (1) potentially non-zero or (0) not. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Flag indicating whether the derivative was successfully initialized (0 = false; 1 = true) </dd></dl>
-
 <p class="definition">Definition at line <a class="el" href="_jacobian_8c_source.html#l00046">46</a> of file <a class="el" href="_jacobian_8c_source.html">Jacobian.c</a>.</p>
 
 </div>
@@ -852,7 +782,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">int jacobian_initialize_empty </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a> *</td>          <td class="paramname"><span class="paramname"><em>jac</em></span>, </td>
+          <td class="paramtype">Jacobian *</td>          <td class="paramname"><span class="paramname"><em>jac</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -862,27 +792,16 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Initialize the <a class="el" href="struct_jacobian.html">Jacobian</a>. </p>
-<p>Sets up a sparse matrix (num_spec x num_spec) containing zero elements. Elements can be added using the <code>jacobian_register_element</code> function.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">jac</td><td><a class="el" href="struct_jacobian.html">Jacobian</a> object </td></tr>
-    <tr><td class="paramname">num_spec</td><td>Number of species </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Flag indicating whether the <a class="el" href="struct_jacobian.html">Jacobian</a> was successfully initialized (0 = false; 1 = true) </dd></dl>
-
 <p class="definition">Definition at line <a class="el" href="_jacobian_8c_source.html#l00020">20</a> of file <a class="el" href="_jacobian_8c_source.html">Jacobian.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="_jacobian_8c_a3ea16d25b8523ab15b3f505fe00e2ed2_cgraph.png" border="0" usemap="#a_jacobian_8c_a3ea16d25b8523ab15b3f505fe00e2ed2_cgraph" alt=""/></div>
 <map name="a_jacobian_8c_a3ea16d25b8523ab15b3f505fe00e2ed2_cgraph" id="a_jacobian_8c_a3ea16d25b8523ab15b3f505fe00e2ed2_cgraph">
-<area shape="rect" title="Initialize the Jacobian." alt="" coords="5,5,128,46"/>
-<area shape="rect" href="_jacobian_8c.html#a0c0108de18ada97dc46782f7223ceef8" title="Free memory associated with a Jacobian." alt="" coords="176,13,274,38"/>
+<area shape="rect" title=" " alt="" coords="5,5,128,46"/>
+<area shape="rect" href="_jacobian_8c.html#a0c0108de18ada97dc46782f7223ceef8" title=" " alt="" coords="176,13,274,38"/>
 <area shape="poly" title=" " alt="" coords="128,23,160,23,160,28,128,28"/>
-<area shape="rect" href="_jacobian_8c.html#a7bc2fe67ae132c04bf45e69934e6be1f" title="Free memory associated with a JacobianColumnElements." alt="" coords="322,13,529,38"/>
+<area shape="rect" href="_jacobian_8c.html#a7bc2fe67ae132c04bf45e69934e6be1f" title=" " alt="" coords="322,13,529,38"/>
 <area shape="poly" title=" " alt="" coords="275,23,306,23,306,28,275,28"/>
 </map>
 </div>
@@ -891,7 +810,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="_jacobian_8c_a3ea16d25b8523ab15b3f505fe00e2ed2_icgraph.png" border="0" usemap="#a_jacobian_8c_a3ea16d25b8523ab15b3f505fe00e2ed2_icgraph" alt=""/></div>
 <map name="a_jacobian_8c_a3ea16d25b8523ab15b3f505fe00e2ed2_icgraph" id="a_jacobian_8c_a3ea16d25b8523ab15b3f505fe00e2ed2_icgraph">
-<area shape="rect" title="Initialize the Jacobian." alt="" coords="714,28,836,69"/>
+<area shape="rect" title=" " alt="" coords="714,28,836,69"/>
 <area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="163,36,250,61"/>
 <area shape="poly" title=" " alt="" coords="698,35,615,22,515,12,406,9,352,12,298,19,267,27,238,37,237,32,266,22,298,14,351,7,406,4,515,6,616,17,699,30"/>
 <area shape="rect" href="sub__model__solver_8c.html#a4b1d9807c5fc6b0f2129eb420fa191ad" title="Get the Jacobian elements used by a particular sub model." alt="" coords="303,28,447,69"/>
@@ -918,20 +837,11 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">unsigned int jacobian_number_of_elements </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a></td>          <td class="paramname"><span class="paramname"><em>jac</em></span></td><td>)</td>
+          <td class="paramtype">Jacobian</td>          <td class="paramname"><span class="paramname"><em>jac</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Returns the number of elements in the <a class="el" href="struct_jacobian.html">Jacobian</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">jac</td><td><a class="el" href="struct_jacobian.html">Jacobian</a> object </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Number of <a class="el" href="struct_jacobian.html">Jacobian</a> elements </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="_jacobian_8c_source.html#l00190">190</a> of file <a class="el" href="_jacobian_8c_source.html">Jacobian.c</a>.</p>
 <div class="dynheader">
@@ -939,7 +849,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="_jacobian_8c_a797c57a02151acb880fba00b8afc57a3_icgraph.png" border="0" usemap="#a_jacobian_8c_a797c57a02151acb880fba00b8afc57a3_icgraph" alt=""/></div>
 <map name="a_jacobian_8c_a797c57a02151acb880fba00b8afc57a3_icgraph" id="a_jacobian_8c_a797c57a02151acb880fba00b8afc57a3_icgraph">
-<area shape="rect" title="Returns the number of elements in the Jacobian." alt="" coords="298,5,435,46"/>
+<area shape="rect" title=" " alt="" coords="298,5,435,46"/>
 <area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="163,13,250,38"/>
 <area shape="poly" title=" " alt="" coords="282,28,250,28,250,23,282,23"/>
 <area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,13,115,38"/>
@@ -958,7 +868,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">void jacobian_output </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a></td>          <td class="paramname"><span class="paramname"><em>jac</em></span>, </td>
+          <td class="paramtype">Jacobian</td>          <td class="paramname"><span class="paramname"><em>jac</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -968,22 +878,13 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Output the <a class="el" href="struct_jacobian.html">Jacobian</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">jac</td><td><a class="el" href="struct_jacobian.html">Jacobian</a> object </td></tr>
-    <tr><td class="paramname">dest_array</td><td>Pointer to the array to save <a class="el" href="struct_jacobian.html">Jacobian</a> data to </td></tr>
-  </table>
-  </dd>
-</dl>
-
 <p class="definition">Definition at line <a class="el" href="_jacobian_8c_source.html#l00223">223</a> of file <a class="el" href="_jacobian_8c_source.html">Jacobian.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="_jacobian_8c_adcc6d47123aab80bc7b90bdcbb68c90d_icgraph.png" border="0" usemap="#a_jacobian_8c_adcc6d47123aab80bc7b90bdcbb68c90d_icgraph" alt=""/></div>
 <map name="a_jacobian_8c_adcc6d47123aab80bc7b90bdcbb68c90d_icgraph" id="a_jacobian_8c_adcc6d47123aab80bc7b90bdcbb68c90d_icgraph">
-<area shape="rect" title="Output the Jacobian." alt="" coords="253,5,365,31"/>
+<area shape="rect" title=" " alt="" coords="253,5,365,31"/>
 <area shape="rect" href="camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="163,5,205,31"/>
 <area shape="poly" title=" " alt="" coords="238,21,205,21,205,16,238,16"/>
 <area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,5,115,31"/>
@@ -1002,19 +903,11 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">void jacobian_print </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a></td>          <td class="paramname"><span class="paramname"><em>jac</em></span></td><td>)</td>
+          <td class="paramtype">Jacobian</td>          <td class="paramname"><span class="paramname"><em>jac</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Prints the <a class="el" href="struct_jacobian.html">Jacobian</a> structure. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">jac</td><td><a class="el" href="struct_jacobian.html">Jacobian</a> object </td></tr>
-  </table>
-  </dd>
-</dl>
 
 <p class="definition">Definition at line <a class="el" href="_jacobian_8c_source.html#l00243">243</a> of file <a class="el" href="_jacobian_8c_source.html">Jacobian.c</a>.</p>
 
@@ -1029,7 +922,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">void jacobian_register_element </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a> *</td>          <td class="paramname"><span class="paramname"><em>jac</em></span>, </td>
+          <td class="paramtype">Jacobian *</td>          <td class="paramname"><span class="paramname"><em>jac</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1044,23 +937,13 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Adds an element to the sparse matrix. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">jac</td><td><a class="el" href="struct_jacobian.html">Jacobian</a> object </td></tr>
-    <tr><td class="paramname">dep_id</td><td>Dependent species index </td></tr>
-    <tr><td class="paramname">ind_id</td><td>Independent species index </td></tr>
-  </table>
-  </dd>
-</dl>
-
 <p class="definition">Definition at line <a class="el" href="_jacobian_8c_source.html#l00105">105</a> of file <a class="el" href="_jacobian_8c_source.html">Jacobian.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="_jacobian_8c_aac51ac6b1cf239a84899308dab229441_cgraph.png" border="0" usemap="#a_jacobian_8c_aac51ac6b1cf239a84899308dab229441_cgraph" alt=""/></div>
 <map name="a_jacobian_8c_aac51ac6b1cf239a84899308dab229441_cgraph" id="a_jacobian_8c_aac51ac6b1cf239a84899308dab229441_cgraph">
-<area shape="rect" title="Adds an element to the sparse matrix." alt="" coords="5,13,178,38"/>
+<area shape="rect" title=" " alt="" coords="5,13,178,38"/>
 <area shape="rect" href="_jacobian_8c.html#ad9cda15d66705739c9d7bdf63c4636a3" title=" " alt="" coords="226,5,404,46"/>
 <area shape="poly" title=" " alt="" coords="178,23,210,23,210,28,178,28"/>
 </map>
@@ -1070,7 +953,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="_jacobian_8c_aac51ac6b1cf239a84899308dab229441_icgraph.png" border="0" usemap="#a_jacobian_8c_aac51ac6b1cf239a84899308dab229441_icgraph" alt=""/></div>
 <map name="a_jacobian_8c_aac51ac6b1cf239a84899308dab229441_icgraph" id="a_jacobian_8c_aac51ac6b1cf239a84899308dab229441_icgraph">
-<area shape="rect" title="Adds an element to the sparse matrix." alt="" coords="951,676,1123,702"/>
+<area shape="rect" title=" " alt="" coords="951,676,1123,702"/>
 <area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="163,825,250,851"/>
 <area shape="poly" title=" " alt="" coords="1032,661,1023,527,1001,338,984,243,962,156,934,87,919,61,901,43,878,26,855,15,833,9,812,8,766,19,715,43,655,81,598,126,547,176,499,230,455,288,415,348,347,470,294,588,254,692,213,826,208,824,249,690,289,586,343,468,411,345,451,285,495,227,543,172,595,122,651,77,712,39,764,14,811,3,834,4,857,10,881,22,905,39,923,58,939,85,967,155,989,242,1006,338,1028,527,1037,660"/>
 <area shape="rect" href="rxn__aqueous__equilibrium_8c.html#aba2b7971289b789830bb3986d8c26143" title="Flag Jacobian elements used by this reaction." alt="" coords="727,1059,890,1100"/>
@@ -1158,19 +1041,11 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">void jacobian_reset </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a></td>          <td class="paramname"><span class="paramname"><em>jac</em></span></td><td>)</td>
+          <td class="paramtype">Jacobian</td>          <td class="paramname"><span class="paramname"><em>jac</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Reset the <a class="el" href="struct_jacobian.html">Jacobian</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">jac</td><td><a class="el" href="struct_jacobian.html">Jacobian</a> matrix </td></tr>
-  </table>
-  </dd>
-</dl>
 
 <p class="definition">Definition at line <a class="el" href="_jacobian_8c_source.html#l00216">216</a> of file <a class="el" href="_jacobian_8c_source.html">Jacobian.c</a>.</p>
 <div class="dynheader">
@@ -1178,10 +1053,10 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="_jacobian_8c_a9b50b1fb83f669391bf76726b9c81ead_icgraph.png" border="0" usemap="#a_jacobian_8c_a9b50b1fb83f669391bf76726b9c81ead_icgraph" alt=""/></div>
 <map name="a_jacobian_8c_a9b50b1fb83f669391bf76726b9c81ead_icgraph" id="a_jacobian_8c_a9b50b1fb83f669391bf76726b9c81ead_icgraph">
-<area shape="rect" title="Reset the Jacobian." alt="" coords="907,59,1012,84"/>
+<area shape="rect" title=" " alt="" coords="907,59,1012,84"/>
 <area shape="rect" href="camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="354,5,396,31"/>
 <area shape="poly" title=" " alt="" coords="891,68,396,23,397,17,892,63"/>
-<area shape="rect" href="_jacobian_8c.html#a2e954524b21f4e097996b2dc0d3cf999" title="Builds the sparse matrix with the registered elements." alt="" coords="714,84,859,110"/>
+<area shape="rect" href="_jacobian_8c.html#a2e954524b21f4e097996b2dc0d3cf999" title=" " alt="" coords="714,84,859,110"/>
 <area shape="poly" title=" " alt="" coords="892,84,860,89,859,84,891,79"/>
 <area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,57,115,83"/>
 <area shape="poly" title=" " alt="" coords="339,27,116,64,115,59,339,21"/>
@@ -1210,7 +1085,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">unsigned int jacobian_row_index </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_jacobian.html">Jacobian</a></td>          <td class="paramname"><span class="paramname"><em>jac</em></span>, </td>
+          <td class="paramtype">Jacobian</td>          <td class="paramname"><span class="paramname"><em>jac</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1220,23 +1095,13 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Returns the row for a given <a class="el" href="struct_jacobian.html">Jacobian</a> element. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">jac</td><td><a class="el" href="struct_jacobian.html">Jacobian</a> object </td></tr>
-    <tr><td class="paramname">elem_id</td><td><a class="el" href="struct_jacobian.html">Jacobian</a> element index (0...number of elements-1) </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Row index for given element </dd></dl>
-
 <p class="definition">Definition at line <a class="el" href="_jacobian_8c_source.html#l00196">196</a> of file <a class="el" href="_jacobian_8c_source.html">Jacobian.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="_jacobian_8c_ae72fb841b0dd527b9e463e7ce208d856_icgraph.png" border="0" usemap="#a_jacobian_8c_ae72fb841b0dd527b9e463e7ce208d856_icgraph" alt=""/></div>
 <map name="a_jacobian_8c_ae72fb841b0dd527b9e463e7ce208d856_icgraph" id="a_jacobian_8c_ae72fb841b0dd527b9e463e7ce208d856_icgraph">
-<area shape="rect" title="Returns the row for a given Jacobian element." alt="" coords="714,36,848,61"/>
+<area shape="rect" title=" " alt="" coords="714,36,848,61"/>
 <area shape="rect" href="camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="163,36,250,61"/>
 <area shape="poly" title=" " alt="" coords="702,35,618,22,517,11,407,9,352,12,298,19,267,27,238,38,237,33,266,22,298,14,352,7,407,4,517,6,619,16,703,30"/>
 <area shape="rect" href="sub__model__solver_8c.html#a4b1d9807c5fc6b0f2129eb420fa191ad" title="Get the Jacobian elements used by a particular sub model." alt="" coords="303,28,447,69"/>

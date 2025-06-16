@@ -85,16 +85,16 @@ Include dependency graph for sub\+\_\+model\+\_\+\+PDFi\+TE.\+c\+:
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a1c3598c177755e3ca9d3bde1ace7c0e0}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
-\begin{DoxyCompactList}\small\item\em Flag \doxylink{struct_jacobian}{Jacobian} elements used by this sub model. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_ad0578f51652ce992842c2e65c8d84e55}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+update\+\_\+ids}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
+void \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a1c3598c177755e3ca9d3bde1ace7c0e0}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, Jacobian \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Flag Jacobian elements used by this sub model. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_ad0578f51652ce992842c2e65c8d84e55}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+update\+\_\+ids}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, Jacobian jac)
 \begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_ae2d20ec59ac4397714d038f51324809d}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+update\+\_\+env\+\_\+state}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
+void \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_ae2d20ec59ac4397714d038f51324809d}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+update\+\_\+env\+\_\+state}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update sub model data for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2f46f791a4a74c77e283b5afb91911aa}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+calculate}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
+void \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a2f46f791a4a74c77e283b5afb91911aa}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+calculate}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Perform the sub-\/model calculations for the current model state. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a50d2ccc5a5c4b40019447f6b7dd5feab}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+get\+\_\+jac\+\_\+contrib}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, realtype \texorpdfstring{$\ast$}{*}J, double time\+\_\+step)
-\begin{DoxyCompactList}\small\item\em Add contributions to the \doxylink{struct_jacobian}{Jacobian} from derivates calculated using the output of this sub model. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a50d2ccc5a5c4b40019447f6b7dd5feab}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+get\+\_\+jac\+\_\+contrib}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, realtype \texorpdfstring{$\ast$}{*}J, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Add contributions to the Jacobian from derivates calculated using the output of this sub model. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_a57f2820ce385881014fed09a82ae5364}{sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+print}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the PDFi\+TE Activity sub model parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -562,7 +562,7 @@ Definition at line \mbox{\hyperlink{sub__model___p_d_fi_t_e_8c_source_l00018}{18
 \index{sub\_model\_PDFiTE\_calculate@{sub\_model\_PDFiTE\_calculate}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_PDFiTE\_calculate()}{sub\_model\_PDFiTE\_calculate()}}
 {\footnotesize\ttfamily \label{sub__model___p_d_fi_t_e_8c_a2f46f791a4a74c77e283b5afb91911aa} 
-void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+calculate (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{}\end{DoxyParamCaption})}
+void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+calculate (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data}{, }\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -595,11 +595,11 @@ Here is the caller graph for this function\+:
 \index{sub\_model\_PDFiTE\_get\_jac\_contrib@{sub\_model\_PDFiTE\_get\_jac\_contrib}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_PDFiTE\_get\_jac\_contrib()}{sub\_model\_PDFiTE\_get\_jac\_contrib()}}
 {\footnotesize\ttfamily \label{sub__model___p_d_fi_t_e_8c_a50d2ccc5a5c4b40019447f6b7dd5feab} 
-void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+get\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{realtype \texorpdfstring{$\ast$}{*}}]{J}{, }\item[{double}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+get\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data}{, }\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{realtype \texorpdfstring{$\ast$}{*}}]{J}{, }\item[{double}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
-Add contributions to the \doxylink{struct_jacobian}{Jacobian} from derivates calculated using the output of this sub model. 
+Add contributions to the Jacobian from derivates calculated using the output of this sub model. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -611,7 +611,7 @@ Add contributions to the \doxylink{struct_jacobian}{Jacobian} from derivates cal
 \hline
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em J} & \doxylink{struct_jacobian}{Jacobian} to be calculated \\
+{\em J} & Jacobian to be calculated \\
 \hline
 {\em time\+\_\+step} & Current time step in \mbox{[}s\mbox{]} \\
 \hline
@@ -632,11 +632,11 @@ Here is the caller graph for this function\+:
 \index{sub\_model\_PDFiTE\_get\_used\_jac\_elem@{sub\_model\_PDFiTE\_get\_used\_jac\_elem}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_PDFiTE\_get\_used\_jac\_elem()}{sub\_model\_PDFiTE\_get\_used\_jac\_elem()}}
 {\footnotesize\ttfamily \label{sub__model___p_d_fi_t_e_8c_a1c3598c177755e3ca9d3bde1ace7c0e0} 
-void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
+void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{Jacobian \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
 
 
 
-Flag \doxylink{struct_jacobian}{Jacobian} elements used by this sub model. 
+Flag Jacobian elements used by this sub model. 
 
 activity sub models are assumed to be at equilibrium
 
@@ -646,7 +646,7 @@ activity sub models are assumed to be at equilibrium
 \hline
 {\em sub\+\_\+model\+\_\+float\+\_\+data} & Pointer to the sub model floating-\/point data \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 \end{DoxyParams}
 
@@ -702,7 +702,7 @@ Here is the caller graph for this function\+:
 \index{sub\_model\_PDFiTE\_update\_env\_state@{sub\_model\_PDFiTE\_update\_env\_state}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_PDFiTE\_update\_env\_state()}{sub\_model\_PDFiTE\_update\_env\_state()}}
 {\footnotesize\ttfamily \label{sub__model___p_d_fi_t_e_8c_ae2d20ec59ac4397714d038f51324809d} 
-void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{}\end{DoxyParamCaption})}
+void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data}{, }\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -735,7 +735,7 @@ Here is the caller graph for this function\+:
 \index{sub\_model\_PDFiTE\_update\_ids@{sub\_model\_PDFiTE\_update\_ids}!sub\_model\_PDFiTE.c@{sub\_model\_PDFiTE.c}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_PDFiTE\_update\_ids()}{sub\_model\_PDFiTE\_update\_ids()}}
 {\footnotesize\ttfamily \label{sub__model___p_d_fi_t_e_8c_ad0578f51652ce992842c2e65c8d84e55} 
-void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{}\end{DoxyParamCaption})}
+void sub\+\_\+model\+\_\+\+PDFi\+TE\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{Jacobian}]{jac}{}\end{DoxyParamCaption})}
 
 
 
@@ -751,7 +751,7 @@ activity sub models are assumed to be at equilibrium
 \hline
 {\em deriv\+\_\+ids} & Indices for state array variables on the solver state array \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 \end{DoxyParams}
 

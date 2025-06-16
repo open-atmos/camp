@@ -1,7 +1,0 @@
-<map id="sub_model_get_jac_contrib" name="sub_model_get_jac_contrib">
-<area shape="rect" id="Node000001" title="Calculate the Jacobian constributions from sub model calculations." alt="" coords="253,5,432,31"/>
-<area shape="rect" id="Node000002" href="$camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="163,5,205,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="238,21,205,21,205,16,238,16"/>
-<area shape="rect" id="Node000003" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,5,115,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="147,21,115,21,115,16,147,16"/>
-</map>

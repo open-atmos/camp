@@ -55,20 +55,20 @@ Include dependency graph for rxn\+\_\+solver.\+c\+:
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{rxn__solver_8c_a6816597d1e59964f558cfc82b004549e}{rxn\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
-\begin{DoxyCompactList}\small\item\em Get the \doxylink{struct_jacobian}{Jacobian} elements used by a particular reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__solver_8c_a04e1414725ffbbb0b16fca416d826c1d}{rxn\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
-\begin{DoxyCompactList}\small\item\em Update the time derivative and \doxylink{struct_jacobian}{Jacobian} array ids. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__solver_8c_ab3d4bbab05647b5931a81ead002a5805}{rxn\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
+void \mbox{\hyperlink{rxn__solver_8c_a6816597d1e59964f558cfc82b004549e}{rxn\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Jacobian \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Get the Jacobian elements used by a particular reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__solver_8c_a04e1414725ffbbb0b16fca416d826c1d}{rxn\+\_\+update\+\_\+ids}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, Jacobian jac)
+\begin{DoxyCompactList}\small\item\em Update the time derivative and Jacobian array ids. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__solver_8c_ab3d4bbab05647b5931a81ead002a5805}{rxn\+\_\+update\+\_\+env\+\_\+state}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update reaction data for new environmental state. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__solver_8c_af014568140c63dfab9ea1c92b056e3b8}{rxn\+\_\+calc\+\_\+deriv}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, realtype time\+\_\+step)
+void \mbox{\hyperlink{rxn__solver_8c_af014568140c63dfab9ea1c92b056e3b8}{rxn\+\_\+calc\+\_\+deriv}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Time\+Derivative time\+\_\+deriv, realtype time\+\_\+step)
 \begin{DoxyCompactList}\small\item\em Calculate the time derivative $f(t,y)$. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__solver_8c_a066fddd15835cba3a8b519fb734bd552}{rxn\+\_\+calc\+\_\+deriv\+\_\+specific\+\_\+types}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, realtype time\+\_\+step)
+void \mbox{\hyperlink{rxn__solver_8c_a066fddd15835cba3a8b519fb734bd552}{rxn\+\_\+calc\+\_\+deriv\+\_\+specific\+\_\+types}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Time\+Derivative time\+\_\+deriv, realtype time\+\_\+step)
 \begin{DoxyCompactList}\small\item\em Calculate the time derivative $f(t,y)$ for only some specific types. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__solver_8c_ad44deb65b9845d05c6bd148e3378b42a}{rxn\+\_\+calc\+\_\+jac}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, realtype time\+\_\+step)
-\begin{DoxyCompactList}\small\item\em Calculate the \doxylink{struct_jacobian}{Jacobian}. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__solver_8c_a40f9caeb40a6630edd3d61544ee29922}{rxn\+\_\+calc\+\_\+jac\+\_\+specific\+\_\+types}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, realtype time\+\_\+step)
-\begin{DoxyCompactList}\small\item\em Calculate the \doxylink{struct_jacobian}{Jacobian} for only some specific types. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__solver_8c_ad44deb65b9845d05c6bd148e3378b42a}{rxn\+\_\+calc\+\_\+jac}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Jacobian jac, realtype time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate the Jacobian. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__solver_8c_a40f9caeb40a6630edd3d61544ee29922}{rxn\+\_\+calc\+\_\+jac\+\_\+specific\+\_\+types}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Jacobian jac, realtype time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate the Jacobian for only some specific types. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{rxn__solver_8c_a411c814fb8bd6d71da9c339f632e4a4b}{rxn\+\_\+add\+\_\+condensed\+\_\+data}} (int rxn\+\_\+type, int n\+\_\+int\+\_\+param, int n\+\_\+float\+\_\+param, int n\+\_\+env\+\_\+param, int \texorpdfstring{$\ast$}{*}int\+\_\+param, double \texorpdfstring{$\ast$}{*}float\+\_\+param, void \texorpdfstring{$\ast$}{*}solver\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Add condensed data to the condensed data block of memory. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{rxn__solver_8c_ae35bddd1d3cc8d012789600176c7595b}{rxn\+\_\+update\+\_\+data}} (int cell\+\_\+id, int \texorpdfstring{$\ast$}{*}rxn\+\_\+id, int update\+\_\+rxn\+\_\+type, void \texorpdfstring{$\ast$}{*}update\+\_\+data, void \texorpdfstring{$\ast$}{*}solver\+\_\+data)
@@ -307,7 +307,7 @@ Definition at line \mbox{\hyperlink{rxn__solver_8c_source_l00658}{658}} of file 
 \index{rxn\_calc\_deriv@{rxn\_calc\_deriv}!rxn\_solver.c@{rxn\_solver.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_calc\_deriv()}{rxn\_calc\_deriv()}}
 {\footnotesize\ttfamily \label{rxn__solver_8c_af014568140c63dfab9ea1c92b056e3b8} 
-void rxn\+\_\+calc\+\_\+deriv (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+calc\+\_\+deriv (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Time\+Derivative}]{time\+\_\+deriv}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
@@ -317,7 +317,7 @@ Calculate the time derivative $f(t,y)$.
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em time\+\_\+deriv} & \doxylink{struct_time_derivative}{Time\+Derivative} to use to build derivative array \\
+{\em time\+\_\+deriv} & Time\+Derivative to use to build derivative array \\
 \hline
 {\em time\+\_\+step} & Current model time step (s) \\
 \hline
@@ -346,7 +346,7 @@ Here is the caller graph for this function\+:
 \index{rxn\_calc\_deriv\_specific\_types@{rxn\_calc\_deriv\_specific\_types}!rxn\_solver.c@{rxn\_solver.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_calc\_deriv\_specific\_types()}{rxn\_calc\_deriv\_specific\_types()}}
 {\footnotesize\ttfamily \label{rxn__solver_8c_a066fddd15835cba3a8b519fb734bd552} 
-void rxn\+\_\+calc\+\_\+deriv\+\_\+specific\+\_\+types (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+calc\+\_\+deriv\+\_\+specific\+\_\+types (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Time\+Derivative}]{time\+\_\+deriv}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
@@ -356,7 +356,7 @@ Calculate the time derivative $f(t,y)$ for only some specific types.
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em time\+\_\+deriv} & \doxylink{struct_time_derivative}{Time\+Derivative} to use to build derivative array \\
+{\em time\+\_\+deriv} & Time\+Derivative to use to build derivative array \\
 \hline
 {\em time\+\_\+step} & Current model time step (s) \\
 \hline
@@ -385,17 +385,17 @@ Here is the caller graph for this function\+:
 \index{rxn\_calc\_jac@{rxn\_calc\_jac}!rxn\_solver.c@{rxn\_solver.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_calc\_jac()}{rxn\_calc\_jac()}}
 {\footnotesize\ttfamily \label{rxn__solver_8c_ad44deb65b9845d05c6bd148e3378b42a} 
-void rxn\+\_\+calc\+\_\+jac (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+calc\+\_\+jac (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Jacobian}]{jac}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
-Calculate the \doxylink{struct_jacobian}{Jacobian}. 
+Calculate the Jacobian. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em jac} & The reaction \doxylink{struct_jacobian}{Jacobian} (for one grid cell) \\
+{\em jac} & The reaction Jacobian (for one grid cell) \\
 \hline
 {\em time\+\_\+step} & Current model time step (s) \\
 \hline
@@ -424,17 +424,17 @@ Here is the caller graph for this function\+:
 \index{rxn\_calc\_jac\_specific\_types@{rxn\_calc\_jac\_specific\_types}!rxn\_solver.c@{rxn\_solver.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_calc\_jac\_specific\_types()}{rxn\_calc\_jac\_specific\_types()}}
 {\footnotesize\ttfamily \label{rxn__solver_8c_a40f9caeb40a6630edd3d61544ee29922} 
-void rxn\+\_\+calc\+\_\+jac\+\_\+specific\+\_\+types (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+calc\+\_\+jac\+\_\+specific\+\_\+types (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Jacobian}]{jac}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
-Calculate the \doxylink{struct_jacobian}{Jacobian} for only some specific types. 
+Calculate the Jacobian for only some specific types. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em jac} & The reaction \doxylink{struct_jacobian}{Jacobian} (for one grid cell) \\
+{\em jac} & The reaction Jacobian (for one grid cell) \\
 \hline
 {\em time\+\_\+step} & Current model time step (s) \\
 \hline
@@ -482,17 +482,17 @@ Definition at line \mbox{\hyperlink{rxn__solver_8c_source_l00851}{851}} of file 
 \index{rxn\_get\_used\_jac\_elem@{rxn\_get\_used\_jac\_elem}!rxn\_solver.c@{rxn\_solver.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_get\_used\_jac\_elem()}{rxn\_get\_used\_jac\_elem()}}
 {\footnotesize\ttfamily \label{rxn__solver_8c_a6816597d1e59964f558cfc82b004549e} 
-void rxn\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
+void rxn\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Jacobian \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
 
 
 
-Get the \doxylink{struct_jacobian}{Jacobian} elements used by a particular reaction. 
+Get the Jacobian elements used by a particular reaction. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & A pointer to the model data \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 \end{DoxyParams}
 
@@ -583,7 +583,7 @@ Here is the call graph for this function\+:
 \index{rxn\_update\_env\_state@{rxn\_update\_env\_state}!rxn\_solver.c@{rxn\_solver.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_update\_env\_state()}{rxn\_update\_env\_state()}}
 {\footnotesize\ttfamily \label{rxn__solver_8c_ab3d4bbab05647b5931a81ead002a5805} 
-void rxn\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{}\end{DoxyParamCaption})}
+void rxn\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -603,7 +603,7 @@ Here is the call graph for this function\+:
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{rxn__solver_8c_ab3d4bbab05647b5931a81ead002a5805_cgraph}
+\includegraphics[height=550pt]{rxn__solver_8c_ab3d4bbab05647b5931a81ead002a5805_cgraph}
 \end{center}
 \end{figure}
 Here is the caller graph for this function\+:
@@ -618,11 +618,11 @@ Here is the caller graph for this function\+:
 \index{rxn\_update\_ids@{rxn\_update\_ids}!rxn\_solver.c@{rxn\_solver.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_update\_ids()}{rxn\_update\_ids()}}
 {\footnotesize\ttfamily \label{rxn__solver_8c_a04e1414725ffbbb0b16fca416d826c1d} 
-void rxn\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{}\end{DoxyParamCaption})}
+void rxn\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{Jacobian}]{jac}{}\end{DoxyParamCaption})}
 
 
 
-Update the time derivative and \doxylink{struct_jacobian}{Jacobian} array ids. 
+Update the time derivative and Jacobian array ids. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -630,7 +630,7 @@ Update the time derivative and \doxylink{struct_jacobian}{Jacobian} array ids.
 \hline
 {\em deriv\+\_\+ids} & Ids for state variables on the time derivative array \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 \end{DoxyParams}
 

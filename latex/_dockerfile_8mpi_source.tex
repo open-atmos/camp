@@ -1,7 +1,7 @@
 \doxysection{Dockerfile.\+mpi}
 \hypertarget{_dockerfile_8mpi_source}{}\label{_dockerfile_8mpi_source}\mbox{\hyperlink{_dockerfile_8mpi}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00001}00001\ FROM\ fedora:27}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00001}00001\ FROM\ fedora:37}
 \DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00002}00002\ }
 \DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00003}00003\ RUN\ dnf\ -\/y\ update\ \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00004}00004\ \ \ \ \ \&\&\ dnf\ install\ -\/y\ sudo\ \(\backslash\)}
@@ -21,67 +21,69 @@
 \DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00018}00018\ \ \ \ \ \ \ \ \ lapack-\/devel\ \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00019}00019\ \ \ \ \ \ \ \ \ openblas-\/devel\ \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00020}00020\ \ \ \ \ \ \ \ \ cmake\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00021}00021\ \ \ \ \ \&\&\ sudo\ dnf\ clean\ all}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00022}00022\ ENV\ PATH="{}\$\{PATH\}:/usr/lib64/openmpi/bin/"{}}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00023}00023\ }
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00024}00024\ \#\ Build\ the\ SuiteSparse\ libraries\ for\ sparse\ matrix\ support}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00025}00025\ RUN\ curl\ -\/kLO\ http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-\/5.1.0.tar.gz\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00026}00026\ \ \ \ \ \&\&\ tar\ -\/zxvf\ SuiteSparse-\/5.1.0.tar.gz\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00027}00027\ \ \ \ \ \&\&\ export\ CXX=/usr/bin/cc\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00028}00028\ \ \ \ \ \&\&\ cd\ SuiteSparse\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00029}00029\ \ \ \ \ \&\&\ sudo\ make\ install\ INSTALL=/usr/local\ BLAS="{}-\/L/lib64\ -\/lopenblas"{}}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00030}00030\ }
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00031}00031\ \#\ Install\ json-\/fortran}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00032}00032\ RUN\ curl\ -\/LO\ https://github.com/jacobwilliams/json-\/fortran/archive/6.1.0.tar.gz\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00033}00033\ \ \ \ \ \&\&\ tar\ -\/zxvf\ 6.1.0.tar.gz\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00034}00034\ \ \ \ \ \&\&\ cd\ json-\/fortran-\/6.1.0\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00035}00035\ \ \ \ \ \&\&\ export\ FC=gfortran\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00036}00036\ \ \ \ \ \&\&\ mkdir\ build\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00037}00037\ \ \ \ \ \&\&\ cd\ build\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00038}00038\ \ \ \ \ \&\&\ cmake\ -\/D\ SKIP\_DOC\_GEN:BOOL=TRUE\ ..\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00039}00039\ \ \ \ \ \&\&\ sudo\ make\ install}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00040}00040\ }
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00041}00041\ \#\ copy\ CVODE\ source}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00042}00042\ COPY\ cvode-\/3.4-\/alpha.tar.gz\ cvode-\/3.4-\/alpha.tar.gz}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00043}00043\ }
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00044}00044\ \#\ Install\ a\ modified\ version\ of\ CVODE}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00045}00045\ RUN\ tar\ -\/zxvf\ cvode-\/3.4-\/alpha.tar.gz\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00046}00046\ \ \ \ \ \&\&\ cd\ cvode-\/3.4-\/alpha\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00047}00047\ \ \ \ \ \&\&\ mkdir\ build\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00048}00048\ \ \ \ \ \&\&\ cd\ build\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00049}00049\ \ \ \ \ \&\&\ cmake\ -\/D\ CMAKE\_BUILD\_TYPE=release\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_C\_FLAGS\_DEBUG="{}-\/g\ -\/pg"{}\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_EXE\_LINKER\_FLAGS\_DEBUG="{}-\/pg"{}\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_MODULE\_LINKER\_FLAGS\_DEBUG="{}-\/pg"{}\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_SHARED\_LINKER\_FLAGS\_DEBUG="{}-\/pg"{}\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ KLU\_ENABLE:BOOL=TRUE\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ KLU\_LIBRARY\_DIR=/usr/local/lib\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ KLU\_INCLUDE\_DIR=/usr/local/include\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ ..\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00058}00058\ \ \ \ \ \&\&\ sudo\ make\ install}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00059}00059\ }
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00060}00060\ \#\ Update\ environment\ variables}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00061}00061\ ENV\ LD\_LIBRARY\_PATH="{}\$\{LD\_LIBRARY\_PATH\}:/usr/local/lib:/usr/local/lib64:/usr/local/jsonfortran-\/gnu-\/6.1.0/lib"{}}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00062}00062\ ENV\ PATH="{}\$\{PATH\}:/usr/local/jsonfortran-\/gnu-\/6.1.0/lib"{}}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00063}00063\ }
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00064}00064\ \#\ NOTE:\ Modify\ .dockerignore\ to\ whitelist\ files/directories\ to\ copy.}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00065}00065\ COPY\ .\ /home/test\_user/camp/}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00066}00066\ }
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00067}00067\ \#\ Build\ CAMP}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00068}00068\ \ RUN\ mkdir\ build\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00069}00069\ \ \ \ \ \&\&\ cd\ build\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00070}00070\ \ \ \ \ \&\&\ export\ JSON\_FORTRAN\_HOME="{}/usr/local/jsonfortran-\/gnu-\/6.1.0"{}\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00071}00071\ \ \ \ \ \&\&\ cmake\ -\/D\ CMAKE\_BUILD\_TYPE=release\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_C\_FLAGS\_DEBUG="{}-\/g\ -\/pg"{}\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_Fortran\_FLAGS\_DEBUG="{}-\/g\ -\/pg"{}\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_MODULE\_LINKER\_FLAGS="{}-\/pg"{}\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ ENABLE\_DEBUG:BOOL=TRUE\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ ENABLE\_MPI:BOOL=TRUE\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_Fortran\_COMPILER=/usr/lib64/openmpi/bin/mpif90\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ ../camp\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00079}00079\ \ \ \ \ \&\&\ make\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00080}00080\ \ \ \ \ \&\&\ sudo\ make\ install}
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00081}00081\ }
-\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00082}00082\ WORKDIR\ /home/test\_user/build}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00021}00021\ \ \ \ \ \ \ \ \ valgrind\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00022}00022\ \ \ \ \ \&\&\ sudo\ dnf\ clean\ all}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00023}00023\ ENV\ PATH="{}\$\{PATH\}:/usr/lib64/openmpi/bin/"{}}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00025}00025\ \#\ Build\ the\ SuiteSparse\ libraries\ for\ sparse\ matrix\ support}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00026}00026\ RUN\ curl\ -\/kLO\ http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-\/5.1.0.tar.gz\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00027}00027\ \ \ \ \ \&\&\ tar\ -\/zxvf\ SuiteSparse-\/5.1.0.tar.gz\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00028}00028\ \ \ \ \ \&\&\ export\ CXX=/usr/bin/cc\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00029}00029\ \ \ \ \ \&\&\ cd\ SuiteSparse\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00030}00030\ \ \ \ \ \&\&\ sudo\ make\ install\ INSTALL=/usr/local\ BLAS="{}-\/L/lib64\ -\/lopenblas"{}}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00032}00032\ \#\ Install\ json-\/fortran}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00033}00033\ RUN\ curl\ -\/LO\ https://github.com/jacobwilliams/json-\/fortran/archive/6.1.0.tar.gz\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00034}00034\ \ \ \ \ \&\&\ tar\ -\/zxvf\ 6.1.0.tar.gz\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00035}00035\ \ \ \ \ \&\&\ cd\ json-\/fortran-\/6.1.0\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00036}00036\ \ \ \ \ \&\&\ export\ FC=gfortran\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00037}00037\ \ \ \ \ \&\&\ mkdir\ build\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00038}00038\ \ \ \ \ \&\&\ cd\ build\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00039}00039\ \ \ \ \ \&\&\ cmake\ -\/D\ SKIP\_DOC\_GEN:BOOL=TRUE\ ..\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00040}00040\ \ \ \ \ \&\&\ sudo\ make\ install}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00042}00042\ \#\ copy\ CVODE\ source}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00043}00043\ COPY\ cvode-\/3.4-\/alpha.tar.gz\ cvode-\/3.4-\/alpha.tar.gz}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00045}00045\ \#\ Install\ a\ modified\ version\ of\ CVODE}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00046}00046\ RUN\ tar\ -\/zxvf\ cvode-\/3.4-\/alpha.tar.gz\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00047}00047\ \ \ \ \ \&\&\ cd\ cvode-\/3.4-\/alpha\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00048}00048\ \ \ \ \ \&\&\ mkdir\ build\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00049}00049\ \ \ \ \ \&\&\ cd\ build\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00050}00050\ \ \ \ \ \&\&\ cmake\ -\/D\ CMAKE\_BUILD\_TYPE=release\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_C\_FLAGS\_DEBUG="{}-\/g\ -\/pg"{}\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_EXE\_LINKER\_FLAGS\_DEBUG="{}-\/pg"{}\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_MODULE\_LINKER\_FLAGS\_DEBUG="{}-\/pg"{}\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_SHARED\_LINKER\_FLAGS\_DEBUG="{}-\/pg"{}\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ KLU\_ENABLE:BOOL=TRUE\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ KLU\_LIBRARY\_DIR=/usr/local/lib\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ KLU\_INCLUDE\_DIR=/usr/local/include\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ ..\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00059}00059\ \ \ \ \ \&\&\ sudo\ make\ install}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00061}00061\ \#\ Update\ environment\ variables}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00062}00062\ ENV\ LD\_LIBRARY\_PATH="{}\$\{LD\_LIBRARY\_PATH\}:/usr/local/lib:/usr/local/lib64:/usr/local/jsonfortran-\/gnu-\/6.1.0/lib"{}}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00063}00063\ ENV\ PATH="{}\$\{PATH\}:/usr/local/jsonfortran-\/gnu-\/6.1.0/lib"{}}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00065}00065\ \#\ NOTE:\ Modify\ .dockerignore\ to\ whitelist\ files/directories\ to\ copy.}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00066}00066\ COPY\ .\ /home/test\_user/camp/}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00068}00068\ \#\ Build\ CAMP}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00069}00069\ \ RUN\ mkdir\ build\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00070}00070\ \ \ \ \ \&\&\ cd\ build\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00071}00071\ \ \ \ \ \&\&\ export\ JSON\_FORTRAN\_HOME="{}/usr/local/jsonfortran-\/gnu-\/6.1.0"{}\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00072}00072\ \ \ \ \ \&\&\ cmake\ -\/D\ CMAKE\_BUILD\_TYPE=release\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_C\_FLAGS\_DEBUG="{}-\/g\ -\/pg"{}\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_Fortran\_FLAGS\_DEBUG="{}-\/g\ -\/pg"{}\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_MODULE\_LINKER\_FLAGS="{}-\/pg"{}\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ ENABLE\_DEBUG:BOOL=TRUE\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ ENABLE\_MPI:BOOL=TRUE\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_Fortran\_COMPILER=/usr/lib64/openmpi/bin/mpif90\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CAMP\_ENABLE\_MEMCHECK:BOOL=TRUE\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ ../camp\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00081}00081\ \ \ \ \ \&\&\ make\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00082}00082\ \ \ \ \ \&\&\ sudo\ make\ install}
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_dockerfile_8mpi_source_l00084}00084\ WORKDIR\ /home/test\_user/build}
 
 \end{DoxyCode}

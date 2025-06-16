@@ -119,11 +119,11 @@
     \fancyhead[LE, RO]{\bfseries\thepage}
     \fancyhead[LO]{\bfseries\rightmark}
     \fancyhead[RE]{\bfseries\leftmark}
-    \fancyfoot[LO, RE]{\bfseries\scriptsize Generated on Mon Mar 17 2025 18\+:33\+:17 for CAMP by Doxygen }
+    \fancyfoot[LO, RE]{\bfseries\scriptsize Generated on Mon Jun 16 2025 16\+:47\+:38 for CAMP by Doxygen }
   }
   \fancypagestyle{plain}{
     \fancyhf{}
-    \fancyfoot[LO, RE]{\bfseries\scriptsize Generated on Mon Mar 17 2025 18\+:33\+:17 for CAMP by Doxygen }
+    \fancyfoot[LO, RE]{\bfseries\scriptsize Generated on Mon Jun 16 2025 16\+:47\+:38 for CAMP by Doxygen }
     \renewcommand{\headrulewidth}{0pt}
   }
   \pagestyle{fancyplain}
@@ -228,9 +228,9 @@
   {\Large CAMP}\\
   [1ex]\large 1.\+0.\+0 \\
   \vspace*{1cm}
-  {\large Generated on Mon Mar 17 2025 18\+:33\+:17 for CAMP by Doxygen 1.12.0}\\
+  {\large Generated on Mon Jun 16 2025 16\+:47\+:38 for CAMP by Doxygen 1.12.0}\\
     \vspace*{0.5cm}
-    {\small Mon Mar 17 2025 18:33:17}
+    {\small Mon Jun 16 2025 16:47:38}
   \end{center}
   \end{titlepage}
   \clearemptydoublepage
@@ -270,6 +270,7 @@
 \input{namespacecamp__aero__rep__factory}
 \input{namespacecamp__aero__rep__modal__binned__mass}
 \input{namespacecamp__aero__rep__single__particle}
+\input{namespacecamp__camp__box__model__data}
 \input{namespacecamp__camp__core}
 \input{namespacecamp__camp__solver__data}
 \input{namespacecamp__camp__state}
@@ -322,6 +323,7 @@
 \input{interfacecamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__set__gsd__update__data}
 \input{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}
 \input{interfacecamp__camp__solver__data_1_1aero__rep__print__data}
+\input{structcamp__camp__box__model__data_1_1aero__rep__profile__t}
 \input{interfacecamp__aero__rep__single__particle_1_1aero__rep__single__particle__create__number__update__data}
 \input{interfacecamp__aero__rep__single__particle_1_1aero__rep__single__particle__set__number__update__data____n__m3}
 \input{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}
@@ -330,6 +332,7 @@
 \input{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__update__data__modal__binned__mass__gsd__t}
 \input{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}
 \input{structcamp__aero__rep__data_1_1aero__rep__update__data__t}
+\input{structcamp__camp__box__model__data_1_1camp__box__model__data__t}
 \input{structcamp__camp__core_1_1camp__core__t}
 \input{structcamp__camp__solver__data_1_1camp__solver__data__t}
 \input{structcamp__camp__state_1_1camp__state__ptr}
@@ -355,19 +358,16 @@
 \input{interfacecamp__aero__rep__data_1_1internal__pack__size}
 \input{interfacecamp__rxn__data_1_1internal__pack__size}
 \input{interfacecamp__sub__model__data_1_1internal__pack__size}
-\input{struct_jac_map}
-\input{struct_jacobian}
-\input{struct_jacobian_column_elements}
 \input{structcamp__mechanism__data_1_1mechanism__data__ptr}
 \input{structcamp__mechanism__data_1_1mechanism__data__t}
 \input{struct_model}
-\input{struct_model_data}
 \input{struct_model_element}
 \input{struct_model_element_data_indices}
 \input{struct_model_element_data_pointers}
 \input{interfacecamp__aero__rep__data_1_1num__jac__elem}
 \input{interfacecamp__aero__rep__data_1_1num__phase__instances}
 \input{interfacecamp__sub__model__data_1_1priority}
+\input{structcamp__camp__box__model__data_1_1profile__t}
 \input{structcamp__property_1_1property__link__t}
 \input{structcamp__property_1_1property__ptr}
 \input{structcamp__property_1_1property__t}
@@ -399,6 +399,7 @@
 \input{interfacecamp__rxn__photolysis_1_1rxn__photolysis__set__rate__update__data}
 \input{structcamp__rxn__photolysis_1_1rxn__photolysis__t}
 \input{interfacecamp__camp__solver__data_1_1rxn__print__data}
+\input{structcamp__camp__box__model__data_1_1rxn__profile__t}
 \input{structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t}
 \input{structcamp__rxn__surface_1_1rxn__surface__t}
 \input{structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t}
@@ -422,7 +423,6 @@
 \input{interfacecamp__camp__solver__data_1_1solver__reset__timers}
 \input{interfacecamp__camp__solver__data_1_1solver__run}
 \input{structcamp__solver__stats_1_1solver__stats__t}
-\input{struct_solver_data}
 \input{interfacecamp__aero__rep__data_1_1spec__name}
 \input{interfacecamp__aero__rep__data_1_1spec__state__id}
 \input{structcamp__util_1_1string__t}
@@ -434,7 +434,6 @@
 \input{interfacecamp__camp__solver__data_1_1sub__model__print__data}
 \input{interfacecamp__camp__solver__data_1_1sub__model__update__data}
 \input{structcamp__sub__model__data_1_1sub__model__update__data__t}
-\input{struct_time_derivative}
 \input{interfacecamp__util_1_1to__string}
 \input{interfacecamp__aero__rep__data_1_1unique__names}
 \chapter{File Documentation}
@@ -442,6 +441,8 @@
 \input{_c_a_m_p__tutorial_8_f90_source}
 \input{part__1__code_2box__model_8_f90}
 \input{part__1__code_2box__model_8_f90_source}
+\input{part__2__code_2box__model_8_f90}
+\input{part__2__code_2box__model_8_f90_source}
 \input{part__3__code_2box__model_8_f90}
 \input{part__3__code_2box__model_8_f90_source}
 \input{part__4__code_2box__model_8_f90}
@@ -454,18 +455,12 @@
 \input{aero__phase__data_8_f90_source}
 \input{aero__phase__solver_8c}
 \input{aero__phase__solver_8c_source}
-\input{aero__phase__solver_8h}
-\input{aero__phase__solver_8h_source}
 \input{aero__rep__data_8_f90}
 \input{aero__rep__data_8_f90_source}
 \input{aero__rep__factory_8_f90}
 \input{aero__rep__factory_8_f90_source}
 \input{aero__rep__solver_8c}
 \input{aero__rep__solver_8c_source}
-\input{aero__rep__solver_8h}
-\input{aero__rep__solver_8h_source}
-\input{aero__reps_8h}
-\input{aero__reps_8h_source}
 \input{aero__rep__modal__binned__mass_8c}
 \input{aero__rep__modal__binned__mass_8c_source}
 \input{aero__rep__modal__binned__mass_8_f90}
@@ -474,16 +469,14 @@
 \input{aero__rep__single__particle_8c_source}
 \input{aero__rep__single__particle_8_f90}
 \input{aero__rep__single__particle_8_f90_source}
-\input{camp__common_8h}
-\input{camp__common_8h_source}
+\input{camp__box__model_8_f90}
+\input{camp__box__model_8_f90_source}
+\input{camp__box__model__data_8_f90}
+\input{camp__box__model__data_8_f90_source}
 \input{camp__core_8_f90}
 \input{camp__core_8_f90_source}
-\input{camp__debug_8h}
-\input{camp__debug_8h_source}
 \input{camp__solver_8c}
 \input{camp__solver_8c_source}
-\input{camp__solver_8h}
-\input{camp__solver_8h_source}
 \input{camp__solver__data_8_f90}
 \input{camp__solver__data_8_f90_source}
 \input{camp__state_8_f90}
@@ -496,14 +489,10 @@
 \input{debug__diff__check_8c_source}
 \input{debug__diff__check_8_f90}
 \input{debug__diff__check_8_f90_source}
-\input{debug__diff__check_8h}
-\input{debug__diff__check_8h_source}
 \input{env__state_8_f90}
 \input{env__state_8_f90_source}
 \input{_jacobian_8c}
 \input{_jacobian_8c_source}
-\input{_jacobian_8h}
-\input{_jacobian_8h_source}
 \input{mechanism__data_8_f90}
 \input{mechanism__data_8_f90_source}
 \input{mpi_8_f90}
@@ -518,10 +507,6 @@
 \input{rxn__factory_8_f90_source}
 \input{rxn__solver_8c}
 \input{rxn__solver_8c_source}
-\input{rxn__solver_8h}
-\input{rxn__solver_8h_source}
-\input{rxns_8h}
-\input{rxns_8h_source}
 \input{rxn__aqueous__equilibrium_8c}
 \input{rxn__aqueous__equilibrium_8c_source}
 \input{rxn__aqueous__equilibrium_8_f90}
@@ -598,10 +583,6 @@
 \input{sub__model__factory_8_f90_source}
 \input{sub__model__solver_8c}
 \input{sub__model__solver_8c_source}
-\input{sub__model__solver_8h}
-\input{sub__model__solver_8h_source}
-\input{sub__models_8h}
-\input{sub__models_8h_source}
 \input{sub__model___p_d_fi_t_e_8c}
 \input{sub__model___p_d_fi_t_e_8c_source}
 \input{sub__model___p_d_fi_t_e_8_f90}
@@ -616,12 +597,8 @@
 \input{sub__model___z_s_r__aerosol__water_8_f90_source}
 \input{time__derivative_8c}
 \input{time__derivative_8c_source}
-\input{time__derivative_8h}
-\input{time__derivative_8h_source}
 \input{util_8_f90}
 \input{util_8_f90_source}
-\input{util_8h}
-\input{util_8h_source}
 %--- End generated contents ---
   % Bibliography
   \newpage

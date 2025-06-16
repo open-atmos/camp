@@ -1,9 +1,0 @@
-<map id="util.h" name="util.h">
-<area shape="rect" id="Node000001" title="Utility functions and commonly used science property calculators." alt="" coords="271,5,319,31"/>
-<area shape="rect" id="Node000002" href="$rxn___h_l__phase__transfer_8c.html" title="Phase Transfer reaction solver functions." alt="" coords="5,79,172,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="257,35,125,81,123,76,256,30"/>
-<area shape="rect" id="Node000003" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html" title="Phase Transfer reaction solver functions." alt="" coords="196,79,395,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="298,46,298,79,292,79,292,46"/>
-<area shape="rect" id="Node000004" href="$rxn__surface_8c.html" title="Surface reaction solver functions." alt="" coords="419,79,518,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="335,33,440,76,438,81,333,38"/>
-</map>

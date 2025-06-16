@@ -1,0 +1,212 @@
+\doxysection{camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::profile\+\_\+t Type Reference}
+\hypertarget{structcamp__camp__box__model__data_1_1profile__t}{}\label{structcamp__camp__box__model__data_1_1profile__t}\index{camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}}
+
+
+Property time profile.  
+
+
+
+
+Inheritance diagram for camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::profile\+\_\+t\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{structcamp__camp__box__model__data_1_1profile__t__inherit__graph}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+procedure \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_a5528388cd9694b020997071e092d787e}{reset}} (this)
+\begin{DoxyCompactList}\small\item\em Reset the profile. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_ab33a66ae79ca54a96ce854fdcba7a4b2}{advance}} (this)
+\begin{DoxyCompactList}\small\item\em Advance the profile by one time step. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_acf176eede9a8b041c24cf37cb73e54a9}{current\+\_\+value}} (this)
+\begin{DoxyCompactList}\small\item\em Get the current profile value. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_ad4d5784e0e2540e56abef1be63512ebb}{print}} (this, file\+\_\+unit)
+\begin{DoxyCompactList}\small\item\em Print the profile configuration. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+character(len=\+:), allocatable \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_a32e34b2523b23f339184b97e598e8032}{name}}
+\begin{DoxyCompactList}\small\item\em Name of the profile. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_a73ae804b4c16239e634fddb93ceb0ae4}{curr\+\_\+time\+\_\+step}}
+\begin{DoxyCompactList}\small\item\em Current time step in the profile. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind) \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_a620b93340f7f64f7b2d48920f2951981}{curr\+\_\+transition}}
+\begin{DoxyCompactList}\small\item\em Index for the current position in the transition arrays. \end{DoxyCompactList}\item 
+integer(kind=i\+\_\+kind), dimension(\+:), allocatable \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_af0396fb5ddeb1441aaae974e86a73445}{transition\+\_\+time\+\_\+step}}
+\begin{DoxyCompactList}\small\item\em Time step for the next transition, starting with 0 (initial conditions) \end{DoxyCompactList}\item 
+real(kind=dp), dimension(\+:), allocatable \mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t_a048891e70bb5be9b15dd07513f1c53bc}{transition\+\_\+value}}
+\begin{DoxyCompactList}\small\item\em New values for each transition, starting with the initial value. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Property time profile. 
+
+Constructor for \doxylink{structcamp__camp__box__model__data_1_1profile__t}{profile\+\_\+t}. 
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00054}{54}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+
+
+\doxysubsection{Member Function/\+Subroutine Documentation}
+\Hypertarget{structcamp__camp__box__model__data_1_1profile__t_ab33a66ae79ca54a96ce854fdcba7a4b2}\index{camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}!advance@{advance}}
+\index{advance@{advance}!camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}}
+\doxysubsubsection{\texorpdfstring{advance()}{advance()}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1profile__t_ab33a66ae79ca54a96ce854fdcba7a4b2} 
+procedure camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::profile\+\_\+t\+::advance (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\+\_\+t}}), intent(inout)}]{this}{}\end{DoxyParamCaption})}
+
+
+
+Advance the profile by one time step. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Property profile \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00045}{45}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1profile__t_acf176eede9a8b041c24cf37cb73e54a9}\index{camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}!current\_value@{current\_value}}
+\index{current\_value@{current\_value}!camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}}
+\doxysubsubsection{\texorpdfstring{current\_value()}{current\_value()}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1profile__t_acf176eede9a8b041c24cf37cb73e54a9} 
+procedure camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::profile\+\_\+t\+::current\+\_\+value (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\+\_\+t}}), intent(inout)}]{this}{}\end{DoxyParamCaption})}
+
+
+
+Get the current profile value. 
+
+\begin{DoxyReturn}{Returns}
+Current value of the profile 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Property profile \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00047}{47}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1profile__t_ad4d5784e0e2540e56abef1be63512ebb}\index{camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}!print@{print}}
+\index{print@{print}!camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}}
+\doxysubsubsection{\texorpdfstring{print()}{print()}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1profile__t_ad4d5784e0e2540e56abef1be63512ebb} 
+procedure camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::profile\+\_\+t\+::print (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\+\_\+t}}), intent(in)}]{this}{, }\item[{integer(kind=i\+\_\+kind), intent(in), optional}]{file\+\_\+unit}{}\end{DoxyParamCaption})}
+
+
+
+Print the profile configuration. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Property profile \\
+\hline
+\mbox{\texttt{ in}}  & {\em file\+\_\+unit} & Output file unit \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00049}{49}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1profile__t_a5528388cd9694b020997071e092d787e}\index{camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}!reset@{reset}}
+\index{reset@{reset}!camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}}
+\doxysubsubsection{\texorpdfstring{reset()}{reset()}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1profile__t_a5528388cd9694b020997071e092d787e} 
+procedure camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::profile\+\_\+t\+::reset (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__camp__box__model__data_1_1profile__t}{profile\+\_\+t}}), intent(inout)}]{this}{}\end{DoxyParamCaption})}
+
+
+
+Reset the profile. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in,out}}  & {\em this} & Property profile \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00043}{43}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{structcamp__camp__box__model__data_1_1profile__t_a73ae804b4c16239e634fddb93ceb0ae4}\index{camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}!curr\_time\_step@{curr\_time\_step}}
+\index{curr\_time\_step@{curr\_time\_step}!camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}}
+\doxysubsubsection{\texorpdfstring{curr\_time\_step}{curr\_time\_step}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1profile__t_a73ae804b4c16239e634fddb93ceb0ae4} 
+integer(kind=i\+\_\+kind) camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::profile\+\_\+t\+::curr\+\_\+time\+\_\+step}
+
+
+
+Current time step in the profile. 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00034}{34}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1profile__t_a620b93340f7f64f7b2d48920f2951981}\index{camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}!curr\_transition@{curr\_transition}}
+\index{curr\_transition@{curr\_transition}!camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}}
+\doxysubsubsection{\texorpdfstring{curr\_transition}{curr\_transition}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1profile__t_a620b93340f7f64f7b2d48920f2951981} 
+integer(kind=i\+\_\+kind) camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::profile\+\_\+t\+::curr\+\_\+transition}
+
+
+
+Index for the current position in the transition arrays. 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00036}{36}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1profile__t_a32e34b2523b23f339184b97e598e8032}\index{camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}!name@{name}}
+\index{name@{name}!camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}}
+\doxysubsubsection{\texorpdfstring{name}{name}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1profile__t_a32e34b2523b23f339184b97e598e8032} 
+character(len=\+:), allocatable camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::profile\+\_\+t\+::name}
+
+
+
+Name of the profile. 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00032}{32}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1profile__t_af0396fb5ddeb1441aaae974e86a73445}\index{camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}!transition\_time\_step@{transition\_time\_step}}
+\index{transition\_time\_step@{transition\_time\_step}!camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}}
+\doxysubsubsection{\texorpdfstring{transition\_time\_step}{transition\_time\_step}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1profile__t_af0396fb5ddeb1441aaae974e86a73445} 
+integer(kind=i\+\_\+kind), dimension(\+:), allocatable camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::profile\+\_\+t\+::transition\+\_\+time\+\_\+step}
+
+
+
+Time step for the next transition, starting with 0 (initial conditions) 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00038}{38}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+\Hypertarget{structcamp__camp__box__model__data_1_1profile__t_a048891e70bb5be9b15dd07513f1c53bc}\index{camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}!transition\_value@{transition\_value}}
+\index{transition\_value@{transition\_value}!camp\_camp\_box\_model\_data::profile\_t@{camp\_camp\_box\_model\_data::profile\_t}}
+\doxysubsubsection{\texorpdfstring{transition\_value}{transition\_value}}
+{\footnotesize\ttfamily \label{structcamp__camp__box__model__data_1_1profile__t_a048891e70bb5be9b15dd07513f1c53bc} 
+real(kind=dp), dimension(\+:), allocatable camp\+\_\+camp\+\_\+box\+\_\+model\+\_\+data\+::profile\+\_\+t\+::transition\+\_\+value}
+
+
+
+New values for each transition, starting with the initial value. 
+
+
+
+Definition at line \mbox{\hyperlink{camp__box__model__data_8_f90_source_l00040}{40}} of file \mbox{\hyperlink{camp__box__model__data_8_f90_source}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}.
+
+
+
+The documentation for this type was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{camp__box__model__data_8_f90}{camp\+\_\+box\+\_\+model\+\_\+data.\+F90}}\end{DoxyCompactItemize}

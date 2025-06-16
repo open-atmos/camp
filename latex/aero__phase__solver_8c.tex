@@ -10,7 +10,7 @@ Include dependency graph for aero\+\_\+phase\+\_\+solver.\+c\+:
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{aero__phase__solver_8c__incl}
+\includegraphics[width=340pt]{aero__phase__solver_8c__incl}
 \end{center}
 \end{figure}
 \doxysubsubsection*{Macros}
@@ -47,11 +47,11 @@ Include dependency graph for aero\+\_\+phase\+\_\+solver.\+c\+:
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-int \mbox{\hyperlink{aero__phase__solver_8c_a6e5ea770a313a6eebea53e86540dd510}{aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, int state\+\_\+var\+\_\+id, bool \texorpdfstring{$\ast$}{*}jac\+\_\+struct)
-\begin{DoxyCompactList}\small\item\em Flag \doxylink{struct_jacobian}{Jacobian} elements used in calculations of mass and volume. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}{aero\+\_\+phase\+\_\+get\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}state\+\_\+var, double \texorpdfstring{$\ast$}{*}mass, double \texorpdfstring{$\ast$}{*}MW, double \texorpdfstring{$\ast$}{*}jac\+\_\+elem\+\_\+mass, double \texorpdfstring{$\ast$}{*}jac\+\_\+elem\+\_\+\+MW)
+int \mbox{\hyperlink{aero__phase__solver_8c_a6e5ea770a313a6eebea53e86540dd510}{aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, int state\+\_\+var\+\_\+id, bool \texorpdfstring{$\ast$}{*}jac\+\_\+struct)
+\begin{DoxyCompactList}\small\item\em Flag Jacobian elements used in calculations of mass and volume. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}{aero\+\_\+phase\+\_\+get\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}state\+\_\+var, double \texorpdfstring{$\ast$}{*}mass, double \texorpdfstring{$\ast$}{*}MW, double \texorpdfstring{$\ast$}{*}jac\+\_\+elem\+\_\+mass, double \texorpdfstring{$\ast$}{*}jac\+\_\+elem\+\_\+\+MW)
 \begin{DoxyCompactList}\small\item\em Get the mass and average MW in an aerosol phase. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}{aero\+\_\+phase\+\_\+get\+\_\+volume\+\_\+\+\_\+m3\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}state\+\_\+var, double \texorpdfstring{$\ast$}{*}volume, double \texorpdfstring{$\ast$}{*}jac\+\_\+elem)
+void \mbox{\hyperlink{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}{aero\+\_\+phase\+\_\+get\+\_\+volume\+\_\+\+\_\+m3\+\_\+m3}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}state\+\_\+var, double \texorpdfstring{$\ast$}{*}volume, double \texorpdfstring{$\ast$}{*}jac\+\_\+elem)
 \begin{DoxyCompactList}\small\item\em Get the volume of an aerosol phase. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{aero__phase__solver_8c_a945dae2a4f51b15322f47d002969e666}{aero\+\_\+phase\+\_\+add\+\_\+condensed\+\_\+data}} (int n\+\_\+int\+\_\+param, int n\+\_\+float\+\_\+param, int \texorpdfstring{$\ast$}{*}int\+\_\+param, double \texorpdfstring{$\ast$}{*}float\+\_\+param, void \texorpdfstring{$\ast$}{*}solver\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Add condensed data to the condensed data block for aerosol phases. \end{DoxyCompactList}\item 
@@ -270,7 +270,7 @@ Definition at line \mbox{\hyperlink{aero__phase__solver_8c_source_l00175}{175}} 
 \index{aero\_phase\_get\_mass\_\_kg\_m3@{aero\_phase\_get\_mass\_\_kg\_m3}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
 \doxysubsubsection{\texorpdfstring{aero\_phase\_get\_mass\_\_kg\_m3()}{aero\_phase\_get\_mass\_\_kg\_m3()}}
 {\footnotesize\ttfamily \label{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1} 
-void aero\+\_\+phase\+\_\+get\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{state\+\_\+var}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{mass}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{MW}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{jac\+\_\+elem\+\_\+mass}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{jac\+\_\+elem\+\_\+\+MW}{}\end{DoxyParamCaption})}
+void aero\+\_\+phase\+\_\+get\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3 (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{state\+\_\+var}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{mass}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{MW}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{jac\+\_\+elem\+\_\+mass}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{jac\+\_\+elem\+\_\+\+MW}{}\end{DoxyParamCaption})}
 
 
 
@@ -288,9 +288,9 @@ Get the mass and average MW in an aerosol phase.
 \hline
 {\em MW} & Pointer to hold average MW of the aerosol phase ( $\mbox{\si{\kilogram\per\mol}}$) \\
 \hline
-{\em jac\+\_\+elem\+\_\+mass} & When not NULL, a pointer to an array whose length is the number of \doxylink{struct_jacobian}{Jacobian} elements used in calculations of mass and volume of this aerosol phase returned by {\ttfamily aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem} and whose contents will be set to the partial derivatives of mass by concentration $\frac{dm}{dy_i}$ of each component species $y_i$. \\
+{\em jac\+\_\+elem\+\_\+mass} & When not NULL, a pointer to an array whose length is the number of Jacobian elements used in calculations of mass and volume of this aerosol phase returned by {\ttfamily aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem} and whose contents will be set to the partial derivatives of mass by concentration $\frac{dm}{dy_i}$ of each component species $y_i$. \\
 \hline
-{\em jac\+\_\+elem\+\_\+\+MW} & When not NULL, a pointer to an array whose length is the number of \doxylink{struct_jacobian}{Jacobian} elements used in calculations of mass and volume of this aerosol phase returned by {\ttfamily aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem} and whose contents will be set to the partial derivatives of total molecular weight by concentration $\frac{dMW}{dy_i}$ of each component species $y_i$. \\
+{\em jac\+\_\+elem\+\_\+\+MW} & When not NULL, a pointer to an array whose length is the number of Jacobian elements used in calculations of mass and volume of this aerosol phase returned by {\ttfamily aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem} and whose contents will be set to the partial derivatives of total molecular weight by concentration $\frac{dMW}{dy_i}$ of each component species $y_i$. \\
 \hline
 \end{DoxyParams}
 
@@ -309,11 +309,11 @@ Here is the caller graph for this function\+:
 \index{aero\_phase\_get\_used\_jac\_elem@{aero\_phase\_get\_used\_jac\_elem}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
 \doxysubsubsection{\texorpdfstring{aero\_phase\_get\_used\_jac\_elem()}{aero\_phase\_get\_used\_jac\_elem()}}
 {\footnotesize\ttfamily \label{aero__phase__solver_8c_a6e5ea770a313a6eebea53e86540dd510} 
-int aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{int}]{state\+\_\+var\+\_\+id}{, }\item[{bool \texorpdfstring{$\ast$}{*}}]{jac\+\_\+struct}{}\end{DoxyParamCaption})}
+int aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{int}]{state\+\_\+var\+\_\+id}{, }\item[{bool \texorpdfstring{$\ast$}{*}}]{jac\+\_\+struct}{}\end{DoxyParamCaption})}
 
 
 
-Flag \doxylink{struct_jacobian}{Jacobian} elements used in calculations of mass and volume. 
+Flag Jacobian elements used in calculations of mass and volume. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -323,11 +323,11 @@ Flag \doxylink{struct_jacobian}{Jacobian} elements used in calculations of mass 
 \hline
 {\em state\+\_\+var\+\_\+id} & Index in the state array for this aerosol phase \\
 \hline
-{\em jac\+\_\+struct} & 1D array of flags indicating potentially non-\/zero \doxylink{struct_jacobian}{Jacobian} elements. (The dependent variable should have been chosen by the calling function.) \\
+{\em jac\+\_\+struct} & 1D array of flags indicating potentially non-\/zero Jacobian elements. (The dependent variable should have been chosen by the calling function.) \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Number of \doxylink{struct_jacobian}{Jacobian} elements flagged 
+Number of Jacobian elements flagged 
 \end{DoxyReturn}
 
 
@@ -345,7 +345,7 @@ Here is the caller graph for this function\+:
 \index{aero\_phase\_get\_volume\_\_m3\_m3@{aero\_phase\_get\_volume\_\_m3\_m3}!aero\_phase\_solver.c@{aero\_phase\_solver.c}}
 \doxysubsubsection{\texorpdfstring{aero\_phase\_get\_volume\_\_m3\_m3()}{aero\_phase\_get\_volume\_\_m3\_m3()}}
 {\footnotesize\ttfamily \label{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08} 
-void aero\+\_\+phase\+\_\+get\+\_\+volume\+\_\+\+\_\+m3\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{state\+\_\+var}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{volume}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{jac\+\_\+elem}{}\end{DoxyParamCaption})}
+void aero\+\_\+phase\+\_\+get\+\_\+volume\+\_\+\+\_\+m3\+\_\+m3 (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{state\+\_\+var}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{volume}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{jac\+\_\+elem}{}\end{DoxyParamCaption})}
 
 
 
@@ -361,7 +361,7 @@ Get the volume of an aerosol phase.
 \hline
 {\em volume} & Pointer to hold the aerosol phase volume ( $\mbox{\si{\cubic\metre\per\cubic\metre}}$ or $\mbox{\si{\cubic\metre\per particle}}$) \\
 \hline
-{\em jac\+\_\+elem} & When not NULL, a pointer to an array whose length is the number of \doxylink{struct_jacobian}{Jacobian} elements used in calculations of mass and volume of this aerosol phase returned by {\ttfamily aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem} and whose contents will be set to the partial derivatives of total phase volume by concentration $\frac{dv}{dy_i}$ of each component species $y_i$. \\
+{\em jac\+\_\+elem} & When not NULL, a pointer to an array whose length is the number of Jacobian elements used in calculations of mass and volume of this aerosol phase returned by {\ttfamily aero\+\_\+phase\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem} and whose contents will be set to the partial derivatives of total phase volume by concentration $\frac{dv}{dy_i}$ of each component species $y_i$. \\
 \hline
 \end{DoxyParams}
 

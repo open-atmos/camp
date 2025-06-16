@@ -15,7 +15,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <math.h>}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{rxns_8h}{../rxns.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00014}00014\ \textcolor{preprocessor}{\#include\ <camp/rxns.h>}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00015}00015\ }
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00016}00016\ \textcolor{comment}{//\ TODO\ Lookup\ environmental\ indicies\ during\ initialization}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00017}\mbox{\hyperlink{rxn__first__order__loss_8c_aa90d2b6c48aceb4d7ac3d93d5249bb60}{00017}}\ \textcolor{preprocessor}{\#define\ TEMPERATURE\_K\_\ env\_data[0]}}
@@ -38,9 +38,9 @@
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00034}00034\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00035}00035\ \textcolor{comment}{\ *\ \(\backslash\)param\ jac\ Jacobian}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00036}00036\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00037}\mbox{\hyperlink{rxns_8h_a73e9594a2ad684000b2cbef37ab6f195}{00037}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__first__order__loss_8c_a73e9594a2ad684000b2cbef37ab6f195}{rxn\_first\_order\_loss\_get\_used\_jac\_elem}}(\textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00037}\mbox{\hyperlink{rxn__first__order__loss_8c_a73e9594a2ad684000b2cbef37ab6f195}{00037}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__first__order__loss_8c_a73e9594a2ad684000b2cbef37ab6f195}{rxn\_first\_order\_loss\_get\_used\_jac\_elem}}(\textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00038}00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ *jac)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00039}00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Jacobian\ *jac)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00040}00040\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00041}00041\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00042}00042\ }
@@ -57,8 +57,8 @@
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00053}00053\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_int\_data\ Pointer\ to\ the\ reaction\ integer\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00054}00054\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00055}00055\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00056}\mbox{\hyperlink{rxns_8h_ae3eced0147f7ef45e55762930c86bf56}{00056}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__first__order__loss_8c_ae3eced0147f7ef45e55762930c86bf56}{rxn\_first\_order\_loss\_update\_ids}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ \textcolor{keywordtype}{int}\ *deriv\_ids,}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00056}\mbox{\hyperlink{rxn__first__order__loss_8c_ae3eced0147f7ef45e55762930c86bf56}{00056}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__first__order__loss_8c_ae3eced0147f7ef45e55762930c86bf56}{rxn\_first\_order\_loss\_update\_ids}}(ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ *deriv\_ids,}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Jacobian\ jac,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00059}00059\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00060}00060\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
@@ -90,7 +90,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00086}00086\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_env\_data\ Pointer\ to\ the\ environment-\/dependent\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00087}00087\ \textcolor{comment}{\ *\ \(\backslash\)return\ Flag\ indicating\ whether\ this\ is\ the\ reaction\ to\ update}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00088}00088\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00089}\mbox{\hyperlink{rxns_8h_aeb0a48270ecb60c44746b4c5fce85017}{00089}}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{rxn__first__order__loss_8c_aeb0a48270ecb60c44746b4c5fce85017}{rxn\_first\_order\_loss\_update\_data}}(\textcolor{keywordtype}{void}\ *update\_data,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00089}\mbox{\hyperlink{rxn__first__order__loss_8c_aeb0a48270ecb60c44746b4c5fce85017}{00089}}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{rxn__first__order__loss_8c_aeb0a48270ecb60c44746b4c5fce85017}{rxn\_first\_order\_loss\_update\_data}}(\textcolor{keywordtype}{void}\ *update\_data,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00090}00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_env\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00092}00092\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
@@ -119,13 +119,13 @@
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00115}00115\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00116}00116\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_env\_data\ Pointer\ to\ the\ environment-\/dependent\ parameters}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00117}00117\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00118}\mbox{\hyperlink{rxns_8h_ac31fd29a881698e3bb9f30b4b91ffddb}{00118}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__first__order__loss_8c_ac31fd29a881698e3bb9f30b4b91ffddb}{rxn\_first\_order\_loss\_update\_env\_state}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00118}\mbox{\hyperlink{rxn__first__order__loss_8c_ac31fd29a881698e3bb9f30b4b91ffddb}{00118}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__first__order__loss_8c_ac31fd29a881698e3bb9f30b4b91ffddb}{rxn\_first\_order\_loss\_update\_env\_state}}(ModelData\ *model\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_env\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00122}00122\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00123}00123\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00124}00124\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00124}00124\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>grid\_cell\_env;}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00125}00125\ }
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00126}00126\ \ \ \textcolor{comment}{//\ Calculate\ the\ rate\ constant\ in\ (1/s)}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00127}00127\ \ \ \mbox{\hyperlink{rxn__first__order__loss_8c_a6d62af2f44a112ef5b324cf406a830c2}{RATE\_CONSTANT\_}}\ =\ \mbox{\hyperlink{rxn__first__order__loss_8c_a1757f332a0485799c2ee77edff00c38a}{SCALING\_}}\ *\ \mbox{\hyperlink{rxn__first__order__loss_8c_a8a6abdf49f8b3b17aea4f4595bcbc0cc}{BASE\_RATE\_}};}
@@ -144,13 +144,13 @@
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00140}00140\ \textcolor{comment}{\ *\ \(\backslash\)param\ time\_step\ Current\ time\ step\ being\ computed\ (s)}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00141}00141\ \textcolor{comment}{\ */}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00142}00142\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_SUNDIALS}}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00143}\mbox{\hyperlink{rxns_8h_ac1d2c5d3bf68d6adcdc4183ba340175d}{00143}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__first__order__loss_8c_ac1d2c5d3bf68d6adcdc4183ba340175d}{rxn\_first\_order\_loss\_calc\_deriv\_contrib}}(}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00144}00144\ \ \ \ \ \mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ \mbox{\hyperlink{struct_time_derivative}{TimeDerivative}}\ time\_deriv,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00143}\mbox{\hyperlink{rxn__first__order__loss_8c_ac1d2c5d3bf68d6adcdc4183ba340175d}{00143}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__first__order__loss_8c_ac1d2c5d3bf68d6adcdc4183ba340175d}{rxn\_first\_order\_loss\_calc\_deriv\_contrib}}(}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00144}00144\ \ \ \ \ ModelData\ *model\_data,\ TimeDerivative\ time\_deriv,\ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00145}00145\ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,\ \textcolor{keywordtype}{double}\ *rxn\_env\_data,\ realtype\ time\_step)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00146}00146\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00147}00147\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00148}00148\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00149}00149\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00148}00148\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>grid\_cell\_state;}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00149}00149\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>grid\_cell\_env;}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00150}00150\ }
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00151}00151\ \ \ \textcolor{comment}{//\ Calculate\ the\ reaction\ rate}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00152}00152\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ rate\ =\ \mbox{\hyperlink{rxn__first__order__loss_8c_a6d62af2f44a112ef5b324cf406a830c2}{RATE\_CONSTANT\_}}\ *\ state[\mbox{\hyperlink{rxn__first__order__loss_8c_a341ae951df29b4d3f0b92b7eae194dc9}{REACT\_}}];}
@@ -172,19 +172,19 @@
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00168}00168\ \textcolor{comment}{\ *\ \(\backslash\)param\ time\_step\ Current\ time\ step\ being\ calculated\ (s)}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00169}00169\ \textcolor{comment}{\ */}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00170}00170\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_SUNDIALS}}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00171}\mbox{\hyperlink{rxns_8h_a07413cad7e1d96989ea035941a53e915}{00171}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__first__order__loss_8c_a07413cad7e1d96989ea035941a53e915}{rxn\_first\_order\_loss\_calc\_jac\_contrib}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ \mbox{\hyperlink{struct_jacobian}{Jacobian}}\ jac,}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00171}\mbox{\hyperlink{rxn__first__order__loss_8c_a07413cad7e1d96989ea035941a53e915}{00171}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__first__order__loss_8c_a07413cad7e1d96989ea035941a53e915}{rxn\_first\_order\_loss\_calc\_jac\_contrib}}(ModelData\ *model\_data,\ Jacobian\ jac,}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *rxn\_int\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_float\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *rxn\_env\_data,}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ realtype\ time\_step)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00176}00176\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00177}00177\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00178}00178\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a97655058cfc0116225582920128111ef}{grid\_cell\_state}};}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00179}00179\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_a847bd594a8e88da48104655fdc8524d7}{grid\_cell\_env}};}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00178}00178\ \ \ \textcolor{keywordtype}{double}\ *state\ =\ model\_data-\/>grid\_cell\_state;}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00179}00179\ \ \ \textcolor{keywordtype}{double}\ *env\_data\ =\ model\_data-\/>grid\_cell\_env;}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00180}00180\ }
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00181}00181\ \ \ \textcolor{comment}{//\ Add\ contributions\ to\ the\ Jacobian}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00182}00182\ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{rxn__first__order__loss_8c_a472acd7d6b592c0de65fc1915cf5b2c7}{JAC\_ID\_}}\ >=\ 0)}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00183}00183\ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__first__order__loss_8c_a472acd7d6b592c0de65fc1915cf5b2c7}{JAC\_ID\_}},\ \mbox{\hyperlink{_jacobian_8h_a1c0a4f1846373ae097290829cd23fc06}{JACOBIAN\_LOSS}},}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00183}00183\ \ \ \ \ \mbox{\hyperlink{_jacobian_8c_a844d8b2784c48a794ada38d053b1d1b3}{jacobian\_add\_value}}(jac,\ (\textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{int})\mbox{\hyperlink{rxn__first__order__loss_8c_a472acd7d6b592c0de65fc1915cf5b2c7}{JAC\_ID\_}},\ JACOBIAN\_LOSS,}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{rxn__first__order__loss_8c_a6d62af2f44a112ef5b324cf406a830c2}{RATE\_CONSTANT\_}});}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00185}00185\ }
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00186}00186\ \ \ \textcolor{keywordflow}{return};}
@@ -196,7 +196,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00192}00192\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_int\_data\ Pointer\ to\ the\ reaction\ integer\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00193}00193\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_float\_data\ Pointer\ to\ the\ reaction\ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00194}00194\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00195}\mbox{\hyperlink{rxns_8h_a5ee9277b28f90b141ec018e086fc5fa3}{00195}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__first__order__loss_8c_a5ee9277b28f90b141ec018e086fc5fa3}{rxn\_first\_order\_loss\_print}}(\textcolor{keywordtype}{int}\ *rxn\_int\_data,\ \textcolor{keywordtype}{double}\ *rxn\_float\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00195}\mbox{\hyperlink{rxn__first__order__loss_8c_a5ee9277b28f90b141ec018e086fc5fa3}{00195}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__first__order__loss_8c_a5ee9277b28f90b141ec018e086fc5fa3}{rxn\_first\_order\_loss\_print}}(\textcolor{keywordtype}{int}\ *rxn\_int\_data,\ \textcolor{keywordtype}{double}\ *rxn\_float\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00196}00196\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ rxn\_int\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00197}00197\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ rxn\_float\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00198}00198\ }
@@ -209,7 +209,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00205}00205\ \textcolor{comment}{\ *}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00206}00206\ \textcolor{comment}{\ *\ \(\backslash\)return\ Pointer\ to\ a\ new\ rate\ update\ data\ object}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00207}00207\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00208}\mbox{\hyperlink{rxns_8h_aaecb66d7db7eb472bb74b796e17d1ed9}{00208}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{rxn__first__order__loss_8c_aaecb66d7db7eb472bb74b796e17d1ed9}{rxn\_first\_order\_loss\_create\_rate\_update\_data}}()\ \{}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00208}\mbox{\hyperlink{rxn__first__order__loss_8c_aaecb66d7db7eb472bb74b796e17d1ed9}{00208}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{rxn__first__order__loss_8c_aaecb66d7db7eb472bb74b796e17d1ed9}{rxn\_first\_order\_loss\_create\_rate\_update\_data}}()\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00209}00209\ \ \ \textcolor{keywordtype}{int}\ *update\_data\ =\ (\textcolor{keywordtype}{int}\ *)malloc(\textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ +\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{double}));}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00210}00210\ \ \ \textcolor{keywordflow}{if}\ (update\_data\ ==\ NULL)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00211}00211\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ first-\/order\ loss\ update\ data\(\backslash\)n\(\backslash\)n"{}});}
@@ -224,7 +224,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00220}00220\ \textcolor{comment}{\ *\ \(\backslash\)param\ rxn\_id\ Id\ of\ first-\/order\ loss\ reactions\ to\ update}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00221}00221\ \textcolor{comment}{\ *\ \(\backslash\)param\ base\_rate\ New\ pre-\/scaling\ first-\/order\ loss\ rate}}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00222}00222\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00223}\mbox{\hyperlink{rxns_8h_a79a93a61f1f6b1d428bd2e6babc58216}{00223}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__first__order__loss_8c_a79a93a61f1f6b1d428bd2e6babc58216}{rxn\_first\_order\_loss\_set\_rate\_update\_data}}(\textcolor{keywordtype}{void}\ *update\_data,\ \textcolor{keywordtype}{int}\ rxn\_id,}
+\DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00223}\mbox{\hyperlink{rxn__first__order__loss_8c_a79a93a61f1f6b1d428bd2e6babc58216}{00223}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{rxn__first__order__loss_8c_a79a93a61f1f6b1d428bd2e6babc58216}{rxn\_first\_order\_loss\_set\_rate\_update\_data}}(\textcolor{keywordtype}{void}\ *update\_data,\ \textcolor{keywordtype}{int}\ rxn\_id,}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ base\_rate)\ \{}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00225}00225\ \ \ \textcolor{keywordtype}{int}\ *new\_rxn\_id\ =\ (\textcolor{keywordtype}{int}\ *)update\_data;}
 \DoxyCodeLine{\Hypertarget{rxn__first__order__loss_8c_source_l00226}00226\ \ \ \textcolor{keywordtype}{double}\ *new\_base\_rate\ =\ (\textcolor{keywordtype}{double}\ *)\&(new\_rxn\_id[1]);}

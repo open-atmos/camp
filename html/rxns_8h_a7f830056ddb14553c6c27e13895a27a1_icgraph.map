@@ -1,9 +1,0 @@
-<map id="rxn_arrhenius_get_used_jac_elem" name="rxn_arrhenius_get_used_jac_elem">
-<area shape="rect" id="Node000001" title="Flag Jacobian elements used by this reaction." alt="" coords="503,5,662,46"/>
-<area shape="rect" id="Node000002" href="$rxn__solver_8c.html#a6816597d1e59964f558cfc82b004549e" title="Get the Jacobian elements used by a particular reaction." alt="" coords="298,13,455,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="488,28,456,28,456,23,488,23"/>
-<area shape="rect" id="Node000003" href="$camp__solver_8c.html#a5b485fa25356197023889f3795888e98" title="Try to improve guesses of y sent to the linear solver." alt="" coords="163,13,250,38"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="282,28,250,28,250,23,282,23"/>
-<area shape="rect" id="Node000004" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,13,115,38"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="147,28,115,28,115,23,147,23"/>
-</map>

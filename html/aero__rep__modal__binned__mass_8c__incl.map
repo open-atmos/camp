@@ -1,45 +1,15 @@
 <map id="aero_rep_modal_binned_mass.c" name="aero_rep_modal_binned_mass.c">
-<area shape="rect" id="Node000001" title="Modal mass aerosol representation functions." alt="" coords="1131,5,1290,46"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="1104,330,1165,356"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1131,31,874,43,709,56,536,76,367,103,216,139,151,161,95,185,50,213,17,243,8,262,10,271,16,280,31,287,63,293,169,305,488,322,839,333,1089,338,1088,343,839,338,488,328,169,310,62,298,30,292,13,284,5,273,3,262,12,240,46,209,92,181,149,156,215,134,366,98,535,70,708,51,874,38,1131,26"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="1685,94,1744,120"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1290,34,1464,57,1667,91,1670,92,1669,97,1666,97,1463,63,1289,39"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="1229,330,1291,356"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1291,40,1374,64,1467,104,1513,130,1556,161,1594,198,1625,240,1633,262,1631,273,1624,284,1602,300,1569,313,1483,331,1388,340,1306,344,1306,338,1387,335,1482,326,1568,308,1600,296,1620,280,1626,271,1628,263,1620,243,1590,201,1552,165,1510,134,1465,108,1372,69,1289,45"/>
-<area shape="rect" id="Node000005" href="$aero__phase__solver_8h.html" title="Header file for aerosol phase functions." alt="" coords="1062,94,1212,120"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1194,48,1161,84,1157,81,1190,45"/>
-<area shape="rect" id="Node000018" href="$aero__reps_8h.html" title="Header file for aerosol representations functions." alt="" coords="1236,94,1334,120"/>
-<area shape="poly" id="edge21_Node000001_Node000018" title=" " alt="" coords="1231,45,1265,81,1261,84,1227,48"/>
-<area shape="rect" id="Node000019" href="$camp__solver_8h.html" title="Header file for solver functions." alt="" coords="922,94,1037,120"/>
-<area shape="poly" id="edge23_Node000001_Node000019" title=" " alt="" coords="1154,49,1030,91,1029,86,1152,44"/>
-<area shape="rect" id="Node000006" href="$camp__common_8h.html" title="Header file for common constants and structures." alt="" coords="998,168,1119,193"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1126,122,1085,159,1081,155,1122,118"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="1326,249,1399,274"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1120,191,1212,211,1314,239,1319,241,1318,246,1312,244,1211,216,1119,196"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="1424,249,1480,274"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="1119,184,1255,202,1334,218,1413,239,1416,240,1415,245,1411,244,1333,223,1254,208,1119,190"/>
-<area shape="rect" id="Node000009" href="$_jacobian_8h.html" title="Header for the Jacobian structure and related functions." alt="" coords="1218,249,1301,274"/>
-<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="1090,191,1215,240,1213,245,1088,196"/>
-<area shape="rect" id="Node000010" href="$time__derivative_8h.html" title="Header for the time derivative structure and related functions." alt="" coords="1075,249,1194,274"/>
-<area shape="poly" id="edge11_Node000006_Node000010" title=" " alt="" coords="1072,192,1114,235,1110,239,1068,196"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="1504,249,1610,274"/>
-<area shape="poly" id="edge14_Node000006_Node000011" title=" " alt="" coords="1119,185,1288,204,1390,220,1492,239,1505,242,1504,247,1491,244,1389,225,1287,210,1119,190"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="26,249,171,274"/>
-<area shape="poly" id="edge15_Node000006_Node000012" title=" " alt="" coords="998,185,853,189,651,199,418,216,183,244,161,248,160,242,182,239,418,211,651,194,853,184,998,180"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="195,249,354,274"/>
-<area shape="poly" id="edge16_Node000006_Node000013" title=" " alt="" coords="998,187,724,205,546,222,367,244,343,248,342,243,366,239,546,216,724,200,998,182"/>
-<area shape="rect" id="Node000014" title=" " alt="" coords="379,249,546,274"/>
-<area shape="poly" id="edge17_Node000006_Node000014" title=" " alt="" coords="998,190,802,211,557,244,534,248,533,243,557,239,801,206,997,185"/>
-<area shape="rect" id="Node000015" title=" " alt="" coords="570,249,739,274"/>
-<area shape="poly" id="edge18_Node000006_Node000015" title=" " alt="" coords="998,196,751,244,731,248,730,243,750,239,997,191"/>
-<area shape="rect" id="Node000016" title=" " alt="" coords="763,241,890,282"/>
-<area shape="poly" id="edge19_Node000006_Node000016" title=" " alt="" coords="1024,196,899,238,898,233,1022,191"/>
-<area shape="rect" id="Node000017" title=" " alt="" coords="914,241,1051,282"/>
-<area shape="poly" id="edge20_Node000006_Node000017" title=" " alt="" coords="1049,196,1013,232,1010,228,1045,192"/>
-<area shape="poly" id="edge9_Node000009_Node000002" title=" " alt="" coords="1242,277,1168,324,1165,319,1239,273"/>
-<area shape="poly" id="edge10_Node000009_Node000004" title=" " alt="" coords="1262,275,1262,314,1257,314,1257,275"/>
-<area shape="poly" id="edge12_Node000010_Node000002" title=" " alt="" coords="1137,275,1137,314,1132,314,1132,275"/>
-<area shape="poly" id="edge13_Node000010_Node000004" title=" " alt="" coords="1155,273,1229,319,1226,324,1152,277"/>
-<area shape="poly" id="edge22_Node000018_Node000006" title=" " alt="" coords="1247,123,1112,165,1111,160,1246,118"/>
-<area shape="poly" id="edge24_Node000019_Node000006" title=" " alt="" coords="995,118,1036,155,1032,159,991,122"/>
+<area shape="rect" id="Node000001" title="Modal mass aerosol representation functions." alt="" coords="198,5,356,46"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,94,66,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,49,81,94,79,88,216,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="90,94,149,120"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="239,49,159,89,156,84,236,44"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="174,94,236,120"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="261,48,228,84,224,80,257,45"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="261,94,437,120"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="297,45,329,80,325,84,293,48"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="461,94,586,120"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="339,44,472,86,470,91,338,49"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="610,94,752,120"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="357,40,604,88,603,93,356,45"/>
 </map>

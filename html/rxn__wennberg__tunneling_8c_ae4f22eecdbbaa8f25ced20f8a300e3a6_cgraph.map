@@ -1,5 +1,5 @@
 <map id="rxn_wennberg_tunneling_calc_deriv_contrib" name="rxn_wennberg_tunneling_calc_deriv_contrib">
 <area shape="rect" id="Node000001" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="5,5,166,46"/>
-<area shape="rect" id="Node000002" href="$time__derivative_8c.html#af4c9ab5040b544a8ec4b63a1c75922e2" title="Add a contribution to the time derivative." alt="" coords="214,5,351,46"/>
+<area shape="rect" id="Node000002" href="$time__derivative_8c.html#af4c9ab5040b544a8ec4b63a1c75922e2" title=" " alt="" coords="214,5,351,46"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,23,198,23,198,28,166,28"/>
 </map>

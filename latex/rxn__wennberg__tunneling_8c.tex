@@ -10,7 +10,7 @@ Include dependency graph for rxn\+\_\+wennberg\+\_\+tunneling.\+c\+:
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{rxn__wennberg__tunneling_8c__incl}
+\includegraphics[width=340pt]{rxn__wennberg__tunneling_8c__incl}
 \end{center}
 \end{figure}
 \doxysubsubsection*{Macros}
@@ -53,16 +53,16 @@ Include dependency graph for rxn\+\_\+wennberg\+\_\+tunneling.\+c\+:
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{rxn__wennberg__tunneling_8c_aee637cf278edc46b8d6835d5ba00947e}{rxn\+\_\+wennberg\+\_\+tunneling\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
-\begin{DoxyCompactList}\small\item\em Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__wennberg__tunneling_8c_a5ba7b78cf14b1666503736ae442912a9}{rxn\+\_\+wennberg\+\_\+tunneling\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
+void \mbox{\hyperlink{rxn__wennberg__tunneling_8c_aee637cf278edc46b8d6835d5ba00947e}{rxn\+\_\+wennberg\+\_\+tunneling\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, Jacobian \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Flag Jacobian elements used by this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__wennberg__tunneling_8c_a5ba7b78cf14b1666503736ae442912a9}{rxn\+\_\+wennberg\+\_\+tunneling\+\_\+update\+\_\+ids}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, Jacobian jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__wennberg__tunneling_8c_adc3b7a604cd2f2e0af17b22e7aac0670}{rxn\+\_\+wennberg\+\_\+tunneling\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{rxn__wennberg__tunneling_8c_adc3b7a604cd2f2e0af17b22e7aac0670}{rxn\+\_\+wennberg\+\_\+tunneling\+\_\+update\+\_\+env\+\_\+state}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update reaction data for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__wennberg__tunneling_8c_ae4f22eecdbbaa8f25ced20f8a300e3a6}{rxn\+\_\+wennberg\+\_\+tunneling\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, double time\+\_\+step)
+void \mbox{\hyperlink{rxn__wennberg__tunneling_8c_ae4f22eecdbbaa8f25ced20f8a300e3a6}{rxn\+\_\+wennberg\+\_\+tunneling\+\_\+calc\+\_\+deriv\+\_\+contrib}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Time\+Derivative time\+\_\+deriv, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, double time\+\_\+step)
 \begin{DoxyCompactList}\small\item\em Calculate contributions to the time derivative $f(t,y)$ from this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn__wennberg__tunneling_8c_a685940f20236736828f6afb7416ea655}{rxn\+\_\+wennberg\+\_\+tunneling\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, double time\+\_\+step)
-\begin{DoxyCompactList}\small\item\em Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn__wennberg__tunneling_8c_a685940f20236736828f6afb7416ea655}{rxn\+\_\+wennberg\+\_\+tunneling\+\_\+calc\+\_\+jac\+\_\+contrib}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Jacobian jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the Jacobian from this reaction. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{rxn__wennberg__tunneling_8c_a5dc7a10331318cd9f6d0d52381a4fb3c}{rxn\+\_\+wennberg\+\_\+tunneling\+\_\+print}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the Wennberg tunneling reaction parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -279,7 +279,7 @@ Definition at line \mbox{\hyperlink{rxn__wennberg__tunneling_8c_source_l00035}{3
 \index{rxn\_wennberg\_tunneling\_calc\_deriv\_contrib@{rxn\_wennberg\_tunneling\_calc\_deriv\_contrib}!rxn\_wennberg\_tunneling.c@{rxn\_wennberg\_tunneling.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_wennberg\_tunneling\_calc\_deriv\_contrib()}{rxn\_wennberg\_tunneling\_calc\_deriv\_contrib()}}
 {\footnotesize\ttfamily \label{rxn__wennberg__tunneling_8c_ae4f22eecdbbaa8f25ced20f8a300e3a6} 
-void rxn\+\_\+wennberg\+\_\+tunneling\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{double}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+wennberg\+\_\+tunneling\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Time\+Derivative}]{time\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{double}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
@@ -289,7 +289,7 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & \doxylink{struct_model}{Model} data \\
 \hline
-{\em time\+\_\+deriv} & \doxylink{struct_time_derivative}{Time\+Derivative} object \\
+{\em time\+\_\+deriv} & Time\+Derivative object \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -312,21 +312,29 @@ Here is the call graph for this function\+:
 \includegraphics[width=339pt]{rxn__wennberg__tunneling_8c_ae4f22eecdbbaa8f25ced20f8a300e3a6_cgraph}
 \end{center}
 \end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__wennberg__tunneling_8c_ae4f22eecdbbaa8f25ced20f8a300e3a6_icgraph}
+\end{center}
+\end{figure}
 \Hypertarget{rxn__wennberg__tunneling_8c_a685940f20236736828f6afb7416ea655}\index{rxn\_wennberg\_tunneling.c@{rxn\_wennberg\_tunneling.c}!rxn\_wennberg\_tunneling\_calc\_jac\_contrib@{rxn\_wennberg\_tunneling\_calc\_jac\_contrib}}
 \index{rxn\_wennberg\_tunneling\_calc\_jac\_contrib@{rxn\_wennberg\_tunneling\_calc\_jac\_contrib}!rxn\_wennberg\_tunneling.c@{rxn\_wennberg\_tunneling.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_wennberg\_tunneling\_calc\_jac\_contrib()}{rxn\_wennberg\_tunneling\_calc\_jac\_contrib()}}
 {\footnotesize\ttfamily \label{rxn__wennberg__tunneling_8c_a685940f20236736828f6afb7416ea655} 
-void rxn\+\_\+wennberg\+\_\+tunneling\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{double}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+wennberg\+\_\+tunneling\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Jacobian}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{double}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
-Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. 
+Calculate contributions to the Jacobian from this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & \doxylink{struct_model}{Model} data \\
 \hline
-{\em jac} & Reaction \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Reaction Jacobian \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -349,15 +357,23 @@ Here is the call graph for this function\+:
 \includegraphics[width=338pt]{rxn__wennberg__tunneling_8c_a685940f20236736828f6afb7416ea655_cgraph}
 \end{center}
 \end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rxn__wennberg__tunneling_8c_a685940f20236736828f6afb7416ea655_icgraph}
+\end{center}
+\end{figure}
 \Hypertarget{rxn__wennberg__tunneling_8c_aee637cf278edc46b8d6835d5ba00947e}\index{rxn\_wennberg\_tunneling.c@{rxn\_wennberg\_tunneling.c}!rxn\_wennberg\_tunneling\_get\_used\_jac\_elem@{rxn\_wennberg\_tunneling\_get\_used\_jac\_elem}}
 \index{rxn\_wennberg\_tunneling\_get\_used\_jac\_elem@{rxn\_wennberg\_tunneling\_get\_used\_jac\_elem}!rxn\_wennberg\_tunneling.c@{rxn\_wennberg\_tunneling.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_wennberg\_tunneling\_get\_used\_jac\_elem()}{rxn\_wennberg\_tunneling\_get\_used\_jac\_elem()}}
 {\footnotesize\ttfamily \label{rxn__wennberg__tunneling_8c_aee637cf278edc46b8d6835d5ba00947e} 
-void rxn\+\_\+wennberg\+\_\+tunneling\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
+void rxn\+\_\+wennberg\+\_\+tunneling\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{Jacobian \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
 
 
 
-Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. 
+Flag Jacobian elements used by this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -365,7 +381,7 @@ Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction.
 \hline
 {\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 \end{DoxyParams}
 
@@ -421,7 +437,7 @@ Here is the caller graph for this function\+:
 \index{rxn\_wennberg\_tunneling\_update\_env\_state@{rxn\_wennberg\_tunneling\_update\_env\_state}!rxn\_wennberg\_tunneling.c@{rxn\_wennberg\_tunneling.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_wennberg\_tunneling\_update\_env\_state()}{rxn\_wennberg\_tunneling\_update\_env\_state()}}
 {\footnotesize\ttfamily \label{rxn__wennberg__tunneling_8c_adc3b7a604cd2f2e0af17b22e7aac0670} 
-void rxn\+\_\+wennberg\+\_\+tunneling\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
+void rxn\+\_\+wennberg\+\_\+tunneling\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -456,7 +472,7 @@ Here is the caller graph for this function\+:
 \index{rxn\_wennberg\_tunneling\_update\_ids@{rxn\_wennberg\_tunneling\_update\_ids}!rxn\_wennberg\_tunneling.c@{rxn\_wennberg\_tunneling.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_wennberg\_tunneling\_update\_ids()}{rxn\_wennberg\_tunneling\_update\_ids()}}
 {\footnotesize\ttfamily \label{rxn__wennberg__tunneling_8c_a5ba7b78cf14b1666503736ae442912a9} 
-void rxn\+\_\+wennberg\+\_\+tunneling\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
+void rxn\+\_\+wennberg\+\_\+tunneling\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{Jacobian}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -468,7 +484,7 @@ Update the time derivative and Jacbobian array indices.
 \hline
 {\em deriv\+\_\+ids} & Id of each state variable in the derivative array \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline

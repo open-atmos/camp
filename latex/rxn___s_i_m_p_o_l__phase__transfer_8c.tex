@@ -101,16 +101,16 @@ Include dependency graph for rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+c\+:
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a1658944a83529b7d5e854920f235ed3b}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
-\begin{DoxyCompactList}\small\item\em Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_abe640b69520d723afc79fdac91714f06}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+update\+\_\+ids}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
+void \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a1658944a83529b7d5e854920f235ed3b}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, Jacobian \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Flag Jacobian elements used by this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_abe640b69520d723afc79fdac91714f06}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+update\+\_\+ids}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, Jacobian jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update the time derivative and Jacbobian array indices. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a16e926c16f84b0d8628f10553fc63ce6}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
+void \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a16e926c16f84b0d8628f10553fc63ce6}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+update\+\_\+env\+\_\+state}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update reaction data for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a8387f10a0a5aa0b38cc545859542f3c4}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+calc\+\_\+deriv\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}} time\+\_\+deriv, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+void \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a8387f10a0a5aa0b38cc545859542f3c4}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+calc\+\_\+deriv\+\_\+contrib}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Time\+Derivative time\+\_\+deriv, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
 \begin{DoxyCompactList}\small\item\em Calculate contributions to the time derivative $f(t,y)$ from this reaction. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a2c6b4163ab0a9e65eec7dd8286d67885}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+calc\+\_\+jac\+\_\+contrib}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
-\begin{DoxyCompactList}\small\item\em Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a2c6b4163ab0a9e65eec7dd8286d67885}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+calc\+\_\+jac\+\_\+contrib}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, Jacobian jac, int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+env\+\_\+data, realtype time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Calculate contributions to the Jacobian from this reaction. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_a63043b44a2874c8fb87ab85a2497d0c2}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+print}} (int \texorpdfstring{$\ast$}{*}rxn\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}rxn\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the Phase Transfer reaction parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -622,7 +622,7 @@ Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source
 \index{rxn\_SIMPOL\_phase\_transfer\_calc\_deriv\_contrib@{rxn\_SIMPOL\_phase\_transfer\_calc\_deriv\_contrib}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_SIMPOL\_phase\_transfer\_calc\_deriv\_contrib()}{rxn\_SIMPOL\_phase\_transfer\_calc\_deriv\_contrib()}}
 {\footnotesize\ttfamily \label{rxn___s_i_m_p_o_l__phase__transfer_8c_a8387f10a0a5aa0b38cc545859542f3c4} 
-void rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_time_derivative}{Time\+Derivative}}}]{time\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+calc\+\_\+deriv\+\_\+contrib (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Time\+Derivative}]{time\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
@@ -632,7 +632,7 @@ Calculate contributions to the time derivative $f(t,y)$ from this reaction.
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data, including the state array \\
 \hline
-{\em time\+\_\+deriv} & \doxylink{struct_time_derivative}{Time\+Derivative} object \\
+{\em time\+\_\+deriv} & Time\+Derivative object \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -667,17 +667,17 @@ Here is the caller graph for this function\+:
 \index{rxn\_SIMPOL\_phase\_transfer\_calc\_jac\_contrib@{rxn\_SIMPOL\_phase\_transfer\_calc\_jac\_contrib}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_SIMPOL\_phase\_transfer\_calc\_jac\_contrib()}{rxn\_SIMPOL\_phase\_transfer\_calc\_jac\_contrib()}}
 {\footnotesize\ttfamily \label{rxn___s_i_m_p_o_l__phase__transfer_8c_a2c6b4163ab0a9e65eec7dd8286d67885} 
-void rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+calc\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{Jacobian}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{, }\item[{realtype}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
-Calculate contributions to the \doxylink{struct_jacobian}{Jacobian} from this reaction. 
+Calculate contributions to the Jacobian from this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em jac} & Reaction \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Reaction Jacobian \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline
@@ -712,11 +712,11 @@ Here is the caller graph for this function\+:
 \index{rxn\_SIMPOL\_phase\_transfer\_get\_used\_jac\_elem@{rxn\_SIMPOL\_phase\_transfer\_get\_used\_jac\_elem}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_SIMPOL\_phase\_transfer\_get\_used\_jac\_elem()}{rxn\_SIMPOL\_phase\_transfer\_get\_used\_jac\_elem()}}
 {\footnotesize\ttfamily \label{rxn___s_i_m_p_o_l__phase__transfer_8c_a1658944a83529b7d5e854920f235ed3b} 
-void rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
+void rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{Jacobian \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
 
 
 
-Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction. 
+Flag Jacobian elements used by this reaction. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -726,7 +726,7 @@ Flag \doxylink{struct_jacobian}{Jacobian} elements used by this reaction.
 \hline
 {\em rxn\+\_\+float\+\_\+data} & Pointer to the reaction floating-\/point data \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 \end{DoxyParams}
 
@@ -782,7 +782,7 @@ Here is the caller graph for this function\+:
 \index{rxn\_SIMPOL\_phase\_transfer\_update\_env\_state@{rxn\_SIMPOL\_phase\_transfer\_update\_env\_state}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_SIMPOL\_phase\_transfer\_update\_env\_state()}{rxn\_SIMPOL\_phase\_transfer\_update\_env\_state()}}
 {\footnotesize\ttfamily \label{rxn___s_i_m_p_o_l__phase__transfer_8c_a16e926c16f84b0d8628f10553fc63ce6} 
-void rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
+void rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -805,14 +805,6 @@ save the mean free path \mbox{[}m\mbox{]} for calculating condensation rates
 
 Definition at line \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source_l00220}{220}} of file \mbox{\hyperlink{rxn___s_i_m_p_o_l__phase__transfer_8c_source}{rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer.\+c}}.
 
-Here is the call graph for this function\+:
-\nopagebreak
-\begin{figure}[H]
-\begin{center}
-\leavevmode
-\includegraphics[width=350pt]{rxn___s_i_m_p_o_l__phase__transfer_8c_a16e926c16f84b0d8628f10553fc63ce6_cgraph}
-\end{center}
-\end{figure}
 Here is the caller graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
@@ -825,7 +817,7 @@ Here is the caller graph for this function\+:
 \index{rxn\_SIMPOL\_phase\_transfer\_update\_ids@{rxn\_SIMPOL\_phase\_transfer\_update\_ids}!rxn\_SIMPOL\_phase\_transfer.c@{rxn\_SIMPOL\_phase\_transfer.c}}
 \doxysubsubsection{\texorpdfstring{rxn\_SIMPOL\_phase\_transfer\_update\_ids()}{rxn\_SIMPOL\_phase\_transfer\_update\_ids()}}
 {\footnotesize\ttfamily \label{rxn___s_i_m_p_o_l__phase__transfer_8c_abe640b69520d723afc79fdac91714f06} 
-void rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
+void rxn\+\_\+\+SIMPOL\+\_\+phase\+\_\+transfer\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{Jacobian}]{jac}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{rxn\+\_\+float\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -837,7 +829,7 @@ Update the time derivative and Jacbobian array indices.
 \hline
 {\em deriv\+\_\+ids} & Id of each state variable in the derivative array \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 {\em rxn\+\_\+int\+\_\+data} & Pointer to the reaction integer data \\
 \hline

@@ -1,18 +1,18 @@
 <map id="sub_model_get_used_jac_elem" name="sub_model_get_used_jac_elem">
 <area shape="rect" id="Node000001" title="Get the Jacobian elements used by a particular sub model." alt="" coords="5,324,150,365"/>
-<area shape="rect" id="Node000002" href="$_jacobian_8c.html#a2e954524b21f4e097996b2dc0d3cf999" title="Builds the sparse matrix with the registered elements." alt="" coords="215,80,360,106"/>
+<area shape="rect" id="Node000002" href="$_jacobian_8c.html#a2e954524b21f4e097996b2dc0d3cf999" title=" " alt="" coords="215,80,360,106"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,323,96,282,119,228,152,172,173,146,196,123,215,110,217,115,199,127,177,149,157,175,124,230,101,284,87,325"/>
-<area shape="rect" id="Node000005" href="$_jacobian_8c.html#a0c0108de18ada97dc46782f7223ceef8" title="Free memory associated with a Jacobian." alt="" coords="462,156,560,182"/>
+<area shape="rect" id="Node000005" href="$_jacobian_8c.html#a0c0108de18ada97dc46782f7223ceef8" title=" " alt="" coords="462,156,560,182"/>
 <area shape="poly" id="edge8_Node000001_Node000005" title=" " alt="" coords="83,323,98,287,121,243,154,200,174,181,196,166,227,153,260,144,327,137,391,141,447,150,446,155,391,146,327,143,261,149,229,158,199,171,177,186,158,204,125,246,102,289,88,325"/>
-<area shape="rect" id="Node000007" href="$_jacobian_8c.html#a0a9b073f122e923fe6bad96d0611a4ac" title="Returns the value of a column pointer." alt="" coords="205,180,370,221"/>
+<area shape="rect" id="Node000007" href="$_jacobian_8c.html#a0a9b073f122e923fe6bad96d0611a4ac" title=" " alt="" coords="205,180,370,221"/>
 <area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="94,322,138,277,166,252,196,231,204,226,207,231,199,235,169,256,141,281,98,326"/>
-<area shape="rect" id="Node000008" href="$_jacobian_8c.html#a7b43d5884ec62826389d6d739b7f25eb" title="Get an element id in the Jacobian data arrays." alt="" coords="205,245,370,271"/>
+<area shape="rect" id="Node000008" href="$_jacobian_8c.html#a7b43d5884ec62826389d6d739b7f25eb" title=" " alt="" coords="205,245,370,271"/>
 <area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="114,321,197,281,217,274,219,279,199,286,116,326"/>
-<area shape="rect" id="Node000009" href="$_jacobian_8c.html#a3ea16d25b8523ab15b3f505fe00e2ed2" title="Initialize the Jacobian." alt="" coords="226,295,348,336"/>
+<area shape="rect" id="Node000009" href="$_jacobian_8c.html#a3ea16d25b8523ab15b3f505fe00e2ed2" title=" " alt="" coords="226,295,348,336"/>
 <area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="150,332,210,324,211,329,151,337"/>
-<area shape="rect" id="Node000010" href="$_jacobian_8c.html#aac51ac6b1cf239a84899308dab229441" title="Adds an element to the sparse matrix." alt="" coords="425,500,597,526"/>
+<area shape="rect" id="Node000010" href="$_jacobian_8c.html#aac51ac6b1cf239a84899308dab229441" title=" " alt="" coords="425,500,597,526"/>
 <area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="150,344,202,349,260,359,321,374,378,396,412,415,443,439,491,486,487,490,439,443,409,420,376,401,319,379,259,364,201,355,150,350"/>
-<area shape="rect" id="Node000012" href="$_jacobian_8c.html#ae72fb841b0dd527b9e463e7ce208d856" title="Returns the row for a given Jacobian element." alt="" coords="220,411,354,436"/>
+<area shape="rect" id="Node000012" href="$_jacobian_8c.html#ae72fb841b0dd527b9e463e7ce208d856" title=" " alt="" coords="220,411,354,436"/>
 <area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="132,363,199,389,235,402,233,407,197,394,130,368"/>
 <area shape="rect" id="Node000013" href="$sub__model___p_d_fi_t_e_8c.html#a1c3598c177755e3ca9d3bde1ace7c0e0" title="Flag Jacobian elements used by this sub model." alt="" coords="207,460,368,501"/>
 <area shape="poly" id="edge15_Node000001_Node000013" title=" " alt="" coords="100,364,143,405,199,447,207,451,205,456,196,451,140,409,96,368"/>
@@ -22,10 +22,10 @@
 <area shape="poly" id="edge19_Node000001_Node000015" title=" " alt="" coords="87,365,100,409,123,465,155,524,176,552,199,576,205,580,201,585,196,580,172,555,151,527,118,467,95,410,81,367"/>
 <area shape="rect" id="Node000003" href="$_jacobian_8c.html#a87200e2cb129a2b8d8436848760f63d5" title=" " alt="" coords="464,5,559,31"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="327,77,455,34,456,39,329,82"/>
-<area shape="rect" id="Node000004" href="$_jacobian_8c.html#a7bc2fe67ae132c04bf45e69934e6be1f" title="Free memory associated with a JacobianColumnElements." alt="" coords="645,107,853,132"/>
+<area shape="rect" id="Node000004" href="$_jacobian_8c.html#a7bc2fe67ae132c04bf45e69934e6be1f" title=" " alt="" coords="645,107,853,132"/>
 <area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="361,87,472,86,598,92,667,101,666,106,597,97,472,91,361,93"/>
 <area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="328,104,378,122,426,142,448,149,446,155,424,147,376,127,326,109"/>
-<area shape="rect" id="Node000006" href="$_jacobian_8c.html#a9b50b1fb83f669391bf76726b9c81ead" title="Reset the Jacobian." alt="" coords="458,107,564,132"/>
+<area shape="rect" id="Node000006" href="$_jacobian_8c.html#a9b50b1fb83f669391bf76726b9c81ead" title=" " alt="" coords="458,107,564,132"/>
 <area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="361,99,443,109,442,114,360,104"/>
 <area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="560,156,668,133,669,139,561,161"/>
 <area shape="poly" id="edge11_Node000009_Node000005" title=" " alt="" coords="348,295,376,281,437,236,485,191,489,195,440,241,378,286,350,299"/>

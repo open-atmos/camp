@@ -12,7 +12,7 @@
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00008}00008\ \textcolor{comment}{/**\ \(\backslash\)file}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00009}00009\ \textcolor{comment}{\ *\ \(\backslash\)brief\ Aerosol\ phase\ functions}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00010}00010\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00011}00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{aero__phase__solver_8h}{aero\_phase\_solver.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00011}00011\ \textcolor{preprocessor}{\#include\ <camp/aero\_phase\_solver.h>}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00012}00012\ \textcolor{preprocessor}{\#include\ <stdio.h>}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00013}00013\ \textcolor{preprocessor}{\#include\ <stdlib.h>}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00014}00014\ \textcolor{comment}{}}
@@ -47,14 +47,14 @@
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00043}00043\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ been\ chosen\ by\ the\ calling\ function.)}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00044}00044\ \textcolor{comment}{\ *\ \(\backslash\)return\ Number\ of\ Jacobian\ elements\ flagged}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00045}00045\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00046}\mbox{\hyperlink{aero__phase__solver_8c_a6e5ea770a313a6eebea53e86540dd510}{00046}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{aero__phase__solver_8c_a6e5ea770a313a6eebea53e86540dd510}{aero\_phase\_get\_used\_jac\_elem}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00046}\mbox{\hyperlink{aero__phase__solver_8c_a6e5ea770a313a6eebea53e86540dd510}{00046}}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{aero__phase__solver_8c_a6e5ea770a313a6eebea53e86540dd510}{aero\_phase\_get\_used\_jac\_elem}}(ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ state\_var\_id,\ \textcolor{keywordtype}{bool}\ *jac\_struct)\ \{}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00048}00048\ \ \ \textcolor{comment}{//\ Get\ the\ requested\ aerosol\ phase\ data}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00049}00049\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ae82127c5877fe3987f2bbb2636516a47}{aero\_phase\_int\_data}}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>\mbox{\hyperlink{struct_model_data_a6a242eb09ac70038c11b1c24c52e5502}{aero\_phase\_int\_indices}}[aero\_phase\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00049}00049\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ \&(model\_data-\/>aero\_phase\_int\_data}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>aero\_phase\_int\_indices[aero\_phase\_idx]]);}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00051}00051\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00052}00052\ \ \ \ \ \ \ \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ab1a029cb9cba0a46d1575abeec02b857}{aero\_phase\_float\_data}}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>\mbox{\hyperlink{struct_model_data_a0c276389d9037a957a64a4e56f818630}{aero\_phase\_float\_indices}}[aero\_phase\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00052}00052\ \ \ \ \ \ \ \&(model\_data-\/>aero\_phase\_float\_data}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>aero\_phase\_float\_indices[aero\_phase\_idx]]);}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00054}00054\ }
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00055}00055\ \ \ \textcolor{keywordtype}{int}\ num\_flagged\_elem\ =\ 0;}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00056}00056\ }
@@ -94,15 +94,15 @@
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00090}00090\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ concentration\ \(\backslash\)f\$\(\backslash\)frac\{dMW\}\{dy\_i\}\(\backslash\)f\$\ of\ each\ component}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00091}00091\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ species\ \(\backslash\)f\$y\_i\(\backslash\)f\$.}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00092}00092\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00093}\mbox{\hyperlink{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}{00093}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}{aero\_phase\_get\_mass\_\_kg\_m3}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00093}\mbox{\hyperlink{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}{00093}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}{aero\_phase\_get\_mass\_\_kg\_m3}}(ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\_var,\ \textcolor{keywordtype}{double}\ *mass,\ \textcolor{keywordtype}{double}\ *MW,}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *jac\_elem\_mass,\ \textcolor{keywordtype}{double}\ *jac\_elem\_MW)\ \{}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00096}00096\ \ \ \textcolor{comment}{//\ Get\ the\ requested\ aerosol\ phase\ data}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00097}00097\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ae82127c5877fe3987f2bbb2636516a47}{aero\_phase\_int\_data}}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>\mbox{\hyperlink{struct_model_data_a6a242eb09ac70038c11b1c24c52e5502}{aero\_phase\_int\_indices}}[aero\_phase\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00097}00097\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ \&(model\_data-\/>aero\_phase\_int\_data}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>aero\_phase\_int\_indices[aero\_phase\_idx]]);}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00099}00099\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00100}00100\ \ \ \ \ \ \ \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ab1a029cb9cba0a46d1575abeec02b857}{aero\_phase\_float\_data}}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>\mbox{\hyperlink{struct_model_data_a0c276389d9037a957a64a4e56f818630}{aero\_phase\_float\_indices}}[aero\_phase\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00100}00100\ \ \ \ \ \ \ \&(model\_data-\/>aero\_phase\_float\_data}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>aero\_phase\_float\_indices[aero\_phase\_idx]]);}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00102}00102\ }
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00103}00103\ \ \ \textcolor{comment}{//\ Sum\ the\ mass\ and\ MW}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00104}00104\ \ \ \textcolor{keywordtype}{long}\ \textcolor{keywordtype}{double}\ l\_mass\ =\ \mbox{\hyperlink{aero__phase__solver_8c_a23794bf081112761f68bf7b3e54f62ce}{MINIMUM\_MASS\_}};}
@@ -145,15 +145,15 @@
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00141}00141\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ concentration\ \(\backslash\)f\$\(\backslash\)frac\{dv\}\{dy\_i\}\(\backslash\)f\$\ of\ each\ component}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00142}00142\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ species\ \(\backslash\)f\$y\_i\(\backslash\)f\$.}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00143}00143\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00144}\mbox{\hyperlink{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}{00144}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}{aero\_phase\_get\_volume\_\_m3\_m3}}(\mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00144}\mbox{\hyperlink{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}{00144}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}{aero\_phase\_get\_volume\_\_m3\_m3}}(ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\_var,\ \textcolor{keywordtype}{double}\ *volume,}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *jac\_elem)\ \{}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00147}00147\ \ \ \textcolor{comment}{//\ Get\ the\ requested\ aerosol\ phase\ data}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00148}00148\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ae82127c5877fe3987f2bbb2636516a47}{aero\_phase\_int\_data}}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>\mbox{\hyperlink{struct_model_data_a6a242eb09ac70038c11b1c24c52e5502}{aero\_phase\_int\_indices}}[aero\_phase\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00148}00148\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ \&(model\_data-\/>aero\_phase\_int\_data}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>aero\_phase\_int\_indices[aero\_phase\_idx]]);}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00150}00150\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00151}00151\ \ \ \ \ \ \ \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ab1a029cb9cba0a46d1575abeec02b857}{aero\_phase\_float\_data}}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>\mbox{\hyperlink{struct_model_data_a0c276389d9037a957a64a4e56f818630}{aero\_phase\_float\_indices}}[aero\_phase\_idx]]);}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00151}00151\ \ \ \ \ \ \ \&(model\_data-\/>aero\_phase\_float\_data}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>aero\_phase\_float\_indices[aero\_phase\_idx]]);}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00153}00153\ }
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00154}00154\ \ \ \textcolor{comment}{//\ Sum\ the\ mass\ and\ MW}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00155}00155\ \ \ *volume\ =\ \mbox{\hyperlink{aero__phase__solver_8c_a23794bf081112761f68bf7b3e54f62ce}{MINIMUM\_MASS\_}}\ /\ \mbox{\hyperlink{aero__phase__solver_8c_a423f8486b9891ca83ee03413553cda28}{MINIMUM\_DENSITY\_}};}
@@ -179,25 +179,25 @@
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00175}\mbox{\hyperlink{aero__phase__solver_8c_a945dae2a4f51b15322f47d002969e666}{00175}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__phase__solver_8c_a945dae2a4f51b15322f47d002969e666}{aero\_phase\_add\_condensed\_data}}(\textcolor{keywordtype}{int}\ n\_int\_param,\ \textcolor{keywordtype}{int}\ n\_float\_param,}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *int\_param,\ \textcolor{keywordtype}{double}\ *float\_param,}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ *solver\_data)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00178}00178\ \ \ \mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data\ =}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00179}00179\ \ \ \ \ \ \ (\mbox{\hyperlink{struct_model_data}{ModelData}}\ *)\&(((\mbox{\hyperlink{struct_solver_data}{SolverData}}\ *)solver\_data)-\/>model\_data);}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00178}00178\ \ \ ModelData\ *model\_data\ =}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00179}00179\ \ \ \ \ \ \ (ModelData\ *)\&(((SolverData\ *)solver\_data)-\/>model\_data);}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00180}00180\ }
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00181}00181\ \ \ \textcolor{comment}{//\ Get\ pointers\ to\ the\ aerosol\ phase\ data}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00182}00182\ \ \ \textcolor{keywordtype}{int}\ *aero\_phase\_int\_data\ =}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00183}00183\ \ \ \ \ \ \ \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ae82127c5877fe3987f2bbb2636516a47}{aero\_phase\_int\_data}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a6a242eb09ac70038c11b1c24c52e5502}{aero\_phase\_int\_indices}}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>\mbox{\hyperlink{struct_model_data_aef703e1513900d77c1041c3eb27c8f8f}{n\_added\_aero\_phases}}]]);}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00183}00183\ \ \ \ \ \ \ \&(model\_data-\/>aero\_phase\_int\_data[model\_data-\/>aero\_phase\_int\_indices}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00184}00184\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>n\_added\_aero\_phases]]);}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00185}00185\ \ \ \textcolor{keywordtype}{double}\ *aero\_phase\_float\_data\ =\ \&(}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00186}00186\ \ \ \ \ \ \ model\_data-\/>\mbox{\hyperlink{struct_model_data_ab1a029cb9cba0a46d1575abeec02b857}{aero\_phase\_float\_data}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_a0c276389d9037a957a64a4e56f818630}{aero\_phase\_float\_indices}}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>\mbox{\hyperlink{struct_model_data_aef703e1513900d77c1041c3eb27c8f8f}{n\_added\_aero\_phases}}]]);}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00186}00186\ \ \ \ \ \ \ model\_data-\/>aero\_phase\_float\_data[model\_data-\/>aero\_phase\_float\_indices}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>n\_added\_aero\_phases]]);}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00188}00188\ }
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00189}00189\ \ \ \textcolor{comment}{//\ Save\ next\ indices\ by\ adding\ lengths}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00190}00190\ \ \ model\_data-\/>\mbox{\hyperlink{struct_model_data_a6a242eb09ac70038c11b1c24c52e5502}{aero\_phase\_int\_indices}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_aef703e1513900d77c1041c3eb27c8f8f}{n\_added\_aero\_phases}}\ +\ 1]\ =}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00190}00190\ \ \ model\_data-\/>aero\_phase\_int\_indices[model\_data-\/>n\_added\_aero\_phases\ +\ 1]\ =}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00191}00191\ \ \ \ \ \ \ n\_int\_param\ +}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00192}00192\ \ \ \ \ \ \ model\_data-\/>\mbox{\hyperlink{struct_model_data_a6a242eb09ac70038c11b1c24c52e5502}{aero\_phase\_int\_indices}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_aef703e1513900d77c1041c3eb27c8f8f}{n\_added\_aero\_phases}}];}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00193}00193\ \ \ model\_data-\/>\mbox{\hyperlink{struct_model_data_a0c276389d9037a957a64a4e56f818630}{aero\_phase\_float\_indices}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_aef703e1513900d77c1041c3eb27c8f8f}{n\_added\_aero\_phases}}\ +\ 1]\ =}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00192}00192\ \ \ \ \ \ \ model\_data-\/>aero\_phase\_int\_indices[model\_data-\/>n\_added\_aero\_phases];}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00193}00193\ \ \ model\_data-\/>aero\_phase\_float\_indices[model\_data-\/>n\_added\_aero\_phases\ +\ 1]\ =}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00194}00194\ \ \ \ \ \ \ n\_float\_param\ +}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00195}00195\ \ \ \ \ \ \ model\_data-\/>\mbox{\hyperlink{struct_model_data_a0c276389d9037a957a64a4e56f818630}{aero\_phase\_float\_indices}}[model\_data-\/>\mbox{\hyperlink{struct_model_data_aef703e1513900d77c1041c3eb27c8f8f}{n\_added\_aero\_phases}}];}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00196}00196\ \ \ ++(model\_data-\/>\mbox{\hyperlink{struct_model_data_aef703e1513900d77c1041c3eb27c8f8f}{n\_added\_aero\_phases}});}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00195}00195\ \ \ \ \ \ \ model\_data-\/>aero\_phase\_float\_indices[model\_data-\/>n\_added\_aero\_phases];}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00196}00196\ \ \ ++(model\_data-\/>n\_added\_aero\_phases);}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00197}00197\ }
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00198}00198\ \ \ \textcolor{comment}{//\ Add\ the\ integer\ parameters}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00199}00199\ \ \ \textcolor{keywordflow}{for}\ (;\ n\_int\_param\ >\ 0;\ -\/-\/n\_int\_param)}
@@ -212,20 +212,20 @@
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00208}00208\ \textcolor{comment}{\ *\ \(\backslash\)param\ solver\_data\ Pointer\ to\ the\ solver\ data}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00209}00209\ \textcolor{comment}{\ */}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00210}\mbox{\hyperlink{aero__phase__solver_8c_a27c8defcce28585eb3ed62e62f877caa}{00210}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__phase__solver_8c_a27c8defcce28585eb3ed62e62f877caa}{aero\_phase\_print\_data}}(\textcolor{keywordtype}{void}\ *solver\_data)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00211}00211\ \ \ \mbox{\hyperlink{struct_model_data}{ModelData}}\ *model\_data\ =}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00212}00212\ \ \ \ \ \ \ (\mbox{\hyperlink{struct_model_data}{ModelData}}\ *)\&(((\mbox{\hyperlink{struct_solver_data}{SolverData}}\ *)solver\_data)-\/>model\_data);}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00211}00211\ \ \ ModelData\ *model\_data\ =}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00212}00212\ \ \ \ \ \ \ (ModelData\ *)\&(((SolverData\ *)solver\_data)-\/>model\_data);}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00213}00213\ }
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00214}00214\ \ \ \textcolor{comment}{//\ Get\ the\ number\ of\ aerosol\ phases}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00215}00215\ \ \ \textcolor{keywordtype}{int}\ n\_aero\_phase\ =\ model\_data-\/>\mbox{\hyperlink{struct_model_data_af8341667ba2934abdcba09eeffcb4caa}{n\_aero\_phase}};}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00215}00215\ \ \ \textcolor{keywordtype}{int}\ n\_aero\_phase\ =\ model\_data-\/>n\_aero\_phase;}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00216}00216\ }
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00217}00217\ \ \ \textcolor{comment}{//\ Loop\ through\ the\ aerosol\ phases\ and\ print\ their\ data}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00218}00218\ \ \ \textcolor{comment}{//\ advancing\ the\ aero\_phase\_data\ pointer\ each\ time}}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00219}00219\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_aero\_phase\ =\ 0;\ i\_aero\_phase\ <\ n\_aero\_phase;\ i\_aero\_phase++)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00220}00220\ \ \ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ae82127c5877fe3987f2bbb2636516a47}{aero\_phase\_int\_data}}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>\mbox{\hyperlink{struct_model_data_a6a242eb09ac70038c11b1c24c52e5502}{aero\_phase\_int\_indices}}[i\_aero\_phase]]);}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00220}00220\ \ \ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ \&(model\_data-\/>aero\_phase\_int\_data}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>aero\_phase\_int\_indices[i\_aero\_phase]]);}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00222}00222\ \ \ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00223}00223\ \ \ \ \ \ \ \ \ \&(model\_data-\/>\mbox{\hyperlink{struct_model_data_ab1a029cb9cba0a46d1575abeec02b857}{aero\_phase\_float\_data}}}
-\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>\mbox{\hyperlink{struct_model_data_a0c276389d9037a957a64a4e56f818630}{aero\_phase\_float\_indices}}[i\_aero\_phase]]);}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00223}00223\ \ \ \ \ \ \ \ \ \&(model\_data-\/>aero\_phase\_float\_data}
+\DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ [model\_data-\/>aero\_phase\_float\_indices[i\_aero\_phase]]);}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00225}00225\ }
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00226}00226\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nAerosol\ Phase\ \%d\(\backslash\)n\(\backslash\)n"{}},\ i\_aero\_phase);}
 \DoxyCodeLine{\Hypertarget{aero__phase__solver_8c_source_l00227}00227\ \ \ \}}

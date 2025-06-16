@@ -1,9 +1,0 @@
-<map id="camp_solver.h" name="camp_solver.h">
-<area shape="rect" id="Node000001" title="Header file for solver functions." alt="" coords="221,5,326,31"/>
-<area shape="rect" id="Node000002" href="$aero__rep__modal__binned__mass_8c.html" title="Modal mass aerosol representation functions." alt="" coords="5,79,164,120"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="232,40,133,81,131,76,230,35"/>
-<area shape="rect" id="Node000003" href="$aero__rep__single__particle_8c.html" title="Single particle aerosol representation functions." alt="" coords="188,86,360,112"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="276,47,276,86,271,86,271,47"/>
-<area shape="rect" id="Node000004" href="$camp__solver_8c.html" title="Interface to c solvers for chemistry." alt="" coords="384,86,489,112"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="314,36,413,84,411,88,311,41"/>
-</map>

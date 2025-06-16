@@ -89,16 +89,16 @@ Include dependency graph for sub\+\_\+model\+\_\+\+UNIFAC.\+c\+:
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a6895ac51f6122ce830f30d8b1f09d052}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, \mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}jac)
-\begin{DoxyCompactList}\small\item\em Get the \doxylink{struct_jacobian}{Jacobian} elements used for a particular row of the matrix. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a2674d98846a9c4933d56156ec1f0deb5}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+ids}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, \mbox{\hyperlink{struct_jacobian}{Jacobian}} jac)
-\begin{DoxyCompactList}\small\item\em Update stored ids for elements used within a row of the \doxylink{struct_jacobian}{Jacobian} matrix. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a43f3628a20f1bf545034554576e9c85c}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+env\+\_\+state}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
+void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a6895ac51f6122ce830f30d8b1f09d052}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, Jacobian \texorpdfstring{$\ast$}{*}jac)
+\begin{DoxyCompactList}\small\item\em Get the Jacobian elements used for a particular row of the matrix. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a2674d98846a9c4933d56156ec1f0deb5}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+ids}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, int \texorpdfstring{$\ast$}{*}deriv\+\_\+ids, Jacobian jac)
+\begin{DoxyCompactList}\small\item\em Update stored ids for elements used within a row of the Jacobian matrix. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a43f3628a20f1bf545034554576e9c85c}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+env\+\_\+state}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update sub-\/model data for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a91d55564c556bf61d6bf0ccac7b43e4b}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+calculate}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
+void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a91d55564c556bf61d6bf0ccac7b43e4b}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+calculate}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Perform the sub-\/model calculations for the current model state. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0301d06b09af90fcfe49f9a1ba7c6742}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+jac\+\_\+contrib}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, \mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, realtype \texorpdfstring{$\ast$}{*}J, double time\+\_\+step)
-\begin{DoxyCompactList}\small\item\em Add contributions to the \doxylink{struct_jacobian}{Jacobian} from derivates calculated using the output of this sub model. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_a0301d06b09af90fcfe49f9a1ba7c6742}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+jac\+\_\+contrib}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+env\+\_\+data, Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, realtype \texorpdfstring{$\ast$}{*}J, double time\+\_\+step)
+\begin{DoxyCompactList}\small\item\em Add contributions to the Jacobian from derivates calculated using the output of this sub model. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_ac47310b67585f52b71ff6aac1c603ba5}{sub\+\_\+model\+\_\+\+UNIFAC\+\_\+print}} (int \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}sub\+\_\+model\+\_\+float\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Print the sub model data. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
@@ -600,13 +600,13 @@ Definition at line \mbox{\hyperlink{sub__model___u_n_i_f_a_c_8c_source_l00056}{5
 \index{sub\_model\_UNIFAC\_calculate@{sub\_model\_UNIFAC\_calculate}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_calculate()}{sub\_model\_UNIFAC\_calculate()}}
 {\footnotesize\ttfamily \label{sub__model___u_n_i_f_a_c_8c_a91d55564c556bf61d6bf0ccac7b43e4b} 
-void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+calculate (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{}\end{DoxyParamCaption})}
+void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+calculate (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data}{, }\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
 Perform the sub-\/model calculations for the current model state. 
 
-These calculations are based on equations (1)--(9) in {\bfseries [Marcolli2005]}. Variable names used in the derivation of the \doxylink{struct_jacobian}{Jacobian} equations are adopted here for consistency. Specifically, these are\+:          \[
+These calculations are based on equations (1)--(9) in {\bfseries [Marcolli2005]}. Variable names used in the derivation of the Jacobian equations are adopted here for consistency. Specifically, these are\+:          \[
   \begin{align*}
    \sigma & \equiv \displaystyle\sum_k r_k x_k, \\
    \tau & \equiv \displaystyle\sum_k q_k x_k, \\
@@ -615,7 +615,7 @@ These calculations are based on equations (1)--(9) in {\bfseries [Marcolli2005]}
                   \displaystyle\sum_i v_j^{(i)} x_i}, \textrm{ and} \\
    \Pi & \equiv \displaystyle\sum_n Q_n X_n. \\
   \end{align*}
-\] Using these variables and subscript $j$ for the species whose activity is being calculated for easy comparison with the \doxylink{struct_jacobian}{Jacobian} calculations, equations (1)--(9) in {\bfseries [Marcolli2005]} become\+:                      \[
+\] Using these variables and subscript $j$ for the species whose activity is being calculated for easy comparison with the Jacobian calculations, equations (1)--(9) in {\bfseries [Marcolli2005]} become\+:                      \[
   \begin{align*}
    \ln{\gamma_j} & = \ln{\gamma_j^C} + \ln{\gamma_j^R} & (1) \\
    \alpha_w & = \gamma_w x_w & (2) \\
@@ -665,11 +665,11 @@ Here is the caller graph for this function\+:
 \index{sub\_model\_UNIFAC\_get\_jac\_contrib@{sub\_model\_UNIFAC\_get\_jac\_contrib}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_get\_jac\_contrib()}{sub\_model\_UNIFAC\_get\_jac\_contrib()}}
 {\footnotesize\ttfamily \label{sub__model___u_n_i_f_a_c_8c_a0301d06b09af90fcfe49f9a1ba7c6742} 
-void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{realtype \texorpdfstring{$\ast$}{*}}]{J}{, }\item[{double}]{time\+\_\+step}{}\end{DoxyParamCaption})}
+void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+jac\+\_\+contrib (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data}{, }\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{realtype \texorpdfstring{$\ast$}{*}}]{J}{, }\item[{double}]{time\+\_\+step}{}\end{DoxyParamCaption})}
 
 
 
-Add contributions to the \doxylink{struct_jacobian}{Jacobian} from derivates calculated using the output of this sub model. 
+Add contributions to the Jacobian from derivates calculated using the output of this sub model. 
 
 This derivation starts from equations (1)--(9) in {\bfseries [Marcolli2005]}. The mole fraction of species $i$ is calculated as\+:   \[
    x_i = \frac{m_i}{m_T},
@@ -846,7 +846,7 @@ This derivation starts from equations (1)--(9) in {\bfseries [Marcolli2005]}. Th
 \hline
 {\em model\+\_\+data} & Pointer to the model data \\
 \hline
-{\em J} & \doxylink{struct_jacobian}{Jacobian} to be calculated \\
+{\em J} & Jacobian to be calculated \\
 \hline
 {\em time\+\_\+step} & Current time step \mbox{[}s\mbox{]} \\
 \hline
@@ -867,11 +867,11 @@ Here is the caller graph for this function\+:
 \index{sub\_model\_UNIFAC\_get\_used\_jac\_elem@{sub\_model\_UNIFAC\_get\_used\_jac\_elem}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_get\_used\_jac\_elem()}{sub\_model\_UNIFAC\_get\_used\_jac\_elem()}}
 {\footnotesize\ttfamily \label{sub__model___u_n_i_f_a_c_8c_a6895ac51f6122ce830f30d8b1f09d052} 
-void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}} \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
+void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{Jacobian \texorpdfstring{$\ast$}{*}}]{jac}{}\end{DoxyParamCaption})}
 
 
 
-Get the \doxylink{struct_jacobian}{Jacobian} elements used for a particular row of the matrix. 
+Get the Jacobian elements used for a particular row of the matrix. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -879,7 +879,7 @@ Get the \doxylink{struct_jacobian}{Jacobian} elements used for a particular row 
 \hline
 {\em sub\+\_\+model\+\_\+float\+\_\+data} & Pointer to the sub model floating-\/point data \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 \end{DoxyParams}
 
@@ -935,7 +935,7 @@ Here is the caller graph for this function\+:
 \index{sub\_model\_UNIFAC\_update\_env\_state@{sub\_model\_UNIFAC\_update\_env\_state}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_update\_env\_state()}{sub\_model\_UNIFAC\_update\_env\_state()}}
 {\footnotesize\ttfamily \label{sub__model___u_n_i_f_a_c_8c_a43f3628a20f1bf545034554576e9c85c} 
-void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data}{, }\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{}\end{DoxyParamCaption})}
+void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+env\+\_\+data}{, }\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -968,11 +968,11 @@ Here is the caller graph for this function\+:
 \index{sub\_model\_UNIFAC\_update\_ids@{sub\_model\_UNIFAC\_update\_ids}!sub\_model\_UNIFAC.c@{sub\_model\_UNIFAC.c}}
 \doxysubsubsection{\texorpdfstring{sub\_model\_UNIFAC\_update\_ids()}{sub\_model\_UNIFAC\_update\_ids()}}
 {\footnotesize\ttfamily \label{sub__model___u_n_i_f_a_c_8c_a2674d98846a9c4933d56156ec1f0deb5} 
-void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{\mbox{\hyperlink{struct_jacobian}{Jacobian}}}]{jac}{}\end{DoxyParamCaption})}
+void sub\+\_\+model\+\_\+\+UNIFAC\+\_\+update\+\_\+ids (\begin{DoxyParamCaption}\item[{int \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{sub\+\_\+model\+\_\+float\+\_\+data}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{deriv\+\_\+ids}{, }\item[{Jacobian}]{jac}{}\end{DoxyParamCaption})}
 
 
 
-Update stored ids for elements used within a row of the \doxylink{struct_jacobian}{Jacobian} matrix. 
+Update stored ids for elements used within a row of the Jacobian matrix. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -982,7 +982,7 @@ Update stored ids for elements used within a row of the \doxylink{struct_jacobia
 \hline
 {\em deriv\+\_\+ids} & Indices for state array variables on the solver state array \\
 \hline
-{\em jac} & \doxylink{struct_jacobian}{Jacobian} \\
+{\em jac} & Jacobian \\
 \hline
 \end{DoxyParams}
 

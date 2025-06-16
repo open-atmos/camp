@@ -1,5 +1,0 @@
-<map id="aero_rep_modal_binned_mass_get_aero_phase_mass__kg_m3" name="aero_rep_modal_binned_mass_get_aero_phase_mass__kg_m3">
-<area shape="rect" id="Node000001" title="Get the total mass in an aerosol phase &#160;( )" alt="" coords="5,5,165,61"/>
-<area shape="rect" id="Node000002" href="$aero__phase__solver_8c.html#a965e0b9fc79db694be201edd05377dd1" title="Get the mass and average MW in an aerosol phase." alt="" coords="213,13,365,54"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,30,197,30,197,36,165,36"/>
-</map>

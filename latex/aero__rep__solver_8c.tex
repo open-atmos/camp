@@ -23,23 +23,23 @@ Include dependency graph for aero\+\_\+rep\+\_\+solver.\+c\+:
 \doxysubsubsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-int \mbox{\hyperlink{aero__rep__solver_8c_a020684f657e2d323f672bd5500ceae22}{aero\+\_\+rep\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+rep\+\_\+idx, int aero\+\_\+phase\+\_\+idx, bool \texorpdfstring{$\ast$}{*}jac\+\_\+struct)
-\begin{DoxyCompactList}\small\item\em Flag \doxylink{struct_jacobian}{Jacobian} elements used to calculated mass, volume, etc. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__solver_8c_ad9f40249b3d38d5fe7a18adf836ef430}{aero\+\_\+rep\+\_\+get\+\_\+dependencies}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, bool \texorpdfstring{$\ast$}{*}state\+\_\+flags)
+int \mbox{\hyperlink{aero__rep__solver_8c_a020684f657e2d323f672bd5500ceae22}{aero\+\_\+rep\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+rep\+\_\+idx, int aero\+\_\+phase\+\_\+idx, bool \texorpdfstring{$\ast$}{*}jac\+\_\+struct)
+\begin{DoxyCompactList}\small\item\em Flag Jacobian elements used to calculated mass, volume, etc. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__rep__solver_8c_ad9f40249b3d38d5fe7a18adf836ef430}{aero\+\_\+rep\+\_\+get\+\_\+dependencies}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, bool \texorpdfstring{$\ast$}{*}state\+\_\+flags)
 \begin{DoxyCompactList}\small\item\em Get state array elements used by aerosol representation functions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__solver_8c_a12de9a6d2ba14abd79aff561014feeb9}{aero\+\_\+rep\+\_\+update\+\_\+env\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
+void \mbox{\hyperlink{aero__rep__solver_8c_a12de9a6d2ba14abd79aff561014feeb9}{aero\+\_\+rep\+\_\+update\+\_\+env\+\_\+state}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update the aerosol representations for new environmental conditions. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__solver_8c_a42041b486fc391bc9abeee5d1ad666b2}{aero\+\_\+rep\+\_\+update\+\_\+state}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data)
+void \mbox{\hyperlink{aero__rep__solver_8c_a42041b486fc391bc9abeee5d1ad666b2}{aero\+\_\+rep\+\_\+update\+\_\+state}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update the aerosol representations for a new state. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__solver_8c_aab8fc9de2c9bfe5d012e80322a5b653b}{aero\+\_\+rep\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+rep\+\_\+idx, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}radius, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv)
+void \mbox{\hyperlink{aero__rep__solver_8c_aab8fc9de2c9bfe5d012e80322a5b653b}{aero\+\_\+rep\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+rep\+\_\+idx, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}radius, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv)
 \begin{DoxyCompactList}\small\item\em Get the effective particle radius, $r_{eff}$ (m) \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__solver_8c_aa56870eb4fe20532461b1634d7688210}{aero\+\_\+rep\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+rep\+\_\+idx, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}number\+\_\+conc, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv)
+void \mbox{\hyperlink{aero__rep__solver_8c_aa56870eb4fe20532461b1634d7688210}{aero\+\_\+rep\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+rep\+\_\+idx, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}number\+\_\+conc, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv)
 \begin{DoxyCompactList}\small\item\em Get the particle number concentration $n$ ( $\mbox{\si{\#\per\cubic\metre}}$) \end{DoxyCompactList}\item 
-int \mbox{\hyperlink{aero__rep__solver_8c_a00aee7bec2d9284a74c0eb26d346dc81}{aero\+\_\+rep\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+rep\+\_\+idx, int aero\+\_\+phase\+\_\+idx)
+int \mbox{\hyperlink{aero__rep__solver_8c_a00aee7bec2d9284a74c0eb26d346dc81}{aero\+\_\+rep\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+rep\+\_\+idx, int aero\+\_\+phase\+\_\+idx)
 \begin{DoxyCompactList}\small\item\em Check whether aerosol concentrations are per-\/particle or total for each phase. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__solver_8c_a0d5fc5c14f5fc182d80811b27c644e86}{aero\+\_\+rep\+\_\+get\+\_\+aero\+\_\+phase\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+rep\+\_\+idx, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}aero\+\_\+phase\+\_\+mass, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv)
+void \mbox{\hyperlink{aero__rep__solver_8c_a0d5fc5c14f5fc182d80811b27c644e86}{aero\+\_\+rep\+\_\+get\+\_\+aero\+\_\+phase\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+rep\+\_\+idx, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}aero\+\_\+phase\+\_\+mass, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv)
 \begin{DoxyCompactList}\small\item\em Get the total mass of an aerosol phase in this representation $m$ ( $\mbox{\si{\kilogram\per\cubic\metre}}$) \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{aero__rep__solver_8c_a513044e29b338d17d02b5bc472a8046f}{aero\+\_\+rep\+\_\+get\+\_\+aero\+\_\+phase\+\_\+avg\+\_\+\+MW\+\_\+\+\_\+kg\+\_\+mol}} (\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+rep\+\_\+idx, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}aero\+\_\+phase\+\_\+avg\+\_\+\+MW, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv)
+void \mbox{\hyperlink{aero__rep__solver_8c_a513044e29b338d17d02b5bc472a8046f}{aero\+\_\+rep\+\_\+get\+\_\+aero\+\_\+phase\+\_\+avg\+\_\+\+MW\+\_\+\+\_\+kg\+\_\+mol}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+rep\+\_\+idx, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}aero\+\_\+phase\+\_\+avg\+\_\+\+MW, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv)
 \begin{DoxyCompactList}\small\item\em Get the average molecular weight of an aerosol phase in this representation $m$ ( $\mbox{\si{\micro\gram\per\cubic\metre}}$) \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{aero__rep__solver_8c_a0429119f0c3a2ad73e6c291462571090}{aero\+\_\+rep\+\_\+add\+\_\+condensed\+\_\+data}} (int aero\+\_\+rep\+\_\+type, int n\+\_\+int\+\_\+param, int n\+\_\+float\+\_\+param, int n\+\_\+env\+\_\+param, int \texorpdfstring{$\ast$}{*}int\+\_\+param, double \texorpdfstring{$\ast$}{*}float\+\_\+param, void \texorpdfstring{$\ast$}{*}solver\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Add condensed data to the condensed data block for aerosol representations. \end{DoxyCompactList}\item 
@@ -138,7 +138,7 @@ Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00589}{589}} of
 \index{aero\_rep\_get\_aero\_conc\_type@{aero\_rep\_get\_aero\_conc\_type}!aero\_rep\_solver.c@{aero\_rep\_solver.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_get\_aero\_conc\_type()}{aero\_rep\_get\_aero\_conc\_type()}}
 {\footnotesize\ttfamily \label{aero__rep__solver_8c_a00aee7bec2d9284a74c0eb26d346dc81} 
-int aero\+\_\+rep\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+rep\+\_\+idx}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{}\end{DoxyParamCaption})}
+int aero\+\_\+rep\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+rep\+\_\+idx}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{}\end{DoxyParamCaption})}
 
 
 
@@ -180,7 +180,7 @@ Here is the caller graph for this function\+:
 \index{aero\_rep\_get\_aero\_phase\_avg\_MW\_\_kg\_mol@{aero\_rep\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}!aero\_rep\_solver.c@{aero\_rep\_solver.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_get\_aero\_phase\_avg\_MW\_\_kg\_mol()}{aero\_rep\_get\_aero\_phase\_avg\_MW\_\_kg\_mol()}}
 {\footnotesize\ttfamily \label{aero__rep__solver_8c_a513044e29b338d17d02b5bc472a8046f} 
-void aero\+\_\+rep\+\_\+get\+\_\+aero\+\_\+phase\+\_\+avg\+\_\+\+MW\+\_\+\+\_\+kg\+\_\+mol (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+rep\+\_\+idx}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+phase\+\_\+avg\+\_\+\+MW}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv}{}\end{DoxyParamCaption})}
+void aero\+\_\+rep\+\_\+get\+\_\+aero\+\_\+phase\+\_\+avg\+\_\+\+MW\+\_\+\+\_\+kg\+\_\+mol (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+rep\+\_\+idx}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+phase\+\_\+avg\+\_\+\+MW}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv}{}\end{DoxyParamCaption})}
 
 
 
@@ -225,7 +225,7 @@ Here is the caller graph for this function\+:
 \index{aero\_rep\_get\_aero\_phase\_mass\_\_kg\_m3@{aero\_rep\_get\_aero\_phase\_mass\_\_kg\_m3}!aero\_rep\_solver.c@{aero\_rep\_solver.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_get\_aero\_phase\_mass\_\_kg\_m3()}{aero\_rep\_get\_aero\_phase\_mass\_\_kg\_m3()}}
 {\footnotesize\ttfamily \label{aero__rep__solver_8c_a0d5fc5c14f5fc182d80811b27c644e86} 
-void aero\+\_\+rep\+\_\+get\+\_\+aero\+\_\+phase\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+rep\+\_\+idx}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+phase\+\_\+mass}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv}{}\end{DoxyParamCaption})}
+void aero\+\_\+rep\+\_\+get\+\_\+aero\+\_\+phase\+\_\+mass\+\_\+\+\_\+kg\+\_\+m3 (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+rep\+\_\+idx}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+phase\+\_\+mass}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv}{}\end{DoxyParamCaption})}
 
 
 
@@ -270,7 +270,7 @@ Here is the caller graph for this function\+:
 \index{aero\_rep\_get\_dependencies@{aero\_rep\_get\_dependencies}!aero\_rep\_solver.c@{aero\_rep\_solver.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_get\_dependencies()}{aero\_rep\_get\_dependencies()}}
 {\footnotesize\ttfamily \label{aero__rep__solver_8c_ad9f40249b3d38d5fe7a18adf836ef430} 
-void aero\+\_\+rep\+\_\+get\+\_\+dependencies (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{bool \texorpdfstring{$\ast$}{*}}]{state\+\_\+flags}{}\end{DoxyParamCaption})}
+void aero\+\_\+rep\+\_\+get\+\_\+dependencies (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{bool \texorpdfstring{$\ast$}{*}}]{state\+\_\+flags}{}\end{DoxyParamCaption})}
 
 
 
@@ -299,7 +299,7 @@ Here is the call graph for this function\+:
 \index{aero\_rep\_get\_effective\_radius\_\_m@{aero\_rep\_get\_effective\_radius\_\_m}!aero\_rep\_solver.c@{aero\_rep\_solver.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_get\_effective\_radius\_\_m()}{aero\_rep\_get\_effective\_radius\_\_m()}}
 {\footnotesize\ttfamily \label{aero__rep__solver_8c_aab8fc9de2c9bfe5d012e80322a5b653b} 
-void aero\+\_\+rep\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+rep\+\_\+idx}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{radius}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv}{}\end{DoxyParamCaption})}
+void aero\+\_\+rep\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+rep\+\_\+idx}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{radius}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv}{}\end{DoxyParamCaption})}
 
 
 
@@ -344,7 +344,7 @@ Here is the caller graph for this function\+:
 \index{aero\_rep\_get\_number\_conc\_\_n\_m3@{aero\_rep\_get\_number\_conc\_\_n\_m3}!aero\_rep\_solver.c@{aero\_rep\_solver.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_get\_number\_conc\_\_n\_m3()}{aero\_rep\_get\_number\_conc\_\_n\_m3()}}
 {\footnotesize\ttfamily \label{aero__rep__solver_8c_aa56870eb4fe20532461b1634d7688210} 
-void aero\+\_\+rep\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3 (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+rep\+\_\+idx}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{number\+\_\+conc}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv}{}\end{DoxyParamCaption})}
+void aero\+\_\+rep\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3 (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+rep\+\_\+idx}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{number\+\_\+conc}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv}{}\end{DoxyParamCaption})}
 
 
 
@@ -389,11 +389,11 @@ Here is the caller graph for this function\+:
 \index{aero\_rep\_get\_used\_jac\_elem@{aero\_rep\_get\_used\_jac\_elem}!aero\_rep\_solver.c@{aero\_rep\_solver.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_get\_used\_jac\_elem()}{aero\_rep\_get\_used\_jac\_elem()}}
 {\footnotesize\ttfamily \label{aero__rep__solver_8c_a020684f657e2d323f672bd5500ceae22} 
-int aero\+\_\+rep\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+rep\+\_\+idx}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{bool \texorpdfstring{$\ast$}{*}}]{jac\+\_\+struct}{}\end{DoxyParamCaption})}
+int aero\+\_\+rep\+\_\+get\+\_\+used\+\_\+jac\+\_\+elem (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+rep\+\_\+idx}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{bool \texorpdfstring{$\ast$}{*}}]{jac\+\_\+struct}{}\end{DoxyParamCaption})}
 
 
 
-Flag \doxylink{struct_jacobian}{Jacobian} elements used to calculated mass, volume, etc. 
+Flag Jacobian elements used to calculated mass, volume, etc. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -403,11 +403,11 @@ Flag \doxylink{struct_jacobian}{Jacobian} elements used to calculated mass, volu
 \hline
 {\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase within the aerosol representation \\
 \hline
-{\em jac\+\_\+struct} & 1D array of flags indicating potentially non-\/zero \doxylink{struct_jacobian}{Jacobian} elements. (The dependent variable should have been chosen by the calling function.) \\
+{\em jac\+\_\+struct} & 1D array of flags indicating potentially non-\/zero Jacobian elements. (The dependent variable should have been chosen by the calling function.) \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-Number of \doxylink{struct_jacobian}{Jacobian} elements flagged 
+Number of Jacobian elements flagged 
 \end{DoxyReturn}
 
 
@@ -495,7 +495,7 @@ Here is the call graph for this function\+:
 \index{aero\_rep\_update\_env\_state@{aero\_rep\_update\_env\_state}!aero\_rep\_solver.c@{aero\_rep\_solver.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_update\_env\_state()}{aero\_rep\_update\_env\_state()}}
 {\footnotesize\ttfamily \label{aero__rep__solver_8c_a12de9a6d2ba14abd79aff561014feeb9} 
-void aero\+\_\+rep\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{}\end{DoxyParamCaption})}
+void aero\+\_\+rep\+\_\+update\+\_\+env\+\_\+state (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
@@ -530,7 +530,7 @@ Here is the caller graph for this function\+:
 \index{aero\_rep\_update\_state@{aero\_rep\_update\_state}!aero\_rep\_solver.c@{aero\_rep\_solver.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_update\_state()}{aero\_rep\_update\_state()}}
 {\footnotesize\ttfamily \label{aero__rep__solver_8c_a42041b486fc391bc9abeee5d1ad666b2} 
-void aero\+\_\+rep\+\_\+update\+\_\+state (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_model_data}{Model\+Data}} \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{}\end{DoxyParamCaption})}
+void aero\+\_\+rep\+\_\+update\+\_\+state (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{}\end{DoxyParamCaption})}
 
 
 
