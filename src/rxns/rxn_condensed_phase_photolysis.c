@@ -11,7 +11,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../rxns.h"
+#include <camp/rxns.h>
 
 #define NUM_REACT_ int_data[0]
 #define NUM_PROD_ int_data[1]

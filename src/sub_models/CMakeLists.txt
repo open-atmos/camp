@@ -1,0 +1,9 @@
+target_sources(camp
+  PRIVATE
+    sub_model_PDFiTE.c
+    sub_model_PDFiTE.F90
+    sub_model_UNIFAC.c
+    sub_model_UNIFAC.F90
+    sub_model_ZSR_aerosol_water.c
+    sub_model_ZSR_aerosol_water.F90
+)

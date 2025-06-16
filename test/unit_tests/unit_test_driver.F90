@@ -60,7 +60,7 @@ program unit_test_driver
 
 #ifdef CAMP_USE_MPI
   character, allocatable :: buffer(:), buffer_copy(:)
-  integer(kind=i_kind) :: pack_size, pos, i_elem, results
+  integer(kind=i_kind) :: pack_size, pos, i_elem, results, rank_1_results
 #endif
 
   ! initialize MPI
@@ -81,11 +81,11 @@ program unit_test_driver
     unit_test => UNIT_TEST_TYPE_
 
     ! Initialize the model for solving individual cells
-    one_cell_core => camp_core_t( unit_test%input_file_name( ) )
+    one_cell_core => camp_core_t( "input_files/"//unit_test%input_file_name( ) )
     call one_cell_core%initialize( )
 
     ! Initialize the model for solving multiple cells
-    multicell_core => camp_core_t( unit_test%input_file_name( ), N_CELLS )
+    multicell_core => camp_core_t( "input_files/"//unit_test%input_file_name( ), N_CELLS )
     call multicell_core%initialize( )
 
     ! Initialize the unit test
@@ -320,10 +320,11 @@ program unit_test_driver
     else
       results = 1
     end if
+    rank_1_results = results
   end if
 
   ! Send the results back to the primary process
-  call camp_mpi_transfer_integer(results, results, 1, 0)
+  call camp_mpi_transfer_integer(rank_1_results, results, 1, 0)
 
   ! Convert the results back to a logical
   if( camp_mpi_rank( ) .eq. 0 ) then

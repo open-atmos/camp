@@ -8,11 +8,11 @@
 /** \file
  * \brief Aerosol representation functions
  */
-#include "aero_rep_solver.h"
+#include <camp/aero_rep_solver.h>
+#include <camp/aero_reps.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "aero_reps.h"
 
 // Aerosol representations (Must match parameters defined in
 // camp_aero_rep_factory

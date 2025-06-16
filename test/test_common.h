@@ -8,7 +8,7 @@
 #ifndef CAMP_TEST_COMMON_H
 #define CAMP_TEST_COMMON_H
 
-#include "../src/camp_common.h"
+#include <camp/camp_common.h>
 
 // Tolerances
 #define CAMP_TEST_COMMON_ABS_TOL 1.0e-30

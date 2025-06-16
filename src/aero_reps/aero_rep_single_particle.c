@@ -10,9 +10,9 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
-#include "../aero_phase_solver.h"
-#include "../aero_reps.h"
-#include "../camp_solver.h"
+#include <camp/aero_phase_solver.h>
+#include <camp/aero_reps.h>
+#include <camp/camp_solver.h>
 
 // TODO Lookup environmental indicies during initialization
 #define TEMPERATURE_K_ env_data[0]

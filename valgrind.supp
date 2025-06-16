@@ -1,0 +1,254 @@
+##############################################################
+#
+# Valgrind suppressions
+#
+##############################################################
+
+{
+   <Tutorial_string_bad_finalization>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   ...
+   fun:__camp_property_MOD_get_string
+   ...
+}
+
+###############################################################
+#
+# MPI suppressions
+#
+###############################################################
+{
+   <mpi_unpack>
+   Memcheck:User
+   ...
+   fun:PMPI_Unpack
+   fun:*MPI_UNPACK
+   ...
+   fun:MAIN__
+   fun:main
+}
+{
+   <mpi_init>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:*alloc
+   ...
+   fun:PMPI_Init
+   ...
+}
+{
+   <ompi_init>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:*alloc
+   ...
+   fun:ompi_mpi_init
+   ...
+}
+{
+   <mpi_init_param>
+   Memcheck:Param
+   setsockopt(optlen)
+   ...
+   fun:PMPI_Init
+   ...
+}
+{
+   <ompi_init_param>
+   Memcheck:Param
+   setsockopt(optlen)
+   ...
+   fun:ompi_mpi_init
+   ...
+}
+{
+   <mpi_init_param2>
+   Memcheck:Param
+   socketcall.getsockopt(optlen)
+   ...
+   fun:PMPI_Init
+   ...
+}
+{
+   <ompi_init_param2>
+   Memcheck:Param
+   socketcall.getsockopt(optlen)
+   ...
+   fun:ompi_mpi_init
+   ...
+}
+{
+   <mpi_init_param3>
+   Memcheck:Param
+   socketcall.getsockopt(optlen_out)
+   ...
+   fun:PMPI_Init
+   ...
+}
+{
+   <ompi_init_param3>
+   Memcheck:Param
+   socketcall.getsockopt(optlen_out)
+   ...
+   fun:ompi_mpi_init
+   ...
+}
+{
+   <mpi_finalize>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   ...
+   fun:orte_finalize
+   fun:ompi_mpi_finalize
+}
+{
+   <orte_daemon_leak>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:*alloc
+   ...
+   fun:orte_daemon
+   ...
+}
+{
+   <unknown_inlined_function_user>
+   Memcheck:User
+   ...
+   fun:UnknownInlinedFun
+   ...
+}
+{
+   <mpi_unpack>
+   Memcheck:User
+   ...
+   fun:PMPI_Unpack
+   fun:mpi_unpack
+   ...
+   fun:MAIN__
+   fun:main
+}
+{
+   <write_vector>
+   Memcheck:Param
+   writev(vector[1])
+   ...
+   fun:start_thread
+   fun:thread_start
+}
+{
+   <thread_start>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:*alloc
+   ...
+   fun:start_thread
+   fun:thread_start
+}
+{
+   <thread_start_param>
+   Memcheck:Param
+   writev(vector[1])
+   ...
+   fun:start_thread
+   fun:thread_start
+}
+{
+   <ucs_rcache>
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:*alloc
+   ...
+   fun:ucs_rcache_t_init
+   fun:ucs_rcache_create
+   ...
+}
+{
+   <ucs_rcache_create_leak>
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:*alloc
+   ...
+   fun:ucs_rcache_create
+   ...
+}
+{
+   <dlerror>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   ...
+   fun:_dl_catch_error
+   ...
+}
+{
+   <mpi_inline_func>
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:malloc
+   fun:UnknownInlinedFun
+   fun:_dlfo_mappings_segment_allocate
+   fun:_dl_find_object_update_1
+   fun:_dl_find_object_update
+   fun:dl_open_worker_begin
+   fun:_dl_catch_exception
+   fun:dl_open_worker
+   fun:_dl_catch_exception
+   fun:_dl_open
+   fun:dlopen_doit
+   fun:_dl_catch_exception
+   fun:_dl_catch_error
+   fun:_dlerror_run
+   fun:dlopen_implementation
+   ...
+}
+{
+   <mpi_inline_func_2>
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:calloc
+   fun:UnknownInlinedFun
+   fun:allocate_dtv
+   fun:_dl_allocate_tls
+   fun:allocate_stack
+   ...
+   fun:orte_init
+}
+{
+   <mpi_inline_func_3>
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:calloc
+   fun:UnknownInlinedFun
+   fun:allocate_dtv
+   fun:_dl_allocate_tls
+   fun:allocate_stack
+   ...
+   fun:PMPI_INIT
+   ...
+}
+{
+   <mpi_clone>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   ...
+   fun:clone
+}
+ {
+   <mpi_param_clone>
+   Memcheck:Param
+   writev(vector[1])
+   ...
+   fun:clone
+}
+{
+   <PMPI_Bcast>
+   Memcheck:User
+   ...
+   fun:PMPI_Bcast
+   fun:MPI_BCAST
+   ...
+}

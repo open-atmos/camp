@@ -1,0 +1,13 @@
+include(test_util)
+
+if(NOT ${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
+  add_executable(mock_monarch mock_monarch.F90 camp_monarch_interface.F90)
+  target_link_libraries(mock_monarch camp::camp)
+  if (ENABLE_MPI)
+    add_test(test_MONARCH_1 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_1.sh MPI)
+    add_test(test_MONARCH_2 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_2.sh MPI)
+  else()
+    add_test(test_MONARCH_1 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_1.sh serial)
+    add_test(test_MONARCH_2 ${CMAKE_BINARY_DIR}/test_run/monarch/test_monarch_2.sh serial)
+  endif()
+endif()

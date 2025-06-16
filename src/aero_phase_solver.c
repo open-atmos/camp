@@ -8,7 +8,7 @@
 /** \file
  * \brief Aerosol phase functions
  */
-#include "aero_phase_solver.h"
+#include <camp/aero_phase_solver.h>
 #include <stdio.h>
 #include <stdlib.h>
 
