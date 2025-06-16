@@ -8,7 +8,7 @@
 /** \file
  * \brief Functions of the time derivative structure
  */
-#include "time_derivative.h"
+#include <camp/time_derivative.h>
 #include <math.h>
 #include <stdio.h>
 

@@ -98,7 +98,7 @@ contains
             NO3_m_mol_m3, temp, pressure, a_w
 #ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
-    integer(kind=i_kind) :: pack_size, pos, i_elem, results
+    integer(kind=i_kind) :: pack_size, pos, i_elem, results, rank_1_results
 #endif
 
     type(solver_stats_t), target :: solver_stats
@@ -456,10 +456,11 @@ contains
       else
         results = 1
       end if
+      rank_1_results = results
     end if
 
     ! Send the results back to the primary process
-    call camp_mpi_transfer_integer(results, results, 1, 0)
+    call camp_mpi_transfer_integer(rank_1_results, results, 1, 0)
 
     ! convert the results back to a logical value
     if (camp_mpi_rank().eq.0) then

@@ -11,9 +11,9 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../aero_rep_solver.h"
-#include "../rxns.h"
-#include "../util.h"
+#include <camp/aero_rep_solver.h>
+#include <camp/rxns.h>
+#include <camp/util.h>
 
 // TODO Lookup environmental indices during initialization
 #define TEMPERATURE_K_ env_data[0]

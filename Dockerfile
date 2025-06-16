@@ -9,6 +9,7 @@ RUN dnf -y update \
         lapack-devel \
         openblas-devel \
         cmake \
+        valgrind \
     && dnf clean all
 
 # Build the SuiteSparse libraries for sparse matrix support
@@ -63,6 +64,7 @@ ENV PATH="${PATH}:/usr/local/jsonfortran-gnu-6.1.0/lib"
              -D CMAKE_C_FLAGS_DEBUG="-pg" \
              -D CMAKE_Fortran_FLAGS_DEBUG="-pg" \
              -D CMAKE_MODULE_LINKER_FLAGS="-pg" \
+             -D CAMP_ENABLE_MEMCHECK:BOOL=TRUE \
              /camp \
     && make install
 

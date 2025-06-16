@@ -1,0 +1,37 @@
+target_sources(camp
+  PRIVATE
+    rxn_aqueous_equilibrium.c
+    rxn_aqueous_equilibrium.F90
+    rxn_arrhenius.c
+    rxn_arrhenius.F90
+    rxn_CMAQ_H2O2.c
+    rxn_CMAQ_H2O2.F90
+    rxn_CMAQ_OH_HNO3.c
+    rxn_CMAQ_OH_HNO3.F90
+    rxn_condensed_phase_arrhenius.c
+    rxn_condensed_phase_arrhenius.F90
+    rxn_condensed_phase_photolysis.c
+    rxn_condensed_phase_photolysis.F90
+    rxn_emission.c
+    rxn_emission.F90
+    rxn_first_order_loss.c
+    rxn_first_order_loss.F90
+    rxn_HL_phase_transfer.c
+    rxn_HL_phase_transfer.F90
+    rxn_photolysis.c
+    rxn_photolysis.F90
+    rxn_SIMPOL_phase_transfer.c
+    rxn_SIMPOL_phase_transfer.F90
+    rxn_surface.c
+    rxn_surface.F90
+    rxn_ternary_chemical_activation.c
+    rxn_ternary_chemical_activation.F90
+    rxn_troe.c
+    rxn_troe.F90
+    rxn_wennberg_no_ro2.c
+    rxn_wennberg_no_ro2.F90
+    rxn_wennberg_tunneling.c
+    rxn_wennberg_tunneling.F90
+    rxn_wet_deposition.c
+    rxn_wet_deposition.F90
+)

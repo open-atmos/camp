@@ -3,11 +3,14 @@
 
 # add back things to copy
 !CMakeLists.txt
+!cmake/
 !data/
 !doc/
 !docker/
+!include/
 !src/
 !test/
 !tool/
 !mechanisms/
 !cvode*.tar.gz
+!valgrind.supp

@@ -10,10 +10,10 @@
  */
 #define CAMP_DEBUG_SPEC_ 118
 
-#include "rxn_solver.h"
+#include <camp/rxn_solver.h>
+#include <camp/rxns.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "rxns.h"
 
 // Reaction types (Must match parameters defined in camp_rxn_factory)
 #define RXN_ARRHENIUS 1

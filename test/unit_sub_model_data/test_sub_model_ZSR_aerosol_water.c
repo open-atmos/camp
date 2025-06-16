@@ -8,10 +8,10 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <camp/sub_model_solver.h>
+#include <camp/sub_models.h>
+#include <camp/camp_common.h>
 #include "../test_common.h"
-#include "../../src/sub_model_solver.h"
-#include "../../src/sub_models.h"
-#include "../../src/camp_common.h"
 
 // index for the test aerosol representation
 #define AERO_REP_IDX 1
