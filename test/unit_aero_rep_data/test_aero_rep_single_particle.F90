@@ -253,10 +253,8 @@ contains
         call assert(734138496, bread_phase_instance .eq. aero_rep%num_phase_instances(phase_name_test, &
                                                          is_at_surface = .true.))
         ! test adjacent_phases function
-        ! TODO add size test
         phase_name_first = "bread"
         phase_name_second = "almond butter"
-        allocate(adjacent_phases(4))
         adjacent_phases = aero_rep%adjacent_phases(phase_name_first,phase_name_second)
         call assert(715901353, adjacent_phases(1)%first_ .eq. 1)
         call assert(304969793, adjacent_phases(1)%second_ .eq. 4)
@@ -266,6 +264,7 @@ contains
         call assert(306293505, adjacent_phases(3)%second_ .eq. 7)
         call assert(416996897, adjacent_phases(4)%first_ .eq. 5)
         call assert(719566692, adjacent_phases(4)%second_ .eq. 6)
+        call assert(724094274, 4 .eq. size(adjacent_phases))
         
         phase_name_first = "jam"
         phase_name_second = "almond butter"
@@ -274,6 +273,7 @@ contains
         call assert(453784946, adjacent_phases(1)%second_ .eq. 3)
         call assert(001194530, adjacent_phases(2)%first_ .eq. 3)
         call assert(361037799, adjacent_phases(2)%second_ .eq. 6)
+        call assert(560780730, 2 .eq. size(adjacent_phases))
 
         phase_name_first = "almond butter"
         phase_name_second = "almond butter"
@@ -282,6 +282,7 @@ contains
         call assert(586407829, adjacent_phases(1)%second_ .eq. 4)
         call assert(148468645, adjacent_phases(2)%first_ .eq. 4)
         call assert(479227854, adjacent_phases(2)%second_ .eq. 6)
+        call assert(010889252, 2 .eq. size(adjacent_phases))
 
         phase_name_first = "pickles"
         phase_name_second = "almond butter"

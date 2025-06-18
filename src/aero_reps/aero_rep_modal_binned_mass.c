@@ -328,6 +328,36 @@ void aero_rep_modal_binned_mass_get_effective_radius__m(
   return;
 }
 
+/** \brief Get the effective particle surface area \f$r_{eff}\f$ (m)
+ *
+ * The surface area interface that exists between two specified phases within
+ * the modal/binned aerosol representation always returns an error, because no
+ * specific internal structure is assumed for phases within modes or bins.
+ *
+ * \param model_data Pointer to the model data, including the state array
+ * \param aero_phase_idx_first Index of the first aerosol phase within the representation
+ * \param aero_phase_idx_second Index of the second aerosol phase within the representation
+ * \param surface_area Effective surface area of interface between phases (m^2)
+ * \param partial_deriv \f$\frac{\partial sa_{eff}}{\partial y}\f$ where \f$y\f$
+ *                       are species on the state array
+ * \param aero_rep_int_data Pointer to the aerosol representation integer data
+ * \param aero_rep_float_data Pointer to the aerosol representation
+ *                            floating-point data
+ * \param aero_rep_env_data Pointer to the aerosol representation
+ *                          environment-dependent parameters
+ */
+void aero_rep_modal_binned_mass_get_interface_surface_area__m2(
+    ModelData *model_data, int aero_phase_idx_first, int aero_phase_idx_second,
+    double *surface_area, double *partial_deriv, int *aero_rep_int_data, 
+    double *aero_rep_float_data, double *aero_rep_env_data) {
+  int *int_data = aero_rep_int_data;
+  double *float_data = aero_rep_float_data;
+
+
+  printf("\n\nERROR There are no adjacent pairs in the modal/binned representation.\n\n");  
+  exit(1);
+}
+
 /** \brief Get the particle number concentration \f$n\f$
  * (\f$\mbox{\si{\#\per\cubic\metre}}\f$)
  *
