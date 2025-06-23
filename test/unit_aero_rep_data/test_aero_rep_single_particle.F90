@@ -366,6 +366,8 @@ contains
     call assert(623071633, unique_names_surface(7)%string .eq. "P3.top bread.bread.wheat")
     call assert(862917237, unique_names_surface(8)%string .eq. "P3.top bread.bread.water")
     call assert(521426951, unique_names_surface(9)%string .eq. "P3.top bread.bread.salt")
+
+    deallocate(camp_core)
 #endif
 
   end subroutine test_config_read
