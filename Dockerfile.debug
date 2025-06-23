@@ -60,9 +60,12 @@ ENV PATH="${PATH}:/usr/local/jsonfortran-gnu-6.1.0/lib"
     && cd build \
     && export JSON_FORTRAN_HOME="/usr/local/jsonfortran-gnu-6.1.0" \
     && cmake -D CMAKE_BUILD_TYPE=debug \
-             -D CMAKE_C_FLAGS="-pg -Og" \
-             -D CMAKE_Fortran_FLAGS="-pg -Og -fbacktrace" \
-             -D CMAKE_MODULE_LINKER_FLAGS="-pg" \
+             -D CMAKE_C_FLAGS="-Og" \
+             -D CMAKE_Fortran_FLAGS="-Og -fbacktrace" \
+             -D CMAKE_MODULE_LINKER_FLAGS="-g" \
              -D ENABLE_DEBUG:BOOL=TRUE \
+             -D CAMP_ENABLE_MEMCHECK:BOOL=TRUE \
              /camp \
     && make install
+
+    WORKDIR /build

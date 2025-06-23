@@ -42,7 +42,8 @@ module camp_aero_rep_data
   implicit none
   private
 
-  public :: aero_rep_data_t, aero_rep_data_ptr, aero_rep_update_data_t
+  public :: aero_rep_data_t, aero_rep_data_ptr, aero_rep_update_data_t, &
+            index_pair_t
 
   !> Abstract aerosol representation data type
   !!
@@ -180,6 +181,12 @@ module camp_aero_rep_data
     !> Print the update data
     procedure :: print => do_aero_rep_update_data_print
   end type aero_rep_update_data_t
+
+  !> Define index_pair array for adjacent_phases functions
+  type :: index_pair_t
+    integer :: first_ = -9999
+    integer :: second_ = -9999
+  end type index_pair_t
 
 interface
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
