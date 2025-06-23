@@ -143,6 +143,7 @@ contains
     call assert(468777371, layer_names(ordered_ids(2))%string .eq. correct_layer_names(2)%string)
     call assert(487966491, layer_names(ordered_ids(3))%string .eq. correct_layer_names(3)%string)
 
+    deallocate(ordered_ids)
   end subroutine test_ordered_layer_ids
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -265,6 +266,7 @@ contains
         call assert(416996897, adjacent_phases(4)%first_ .eq. 5)
         call assert(719566692, adjacent_phases(4)%second_ .eq. 6)
         call assert(724094274, 4 .eq. size(adjacent_phases))
+        deallocate(adjacent_phases)
         
         phase_name_first = "jam"
         phase_name_second = "almond butter"
@@ -274,6 +276,7 @@ contains
         call assert(001194530, adjacent_phases(2)%first_ .eq. 3)
         call assert(361037799, adjacent_phases(2)%second_ .eq. 6)
         call assert(560780730, 2 .eq. size(adjacent_phases))
+        deallocate(adjacent_phases)
 
         phase_name_first = "almond butter"
         phase_name_second = "almond butter"
@@ -283,11 +286,13 @@ contains
         call assert(148468645, adjacent_phases(2)%first_ .eq. 4)
         call assert(479227854, adjacent_phases(2)%second_ .eq. 6)
         call assert(010889252, 2 .eq. size(adjacent_phases))
+        deallocate(adjacent_phases)
 
         phase_name_first = "pickles"
         phase_name_second = "almond butter"
         adjacent_phases = aero_rep%adjacent_phases(phase_name_first,phase_name_second)
         call assert(688720528, size(adjacent_phases) .eq. 0)
+        deallocate(adjacent_phases)
 
       class default
         call die_msg(519535557, rep_name)

@@ -881,12 +881,6 @@ contains
       index_pairs(:)%first_ = temp_index_pairs(1:i_instance-1)%first_
       index_pairs(:)%second_ = temp_index_pairs(1:i_instance-1)%second_
 
-      deallocate(layer_first)
-      deallocate(layer_second)
-      deallocate(phase_id_first_)
-      deallocate(phase_id_second_)
-      deallocate(temp_index_pairs) 
-
     end function adjacent_phases
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
