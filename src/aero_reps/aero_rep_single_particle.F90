@@ -880,6 +880,7 @@ contains
       allocate(index_pairs(i_instance-1))
       index_pairs(:)%first_ = temp_index_pairs(1:i_instance-1)%first_
       index_pairs(:)%second_ = temp_index_pairs(1:i_instance-1)%second_
+      deallocate(temp_index_pairs)
 
     end function adjacent_phases
 

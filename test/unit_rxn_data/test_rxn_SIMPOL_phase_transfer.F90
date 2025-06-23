@@ -546,21 +546,20 @@ contains
       do i_time = 1, NUM_TIME_STEP
         do i_spec = 1, 5
           ! scenario 1 - Only check the second phase
-          if (scenario.eq.1.and.i_spec.ge.2.and.i_spec.le.3) cycle
-          ! scenario 2 - exclude activity coefficient
-          if (scenario.eq.2.and.i_spec.eq.4) cycle
-          call assert_msg(237580431, &
-            almost_equal(model_conc(i_time, i_spec), &
-            true_conc(i_time, i_spec), real(1.0e-1, kind=dp)).or. &
-            (model_conc(i_time, i_spec).lt.1.2*model_conc(NUM_TIME_STEP, i_spec).and. &
-            true_conc(i_time, i_spec).lt.1.2*true_conc(NUM_TIME_STEP, i_spec)).or. &
-            (model_conc(i_time, i_spec).lt.1e-2*model_conc(1, i_spec).and. &
-            true_conc(i_time, i_spec).lt.1e-2*true_conc(1, i_spec)) .and. &
-            model_conc(i_time,idx_ethanol_aq_layer2).eq.model_conc(i_time,idx_ethanol_aq_layer2), &
-            "time: "//trim(to_string(i_time))//"; species: "// &
-            trim(to_string(i_spec))//"; mod: "// &
-            trim(to_string(model_conc(i_time, i_spec)))//"; true: "// &
-            trim(to_string(true_conc(i_time, i_spec))))
+          if ((scenario.eq.1.and.(i_spec.eq.idx_ethanol_aq_layer2.or.i_spec.eq.idx_H2O_aq_layer2)) &
+              .or.(scenario.eq.2.and.(i_spec.eq.idx_ethanol_aq.or.i_spec.eq.idx_H2O_aq))) then
+            call assert_msg(237580431, &
+              almost_equal(model_conc(i_time, i_spec), &
+              true_conc(i_time, i_spec), real(1.0e-1, kind=dp)).or. &
+              (model_conc(i_time, i_spec).lt.1.2*model_conc(NUM_TIME_STEP, i_spec).and. &
+              true_conc(i_time, i_spec).lt.1.2*true_conc(NUM_TIME_STEP, i_spec)).or. &
+              (model_conc(i_time, i_spec).lt.1e-2*model_conc(1, i_spec).and. &
+              true_conc(i_time, i_spec).lt.1e-2*true_conc(1, i_spec)), &
+              "time: "//trim(to_string(i_time))//"; species: "// &
+              trim(to_string(i_spec))//"; mod: "// &
+              trim(to_string(model_conc(i_time, i_spec)))//"; true: "// &
+              trim(to_string(true_conc(i_time, i_spec))))
+          end if
         end do
       end do
       deallocate(camp_state)
