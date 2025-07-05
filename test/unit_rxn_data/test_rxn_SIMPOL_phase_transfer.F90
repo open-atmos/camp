@@ -544,7 +544,7 @@ contains
       ! an exact solution is not calculated. The tolerances on the comparison
       ! with "true" values are higher to account for this.
       do i_time = 1, NUM_TIME_STEP
-        do i_spec = 1, 5
+        do i_spec = 1, 6
           ! comparing the "true" and model concs for considered phases for scenario 1 and scenario 2
           ! scenario 1 - only tests the concs in layer 2
           if ((scenario.eq.1.and.(i_spec.eq.idx_ethanol_aq_layer2.or.i_spec.eq.idx_H2O_aq_layer2)) &
