@@ -20,9 +20,19 @@
 !!  ]}
 !! \endcode
 !! The key-value pair \b type is required and must be \b
-!! AERO_REP_SINGLE_PARTICLE. This representation assumes that every \ref
-!! input_format_aero_phase "aerosol phase" available will be present
-!! once in each particle.
+!! AERO_REP_SINGLE_PARTICLE. In this representation, particles are divided
+!! into layers. Phases in each layer are specified by the user. 
+!!
+!! Phase configuration within particles follows "fractional volume overlap". 
+!! The shared surface area between phases in adjacent layers is scaled by phase 
+!! volume fraction within respective layers.
+!! In this configuration, the surface area of the layer interface between two phases
+!! is calculated as f_first * f_second * total_interface_surface_area where 
+!! the first and second subscripts refer to the two phases in adjacent layers and
+!!  
+!!   f_first = volume_phase_first / volume_total_layer_first
+!!   f_second = volume_phase_second / volume_total_layer_second
+!!
 !!
 !! The number concentration for each particle must be
 !! set from an external model using
@@ -68,7 +78,7 @@ module camp_aero_rep_single_particle
 
   public :: aero_rep_single_particle_t, &
             aero_rep_update_data_single_particle_number_t, &
-            ordered_layer_ids, index_pair_t
+            ordered_layer_ids
 
   !> Single particle aerosol representation
   !!
@@ -147,11 +157,6 @@ module camp_aero_rep_single_particle
     !> Finalize the aerosol representation
     final :: finalize, finalize_array
   end type aero_rep_single_particle_t
-
-  type :: index_pair_t
-    integer :: first_ = -9999
-    integer :: second_ = -9999
-  end type index_pair_t
 
   ! Constructor for aero_rep_single_particle_t
   interface aero_rep_single_particle_t
@@ -875,8 +880,10 @@ contains
       allocate(index_pairs(i_instance-1))
       index_pairs(:)%first_ = temp_index_pairs(1:i_instance-1)%first_
       index_pairs(:)%second_ = temp_index_pairs(1:i_instance-1)%second_
+      deallocate(temp_index_pairs)
 
     end function adjacent_phases
+
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the aerosol representation
