@@ -199,6 +199,9 @@ module camp_aero_rep_modal_binned_mass
     !> Get the number of Jacobian elements used in calculations of aerosol mass,
     !! volume, number, etc. for a particular phase
     procedure :: num_jac_elem
+    !> Returns index_pair_t type with phase_ids of adjacent phases
+    !! for modal/binned representation there are no adjacent phases
+    procedure :: adjacent_phases
     !> Finalize the aerosol representation
     final :: finalize, finalize_array
 
@@ -1040,6 +1043,23 @@ contains
     end do
 
   end function num_jac_elem
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Determine is specified phase(s) exist in adjacent layers. Returns array
+  !! of phase_ids for adjacent phases first and second.
+
+  function adjacent_phases(this, phase_name_first, &
+                           phase_name_second) result(index_pairs)
+    !> Aerosol representation data
+    class(aero_rep_modal_binned_mass_t), intent(in) :: this
+    character(len=*), intent(in) :: phase_name_first
+    character(len=*), intent(in) :: phase_name_second
+    type(index_pair_t), allocatable :: index_pairs(:)
+
+    allocate(index_pairs(0))
+
+  end function adjacent_phases
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

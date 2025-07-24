@@ -165,6 +165,138 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
   return ret_val;
 }
 
+/** \brief Test the surface area of interfacial layer function
+ *
+ * \param model_data Pointer to the model data
+ * \param state Solver state
+ */
+
+int test_surface_area_layer(ModelData * model_data, N_Vector state) {
+
+  int ret_val = 0;
+  double partial_deriv[N_JAC_ELEM+2];
+  double eff_sa = -999.9;
+
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv[i] = 999.9;
+
+  aero_rep_get_interface_surface_area__m2(model_data, AERO_REP_IDX,
+                                AERO_PHASE_IDX_1 - NUM_AERO_PHASE, 
+                                AERO_PHASE_IDX_2 - NUM_AERO_PHASE, 
+                                &eff_sa, &(partial_deriv[1]));
+
+  // calculate the volume density of the layer interface
+  double volume_density = ( CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt +
+                            CONC_almonds / DENSITY_almonds +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_rasberry / DENSITY_rasberry +
+                            CONC_honey / DENSITY_honey +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_lemon / DENSITY_lemon +
+                            CONC_almonds / DENSITY_almonds +
+                            CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt +
+                            CONC_sugar / DENSITY_sugar ); // volume density (m3/m3)
+
+  // calcualte the volume density of the first phase and associated layer
+  double volume_density_jam = ( CONC_rasberry / DENSITY_rasberry +
+                            CONC_honey / DENSITY_honey +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_lemon / DENSITY_lemon ); // volume density of jam (m3/m3)
+
+  double volume_density_layer_2 = ( CONC_almonds / DENSITY_almonds +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_rasberry / DENSITY_rasberry +
+                            CONC_honey / DENSITY_honey +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_lemon / DENSITY_lemon +
+                            CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt ); // volume density of layer 2 (m3/m3)
+
+  // calculate the volume density of the second phase and assicated layer
+  double volume_density_bread = ( CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt ); // volume density of bread (m3/m3)
+
+  double volume_density_layer_3 = ( CONC_almonds / DENSITY_almonds +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt ); // volume density of layer 3 (m3/m3)
+
+  // calculate the volume density of the other phase in the first and second layer 
+  double volume_density_almond_butter = ( CONC_almonds / DENSITY_almonds +
+                            CONC_sugar / DENSITY_sugar ); // volume density of almond butter (m3/m3)
+
+  // calculate the expeted interface surface area and phase fractional volume
+  double eff_rad_expected = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density ), 1.0/3.0 );
+  double f_jam = volume_density_jam / volume_density_layer_2;
+  double f_bread = volume_density_bread / volume_density_layer_3;
+
+  double eff_sa_expected = f_jam * f_bread * 4.0 * 3.14159265359 * pow( eff_rad_expected, 2.0 );
+  ret_val += ASSERT_MSG(fabs(eff_sa-eff_sa_expected) < 1.0e-4*eff_sa_expected,
+                        "Bad surface area layer");
+
+  // calculate the partial derivatives for first and second phase
+  double d_eff_sa_filling_jam_dx = ((volume_density_layer_2 - volume_density_jam) *
+              pow(volume_density_layer_2, -2.0) * f_bread * eff_sa_expected) +
+              (2.0 * f_jam * f_bread * pow(volume_density * 3.0 / 4.0 / 3.14159265359, -1.0 / 3.0)) ;
+  double d_eff_sa_top_bread_bread_dx = ((volume_density_layer_3 - volume_density_bread) *
+              pow(volume_density_layer_3, -2.0) * f_jam * eff_sa_expected) +
+              (2.0 * f_jam * f_bread * pow(volume_density * 3.0 / 4.0 / 3.14159265359, -1.0 / 3.0)) ;
+  // calculate the partial derivatives of the other phases in the first and second layers
+  double d_eff_sa_filling_almond_butter_dx = ((-1 * volume_density_almond_butter) *
+              pow(volume_density_layer_2, -2.0) * f_bread * eff_sa_expected) +
+              (2.0 * f_jam * f_bread * pow(volume_density * 3.0 / 4.0 / 3.14159265359, -1.0 / 3.0)) ;
+  double d_eff_sa_filling_bread_dx = ((-1 * volume_density_bread) *
+              pow(volume_density_layer_2, -2.0) * f_bread * eff_sa_expected) +
+              (2.0 * f_jam * f_bread * pow(volume_density * 3.0 / 4.0 / 3.14159265359, -1.0 / 3.0)) ;
+  double d_eff_sa_top_bread_almond_butter_dx = ((-1 * volume_density_almond_butter) *
+              pow(volume_density_layer_3, -2.0) * f_jam * eff_sa_expected) +
+              (2.0 * f_jam * f_bread * pow(volume_density * 3.0 / 4.0 / 3.14159265359, -1.0 / 3.0)) ;
+
+  // test the partial derivatives 
+  ret_val += ASSERT_MSG(partial_deriv[0] = 999.9,
+                        "Bad Jacobian (-1)");
+
+  for( int i = 1; i < 6; ++i )
+    ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
+                          "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[6] - d_eff_sa_filling_jam_dx / DENSITY_rasberry) <
+                        1.0e-10 * partial_deriv[6], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[7] - d_eff_sa_filling_jam_dx / DENSITY_honey) <
+                        1.0e-10 * partial_deriv[7], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[8] - d_eff_sa_filling_jam_dx / DENSITY_sugar) <
+                        1.0e-10 * partial_deriv[8], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[9] - d_eff_sa_filling_jam_dx / DENSITY_lemon) <
+                        1.0e-10 * partial_deriv[9], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[10] - d_eff_sa_filling_almond_butter_dx / DENSITY_almonds) <
+                        1.0e-10 * partial_deriv[10], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[11] - d_eff_sa_filling_almond_butter_dx / DENSITY_sugar) <
+                        1.0e-10 * partial_deriv[11], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[12] - d_eff_sa_filling_bread_dx / DENSITY_wheat) <
+                        1.0e-10 * partial_deriv[12], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[13] - d_eff_sa_filling_bread_dx / DENSITY_water) <
+                        1.0e-10 * partial_deriv[13], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[14] - d_eff_sa_filling_bread_dx / DENSITY_salt) <
+                        1.0e-10 * partial_deriv[14], "Bad Jacobian element");
+  // the absolute value is needed here since the partial derivative is negative
+  ret_val += ASSERT_MSG(fabs(partial_deriv[15] - d_eff_sa_top_bread_almond_butter_dx / DENSITY_almonds) <
+                        1.0e-10 * fabs(partial_deriv[15]), "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[16] - d_eff_sa_top_bread_almond_butter_dx / DENSITY_sugar) <
+                        1.0e-10 * fabs(partial_deriv[16]), "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[17] - d_eff_sa_top_bread_bread_dx / DENSITY_wheat) <
+                        1.0e-10 * partial_deriv[17], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[18] - d_eff_sa_top_bread_bread_dx / DENSITY_water) <
+                        1.0e-10 * partial_deriv[18], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[19] - d_eff_sa_top_bread_bread_dx / DENSITY_salt) <
+                        1.0e-10 * partial_deriv[19], "Bad Jacobian element");
+  return ret_val;
+}
+
 /** \brief Test the number concentration function
  *
  * \param model_data Pointer to the model data
@@ -182,7 +314,6 @@ int test_number_concentration(ModelData * model_data, N_Vector state) {
   aero_rep_get_number_conc__n_m3(model_data, AERO_REP_IDX,
                            AERO_PHASE_IDX_1, &num_conc, &(partial_deriv[1]));
 
-  printf("\nnumber conc : %f", num_conc);
   ret_val += ASSERT_MSG(fabs(num_conc-PART_NUM_CONC) < 1.0e-10*PART_NUM_CONC,
                         "Bad number concentration");
 
@@ -246,7 +377,6 @@ int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
 
   ret_val += ASSERT_MSG(fabs(phase_mass_2-mass_2) < 1.0e-10*mass_2,
                         "Bad aerosol phase mass");
-  printf("\nphase_mass_2 : %f", phase_mass_2);
   ret_val += ASSERT_MSG(partial_deriv_2[0] = 999.9,
                         "Bad Jacobian (-1)");
   for( int i = 1; i < 6; ++i )
@@ -421,6 +551,7 @@ int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, doubl
 
   // Run the property tests
   ret_val += test_effective_radius(model_data, solver_state);
+  ret_val += test_surface_area_layer(model_data, solver_state);
   ret_val += test_aero_phase_mass(model_data, solver_state);
   ret_val += test_aero_phase_avg_MW(model_data, solver_state);
   ret_val += test_number_concentration(model_data, solver_state);
