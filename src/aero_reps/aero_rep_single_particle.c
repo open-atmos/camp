@@ -283,8 +283,8 @@ void aero_rep_single_particle_get_interface_surface_area__m2(
   */ 
   double f_first = volume_phase_first / total_volume_layer_first;
   double f_second = volume_phase_second / total_volume_layer_second;
-  radius = pow(((interface_volume) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
-  *surface_area = f_first * f_second * 4 * 3.14159265359 * pow(radius, 2.0);
+  radius = pow(((interface_volume) * 3.0 / 4.0 / M_PI), 1.0 / 3.0);
+  *surface_area = f_first * f_second * 4 * M_PI * pow(radius, 2.0);
 
 
   // Calculate the partial derivatives for each layer/phase combination. 
