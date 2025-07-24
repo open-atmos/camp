@@ -152,6 +152,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a48b11d345d89071d34e67b5063b1b891" id="r_a48b11d345d89071d34e67b5063b1b891"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a48b11d345d89071d34e67b5063b1b891">aero_rep_single_particle_get_effective_radius__m</a> (ModelData *model_data, int aero_phase_idx, double *radius, double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data, double *aero_rep_env_data)</td></tr>
 <tr class="memdesc:a48b11d345d89071d34e67b5063b1b891"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the effective particle radius \(r_{eff}\) (m)  <br /></td></tr>
 <tr class="separator:a48b11d345d89071d34e67b5063b1b891"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a788ee00930db343356a0cbe7c53ea600" id="r_a788ee00930db343356a0cbe7c53ea600"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a788ee00930db343356a0cbe7c53ea600">aero_rep_single_particle_get_interface_surface_area__m2</a> (ModelData *model_data, int aero_phase_idx_first, int aero_phase_idx_second, double *surface_area, double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data, double *aero_rep_env_data)</td></tr>
+<tr class="memdesc:a788ee00930db343356a0cbe7c53ea600"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the surface area of specified particle layer \(r_{eff}\) (m)  <br /></td></tr>
+<tr class="separator:a788ee00930db343356a0cbe7c53ea600"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa7d35b774d0ab4d7cad7fb30d75e897" id="r_afa7d35b774d0ab4d7cad7fb30d75e897"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afa7d35b774d0ab4d7cad7fb30d75e897">aero_rep_single_particle_get_number_conc__n_m3</a> (ModelData *model_data, int aero_phase_idx, double *number_conc, double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data, double *aero_rep_env_data)</td></tr>
 <tr class="memdesc:afa7d35b774d0ab4d7cad7fb30d75e897"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the particle number concentration \(n\) ( \(\mbox{\si{\#\per\cubic\metre}}\))  <br /></td></tr>
 <tr class="separator:afa7d35b774d0ab4d7cad7fb30d75e897"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -534,7 +537,7 @@ Functions</h2></td></tr>
 <p>Create update data for new particle number. </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to a new number update data object </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8c_source.html#l00444">444</a> of file <a class="el" href="aero__rep__single__particle_8c_source.html">aero_rep_single_particle.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8c_source.html#l00602">602</a> of file <a class="el" href="aero__rep__single__particle_8c_source.html">aero_rep_single_particle.c</a>.</p>
 
 </div>
 </div>
@@ -585,7 +588,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8c_source.html#l00250">250</a> of file <a class="el" href="aero__rep__single__particle_8c_source.html">aero_rep_single_particle.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8c_source.html#l00408">408</a> of file <a class="el" href="aero__rep__single__particle_8c_source.html">aero_rep_single_particle.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -696,7 +699,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8c_source.html#l00331">331</a> of file <a class="el" href="aero__rep__single__particle_8c_source.html">aero_rep_single_particle.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8c_source.html#l00489">489</a> of file <a class="el" href="aero__rep__single__particle_8c_source.html">aero_rep_single_particle.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -809,7 +812,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8c_source.html#l00282">282</a> of file <a class="el" href="aero__rep__single__particle_8c_source.html">aero_rep_single_particle.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8c_source.html#l00440">440</a> of file <a class="el" href="aero__rep__single__particle_8c_source.html">aero_rep_single_particle.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1038,6 +1041,96 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="a788ee00930db343356a0cbe7c53ea600" name="a788ee00930db343356a0cbe7c53ea600"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a788ee00930db343356a0cbe7c53ea600">&#9670;&#160;</a></span>aero_rep_single_particle_get_interface_surface_area__m2()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void aero_rep_single_particle_get_interface_surface_area__m2 </td>
+          <td>(</td>
+          <td class="paramtype">ModelData *</td>          <td class="paramname"><span class="paramname"><em>model_data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>aero_phase_idx_first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>aero_phase_idx_second</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *</td>          <td class="paramname"><span class="paramname"><em>surface_area</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *</td>          <td class="paramname"><span class="paramname"><em>partial_deriv</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *</td>          <td class="paramname"><span class="paramname"><em>aero_rep_int_data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *</td>          <td class="paramname"><span class="paramname"><em>aero_rep_float_data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *</td>          <td class="paramname"><span class="paramname"><em>aero_rep_env_data</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the surface area of specified particle layer \(r_{eff}\) (m) </p>
+<p>Solve for the surface area of the interfacial layer that exists between the two phases considered in aerosol phase mass tranfer between layers. When more than one phase exists in a layer, a "fractional volume overlap" configuration is applied (see the single particle description in the Fortran script and CAMP Github Documentation for details).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model_data</td><td>Pointer to the model data, including the state array </td></tr>
+    <tr><td class="paramname">aero_phase_idx_first</td><td>Index of the first aerosol phase within the representation </td></tr>
+    <tr><td class="paramname">aero_phase_idx_second</td><td>Index of the second aerosol phase within the representation </td></tr>
+    <tr><td class="paramname">surface_area</td><td>Pointer to surface area of inner layer (m^2) </td></tr>
+    <tr><td class="paramname">partial_deriv</td><td>\(\frac{\partial sa_{eff}}{\partial y}\) where \(y\) are species on the state array </td></tr>
+    <tr><td class="paramname">aero_rep_int_data</td><td>Pointer to the aerosol representation integer data </td></tr>
+    <tr><td class="paramname">aero_rep_float_data</td><td>Pointer to the aerosol representation floating-point data </td></tr>
+    <tr><td class="paramname">aero_rep_env_data</td><td>Pointer to the aerosol representation environment-dependent parameters </td></tr>
+    <tr><td class="paramname">surface_area</td><td>Surface area of specified layer (m2) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8c_source.html#l00212">212</a> of file <a class="el" href="aero__rep__single__particle_8c_source.html">aero_rep_single_particle.c</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="aero__rep__single__particle_8c_a788ee00930db343356a0cbe7c53ea600_cgraph.png" border="0" usemap="#aaero__rep__single__particle_8c_a788ee00930db343356a0cbe7c53ea600_cgraph" alt=""/></div>
+<map name="aaero__rep__single__particle_8c_a788ee00930db343356a0cbe7c53ea600_cgraph" id="aaero__rep__single__particle_8c_a788ee00930db343356a0cbe7c53ea600_cgraph">
+<area shape="rect" title="Get the surface area of specified particle layer &#160;(m)" alt="" coords="5,5,167,61"/>
+<area shape="rect" href="aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="215,13,377,54"/>
+<area shape="poly" title=" " alt="" coords="167,30,199,30,199,36,167,36"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="aero__rep__single__particle_8c_a788ee00930db343356a0cbe7c53ea600_icgraph.png" border="0" usemap="#aaero__rep__single__particle_8c_a788ee00930db343356a0cbe7c53ea600_icgraph" alt=""/></div>
+<map name="aaero__rep__single__particle_8c_a788ee00930db343356a0cbe7c53ea600_icgraph" id="aaero__rep__single__particle_8c_a788ee00930db343356a0cbe7c53ea600_icgraph">
+<area shape="rect" title="Get the surface area of specified particle layer &#160;(m)" alt="" coords="207,5,368,61"/>
+<area shape="rect" href="aero__rep__solver_8c.html#a122c5a47dece6968347c8f37484951a9" title="Get the surface area of interfacial layer between two phases (m^2)" alt="" coords="5,13,159,54"/>
+<area shape="poly" title=" " alt="" coords="191,36,159,36,159,30,191,30"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="afa7d35b774d0ab4d7cad7fb30d75e897" name="afa7d35b774d0ab4d7cad7fb30d75e897"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afa7d35b774d0ab4d7cad7fb30d75e897">&#9670;&#160;</a></span>aero_rep_single_particle_get_number_conc__n_m3()</h2>
 
@@ -1097,7 +1190,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8c_source.html#l00212">212</a> of file <a class="el" href="aero__rep__single__particle_8c_source.html">aero_rep_single_particle.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8c_source.html#l00370">370</a> of file <a class="el" href="aero__rep__single__particle_8c_source.html">aero_rep_single_particle.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1268,7 +1361,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8c_source.html#l00414">414</a> of file <a class="el" href="aero__rep__single__particle_8c_source.html">aero_rep_single_particle.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8c_source.html#l00572">572</a> of file <a class="el" href="aero__rep__single__particle_8c_source.html">aero_rep_single_particle.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1322,7 +1415,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8c_source.html#l00460">460</a> of file <a class="el" href="aero__rep__single__particle_8c_source.html">aero_rep_single_particle.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8c_source.html#l00618">618</a> of file <a class="el" href="aero__rep__single__particle_8c_source.html">aero_rep_single_particle.c</a>.</p>
 
 </div>
 </div>
@@ -1373,7 +1466,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Flag indicating whether this is the aerosol representation to update </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8c_source.html#l00383">383</a> of file <a class="el" href="aero__rep__single__particle_8c_source.html">aero_rep_single_particle.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8c_source.html#l00541">541</a> of file <a class="el" href="aero__rep__single__particle_8c_source.html">aero_rep_single_particle.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">

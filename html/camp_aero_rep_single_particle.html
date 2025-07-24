@@ -76,7 +76,9 @@ $(function(){ initResizable(false); });
 <div class="line">  },</div>
 <div class="line">  ...</div>
 <div class="line">]}</div>
-</div><!-- fragment --><p> The key-value pair <b>type</b> is required and must be <b>AERO_REP_SINGLE_PARTICLE</b>. This representation assumes that every <a class="el" href="input_format_aero_phase.html">aerosol phase</a> available will be present once in each particle.</p>
+</div><!-- fragment --><p> The key-value pair <b>type</b> is required and must be <b>AERO_REP_SINGLE_PARTICLE</b>. In this representation, particles are divided into layers. Phases in each layer are specified by the user.</p>
+<p>Phase configuration within particles follows "fractional volume overlap". The shared surface area between phases in adjacent layers is scaled by phase volume fraction within respective layers. In this configuration, the surface area of the layer interface between two phases is calculated as f_first * f_second * total_interface_surface_area where the first and second subscripts refer to the two phases in adjacent layers and</p>
+<p>f_first = volume_phase_first / volume_total_layer_first f_second = volume_phase_second / volume_total_layer_second</p>
 <p>The number concentration for each particle must be set from an external model using <code><a class="el" href="structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t.html" title="Single particle update number concentration object.">camp_aero_rep_single_particle::aero_rep_update_data_single_particle_number_t</a></code> objects. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

@@ -1,0 +1,9 @@
+<map id="aero_rep_get_interface_surface_area__m2" name="aero_rep_get_interface_surface_area__m2">
+<area shape="rect" id="Node000001" title="Get the surface area of interfacial layer between two phases (m^2)" alt="" coords="5,53,159,94"/>
+<area shape="rect" id="Node000002" href="$aero__rep__modal__binned__mass_8c.html#ab17adf9d167b1c67c4ffa0ea0cf1aa1a" title="Get the effective particle surface area &#160;(m)" alt="" coords="207,5,399,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,57,191,51,192,56,160,62"/>
+<area shape="rect" id="Node000003" href="$aero__rep__single__particle_8c.html#a788ee00930db343356a0cbe7c53ea600" title="Get the surface area of specified particle layer &#160;(m)" alt="" coords="222,85,384,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="160,84,208,93,207,99,159,90"/>
+<area shape="rect" id="Node000004" href="$aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="447,93,609,134"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="384,110,431,110,431,116,384,116"/>
+</map>

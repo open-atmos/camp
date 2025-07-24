@@ -48,6 +48,8 @@ procedure \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__r
 \begin{DoxyCompactList}\small\item\em Get the number of instances of an aerosol phase in this representation. \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a2329d10644fd2f8b2e73104561e0812b}{num\+\_\+jac\+\_\+elem}} (this, phase\+\_\+id)
 \begin{DoxyCompactList}\small\item\em Get the number of Jacobian elements used in calculations of aerosol mass, volume, number, etc. for a particular phase. \end{DoxyCompactList}\item 
+procedure \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a99d9a31fe9752c782d65bff41de1c7f3}{adjacent\+\_\+phases}} (this, phase\+\_\+name\+\_\+first, phase\+\_\+name\+\_\+second)
+\begin{DoxyCompactList}\small\item\em Returns index\+\_\+pair\+\_\+t type with phase\+\_\+ids of adjacent phases for modal/binned representation there are no adjacent phases. \end{DoxyCompactList}\item 
 final \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a849c52dc43e0cbe38fd5a32bdf613c5c}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the aerosol representation. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a3310e0b4d0d79b8180af1585638f715b}{finalize\+\_\+array}} (aero\+\_\+reps)
@@ -114,7 +116,7 @@ Modal mass aerosol representation.
 
 Time-\/invariant data related to a modal/binned mass aerosol representation. 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00208}{208}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00211}{211}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
 
 
@@ -136,7 +138,7 @@ Finalize the aerosol representation.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00203}{203}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00206}{206}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -149,6 +151,25 @@ Here is the call graph for this function\+:
 
 
 \doxysubsection{Member Function/\+Subroutine Documentation}
+\Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a99d9a31fe9752c782d65bff41de1c7f3}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!adjacent\_phases@{adjacent\_phases}}
+\index{adjacent\_phases@{adjacent\_phases}!camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}
+\doxysubsubsection{\texorpdfstring{adjacent\_phases()}{adjacent\_phases()}}
+{\footnotesize\ttfamily \label{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a99d9a31fe9752c782d65bff41de1c7f3} 
+procedure camp\+\_\+aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+::aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t\+::adjacent\+\_\+phases (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+t}}), intent(in)}]{this}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{phase\+\_\+name\+\_\+first}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{phase\+\_\+name\+\_\+second}{}\end{DoxyParamCaption})}
+
+
+
+Returns index\+\_\+pair\+\_\+t type with phase\+\_\+ids of adjacent phases for modal/binned representation there are no adjacent phases. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em this} & Aerosol representation data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00204}{204}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+
 \Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a3310e0b4d0d79b8180af1585638f715b}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!finalize\_array@{finalize\_array}}
 \index{finalize\_array@{finalize\_array}!camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}
 \doxysubsubsection{\texorpdfstring{finalize\_array()}{finalize\_array()}}
@@ -166,7 +187,7 @@ Finalize the aerosol representation array.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00203}{203}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source_l00206}{206}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8_f90_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+F90}}.
 
 \Hypertarget{structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t_a3a150a32595a8fe4d107af27b9cf8c8c}\index{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}!get\_section\_id@{get\_section\_id}}
 \index{get\_section\_id@{get\_section\_id}!camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t@{camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t}}

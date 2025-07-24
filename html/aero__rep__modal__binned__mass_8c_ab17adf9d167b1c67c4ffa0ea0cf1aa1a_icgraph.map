@@ -1,0 +1,5 @@
+<map id="aero_rep_modal_binned_mass_get_interface_surface_area__m2" name="aero_rep_modal_binned_mass_get_interface_surface_area__m2">
+<area shape="rect" id="Node000001" title="Get the effective particle surface area &#160;(m)" alt="" coords="207,5,399,61"/>
+<area shape="rect" id="Node000002" href="$aero__rep__solver_8c.html#a122c5a47dece6968347c8f37484951a9" title="Get the surface area of interfacial layer between two phases (m^2)" alt="" coords="5,13,159,54"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,36,159,36,159,30,191,30"/>
+</map>

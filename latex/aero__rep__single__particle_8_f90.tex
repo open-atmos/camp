@@ -10,8 +10,6 @@ The \doxylink{namespacecamp__aero__rep__single__particle}{camp\+\_\+aero\+\_\+re
 \item 
 type \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+t}}
 \begin{DoxyCompactList}\small\item\em Single particle aerosol representation. \end{DoxyCompactList}\item 
-type \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1index__pair__t}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::index\+\_\+pair\+\_\+t}}
-\item 
 type \mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t}}
 \begin{DoxyCompactList}\small\item\em Single particle update number concentration object. \end{DoxyCompactList}\item 
 interface \mbox{\hyperlink{interfacecamp__aero__rep__single__particle_1_1aero__rep__single__particle__create__number__update__data}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+create\+\_\+number\+\_\+update\+\_\+data}}
@@ -86,7 +84,7 @@ integer function \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_aec
 \begin{DoxyCompactList}\small\item\em Returns the number of phases in a layer or overall. \end{DoxyCompactList}\item 
 integer function \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_ad9d74330579c43a815e0cb46d546dc53}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::phase\+\_\+state\+\_\+size}} (this, layer, phase)
 \begin{DoxyCompactList}\small\item\em Returns the number of state variables for a layer and phase. \end{DoxyCompactList}\item 
-type(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1index__pair__t}{index\+\_\+pair\+\_\+t}}) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a6712abcf1445609b4ec085bcc84c099e}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::adjacent\+\_\+phases}} (this, phase\+\_\+name\+\_\+first, phase\+\_\+name\+\_\+second)
+type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1index__pair__t}{index\+\_\+pair\+\_\+t}}) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a6712abcf1445609b4ec085bcc84c099e}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::adjacent\+\_\+phases}} (this, phase\+\_\+name\+\_\+first, phase\+\_\+name\+\_\+second)
 \begin{DoxyCompactList}\small\item\em Determine is specified phase(s) exist in adjacent layers. Returns array of phase\+\_\+ids for adjacent phases first and second. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_aa04907b92cfcfefd74758da3ca7607cb}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the aerosol representation. \end{DoxyCompactList}\item 

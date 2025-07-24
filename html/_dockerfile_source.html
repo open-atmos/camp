@@ -128,9 +128,9 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    &amp;&amp; cd build \</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    &amp;&amp; export JSON_FORTRAN_HOME=&quot;/usr/local/jsonfortran-gnu-6.1.0&quot; \</div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    &amp;&amp; cmake -D CMAKE_BUILD_TYPE=release \</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>             -D CMAKE_C_FLAGS_DEBUG=&quot;-pg&quot; \</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>             -D CMAKE_Fortran_FLAGS_DEBUG=&quot;-pg&quot; \</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>             -D CMAKE_MODULE_LINKER_FLAGS=&quot;-pg&quot; \</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>             -D CMAKE_C_FLAGS_RELEASE=&quot;-g -O3&quot; \</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>             -D CMAKE_Fortran_FLAGS_RELEASE=&quot;-g -O3 -fbacktrace&quot; \</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>             -D CMAKE_MODULE_LINKER_FLAGS=&quot;-g&quot; \</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>             -D CAMP_ENABLE_MEMCHECK:BOOL=TRUE \</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>             /camp \</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    &amp;&amp; make install</div>

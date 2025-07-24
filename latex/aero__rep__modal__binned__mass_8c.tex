@@ -85,6 +85,8 @@ void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a567e448c1ea25085add6257
 \begin{DoxyCompactList}\small\item\em Update aerosol representation data for a new state. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a8d5bf734337581d90c2280ab858ccf96}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}radius, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Get the effective particle radius $r_{eff}$ (m) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ab17adf9d167b1c67c4ffa0ea0cf1aa1a}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+interface\+\_\+surface\+\_\+area\+\_\+\+\_\+m2}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx\+\_\+first, int aero\+\_\+phase\+\_\+idx\+\_\+second, double \texorpdfstring{$\ast$}{*}surface\+\_\+area, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Get the effective particle surface area $r_{eff}$ (m) \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2e585253c19aa48dec8c55b963999e9d}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}number\+\_\+conc, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Get the particle number concentration $n$ ( $\mbox{\si{\#\per\cubic\metre}}$) \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a5806fae1fe7d70369bfb7a0d9c54d12f}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type}} (int aero\+\_\+phase\+\_\+idx, int \texorpdfstring{$\ast$}{*}aero\+\_\+conc\+\_\+type, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
@@ -495,7 +497,7 @@ Pointer to a new GMD update data object
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00677}{677}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00707}{707}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 \Hypertarget{aero__rep__modal__binned__mass_8c_af0d3a3c6cbefde94669a1af1ac9e2937}\index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data@{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data}}
 \index{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data@{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
@@ -512,7 +514,7 @@ Pointer to a new GSD update data object
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00711}{711}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00741}{741}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 \Hypertarget{aero__rep__modal__binned__mass_8c_a5806fae1fe7d70369bfb7a0d9c54d12f}\index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type@{aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type}}
 \index{aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type@{aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
@@ -541,7 +543,7 @@ Modal mass concentrations are per-\/mode or per-\/bin.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00434}{434}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00464}{464}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -580,7 +582,7 @@ Get the average molecular weight in an aerosol phase $m$ ( $\mbox{\si{\kilogram\
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00525}{525}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00555}{555}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -627,7 +629,7 @@ Get the total mass in an aerosol phase $m$ ( $\mbox{\si{\kilogram\per\cubic\metr
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00462}{462}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00492}{492}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -729,6 +731,49 @@ Here is the caller graph for this function\+:
 \includegraphics[width=350pt]{aero__rep__modal__binned__mass_8c_a8d5bf734337581d90c2280ab858ccf96_icgraph}
 \end{center}
 \end{figure}
+\Hypertarget{aero__rep__modal__binned__mass_8c_ab17adf9d167b1c67c4ffa0ea0cf1aa1a}\index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_get\_interface\_surface\_area\_\_m2@{aero\_rep\_modal\_binned\_mass\_get\_interface\_surface\_area\_\_m2}}
+\index{aero\_rep\_modal\_binned\_mass\_get\_interface\_surface\_area\_\_m2@{aero\_rep\_modal\_binned\_mass\_get\_interface\_surface\_area\_\_m2}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_get\_interface\_surface\_area\_\_m2()}{aero\_rep\_modal\_binned\_mass\_get\_interface\_surface\_area\_\_m2()}}
+{\footnotesize\ttfamily \label{aero__rep__modal__binned__mass_8c_ab17adf9d167b1c67c4ffa0ea0cf1aa1a} 
+void aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass\+\_\+get\+\_\+interface\+\_\+surface\+\_\+area\+\_\+\+\_\+m2 (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx\+\_\+first}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx\+\_\+second}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{surface\+\_\+area}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
+
+
+
+Get the effective particle surface area $r_{eff}$ (m) 
+
+The surface area interface that exists between two specified phases within the modal/binned aerosol representation always returns an error, because no specific internal structure is assumed for phases within modes or bins.
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data, including the state array \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx\+\_\+first} & Index of the first aerosol phase within the representation \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx\+\_\+second} & Index of the second aerosol phase within the representation \\
+\hline
+{\em surface\+\_\+area} & Effective surface area of interface between phases (m\texorpdfstring{$^\wedge$}{\string^}2) \\
+\hline
+{\em partial\+\_\+deriv} & $\frac{\partial sa_{eff}}{\partial y}$ where $y$ are species on the state array \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00349}{349}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__modal__binned__mass_8c_ab17adf9d167b1c67c4ffa0ea0cf1aa1a_icgraph}
+\end{center}
+\end{figure}
 \Hypertarget{aero__rep__modal__binned__mass_8c_a2e585253c19aa48dec8c55b963999e9d}\index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3@{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3}}
 \index{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3@{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3()}{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3()}}
@@ -768,7 +813,7 @@ The binned number concentration is calculated according to\+:   \[
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00368}{368}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00398}{398}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -851,7 +896,7 @@ Print the mass-\/only modal/binned reaction parameters.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00663}{663}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00693}{693}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -884,7 +929,7 @@ Set GMD update data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00693}{693}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00723}{723}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 \Hypertarget{aero__rep__modal__binned__mass_8c_a1ac1087396c082ed4ebc7ddf43e7802f}\index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data@{aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data}}
 \index{aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data@{aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
@@ -909,7 +954,7 @@ Set GSD update data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00727}{727}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00757}{757}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 \Hypertarget{aero__rep__modal__binned__mass_8c_a1af186a816b0a6be0f3ee39f126351f1}\index{aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}!aero\_rep\_modal\_binned\_mass\_update\_data@{aero\_rep\_modal\_binned\_mass\_update\_data}}
 \index{aero\_rep\_modal\_binned\_mass\_update\_data@{aero\_rep\_modal\_binned\_mass\_update\_data}!aero\_rep\_modal\_binned\_mass.c@{aero\_rep\_modal\_binned\_mass.c}}
@@ -955,7 +1000,7 @@ D_s = D_{eff} = \tilde{D_n} e^{5 \tilde{\sigma}_g^2 / 2}
 r_{eff} = \frac{D_{eff}}{2}
 \] where $\tilde{D_n}$ is the geometric mean diameter \mbox{[}m\mbox{]}, $\sigma_g$ is the geometric standard deviation \mbox{[}unitless\mbox{]}, and $r_{eff}$ is the effective radius \mbox{[}m\mbox{]}.
 
-Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00594}{594}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source_l00624}{624}} of file \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_source}{aero\+\_\+rep\+\_\+modal\+\_\+binned\+\_\+mass.\+c}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak

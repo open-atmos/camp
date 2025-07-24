@@ -332,414 +332,444 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00328}00328\ \ \ \textcolor{keywordflow}{return};}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00329}00329\ \}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00330}00330\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00331}00331\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ particle\ number\ concentration\ \(\backslash\)f\$n\(\backslash\)f\$}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00332}00332\ \textcolor{comment}{\ *\ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)\#\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00333}00333\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00334}00334\ \textcolor{comment}{\ *\ The\ modal\ mass\ number\ concentration\ is\ calculated\ for\ a\ log-\/normal}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00335}00335\ \textcolor{comment}{\ *\ distribution\ where\ the\ geometric\ mean\ diameter\ (\(\backslash\)f\$\(\backslash\)tilde\{D\}\_n\(\backslash\)f\$)\ and}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00336}00336\ \textcolor{comment}{\ *\ geometric\ standard\ deviation\ (\(\backslash\)f\$\(\backslash\)tilde\{\(\backslash\)sigma\}\_g\(\backslash\)f\$)\ are\ set\ by\ the\ aerosol}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00337}00337\ \textcolor{comment}{\ *\ model\ prior\ to\ solving\ the\ chemistry.\ The\ number\ concentration\ is}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00338}00338\ \textcolor{comment}{\ *\ calculated\ according\ to\ the\ equation\ given\ in\ Table\ 1\ of\ Zender}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00339}00339\ \textcolor{comment}{\ *\ \(\backslash\)cite\ Zender2002\ :}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00340}00340\ \textcolor{comment}{\ *\ \(\backslash\)f[}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00341}00341\ \textcolor{comment}{\ *\ \ \ \ \ \ n\ =\ N\_0\ =\ \(\backslash\)frac\{6V\_0\}\{\(\backslash\)pi\}\(\backslash\)tilde\{D\}\_n\string^\{-\/3\}e\string^\{-\/9}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00342}00342\ \textcolor{comment}{\ *\ ln(\(\backslash\)tilde\{\(\backslash\)sigma\}\_g)\string^2/2\}\ \(\backslash\)f]\ \(\backslash\)f[\ V\_0\ =\ \(\backslash\)sum\_i\{\(\backslash\)frac\{m\_i\}\{\(\backslash\)rho\_i\}\}\ \(\backslash\)f]\ where}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00343}00343\ \textcolor{comment}{\ *\ \(\backslash\)f\$\(\backslash\)rho\_i\(\backslash\)f\$\ and\ \(\backslash\)f\$m\_i\(\backslash\)f\$\ are\ the\ density\ and\ total\ mass\ of\ species\ \(\backslash\)f\$i\(\backslash\)f\$}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00344}00344\ \textcolor{comment}{\ *\ in\ the\ specified\ mode.}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00345}00345\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00346}00346\ \textcolor{comment}{\ *\ The\ binned\ number\ concentration\ is\ calculated\ according\ to:}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00347}00347\ \textcolor{comment}{\ *\ \(\backslash\)f[}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00348}00348\ \textcolor{comment}{\ *\ \ \ \ \ n\ =\ V\_0\ /\ V\_p}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00349}00349\ \textcolor{comment}{\ *\ \(\backslash\)f]}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00350}00350\ \textcolor{comment}{\ *\ \(\backslash\)f[}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00351}00351\ \textcolor{comment}{\ *\ \ \ \ \ V\_p\ =\ \(\backslash\)frac\{4\}\{3\}\(\backslash\)pi\ r\string^\{3\}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00352}00352\ \textcolor{comment}{\ *\ \(\backslash\)f]}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00353}00353\ \textcolor{comment}{\ *\ where\ \(\backslash\)f\$r\(\backslash\)f\$\ is\ the\ radius\ of\ the\ size\ bin\ and\ \(\backslash\)f\$V\_0\(\backslash\)f\$\ is\ defined\ as}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00354}00354\ \textcolor{comment}{\ *\ above.}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00355}00355\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00356}00356\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00357}00357\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00358}00358\ \textcolor{comment}{\ *\ \(\backslash\)param\ number\_conc\ Particle\ number\ concentration,\ \(\backslash\)f\$n\(\backslash\)f\$}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00359}00359\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)\#\(\backslash\)per\(\backslash\)cubic\(\backslash\)centi\(\backslash\)metre\}\}\(\backslash\)f\$)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00360}00360\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ n\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$\ are}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00361}00361\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ species\ on\ the\ state\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00362}00362\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00363}00363\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00364}00364\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00365}00365\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00366}00366\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00367}00367\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00368}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2e585253c19aa48dec8c55b963999e9d}{00368}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2e585253c19aa48dec8c55b963999e9d}{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3}}(}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00369}00369\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,\ \textcolor{keywordtype}{double}\ *number\_conc,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00370}00370\ \ \ \ \ \textcolor{keywordtype}{double}\ *partial\_deriv,\ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00371}00371\ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00372}00372\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00373}00373\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00374}00374\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00375}00375\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_section\ =\ 0;\ i\_section\ <\ NUM\_SECTION\_\ \&\&\ aero\_phase\_idx\ >=\ 0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00376}00376\ \ \ \ \ \ \ \ i\_section++)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00377}00377\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_bin\ =\ 0;\ i\_bin\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc}{NUM\_BINS\_}}(i\_section)\ \&\&\ aero\_phase\_idx\ >=\ 0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00378}00378\ \ \ \ \ \ \ \ \ \ i\_bin++)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00379}00379\ \ \ \ \ \ \ aero\_phase\_idx\ -\/=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(i\_section);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00380}00380\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (aero\_phase\_idx\ <\ 0)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00381}00381\ \ \ \ \ \ \ \ \ *number\_conc\ =\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a97a5067d0d0de83f7d685a2147931b56}{NUMBER\_CONC\_}}(i\_section,\ i\_bin);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00382}00382\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00383}00383\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(i\_section);\ ++i\_phase)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ a\ pointer\ to\ the\ phase\ on\ the\ state\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\ =\ (\textcolor{keywordtype}{double}\ *)(model\_data-\/>grid\_cell\_state);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \ \ state\ +=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a25f6ec1483e499d98449daade14006d0}{PHASE\_STATE\_ID\_}}(i\_section,\ i\_phase,\ i\_bin);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00387}00387\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ the\ aerosol\ phase\ volume\ [m3\ m-\/3]}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ phase\_volume\ =\ 0.0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00390}00390\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}{aero\_phase\_get\_volume\_\_m3\_m3}}(}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00391}00391\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ model\_data,\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a3099f066dfc88d15de5e507d2ff9348e}{PHASE\_MODEL\_DATA\_ID\_}}(i\_section,\ i\_phase,\ i\_bin),}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00392}00392\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state,\ \&phase\_volume,\ partial\_deriv);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00393}00393\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00394}00394\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Convert\ d\_vol/d\_conc\ to\ d\_number/d\_conc}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00395}00395\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_elem\ =\ 0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00396}00396\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_elem\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae916e42526ab9cc51b8a5ef7a8a6b015}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_section,\ i\_phase,\ i\_bin);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00397}00397\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++i\_elem)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00398}00398\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a5990ecb35a15458808481d3e89b1d221}{SECTION\_TYPE\_}}(i\_section))\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00399}00399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_acdc340df3f65455d5b957345be3a6eff}{MODAL}}):}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00400}00400\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *(partial\_deriv++)\ *=}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00401}00401\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 6.0\ /\ (M\_PI\ *\ pow(\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aa155edd72e3fef10fdf04e07fea6fa4e}{GMD\_}}(i\_section),\ 3)\ *}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00402}00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ exp(9.0\ /\ 2.0\ *\ pow(log(\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_affffad0341081ad284a7f191f7688297}{GSD\_}}(i\_section)),\ 2)));}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00403}00403\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00404}00404\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a1c40fbd8643dc7cec0ed57056faf021c}{BINNED}}):}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00405}00405\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *(partial\_deriv++)\ *=\ 3.0\ /\ (4.0\ *\ M\_PI)\ /}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00406}00406\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pow(\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ad4bc2b2dfb9f2b8b2a94fa8f8bf048da}{BIN\_DP\_}}(i\_section,\ i\_bin)\ /\ 2.0,\ 3);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00407}00407\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00408}00408\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00409}00409\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00410}00410\ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00411}00411\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00412}00412\ \ \ \ \ \ \ \ \ i\_section\ =\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2bbf59e5f8e339a8a3ef9f64af23c0be}{NUM\_SECTION\_}};}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00413}00413\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00414}00414\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00415}00415\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00416}00416\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00331}00331\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ effective\ particle\ surface\ area\ \(\backslash\)f\$r\_\{eff\}\(\backslash\)f\$\ (m)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00332}00332\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00333}00333\ \textcolor{comment}{\ *\ The\ surface\ area\ interface\ that\ exists\ between\ two\ specified\ phases\ within}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00334}00334\ \textcolor{comment}{\ *\ the\ modal/binned\ aerosol\ representation\ always\ returns\ an\ error,\ because\ no}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00335}00335\ \textcolor{comment}{\ *\ specific\ internal\ structure\ is\ assumed\ for\ phases\ within\ modes\ or\ bins.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00336}00336\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00337}00337\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00338}00338\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\_first\ Index\ of\ the\ first\ aerosol\ phase\ within\ the\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00339}00339\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\_second\ Index\ of\ the\ second\ aerosol\ phase\ within\ the\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00340}00340\ \textcolor{comment}{\ *\ \(\backslash\)param\ surface\_area\ Effective\ surface\ area\ of\ interface\ between\ phases\ (m\string^2)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00341}00341\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ sa\_\{eff\}\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00342}00342\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ are\ species\ on\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00343}00343\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00344}00344\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00345}00345\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00346}00346\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00347}00347\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00348}00348\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00349}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ab17adf9d167b1c67c4ffa0ea0cf1aa1a}{00349}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ab17adf9d167b1c67c4ffa0ea0cf1aa1a}{aero\_rep\_modal\_binned\_mass\_get\_interface\_surface\_area\_\_m2}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00350}00350\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx\_first,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx\_second,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00351}00351\ \ \ \ \ \textcolor{keywordtype}{double}\ *surface\_area,\ \textcolor{keywordtype}{double}\ *partial\_deriv,\ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00352}00352\ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00353}00353\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00354}00354\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00355}00355\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00356}00356\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00357}00357\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ There\ are\ no\ adjacent\ pairs\ in\ the\ modal/binned\ representation.\(\backslash\)n\(\backslash\)n"{}});\ \ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00358}00358\ \ \ exit(1);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00359}00359\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00360}00360\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00361}00361\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ particle\ number\ concentration\ \(\backslash\)f\$n\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00362}00362\ \textcolor{comment}{\ *\ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)\#\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00363}00363\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00364}00364\ \textcolor{comment}{\ *\ The\ modal\ mass\ number\ concentration\ is\ calculated\ for\ a\ log-\/normal}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00365}00365\ \textcolor{comment}{\ *\ distribution\ where\ the\ geometric\ mean\ diameter\ (\(\backslash\)f\$\(\backslash\)tilde\{D\}\_n\(\backslash\)f\$)\ and}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00366}00366\ \textcolor{comment}{\ *\ geometric\ standard\ deviation\ (\(\backslash\)f\$\(\backslash\)tilde\{\(\backslash\)sigma\}\_g\(\backslash\)f\$)\ are\ set\ by\ the\ aerosol}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00367}00367\ \textcolor{comment}{\ *\ model\ prior\ to\ solving\ the\ chemistry.\ The\ number\ concentration\ is}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00368}00368\ \textcolor{comment}{\ *\ calculated\ according\ to\ the\ equation\ given\ in\ Table\ 1\ of\ Zender}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00369}00369\ \textcolor{comment}{\ *\ \(\backslash\)cite\ Zender2002\ :}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00370}00370\ \textcolor{comment}{\ *\ \(\backslash\)f[}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00371}00371\ \textcolor{comment}{\ *\ \ \ \ \ \ n\ =\ N\_0\ =\ \(\backslash\)frac\{6V\_0\}\{\(\backslash\)pi\}\(\backslash\)tilde\{D\}\_n\string^\{-\/3\}e\string^\{-\/9}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00372}00372\ \textcolor{comment}{\ *\ ln(\(\backslash\)tilde\{\(\backslash\)sigma\}\_g)\string^2/2\}\ \(\backslash\)f]\ \(\backslash\)f[\ V\_0\ =\ \(\backslash\)sum\_i\{\(\backslash\)frac\{m\_i\}\{\(\backslash\)rho\_i\}\}\ \(\backslash\)f]\ where}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00373}00373\ \textcolor{comment}{\ *\ \(\backslash\)f\$\(\backslash\)rho\_i\(\backslash\)f\$\ and\ \(\backslash\)f\$m\_i\(\backslash\)f\$\ are\ the\ density\ and\ total\ mass\ of\ species\ \(\backslash\)f\$i\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00374}00374\ \textcolor{comment}{\ *\ in\ the\ specified\ mode.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00375}00375\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00376}00376\ \textcolor{comment}{\ *\ The\ binned\ number\ concentration\ is\ calculated\ according\ to:}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00377}00377\ \textcolor{comment}{\ *\ \(\backslash\)f[}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00378}00378\ \textcolor{comment}{\ *\ \ \ \ \ n\ =\ V\_0\ /\ V\_p}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00379}00379\ \textcolor{comment}{\ *\ \(\backslash\)f]}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00380}00380\ \textcolor{comment}{\ *\ \(\backslash\)f[}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00381}00381\ \textcolor{comment}{\ *\ \ \ \ \ V\_p\ =\ \(\backslash\)frac\{4\}\{3\}\(\backslash\)pi\ r\string^\{3\}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00382}00382\ \textcolor{comment}{\ *\ \(\backslash\)f]}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00383}00383\ \textcolor{comment}{\ *\ where\ \(\backslash\)f\$r\(\backslash\)f\$\ is\ the\ radius\ of\ the\ size\ bin\ and\ \(\backslash\)f\$V\_0\(\backslash\)f\$\ is\ defined\ as}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00384}00384\ \textcolor{comment}{\ *\ above.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00385}00385\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00386}00386\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00387}00387\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00388}00388\ \textcolor{comment}{\ *\ \(\backslash\)param\ number\_conc\ Particle\ number\ concentration,\ \(\backslash\)f\$n\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00389}00389\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)\#\(\backslash\)per\(\backslash\)cubic\(\backslash\)centi\(\backslash\)metre\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00390}00390\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ n\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$\ are}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00391}00391\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ species\ on\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00392}00392\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00393}00393\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00394}00394\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00395}00395\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00396}00396\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00397}00397\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00398}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2e585253c19aa48dec8c55b963999e9d}{00398}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2e585253c19aa48dec8c55b963999e9d}{aero\_rep\_modal\_binned\_mass\_get\_number\_conc\_\_n\_m3}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00399}00399\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,\ \textcolor{keywordtype}{double}\ *number\_conc,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00400}00400\ \ \ \ \ \textcolor{keywordtype}{double}\ *partial\_deriv,\ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00401}00401\ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00402}00402\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00403}00403\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00404}00404\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00405}00405\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_section\ =\ 0;\ i\_section\ <\ NUM\_SECTION\_\ \&\&\ aero\_phase\_idx\ >=\ 0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00406}00406\ \ \ \ \ \ \ \ i\_section++)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00407}00407\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_bin\ =\ 0;\ i\_bin\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc}{NUM\_BINS\_}}(i\_section)\ \&\&\ aero\_phase\_idx\ >=\ 0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00408}00408\ \ \ \ \ \ \ \ \ \ i\_bin++)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00409}00409\ \ \ \ \ \ \ aero\_phase\_idx\ -\/=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(i\_section);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00410}00410\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (aero\_phase\_idx\ <\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00411}00411\ \ \ \ \ \ \ \ \ *number\_conc\ =\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a97a5067d0d0de83f7d685a2147931b56}{NUMBER\_CONC\_}}(i\_section,\ i\_bin);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00412}00412\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00413}00413\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(i\_section);\ ++i\_phase)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ a\ pointer\ to\ the\ phase\ on\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00415}00415\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\ =\ (\textcolor{keywordtype}{double}\ *)(model\_data-\/>grid\_cell\_state);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00416}00416\ \ \ \ \ \ \ \ \ \ \ \ \ state\ +=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a25f6ec1483e499d98449daade14006d0}{PHASE\_STATE\_ID\_}}(i\_section,\ i\_phase,\ i\_bin);}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00417}00417\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00418}00418\ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00419}00419\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00420}00420\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00421}00421\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ type\ of\ aerosol\ concentration\ used.}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00422}00422\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00423}00423\ \textcolor{comment}{\ *\ Modal\ mass\ concentrations\ are\ per-\/mode\ or\ per-\/bin.}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00424}00424\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00425}00425\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00426}00426\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_conc\_type\ Pointer\ to\ int\ that\ will\ hold\ the\ concentration\ type}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00427}00427\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ code}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00428}00428\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00429}00429\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00430}00430\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00431}00431\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00432}00432\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00433}00433\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00434}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a5806fae1fe7d70369bfb7a0d9c54d12f}{00434}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a5806fae1fe7d70369bfb7a0d9c54d12f}{aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type}}(\textcolor{keywordtype}{int}\ aero\_phase\_idx,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00435}00435\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *aero\_conc\_type,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00436}00436\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00437}00437\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00438}00438\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00439}00439\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00440}00440\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00441}00441\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00442}00442\ \ \ *aero\_conc\_type\ =\ 1;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00443}00443\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00444}00444\ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00445}00445\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00446}00446\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00447}00447\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ total\ mass\ in\ an\ aerosol\ phase\ \(\backslash\)f\$m\(\backslash\)f\$}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00448}00448\ \textcolor{comment}{\ *\ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00449}00449\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00450}00450\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00451}00451\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00452}00452\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_mass\ Total\ mass\ in\ the\ aerosol\ phase,\ \(\backslash\)f\$m\(\backslash\)f\$}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00453}00453\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00454}00454\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ m\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$\ are}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00455}00455\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ species\ on\ the\ state\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00456}00456\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00457}00457\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00458}00458\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00459}00459\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00460}00460\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00461}00461\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00462}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aa84e95ce69656ab640edfdb32cc71d4c}{00462}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aa84e95ce69656ab640edfdb32cc71d4c}{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_mass\_\_kg\_m3}}(}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00463}00463\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,\ \textcolor{keywordtype}{double}\ *aero\_phase\_mass,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00464}00464\ \ \ \ \ \textcolor{keywordtype}{double}\ *partial\_deriv,\ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00465}00465\ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00466}00466\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00467}00467\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00468}00468\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00469}00469\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_section\ =\ 0;\ i\_section\ <\ NUM\_SECTION\_\ \&\&\ aero\_phase\_idx\ >=\ 0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00470}00470\ \ \ \ \ \ \ \ ++i\_section)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00471}00471\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_bin\ =\ 0;\ i\_bin\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc}{NUM\_BINS\_}}(i\_section)\ \&\&\ aero\_phase\_idx\ >=\ 0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00472}00472\ \ \ \ \ \ \ \ \ \ ++i\_bin)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00473}00473\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (aero\_phase\_idx\ <\ 0\ ||\ aero\_phase\_idx\ >=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(i\_section))\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00474}00474\ \ \ \ \ \ \ \ \ aero\_phase\_idx\ -\/=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(i\_section);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00475}00475\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00476}00476\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00477}00477\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(i\_section);\ ++i\_phase)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00478}00478\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (aero\_phase\_idx\ ==\ 0)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ *aero\_phase\_mass\ =\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aed11d52678d2b6369215eea0a0533a84}{PHASE\_MASS\_}}(i\_section,\ i\_phase,\ i\_bin);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00480}00480\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00481}00481\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ a\ pointer\ to\ the\ phase\ on\ the\ state\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00482}00482\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\ =\ (\textcolor{keywordtype}{double}\ *)(model\_data-\/>grid\_cell\_state);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00483}00483\ \ \ \ \ \ \ \ \ \ \ \ \ state\ +=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a25f6ec1483e499d98449daade14006d0}{PHASE\_STATE\_ID\_}}(i\_section,\ i\_phase,\ i\_bin);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00484}00484\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00485}00485\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ d\_mass\ /\ d\_conc}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00486}00486\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ mass,\ mw;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}{aero\_phase\_get\_mass\_\_kg\_m3}}(}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ model\_data,\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a3099f066dfc88d15de5e507d2ff9348e}{PHASE\_MODEL\_DATA\_ID\_}}(i\_section,\ i\_phase,\ i\_bin),}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00489}00489\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state,\ \&mass,\ \&mw,\ partial\_deriv,\ NULL);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00490}00490\ \ \ \ \ \ \ \ \ \ \ \ \ partial\_deriv\ +=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae916e42526ab9cc51b8a5ef7a8a6b015}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_section,\ i\_phase,\ i\_bin);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00491}00491\ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00492}00492\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00493}00493\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Other\ phases\ present\ in\ the\ bin\ or\ mode\ do\ not\ contribute\ to}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00494}00494\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ aerosol\ phase\ mass}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00495}00495\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00496}00496\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_elem\ =\ 0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00497}00497\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_elem\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae916e42526ab9cc51b8a5ef7a8a6b015}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_section,\ i\_phase,\ i\_bin);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00498}00498\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++i\_elem)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00499}00499\ \ \ \ \ \ \ \ \ \ \ \ \ *(partial\_deriv++)\ =\ ZERO;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00500}00500\ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00501}00501\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00502}00502\ \ \ \ \ \ \ \ \ aero\_phase\_idx\ -\/=\ 1;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00503}00503\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00504}00504\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00505}00505\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00506}00506\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00507}00507\ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00508}00508\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00509}00509\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00510}00510\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ average\ molecular\ weight\ in\ an\ aerosol\ phase}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00511}00511\ \textcolor{comment}{\ **\ \ \ \ \ \ \ \ \(\backslash\)f\$m\(\backslash\)f\$\ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)mole\}\}\(\backslash\)f\$)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00512}00512\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00513}00513\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00514}00514\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00515}00515\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_avg\_MW\ Average\ molecular\ weight\ in\ the\ aerosol\ phase}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00516}00516\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)mole\}\}\(\backslash\)f\$)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00517}00517\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ m\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$\ are}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00518}00518\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ species\ on\ the\ state\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00519}00519\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00520}00520\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00521}00521\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00522}00522\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00523}00523\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00524}00524\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00525}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2c1fd8badaa6ebffd2b45ab5314c1279}{00525}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2c1fd8badaa6ebffd2b45ab5314c1279}{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}}(}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00526}00526\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,\ \textcolor{keywordtype}{double}\ *aero\_phase\_avg\_MW,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00527}00527\ \ \ \ \ \textcolor{keywordtype}{double}\ *partial\_deriv,\ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00528}00528\ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00529}00529\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00530}00530\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00531}00531\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00532}00532\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_section\ =\ 0;\ i\_section\ <\ NUM\_SECTION\_\ \&\&\ aero\_phase\_idx\ >=\ 0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00533}00533\ \ \ \ \ \ \ \ ++i\_section)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00534}00534\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_bin\ =\ 0;\ i\_bin\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc}{NUM\_BINS\_}}(i\_section)\ \&\&\ aero\_phase\_idx\ >=\ 0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00535}00535\ \ \ \ \ \ \ \ \ \ ++i\_bin)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00536}00536\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (aero\_phase\_idx\ <\ 0\ ||\ aero\_phase\_idx\ >=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(i\_section))\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00537}00537\ \ \ \ \ \ \ \ \ aero\_phase\_idx\ -\/=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(i\_section);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00538}00538\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00539}00539\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00540}00540\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(i\_section);\ ++i\_phase)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00541}00541\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (aero\_phase\_idx\ ==\ 0)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00542}00542\ \ \ \ \ \ \ \ \ \ \ *aero\_phase\_avg\_MW\ =\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_adcbbdc8b57268939e9ac1317011526be}{PHASE\_AVG\_MW\_}}(i\_section,\ i\_phase,\ i\_bin);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00543}00543\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00544}00544\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ a\ pointer\ to\ the\ phase\ on\ the\ state\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00545}00545\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\ =\ (\textcolor{keywordtype}{double}\ *)(model\_data-\/>grid\_cell\_state);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00546}00546\ \ \ \ \ \ \ \ \ \ \ \ \ state\ +=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a25f6ec1483e499d98449daade14006d0}{PHASE\_STATE\_ID\_}}(i\_section,\ i\_phase,\ i\_bin);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00547}00547\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00548}00548\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ d\_MW\ /\ d\_conc}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00549}00549\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ mass,\ mw;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00550}00550\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}{aero\_phase\_get\_mass\_\_kg\_m3}}(}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00551}00551\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ model\_data,\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a3099f066dfc88d15de5e507d2ff9348e}{PHASE\_MODEL\_DATA\_ID\_}}(i\_section,\ i\_phase,\ i\_bin),}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00552}00552\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state,\ \&mass,\ \&mw,\ NULL,\ partial\_deriv);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00553}00553\ \ \ \ \ \ \ \ \ \ \ \ \ partial\_deriv\ +=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae916e42526ab9cc51b8a5ef7a8a6b015}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_section,\ i\_phase,\ i\_bin);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00554}00554\ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00555}00555\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00556}00556\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Other\ phases\ present\ in\ the\ bin/mode\ do\ not\ contribute\ to\ the}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00557}00557\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ average\ MW\ of\ the\ aerosol\ phase}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00558}00558\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00559}00559\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_elem\ =\ 0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00560}00560\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_elem\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae916e42526ab9cc51b8a5ef7a8a6b015}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_section,\ i\_phase,\ i\_bin);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00561}00561\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++i\_elem)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00562}00562\ \ \ \ \ \ \ \ \ \ \ \ \ *(partial\_deriv++)\ =\ ZERO;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00563}00563\ \ \ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00564}00564\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00565}00565\ \ \ \ \ \ \ \ \ aero\_phase\_idx\ -\/=\ 1;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00566}00566\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00567}00567\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00568}00568\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00569}00569\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00570}00570\ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00571}00571\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00572}00572\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00573}00573\ \textcolor{comment}{/**\ \(\backslash\)brief\ Update\ the\ aerosol\ representation\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00574}00574\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00575}00575\ \textcolor{comment}{\ *\ The\ model\ mass\ aerosol\ representation\ update\ data\ is\ structured\ as\ follows:}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00576}00576\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00577}00577\ \textcolor{comment}{\ *\ \ -\/\ \(\backslash\)b\ int\ aero\_rep\_id\ (Id\ of\ one\ or\ more\ aerosol\ representations\ set\ by\ the}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00578}00578\ \textcolor{comment}{\ *\ \ \ \ \ \ \ host\ model\ using\ the}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00579}00579\ \textcolor{comment}{\ *\ \ \ \ \ \ \ camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t::set\_id}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00580}00580\ \textcolor{comment}{\ *\ \ \ \ \ \ \ function\ prior\ to\ initializing\ the\ solver.)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00581}00581\ \textcolor{comment}{\ *\ \ -\/\ \(\backslash\)b\ int\ update\_type\ (Type\ of\ update\ to\ perform.\ Can\ be\ UPDATE\_GMD\ or}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00582}00582\ \textcolor{comment}{\ *\ \ \ \ \ \ \ UPDATE\_GSD.)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00583}00583\ \textcolor{comment}{\ *\ \ -\/\ \(\backslash\)b\ int\ section\_id\ (Index\ of\ the\ mode\ to\ update.)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00584}00584\ \textcolor{comment}{\ *\ \ -\/\ \(\backslash\)b\ double\ new\_value\ (Either\ the\ new\ GMD\ (m)\ or\ the\ new\ GSD\ (unitless).)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00585}00585\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00586}00586\ \textcolor{comment}{\ *\ \(\backslash\)param\ update\_data\ Pointer\ to\ the\ updated\ aerosol\ representation\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00587}00587\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00588}00588\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00589}00589\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00590}00590\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00591}00591\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00592}00592\ \textcolor{comment}{\ *\ \(\backslash\)return\ Flag\ indicating\ whether\ this\ is\ the\ aerosol\ representation\ to\ update}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00593}00593\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00594}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a1af186a816b0a6be0f3ee39f126351f1}{00594}}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a1af186a816b0a6be0f3ee39f126351f1}{aero\_rep\_modal\_binned\_mass\_update\_data}}(\textcolor{keywordtype}{void}\ *update\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00595}00595\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00596}00596\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00597}00597\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00598}00598\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00599}00599\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00600}00600\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00601}00601\ \ \ \textcolor{keywordtype}{int}\ *aero\_rep\_id\ =\ (\textcolor{keywordtype}{int}\ *)update\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00602}00602\ \ \ \textcolor{keywordtype}{int}\ *update\_type\ =\ (\textcolor{keywordtype}{int}\ *)\&(aero\_rep\_id[1]);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00603}00603\ \ \ \textcolor{keywordtype}{int}\ *section\_id\ =\ (\textcolor{keywordtype}{int}\ *)\&(update\_type[1]);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00604}00604\ \ \ \textcolor{keywordtype}{double}\ *new\_value\ =\ (\textcolor{keywordtype}{double}\ *)\&(section\_id[1]);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00605}00605\ \ \ \textcolor{keywordtype}{bool}\ ret\_val\ =\ \textcolor{keyword}{false};}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00606}00606\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00607}00607\ \ \ \textcolor{comment}{//\ Set\ the\ new\ GMD\ or\ GSD\ for\ matching\ aerosol\ representations}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00608}00608\ \ \ \textcolor{keywordflow}{if}\ (*aero\_rep\_id\ ==\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a7f41adc102bb4117dcf37be9d4580b0a}{AERO\_REP\_ID\_}}\ \&\&\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a7f41adc102bb4117dcf37be9d4580b0a}{AERO\_REP\_ID\_}}\ !=\ 0)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00609}00609\ \ \ \ \ \textcolor{keywordflow}{if}\ (*update\_type\ ==\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a88bceb7cf5756b6b0b1a1e2b9d4960c7}{UPDATE\_GMD}})\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00610}00610\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a5990ecb35a15458808481d3e89b1d221}{SECTION\_TYPE\_}}(*section\_id)\ !=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_acdc340df3f65455d5b957345be3a6eff}{MODAL}})\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00611}00611\ \ \ \ \ \ \ \ \ printf(}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00612}00612\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ Trying\ to\ set\ geometric\ mean\ diameter\ for\ non-\/modal"{}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00613}00613\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\ aerosol\ section."{}});}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00614}00614\ \ \ \ \ \ \ \ \ exit(1);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00615}00615\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00616}00616\ \ \ \ \ \ \ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aa155edd72e3fef10fdf04e07fea6fa4e}{GMD\_}}(*section\_id)\ =\ (double)*new\_value;\ \ \textcolor{comment}{//\ [m]}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00617}00617\ \ \ \ \ \ \ ret\_val\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00618}00618\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (*update\_type\ ==\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae4f3303c913ec32f350d9e45d27debaa}{UPDATE\_GSD}})\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00619}00619\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a5990ecb35a15458808481d3e89b1d221}{SECTION\_TYPE\_}}(*section\_id)\ !=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_acdc340df3f65455d5b957345be3a6eff}{MODAL}})\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00620}00620\ \ \ \ \ \ \ \ \ printf(}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00621}00621\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ Trying\ to\ set\ geometric\ standard\ deviation\ for\ non-\/modal"{}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00622}00622\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\ aerosol\ section."{}});}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00623}00623\ \ \ \ \ \ \ \ \ exit(1);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00624}00624\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00625}00625\ \ \ \ \ \ \ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_affffad0341081ad284a7f191f7688297}{GSD\_}}(*section\_id)\ =\ (double)*new\_value;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00626}00626\ \ \ \ \ \ \ ret\_val\ =\ \textcolor{keyword}{true};}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00627}00627\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00628}00628\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00629}00629\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00630}00630\ \ \ \textcolor{keywordflow}{if}\ (ret\_val\ ==\ \textcolor{keyword}{true})\ \{\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00631}00631\ \textcolor{comment}{\ \ \ \ ///\ Recalculate\ the\ effective\ radius\ [m]}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00632}00632\ \textcolor{comment}{\ \ \ \ ///}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00633}00633\ \textcolor{comment}{\ \ \ \ ///\ Equation\ based\ on\ \(\backslash\)cite\ Zender2002}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00634}00634\ \textcolor{comment}{\ \ \ \ ///\ Table\ 1\ effective\ diameter\ \(\backslash\)f\$(D\_s,\ D\_\{eff\}\(\backslash\)f\$)\ equations:}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00635}00635\ \textcolor{comment}{\ \ \ \ ///\ \(\backslash\)f[}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00636}00636\ \textcolor{comment}{\ \ \ \ ///\ \(\backslash\)tilde\{\(\backslash\)sigma\_g\}\ \(\backslash\)equiv\ ln(\ \(\backslash\)sigma\_g\ )}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00637}00637\ \textcolor{comment}{\ \ \ \ ///\ \(\backslash\)f]}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00638}00638\ \textcolor{comment}{\ \ \ \ ///\ \(\backslash\)f[}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00639}00639\ \textcolor{comment}{\ \ \ \ ///\ D\_s\ =\ D\_\{eff\}\ =\ \(\backslash\)tilde\{D\_n\}\ e\string^\{5\ \(\backslash\)tilde\{\(\backslash\)sigma\}\_g\string^2\ /\ 2\}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00640}00640\ \textcolor{comment}{\ \ \ \ ///\ \(\backslash\)f]}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00641}00641\ \textcolor{comment}{\ \ \ \ ///\ \(\backslash\)f[}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00642}00642\ \textcolor{comment}{\ \ \ \ ///\ r\_\{eff\}\ =\ \(\backslash\)frac\{D\_\{eff\}\}\{2\}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00643}00643\ \textcolor{comment}{\ \ \ \ ///\ \(\backslash\)f]}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00644}00644\ \textcolor{comment}{\ \ \ \ ///\ where\ \(\backslash\)f\$\(\backslash\)tilde\{D\_n\}\(\backslash\)f\$\ is\ the\ geometric\ mean\ diameter\ [m],}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00645}00645\ \textcolor{comment}{\ \ \ \ ///\ \(\backslash\)f\$\(\backslash\)sigma\_g\(\backslash\)f\$}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00646}00646\ \textcolor{comment}{\ \ \ \ ///\ is\ the\ geometric\ standard\ deviation\ [unitless],\ and\ \(\backslash\)f\$r\_\{eff\}\(\backslash\)f\$}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00647}00647\ \textcolor{comment}{\ \ \ \ ///\ is\ the\ effective\ radius\ [m].}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00648}00648\ \textcolor{comment}{\ \ \ \ ///}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00649}00649\ \textcolor{comment}{}\ \ \ \ \textcolor{keywordtype}{double}\ ln\_gsd\ =\ log(\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_affffad0341081ad284a7f191f7688297}{GSD\_}}(*section\_id));}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00650}00650\ \ \ \ \ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_af90cc695d8ca7bff1de52f2648a1ea1f}{EFFECTIVE\_RADIUS\_}}(*section\_id,\ 0)\ =}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00651}00651\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aa155edd72e3fef10fdf04e07fea6fa4e}{GMD\_}}(*section\_id)\ /\ 2.0\ *\ exp(5.0\ *\ ln\_gsd\ *\ ln\_gsd\ /\ 2.0);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00652}00652\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00653}00653\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00654}00654\ \ \ \textcolor{keywordflow}{return}\ ret\_val;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00655}00655\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00656}00656\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00657}00657\ \textcolor{comment}{/**\ \(\backslash\)brief\ Print\ the\ mass-\/only\ modal/binned\ reaction\ parameters}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00658}00658\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00659}00659\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00660}00660\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00661}00661\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00662}00662\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00663}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a720cd5bdec5b2338509109814f0f94c6}{00663}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a720cd5bdec5b2338509109814f0f94c6}{aero\_rep\_modal\_binned\_mass\_print}}(\textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00664}00664\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00665}00665\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00666}00666\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00667}00667\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00668}00668\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nModal/binned\ mass-\/only\ aerosol\ representation\(\backslash\)n"{}});}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00669}00669\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00670}00670\ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00671}00671\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00672}00672\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00673}00673\ \textcolor{comment}{/**\ \(\backslash\)brief\ Create\ update\ data\ for\ new\ GMD}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00674}00674\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00675}00675\ \textcolor{comment}{\ *\ \(\backslash\)return\ Pointer\ to\ a\ new\ GMD\ update\ data\ object}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00676}00676\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00677}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aaf5da9bfa677ccfbbe2e5d9154ddce44}{00677}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aaf5da9bfa677ccfbbe2e5d9154ddce44}{aero\_rep\_modal\_binned\_mass\_create\_gmd\_update\_data}}()\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00678}00678\ \ \ \textcolor{keywordtype}{int}\ *update\_data\ =\ (\textcolor{keywordtype}{int}\ *)malloc(3\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ +\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{double}));}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00679}00679\ \ \ \textcolor{keywordflow}{if}\ (update\_data\ ==\ NULL)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00680}00680\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ GMD\ update\ data.\(\backslash\)n\(\backslash\)n"{}});}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00681}00681\ \ \ \ \ exit(1);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00418}00418\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ the\ aerosol\ phase\ volume\ [m3\ m-\/3]}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00419}00419\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ phase\_volume\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00420}00420\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}{aero\_phase\_get\_volume\_\_m3\_m3}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00421}00421\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ model\_data,\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a3099f066dfc88d15de5e507d2ff9348e}{PHASE\_MODEL\_DATA\_ID\_}}(i\_section,\ i\_phase,\ i\_bin),}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00422}00422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state,\ \&phase\_volume,\ partial\_deriv);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00423}00423\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00424}00424\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Convert\ d\_vol/d\_conc\ to\ d\_number/d\_conc}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00425}00425\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_elem\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00426}00426\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_elem\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae916e42526ab9cc51b8a5ef7a8a6b015}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_section,\ i\_phase,\ i\_bin);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00427}00427\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++i\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00428}00428\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a5990ecb35a15458808481d3e89b1d221}{SECTION\_TYPE\_}}(i\_section))\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_acdc340df3f65455d5b957345be3a6eff}{MODAL}}):}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00430}00430\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *(partial\_deriv++)\ *=}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00431}00431\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 6.0\ /\ (M\_PI\ *\ pow(\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aa155edd72e3fef10fdf04e07fea6fa4e}{GMD\_}}(i\_section),\ 3)\ *}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00432}00432\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ exp(9.0\ /\ 2.0\ *\ pow(log(\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_affffad0341081ad284a7f191f7688297}{GSD\_}}(i\_section)),\ 2)));}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00433}00433\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00434}00434\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ (\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a1c40fbd8643dc7cec0ed57056faf021c}{BINNED}}):}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00435}00435\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ *(partial\_deriv++)\ *=\ 3.0\ /\ (4.0\ *\ M\_PI)\ /}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00436}00436\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pow(\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ad4bc2b2dfb9f2b8b2a94fa8f8bf048da}{BIN\_DP\_}}(i\_section,\ i\_bin)\ /\ 2.0,\ 3);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00437}00437\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00438}00438\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00439}00439\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00440}00440\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00441}00441\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00442}00442\ \ \ \ \ \ \ \ \ i\_section\ =\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2bbf59e5f8e339a8a3ef9f64af23c0be}{NUM\_SECTION\_}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00443}00443\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00444}00444\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00445}00445\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00446}00446\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00447}00447\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00448}00448\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00449}00449\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00450}00450\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00451}00451\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ type\ of\ aerosol\ concentration\ used.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00452}00452\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00453}00453\ \textcolor{comment}{\ *\ Modal\ mass\ concentrations\ are\ per-\/mode\ or\ per-\/bin.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00454}00454\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00455}00455\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00456}00456\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_conc\_type\ Pointer\ to\ int\ that\ will\ hold\ the\ concentration\ type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00457}00457\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ code}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00458}00458\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00459}00459\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00460}00460\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00461}00461\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00462}00462\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00463}00463\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00464}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a5806fae1fe7d70369bfb7a0d9c54d12f}{00464}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a5806fae1fe7d70369bfb7a0d9c54d12f}{aero\_rep\_modal\_binned\_mass\_get\_aero\_conc\_type}}(\textcolor{keywordtype}{int}\ aero\_phase\_idx,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00465}00465\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *aero\_conc\_type,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00466}00466\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00467}00467\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00468}00468\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00469}00469\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00470}00470\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00471}00471\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00472}00472\ \ \ *aero\_conc\_type\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00473}00473\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00474}00474\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00475}00475\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00476}00476\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00477}00477\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ total\ mass\ in\ an\ aerosol\ phase\ \(\backslash\)f\$m\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00478}00478\ \textcolor{comment}{\ *\ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00479}00479\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00480}00480\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00481}00481\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00482}00482\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_mass\ Total\ mass\ in\ the\ aerosol\ phase,\ \(\backslash\)f\$m\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00483}00483\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00484}00484\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ m\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$\ are}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00485}00485\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ species\ on\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00486}00486\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00487}00487\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00488}00488\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00489}00489\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00490}00490\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00491}00491\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00492}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aa84e95ce69656ab640edfdb32cc71d4c}{00492}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aa84e95ce69656ab640edfdb32cc71d4c}{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_mass\_\_kg\_m3}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00493}00493\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,\ \textcolor{keywordtype}{double}\ *aero\_phase\_mass,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00494}00494\ \ \ \ \ \textcolor{keywordtype}{double}\ *partial\_deriv,\ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00495}00495\ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00496}00496\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00497}00497\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00498}00498\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00499}00499\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_section\ =\ 0;\ i\_section\ <\ NUM\_SECTION\_\ \&\&\ aero\_phase\_idx\ >=\ 0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00500}00500\ \ \ \ \ \ \ \ ++i\_section)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00501}00501\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_bin\ =\ 0;\ i\_bin\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc}{NUM\_BINS\_}}(i\_section)\ \&\&\ aero\_phase\_idx\ >=\ 0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00502}00502\ \ \ \ \ \ \ \ \ \ ++i\_bin)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00503}00503\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (aero\_phase\_idx\ <\ 0\ ||\ aero\_phase\_idx\ >=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(i\_section))\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00504}00504\ \ \ \ \ \ \ \ \ aero\_phase\_idx\ -\/=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(i\_section);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00505}00505\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00506}00506\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00507}00507\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(i\_section);\ ++i\_phase)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00508}00508\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (aero\_phase\_idx\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00509}00509\ \ \ \ \ \ \ \ \ \ \ *aero\_phase\_mass\ =\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aed11d52678d2b6369215eea0a0533a84}{PHASE\_MASS\_}}(i\_section,\ i\_phase,\ i\_bin);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00510}00510\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00511}00511\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ a\ pointer\ to\ the\ phase\ on\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00512}00512\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\ =\ (\textcolor{keywordtype}{double}\ *)(model\_data-\/>grid\_cell\_state);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00513}00513\ \ \ \ \ \ \ \ \ \ \ \ \ state\ +=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a25f6ec1483e499d98449daade14006d0}{PHASE\_STATE\_ID\_}}(i\_section,\ i\_phase,\ i\_bin);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00514}00514\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00515}00515\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ d\_mass\ /\ d\_conc}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00516}00516\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ mass,\ mw;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00517}00517\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}{aero\_phase\_get\_mass\_\_kg\_m3}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00518}00518\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ model\_data,\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a3099f066dfc88d15de5e507d2ff9348e}{PHASE\_MODEL\_DATA\_ID\_}}(i\_section,\ i\_phase,\ i\_bin),}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00519}00519\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state,\ \&mass,\ \&mw,\ partial\_deriv,\ NULL);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00520}00520\ \ \ \ \ \ \ \ \ \ \ \ \ partial\_deriv\ +=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae916e42526ab9cc51b8a5ef7a8a6b015}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_section,\ i\_phase,\ i\_bin);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00521}00521\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00522}00522\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00523}00523\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Other\ phases\ present\ in\ the\ bin\ or\ mode\ do\ not\ contribute\ to}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00524}00524\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ the\ aerosol\ phase\ mass}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00525}00525\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00526}00526\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_elem\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00527}00527\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_elem\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae916e42526ab9cc51b8a5ef7a8a6b015}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_section,\ i\_phase,\ i\_bin);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00528}00528\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++i\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00529}00529\ \ \ \ \ \ \ \ \ \ \ \ \ *(partial\_deriv++)\ =\ ZERO;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00530}00530\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00531}00531\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00532}00532\ \ \ \ \ \ \ \ \ aero\_phase\_idx\ -\/=\ 1;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00533}00533\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00534}00534\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00535}00535\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00536}00536\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00537}00537\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00538}00538\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00539}00539\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00540}00540\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ average\ molecular\ weight\ in\ an\ aerosol\ phase}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00541}00541\ \textcolor{comment}{\ **\ \ \ \ \ \ \ \ \(\backslash\)f\$m\(\backslash\)f\$\ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)mole\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00542}00542\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00543}00543\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00544}00544\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00545}00545\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_avg\_MW\ Average\ molecular\ weight\ in\ the\ aerosol\ phase}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00546}00546\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)mole\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00547}00547\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ m\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$\ are}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00548}00548\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ species\ on\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00549}00549\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00550}00550\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00551}00551\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00552}00552\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00553}00553\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00554}00554\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00555}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2c1fd8badaa6ebffd2b45ab5314c1279}{00555}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2c1fd8badaa6ebffd2b45ab5314c1279}{aero\_rep\_modal\_binned\_mass\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00556}00556\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,\ \textcolor{keywordtype}{double}\ *aero\_phase\_avg\_MW,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00557}00557\ \ \ \ \ \textcolor{keywordtype}{double}\ *partial\_deriv,\ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00558}00558\ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00559}00559\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00560}00560\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00561}00561\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00562}00562\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_section\ =\ 0;\ i\_section\ <\ NUM\_SECTION\_\ \&\&\ aero\_phase\_idx\ >=\ 0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00563}00563\ \ \ \ \ \ \ \ ++i\_section)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00564}00564\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_bin\ =\ 0;\ i\_bin\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae54530817d65033793af17ccdea393fc}{NUM\_BINS\_}}(i\_section)\ \&\&\ aero\_phase\_idx\ >=\ 0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00565}00565\ \ \ \ \ \ \ \ \ \ ++i\_bin)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00566}00566\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (aero\_phase\_idx\ <\ 0\ ||\ aero\_phase\_idx\ >=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(i\_section))\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00567}00567\ \ \ \ \ \ \ \ \ aero\_phase\_idx\ -\/=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(i\_section);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00568}00568\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{continue};}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00569}00569\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00570}00570\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a96f3a7315e70f53597d5075f61d5c9df}{NUM\_PHASE\_}}(i\_section);\ ++i\_phase)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00571}00571\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (aero\_phase\_idx\ ==\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00572}00572\ \ \ \ \ \ \ \ \ \ \ *aero\_phase\_avg\_MW\ =\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_adcbbdc8b57268939e9ac1317011526be}{PHASE\_AVG\_MW\_}}(i\_section,\ i\_phase,\ i\_bin);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00573}00573\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00574}00574\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ a\ pointer\ to\ the\ phase\ on\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00575}00575\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\ =\ (\textcolor{keywordtype}{double}\ *)(model\_data-\/>grid\_cell\_state);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00576}00576\ \ \ \ \ \ \ \ \ \ \ \ \ state\ +=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a25f6ec1483e499d98449daade14006d0}{PHASE\_STATE\_ID\_}}(i\_section,\ i\_phase,\ i\_bin);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00577}00577\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00578}00578\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Get\ d\_MW\ /\ d\_conc}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00579}00579\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ mass,\ mw;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00580}00580\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}{aero\_phase\_get\_mass\_\_kg\_m3}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00581}00581\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ model\_data,\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a3099f066dfc88d15de5e507d2ff9348e}{PHASE\_MODEL\_DATA\_ID\_}}(i\_section,\ i\_phase,\ i\_bin),}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00582}00582\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state,\ \&mass,\ \&mw,\ NULL,\ partial\_deriv);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00583}00583\ \ \ \ \ \ \ \ \ \ \ \ \ partial\_deriv\ +=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae916e42526ab9cc51b8a5ef7a8a6b015}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_section,\ i\_phase,\ i\_bin);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00584}00584\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00585}00585\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00586}00586\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Other\ phases\ present\ in\ the\ bin/mode\ do\ not\ contribute\ to\ the}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00587}00587\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ average\ MW\ of\ the\ aerosol\ phase}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00588}00588\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00589}00589\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_elem\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00590}00590\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_elem\ <\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae916e42526ab9cc51b8a5ef7a8a6b015}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_section,\ i\_phase,\ i\_bin);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00591}00591\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ++i\_elem)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00592}00592\ \ \ \ \ \ \ \ \ \ \ \ \ *(partial\_deriv++)\ =\ ZERO;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00593}00593\ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00594}00594\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00595}00595\ \ \ \ \ \ \ \ \ aero\_phase\_idx\ -\/=\ 1;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00596}00596\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00597}00597\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00598}00598\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00599}00599\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00600}00600\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00601}00601\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00602}00602\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00603}00603\ \textcolor{comment}{/**\ \(\backslash\)brief\ Update\ the\ aerosol\ representation\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00604}00604\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00605}00605\ \textcolor{comment}{\ *\ The\ model\ mass\ aerosol\ representation\ update\ data\ is\ structured\ as\ follows:}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00606}00606\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00607}00607\ \textcolor{comment}{\ *\ \ -\/\ \(\backslash\)b\ int\ aero\_rep\_id\ (Id\ of\ one\ or\ more\ aerosol\ representations\ set\ by\ the}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00608}00608\ \textcolor{comment}{\ *\ \ \ \ \ \ \ host\ model\ using\ the}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00609}00609\ \textcolor{comment}{\ *\ \ \ \ \ \ \ camp\_aero\_rep\_modal\_binned\_mass::aero\_rep\_modal\_binned\_mass\_t::set\_id}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00610}00610\ \textcolor{comment}{\ *\ \ \ \ \ \ \ function\ prior\ to\ initializing\ the\ solver.)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00611}00611\ \textcolor{comment}{\ *\ \ -\/\ \(\backslash\)b\ int\ update\_type\ (Type\ of\ update\ to\ perform.\ Can\ be\ UPDATE\_GMD\ or}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00612}00612\ \textcolor{comment}{\ *\ \ \ \ \ \ \ UPDATE\_GSD.)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00613}00613\ \textcolor{comment}{\ *\ \ -\/\ \(\backslash\)b\ int\ section\_id\ (Index\ of\ the\ mode\ to\ update.)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00614}00614\ \textcolor{comment}{\ *\ \ -\/\ \(\backslash\)b\ double\ new\_value\ (Either\ the\ new\ GMD\ (m)\ or\ the\ new\ GSD\ (unitless).)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00615}00615\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00616}00616\ \textcolor{comment}{\ *\ \(\backslash\)param\ update\_data\ Pointer\ to\ the\ updated\ aerosol\ representation\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00617}00617\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00618}00618\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00619}00619\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00620}00620\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00621}00621\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00622}00622\ \textcolor{comment}{\ *\ \(\backslash\)return\ Flag\ indicating\ whether\ this\ is\ the\ aerosol\ representation\ to\ update}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00623}00623\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00624}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a1af186a816b0a6be0f3ee39f126351f1}{00624}}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a1af186a816b0a6be0f3ee39f126351f1}{aero\_rep\_modal\_binned\_mass\_update\_data}}(\textcolor{keywordtype}{void}\ *update\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00625}00625\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00626}00626\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00627}00627\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00628}00628\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00629}00629\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00630}00630\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00631}00631\ \ \ \textcolor{keywordtype}{int}\ *aero\_rep\_id\ =\ (\textcolor{keywordtype}{int}\ *)update\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00632}00632\ \ \ \textcolor{keywordtype}{int}\ *update\_type\ =\ (\textcolor{keywordtype}{int}\ *)\&(aero\_rep\_id[1]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00633}00633\ \ \ \textcolor{keywordtype}{int}\ *section\_id\ =\ (\textcolor{keywordtype}{int}\ *)\&(update\_type[1]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00634}00634\ \ \ \textcolor{keywordtype}{double}\ *new\_value\ =\ (\textcolor{keywordtype}{double}\ *)\&(section\_id[1]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00635}00635\ \ \ \textcolor{keywordtype}{bool}\ ret\_val\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00636}00636\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00637}00637\ \ \ \textcolor{comment}{//\ Set\ the\ new\ GMD\ or\ GSD\ for\ matching\ aerosol\ representations}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00638}00638\ \ \ \textcolor{keywordflow}{if}\ (*aero\_rep\_id\ ==\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a7f41adc102bb4117dcf37be9d4580b0a}{AERO\_REP\_ID\_}}\ \&\&\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a7f41adc102bb4117dcf37be9d4580b0a}{AERO\_REP\_ID\_}}\ !=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00639}00639\ \ \ \ \ \textcolor{keywordflow}{if}\ (*update\_type\ ==\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a88bceb7cf5756b6b0b1a1e2b9d4960c7}{UPDATE\_GMD}})\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00640}00640\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a5990ecb35a15458808481d3e89b1d221}{SECTION\_TYPE\_}}(*section\_id)\ !=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_acdc340df3f65455d5b957345be3a6eff}{MODAL}})\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00641}00641\ \ \ \ \ \ \ \ \ printf(}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00642}00642\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ Trying\ to\ set\ geometric\ mean\ diameter\ for\ non-\/modal"{}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00643}00643\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\ aerosol\ section."{}});}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00644}00644\ \ \ \ \ \ \ \ \ exit(1);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00645}00645\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00646}00646\ \ \ \ \ \ \ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aa155edd72e3fef10fdf04e07fea6fa4e}{GMD\_}}(*section\_id)\ =\ (double)*new\_value;\ \ \textcolor{comment}{//\ [m]}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00647}00647\ \ \ \ \ \ \ ret\_val\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00648}00648\ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (*update\_type\ ==\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae4f3303c913ec32f350d9e45d27debaa}{UPDATE\_GSD}})\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00649}00649\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a5990ecb35a15458808481d3e89b1d221}{SECTION\_TYPE\_}}(*section\_id)\ !=\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_acdc340df3f65455d5b957345be3a6eff}{MODAL}})\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00650}00650\ \ \ \ \ \ \ \ \ printf(}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00651}00651\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ Trying\ to\ set\ geometric\ standard\ deviation\ for\ non-\/modal"{}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00652}00652\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}\ aerosol\ section."{}});}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00653}00653\ \ \ \ \ \ \ \ \ exit(1);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00654}00654\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00655}00655\ \ \ \ \ \ \ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_affffad0341081ad284a7f191f7688297}{GSD\_}}(*section\_id)\ =\ (double)*new\_value;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00656}00656\ \ \ \ \ \ \ ret\_val\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00657}00657\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00658}00658\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00659}00659\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00660}00660\ \ \ \textcolor{keywordflow}{if}\ (ret\_val\ ==\ \textcolor{keyword}{true})\ \{\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00661}00661\ \textcolor{comment}{\ \ \ \ ///\ Recalculate\ the\ effective\ radius\ [m]}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00662}00662\ \textcolor{comment}{\ \ \ \ ///}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00663}00663\ \textcolor{comment}{\ \ \ \ ///\ Equation\ based\ on\ \(\backslash\)cite\ Zender2002}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00664}00664\ \textcolor{comment}{\ \ \ \ ///\ Table\ 1\ effective\ diameter\ \(\backslash\)f\$(D\_s,\ D\_\{eff\}\(\backslash\)f\$)\ equations:}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00665}00665\ \textcolor{comment}{\ \ \ \ ///\ \(\backslash\)f[}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00666}00666\ \textcolor{comment}{\ \ \ \ ///\ \(\backslash\)tilde\{\(\backslash\)sigma\_g\}\ \(\backslash\)equiv\ ln(\ \(\backslash\)sigma\_g\ )}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00667}00667\ \textcolor{comment}{\ \ \ \ ///\ \(\backslash\)f]}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00668}00668\ \textcolor{comment}{\ \ \ \ ///\ \(\backslash\)f[}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00669}00669\ \textcolor{comment}{\ \ \ \ ///\ D\_s\ =\ D\_\{eff\}\ =\ \(\backslash\)tilde\{D\_n\}\ e\string^\{5\ \(\backslash\)tilde\{\(\backslash\)sigma\}\_g\string^2\ /\ 2\}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00670}00670\ \textcolor{comment}{\ \ \ \ ///\ \(\backslash\)f]}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00671}00671\ \textcolor{comment}{\ \ \ \ ///\ \(\backslash\)f[}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00672}00672\ \textcolor{comment}{\ \ \ \ ///\ r\_\{eff\}\ =\ \(\backslash\)frac\{D\_\{eff\}\}\{2\}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00673}00673\ \textcolor{comment}{\ \ \ \ ///\ \(\backslash\)f]}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00674}00674\ \textcolor{comment}{\ \ \ \ ///\ where\ \(\backslash\)f\$\(\backslash\)tilde\{D\_n\}\(\backslash\)f\$\ is\ the\ geometric\ mean\ diameter\ [m],}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00675}00675\ \textcolor{comment}{\ \ \ \ ///\ \(\backslash\)f\$\(\backslash\)sigma\_g\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00676}00676\ \textcolor{comment}{\ \ \ \ ///\ is\ the\ geometric\ standard\ deviation\ [unitless],\ and\ \(\backslash\)f\$r\_\{eff\}\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00677}00677\ \textcolor{comment}{\ \ \ \ ///\ is\ the\ effective\ radius\ [m].}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00678}00678\ \textcolor{comment}{\ \ \ \ ///}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00679}00679\ \textcolor{comment}{}\ \ \ \ \textcolor{keywordtype}{double}\ ln\_gsd\ =\ log(\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_affffad0341081ad284a7f191f7688297}{GSD\_}}(*section\_id));}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00680}00680\ \ \ \ \ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_af90cc695d8ca7bff1de52f2648a1ea1f}{EFFECTIVE\_RADIUS\_}}(*section\_id,\ 0)\ =}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00681}00681\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aa155edd72e3fef10fdf04e07fea6fa4e}{GMD\_}}(*section\_id)\ /\ 2.0\ *\ exp(5.0\ *\ ln\_gsd\ *\ ln\_gsd\ /\ 2.0);}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00682}00682\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00683}00683\ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{void}\ *)update\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00684}00684\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00685}00685\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00686}00686\ \textcolor{comment}{/**\ \(\backslash\)brief\ Set\ GMD\ update\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00687}00687\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00688}00688\ \textcolor{comment}{\ *\ \(\backslash\)param\ update\_data\ Pointer\ to\ an\ allocated\ GMD\ update\ data\ object}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00689}00689\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_id\ Id\ of\ the\ aerosol\ representation(s)\ to\ update}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00690}00690\ \textcolor{comment}{\ *\ \(\backslash\)param\ section\_id\ Id\ of\ the\ mode\ to\ update}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00691}00691\ \textcolor{comment}{\ *\ \(\backslash\)param\ gmd\ New\ mode\ GMD\ (m)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00683}00683\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00684}00684\ \ \ \textcolor{keywordflow}{return}\ ret\_val;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00685}00685\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00686}00686\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00687}00687\ \textcolor{comment}{/**\ \(\backslash\)brief\ Print\ the\ mass-\/only\ modal/binned\ reaction\ parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00688}00688\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00689}00689\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00690}00690\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00691}00691\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
 \DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00692}00692\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00693}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2ef81a778d8aba9feaef36188a545f45}{00693}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2ef81a778d8aba9feaef36188a545f45}{aero\_rep\_modal\_binned\_mass\_set\_gmd\_update\_data}}(\textcolor{keywordtype}{void}\ *update\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00694}00694\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ aero\_rep\_id,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00695}00695\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ section\_id,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00696}00696\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ gmd)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00697}00697\ \ \ \textcolor{keywordtype}{int}\ *new\_aero\_rep\_id\ =\ (\textcolor{keywordtype}{int}\ *)update\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00698}00698\ \ \ \textcolor{keywordtype}{int}\ *update\_type\ =\ (\textcolor{keywordtype}{int}\ *)\&(new\_aero\_rep\_id[1]);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00699}00699\ \ \ \textcolor{keywordtype}{int}\ *new\_section\_id\ =\ (\textcolor{keywordtype}{int}\ *)\&(update\_type[1]);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00700}00700\ \ \ \textcolor{keywordtype}{double}\ *new\_GMD\ =\ (\textcolor{keywordtype}{double}\ *)\&(new\_section\_id[1]);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00701}00701\ \ \ *new\_aero\_rep\_id\ =\ aero\_rep\_id;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00702}00702\ \ \ *update\_type\ =\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a88bceb7cf5756b6b0b1a1e2b9d4960c7}{UPDATE\_GMD}};}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00703}00703\ \ \ *new\_section\_id\ =\ section\_id;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00704}00704\ \ \ *new\_GMD\ =\ gmd;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00705}00705\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00706}00706\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00707}00707\ \textcolor{comment}{/**\ \(\backslash\)brief\ Create\ update\ data\ for\ new\ GSD}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00708}00708\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00709}00709\ \textcolor{comment}{\ *\ \(\backslash\)return\ Pointer\ to\ a\ new\ GSD\ update\ data\ object}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00710}00710\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00711}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_af0d3a3c6cbefde94669a1af1ac9e2937}{00711}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_af0d3a3c6cbefde94669a1af1ac9e2937}{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data}}()\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00712}00712\ \ \ \textcolor{keywordtype}{int}\ *update\_data\ =\ (\textcolor{keywordtype}{int}\ *)malloc(3\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ +\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{double}));}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00713}00713\ \ \ \textcolor{keywordflow}{if}\ (update\_data\ ==\ NULL)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00714}00714\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ GSD\ update\ data.\(\backslash\)n\(\backslash\)n"{}});}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00715}00715\ \ \ \ \ exit(1);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00716}00716\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00717}00717\ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{void}\ *)update\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00718}00718\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00719}00719\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00720}00720\ \textcolor{comment}{/**\ \(\backslash\)brief\ Set\ GSD\ update\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00721}00721\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00722}00722\ \textcolor{comment}{\ *\ \(\backslash\)param\ update\_data\ Pointer\ to\ an\ allocated\ GSD\ update\ data\ object}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00723}00723\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_id\ Id\ of\ the\ aerosol\ representation(s)\ to\ update}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00724}00724\ \textcolor{comment}{\ *\ \(\backslash\)param\ section\_id\ Id\ of\ the\ mode\ to\ update}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00725}00725\ \textcolor{comment}{\ *\ \(\backslash\)param\ gsd\ New\ mode\ GSD\ (unitless)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00726}00726\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00727}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a1ac1087396c082ed4ebc7ddf43e7802f}{00727}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a1ac1087396c082ed4ebc7ddf43e7802f}{aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data}}(\textcolor{keywordtype}{void}\ *update\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00728}00728\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ aero\_rep\_id,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00729}00729\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ section\_id,}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00730}00730\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ gsd)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00731}00731\ \ \ \textcolor{keywordtype}{int}\ *new\_aero\_rep\_id\ =\ (\textcolor{keywordtype}{int}\ *)update\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00732}00732\ \ \ \textcolor{keywordtype}{int}\ *update\_type\ =\ (\textcolor{keywordtype}{int}\ *)\&(new\_aero\_rep\_id[1]);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00733}00733\ \ \ \textcolor{keywordtype}{int}\ *new\_section\_id\ =\ (\textcolor{keywordtype}{int}\ *)\&(update\_type[1]);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00734}00734\ \ \ \textcolor{keywordtype}{double}\ *new\_GSD\ =\ (\textcolor{keywordtype}{double}\ *)\&(new\_section\_id[1]);}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00735}00735\ \ \ *new\_aero\_rep\_id\ =\ aero\_rep\_id;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00736}00736\ \ \ *update\_type\ =\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae4f3303c913ec32f350d9e45d27debaa}{UPDATE\_GSD}};}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00737}00737\ \ \ *new\_section\_id\ =\ section\_id;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00738}00738\ \ \ *new\_GSD\ =\ gsd;}
-\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00739}00739\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00693}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a720cd5bdec5b2338509109814f0f94c6}{00693}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a720cd5bdec5b2338509109814f0f94c6}{aero\_rep\_modal\_binned\_mass\_print}}(\textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00694}00694\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00695}00695\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00696}00696\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00697}00697\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00698}00698\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nModal/binned\ mass-\/only\ aerosol\ representation\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00699}00699\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00700}00700\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00701}00701\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00702}00702\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00703}00703\ \textcolor{comment}{/**\ \(\backslash\)brief\ Create\ update\ data\ for\ new\ GMD}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00704}00704\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00705}00705\ \textcolor{comment}{\ *\ \(\backslash\)return\ Pointer\ to\ a\ new\ GMD\ update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00706}00706\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00707}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aaf5da9bfa677ccfbbe2e5d9154ddce44}{00707}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_aaf5da9bfa677ccfbbe2e5d9154ddce44}{aero\_rep\_modal\_binned\_mass\_create\_gmd\_update\_data}}()\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00708}00708\ \ \ \textcolor{keywordtype}{int}\ *update\_data\ =\ (\textcolor{keywordtype}{int}\ *)malloc(3\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ +\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{double}));}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00709}00709\ \ \ \textcolor{keywordflow}{if}\ (update\_data\ ==\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00710}00710\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ GMD\ update\ data.\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00711}00711\ \ \ \ \ exit(1);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00712}00712\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00713}00713\ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{void}\ *)update\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00714}00714\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00715}00715\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00716}00716\ \textcolor{comment}{/**\ \(\backslash\)brief\ Set\ GMD\ update\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00717}00717\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00718}00718\ \textcolor{comment}{\ *\ \(\backslash\)param\ update\_data\ Pointer\ to\ an\ allocated\ GMD\ update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00719}00719\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_id\ Id\ of\ the\ aerosol\ representation(s)\ to\ update}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00720}00720\ \textcolor{comment}{\ *\ \(\backslash\)param\ section\_id\ Id\ of\ the\ mode\ to\ update}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00721}00721\ \textcolor{comment}{\ *\ \(\backslash\)param\ gmd\ New\ mode\ GMD\ (m)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00722}00722\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00723}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2ef81a778d8aba9feaef36188a545f45}{00723}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a2ef81a778d8aba9feaef36188a545f45}{aero\_rep\_modal\_binned\_mass\_set\_gmd\_update\_data}}(\textcolor{keywordtype}{void}\ *update\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00724}00724\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ aero\_rep\_id,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00725}00725\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ section\_id,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00726}00726\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ gmd)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00727}00727\ \ \ \textcolor{keywordtype}{int}\ *new\_aero\_rep\_id\ =\ (\textcolor{keywordtype}{int}\ *)update\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00728}00728\ \ \ \textcolor{keywordtype}{int}\ *update\_type\ =\ (\textcolor{keywordtype}{int}\ *)\&(new\_aero\_rep\_id[1]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00729}00729\ \ \ \textcolor{keywordtype}{int}\ *new\_section\_id\ =\ (\textcolor{keywordtype}{int}\ *)\&(update\_type[1]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00730}00730\ \ \ \textcolor{keywordtype}{double}\ *new\_GMD\ =\ (\textcolor{keywordtype}{double}\ *)\&(new\_section\_id[1]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00731}00731\ \ \ *new\_aero\_rep\_id\ =\ aero\_rep\_id;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00732}00732\ \ \ *update\_type\ =\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a88bceb7cf5756b6b0b1a1e2b9d4960c7}{UPDATE\_GMD}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00733}00733\ \ \ *new\_section\_id\ =\ section\_id;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00734}00734\ \ \ *new\_GMD\ =\ gmd;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00735}00735\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00736}00736\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00737}00737\ \textcolor{comment}{/**\ \(\backslash\)brief\ Create\ update\ data\ for\ new\ GSD}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00738}00738\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00739}00739\ \textcolor{comment}{\ *\ \(\backslash\)return\ Pointer\ to\ a\ new\ GSD\ update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00740}00740\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00741}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_af0d3a3c6cbefde94669a1af1ac9e2937}{00741}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_af0d3a3c6cbefde94669a1af1ac9e2937}{aero\_rep\_modal\_binned\_mass\_create\_gsd\_update\_data}}()\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00742}00742\ \ \ \textcolor{keywordtype}{int}\ *update\_data\ =\ (\textcolor{keywordtype}{int}\ *)malloc(3\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ +\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{double}));}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00743}00743\ \ \ \textcolor{keywordflow}{if}\ (update\_data\ ==\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00744}00744\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ GSD\ update\ data.\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00745}00745\ \ \ \ \ exit(1);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00746}00746\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00747}00747\ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{void}\ *)update\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00748}00748\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00749}00749\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00750}00750\ \textcolor{comment}{/**\ \(\backslash\)brief\ Set\ GSD\ update\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00751}00751\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00752}00752\ \textcolor{comment}{\ *\ \(\backslash\)param\ update\_data\ Pointer\ to\ an\ allocated\ GSD\ update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00753}00753\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_id\ Id\ of\ the\ aerosol\ representation(s)\ to\ update}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00754}00754\ \textcolor{comment}{\ *\ \(\backslash\)param\ section\_id\ Id\ of\ the\ mode\ to\ update}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00755}00755\ \textcolor{comment}{\ *\ \(\backslash\)param\ gsd\ New\ mode\ GSD\ (unitless)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00756}00756\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00757}\mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a1ac1087396c082ed4ebc7ddf43e7802f}{00757}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_a1ac1087396c082ed4ebc7ddf43e7802f}{aero\_rep\_modal\_binned\_mass\_set\_gsd\_update\_data}}(\textcolor{keywordtype}{void}\ *update\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00758}00758\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ aero\_rep\_id,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00759}00759\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ section\_id,}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00760}00760\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ gsd)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00761}00761\ \ \ \textcolor{keywordtype}{int}\ *new\_aero\_rep\_id\ =\ (\textcolor{keywordtype}{int}\ *)update\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00762}00762\ \ \ \textcolor{keywordtype}{int}\ *update\_type\ =\ (\textcolor{keywordtype}{int}\ *)\&(new\_aero\_rep\_id[1]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00763}00763\ \ \ \textcolor{keywordtype}{int}\ *new\_section\_id\ =\ (\textcolor{keywordtype}{int}\ *)\&(update\_type[1]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00764}00764\ \ \ \textcolor{keywordtype}{double}\ *new\_GSD\ =\ (\textcolor{keywordtype}{double}\ *)\&(new\_section\_id[1]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00765}00765\ \ \ *new\_aero\_rep\_id\ =\ aero\_rep\_id;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00766}00766\ \ \ *update\_type\ =\ \mbox{\hyperlink{aero__rep__modal__binned__mass_8c_ae4f3303c913ec32f350d9e45d27debaa}{UPDATE\_GSD}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00767}00767\ \ \ *new\_section\_id\ =\ section\_id;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00768}00768\ \ \ *new\_GSD\ =\ gsd;}
+\DoxyCodeLine{\Hypertarget{aero__rep__modal__binned__mass_8c_source_l00769}00769\ \}}
 
 \end{DoxyCode}

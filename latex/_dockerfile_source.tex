@@ -64,9 +64,9 @@
 \DoxyCodeLine{\Hypertarget{_dockerfile_source_l00061}00061\ \ \ \ \ \&\&\ cd\ build\ \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_source_l00062}00062\ \ \ \ \ \&\&\ export\ JSON\_FORTRAN\_HOME="{}/usr/local/jsonfortran-\/gnu-\/6.1.0"{}\ \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_source_l00063}00063\ \ \ \ \ \&\&\ cmake\ -\/D\ CMAKE\_BUILD\_TYPE=release\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_C\_FLAGS\_DEBUG="{}-\/pg"{}\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_Fortran\_FLAGS\_DEBUG="{}-\/pg"{}\ \(\backslash\)}
-\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_MODULE\_LINKER\_FLAGS="{}-\/pg"{}\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_C\_FLAGS\_RELEASE="{}-\/g\ -\/O3"{}\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_Fortran\_FLAGS\_RELEASE="{}-\/g\ -\/O3\ -\/fbacktrace"{}\ \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{_dockerfile_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CMAKE\_MODULE\_LINKER\_FLAGS="{}-\/g"{}\ \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ -\/D\ CAMP\_ENABLE\_MEMCHECK:BOOL=TRUE\ \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ /camp\ \(\backslash\)}
 \DoxyCodeLine{\Hypertarget{_dockerfile_source_l00069}00069\ \ \ \ \ \&\&\ make\ install}

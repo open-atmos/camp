@@ -146,6 +146,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2329d10644fd2f8b2e73104561e0812b" id="r_a2329d10644fd2f8b2e73104561e0812b"><td class="memItemLeft" align="right" valign="top">procedure&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2329d10644fd2f8b2e73104561e0812b">num_jac_elem</a> (this, phase_id)</td></tr>
 <tr class="memdesc:a2329d10644fd2f8b2e73104561e0812b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of Jacobian elements used in calculations of aerosol mass, volume, number, etc. for a particular phase.  <br /></td></tr>
 <tr class="separator:a2329d10644fd2f8b2e73104561e0812b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99d9a31fe9752c782d65bff41de1c7f3" id="r_a99d9a31fe9752c782d65bff41de1c7f3"><td class="memItemLeft" align="right" valign="top">procedure&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a99d9a31fe9752c782d65bff41de1c7f3">adjacent_phases</a> (this, phase_name_first, phase_name_second)</td></tr>
+<tr class="memdesc:a99d9a31fe9752c782d65bff41de1c7f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns index_pair_t type with phase_ids of adjacent phases for modal/binned representation there are no adjacent phases.  <br /></td></tr>
+<tr class="separator:a99d9a31fe9752c782d65bff41de1c7f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a849c52dc43e0cbe38fd5a32bdf613c5c" id="r_a849c52dc43e0cbe38fd5a32bdf613c5c"><td class="memItemLeft" align="right" valign="top">final&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a849c52dc43e0cbe38fd5a32bdf613c5c">finalize</a> (this)</td></tr>
 <tr class="memdesc:a849c52dc43e0cbe38fd5a32bdf613c5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the aerosol representation.  <br /></td></tr>
 <tr class="separator:a849c52dc43e0cbe38fd5a32bdf613c5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -231,7 +234,7 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p>Modal mass aerosol representation. </p>
 <p>Time-invariant data related to a modal/binned mass aerosol representation. </p>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00208">208</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00211">211</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a849c52dc43e0cbe38fd5a32bdf613c5c" name="a849c52dc43e0cbe38fd5a32bdf613c5c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a849c52dc43e0cbe38fd5a32bdf613c5c">&#9670;&#160;</a></span>finalize()</h2>
@@ -264,7 +267,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00203">203</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00206">206</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -282,6 +285,42 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Function/Subroutine Documentation</h2>
+<a id="a99d9a31fe9752c782d65bff41de1c7f3" name="a99d9a31fe9752c782d65bff41de1c7f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99d9a31fe9752c782d65bff41de1c7f3">&#9670;&#160;</a></span>adjacent_phases()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">procedure camp_aero_rep_modal_binned_mass::aero_rep_modal_binned_mass_t::adjacent_phases </td>
+          <td>(</td>
+          <td class="paramtype">class(<a class="el" href="structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t.html">aero_rep_modal_binned_mass_t</a>), intent(in)</td>          <td class="paramname"><span class="paramname"><em>this</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">character(len=*), intent(in)</td>          <td class="paramname"><span class="paramname"><em>phase_name_first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">character(len=*), intent(in)</td>          <td class="paramname"><span class="paramname"><em>phase_name_second</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns index_pair_t type with phase_ids of adjacent phases for modal/binned representation there are no adjacent phases. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">this</td><td>Aerosol representation data </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00204">204</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+
+</div>
+</div>
 <a id="a3310e0b4d0d79b8180af1585638f715b" name="a3310e0b4d0d79b8180af1585638f715b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3310e0b4d0d79b8180af1585638f715b">&#9670;&#160;</a></span>finalize_array()</h2>
 
@@ -305,7 +344,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00203">203</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00206">206</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 
 </div>
 </div>

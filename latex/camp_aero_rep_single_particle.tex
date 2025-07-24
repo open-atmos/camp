@@ -11,6 +11,10 @@ The single particle aerosol representation is for use with a Part\+MC particle-\
 \DoxyCodeLine{]\}}
 
 \end{DoxyCode}
- The key-\/value pair {\bfseries{type}} is required and must be {\bfseries{AERO\+\_\+\+REP\+\_\+\+SINGLE\+\_\+\+PARTICLE}}. This representation assumes that every \doxylink{input_format_aero_phase}{aerosol phase} available will be present once in each particle.
+ The key-\/value pair {\bfseries{type}} is required and must be {\bfseries{AERO\+\_\+\+REP\+\_\+\+SINGLE\+\_\+\+PARTICLE}}. In this representation, particles are divided into layers. Phases in each layer are specified by the user.
+
+Phase configuration within particles follows "{}fractional volume overlap"{}. The shared surface area between phases in adjacent layers is scaled by phase volume fraction within respective layers. In this configuration, the surface area of the layer interface between two phases is calculated as f\+\_\+first \texorpdfstring{$\ast$}{*} f\+\_\+second \texorpdfstring{$\ast$}{*} total\+\_\+interface\+\_\+surface\+\_\+area where the first and second subscripts refer to the two phases in adjacent layers and
+
+f\+\_\+first = volume\+\_\+phase\+\_\+first / volume\+\_\+total\+\_\+layer\+\_\+first f\+\_\+second = volume\+\_\+phase\+\_\+second / volume\+\_\+total\+\_\+layer\+\_\+second
 
 The number concentration for each particle must be set from an external model using {\ttfamily \doxylink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{camp\+\_\+aero\+\_\+rep\+\_\+single\+\_\+particle\+::aero\+\_\+rep\+\_\+update\+\_\+data\+\_\+single\+\_\+particle\+\_\+number\+\_\+t}} objects. 

@@ -33,6 +33,8 @@ void \mbox{\hyperlink{aero__rep__solver_8c_a42041b486fc391bc9abeee5d1ad666b2}{ae
 \begin{DoxyCompactList}\small\item\em Update the aerosol representations for a new state. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{aero__rep__solver_8c_aab8fc9de2c9bfe5d012e80322a5b653b}{aero\+\_\+rep\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+rep\+\_\+idx, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}radius, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv)
 \begin{DoxyCompactList}\small\item\em Get the effective particle radius, $r_{eff}$ (m) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__rep__solver_8c_a122c5a47dece6968347c8f37484951a9}{aero\+\_\+rep\+\_\+get\+\_\+interface\+\_\+surface\+\_\+area\+\_\+\+\_\+m2}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+rep\+\_\+idx, int aero\+\_\+phase\+\_\+idx\+\_\+first, int aero\+\_\+phase\+\_\+idx\+\_\+second, double \texorpdfstring{$\ast$}{*}surface\+\_\+area, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv)
+\begin{DoxyCompactList}\small\item\em Get the surface area of interfacial layer between two phases (m\texorpdfstring{$^\wedge$}{\string^}2) \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{aero__rep__solver_8c_aa56870eb4fe20532461b1634d7688210}{aero\+\_\+rep\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+rep\+\_\+idx, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}number\+\_\+conc, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv)
 \begin{DoxyCompactList}\small\item\em Get the particle number concentration $n$ ( $\mbox{\si{\#\per\cubic\metre}}$) \end{DoxyCompactList}\item 
 int \mbox{\hyperlink{aero__rep__solver_8c_a00aee7bec2d9284a74c0eb26d346dc81}{aero\+\_\+rep\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+rep\+\_\+idx, int aero\+\_\+phase\+\_\+idx)
@@ -113,7 +115,7 @@ Add condensed data to the condensed data block for aerosol representations.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00443}{443}} of file \mbox{\hyperlink{aero__rep__solver_8c_source}{aero\+\_\+rep\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00493}{493}} of file \mbox{\hyperlink{aero__rep__solver_8c_source}{aero\+\_\+rep\+\_\+solver.\+c}}.
 
 \Hypertarget{aero__rep__solver_8c_a0acd579d3c095f13b5cf4ad7fa2380bc}\index{aero\_rep\_solver.c@{aero\_rep\_solver.c}!aero\_rep\_free\_update\_data@{aero\_rep\_free\_update\_data}}
 \index{aero\_rep\_free\_update\_data@{aero\_rep\_free\_update\_data}!aero\_rep\_solver.c@{aero\_rep\_solver.c}}
@@ -132,7 +134,7 @@ Free an update data object.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00589}{589}} of file \mbox{\hyperlink{aero__rep__solver_8c_source}{aero\+\_\+rep\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00639}{639}} of file \mbox{\hyperlink{aero__rep__solver_8c_source}{aero\+\_\+rep\+\_\+solver.\+c}}.
 
 \Hypertarget{aero__rep__solver_8c_a00aee7bec2d9284a74c0eb26d346dc81}\index{aero\_rep\_solver.c@{aero\_rep\_solver.c}!aero\_rep\_get\_aero\_conc\_type@{aero\_rep\_get\_aero\_conc\_type}}
 \index{aero\_rep\_get\_aero\_conc\_type@{aero\_rep\_get\_aero\_conc\_type}!aero\_rep\_solver.c@{aero\_rep\_solver.c}}
@@ -158,7 +160,7 @@ Check whether aerosol concentrations are per-\/particle or total for each phase.
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00292}{292}} of file \mbox{\hyperlink{aero__rep__solver_8c_source}{aero\+\_\+rep\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00342}{342}} of file \mbox{\hyperlink{aero__rep__solver_8c_source}{aero\+\_\+rep\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -203,7 +205,7 @@ Calculates total aerosol phase mass, $m$ ( $\mbox{\si{\micro\gram\per\cubic\metr
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00398}{398}} of file \mbox{\hyperlink{aero__rep__solver_8c_source}{aero\+\_\+rep\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00448}{448}} of file \mbox{\hyperlink{aero__rep__solver_8c_source}{aero\+\_\+rep\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -248,7 +250,7 @@ Calculates total aerosol phase mass, $m$ ( $\mbox{\si{\kilogram\per\cubic\metre}
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00346}{346}} of file \mbox{\hyperlink{aero__rep__solver_8c_source}{aero\+\_\+rep\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00396}{396}} of file \mbox{\hyperlink{aero__rep__solver_8c_source}{aero\+\_\+rep\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -340,6 +342,45 @@ Here is the caller graph for this function\+:
 \includegraphics[width=350pt]{aero__rep__solver_8c_aab8fc9de2c9bfe5d012e80322a5b653b_icgraph}
 \end{center}
 \end{figure}
+\Hypertarget{aero__rep__solver_8c_a122c5a47dece6968347c8f37484951a9}\index{aero\_rep\_solver.c@{aero\_rep\_solver.c}!aero\_rep\_get\_interface\_surface\_area\_\_m2@{aero\_rep\_get\_interface\_surface\_area\_\_m2}}
+\index{aero\_rep\_get\_interface\_surface\_area\_\_m2@{aero\_rep\_get\_interface\_surface\_area\_\_m2}!aero\_rep\_solver.c@{aero\_rep\_solver.c}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_get\_interface\_surface\_area\_\_m2()}{aero\_rep\_get\_interface\_surface\_area\_\_m2()}}
+{\footnotesize\ttfamily \label{aero__rep__solver_8c_a122c5a47dece6968347c8f37484951a9} 
+void aero\+\_\+rep\+\_\+get\+\_\+interface\+\_\+surface\+\_\+area\+\_\+\+\_\+m2 (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+rep\+\_\+idx}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx\+\_\+first}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx\+\_\+second}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{surface\+\_\+area}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv}{}\end{DoxyParamCaption})}
+
+
+
+Get the surface area of interfacial layer between two phases (m\texorpdfstring{$^\wedge$}{\string^}2) 
+
+Calculates surface area of a interfacial layer (m\texorpdfstring{$^\wedge$}{\string^}2), as well as the set of $\frac{\partial A}{\partial y}$ where $y$ are variables on the solver state array.
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data \\
+\hline
+{\em aero\+\_\+rep\+\_\+idx} & Index of aerosol representation to use for calculation \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx\+\_\+first} & Index of the first aerosol phase within the aerosol representation \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx\+\_\+second} & Index of the second aerosol phase within the aerosol representation \\
+\hline
+{\em surface\+\_\+area} & Pointer to surface area of interfacial layer (m\texorpdfstring{$^\wedge$}{\string^}2) \\
+\hline
+{\em partial\+\_\+deriv} & Pointer to the set of partial derivatives to be calculated $\frac{\partial A}{\partial y}$, or a NULL pointer if no partial derivatives are needed \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00249}{249}} of file \mbox{\hyperlink{aero__rep__solver_8c_source}{aero\+\_\+rep\+\_\+solver.\+c}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__solver_8c_a122c5a47dece6968347c8f37484951a9_cgraph}
+\end{center}
+\end{figure}
 \Hypertarget{aero__rep__solver_8c_aa56870eb4fe20532461b1634d7688210}\index{aero\_rep\_solver.c@{aero\_rep\_solver.c}!aero\_rep\_get\_number\_conc\_\_n\_m3@{aero\_rep\_get\_number\_conc\_\_n\_m3}}
 \index{aero\_rep\_get\_number\_conc\_\_n\_m3@{aero\_rep\_get\_number\_conc\_\_n\_m3}!aero\_rep\_solver.c@{aero\_rep\_solver.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_get\_number\_conc\_\_n\_m3()}{aero\_rep\_get\_number\_conc\_\_n\_m3()}}
@@ -367,7 +408,7 @@ Calculates particle number concentration, $n$ ( $\mbox{\si{\#\per\cubic\metre}}$
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00250}{250}} of file \mbox{\hyperlink{aero__rep__solver_8c_source}{aero\+\_\+rep\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00300}{300}} of file \mbox{\hyperlink{aero__rep__solver_8c_source}{aero\+\_\+rep\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -446,7 +487,7 @@ Print the aerosol representation data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00546}{546}} of file \mbox{\hyperlink{aero__rep__solver_8c_source}{aero\+\_\+rep\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00596}{596}} of file \mbox{\hyperlink{aero__rep__solver_8c_source}{aero\+\_\+rep\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -481,7 +522,7 @@ Update aerosol representation data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00492}{492}} of file \mbox{\hyperlink{aero__rep__solver_8c_source}{aero\+\_\+rep\+\_\+solver.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__solver_8c_source_l00542}{542}} of file \mbox{\hyperlink{aero__rep__solver_8c_source}{aero\+\_\+rep\+\_\+solver.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
