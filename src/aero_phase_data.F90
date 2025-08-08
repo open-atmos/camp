@@ -86,6 +86,7 @@ module camp_aero_phase_data
     !! camp_camp_core::camp_core_t::chem_spec_data variable during
     !! initialization.
     type(string_t), pointer :: spec_name(:) => null()
+    real(kind=dp), pointer :: diffusion_coeff(:) => null()
     !> Aerosol phase parameters. These will be available during
     !! initialization, but not during solving.
     type(property_t), pointer :: property_set => null()
@@ -124,6 +125,7 @@ module camp_aero_phase_data
     procedure :: bin_pack
     !> Unpacks the given value from the buffer, advancing position
     procedure :: bin_unpack
+    procedure :: set_diffusion
     !> Print the aerosol phase data
     procedure :: print => do_print
     !> Finalize the aerosol phase data
@@ -234,11 +236,14 @@ contains
     type(json_value), pointer, intent(in) :: j_obj
 
     type(json_value), pointer :: child, next, species
+    type(json_value), pointer :: species_obj
     character(kind=json_ck, len=:), allocatable :: key, unicode_str_val
+    character(kind=json_ck, len=:), allocatable :: species_name
     integer(kind=i_kind) :: var_type
 
     character(len=:), allocatable :: str_val
     type(property_t), pointer :: property_set
+    real(kind=dp), pointer :: diff_coeff
 
     ! allocate space for the phase property set
     property_set => property_t()
@@ -265,11 +270,21 @@ contains
         call json%get_child(child, species)
         do while (associated(species))
           call json%info(species, var_type=var_type)
-          if (var_type.ne.json_string) call die_msg(669858868, &
-                  "Received non-string aerosol phase species name.")
-          call json%get(species, unicode_str_val)
-          str_val = unicode_str_val
-          call this%add(str_val)
+          if (var_type.eq.json_object) then
+            ! handle species object with optional properties
+            ! extract name
+            call json%get_child(species, species_obj)
+            call json%get(species_obj, "name", species_name)
+            call json%get(species_obj, "diffusion coefficient [m2 s-1]", diff_coeff)
+            call this%add(species_name, diff_coeff) 
+          else if (var_type.eq.json_string) then
+            ! backward compatibility: plain string species name 
+            call json%get(species, unicode_str_val)
+            str_val = unicode_str_val
+            call this%add(str_val)
+          else
+            call die_msg(391082805, "Invalid species format: must be object or string.")
+          end if
           call json%get_next(species, next)
           species => next
         end do
@@ -555,6 +570,27 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+subroutine set_diffusion(this, spec_name, coeff)
+
+    !> Aerosol representation data
+    class(aero_phase_data_t), intent(inout) :: this
+
+    character(len=*), intent(in) :: spec_name
+    real(kind=dp), intent(in) :: coeff
+
+    integer :: i_spec
+
+    i_spec = this%find(spec_name)
+    if (i_spec == 0) then
+      call die_msg(912837, "BUG: set_diffusion called before add for species: "//trim(spec_name))
+    end if
+
+    this%diffusion_coeff(i_spec) = coeff
+
+end subroutine set_diffusion
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
   !> Print out the aerosol phase data
   subroutine do_print(this, file_unit)
 
@@ -628,6 +664,7 @@ contains
 
     integer :: new_size
     type(string_t), pointer :: new_name(:)
+    real(kind=dp), pointer :: new_diff(:)
 
     if (size(this%spec_name) .ge. this%num_spec + num_spec) return
     new_size = this%num_spec + num_spec + REALLOC_INC
@@ -636,17 +673,28 @@ contains
     deallocate(this%spec_name)
     this%spec_name => new_name
 
+    if (.not. associated(this%diffusion_coeff)) then
+      allocate(this%diffusion_coeff(new_size))
+      this%diffusion_coeff(:) = -9999
+    else
+      allocate(new_diff(new_size))
+      new_diff(1:this%num_spec) = this%diffusion_coeff(1:this%num_spec)
+      deallocate(this%diffusion_coeff)
+      this%diffusion_coeff => new_diff
+    end if
+
   end subroutine ensure_size
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Add a new chemical species to the phase
-  subroutine add(this, spec_name)
+  subroutine add(this, spec_name, diff_coeff)
 
     !> Aerosol phase data
     class(aero_phase_data_t), intent(inout) :: this
     !> Name of the species to add
     character(len=*), intent(in) :: spec_name
+    real(kind=dp), intent(in), pointer, optional :: diff_coeff
 
     integer(kind=i_kind) :: i_spec
 
@@ -659,6 +707,11 @@ contains
     call this%ensure_size(1)
     this%num_spec = this%num_spec + 1
     this%spec_name(this%num_spec)%string = spec_name
+    ! Store diffusion coefficient if available
+    if (present(diff_coeff)) then
+      allocate(this%diffusion_coeff(this%num_spec))
+      this%diffusion_coeff(this%num_spec) = diff_coeff
+    end if
 
   end subroutine add
 
