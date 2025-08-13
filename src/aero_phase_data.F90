@@ -275,12 +275,8 @@ contains
           call json%info(species, var_type=var_type)
           if (var_type.eq.json_object) then
             ! handle species object with optional properties
-            call json%get_child(species, species_obj)
-            call json%get(species_obj, "name", species_name)
-            call json%get(species_obj, "diffusion coefficient [m2 s-1]", diff_coeff)
-            print *, "spec_name", species_name
-            print *, "diffusion coeff", diff_coeff
-            call this%add(species_name, diff_coeff)
+            call json%get(species, "name", species_name)
+            call this%add(species_name)
           else if (var_type.eq.json_string) then
             ! string species name 
             call json%get(species, unicode_str_val)
