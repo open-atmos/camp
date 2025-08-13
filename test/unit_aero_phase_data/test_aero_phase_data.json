@@ -17,7 +17,8 @@
 	"type" : "AERO_PHASE",
 	"species" : [
              {
-                 "name": "species b"
+                 "name": "species b",
+                 "diffusion coefficient [m2 s-1]": 1.0
              },
              {
                 "name": "species e"
