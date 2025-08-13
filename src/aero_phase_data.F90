@@ -647,7 +647,6 @@ contains
 
     integer :: new_size
     type(string_t), pointer :: new_name(:)
-    real(kind=dp), pointer :: new_diff(:)
 
     if (size(this%spec_name) .ge. this%num_spec + num_spec) return
     new_size = this%num_spec + num_spec + REALLOC_INC
@@ -656,28 +655,17 @@ contains
     deallocate(this%spec_name)
     this%spec_name => new_name
 
-    if (.not. associated(this%diffusion_coeff)) then
-      allocate(this%diffusion_coeff(new_size))
-      this%diffusion_coeff(:) = -9999
-    else
-      allocate(new_diff(new_size))
-      new_diff(1:this%num_spec) = this%diffusion_coeff(1:this%num_spec)
-      deallocate(this%diffusion_coeff)
-      this%diffusion_coeff => new_diff
-    end if
-
   end subroutine ensure_size
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Add a new chemical species to the phase
-  subroutine add(this, spec_name, diff_coeff)
+  subroutine add(this, spec_name)
 
     !> Aerosol phase data
     class(aero_phase_data_t), intent(inout) :: this
     !> Name of the species to add
     character(len=*), intent(in) :: spec_name
-    real(kind=dp), intent(in), optional :: diff_coeff
 
     integer(kind=i_kind) :: i_spec
 
@@ -687,15 +675,9 @@ contains
               " added more than once to phase "//this%name())
       return
     end if
-    print *, "spec_name func", spec_name
     call this%ensure_size(1)
     this%num_spec = this%num_spec + 1
     this%spec_name(this%num_spec)%string = spec_name
-    ! Store diffusion coefficient if available
-    if (present(diff_coeff)) then
-      !allocate(this%diffusion_coeff(this%num_spec))
-      this%diffusion_coeff(this%num_spec) = diff_coeff
-    end if
 
   end subroutine add
 
