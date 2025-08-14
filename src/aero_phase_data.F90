@@ -90,7 +90,7 @@ module camp_aero_phase_data
     !! are input in JSON files as objects, associated properties
     !! can be included (currently only diffusion coefficient but 
     !! other properties can be added).
-    type(property_t), pointer :: spec_prop_set(:) => null()
+    type(property_t), pointer :: spec_property_set => null()
     !> Aerosol phase parameters. These will be available during
     !! initialization, but not during solving.
     type(property_t), pointer :: property_set => null()
@@ -245,11 +245,12 @@ contains
     integer(kind=i_kind) :: var_type
 
     character(len=:), allocatable :: str_val
-    type(property_t), pointer :: property_set
+    type(property_t), pointer :: property_set, spec_property_set
     real(kind=dp), pointer :: diff_coeff
 
     ! allocate space for the phase property set
     property_set => property_t()
+    spec_property_set => property_t()
 
     ! cycle through the phase properties to find the name and species
     ! and load the remaining data into the phase property set
@@ -279,7 +280,7 @@ contains
             call this%add(species_name)
             ! load remaining properties into the species property set
             if (key.ne."type") then
-              call property_set%load(json, child, .false., species_name)
+              call spec_property_set%load(json, child, .false., species_name)
             end if
           else if (var_type.eq.json_string) then
             ! string species name 
