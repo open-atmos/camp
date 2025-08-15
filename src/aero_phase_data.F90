@@ -86,14 +86,14 @@ module camp_aero_phase_data
     !! camp_camp_core::camp_core_t::chem_spec_data variable during
     !! initialization.
     type(string_t), pointer :: spec_name(:) => null()
-    !!> Property set associated with species. When species
-    !! are input in JSON files as objects, associated properties
-    !! can be included (currently only diffusion coefficient but 
-    !! other properties can be added).
-    type(property_t), pointer :: spec_property_set => null()
     !> Aerosol phase parameters. These will be available during
     !! initialization, but not during solving.
     type(property_t), pointer :: property_set => null()
+    !!> Property set associated with species. When species
+    !! are input in JSON files as objects, associated properties
+    !! can be included (currently only diffusion coefficient but
+    !! other properties can be added).
+    type(property_t), pointer :: spec_property_set => null()
     !> Condensed phase data. Theses arrays will be available during
     !! solving, and should contain any information required by the
     !! functions of the aerosol phase that cannot be obtained
@@ -119,6 +119,7 @@ module camp_aero_phase_data
     procedure :: num_jac_elem
     !> Get property data associated with this phase
     procedure :: get_property_set
+    procedure :: get_spec_property_set
     !> Get a list of species names in this phase
     procedure :: get_species_names
     !> Get a species type by name
@@ -281,6 +282,7 @@ contains
             ! load remaining properties into the species property set
             if (key.ne."type") then
               call spec_property_set%load(json, child, .false., species_name)
+              print *, "looking at properties" 
             end if
           else if (var_type.eq.json_string) then
             ! string species name 
@@ -467,6 +469,34 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+  !> Get the aerosol phase species property set
+  function get_spec_property_set(this, spec_name) result (spec_property_set)
+
+    !> A pointer to the aerosol phase property set
+    class(property_t), pointer :: spec_property_set
+    !> Species name to find properties of
+    character(len=*), intent(in) :: spec_name
+    !> Aerosol phase data
+    class(aero_phase_data_t), intent(in) :: this
+
+    integer(i_kind) :: i_spec   
+
+    spec_property_set => null()
+    i_spec = 0
+    do i_spec = 1, this%num_spec
+      if (this%spec_name(i_spec)%string .eq. spec_name) then
+        if (associated(this%spec_property_set)) then
+          if (this%spec_property_set(i_spec)%val%size() > 0) then
+            spec_property_set => this%spec_property_set(i_spec)
+          end if
+        end if
+      end if
+    end do
+
+  end function get_spec_property_set
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
   !> Get an aerosol phase species name
   function get_species_names(this) result (spec_names)
 
@@ -612,6 +642,7 @@ contains
     if (allocated(this%phase_name))    deallocate(this%phase_name)
     if (associated(this%spec_name))    deallocate(this%spec_name)
     if (associated(this%property_set)) deallocate(this%property_set)
+    if (associated(this%spec_property_set)) deallocate(this%spec_property_set)
     if (allocated(this%condensed_data_real)) &
                                        deallocate(this%condensed_data_real)
     if (allocated(this%condensed_data_int)) &
