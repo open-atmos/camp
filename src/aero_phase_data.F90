@@ -93,7 +93,7 @@ module camp_aero_phase_data
     !! are input in JSON files as objects, associated properties
     !! can be included (currently only diffusion coefficient but
     !! other properties can be added).
-    type(property_t), pointer :: spec_property_set => null()
+    type(property_ptr), allocatable :: spec_property_set(:)
     !> Condensed phase data. Theses arrays will be available during
     !! solving, and should contain any information required by the
     !! functions of the aerosol phase that cannot be obtained
@@ -119,7 +119,6 @@ module camp_aero_phase_data
     procedure :: num_jac_elem
     !> Get property data associated with this phase
     procedure :: get_property_set
-    procedure :: get_spec_property_set
     !> Get a list of species names in this phase
     procedure :: get_species_names
     !> Get a species type by name
@@ -243,11 +242,11 @@ contains
     type(json_value), pointer :: species_obj
     character(kind=json_ck, len=:), allocatable :: key, unicode_str_val
     character(kind=json_ck, len=:), allocatable :: species_name
-    integer(kind=i_kind) :: var_type
+    integer(kind=i_kind) :: var_type, num_spec, i_spec
 
     character(len=:), allocatable :: str_val
-    type(property_t), pointer :: property_set, spec_property_set
-    real(kind=dp), pointer :: diff_coeff
+    type(property_t), pointer :: property_set
+    type(property_t), pointer :: spec_property_set
 
     ! allocate space for the phase property set
     property_set => property_t()
@@ -257,6 +256,7 @@ contains
     ! and load the remaining data into the phase property set
     next => null()
     call json%get_child(j_obj, child)
+    num_spec = 0
     do while (associated(child))
       call json%info(child, name=key, var_type=var_type)
 
@@ -279,11 +279,6 @@ contains
             ! handle species object
             call json%get(species, "name", species_name)
             call this%add(species_name)
-            ! load remaining properties into the species property set
-            if (key.ne."type") then
-              call spec_property_set%load(json, child, .false., species_name)
-              print *, "looking at properties" 
-            end if
           else if (var_type.eq.json_string) then
             ! string species name 
             call json%get(species, unicode_str_val)
@@ -292,6 +287,7 @@ contains
           else
             call die_msg(391082805, "Invalid species format: must be object or string.")
           end if
+          num_spec = num_spec + 1
           call json%get_next(species, next)
           species => next
         end do
@@ -312,6 +308,41 @@ contains
     else
       this%property_set => property_set
     end if
+
+    ! cycle through the species assocaited with each phase and add 
+    ! associated properties
+    print *, "num_spec: ", num_spec
+    i_spec = 0
+    allocate(this%spec_property_set(num_spec))
+    next => null()
+    call json%get_child(j_obj, child)
+    do while (associated(child))
+      call json%info(child, name=key, var_type=var_type)
+
+      ! chemical species in the phase
+      if (key.eq."species") then
+        i_spec = i_spec + 1
+        call json%get_child(child, species)
+        do while (associated(species))
+          call json%info(species, var_type=var_type)
+          if (var_type.eq.json_object) then
+            call json%get(species, "name", species_name)
+            ! load remaining properties into the species property set
+            if (key.ne."type") then
+              call spec_property_set%load(json, species, .false., species_name)
+              print *, "loaded properties for:", trim(species_name)
+            end if
+            this%spec_property_set(i_spec)%val_ => spec_property_set
+          else if (var_type.eq.json_string) then
+            this%spec_property_set(i_spec)%val_ => spec_property_set
+          end if
+          call json%get_next(species, next)
+          species => next
+        end do
+      end if
+      call json%get_next(child, next)
+      child => next
+    end do
 #else
   subroutine load(this)
 
@@ -470,30 +501,30 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get the aerosol phase species property set
-  function get_spec_property_set(this, spec_name) result (spec_property_set)
+!  function get_spec_property_set(this, spec_name) result (spec_property_set)
 
     !> A pointer to the aerosol phase property set
-    class(property_t), pointer :: spec_property_set
+!    class(property_t), pointer :: spec_property_set
     !> Species name to find properties of
-    character(len=*), intent(in) :: spec_name
+!    character(len=*), intent(in) :: spec_name
     !> Aerosol phase data
-    class(aero_phase_data_t), intent(in) :: this
+!   class(aero_phase_data_t), intent(in) :: this
 
-    integer(i_kind) :: i_spec   
-
-    spec_property_set => null()
-    i_spec = 0
-    do i_spec = 1, this%num_spec
-      if (this%spec_name(i_spec)%string .eq. spec_name) then
-        if (associated(this%spec_property_set)) then
-          if (this%spec_property_set(i_spec)%val%size() > 0) then
-            spec_property_set => this%spec_property_set(i_spec)
-          end if
-        end if
-      end if
-    end do
-
-  end function get_spec_property_set
+!    integer(i_kind) :: i_spec   
+!
+!    spec_property_set => null()
+!    i_spec = 0
+!    do i_spec = 1, this%num_spec
+!      if (this%spec_name(i_spec)%string .eq. spec_name) then
+!        if (associated(this%spec_property_set)) then
+!          if (this%spec_property_set(i_spec)%val%size() > 0) then
+!            spec_property_set => this%spec_property_set(i_spec)
+!          end if
+!        end if
+!      end if
+!    end do
+!
+!  end function get_spec_property_set
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -642,7 +673,6 @@ contains
     if (allocated(this%phase_name))    deallocate(this%phase_name)
     if (associated(this%spec_name))    deallocate(this%spec_name)
     if (associated(this%property_set)) deallocate(this%property_set)
-    if (associated(this%spec_property_set)) deallocate(this%spec_property_set)
     if (allocated(this%condensed_data_real)) &
                                        deallocate(this%condensed_data_real)
     if (allocated(this%condensed_data_int)) &
