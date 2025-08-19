@@ -64,7 +64,7 @@ contains
     type(json_value), pointer :: j_obj, j_next
 
     integer(kind=i_kind) :: i_phase, i_spec
-    type(property_t), pointer :: property_set
+    type(property_t), pointer :: property_set, spec_property_set
     character(len=:), allocatable :: key
     real(kind=dp) :: temp_real
     logical :: temp_logical
@@ -132,6 +132,11 @@ contains
     call assert(278773971, aero_phase_data_set(1)%val%size().eq.3)
     call assert(608559165, aero_phase_data_set(2)%val%size().eq.3)
     call assert(438402261, aero_phase_data_set(3)%val%size().eq.2)
+
+    spec_property_set => aero_phase_data_set(3)%val%get_spec_property_set("species b")
+    key = "diffusion coefficient [m2 s-1]"
+    !call assert(368026503, spec_property_set%get_real(key, temp_real))
+    !call assert(979338893, almost_equal(temp_real, real(1.0, kind=dp)))
 
 #ifdef CAMP_USE_MPI
     pack_size = 0

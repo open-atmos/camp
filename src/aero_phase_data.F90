@@ -119,6 +119,7 @@ module camp_aero_phase_data
     procedure :: num_jac_elem
     !> Get property data associated with this phase
     procedure :: get_property_set
+    procedure :: get_spec_property_set
     !> Get a list of species names in this phase
     procedure :: get_species_names
     !> Get a species type by name
@@ -501,30 +502,23 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get the aerosol phase species property set
-!  function get_spec_property_set(this, spec_name) result (spec_property_set)
+  function get_spec_property_set(this, spec_name) result (spec_property_set)
 
     !> A pointer to the aerosol phase property set
-!    class(property_t), pointer :: spec_property_set
+    class(property_t), pointer :: spec_property_set
     !> Species name to find properties of
-!    character(len=*), intent(in) :: spec_name
+    character(len=*), intent(in) :: spec_name
     !> Aerosol phase data
-!   class(aero_phase_data_t), intent(in) :: this
+   class(aero_phase_data_t), intent(in) :: this
 
-!    integer(i_kind) :: i_spec   
-!
-!    spec_property_set => null()
-!    i_spec = 0
-!    do i_spec = 1, this%num_spec
-!      if (this%spec_name(i_spec)%string .eq. spec_name) then
-!        if (associated(this%spec_property_set)) then
-!          if (this%spec_property_set(i_spec)%val%size() > 0) then
-!            spec_property_set => this%spec_property_set(i_spec)
-!          end if
-!        end if
-!      end if
-!    end do
-!
-!  end function get_spec_property_set
+    integer(i_kind) :: i_spec   
+
+    i_spec = this%find(spec_name)
+    !allocate(spec_property_set(this%spec_property_set(i_spec)%val_%size()))
+    spec_property_set => this%spec_property_set(i_spec)%val_
+    !deallocate(spec_property_set)
+
+  end function get_spec_property_set
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
