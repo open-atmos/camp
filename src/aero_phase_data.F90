@@ -330,7 +330,7 @@ contains
             call json%get(species, "name", species_name)
             ! load remaining properties into the species property set
             if (key.ne."type") then
-              call spec_property_set%load(json, species, .false., species_name)
+              call spec_property_set%load(json, species, .false., this%spec_name(i_spec)%string)
               print *, "loaded properties for:", trim(species_name)
             end if
             this%spec_property_set(i_spec)%val_ => spec_property_set
