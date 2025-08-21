@@ -251,7 +251,6 @@ contains
 
     ! allocate space for the phase property set
     property_set => property_t()
-    spec_property_set => property_t()
 
     ! cycle through the phase properties to find the name and species
     ! and load the remaining data into the phase property set
@@ -315,9 +314,11 @@ contains
     print *, "num_spec: ", num_spec
     i_spec = 0
     allocate(this%spec_property_set(num_spec))
+    spec_property_set => property_t()
     next => null()
     call json%get_child(j_obj, child)
     do while (associated(child))
+      key = "species"
       call json%info(child, name=key, var_type=var_type)
 
       ! chemical species in the phase
@@ -325,15 +326,13 @@ contains
         i_spec = i_spec + 1
         call json%get_child(child, species)
         do while (associated(species))
-          call json%info(species, var_type=var_type)
+          call json%info(species, name=key, var_type=var_type)
           if (var_type.eq.json_object) then
-            call json%get(species, "name", species_name)
             ! load remaining properties into the species property set
             if (key.ne."type") then
               call spec_property_set%load(json, species, .false., this%spec_name(i_spec)%string)
-              print *, "loaded properties for:", trim(species_name)
             end if
-            this%spec_property_set(i_spec)%val_ => spec_property_set
+            this%spec_property_set(i_spec)%val_ => spec_property_set 
           else if (var_type.eq.json_string) then
             this%spec_property_set(i_spec)%val_ => spec_property_set
           end if
