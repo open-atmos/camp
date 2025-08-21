@@ -135,8 +135,18 @@ contains
 
     spec_property_set => aero_phase_data_set(3)%val%get_spec_property_set("species b")
     key = "diffusion coefficient [m2 s-1]"
-    !call assert(368026503, spec_property_set%get_real(key, temp_real))
-    !call assert(979338893, almost_equal(temp_real, real(1.0, kind=dp)))
+    call spec_property_set%print()
+    call assert(143255788, spec_property_set%size().eq.1)
+    call assert(368026503, spec_property_set%get_real(key, temp_real))
+    call assert(979338893, almost_equal(temp_real, real(1.0, kind=dp)))
+
+    !spec_property_set => aero_phase_data_set(3)%val%get_spec_property_set("species e")
+    !call spec_property_set%print()
+    !call assert(316478321, spec_property_set%size().eq.0)
+
+    !spec_property_set => aero_phase_data_set(2)%val%get_spec_property_set("species c")
+    !call spec_property_set%print()
+    !call assert(641586524, spec_property_set%size().eq.0)
 
 #ifdef CAMP_USE_MPI
     pack_size = 0

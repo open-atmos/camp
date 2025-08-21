@@ -239,7 +239,7 @@ contains
     !> JSON object
     type(json_value), pointer, intent(in) :: j_obj
 
-    type(json_value), pointer :: child, next, species
+    type(json_value), pointer :: child, next, species, species_child
     type(json_value), pointer :: species_obj
     character(kind=json_ck, len=:), allocatable :: key, unicode_str_val
     character(kind=json_ck, len=:), allocatable :: species_name
@@ -318,7 +318,6 @@ contains
     next => null()
     call json%get_child(j_obj, child)
     do while (associated(child))
-      key = "species"
       call json%info(child, name=key, var_type=var_type)
 
       ! chemical species in the phase
@@ -326,15 +325,25 @@ contains
         i_spec = i_spec + 1
         call json%get_child(child, species)
         do while (associated(species))
-          call json%info(species, name=key, var_type=var_type)
+          call json%info(species, var_type=var_type)
           if (var_type.eq.json_object) then
+            !spec_property_set => property_t()
+            call json%get_child(species, species_child)
+            do while (associated(species_child))
+              call json%info(species_child, name=key, var_type=var_type)
             ! load remaining properties into the species property set
-            if (key.ne."type") then
-              call spec_property_set%load(json, species, .false., this%spec_name(i_spec)%string)
-            end if
-            this%spec_property_set(i_spec)%val_ => spec_property_set 
+              if (key.ne."name".and.key.ne."type") then
+                call spec_property_set%load(json, species_child, .false., this%spec_name(i_spec)%string)
+                print *, "found properties for: ", this%spec_name(i_spec)%string
+                this%spec_property_set(i_spec)%val_ => spec_property_set
+              else
+                this%spec_property_set(i_spec)%val_ => spec_property_set
+              end if
+              call json%get_next(species_child, next)
+              species_child => next
+            end do 
           else if (var_type.eq.json_string) then
-            this%spec_property_set(i_spec)%val_ => spec_property_set
+              this%spec_property_set(i_spec)%val_ => spec_property_set
           end if
           call json%get_next(species, next)
           species => next
