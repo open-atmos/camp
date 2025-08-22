@@ -21,7 +21,9 @@
                  "diffusion coefficient [m2 s-1]": 1.0
              },
              {
-                "name": "species e"
+                "name": "species e",
+                "diffusion coefficient [m2 s-1]": 2.0,
+                "crazy monkey": 13.0
              }
         ],
 	"some property" : 13.75

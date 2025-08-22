@@ -316,6 +316,7 @@ contains
     allocate(this%spec_property_set(num_spec))
     spec_property_set => property_t()
     next => null()
+    !spec_property_set => property_t()
     call json%get_child(j_obj, child)
     do while (associated(child))
       call json%info(child, name=key, var_type=var_type)
@@ -335,15 +336,15 @@ contains
               if (key.ne."name".and.key.ne."type") then
                 call spec_property_set%load(json, species_child, .false., this%spec_name(i_spec)%string)
                 print *, "found properties for: ", this%spec_name(i_spec)%string
-                this%spec_property_set(i_spec)%val_ => spec_property_set
-              else
-                this%spec_property_set(i_spec)%val_ => spec_property_set
               end if
               call json%get_next(species_child, next)
               species_child => next
             end do 
+            this%spec_property_set(i_spec)%val_ => spec_property_set
           else if (var_type.eq.json_string) then
-              this%spec_property_set(i_spec)%val_ => spec_property_set
+            ! species given as just a string name → still give an empty set
+            !spec_property_set => property_t()
+            this%spec_property_set(i_spec)%val_ => spec_property_set     
           end if
           call json%get_next(species, next)
           species => next
@@ -671,14 +672,25 @@ contains
 
     !> Aerosol phase data
     type(aero_phase_data_t), intent(inout) :: this
+    integer(kind=i_kind) :: i
 
     if (allocated(this%phase_name))    deallocate(this%phase_name)
     if (associated(this%spec_name))    deallocate(this%spec_name)
     if (associated(this%property_set)) deallocate(this%property_set)
+    !if (associated(this%spec_property_set%val_)) deallocate(this%spec_property_set%val_)
     if (allocated(this%condensed_data_real)) &
                                        deallocate(this%condensed_data_real)
     if (allocated(this%condensed_data_int)) &
                                        deallocate(this%condensed_data_int)
+
+    if (allocated(this%spec_property_set)) then
+      do i = 1, size(this%spec_property_set)
+        if (associated(this%spec_property_set(i)%val_)) then
+          deallocate(this%spec_property_set(i)%val_)
+        end if
+      end do
+      deallocate(this%spec_property_set)
+    end if
 
   end subroutine finalize
 
