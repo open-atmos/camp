@@ -18,12 +18,12 @@
 	"species" : [
              {
                  "name": "species b",
-                 "diffusion coefficient [m2 s-1]": 1.0
+                 "diffusion coefficient [m2 s-1]": 1.0,
+                 "crazy monkey": 13.0
              },
              {
                 "name": "species e",
-                "diffusion coefficient [m2 s-1]": 2.0,
-                "crazy monkey": 13.0
+                "diffusion coefficient [m2 s-1]": 2.0
              }
         ],
 	"some property" : 13.75
