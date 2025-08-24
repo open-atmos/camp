@@ -135,20 +135,21 @@ contains
 
     spec_property_set => aero_phase_data_set(3)%val%get_spec_property_set("species b")
     key = "diffusion coefficient [m2 s-1]"
-    call spec_property_set%print()
     call assert(143255788, spec_property_set%size().eq.2)
     call assert(368026503, spec_property_set%get_real(key, temp_real))
     call assert(979338893, almost_equal(temp_real, real(1.0, kind=dp)))
-    key = "crazy monkey"
+    key = "species property"
     call assert(114400485, spec_property_set%get_real(key, temp_real))
     call assert(150893490, almost_equal(temp_real, real(13.0, kind=dp)))
 
     spec_property_set => aero_phase_data_set(3)%val%get_spec_property_set("species e")
-    call spec_property_set%print()
-    call assert(379859264, spec_property_set%size().eq.1)
+    call assert(379859264, spec_property_set%size().eq.2)
     key = "diffusion coefficient [m2 s-1]"
     call assert(354007455, spec_property_set%get_real(key, temp_real))
     call assert(568601191, almost_equal(temp_real, real(2.0, kind=dp)))
+    key = "another species property"
+    call assert(958241656, spec_property_set%get_real(key, temp_real))
+    call assert(091832840, almost_equal(temp_real, real(13.3, kind=dp)))
 
     spec_property_set => aero_phase_data_set(2)%val%get_spec_property_set("species c")
     call spec_property_set%print()

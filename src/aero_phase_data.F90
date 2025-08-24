@@ -118,6 +118,7 @@ module camp_aero_phase_data
     procedure :: num_jac_elem
     !> Get property data associated with this phase
     procedure :: get_property_set
+    !> Get property data associated with a species in a phase
     procedure :: get_spec_property_set
     !> Get a list of species names in this phase
     procedure :: get_species_names
@@ -518,9 +519,7 @@ contains
     integer(i_kind) :: i_spec   
 
     i_spec = this%find(spec_name)
-    !allocate(spec_property_set(this%spec_property_set(i_spec)%val_%size()))
     spec_property_set => this%spec_property_set(i_spec)%val_
-    !deallocate(spec_property_set)
 
   end function get_spec_property_set
 
