@@ -343,6 +343,9 @@ contains
            ! species given as just a string name → still give an empty set
             this%spec_property_set(i_spec)%val_ => spec_property_set
             spec_property_set => null()
+          else
+            deallocate(spec_property_set)
+            call die_msg(195829403, "Invalid type for Phase species")
           end if
           call json%get_next(species, next)
           species => next
