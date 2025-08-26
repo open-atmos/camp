@@ -340,7 +340,8 @@ contains
             this%spec_property_set(i_spec)%val_ => spec_property_set
           else if (var_type.eq.json_string) then
            ! species given as just a string name → still give an empty set
-            this%spec_property_set(i_spec)%val_ => spec_property_set     
+            this%spec_property_set(i_spec)%val_ => spec_property_set
+            spec_property_set => null()
           end if
           call json%get_next(species, next)
           species => next
