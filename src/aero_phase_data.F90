@@ -325,7 +325,6 @@ contains
         call json%get_child(child, species)
         do while (associated(species))
           i_spec = i_spec + 1
-          allocate(spec_property_set)
           call json%info(species, var_type=var_type)
           if (var_type.eq.json_object) then
             call json%get_child(species, species_child)
