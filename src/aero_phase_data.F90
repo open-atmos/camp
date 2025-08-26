@@ -310,7 +310,10 @@ contains
     ! cycle through the species assocaited with each phase and add 
     ! associated properties
     i_spec = 0
-    ! allocate space for species property sets assocaited with a phase
+    ! cycle through the species associated with each phase and add 
+    ! associated properties
+    i_spec = 0
+    ! allocate space for species property sets associated with a phase
     allocate(this%spec_property_set(num_spec))
     spec_property_set => property_t()
     next => null()
