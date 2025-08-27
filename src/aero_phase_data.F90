@@ -315,12 +315,11 @@ contains
     i_spec = 0
     ! allocate space for species property sets associated with a phase
     allocate(this%spec_property_set(num_spec))
-    spec_property_set => property_t()
     next => null()
     call json%get_child(j_obj, child)
     do while (associated(child))
       call json%info(child, name=key, var_type=var_type)
-        !spec_property_set => property_t()
+      !spec_property_set => property_t()
       ! chemical species in the phase
       if (key.eq."species") then
         call json%get_child(child, species)
