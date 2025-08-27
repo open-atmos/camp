@@ -307,9 +307,6 @@ contains
       this%property_set => property_set
     end if
 
-    ! cycle through the species assocaited with each phase and add 
-    ! associated properties
-    i_spec = 0
     ! cycle through the species associated with each phase and add 
     ! associated properties
     i_spec = 0
