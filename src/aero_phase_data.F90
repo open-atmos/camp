@@ -316,7 +316,6 @@ contains
     call json%get_child(j_obj, child)
     do while (associated(child))
       call json%info(child, name=key, var_type=var_type)
-      spec_property_set => property_t()
       ! chemical species in the phase
       if (key.eq."species") then
         call json%get_child(child, species)
