@@ -29,6 +29,8 @@ integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__phase__
 \begin{DoxyCompactList}\small\item\em Get the number of Jacobian row elements needed during solving. \end{DoxyCompactList}\item 
 class(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__aero__phase__data_a50c5c02187f8f075971e71bf4e1654e5}{get\+\_\+property\+\_\+set}} (this)
 \begin{DoxyCompactList}\small\item\em Get the aerosol phase property set. \end{DoxyCompactList}\item 
+class(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__aero__phase__data_a3135ac4fd9b7a2769b5dccd343b19e80}{get\+\_\+spec\+\_\+property\+\_\+set}} (this, spec\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Get the aerosol phase species property set. \end{DoxyCompactList}\item 
 type(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\+\_\+t}}) function, dimension(\+:), allocatable \mbox{\hyperlink{namespacecamp__aero__phase__data_a6b0e912f6d52db60cc06554c869c4d50}{get\+\_\+species\+\_\+names}} (this)
 \begin{DoxyCompactList}\small\item\em Get an aerosol phase species name. \end{DoxyCompactList}\item 
 integer(kind=i\+\_\+kind) function \mbox{\hyperlink{namespacecamp__aero__phase__data_ada739b156bc12eee77fe968408b8afc5}{get\+\_\+species\+\_\+type}} (this, spec\+\_\+name)
@@ -87,7 +89,7 @@ Add a new chemical species to the phase.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00644}{644}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00735}{735}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -120,7 +122,7 @@ Pack the given value to the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00506}{506}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00587}{587}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -153,7 +155,7 @@ Unpack the given value from the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00532}{532}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00613}{613}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -185,7 +187,7 @@ A new set of aerosol-\/phase species
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00162}{162}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00168}{168}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__aero__phase__data_af443ab1c8928427f282158c27a2ccc38}\index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!dereference@{dereference}}
 \index{dereference@{dereference}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
@@ -204,7 +206,7 @@ Dereference a pointer to aerosol phase data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00692}{692}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00783}{783}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__aero__phase__data_ac5eaedf2265900988eaddb4872f1c0c2}\index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!do\_print@{do\_print}}
 \index{do\_print@{do\_print}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
@@ -225,7 +227,7 @@ Print out the aerosol phase data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00559}{559}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00640}{640}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__aero__phase__data_a8b457646e5668e7125d29469ed581595}\index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!ensure\_size@{ensure\_size}}
 \index{ensure\_size@{ensure\_size}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
@@ -246,7 +248,7 @@ Ensure there is enough room in the species dataset to add a specified number of 
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00622}{622}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00713}{713}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}\index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
@@ -265,7 +267,7 @@ Finalize the aerosol phase data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00587}{587}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00668}{668}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -292,7 +294,7 @@ Finalize the aerosol phase data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00605}{605}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00696}{696}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -329,7 +331,7 @@ Get the index of an aerosol-\/phase species by name. Return 0 if the species is 
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00669}{669}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00760}{760}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__aero__phase__data_a50e3a12672f60404141d9f7d90ab049e}\index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!get\_name@{get\_name}}
 \index{get\_name@{get\_name}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
@@ -351,7 +353,7 @@ The name of the aerosol phase
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00390}{390}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00452}{452}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__aero__phase__data_a50c5c02187f8f075971e71bf4e1654e5}\index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!get\_property\_set@{get\_property\_set}}
 \index{get\_property\_set@{get\_property\_set}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
@@ -373,7 +375,7 @@ A pointer to the aerosol phase property set
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00437}{437}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00499}{499}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__aero__phase__data_a3f1fce7eed369d2c40aa6ec071f85c17}\index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!get\_size@{get\_size}}
 \index{get\_size@{get\_size}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
@@ -392,7 +394,31 @@ Get the number of species in the phase.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00404}{404}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00466}{466}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+
+\Hypertarget{namespacecamp__aero__phase__data_a3135ac4fd9b7a2769b5dccd343b19e80}\index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!get\_spec\_property\_set@{get\_spec\_property\_set}}
+\index{get\_spec\_property\_set@{get\_spec\_property\_set}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
+\doxysubsubsection{\texorpdfstring{get\_spec\_property\_set()}{get\_spec\_property\_set()}}
+{\footnotesize\ttfamily \label{namespacecamp__aero__phase__data_a3135ac4fd9b7a2769b5dccd343b19e80} 
+class(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}) function, pointer camp\+\_\+aero\+\_\+phase\+\_\+data\+::get\+\_\+spec\+\_\+property\+\_\+set (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__t}{aero\+\_\+phase\+\_\+data\+\_\+t}}), intent(in)}]{this}{, }\item[{character(len=\texorpdfstring{$\ast$}{*}), intent(in)}]{spec\+\_\+name}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Get the aerosol phase species property set. 
+
+\begin{DoxyReturn}{Returns}
+A pointer to the aerosol phase property set 
+\end{DoxyReturn}
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em spec\+\_\+name} & Species name to find properties of \\
+\hline
+\mbox{\texttt{ in}}  & {\em this} & Aerosol phase data \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00513}{513}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__aero__phase__data_a6b0e912f6d52db60cc06554c869c4d50}\index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!get\_species\_names@{get\_species\_names}}
 \index{get\_species\_names@{get\_species\_names}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
@@ -414,7 +440,7 @@ Names of species in this phase
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00451}{451}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00532}{532}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__aero__phase__data_ada739b156bc12eee77fe968408b8afc5}\index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!get\_species\_type@{get\_species\_type}}
 \index{get\_species\_type@{get\_species\_type}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
@@ -438,7 +464,7 @@ The type of a species in this phase
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00470}{470}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00551}{551}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -467,7 +493,7 @@ Initialize the aerosol phase data, validating species names.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00306}{306}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00368}{368}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -498,7 +524,7 @@ Load species from an input file.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00227}{227}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00233}{233}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -525,7 +551,7 @@ Get the number of Jacobian row elements needed during solving.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00416}{416}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00478}{478}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 \Hypertarget{namespacecamp__aero__phase__data_a8f3f446ed030f9ec8af894715c950807}\index{camp\_aero\_phase\_data@{camp\_aero\_phase\_data}!pack\_size@{pack\_size}}
 \index{pack\_size@{pack\_size}!camp\_aero\_phase\_data@{camp\_aero\_phase\_data}}
@@ -546,7 +572,7 @@ Determine the size of a binary required to pack the aerosol representation data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00490}{490}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00571}{571}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -581,7 +607,7 @@ Finalize a pointer to aerosol phase data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00704}{704}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00795}{795}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -608,7 +634,7 @@ Finalize an array of pointers to aerosol phase data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00716}{716}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{aero__phase__data_8_f90_source_l00807}{807}} of file \mbox{\hyperlink{aero__phase__data_8_f90_source}{aero\+\_\+phase\+\_\+data.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
