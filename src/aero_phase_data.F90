@@ -89,6 +89,10 @@ module camp_aero_phase_data
     !> Aerosol phase parameters. These will be available during
     !! initialization, but not during solving.
     type(property_t), pointer :: property_set => null()
+    !!> Property set associated with species. When species
+    !! are input in JSON files as objects, associated properties
+    !! can be included.
+    type(property_ptr), allocatable :: spec_property_set(:)
     !> Condensed phase data. Theses arrays will be available during
     !! solving, and should contain any information required by the
     !! functions of the aerosol phase that cannot be obtained
@@ -114,6 +118,8 @@ module camp_aero_phase_data
     procedure :: num_jac_elem
     !> Get property data associated with this phase
     procedure :: get_property_set
+    !> Get property data associated with a species in a phase
+    procedure :: get_spec_property_set
     !> Get a list of species names in this phase
     procedure :: get_species_names
     !> Get a species type by name
@@ -233,12 +239,15 @@ contains
     !> JSON object
     type(json_value), pointer, intent(in) :: j_obj
 
-    type(json_value), pointer :: child, next, species
+    type(json_value), pointer :: child, next, species, species_child
+    type(json_value), pointer :: species_obj
     character(kind=json_ck, len=:), allocatable :: key, unicode_str_val
-    integer(kind=i_kind) :: var_type
+    character(kind=json_ck, len=:), allocatable :: species_name
+    integer(kind=i_kind) :: var_type, num_spec, i_spec
 
     character(len=:), allocatable :: str_val
     type(property_t), pointer :: property_set
+    type(property_t), pointer :: spec_property_set
 
     ! allocate space for the phase property set
     property_set => property_t()
@@ -247,16 +256,15 @@ contains
     ! and load the remaining data into the phase property set
     next => null()
     call json%get_child(j_obj, child)
+    num_spec = 0
     do while (associated(child))
       call json%info(child, name=key, var_type=var_type)
-
       ! phase name
       if (key.eq."name") then
         if (var_type.ne.json_string) call die_msg(429142134, &
                 "Received non-string aerosol phase name.")
         call json%get(child, unicode_str_val)
         this%phase_name = unicode_str_val
-
       ! chemical species in the phase
       else if (key.eq."species") then
         if (var_type.ne.json_array) call die_msg(293312378, &
@@ -264,12 +272,20 @@ contains
                 to_string(var_type))
         call json%get_child(child, species)
         do while (associated(species))
+          num_spec = num_spec + 1
           call json%info(species, var_type=var_type)
-          if (var_type.ne.json_string) call die_msg(669858868, &
-                  "Received non-string aerosol phase species name.")
-          call json%get(species, unicode_str_val)
-          str_val = unicode_str_val
-          call this%add(str_val)
+          if (var_type.eq.json_object) then
+            ! handle species object
+            call json%get(species, "name", species_name)
+            call this%add(species_name)
+          else if (var_type.eq.json_string) then
+            ! string species name 
+            call json%get(species, unicode_str_val)
+            str_val = unicode_str_val
+            call this%add(str_val)
+          else
+            call die_msg(391082805, "Invalid species format: must be object or string.")
+          end if
           call json%get_next(species, next)
           species => next
         end do
@@ -290,6 +306,52 @@ contains
     else
       this%property_set => property_set
     end if
+
+    ! cycle through the species associated with each phase and add 
+    ! associated properties
+    i_spec = 0
+    ! allocate space for species property sets associated with a phase
+    allocate(this%spec_property_set(num_spec))
+    next => null()
+    call json%get_child(j_obj, child)
+    do while (associated(child))
+      call json%info(child, name=key, var_type=var_type)
+      ! chemical species in the phase
+      if (key.eq."species") then
+        call json%get_child(child, species)
+        do while (associated(species))
+          i_spec = i_spec + 1
+          allocate(spec_property_set)
+          call json%info(species, var_type=var_type)
+          if (var_type.eq.json_object) then
+            call json%get_child(species, species_child)
+            do while (associated(species_child))
+              call json%info(species_child, name=key, var_type=var_type)
+              ! load remaining properties into the species property set
+              if (key.ne."name".and.key.ne."type") then
+                call spec_property_set%load(json, species_child, .false., this%spec_name(i_spec)%string)
+              end if
+              call json%get_next(species_child, next)
+              species_child => next
+            end do
+            this%spec_property_set(i_spec)%val_ => spec_property_set
+            spec_property_set => null()
+          else if (var_type.eq.json_string) then
+           ! species given as just a string name → still give an empty set
+            this%spec_property_set(i_spec)%val_ => spec_property_set
+            spec_property_set => null()
+          else
+            deallocate(spec_property_set)
+            call die_msg(195829403, "Invalid type for Phase species")
+          end if
+          call json%get_next(species, next)
+          species => next
+        end do
+      end if
+      call json%get_next(child, next)
+      child => next
+    end do
+
 #else
   subroutine load(this)
 
@@ -447,6 +509,25 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+  !> Get the aerosol phase species property set
+  function get_spec_property_set(this, spec_name) result (spec_property_set)
+
+    !> A pointer to the aerosol phase property set
+    class(property_t), pointer :: spec_property_set
+    !> Species name to find properties of
+    character(len=*), intent(in) :: spec_name
+    !> Aerosol phase data
+   class(aero_phase_data_t), intent(in) :: this
+
+    integer(i_kind) :: i_spec   
+
+    i_spec = this%find(spec_name)
+    spec_property_set => this%spec_property_set(i_spec)%val_
+
+  end function get_spec_property_set
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
   !> Get an aerosol phase species name
   function get_species_names(this) result (spec_names)
 
@@ -588,6 +669,7 @@ contains
 
     !> Aerosol phase data
     type(aero_phase_data_t), intent(inout) :: this
+    integer(kind=i_kind) :: i
 
     if (allocated(this%phase_name))    deallocate(this%phase_name)
     if (associated(this%spec_name))    deallocate(this%spec_name)
@@ -596,6 +678,15 @@ contains
                                        deallocate(this%condensed_data_real)
     if (allocated(this%condensed_data_int)) &
                                        deallocate(this%condensed_data_int)
+
+    if (allocated(this%spec_property_set)) then
+      do i = 1, size(this%spec_property_set)
+        if (associated(this%spec_property_set(i)%val_)) then
+          deallocate(this%spec_property_set(i)%val_)
+        end if
+      end do
+      deallocate(this%spec_property_set)
+    end if
 
   end subroutine finalize
 

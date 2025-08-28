@@ -64,7 +64,7 @@ contains
     type(json_value), pointer :: j_obj, j_next
 
     integer(kind=i_kind) :: i_phase, i_spec
-    type(property_t), pointer :: property_set
+    type(property_t), pointer :: property_set, spec_property_set
     character(len=:), allocatable :: key
     real(kind=dp) :: temp_real
     logical :: temp_logical
@@ -132,6 +132,28 @@ contains
     call assert(278773971, aero_phase_data_set(1)%val%size().eq.3)
     call assert(608559165, aero_phase_data_set(2)%val%size().eq.3)
     call assert(438402261, aero_phase_data_set(3)%val%size().eq.2)
+
+    spec_property_set => aero_phase_data_set(3)%val%get_spec_property_set("species b")
+    key = "diffusion coefficient [m2 s-1]"
+    call assert(143255788, spec_property_set%size().eq.2)
+    call assert(368026503, spec_property_set%get_real(key, temp_real))
+    call assert(979338893, almost_equal(temp_real, real(1.0, kind=dp)))
+    key = "species property"
+    call assert(114400485, spec_property_set%get_real(key, temp_real))
+    call assert(150893490, almost_equal(temp_real, real(13.0, kind=dp)))
+
+    spec_property_set => aero_phase_data_set(3)%val%get_spec_property_set("species e")
+    call assert(379859264, spec_property_set%size().eq.2)
+    key = "diffusion coefficient [m2 s-1]"
+    call assert(354007455, spec_property_set%get_real(key, temp_real))
+    call assert(568601191, almost_equal(temp_real, real(2.0, kind=dp)))
+    key = "another species property"
+    call assert(958241656, spec_property_set%get_real(key, temp_real))
+    call assert(091832840, almost_equal(temp_real, real(13.3, kind=dp)))
+
+    spec_property_set => aero_phase_data_set(2)%val%get_spec_property_set("species c")
+    call spec_property_set%print()
+    call assert(641586524, spec_property_set%size().eq.0)
 
 #ifdef CAMP_USE_MPI
     pack_size = 0
