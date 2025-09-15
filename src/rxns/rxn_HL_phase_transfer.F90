@@ -169,12 +169,14 @@ contains
   !> Initialize the reaction data, validating component data and loading
   !! any required information into the condensed data arrays for use during
   !! solving
-  subroutine initialize(this, chem_spec_data, aero_rep, n_cells)
+  subroutine initialize(this, chem_spec_data, aero_phase, aero_rep, n_cells)
 
     !> Reaction data
     class(rxn_HL_phase_transfer_t), intent(inout) :: this
     !> Chemical species data
     type(chem_spec_data_t), intent(in) :: chem_spec_data
+    !> Aerosol phase data
+    type(aero_phase_data_ptr), intent(in) :: aero_phase(:)
     !> Aerosol representations
     type(aero_rep_data_ptr), pointer, intent(in) :: aero_rep(:)
     !> Number of grid cells to solve simultaneously
