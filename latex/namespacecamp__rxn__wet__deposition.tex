@@ -23,7 +23,7 @@ type \mbox{\hyperlink{structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__
 \item 
 type(\mbox{\hyperlink{structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t}{rxn\+\_\+wet\+\_\+deposition\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__wet__deposition_aaa5e9d8d7f830dc011c2ed6c59daf468}{constructor}} ()
 \begin{DoxyCompactList}\small\item\em Constructor for Wet Deposition reaction. \end{DoxyCompactList}\item 
-subroutine \mbox{\hyperlink{namespacecamp__rxn__wet__deposition_a11203f6a27c10196fb8e68d31783539f}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+subroutine \mbox{\hyperlink{namespacecamp__rxn__wet__deposition_a24979d3eef8d0fa9fa1f226266b39e77}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+phase, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
 type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__wet__deposition_ae00cf899ce59493d07596c63fd8589f3}{get\+\_\+property\+\_\+set}} (this)
 \begin{DoxyCompactList}\small\item\em Get the reaction properties. (For use by external modules.) \end{DoxyCompactList}\item 
@@ -66,7 +66,7 @@ A new reaction instance
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00157}{157}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00158}{158}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__wet__deposition_a5fa5d2d8ff476f919b09c08d6de0ef3b}\index{camp\_rxn\_wet\_deposition@{camp\_rxn\_wet\_deposition}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_wet\_deposition@{camp\_rxn\_wet\_deposition}}
@@ -85,7 +85,7 @@ Finalize the reaction.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00273}{273}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00276}{276}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__wet__deposition_a978935e949cb53cfb5ec5cec8e6d3df3}\index{camp\_rxn\_wet\_deposition@{camp\_rxn\_wet\_deposition}!finalize\_array@{finalize\_array}}
 \index{finalize\_array@{finalize\_array}!camp\_rxn\_wet\_deposition@{camp\_rxn\_wet\_deposition}}
@@ -104,7 +104,7 @@ Finalize an array of reactions.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00290}{290}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00293}{293}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -134,13 +134,13 @@ Reaction properties
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00259}{259}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00262}{262}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
 
-\Hypertarget{namespacecamp__rxn__wet__deposition_a11203f6a27c10196fb8e68d31783539f}\index{camp\_rxn\_wet\_deposition@{camp\_rxn\_wet\_deposition}!initialize@{initialize}}
+\Hypertarget{namespacecamp__rxn__wet__deposition_a24979d3eef8d0fa9fa1f226266b39e77}\index{camp\_rxn\_wet\_deposition@{camp\_rxn\_wet\_deposition}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_wet\_deposition@{camp\_rxn\_wet\_deposition}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily \label{namespacecamp__rxn__wet__deposition_a11203f6a27c10196fb8e68d31783539f} 
-subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t}{rxn\+\_\+wet\+\_\+deposition\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily \label{namespacecamp__rxn__wet__deposition_a24979d3eef8d0fa9fa1f226266b39e77} 
+subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+wet\+\_\+deposition\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t}{rxn\+\_\+wet\+\_\+deposition\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in)}]{aero\+\_\+phase}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -152,6 +152,8 @@ Initialize the reaction data, validating component data and loading any required
 \hline
 \mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data \\
 \hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+phase} & Aerosol phase data \\
+\hline
 \mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations \\
 \hline
 \mbox{\texttt{ in}}  & {\em n\+\_\+cells} & Number of grid cells to solve simultaneously \\
@@ -159,14 +161,14 @@ Initialize the reaction data, validating component data and loading any required
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00172}{172}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00173}{173}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacecamp__rxn__wet__deposition_a11203f6a27c10196fb8e68d31783539f_cgraph}
+\includegraphics[width=350pt]{namespacecamp__rxn__wet__deposition_a24979d3eef8d0fa9fa1f226266b39e77_cgraph}
 \end{center}
 \end{figure}
 \Hypertarget{namespacecamp__rxn__wet__deposition_ae5253b3006230d6a7af9e739ef53ed07}\index{camp\_rxn\_wet\_deposition@{camp\_rxn\_wet\_deposition}!internal\_bin\_pack@{internal\_bin\_pack}}
@@ -192,7 +194,7 @@ Pack the given value to the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00364}{364}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00367}{367}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -225,7 +227,7 @@ Unpack the given value from the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00390}{390}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00393}{393}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -254,7 +256,7 @@ Determine the size of a binary required to pack the reaction data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00347}{347}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00350}{350}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -281,7 +283,7 @@ Finalize an update data object.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00417}{417}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00420}{420}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -308,7 +310,7 @@ Finalize an array of reactions.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00429}{429}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00432}{432}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -339,7 +341,7 @@ Initialize update data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00321}{321}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00324}{324}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -368,5 +370,5 @@ Set packed update data for wet\+\_\+deposition rate constants.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00306}{306}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wet__deposition_8_f90_source_l00309}{309}} of file \mbox{\hyperlink{rxn__wet__deposition_8_f90_source}{rxn\+\_\+wet\+\_\+deposition.\+F90}}.
 

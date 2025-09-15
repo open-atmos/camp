@@ -23,7 +23,7 @@ type \mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__update__data__photolys
 \item 
 type(\mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__photolysis__t}{rxn\+\_\+photolysis\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__photolysis_acaf2d055599e32a7e7f2791eff9e2776}{constructor}} ()
 \begin{DoxyCompactList}\small\item\em Constructor for Photolysis reaction. \end{DoxyCompactList}\item 
-subroutine \mbox{\hyperlink{namespacecamp__rxn__photolysis_a3c32c66c6f18c51c80097f1fbda550e2}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+subroutine \mbox{\hyperlink{namespacecamp__rxn__photolysis_a346354773e684bb2b9996865552f1bbf}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+phase, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
 type(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__photolysis_a3749e7e9081f1b69fa3fbf9738328f06}{get\+\_\+property\+\_\+set}} (this)
 \begin{DoxyCompactList}\small\item\em Get the reaction properties. (For use by external photolysis modules.) \end{DoxyCompactList}\item 
@@ -66,7 +66,7 @@ A new reaction instance
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00168}{168}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00169}{169}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__photolysis_a852633646afd8ce1497aa34a65e77fc7}\index{camp\_rxn\_photolysis@{camp\_rxn\_photolysis}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_photolysis@{camp\_rxn\_photolysis}}
@@ -85,7 +85,7 @@ Finalize the reaction.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00328}{328}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00331}{331}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__photolysis_aacf60cf6d22bc0a0a0e62db608db437f}\index{camp\_rxn\_photolysis@{camp\_rxn\_photolysis}!finalize\_array@{finalize\_array}}
 \index{finalize\_array@{finalize\_array}!camp\_rxn\_photolysis@{camp\_rxn\_photolysis}}
@@ -104,14 +104,14 @@ Finalize an array of reactions.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00345}{345}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00348}{348}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacecamp__rxn__photolysis_aacf60cf6d22bc0a0a0e62db608db437f_cgraph}
+\includegraphics[width=342pt]{namespacecamp__rxn__photolysis_aacf60cf6d22bc0a0a0e62db608db437f_cgraph}
 \end{center}
 \end{figure}
 \Hypertarget{namespacecamp__rxn__photolysis_a3749e7e9081f1b69fa3fbf9738328f06}\index{camp\_rxn\_photolysis@{camp\_rxn\_photolysis}!get\_property\_set@{get\_property\_set}}
@@ -134,13 +134,13 @@ Reaction properties
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00314}{314}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00317}{317}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
 
-\Hypertarget{namespacecamp__rxn__photolysis_a3c32c66c6f18c51c80097f1fbda550e2}\index{camp\_rxn\_photolysis@{camp\_rxn\_photolysis}!initialize@{initialize}}
+\Hypertarget{namespacecamp__rxn__photolysis_a346354773e684bb2b9996865552f1bbf}\index{camp\_rxn\_photolysis@{camp\_rxn\_photolysis}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_photolysis@{camp\_rxn\_photolysis}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily \label{namespacecamp__rxn__photolysis_a3c32c66c6f18c51c80097f1fbda550e2} 
-subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+photolysis\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__photolysis__t}{rxn\+\_\+photolysis\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily \label{namespacecamp__rxn__photolysis_a346354773e684bb2b9996865552f1bbf} 
+subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+photolysis\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__photolysis_1_1rxn__photolysis__t}{rxn\+\_\+photolysis\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in)}]{aero\+\_\+phase}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -152,6 +152,8 @@ Initialize the reaction data, validating component data and loading any required
 \hline
 \mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data \\
 \hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+phase} & Aerosol phase data \\
+\hline
 \mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations \\
 \hline
 \mbox{\texttt{ in}}  & {\em n\+\_\+cells} & Number of grid cells to solve simultaneously \\
@@ -159,14 +161,14 @@ Initialize the reaction data, validating component data and loading any required
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00183}{183}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00184}{184}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacecamp__rxn__photolysis_a3c32c66c6f18c51c80097f1fbda550e2_cgraph}
+\includegraphics[width=350pt]{namespacecamp__rxn__photolysis_a346354773e684bb2b9996865552f1bbf_cgraph}
 \end{center}
 \end{figure}
 \Hypertarget{namespacecamp__rxn__photolysis_a0606f3ac16bb74eeebf1c1a6daf58d08}\index{camp\_rxn\_photolysis@{camp\_rxn\_photolysis}!internal\_bin\_pack@{internal\_bin\_pack}}
@@ -192,7 +194,7 @@ Pack the given value to the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00419}{419}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00422}{422}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -225,7 +227,7 @@ Unpack the given value from the buffer, advancing position.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00445}{445}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00448}{448}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -254,7 +256,7 @@ Determine the size of a binary required to pack the reaction data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00402}{402}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00405}{405}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -281,7 +283,7 @@ Finalize an update data object.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00472}{472}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00475}{475}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -308,7 +310,7 @@ Finalize an array of update data objects.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00484}{484}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00487}{487}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -347,7 +349,7 @@ Initialize update data.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00376}{376}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00379}{379}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -376,5 +378,5 @@ Set packed update data for photolysis rate constants.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00361}{361}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__photolysis_8_f90_source_l00364}{364}} of file \mbox{\hyperlink{rxn__photolysis_8_f90_source}{rxn\+\_\+photolysis.\+F90}}.
 

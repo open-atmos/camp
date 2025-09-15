@@ -70,272 +70,275 @@
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00066}00066\ \textcolor{comment}{!>\ The\ rxn\_troe\_t\ type\ and\ associated\ functions.}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00067}\mbox{\hyperlink{namespacecamp__rxn__troe}{00067}}\ \textcolor{keyword}{module}\ \mbox{\hyperlink{namespacecamp__rxn__troe}{camp\_rxn\_troe}}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00068}00068\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00069}00069\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__aero__rep__data}{camp\_aero\_rep\_data}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00070}00070\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__chem__spec__data}{camp\_chem\_spec\_data}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00071}00071\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}:\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00072}00072\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__camp__state}{camp\_camp\_state}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00073}00073\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__property}{camp\_property}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00074}00074\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rxn__data}{camp\_rxn\_data}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00075}00075\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__util}{camp\_util}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}:\ \mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}},\ \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}},\ \mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}},\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}},\ \mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}},\ \mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00077}00077\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00078}00078\ \ \ \textcolor{keywordtype}{implicit\ none}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00079}00079\ \ \ \textcolor{keywordtype}{private}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00080}00080\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00081}00081\ \textcolor{preprocessor}{\#define\ NUM\_REACT\_\ this\%condensed\_data\_int(1)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00082}00082\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_PROD\_\ this\%condensed\_data\_int(2)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00083}00083\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ K0\_A\_\ this\%condensed\_data\_real(1)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00084}00084\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ K0\_B\_\ this\%condensed\_data\_real(2)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00085}00085\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ K0\_C\_\ this\%condensed\_data\_real(3)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00086}00086\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ KINF\_A\_\ this\%condensed\_data\_real(4)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00087}00087\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ KINF\_B\_\ this\%condensed\_data\_real(5)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00088}00088\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ KINF\_C\_\ this\%condensed\_data\_real(6)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00089}00089\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ FC\_\ this\%condensed\_data\_real(7)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00090}00090\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ N\_\ this\%condensed\_data\_real(8)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00091}00091\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ SCALING\_\ this\%condensed\_data\_real(9)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00092}00092\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ CONV\_\ this\%condensed\_data\_real(10)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00093}00093\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_INT\_PROP\_\ 2}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00094}00094\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_REAL\_PROP\_\ 10}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00095}00095\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_ENV\_PARAM\_\ 1}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00096}00096\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ REACT\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_\ +\ x)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00097}00097\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ PROD\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_\ +\ NUM\_REACT\_\ +\ x)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00098}00098\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ DERIV\_ID\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_\ +\ NUM\_REACT\_\ +\ NUM\_PROD\_\ +\ x)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00099}00099\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ JAC\_ID\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_\ +\ 2*(NUM\_REACT\_+NUM\_PROD\_)\ +\ x)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00100}00100\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ YIELD\_(x)\ this\%condensed\_data\_real(NUM\_REAL\_PROP\_\ +\ x)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00101}00101\ \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00102}00102\ \textcolor{keywordtype}{public}\ ::\ \mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00103}00103\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00104}00104\ \textcolor{comment}{\ \ !>\ Generic\ test\ reaction\ data\ type}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00105}00105\ \ \ \textcolor{keyword}{type},\ \textcolor{keyword}{extends}(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\_data\_t}})\ ::\ \mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00106}00106\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00107}00107\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ initialization}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00108}\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t_a1954c05803d8cfcb97bfd9ba8fd94d06}{00108}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00109}00109\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00110}\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t_abe21d9498dbe67416216f335ee0e134e}{00110}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}},\ \mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00111}00111\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00112}00112\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00113}00113\ \textcolor{comment}{\ \ !>\ Constructor\ for\ rxn\_troe\_t}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00114}\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{00114}}\ \ \ \textcolor{keyword}{interface}\ \mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00115}00115\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ constructor}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00116}00116\ \ \ \textcolor{keyword}{end\ interface\ }\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00117}00117\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00118}00118\ \textcolor{keyword}{contains}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00119}00119\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00120}00120\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00121}00121\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00122}00122\ \textcolor{comment}{\ \ !>\ Constructor\ for\ Troe\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00123}\mbox{\hyperlink{namespacecamp__rxn__troe_a421d897fb07b66869df3ba8893b342a1}{00123}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_aab9472c40fc0e9d8eb0bf4b8ae4eb025}{constructor}}()\ \textcolor{keyword}{result}(new\_obj)}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00124}00124\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00125}00125\ \textcolor{comment}{\ \ \ \ !>\ A\ new\ reaction\ instance}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00126}00126\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_obj}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00127}00127\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00128}00128\ \ \ \ \ \textcolor{keyword}{allocate}(new\_obj)}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00129}00129\ \ \ \ \ new\_obj\%rxn\_phase\ =\ \mbox{\hyperlink{namespacecamp__rxn__data_a1ff1b61ed572674155f271c550e473ab}{gas\_rxn}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00130}00130\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00131}00131\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_aab9472c40fc0e9d8eb0bf4b8ae4eb025}{constructor}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00132}00132\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00133}00133\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00134}00134\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00135}00135\ \textcolor{comment}{\ \ !>\ Initialize\ the\ reaction\ data,\ validating\ component\ data\ and\ loading}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00136}00136\ \textcolor{comment}{\ \ !!\ any\ required\ information\ into\ the\ condensed\ data\ arrays\ for\ use\ during}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00137}00137\ \textcolor{comment}{\ \ !!\ solving}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00138}\mbox{\hyperlink{namespacecamp__rxn__troe_a9722464e9603a64e43d61be72e7c4ebe}{00138}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}(this,\ chem\_spec\_data,\ aero\_rep,\ n\_cells)}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00139}00139\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00140}00140\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00141}00141\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00142}00142\ \textcolor{comment}{\ \ \ \ !>\ Chemical\ species\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00143}00143\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ chem\_spec\_data\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00144}00144\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representations}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00145}00145\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\_rep\_data\_ptr}}),\ \textcolor{keywordtype}{pointer},\ \textcolor{keywordtype}{intent(in)}\ ::\ aero\_rep(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00146}00146\ \textcolor{comment}{\ \ \ \ !>\ Number\ of\ grid\ cells\ to\ solve\ simultaneously}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00147}00147\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)}\ ::\ n\_cells}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00148}00148\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00149}00149\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ spec\_props,\ reactants,\ products}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00150}00150\ \ \ \ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ key\_name,\ spec\_name,\ string\_val}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00151}00151\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_spec,\ i\_qty}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00152}00152\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00153}00153\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ temp\_int}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00154}00154\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ temp\_real}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00069}00069\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__aero__phase__data}{camp\_aero\_phase\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00070}00070\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__aero__rep__data}{camp\_aero\_rep\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00071}00071\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__chem__spec__data}{camp\_chem\_spec\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00072}00072\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}:\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00073}00073\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__camp__state}{camp\_camp\_state}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00074}00074\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__property}{camp\_property}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00075}00075\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rxn__data}{camp\_rxn\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00076}00076\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__util}{camp\_util}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}:\ \mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}},\ \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}},\ \mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}},\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}},\ \mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}},\ \mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00079}00079\ \ \ \textcolor{keywordtype}{implicit\ none}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00080}00080\ \ \ \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00082}00082\ \textcolor{preprocessor}{\#define\ NUM\_REACT\_\ this\%condensed\_data\_int(1)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00083}00083\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_PROD\_\ this\%condensed\_data\_int(2)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00084}00084\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ K0\_A\_\ this\%condensed\_data\_real(1)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00085}00085\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ K0\_B\_\ this\%condensed\_data\_real(2)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00086}00086\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ K0\_C\_\ this\%condensed\_data\_real(3)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00087}00087\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ KINF\_A\_\ this\%condensed\_data\_real(4)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00088}00088\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ KINF\_B\_\ this\%condensed\_data\_real(5)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00089}00089\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ KINF\_C\_\ this\%condensed\_data\_real(6)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00090}00090\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ FC\_\ this\%condensed\_data\_real(7)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00091}00091\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ N\_\ this\%condensed\_data\_real(8)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00092}00092\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ SCALING\_\ this\%condensed\_data\_real(9)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00093}00093\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ CONV\_\ this\%condensed\_data\_real(10)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00094}00094\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_INT\_PROP\_\ 2}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00095}00095\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_REAL\_PROP\_\ 10}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00096}00096\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_ENV\_PARAM\_\ 1}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00097}00097\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ REACT\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_\ +\ x)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00098}00098\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ PROD\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_\ +\ NUM\_REACT\_\ +\ x)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00099}00099\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ DERIV\_ID\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_\ +\ NUM\_REACT\_\ +\ NUM\_PROD\_\ +\ x)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00100}00100\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ JAC\_ID\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_\ +\ 2*(NUM\_REACT\_+NUM\_PROD\_)\ +\ x)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00101}00101\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ YIELD\_(x)\ this\%condensed\_data\_real(NUM\_REAL\_PROP\_\ +\ x)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00102}00102\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00103}00103\ \textcolor{keywordtype}{public}\ ::\ \mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00104}00104\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00105}00105\ \textcolor{comment}{\ \ !>\ Generic\ test\ reaction\ data\ type}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00106}00106\ \ \ \textcolor{keyword}{type},\ \textcolor{keyword}{extends}(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\_data\_t}})\ ::\ \mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00107}00107\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00108}00108\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ initialization}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00109}\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t_a408930a6d07b60e7e5869a486a7b67e7}{00109}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00110}00110\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00111}\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t_abe21d9498dbe67416216f335ee0e134e}{00111}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}},\ \mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00112}00112\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00113}00113\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00114}00114\ \textcolor{comment}{\ \ !>\ Constructor\ for\ rxn\_troe\_t}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00115}\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{00115}}\ \ \ \textcolor{keyword}{interface}\ \mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00116}00116\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ constructor}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00117}00117\ \ \ \textcolor{keyword}{end\ interface\ }\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00119}00119\ \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00120}00120\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00121}00121\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00122}00122\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00123}00123\ \textcolor{comment}{\ \ !>\ Constructor\ for\ Troe\ reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00124}\mbox{\hyperlink{namespacecamp__rxn__troe_a421d897fb07b66869df3ba8893b342a1}{00124}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}{constructor}}()\ \textcolor{keyword}{result}(new\_obj)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00125}00125\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00126}00126\ \textcolor{comment}{\ \ \ \ !>\ A\ new\ reaction\ instance}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00127}00127\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_obj}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00129}00129\ \ \ \ \ \textcolor{keyword}{allocate}(new\_obj)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00130}00130\ \ \ \ \ new\_obj\%rxn\_phase\ =\ \mbox{\hyperlink{namespacecamp__rxn__data_a1ff1b61ed572674155f271c550e473ab}{gas\_rxn}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00132}00132\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}{constructor}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00133}00133\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00134}00134\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00135}00135\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00136}00136\ \textcolor{comment}{\ \ !>\ Initialize\ the\ reaction\ data,\ validating\ component\ data\ and\ loading}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00137}00137\ \textcolor{comment}{\ \ !!\ any\ required\ information\ into\ the\ condensed\ data\ arrays\ for\ use\ during}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00138}00138\ \textcolor{comment}{\ \ !!\ solving}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00139}\mbox{\hyperlink{namespacecamp__rxn__troe_a49a161851fd4d890af9465156345b727}{00139}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}(this,\ chem\_spec\_data,\ aero\_phase,\ aero\_rep,\ n\_cells)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00140}00140\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00141}00141\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00142}00142\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00143}00143\ \textcolor{comment}{\ \ \ \ !>\ Chemical\ species\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00144}00144\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ chem\_spec\_data\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00145}00145\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ phase\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00146}00146\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\_phase\_data\_ptr}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ aero\_phase(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00147}00147\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representations}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00148}00148\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\_rep\_data\_ptr}}),\ \textcolor{keywordtype}{pointer},\ \textcolor{keywordtype}{intent(in)}\ ::\ aero\_rep(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00149}00149\ \textcolor{comment}{\ \ \ \ !>\ Number\ of\ grid\ cells\ to\ solve\ simultaneously}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00150}00150\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)}\ ::\ n\_cells}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00152}00152\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ spec\_props,\ reactants,\ products}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00153}00153\ \ \ \ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ key\_name,\ spec\_name,\ string\_val}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00154}00154\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_spec,\ i\_qty}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00155}00155\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00156}00156\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ species\ involved}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00157}00157\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ \textcolor{keyword}{associated}(this\%property\_set))\ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(510658779,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ property\ set\ needed\ to\ initialize\ reaction"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00159}00159\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}reactants"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00160}00160\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(852878121,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_property\_t(key\_name,\ reactants),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Troe\ reaction\ is\ missing\ reactants"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00163}00163\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}products"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00164}00164\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(965196466,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_property\_t(key\_name,\ products),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Troe\ reaction\ is\ missing\ products"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00167}00167\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00168}00168\ \ \ \ \ \textcolor{comment}{!\ Count\ the\ number\ of\ reactants\ (including\ those\ with\ a\ qty\ specified)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00169}00169\ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_reset()}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00170}00170\ \ \ \ \ i\_spec\ =\ 0}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00171}00171\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (reactants\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00172}00172\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ properties\ included\ with\ this\ reactant\ in\ the\ reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00173}00173\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(844081716,\ reactants\%get\_property\_t(val=spec\_props))}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00174}00174\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}qty"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00175}00175\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_int(key\_name,\ temp\_int))\ i\_spec\ =\ i\_spec+temp\_int-\/1}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00176}00176\ \ \ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_next()}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00177}00177\ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00178}00178\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00179}00179\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00180}00180\ \ \ \ \ \textcolor{comment}{!\ Allocate\ space\ in\ the\ condensed\ data\ arrays}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00181}00181\ \ \ \ \ \textcolor{comment}{!\ Space\ in\ this\ example\ is\ allocated\ for\ two\ sets\ of\ inidices\ for\ the}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00182}00182\ \ \ \ \ \textcolor{comment}{!\ reactants\ and\ products,\ one\ molecular\ property\ for\ each\ reactant,}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00183}00183\ \ \ \ \ \textcolor{comment}{!\ yields\ for\ the\ products\ and\ three\ reaction\ parameters.}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00184}00184\ \ \ \ \ \textcolor{keyword}{allocate}(this\%condensed\_data\_int(num\_int\_prop\_\ +\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ (i\_spec\ +\ 2)\ *\ (i\_spec\ +\ products\%size())))}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00186}00186\ \ \ \ \ \textcolor{keyword}{allocate}(this\%condensed\_data\_real(num\_real\_prop\_\ +\ products\%size()))}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00187}00187\ \ \ \ \ this\%condensed\_data\_int(:)\ =\ int(0,\ kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}})}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00188}00188\ \ \ \ \ this\%condensed\_data\_real(:)\ =\ real(0.0,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00189}00189\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00190}00190\ \ \ \ \ \textcolor{comment}{!\ Save\ space\ for\ the\ environment-\/dependent\ parameters}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00191}00191\ \ \ \ \ this\%num\_env\_params\ =\ num\_env\_param\_}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00156}00156\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ temp\_int}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00157}00157\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ temp\_real}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00158}00158\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00159}00159\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ species\ involved}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00160}00160\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ \textcolor{keyword}{associated}(this\%property\_set))\ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(510658779,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00161}00161\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ property\ set\ needed\ to\ initialize\ reaction"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00162}00162\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}reactants"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00163}00163\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(852878121,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_property\_t(key\_name,\ reactants),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Troe\ reaction\ is\ missing\ reactants"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00166}00166\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}products"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00167}00167\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(965196466,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_property\_t(key\_name,\ products),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Troe\ reaction\ is\ missing\ products"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00170}00170\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00171}00171\ \ \ \ \ \textcolor{comment}{!\ Count\ the\ number\ of\ reactants\ (including\ those\ with\ a\ qty\ specified)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00172}00172\ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_reset()}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00173}00173\ \ \ \ \ i\_spec\ =\ 0}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00174}00174\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (reactants\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00175}00175\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ properties\ included\ with\ this\ reactant\ in\ the\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00176}00176\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(844081716,\ reactants\%get\_property\_t(val=spec\_props))}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00177}00177\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}qty"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00178}00178\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_int(key\_name,\ temp\_int))\ i\_spec\ =\ i\_spec+temp\_int-\/1}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00179}00179\ \ \ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_next()}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00180}00180\ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00181}00181\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00182}00182\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00183}00183\ \ \ \ \ \textcolor{comment}{!\ Allocate\ space\ in\ the\ condensed\ data\ arrays}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00184}00184\ \ \ \ \ \textcolor{comment}{!\ Space\ in\ this\ example\ is\ allocated\ for\ two\ sets\ of\ inidices\ for\ the}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00185}00185\ \ \ \ \ \textcolor{comment}{!\ reactants\ and\ products,\ one\ molecular\ property\ for\ each\ reactant,}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00186}00186\ \ \ \ \ \textcolor{comment}{!\ yields\ for\ the\ products\ and\ three\ reaction\ parameters.}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00187}00187\ \ \ \ \ \textcolor{keyword}{allocate}(this\%condensed\_data\_int(num\_int\_prop\_\ +\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ (i\_spec\ +\ 2)\ *\ (i\_spec\ +\ products\%size())))}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00189}00189\ \ \ \ \ \textcolor{keyword}{allocate}(this\%condensed\_data\_real(num\_real\_prop\_\ +\ products\%size()))}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00190}00190\ \ \ \ \ this\%condensed\_data\_int(:)\ =\ int(0,\ kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}})}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00191}00191\ \ \ \ \ this\%condensed\_data\_real(:)\ =\ real(0.0,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00192}00192\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00193}00193\ \ \ \ \ \textcolor{comment}{!\ Save\ the\ size\ of\ the\ reactant\ and\ product\ arrays\ (for\ reactions\ where}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00194}00194\ \ \ \ \ \textcolor{comment}{!\ these\ can\ vary)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00195}00195\ \ \ \ \ num\_react\_\ =\ i\_spec}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00196}00196\ \ \ \ \ num\_prod\_\ =\ products\%size()}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00197}00197\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00198}00198\ \ \ \ \ \textcolor{comment}{!\ Set\ the\ \#/cc\ -\/>\ ppm\ conversion\ prefactor}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00199}00199\ \ \ \ \ conv\_\ =\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%avagadro\ /\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%univ\_gas\_const\ *\ 10.0d0**(-\/12.0d0)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00193}00193\ \ \ \ \ \textcolor{comment}{!\ Save\ space\ for\ the\ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00194}00194\ \ \ \ \ this\%num\_env\_params\ =\ num\_env\_param\_}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00195}00195\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00196}00196\ \ \ \ \ \textcolor{comment}{!\ Save\ the\ size\ of\ the\ reactant\ and\ product\ arrays\ (for\ reactions\ where}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00197}00197\ \ \ \ \ \textcolor{comment}{!\ these\ can\ vary)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00198}00198\ \ \ \ \ num\_react\_\ =\ i\_spec}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00199}00199\ \ \ \ \ num\_prod\_\ =\ products\%size()}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00200}00200\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00201}00201\ \ \ \ \ \textcolor{comment}{!\ Get\ reaction\ parameters\ (it\ might\ be\ easiest\ to\ keep\ these\ at\ the}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00202}00202\ \ \ \ \ \textcolor{comment}{!\ beginning\ of\ the\ condensed\ data\ array,\ so\ they\ can\ be\ accessed\ using}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00203}00203\ \ \ \ \ \textcolor{comment}{!\ compliler\ flags)}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00204}00204\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}k0\_A"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00205}00205\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ k0\_a\_))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00206}00206\ \ \ \ \ \ \ k0\_a\_\ =\ 1.0}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00207}00207\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00208}00208\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}k0\_B"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00209}00209\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ k0\_b\_))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00210}00210\ \ \ \ \ \ \ k0\_b\_\ =\ 0.0}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00211}00211\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00212}00212\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}k0\_C"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00213}00213\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ k0\_c\_))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00214}00214\ \ \ \ \ \ \ k0\_c\_\ =\ 0.0}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00215}00215\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00216}00216\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}kinf\_A"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00217}00217\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ kinf\_a\_))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00218}00218\ \ \ \ \ \ \ kinf\_a\_\ =\ 1.0}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00219}00219\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00220}00220\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}kinf\_B"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00221}00221\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ kinf\_b\_))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00222}00222\ \ \ \ \ \ \ kinf\_b\_\ =\ 0.0}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00223}00223\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00224}00224\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}kinf\_C"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00225}00225\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ kinf\_c\_))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00226}00226\ \ \ \ \ \ \ kinf\_c\_\ =\ 0.0}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00227}00227\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00228}00228\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}Fc"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00229}00229\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ fc\_))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00230}00230\ \ \ \ \ \ \ fc\_\ =\ 0.6}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00231}00231\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00232}00232\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}N"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00233}00233\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_aefa6a395878e8e7282419620791a3364}{n\_}}))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00234}00234\ \ \ \ \ \ \ \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_aefa6a395878e8e7282419620791a3364}{n\_}}\ =\ 1.0}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00235}00235\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00236}00236\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}time\ unit"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00237}00237\ \ \ \ \ scaling\_\ =\ real(1.0,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00238}00238\ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%property\_set\%get\_string(key\_name,\ string\_val))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00239}00239\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (trim(string\_val).eq.\textcolor{stringliteral}{"{}MIN"{}})\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00240}00240\ \ \ \ \ \ \ \ \ scaling\_\ =\ real(1.0d0/60.0d0,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00241}00241\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00242}00242\ \textcolor{keywordflow}{\ \ \ \ endif}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00243}00243\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00244}00244\ \ \ \ \ \textcolor{comment}{!\ Include\ [M]\ in\ K0\_A\_}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00245}00245\ \ \ \ \ k0\_a\_\ =\ k0\_a\_\ *\ real(1.0d6,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00201}00201\ \ \ \ \ \textcolor{comment}{!\ Set\ the\ \#/cc\ -\/>\ ppm\ conversion\ prefactor}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00202}00202\ \ \ \ \ conv\_\ =\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%avagadro\ /\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%univ\_gas\_const\ *\ 10.0d0**(-\/12.0d0)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00203}00203\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00204}00204\ \ \ \ \ \textcolor{comment}{!\ Get\ reaction\ parameters\ (it\ might\ be\ easiest\ to\ keep\ these\ at\ the}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00205}00205\ \ \ \ \ \textcolor{comment}{!\ beginning\ of\ the\ condensed\ data\ array,\ so\ they\ can\ be\ accessed\ using}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00206}00206\ \ \ \ \ \textcolor{comment}{!\ compliler\ flags)}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00207}00207\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}k0\_A"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00208}00208\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ k0\_a\_))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00209}00209\ \ \ \ \ \ \ k0\_a\_\ =\ 1.0}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00210}00210\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00211}00211\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}k0\_B"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00212}00212\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ k0\_b\_))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00213}00213\ \ \ \ \ \ \ k0\_b\_\ =\ 0.0}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00214}00214\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00215}00215\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}k0\_C"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00216}00216\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ k0\_c\_))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00217}00217\ \ \ \ \ \ \ k0\_c\_\ =\ 0.0}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00218}00218\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00219}00219\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}kinf\_A"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00220}00220\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ kinf\_a\_))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00221}00221\ \ \ \ \ \ \ kinf\_a\_\ =\ 1.0}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00222}00222\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00223}00223\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}kinf\_B"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00224}00224\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ kinf\_b\_))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00225}00225\ \ \ \ \ \ \ kinf\_b\_\ =\ 0.0}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00226}00226\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00227}00227\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}kinf\_C"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00228}00228\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ kinf\_c\_))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00229}00229\ \ \ \ \ \ \ kinf\_c\_\ =\ 0.0}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00230}00230\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00231}00231\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}Fc"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00232}00232\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ fc\_))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00233}00233\ \ \ \ \ \ \ fc\_\ =\ 0.6}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00234}00234\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00235}00235\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}N"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00236}00236\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_aefa6a395878e8e7282419620791a3364}{n\_}}))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00237}00237\ \ \ \ \ \ \ \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_aefa6a395878e8e7282419620791a3364}{n\_}}\ =\ 1.0}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00238}00238\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00239}00239\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}time\ unit"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00240}00240\ \ \ \ \ scaling\_\ =\ real(1.0,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00241}00241\ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%property\_set\%get\_string(key\_name,\ string\_val))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00242}00242\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (trim(string\_val).eq.\textcolor{stringliteral}{"{}MIN"{}})\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00243}00243\ \ \ \ \ \ \ \ \ scaling\_\ =\ real(1.0d0/60.0d0,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00244}00244\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00245}00245\ \textcolor{keywordflow}{\ \ \ \ endif}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00246}00246\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00247}00247\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ indices\ and\ chemical\ properties\ for\ the\ reactants}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00248}00248\ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_reset()}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00249}00249\ \ \ \ \ i\_spec\ =\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00250}00250\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (reactants\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00251}00251\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00252}00252\ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ index\ of\ this\ species\ in\ the\ state\ variable\ array}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00253}00253\ \ \ \ \ \ \ react\_(i\_spec)\ =\ chem\_spec\_data\%gas\_state\_id(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00247}00247\ \ \ \ \ \textcolor{comment}{!\ Include\ [M]\ in\ K0\_A\_}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00248}00248\ \ \ \ \ k0\_a\_\ =\ k0\_a\_\ *\ real(1.0d6,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00249}00249\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00250}00250\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ indices\ and\ chemical\ properties\ for\ the\ reactants}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00251}00251\ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_reset()}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00252}00252\ \ \ \ \ i\_spec\ =\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00253}00253\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (reactants\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00254}00254\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00255}00255\ \ \ \ \ \ \ \textcolor{comment}{!\ Make\ sure\ the\ species\ exists}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00256}00256\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(595701751,\ react\_(i\_spec).gt.0,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ Troe\ reactant:\ "{}}//\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00258}00258\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00259}00259\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ properties\ included\ with\ this\ reactant\ in\ the\ reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00260}00260\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(221292659,\ reactants\%get\_property\_t(val=spec\_props))}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00261}00261\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}qty"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00262}00262\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_int(key\_name,\ temp\_int))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00263}00263\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_qty\ =\ 1,\ temp\_int\ -\/\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ react\_(i\_spec\ +\ i\_qty)\ =\ react\_(i\_spec)}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00265}00265\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00266}00266\ \ \ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ temp\_int\ -\/\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00267}00267\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00268}00268\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00269}00269\ \ \ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_next()}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00270}00270\ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00271}00271\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00272}00272\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00273}00273\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ indices\ and\ chemical\ properties\ for\ the\ products}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00274}00274\ \ \ \ \ \textcolor{keyword}{call\ }products\%iter\_reset()}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00275}00275\ \ \ \ \ i\_spec\ =\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00276}00276\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (products\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00277}00277\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00278}00278\ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ index\ of\ this\ species\ in\ the\ state\ variable\ array}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00279}00279\ \ \ \ \ \ \ prod\_(i\_spec)\ =\ chem\_spec\_data\%gas\_state\_id(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00255}00255\ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ index\ of\ this\ species\ in\ the\ state\ variable\ array}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00256}00256\ \ \ \ \ \ \ react\_(i\_spec)\ =\ chem\_spec\_data\%gas\_state\_id(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00257}00257\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00258}00258\ \ \ \ \ \ \ \textcolor{comment}{!\ Make\ sure\ the\ species\ exists}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00259}00259\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(595701751,\ react\_(i\_spec).gt.0,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ Troe\ reactant:\ "{}}//\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00262}00262\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ properties\ included\ with\ this\ reactant\ in\ the\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00263}00263\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(221292659,\ reactants\%get\_property\_t(val=spec\_props))}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00264}00264\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}qty"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00265}00265\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_int(key\_name,\ temp\_int))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00266}00266\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_qty\ =\ 1,\ temp\_int\ -\/\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00267}00267\ \ \ \ \ \ \ \ \ \ \ react\_(i\_spec\ +\ i\_qty)\ =\ react\_(i\_spec)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00268}00268\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00269}00269\ \ \ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ temp\_int\ -\/\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00270}00270\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00271}00271\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00272}00272\ \ \ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_next()}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00273}00273\ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00274}00274\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00275}00275\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00276}00276\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ indices\ and\ chemical\ properties\ for\ the\ products}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00277}00277\ \ \ \ \ \textcolor{keyword}{call\ }products\%iter\_reset()}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00278}00278\ \ \ \ \ i\_spec\ =\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00279}00279\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (products\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00280}00280\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00281}00281\ \ \ \ \ \ \ \textcolor{comment}{!\ Make\ sure\ the\ species\ exists}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00282}00282\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(480024633,\ prod\_(i\_spec).gt.0,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00283}00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ Troe\ product:\ "{}}//\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00284}00284\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00285}00285\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ properties\ included\ with\ this\ product\ in\ the\ reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00286}00286\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(393355097,\ products\%get\_property\_t(val=spec\_props))}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00287}00287\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}yield"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00288}00288\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_real(key\_name,\ temp\_real))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00289}00289\ \ \ \ \ \ \ \ \ yield\_(i\_spec)\ =\ temp\_real}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00290}00290\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00291}00291\ \ \ \ \ \ \ \ \ yield\_(i\_spec)\ =\ 1.0}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00292}00292\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00293}00293\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00294}00294\ \ \ \ \ \ \ \textcolor{keyword}{call\ }products\%iter\_next()}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00295}00295\ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00296}00296\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00297}00297\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00298}00298\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00299}00299\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00300}00300\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00301}00301\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00302}00302\ \textcolor{comment}{\ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00303}\mbox{\hyperlink{namespacecamp__rxn__troe_af94c6c642fc4c9845245ada2d59f8a38}{00303}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00281}00281\ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ index\ of\ this\ species\ in\ the\ state\ variable\ array}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00282}00282\ \ \ \ \ \ \ prod\_(i\_spec)\ =\ chem\_spec\_data\%gas\_state\_id(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00283}00283\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00284}00284\ \ \ \ \ \ \ \textcolor{comment}{!\ Make\ sure\ the\ species\ exists}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00285}00285\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(480024633,\ prod\_(i\_spec).gt.0,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00286}00286\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ Troe\ product:\ "{}}//\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00287}00287\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00288}00288\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ properties\ included\ with\ this\ product\ in\ the\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00289}00289\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(393355097,\ products\%get\_property\_t(val=spec\_props))}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00290}00290\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}yield"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00291}00291\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_real(key\_name,\ temp\_real))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00292}00292\ \ \ \ \ \ \ \ \ yield\_(i\_spec)\ =\ temp\_real}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00293}00293\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00294}00294\ \ \ \ \ \ \ \ \ yield\_(i\_spec)\ =\ 1.0}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00295}00295\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00297}00297\ \ \ \ \ \ \ \textcolor{keyword}{call\ }products\%iter\_next()}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00298}00298\ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00299}00299\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00300}00300\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00301}00301\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00302}00302\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00303}00303\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00304}00304\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00305}00305\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00306}00306\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00307}00307\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00308}00308\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{associated}(this\%property\_set))\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%property\_set)}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00310}00310\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_real))\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00311}00311\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_real)}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00312}00312\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_int))\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_int)}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00314}00314\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00315}00315\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00316}00316\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00317}00317\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00318}00318\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00319}00319\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ reactions}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00320}\mbox{\hyperlink{namespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e}{00320}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}(this)}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00321}00321\ \ \ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00322}00322\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00323}00323\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00324}00324\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00325}00325\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_rxn}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00326}00326\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00327}00327\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_rxn\ =\ 1,\ \textcolor{keyword}{size}(this)}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00328}00328\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this(i\_rxn))}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00329}00329\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00330}00330\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00331}00331\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00332}00332\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00333}00333\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00334}00334\ }
-\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00335}00335\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__troe}{camp\_rxn\_troe}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00305}00305\ \textcolor{comment}{\ \ !>\ Finalize\ the\ reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00306}\mbox{\hyperlink{namespacecamp__rxn__troe_af94c6c642fc4c9845245ada2d59f8a38}{00306}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00307}00307\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00308}00308\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00309}00309\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00310}00310\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00311}00311\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{associated}(this\%property\_set))\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00312}00312\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%property\_set)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00313}00313\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_real))\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_real)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00315}00315\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_int))\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_int)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00317}00317\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00318}00318\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00319}00319\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00320}00320\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00321}00321\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00322}00322\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ reactions}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00323}\mbox{\hyperlink{namespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e}{00323}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00324}00324\ \ \ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00325}00325\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00326}00326\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\_troe\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00327}00327\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00328}00328\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_rxn}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00329}00329\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00330}00330\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_rxn\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00331}00331\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this(i\_rxn))}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00332}00332\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00333}00333\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00334}00334\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00335}00335\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00336}00336\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00337}00337\ }
+\DoxyCodeLine{\Hypertarget{rxn__troe_8_f90_source_l00338}00338\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__troe}{camp\_rxn\_troe}}}
 
 \end{DoxyCode}

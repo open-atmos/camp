@@ -8,7 +8,7 @@ Reaction initialization. Takes species, phase and reaction parameters and packs 
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-subroutine \mbox{\hyperlink{interfacecamp__rxn__data_1_1initialize_a57534a7b0200191e87b26165d1b1d029}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+subroutine \mbox{\hyperlink{interfacecamp__rxn__data_1_1initialize_aa8a296b8ba95aa063857f971f66154c9}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+phase, aero\+\_\+rep, n\+\_\+cells)
 \end{DoxyCompactItemize}
 
 
@@ -17,22 +17,24 @@ Reaction initialization. Takes species, phase and reaction parameters and packs 
 
 This routine should be called once for each reaction at the beginning of a model run after all the input files have been read in. 
 
-Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00202}{202}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00203}{203}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
 
 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\Hypertarget{interfacecamp__rxn__data_1_1initialize_a57534a7b0200191e87b26165d1b1d029}\index{camp\_rxn\_data::initialize@{camp\_rxn\_data::initialize}!initialize@{initialize}}
+\Hypertarget{interfacecamp__rxn__data_1_1initialize_aa8a296b8ba95aa063857f971f66154c9}\index{camp\_rxn\_data::initialize@{camp\_rxn\_data::initialize}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_data::initialize@{camp\_rxn\_data::initialize}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily \label{interfacecamp__rxn__data_1_1initialize_a57534a7b0200191e87b26165d1b1d029} 
-subroutine camp\+\_\+rxn\+\_\+data\+::initialize\+::initialize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\+\_\+data\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{interfacecamp__rxn__data_1_1initialize_aa8a296b8ba95aa063857f971f66154c9} 
+subroutine camp\+\_\+rxn\+\_\+data\+::initialize\+::initialize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\+\_\+data\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in)}]{aero\+\_\+phase}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})}
 
 
 \begin{DoxyParams}[1]{Parameters}
 \mbox{\texttt{ in,out}}  & {\em this} & Reaction data\\
 \hline
 \mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data\\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+phase} & Aerosol phase data\\
 \hline
 \mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations\\
 \hline
@@ -41,7 +43,7 @@ subroutine camp\+\_\+rxn\+\_\+data\+::initialize\+::initialize (\begin{DoxyParam
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00202}{202}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__data_8_f90_source_l00203}{203}} of file \mbox{\hyperlink{rxn__data_8_f90_source}{rxn\+\_\+data.\+F90}}.
 
 
 

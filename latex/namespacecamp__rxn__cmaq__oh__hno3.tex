@@ -15,7 +15,7 @@ type \mbox{\hyperlink{structcamp__rxn__cmaq__oh__hno3_1_1rxn__cmaq__oh__hno3__t}
 \item 
 type(\mbox{\hyperlink{structcamp__rxn__cmaq__oh__hno3_1_1rxn__cmaq__oh__hno3__t}{rxn\+\_\+cmaq\+\_\+oh\+\_\+hno3\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__cmaq__oh__hno3_acc4a8dec29591beeb9b20d26e667f67e}{constructor}} ()
 \begin{DoxyCompactList}\small\item\em Constructor for CMAQ OH+\+HNO3 reaction. \end{DoxyCompactList}\item 
-subroutine \mbox{\hyperlink{namespacecamp__rxn__cmaq__oh__hno3_a86c6ad7eb5eaff68cc5394e47f0dfddc}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+subroutine \mbox{\hyperlink{namespacecamp__rxn__cmaq__oh__hno3_a6eda891b9ea97636a8b188191cc2d80d}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+phase, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__cmaq__oh__hno3_a4454021e3b20bf4641db773f6b306a70}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
@@ -42,7 +42,7 @@ A new reaction instance
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_source_l00128}{128}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_source_l00129}{129}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__cmaq__oh__hno3_a4454021e3b20bf4641db773f6b306a70}\index{camp\_rxn\_cmaq\_oh\_hno3@{camp\_rxn\_cmaq\_oh\_hno3}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_cmaq\_oh\_hno3@{camp\_rxn\_cmaq\_oh\_hno3}}
@@ -61,7 +61,7 @@ Finalize the reaction.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_source_l00312}{312}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_source_l00315}{315}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__cmaq__oh__hno3_a37cf33405db75ef2e0d393ec299316ec}\index{camp\_rxn\_cmaq\_oh\_hno3@{camp\_rxn\_cmaq\_oh\_hno3}!finalize\_array@{finalize\_array}}
 \index{finalize\_array@{finalize\_array}!camp\_rxn\_cmaq\_oh\_hno3@{camp\_rxn\_cmaq\_oh\_hno3}}
@@ -80,7 +80,7 @@ Finalize an array of reactions.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_source_l00329}{329}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_source_l00332}{332}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -90,11 +90,11 @@ Here is the call graph for this function\+:
 \includegraphics[width=350pt]{namespacecamp__rxn__cmaq__oh__hno3_a37cf33405db75ef2e0d393ec299316ec_cgraph}
 \end{center}
 \end{figure}
-\Hypertarget{namespacecamp__rxn__cmaq__oh__hno3_a86c6ad7eb5eaff68cc5394e47f0dfddc}\index{camp\_rxn\_cmaq\_oh\_hno3@{camp\_rxn\_cmaq\_oh\_hno3}!initialize@{initialize}}
+\Hypertarget{namespacecamp__rxn__cmaq__oh__hno3_a6eda891b9ea97636a8b188191cc2d80d}\index{camp\_rxn\_cmaq\_oh\_hno3@{camp\_rxn\_cmaq\_oh\_hno3}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_cmaq\_oh\_hno3@{camp\_rxn\_cmaq\_oh\_hno3}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily \label{namespacecamp__rxn__cmaq__oh__hno3_a86c6ad7eb5eaff68cc5394e47f0dfddc} 
-subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+cmaq\+\_\+oh\+\_\+hno3\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__cmaq__oh__hno3_1_1rxn__cmaq__oh__hno3__t}{rxn\+\_\+cmaq\+\_\+oh\+\_\+hno3\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily \label{namespacecamp__rxn__cmaq__oh__hno3_a6eda891b9ea97636a8b188191cc2d80d} 
+subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+cmaq\+\_\+oh\+\_\+hno3\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__cmaq__oh__hno3_1_1rxn__cmaq__oh__hno3__t}{rxn\+\_\+cmaq\+\_\+oh\+\_\+hno3\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in)}]{aero\+\_\+phase}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -106,6 +106,8 @@ Initialize the reaction data, validating component data and loading any required
 \hline
 \mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data \\
 \hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+phase} & Aerosol phase data \\
+\hline
 \mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations \\
 \hline
 \mbox{\texttt{ in}}  & {\em n\+\_\+cells} & Number of grid cells to solve simultaneously \\
@@ -113,13 +115,13 @@ Initialize the reaction data, validating component data and loading any required
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_source_l00143}{143}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_source_l00144}{144}} of file \mbox{\hyperlink{rxn___c_m_a_q___o_h___h_n_o3_8_f90_source}{rxn\+\_\+\+CMAQ\+\_\+\+OH\+\_\+\+HNO3.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacecamp__rxn__cmaq__oh__hno3_a86c6ad7eb5eaff68cc5394e47f0dfddc_cgraph}
+\includegraphics[width=350pt]{namespacecamp__rxn__cmaq__oh__hno3_a6eda891b9ea97636a8b188191cc2d80d_cgraph}
 \end{center}
 \end{figure}

@@ -79,277 +79,280 @@
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00075}00075\ \textcolor{comment}{!>\ The\ rxn\_wennberg\_no\_ro2\_t\ type\ and\ associated\ functions.}}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00076}\mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2}{00076}}\ \textcolor{keyword}{module}\ \mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2}{camp\_rxn\_wennberg\_no\_ro2}}}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00077}00077\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00078}00078\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__aero__rep__data}{camp\_aero\_rep\_data}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00079}00079\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__chem__spec__data}{camp\_chem\_spec\_data}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00080}00080\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}:\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00081}00081\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__camp__state}{camp\_camp\_state}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00082}00082\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__property}{camp\_property}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00083}00083\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rxn__data}{camp\_rxn\_data}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00084}00084\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__util}{camp\_util}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}:\ \mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}},\ \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}},\ \mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}},\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00085}00085\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}},\ \mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}},\ \mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00086}00086\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00087}00087\ \ \ \textcolor{keywordtype}{implicit\ none}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00088}00088\ \ \ \textcolor{keywordtype}{private}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00089}00089\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00090}00090\ \textcolor{preprocessor}{\#define\ NUM\_REACT\_\ this\%condensed\_data\_int(1)}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00091}00091\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_ALKOXY\_PROD\_\ this\%condensed\_data\_int(2)}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00092}00092\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_NITRATE\_PROD\_\ this\%condensed\_data\_int(3)}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00093}00093\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ X\_\ this\%condensed\_data\_real(1)}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00094}00094\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ Y\_\ this\%condensed\_data\_real(2)}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00095}00095\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ a0\_\ this\%condensed\_data\_real(3)}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00096}00096\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ n\_\ this\%condensed\_data\_real(4)}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00097}00097\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ CONV\_\ this\%condensed\_data\_real(5)}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00098}00098\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_INT\_PROP\_\ 3}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00099}00099\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_REAL\_PROP\_\ 5}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00100}00100\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_ENV\_PARAM\_\ 2}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00101}00101\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ REACT\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_\ +\ x)}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00102}00102\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ PROD\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_\ +\ NUM\_REACT\_\ +\ x)}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00103}00103\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ DERIV\_ID\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_\ +\ NUM\_REACT\_\ +\ NUM\_ALKOXY\_PROD\_\ +\ NUM\_NITRATE\_PROD\_\ +\ x)}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00104}00104\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ JAC\_ID\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_\ +\ 2*(NUM\_REACT\_\ +\ NUM\_ALKOXY\_PROD\_\ +\ NUM\_NITRATE\_PROD\_)\ +\ x)}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00105}00105\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ YIELD\_(x)\ this\%condensed\_data\_real(NUM\_REAL\_PROP\_\ +\ x)}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00106}00106\ \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00107}00107\ \ \ \textcolor{keywordtype}{public}\ ::\ \mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00108}00108\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00109}00109\ \textcolor{comment}{\ \ !>\ Generic\ test\ reaction\ data\ type}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00110}00110\ \ \ \textcolor{keyword}{type},\ \textcolor{keyword}{extends}(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\_data\_t}})\ ::\ \mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00111}00111\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00112}00112\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ initialization}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00113}\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t_a7c15d066fab9bf59d4d4a75c45efee99}{00113}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00114}00114\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00115}\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t_a30cd5c7b21dfb36e108bb2dc1865187d}{00115}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}},\ \mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00116}00116\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00117}00117\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00118}00118\ \textcolor{comment}{\ \ !>\ Constructor\ for\ rxn\_wennberg\_no\_ro2\_t}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00119}\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{00119}}\ \ \ \textcolor{keyword}{interface}\ \mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00120}00120\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ constructor}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00121}00121\ \ \ \textcolor{keyword}{end\ interface\ }\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00122}00122\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00123}00123\ \textcolor{keyword}{contains}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00124}00124\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00125}00125\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00126}00126\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00127}00127\ \textcolor{comment}{\ \ !>\ Constructor\ for\ Wennberg\ no\_ro2\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00128}\mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_aecae771d97cae8229f9e4e7d49398bd6}{00128}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_aab9472c40fc0e9d8eb0bf4b8ae4eb025}{constructor}}()\ \textcolor{keyword}{result}(new\_obj)}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00129}00129\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00130}00130\ \textcolor{comment}{\ \ \ \ !>\ A\ new\ reaction\ instance}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00131}00131\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_obj}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00132}00132\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00133}00133\ \ \ \ \ \textcolor{keyword}{allocate}(new\_obj)}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00134}00134\ \ \ \ \ new\_obj\%rxn\_phase\ =\ \mbox{\hyperlink{namespacecamp__rxn__data_a1ff1b61ed572674155f271c550e473ab}{gas\_rxn}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00135}00135\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00136}00136\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_aab9472c40fc0e9d8eb0bf4b8ae4eb025}{constructor}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00137}00137\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00138}00138\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00139}00139\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00140}00140\ \textcolor{comment}{\ \ !>\ Initialize\ the\ reaction\ data,\ validating\ component\ data\ and\ loading}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00141}00141\ \textcolor{comment}{\ \ !!\ any\ required\ information\ into\ the\ condensed\ data\ arrays\ for\ use\ during}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00142}00142\ \textcolor{comment}{\ \ !!\ solving}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00143}\mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_a4380ce12e874ed0fd2dbceb5b4e31284}{00143}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}(this,\ chem\_spec\_data,\ aero\_rep,\ n\_cells)}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00144}00144\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00145}00145\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00146}00146\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00147}00147\ \textcolor{comment}{\ \ \ \ !>\ Chemical\ species\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00148}00148\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ chem\_spec\_data\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00149}00149\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representations}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00150}00150\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\_rep\_data\_ptr}}),\ \textcolor{keywordtype}{pointer},\ \textcolor{keywordtype}{intent(in)}\ ::\ aero\_rep(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00151}00151\ \textcolor{comment}{\ \ \ \ !>\ Number\ of\ grid\ cells\ being\ solved\ simultaneously}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00152}00152\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)}\ ::\ n\_cells}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00153}00153\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00154}00154\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ spec\_props,\ reactants,\ alkoxy\_products,\ \ \ \ \ \ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nitrate\_products}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00156}00156\ \ \ \ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ key\_name,\ spec\_name,\ string\_val}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00157}00157\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_spec,\ i\_qty}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00158}00158\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00159}00159\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ temp\_int}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00160}00160\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ temp\_real}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00078}00078\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__aero__phase__data}{camp\_aero\_phase\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00079}00079\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__aero__rep__data}{camp\_aero\_rep\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00080}00080\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__chem__spec__data}{camp\_chem\_spec\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00081}00081\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__constants}{camp\_constants}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}:\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00082}00082\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__camp__state}{camp\_camp\_state}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00083}00083\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__property}{camp\_property}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00084}00084\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rxn__data}{camp\_rxn\_data}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00085}00085\ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__util}{camp\_util}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}:\ \mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}},\ \mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}},\ \mbox{\hyperlink{interfacecamp__util_1_1to__string}{to\_string}},\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00086}00086\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}},\ \mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}},\ \mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00088}00088\ \ \ \textcolor{keywordtype}{implicit\ none}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00089}00089\ \ \ \textcolor{keywordtype}{private}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00091}00091\ \textcolor{preprocessor}{\#define\ NUM\_REACT\_\ this\%condensed\_data\_int(1)}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00092}00092\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_ALKOXY\_PROD\_\ this\%condensed\_data\_int(2)}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00093}00093\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_NITRATE\_PROD\_\ this\%condensed\_data\_int(3)}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00094}00094\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ X\_\ this\%condensed\_data\_real(1)}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00095}00095\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ Y\_\ this\%condensed\_data\_real(2)}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00096}00096\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ a0\_\ this\%condensed\_data\_real(3)}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00097}00097\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ n\_\ this\%condensed\_data\_real(4)}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00098}00098\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ CONV\_\ this\%condensed\_data\_real(5)}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00099}00099\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_INT\_PROP\_\ 3}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00100}00100\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_REAL\_PROP\_\ 5}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00101}00101\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ NUM\_ENV\_PARAM\_\ 2}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00102}00102\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ REACT\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_\ +\ x)}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00103}00103\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ PROD\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_\ +\ NUM\_REACT\_\ +\ x)}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00104}00104\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ DERIV\_ID\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_\ +\ NUM\_REACT\_\ +\ NUM\_ALKOXY\_PROD\_\ +\ NUM\_NITRATE\_PROD\_\ +\ x)}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00105}00105\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ JAC\_ID\_(x)\ this\%condensed\_data\_int(NUM\_INT\_PROP\_\ +\ 2*(NUM\_REACT\_\ +\ NUM\_ALKOXY\_PROD\_\ +\ NUM\_NITRATE\_PROD\_)\ +\ x)}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00106}00106\ \textcolor{preprocessor}{}\textcolor{preprocessor}{\#define\ YIELD\_(x)\ this\%condensed\_data\_real(NUM\_REAL\_PROP\_\ +\ x)}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00107}00107\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00108}00108\ \ \ \textcolor{keywordtype}{public}\ ::\ \mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00109}00109\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00110}00110\ \textcolor{comment}{\ \ !>\ Generic\ test\ reaction\ data\ type}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00111}00111\ \ \ \textcolor{keyword}{type},\ \textcolor{keyword}{extends}(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\_data\_t}})\ ::\ \mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00112}00112\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00113}00113\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ initialization}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00114}\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t_a1cb6758b914c38c2913cd20d062bf003}{00114}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00115}00115\ \textcolor{comment}{\ \ \ \ !>\ Finalize\ the\ reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00116}\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t_a30cd5c7b21dfb36e108bb2dc1865187d}{00116}}\ \ \ \ \ final\ ::\ \mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}},\ \mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00117}00117\ \ \ \textcolor{keyword}{end\ type\ }\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00118}00118\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00119}00119\ \textcolor{comment}{\ \ !>\ Constructor\ for\ rxn\_wennberg\_no\_ro2\_t}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00120}\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{00120}}\ \ \ \textcolor{keyword}{interface}\ \mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00121}00121\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ constructor}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00122}00122\ \ \ \textcolor{keyword}{end\ interface\ }\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00123}00123\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00124}00124\ \textcolor{keyword}{contains}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00126}00126\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00127}00127\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00128}00128\ \textcolor{comment}{\ \ !>\ Constructor\ for\ Wennberg\ no\_ro2\ reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00129}\mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_aecae771d97cae8229f9e4e7d49398bd6}{00129}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}{constructor}}()\ \textcolor{keyword}{result}(new\_obj)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00130}00130\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00131}00131\ \textcolor{comment}{\ \ \ \ !>\ A\ new\ reaction\ instance}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00132}00132\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ new\_obj}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00133}00133\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00134}00134\ \ \ \ \ \textcolor{keyword}{allocate}(new\_obj)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00135}00135\ \ \ \ \ new\_obj\%rxn\_phase\ =\ \mbox{\hyperlink{namespacecamp__rxn__data_a1ff1b61ed572674155f271c550e473ab}{gas\_rxn}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00136}00136\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00137}00137\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a750a31ddcd49989a85e6c30a8bc424e4}{constructor}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00138}00138\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00139}00139\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00140}00140\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00141}00141\ \textcolor{comment}{\ \ !>\ Initialize\ the\ reaction\ data,\ validating\ component\ data\ and\ loading}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00142}00142\ \textcolor{comment}{\ \ !!\ any\ required\ information\ into\ the\ condensed\ data\ arrays\ for\ use\ during}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00143}00143\ \textcolor{comment}{\ \ !!\ solving}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00144}\mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_a515799c0dd36f9efa495fda495e9a32d}{00144}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}(this,\ chem\_spec\_data,\ aero\_phase,\ aero\_rep,\ n\_cells)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00145}00145\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00146}00146\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00147}00147\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00148}00148\ \textcolor{comment}{\ \ \ \ !>\ Chemical\ species\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00149}00149\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ chem\_spec\_data\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00150}00150\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ phase\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00151}00151\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\_phase\_data\_ptr}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ aero\_phase(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00152}00152\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representations}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00153}00153\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\_rep\_data\_ptr}}),\ \textcolor{keywordtype}{pointer},\ \textcolor{keywordtype}{intent(in)}\ ::\ aero\_rep(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00154}00154\ \textcolor{comment}{\ \ \ \ !>\ Number\ of\ grid\ cells\ being\ solved\ simultaneously}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00155}00155\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)}\ ::\ n\_cells}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00157}00157\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ spec\_props,\ reactants,\ alkoxy\_products,\ \ \ \ \ \ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nitrate\_products}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00159}00159\ \ \ \ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ key\_name,\ spec\_name,\ string\_val}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00160}00160\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_spec,\ i\_qty}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00161}00161\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00162}00162\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ species\ involved}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00163}00163\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ \textcolor{keyword}{associated}(this\%property\_set))\ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(573144252,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ property\ set\ needed\ to\ initialize\ reaction"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00165}00165\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}reactants"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00166}00166\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(350413096,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_property\_t(key\_name,\ reactants),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Wennberg\ NO\ +\ RO2\ reaction\ is\ missing\ reactants"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00169}00169\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}alkoxy\ products"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00170}00170\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(575049786,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_property\_t(key\_name,\ alkoxy\_products),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Wennberg\ NO\ +\ RO2\ reaction\ is\ missing\ alkoxy\ products"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00173}00173\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}nitrate\ products"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00174}00174\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(794422169,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_property\_t(key\_name,\ nitrate\_products),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Wennberg\ NO\ +\ RO2\ reaction\ is\ missing\ nitrate\ products"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00177}00177\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00178}00178\ \ \ \ \ \textcolor{comment}{!\ Count\ the\ number\ of\ reactants\ (including\ those\ with\ a\ qty\ specified)}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00179}00179\ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_reset()}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00180}00180\ \ \ \ \ i\_spec\ =\ 0}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00181}00181\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (reactants\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00182}00182\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ properties\ included\ with\ this\ reactant\ in\ the\ reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00183}00183\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(626170799,\ reactants\%get\_property\_t(val=spec\_props))}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00184}00184\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}qty"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00185}00185\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_int(key\_name,\ temp\_int))\ i\_spec\ =\ i\_spec+temp\_int-\/1}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00186}00186\ \ \ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_next()}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00187}00187\ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00188}00188\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00189}00189\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00190}00190\ \ \ \ \ \textcolor{comment}{!\ Allocate\ space\ in\ the\ condensed\ data\ arrays}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00191}00191\ \ \ \ \ \textcolor{keyword}{allocate}(this\%condensed\_data\_int(num\_int\_prop\_\ +\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ (i\_spec\ +\ 2)\ *\ (i\_spec\ +\ alkoxy\_products\%size()\ +\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nitrate\_products\%size())))}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00194}00194\ \ \ \ \ \textcolor{keyword}{allocate}(this\%condensed\_data\_real(num\_real\_prop\_\ +\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ alkoxy\_products\%size()\ +\ nitrate\_products\%size()))}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00196}00196\ \ \ \ \ this\%condensed\_data\_int(:)\ =\ int(0,\ kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}})}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00197}00197\ \ \ \ \ this\%condensed\_data\_real(:)\ =\ real(0.0,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00198}00198\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00199}00199\ \ \ \ \ \textcolor{comment}{!\ Save\ space\ for\ the\ environment\ dependent\ parameters}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00200}00200\ \ \ \ \ this\%num\_env\_params\ =\ num\_env\_param\_}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00162}00162\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ temp\_int}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00163}00163\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ temp\_real}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00164}00164\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00165}00165\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ species\ involved}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00166}00166\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ \textcolor{keyword}{associated}(this\%property\_set))\ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(573144252,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ property\ set\ needed\ to\ initialize\ reaction"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00168}00168\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}reactants"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00169}00169\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(350413096,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_property\_t(key\_name,\ reactants),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Wennberg\ NO\ +\ RO2\ reaction\ is\ missing\ reactants"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00172}00172\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}alkoxy\ products"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00173}00173\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(575049786,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_property\_t(key\_name,\ alkoxy\_products),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Wennberg\ NO\ +\ RO2\ reaction\ is\ missing\ alkoxy\ products"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00176}00176\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}nitrate\ products"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00177}00177\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(794422169,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_property\_t(key\_name,\ nitrate\_products),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00179}00179\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Wennberg\ NO\ +\ RO2\ reaction\ is\ missing\ nitrate\ products"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00181}00181\ \ \ \ \ \textcolor{comment}{!\ Count\ the\ number\ of\ reactants\ (including\ those\ with\ a\ qty\ specified)}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00182}00182\ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_reset()}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00183}00183\ \ \ \ \ i\_spec\ =\ 0}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00184}00184\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (reactants\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00185}00185\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ properties\ included\ with\ this\ reactant\ in\ the\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00186}00186\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(626170799,\ reactants\%get\_property\_t(val=spec\_props))}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00187}00187\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}qty"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00188}00188\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_int(key\_name,\ temp\_int))\ i\_spec\ =\ i\_spec+temp\_int-\/1}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00189}00189\ \ \ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_next()}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00190}00190\ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00191}00191\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00193}00193\ \ \ \ \ \textcolor{comment}{!\ Allocate\ space\ in\ the\ condensed\ data\ arrays}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00194}00194\ \ \ \ \ \textcolor{keyword}{allocate}(this\%condensed\_data\_int(num\_int\_prop\_\ +\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ (i\_spec\ +\ 2)\ *\ (i\_spec\ +\ alkoxy\_products\%size()\ +\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nitrate\_products\%size())))}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00197}00197\ \ \ \ \ \textcolor{keyword}{allocate}(this\%condensed\_data\_real(num\_real\_prop\_\ +\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ alkoxy\_products\%size()\ +\ nitrate\_products\%size()))}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00199}00199\ \ \ \ \ this\%condensed\_data\_int(:)\ =\ int(0,\ kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}})}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00200}00200\ \ \ \ \ this\%condensed\_data\_real(:)\ =\ real(0.0,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00201}00201\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00202}00202\ \ \ \ \ \textcolor{comment}{!\ Save\ the\ size\ of\ the\ reactant\ and\ product\ arrays\ (for\ reactions\ where}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00203}00203\ \ \ \ \ \textcolor{comment}{!\ these\ can\ vary)}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00204}00204\ \ \ \ \ num\_react\_\ =\ i\_spec}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00205}00205\ \ \ \ \ num\_alkoxy\_prod\_\ \ =\ alkoxy\_products\%size()}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00206}00206\ \ \ \ \ num\_nitrate\_prod\_\ =\ nitrate\_products\%size()}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00207}00207\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00208}00208\ \ \ \ \ \textcolor{comment}{!\ Set\ the\ \#/cc\ -\/>\ ppm\ conversion\ prefactor}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00209}00209\ \ \ \ \ conv\_\ =\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%avagadro\ /\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%univ\_gas\_const\ *\ 10.0d0**(-\/12.0d0)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00202}00202\ \ \ \ \ \textcolor{comment}{!\ Save\ space\ for\ the\ environment\ dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00203}00203\ \ \ \ \ this\%num\_env\_params\ =\ num\_env\_param\_}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00204}00204\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00205}00205\ \ \ \ \ \textcolor{comment}{!\ Save\ the\ size\ of\ the\ reactant\ and\ product\ arrays\ (for\ reactions\ where}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00206}00206\ \ \ \ \ \textcolor{comment}{!\ these\ can\ vary)}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00207}00207\ \ \ \ \ num\_react\_\ =\ i\_spec}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00208}00208\ \ \ \ \ num\_alkoxy\_prod\_\ \ =\ alkoxy\_products\%size()}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00209}00209\ \ \ \ \ num\_nitrate\_prod\_\ =\ nitrate\_products\%size()}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00210}00210\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00211}00211\ \ \ \ \ \textcolor{comment}{!\ Get\ reaction\ parameters\ (it\ might\ be\ easiest\ to\ keep\ these\ at\ the}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00212}00212\ \ \ \ \ \textcolor{comment}{!\ beginning\ of\ the\ condensed\ data\ array,\ so\ they\ can\ be\ accessed\ using}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00213}00213\ \ \ \ \ \textcolor{comment}{!\ compliler\ flags)}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00214}00214\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}X"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00215}00215\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ x\_))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00216}00216\ \ \ \ \ \ \ x\_\ =\ 1.0}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00217}00217\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00218}00218\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}time\ unit"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00219}00219\ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%property\_set\%get\_string(key\_name,\ string\_val))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00220}00220\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (trim(string\_val).eq.\textcolor{stringliteral}{"{}MIN"{}})\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00221}00221\ \ \ \ \ \ \ \ \ x\_\ =\ x\_\ /\ 60.0}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00222}00222\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00223}00223\ \textcolor{keywordflow}{\ \ \ \ endif}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00224}00224\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}Y"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00225}00225\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ y\_))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00226}00226\ \ \ \ \ \ \ y\_\ =\ 0.0}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00227}00227\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00228}00228\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}a0"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00229}00229\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a06dc246184afdfb15cc91925898bfd7c}{a0\_}}))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00230}00230\ \ \ \ \ \ \ \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a06dc246184afdfb15cc91925898bfd7c}{a0\_}}\ =\ 1.0}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00231}00231\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00232}00232\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}n"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00233}00233\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_aefa6a395878e8e7282419620791a3364}{n\_}}))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00234}00234\ \ \ \ \ \ \ \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_aefa6a395878e8e7282419620791a3364}{n\_}}\ =\ 0.0}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00235}00235\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00236}00236\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00237}00237\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ indices\ and\ chemical\ properties\ for\ the\ reactants}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00238}00238\ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_reset()}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00239}00239\ \ \ \ \ i\_spec\ =\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00240}00240\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (reactants\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00241}00241\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00242}00242\ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ index\ of\ this\ species\ in\ the\ state\ variable\ array}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00243}00243\ \ \ \ \ \ \ react\_(i\_spec)\ =\ chem\_spec\_data\%gas\_state\_id(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00211}00211\ \ \ \ \ \textcolor{comment}{!\ Set\ the\ \#/cc\ -\/>\ ppm\ conversion\ prefactor}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00212}00212\ \ \ \ \ conv\_\ =\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%avagadro\ /\ \mbox{\hyperlink{namespacecamp__constants_aab17f4f4c76dc9812d8ab58b137081de}{const}}\%univ\_gas\_const\ *\ 10.0d0**(-\/12.0d0)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00213}00213\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00214}00214\ \ \ \ \ \textcolor{comment}{!\ Get\ reaction\ parameters\ (it\ might\ be\ easiest\ to\ keep\ these\ at\ the}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00215}00215\ \ \ \ \ \textcolor{comment}{!\ beginning\ of\ the\ condensed\ data\ array,\ so\ they\ can\ be\ accessed\ using}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00216}00216\ \ \ \ \ \textcolor{comment}{!\ compliler\ flags)}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00217}00217\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}X"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00218}00218\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ x\_))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00219}00219\ \ \ \ \ \ \ x\_\ =\ 1.0}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00220}00220\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00221}00221\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}time\ unit"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00222}00222\ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%property\_set\%get\_string(key\_name,\ string\_val))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00223}00223\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (trim(string\_val).eq.\textcolor{stringliteral}{"{}MIN"{}})\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00224}00224\ \ \ \ \ \ \ \ \ x\_\ =\ x\_\ /\ 60.0}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00225}00225\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00226}00226\ \textcolor{keywordflow}{\ \ \ \ endif}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00227}00227\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}Y"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00228}00228\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ y\_))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00229}00229\ \ \ \ \ \ \ y\_\ =\ 0.0}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00230}00230\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00231}00231\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}a0"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00232}00232\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a06dc246184afdfb15cc91925898bfd7c}{a0\_}}))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00233}00233\ \ \ \ \ \ \ \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_a06dc246184afdfb15cc91925898bfd7c}{a0\_}}\ =\ 1.0}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00234}00234\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00235}00235\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}n"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00236}00236\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_aefa6a395878e8e7282419620791a3364}{n\_}}))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00237}00237\ \ \ \ \ \ \ \mbox{\hyperlink{rxn__wennberg__no__ro2_8c_aefa6a395878e8e7282419620791a3364}{n\_}}\ =\ 0.0}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00238}00238\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00239}00239\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00240}00240\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ indices\ and\ chemical\ properties\ for\ the\ reactants}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00241}00241\ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_reset()}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00242}00242\ \ \ \ \ i\_spec\ =\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00243}00243\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (reactants\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00244}00244\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00245}00245\ \ \ \ \ \ \ \textcolor{comment}{!\ Make\ sure\ the\ species\ exists}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00246}00246\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(716430972,\ react\_(i\_spec).gt.0,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ Wennberg\ NO\ +\ RO2\ reactant:\ "{}}//\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00248}00248\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00249}00249\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ properties\ included\ with\ this\ reactant\ in\ the\ reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00250}00250\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(493699816,\ reactants\%get\_property\_t(val=spec\_props))}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00251}00251\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}qty"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00252}00252\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_int(key\_name,\ temp\_int))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00253}00253\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_qty\ =\ 1,\ temp\_int\ -\/\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00254}00254\ \ \ \ \ \ \ \ \ \ \ react\_(i\_spec\ +\ i\_qty)\ =\ react\_(i\_spec)}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00255}00255\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00256}00256\ \ \ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ temp\_int\ -\/\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00257}00257\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00258}00258\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00259}00259\ \ \ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_next()}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00260}00260\ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00261}00261\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00262}00262\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00263}00263\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ indices\ and\ chemical\ properties\ for\ the\ products}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00264}00264\ \ \ \ \ \textcolor{keyword}{call\ }alkoxy\_products\%iter\_reset()}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00265}00265\ \ \ \ \ i\_spec\ =\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00266}00266\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (alkoxy\_products\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00267}00267\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00268}00268\ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ index\ of\ this\ species\ in\ the\ state\ variable\ array}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00269}00269\ \ \ \ \ \ \ prod\_(i\_spec)\ =\ chem\_spec\_data\%gas\_state\_id(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00245}00245\ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ index\ of\ this\ species\ in\ the\ state\ variable\ array}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00246}00246\ \ \ \ \ \ \ react\_(i\_spec)\ =\ chem\_spec\_data\%gas\_state\_id(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00247}00247\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00248}00248\ \ \ \ \ \ \ \textcolor{comment}{!\ Make\ sure\ the\ species\ exists}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00249}00249\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(716430972,\ react\_(i\_spec).gt.0,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00250}00250\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ Wennberg\ NO\ +\ RO2\ reactant:\ "{}}//\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00251}00251\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00252}00252\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ properties\ included\ with\ this\ reactant\ in\ the\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00253}00253\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(493699816,\ reactants\%get\_property\_t(val=spec\_props))}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00254}00254\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}qty"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00255}00255\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_int(key\_name,\ temp\_int))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00256}00256\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_qty\ =\ 1,\ temp\_int\ -\/\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00257}00257\ \ \ \ \ \ \ \ \ \ \ react\_(i\_spec\ +\ i\_qty)\ =\ react\_(i\_spec)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00258}00258\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00259}00259\ \ \ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ temp\_int\ -\/\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00260}00260\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00261}00261\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00262}00262\ \ \ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_next()}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00263}00263\ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00264}00264\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00265}00265\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00266}00266\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ indices\ and\ chemical\ properties\ for\ the\ products}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00267}00267\ \ \ \ \ \textcolor{keyword}{call\ }alkoxy\_products\%iter\_reset()}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00268}00268\ \ \ \ \ i\_spec\ =\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00269}00269\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (alkoxy\_products\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00270}00270\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00271}00271\ \ \ \ \ \ \ \textcolor{comment}{!\ Make\ sure\ the\ species\ exists}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00272}00272\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(825390544,\ prod\_(i\_spec).gt.0,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ Wennberg\ NO\ +\ RO2\ alkoxy\ product:\ "{}}//\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00274}00274\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00275}00275\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ properties\ included\ with\ this\ product\ in\ the\ reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00276}00276\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(879870330,\ alkoxy\_products\%get\_property\_t(val=spec\_props))}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00277}00277\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}yield"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00278}00278\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_real(key\_name,\ temp\_real))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00279}00279\ \ \ \ \ \ \ \ \ yield\_(i\_spec)\ =\ temp\_real}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00280}00280\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00281}00281\ \ \ \ \ \ \ \ \ yield\_(i\_spec)\ =\ 1.0}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00282}00282\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00283}00283\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00284}00284\ \ \ \ \ \ \ \textcolor{keyword}{call\ }alkoxy\_products\%iter\_next()}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00285}00285\ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00286}00286\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00287}00287\ \ \ \ \ \textcolor{keyword}{call\ }nitrate\_products\%iter\_reset()}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00288}00288\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (nitrate\_products\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00289}00289\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00290}00290\ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ index\ of\ this\ species\ in\ the\ state\ variable\ array}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00291}00291\ \ \ \ \ \ \ prod\_(i\_spec)\ =\ chem\_spec\_data\%gas\_state\_id(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00271}00271\ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ index\ of\ this\ species\ in\ the\ state\ variable\ array}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00272}00272\ \ \ \ \ \ \ prod\_(i\_spec)\ =\ chem\_spec\_data\%gas\_state\_id(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00273}00273\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00274}00274\ \ \ \ \ \ \ \textcolor{comment}{!\ Make\ sure\ the\ species\ exists}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00275}00275\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(825390544,\ prod\_(i\_spec).gt.0,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ Wennberg\ NO\ +\ RO2\ alkoxy\ product:\ "{}}//\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00277}00277\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00278}00278\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ properties\ included\ with\ this\ product\ in\ the\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00279}00279\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(879870330,\ alkoxy\_products\%get\_property\_t(val=spec\_props))}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00280}00280\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}yield"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00281}00281\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_real(key\_name,\ temp\_real))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00282}00282\ \ \ \ \ \ \ \ \ yield\_(i\_spec)\ =\ temp\_real}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00283}00283\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00284}00284\ \ \ \ \ \ \ \ \ yield\_(i\_spec)\ =\ 1.0}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00285}00285\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00286}00286\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00287}00287\ \ \ \ \ \ \ \textcolor{keyword}{call\ }alkoxy\_products\%iter\_next()}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00288}00288\ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00289}00289\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00290}00290\ \ \ \ \ \textcolor{keyword}{call\ }nitrate\_products\%iter\_reset()}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00291}00291\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (nitrate\_products\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00292}00292\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00293}00293\ \ \ \ \ \ \ \textcolor{comment}{!\ Make\ sure\ the\ species\ exists}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00294}00294\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(590677535,\ prod\_(i\_spec).gt.0,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00295}00295\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ Wennberg\ NO\ +\ RO2\ nitrate\ product:\ "{}}//\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00296}00296\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00297}00297\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ properties\ included\ with\ this\ product\ in\ the\ reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00298}00298\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(815314225,\ nitrate\_products\%get\_property\_t(val=spec\_props))}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00299}00299\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}yield"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00300}00300\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_real(key\_name,\ temp\_real))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00301}00301\ \ \ \ \ \ \ \ \ yield\_(i\_spec)\ =\ temp\_real}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00302}00302\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00303}00303\ \ \ \ \ \ \ \ \ yield\_(i\_spec)\ =\ 1.0}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00304}00304\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00305}00305\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00306}00306\ \ \ \ \ \ \ \textcolor{keyword}{call\ }nitrate\_products\%iter\_next()}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00307}00307\ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00308}00308\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00309}00309\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(699637107,\ i\_spec\ -\/\ 1\ .eq.\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_alkoxy\_prod\_\ +\ num\_nitrate\_prod\_\ )}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00311}00311\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00312}00312\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00313}00313\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00314}00314\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00315}00315\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00316}00316\ \textcolor{comment}{\ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00317}\mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_acdc032de368e4ad73c38499a4ececf11}{00317}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00293}00293\ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ index\ of\ this\ species\ in\ the\ state\ variable\ array}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00294}00294\ \ \ \ \ \ \ prod\_(i\_spec)\ =\ chem\_spec\_data\%gas\_state\_id(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00295}00295\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00296}00296\ \ \ \ \ \ \ \textcolor{comment}{!\ Make\ sure\ the\ species\ exists}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00297}00297\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(590677535,\ prod\_(i\_spec).gt.0,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ Wennberg\ NO\ +\ RO2\ nitrate\ product:\ "{}}//\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00299}00299\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00300}00300\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ properties\ included\ with\ this\ product\ in\ the\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00301}00301\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(815314225,\ nitrate\_products\%get\_property\_t(val=spec\_props))}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00302}00302\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}yield"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00303}00303\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_real(key\_name,\ temp\_real))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00304}00304\ \ \ \ \ \ \ \ \ yield\_(i\_spec)\ =\ temp\_real}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00305}00305\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00306}00306\ \ \ \ \ \ \ \ \ yield\_(i\_spec)\ =\ 1.0}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00307}00307\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00308}00308\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00309}00309\ \ \ \ \ \ \ \textcolor{keyword}{call\ }nitrate\_products\%iter\_next()}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00310}00310\ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00311}00311\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00312}00312\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(699637107,\ i\_spec\ -\/\ 1\ .eq.\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_alkoxy\_prod\_\ +\ num\_nitrate\_prod\_\ )}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00314}00314\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00315}00315\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00316}00316\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00317}00317\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
 \DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00318}00318\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00319}00319\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00320}00320\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00321}00321\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00322}00322\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{associated}(this\%property\_set))\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%property\_set)}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00324}00324\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_real))\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_real)}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00326}00326\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_int))\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_int)}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00328}00328\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00329}00329\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00330}00330\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00331}00331\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00332}00332\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00333}00333\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ reactions}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00334}\mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_aafd3ac1652f344d30aad709503996788}{00334}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}(this)}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00335}00335\ \ \ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00336}00336\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00337}00337\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00338}00338\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00339}00339\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_rxn}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00340}00340\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00341}00341\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_rxn\ =\ 1,\ \textcolor{keyword}{size}(this)}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00342}00342\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__camp__state_a5522f7056d1ff8bb1626e36c97dfff5a}{finalize}}(this(i\_rxn))}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00343}00343\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00344}00344\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00345}00345\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__chem__spec__data_a161ca7ad4370d191a2b1bf70ec810fcc}{finalize\_array}}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00346}00346\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00347}00347\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00348}00348\ }
-\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00349}00349\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2}{camp\_rxn\_wennberg\_no\_ro2}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00319}00319\ \textcolor{comment}{\ \ !>\ Finalize\ the\ reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00320}\mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_acdc032de368e4ad73c38499a4ececf11}{00320}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00321}00321\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00322}00322\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00323}00323\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00324}00324\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00325}00325\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{associated}(this\%property\_set))\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%property\_set)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00327}00327\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_real))\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00328}00328\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_real)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00329}00329\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_int))\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00330}00330\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_int)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00331}00331\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00332}00332\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00333}00333\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00334}00334\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00335}00335\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00336}00336\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ reactions}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00337}\mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_aafd3ac1652f344d30aad709503996788}{00337}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00338}00338\ \ \ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00339}00339\ \textcolor{comment}{\ \ \ \ !>\ Array\ of\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00340}00340\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\_wennberg\_no\_ro2\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00341}00341\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00342}00342\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_rxn}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00343}00343\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00344}00344\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_rxn\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00345}00345\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this(i\_rxn))}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00346}00346\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00347}00347\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00348}00348\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00349}00349\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00350}00350\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00351}00351\ }
+\DoxyCodeLine{\Hypertarget{rxn__wennberg__no__ro2_8_f90_source_l00352}00352\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2}{camp\_rxn\_wennberg\_no\_ro2}}}
 
 \end{DoxyCode}

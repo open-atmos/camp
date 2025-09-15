@@ -1,5 +1,5 @@
 <map id="camp_mechanism_data::ptr_finalize_array" name="camp_mechanism_data::ptr_finalize_array">
 <area shape="rect" id="Node000001" title="Finalize an array of mechanism data pointers." alt="" coords="5,5,165,46"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__aero__rep__data.html#a3b58ee6e8a00a3bd8f58ca27bae2e0d1" title="Finalize a pointer to an aerosol representation." alt="" coords="213,5,355,46"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__aero__phase__data.html#a954dec0af9b1209771201918ec9a8658" title="Finalize a pointer to aerosol phase data." alt="" coords="213,5,372,46"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,23,197,23,197,28,165,28"/>
 </map>

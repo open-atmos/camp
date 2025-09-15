@@ -83,9 +83,9 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:a82bff012cb1cb268940944a4df12530b" id="r_a82bff012cb1cb268940944a4df12530b"><td class="memItemLeft" align="right" valign="top">type(<a class="el" href="structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t.html">rxn_aqueous_equilibrium_t</a>) function, pointer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a82bff012cb1cb268940944a4df12530b">constructor</a> ()</td></tr>
 <tr class="memdesc:a82bff012cb1cb268940944a4df12530b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for Aqueous equilibrium reaction.  <br /></td></tr>
 <tr class="separator:a82bff012cb1cb268940944a4df12530b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f4a4888b6018b6965047ae4cf3d06d5" id="r_a7f4a4888b6018b6965047ae4cf3d06d5"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7f4a4888b6018b6965047ae4cf3d06d5">initialize</a> (this, chem_spec_data, aero_rep, n_cells)</td></tr>
-<tr class="memdesc:a7f4a4888b6018b6965047ae4cf3d06d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving.  <br /></td></tr>
-<tr class="separator:a7f4a4888b6018b6965047ae4cf3d06d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed216003a4fe89c1e46695852674e1d2" id="r_aed216003a4fe89c1e46695852674e1d2"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed216003a4fe89c1e46695852674e1d2">initialize</a> (this, chem_spec_data, aero_phase, aero_rep, n_cells)</td></tr>
+<tr class="memdesc:aed216003a4fe89c1e46695852674e1d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving.  <br /></td></tr>
+<tr class="separator:aed216003a4fe89c1e46695852674e1d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0bb8e97dd6f8547ea77e975cd7fd684" id="r_ae0bb8e97dd6f8547ea77e975cd7fd684"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae0bb8e97dd6f8547ea77e975cd7fd684">finalize</a> (this)</td></tr>
 <tr class="memdesc:ae0bb8e97dd6f8547ea77e975cd7fd684"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
 <tr class="separator:ae0bb8e97dd6f8547ea77e975cd7fd684"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,7 +154,7 @@ Functions/Subroutines</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__aqueous__equilibrium_8_f90_source.html#l00500">500</a> of file <a class="el" href="rxn__aqueous__equilibrium_8_f90_source.html">rxn_aqueous_equilibrium.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__aqueous__equilibrium_8_f90_source.html#l00502">502</a> of file <a class="el" href="rxn__aqueous__equilibrium_8_f90_source.html">rxn_aqueous_equilibrium.F90</a>.</p>
 
 </div>
 </div>
@@ -189,7 +189,7 @@ Functions/Subroutines</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__aqueous__equilibrium_8_f90_source.html#l00517">517</a> of file <a class="el" href="rxn__aqueous__equilibrium_8_f90_source.html">rxn_aqueous_equilibrium.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__aqueous__equilibrium_8_f90_source.html#l00519">519</a> of file <a class="el" href="rxn__aqueous__equilibrium_8_f90_source.html">rxn_aqueous_equilibrium.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -203,8 +203,8 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="a7f4a4888b6018b6965047ae4cf3d06d5" name="a7f4a4888b6018b6965047ae4cf3d06d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f4a4888b6018b6965047ae4cf3d06d5">&#9670;&#160;</a></span>initialize()</h2>
+<a id="aed216003a4fe89c1e46695852674e1d2" name="aed216003a4fe89c1e46695852674e1d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed216003a4fe89c1e46695852674e1d2">&#9670;&#160;</a></span>initialize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -221,6 +221,11 @@ Here is the call graph for this function:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">type(<a class="el" href="structcamp__chem__spec__data_1_1chem__spec__data__t.html">chem_spec_data_t</a>), intent(in)</td>          <td class="paramname"><span class="paramname"><em>chem_spec_data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structcamp__aero__phase__data_1_1aero__phase__data__ptr.html">aero_phase_data_ptr</a>), dimension(:), intent(in)</td>          <td class="paramname"><span class="paramname"><em>aero_phase</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -245,6 +250,7 @@ Here is the call graph for this function:</div>
   <table class="params">
     <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Reaction data </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">chem_spec_data</td><td>Chemical species data </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">aero_phase</td><td>Aerosol phase data </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">aero_rep</td><td>Aerosol representations </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">n_cells</td><td>Number of grid cells to solve simultaneously </td></tr>
   </table>
@@ -255,8 +261,8 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespacecamp__rxn__aqueous__equilibrium_a7f4a4888b6018b6965047ae4cf3d06d5_cgraph.png" border="0" usemap="#anamespacecamp__rxn__aqueous__equilibrium_a7f4a4888b6018b6965047ae4cf3d06d5_cgraph" alt=""/></div>
-<map name="anamespacecamp__rxn__aqueous__equilibrium_a7f4a4888b6018b6965047ae4cf3d06d5_cgraph" id="anamespacecamp__rxn__aqueous__equilibrium_a7f4a4888b6018b6965047ae4cf3d06d5_cgraph">
+<div class="center"><img src="namespacecamp__rxn__aqueous__equilibrium_aed216003a4fe89c1e46695852674e1d2_cgraph.png" border="0" usemap="#anamespacecamp__rxn__aqueous__equilibrium_aed216003a4fe89c1e46695852674e1d2_cgraph" alt=""/></div>
+<map name="anamespacecamp__rxn__aqueous__equilibrium_aed216003a4fe89c1e46695852674e1d2_cgraph" id="anamespacecamp__rxn__aqueous__equilibrium_aed216003a4fe89c1e46695852674e1d2_cgraph">
 <area shape="rect" title="Initialize the reaction data, validating component data and loading any required information into the..." alt="" coords="5,48,208,89"/>
 <area shape="rect" href="namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="262,5,382,31"/>
 <area shape="poly" title=" " alt="" coords="195,45,249,33,250,38,196,51"/>

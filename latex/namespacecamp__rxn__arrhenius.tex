@@ -15,7 +15,7 @@ type \mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t}{rxn\+\_\+
 \item 
 type(\mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t}{rxn\+\_\+arrhenius\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__arrhenius_a940a2139c9cadbed7e2c9d63a5971da6}{constructor}} ()
 \begin{DoxyCompactList}\small\item\em Constructor for Arrhenius reaction. \end{DoxyCompactList}\item 
-subroutine \mbox{\hyperlink{namespacecamp__rxn__arrhenius_a6f006a7032915fe7e70c0cb03a712096}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+subroutine \mbox{\hyperlink{namespacecamp__rxn__arrhenius_a7fec86a0103d3f86d5321a8bc6c28de1}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+phase, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__arrhenius_a868efd73d1c83561f1347a1b8cc79c4e}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
@@ -42,7 +42,7 @@ A new reaction instance
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{rxn__arrhenius_8_f90_source_l00118}{118}} of file \mbox{\hyperlink{rxn__arrhenius_8_f90_source}{rxn\+\_\+arrhenius.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__arrhenius_8_f90_source_l00119}{119}} of file \mbox{\hyperlink{rxn__arrhenius_8_f90_source}{rxn\+\_\+arrhenius.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__arrhenius_a868efd73d1c83561f1347a1b8cc79c4e}\index{camp\_rxn\_arrhenius@{camp\_rxn\_arrhenius}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_arrhenius@{camp\_rxn\_arrhenius}}
@@ -61,7 +61,7 @@ Finalize the reaction.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__arrhenius_8_f90_source_l00292}{292}} of file \mbox{\hyperlink{rxn__arrhenius_8_f90_source}{rxn\+\_\+arrhenius.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__arrhenius_8_f90_source_l00295}{295}} of file \mbox{\hyperlink{rxn__arrhenius_8_f90_source}{rxn\+\_\+arrhenius.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__arrhenius_a1c96564ba1a75e3d097ce62a1fa1d7ec}\index{camp\_rxn\_arrhenius@{camp\_rxn\_arrhenius}!finalize\_array@{finalize\_array}}
 \index{finalize\_array@{finalize\_array}!camp\_rxn\_arrhenius@{camp\_rxn\_arrhenius}}
@@ -80,21 +80,21 @@ Finalize an array of reactions.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__arrhenius_8_f90_source_l00309}{309}} of file \mbox{\hyperlink{rxn__arrhenius_8_f90_source}{rxn\+\_\+arrhenius.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__arrhenius_8_f90_source_l00312}{312}} of file \mbox{\hyperlink{rxn__arrhenius_8_f90_source}{rxn\+\_\+arrhenius.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=349pt]{namespacecamp__rxn__arrhenius_a1c96564ba1a75e3d097ce62a1fa1d7ec_cgraph}
+\includegraphics[width=339pt]{namespacecamp__rxn__arrhenius_a1c96564ba1a75e3d097ce62a1fa1d7ec_cgraph}
 \end{center}
 \end{figure}
-\Hypertarget{namespacecamp__rxn__arrhenius_a6f006a7032915fe7e70c0cb03a712096}\index{camp\_rxn\_arrhenius@{camp\_rxn\_arrhenius}!initialize@{initialize}}
+\Hypertarget{namespacecamp__rxn__arrhenius_a7fec86a0103d3f86d5321a8bc6c28de1}\index{camp\_rxn\_arrhenius@{camp\_rxn\_arrhenius}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_arrhenius@{camp\_rxn\_arrhenius}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily \label{namespacecamp__rxn__arrhenius_a6f006a7032915fe7e70c0cb03a712096} 
-subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+arrhenius\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t}{rxn\+\_\+arrhenius\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily \label{namespacecamp__rxn__arrhenius_a7fec86a0103d3f86d5321a8bc6c28de1} 
+subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+arrhenius\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__arrhenius_1_1rxn__arrhenius__t}{rxn\+\_\+arrhenius\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in)}]{aero\+\_\+phase}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -106,6 +106,8 @@ Initialize the reaction data, validating component data and loading any required
 \hline
 \mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data \\
 \hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+phase} & Aerosol phase data \\
+\hline
 \mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations \\
 \hline
 \mbox{\texttt{ in}}  & {\em n\+\_\+cells} & Number of grid cells being solved simultaneously \\
@@ -113,13 +115,13 @@ Initialize the reaction data, validating component data and loading any required
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__arrhenius_8_f90_source_l00133}{133}} of file \mbox{\hyperlink{rxn__arrhenius_8_f90_source}{rxn\+\_\+arrhenius.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__arrhenius_8_f90_source_l00134}{134}} of file \mbox{\hyperlink{rxn__arrhenius_8_f90_source}{rxn\+\_\+arrhenius.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacecamp__rxn__arrhenius_a6f006a7032915fe7e70c0cb03a712096_cgraph}
+\includegraphics[width=350pt]{namespacecamp__rxn__arrhenius_a7fec86a0103d3f86d5321a8bc6c28de1_cgraph}
 \end{center}
 \end{figure}

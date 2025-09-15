@@ -103,9 +103,9 @@ Collaboration diagram for camp_rxn_surface::rxn_surface_t:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abb57f96aeb9fc6b267b5ab03522f916c" id="r_abb57f96aeb9fc6b267b5ab03522f916c"><td class="memItemLeft" align="right" valign="top">procedure&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb57f96aeb9fc6b267b5ab03522f916c">initialize</a> (this, chem_spec_data, aero_rep, n_cells)</td></tr>
-<tr class="memdesc:abb57f96aeb9fc6b267b5ab03522f916c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reaction initialization.  <br /></td></tr>
-<tr class="separator:abb57f96aeb9fc6b267b5ab03522f916c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bf78d450c88bd4c0b506f08f4ee0f3b" id="r_a9bf78d450c88bd4c0b506f08f4ee0f3b"><td class="memItemLeft" align="right" valign="top">procedure&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9bf78d450c88bd4c0b506f08f4ee0f3b">initialize</a> (this, chem_spec_data, aero_phase, aero_rep, n_cells)</td></tr>
+<tr class="memdesc:a9bf78d450c88bd4c0b506f08f4ee0f3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reaction initialization.  <br /></td></tr>
+<tr class="separator:a9bf78d450c88bd4c0b506f08f4ee0f3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a75ce35939d28432653065c89892b9be1" id="r_a75ce35939d28432653065c89892b9be1"><td class="memItemLeft" align="right" valign="top">final&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a75ce35939d28432653065c89892b9be1">finalize</a> (this)</td></tr>
 <tr class="memdesc:a75ce35939d28432653065c89892b9be1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
 <tr class="separator:a75ce35939d28432653065c89892b9be1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -236,8 +236,8 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="abb57f96aeb9fc6b267b5ab03522f916c" name="abb57f96aeb9fc6b267b5ab03522f916c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb57f96aeb9fc6b267b5ab03522f916c">&#9670;&#160;</a></span>initialize()</h2>
+<a id="a9bf78d450c88bd4c0b506f08f4ee0f3b" name="a9bf78d450c88bd4c0b506f08f4ee0f3b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9bf78d450c88bd4c0b506f08f4ee0f3b">&#9670;&#160;</a></span>initialize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -251,6 +251,11 @@ Here is the call graph for this function:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">type(<a class="el" href="structcamp__chem__spec__data_1_1chem__spec__data__t.html">chem_spec_data_t</a>), intent(in)</td>          <td class="paramname"><span class="paramname"><em>chem_spec_data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structcamp__aero__phase__data_1_1aero__phase__data__ptr.html">aero_phase_data_ptr</a>), dimension(:), intent(in)</td>          <td class="paramname"><span class="paramname"><em>aero_phase</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -270,6 +275,7 @@ Here is the call graph for this function:</div>
   <table class="params">
     <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Reaction data </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">chem_spec_data</td><td>Chemical species data </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">aero_phase</td><td>Aerosol phase data </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">aero_rep</td><td>Aerosol representations </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">n_cells</td><td>Number of grid cells to solve simultaneously </td></tr>
   </table>

@@ -103,9 +103,9 @@ Collaboration diagram for camp_rxn_emission::rxn_emission_t:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:acb7b80d7bab8bcfeb76c8689e72ddbb7" id="r_acb7b80d7bab8bcfeb76c8689e72ddbb7"><td class="memItemLeft" align="right" valign="top">procedure&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acb7b80d7bab8bcfeb76c8689e72ddbb7">initialize</a> (this, chem_spec_data, aero_rep, n_cells)</td></tr>
-<tr class="memdesc:acb7b80d7bab8bcfeb76c8689e72ddbb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reaction initialization.  <br /></td></tr>
-<tr class="separator:acb7b80d7bab8bcfeb76c8689e72ddbb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59196696cc00c043556fdaa384198013" id="r_a59196696cc00c043556fdaa384198013"><td class="memItemLeft" align="right" valign="top">procedure&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a59196696cc00c043556fdaa384198013">initialize</a> (this, chem_spec_data, aero_phase, aero_rep, n_cells)</td></tr>
+<tr class="memdesc:a59196696cc00c043556fdaa384198013"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reaction initialization.  <br /></td></tr>
+<tr class="separator:a59196696cc00c043556fdaa384198013"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a344bfc227df51ae961d0bcac3e2586ad" id="r_a344bfc227df51ae961d0bcac3e2586ad"><td class="memItemLeft" align="right" valign="top">procedure&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a344bfc227df51ae961d0bcac3e2586ad">get_property_set</a> (this)</td></tr>
 <tr class="memdesc:a344bfc227df51ae961d0bcac3e2586ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the reaction property set.  <br /></td></tr>
 <tr class="separator:a344bfc227df51ae961d0bcac3e2586ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -164,7 +164,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="textblock"><p>Generic test reaction data type. </p>
 <p>Constructor for <a class="el" href="structcamp__rxn__emission_1_1rxn__emission__t.html" title="Generic test reaction data type.">rxn_emission_t</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="rxn__emission_8_f90_source.html#l00090">90</a> of file <a class="el" href="rxn__emission_8_f90_source.html">rxn_emission.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__emission_8_f90_source.html#l00091">91</a> of file <a class="el" href="rxn__emission_8_f90_source.html">rxn_emission.F90</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a47cb8f2b59067ee9f4e4960eca1c799b" name="a47cb8f2b59067ee9f4e4960eca1c799b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a47cb8f2b59067ee9f4e4960eca1c799b">&#9670;&#160;</a></span>finalize()</h2>
@@ -197,19 +197,18 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__emission_8_f90_source.html#l00086">86</a> of file <a class="el" href="rxn__emission_8_f90_source.html">rxn_emission.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__emission_8_f90_source.html#l00087">87</a> of file <a class="el" href="rxn__emission_8_f90_source.html">rxn_emission.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="structcamp__rxn__emission_1_1rxn__emission__t_a47cb8f2b59067ee9f4e4960eca1c799b_cgraph.png" border="0" usemap="#astructcamp__rxn__emission_1_1rxn__emission__t_a47cb8f2b59067ee9f4e4960eca1c799b_cgraph" alt=""/></div>
 <map name="astructcamp__rxn__emission_1_1rxn__emission__t_a47cb8f2b59067ee9f4e4960eca1c799b_cgraph" id="astructcamp__rxn__emission_1_1rxn__emission__t_a47cb8f2b59067ee9f4e4960eca1c799b_cgraph">
-<area shape="rect" title="Finalize the reaction." alt="" coords="5,27,159,68"/>
-<area shape="rect" href="namespacecamp__camp__state.html#a5522f7056d1ff8bb1626e36c97dfff5a" title="Finalize the state." alt="" coords="207,5,380,31"/>
-<area shape="poly" title=" " alt="" coords="159,34,191,30,192,35,160,39"/>
-<area shape="rect" href="namespacecamp__chem__spec__data.html#a161ca7ad4370d191a2b1bf70ec810fcc" title="Finalize the chemical species data." alt="" coords="214,55,373,96"/>
-<area shape="poly" title=" " alt="" coords="160,55,199,60,198,66,159,60"/>
-<area shape="rect" href="namespacecamp__chem__spec__data.html#a254fa8186f63759084357c65d51e9f7f" title="Finalize the chemical species data." alt="" coords="428,55,587,96"/>
-<area shape="poly" title=" " alt="" coords="373,73,412,73,412,78,373,78"/>
+<area shape="rect" title="Finalize the reaction." alt="" coords="5,5,159,46"/>
+<area shape="rect" href="namespacecamp__aero__phase__data.html#a8eebec681f9d24bd7741bb357f7c4e43" title="Finalize the aerosol phase data." alt="" coords="414,5,573,46"/>
+<area shape="poly" title=" " alt="" coords="159,20,207,19,366,19,398,20,398,25,366,24,207,24,159,25"/>
+<area shape="rect" href="namespacecamp__aero__phase__data.html#a0e828293ef8b5cc169dfe653abed14e8" title="Finalize the aerosol phase data." alt="" coords="207,33,366,74"/>
+<area shape="poly" title=" " alt="" coords="159,34,191,38,191,43,159,39"/>
+<area shape="poly" title=" " alt="" coords="366,40,398,36,399,41,367,46"/>
 </map>
 </div>
 
@@ -239,7 +238,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__emission_8_f90_source.html#l00086">86</a> of file <a class="el" href="rxn__emission_8_f90_source.html">rxn_emission.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__emission_8_f90_source.html#l00087">87</a> of file <a class="el" href="rxn__emission_8_f90_source.html">rxn_emission.F90</a>.</p>
 
 </div>
 </div>
@@ -267,12 +266,12 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__emission_8_f90_source.html#l00082">82</a> of file <a class="el" href="rxn__emission_8_f90_source.html">rxn_emission.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__emission_8_f90_source.html#l00083">83</a> of file <a class="el" href="rxn__emission_8_f90_source.html">rxn_emission.F90</a>.</p>
 
 </div>
 </div>
-<a id="acb7b80d7bab8bcfeb76c8689e72ddbb7" name="acb7b80d7bab8bcfeb76c8689e72ddbb7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb7b80d7bab8bcfeb76c8689e72ddbb7">&#9670;&#160;</a></span>initialize()</h2>
+<a id="a59196696cc00c043556fdaa384198013" name="a59196696cc00c043556fdaa384198013"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59196696cc00c043556fdaa384198013">&#9670;&#160;</a></span>initialize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -286,6 +285,11 @@ Here is the call graph for this function:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">type(<a class="el" href="structcamp__chem__spec__data_1_1chem__spec__data__t.html">chem_spec_data_t</a>), intent(in)</td>          <td class="paramname"><span class="paramname"><em>chem_spec_data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structcamp__aero__phase__data_1_1aero__phase__data__ptr.html">aero_phase_data_ptr</a>), dimension(:), intent(in)</td>          <td class="paramname"><span class="paramname"><em>aero_phase</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -305,13 +309,14 @@ Here is the call graph for this function:</div>
   <table class="params">
     <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Reaction data </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">chem_spec_data</td><td>Chemical species data </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">aero_phase</td><td>Aerosol phase data </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">aero_rep</td><td>Aerosol representations </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">n_cells</td><td>Number of grid cells to solve simultaneously </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__emission_8_f90_source.html#l00080">80</a> of file <a class="el" href="rxn__emission_8_f90_source.html">rxn_emission.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__emission_8_f90_source.html#l00081">81</a> of file <a class="el" href="rxn__emission_8_f90_source.html">rxn_emission.F90</a>.</p>
 
 </div>
 </div>
@@ -349,7 +354,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__emission_8_f90_source.html#l00084">84</a> of file <a class="el" href="rxn__emission_8_f90_source.html">rxn_emission.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__emission_8_f90_source.html#l00085">85</a> of file <a class="el" href="rxn__emission_8_f90_source.html">rxn_emission.F90</a>.</p>
 
 </div>
 </div>

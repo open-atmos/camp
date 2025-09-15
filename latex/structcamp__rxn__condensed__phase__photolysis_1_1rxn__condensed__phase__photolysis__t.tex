@@ -28,7 +28,7 @@ Collaboration diagram for camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysi
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-procedure \mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t_a840fb741102d3b62a02edaa36d351f24}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+procedure \mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t_a828eef2fadca79a32dc15ca46276aee0}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+phase, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Reaction initialization. \end{DoxyCompactList}\item 
 procedure \mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t_ad608b49fb727d39b6dabc8b60ed73a70}{get\+\_\+property\+\_\+set}} (this)
 \begin{DoxyCompactList}\small\item\em Get the reaction property set. \end{DoxyCompactList}\item 
@@ -152,11 +152,11 @@ Reaction properties
 
 Definition at line \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source_l00104}{104}} of file \mbox{\hyperlink{rxn__condensed__phase__photolysis_8_f90_source}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis.\+F90}}.
 
-\Hypertarget{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t_a840fb741102d3b62a02edaa36d351f24}\index{camp\_rxn\_condensed\_phase\_photolysis::rxn\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_condensed\_phase\_photolysis\_t}!initialize@{initialize}}
+\Hypertarget{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t_a828eef2fadca79a32dc15ca46276aee0}\index{camp\_rxn\_condensed\_phase\_photolysis::rxn\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_condensed\_phase\_photolysis\_t}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_condensed\_phase\_photolysis::rxn\_condensed\_phase\_photolysis\_t@{camp\_rxn\_condensed\_phase\_photolysis::rxn\_condensed\_phase\_photolysis\_t}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily \label{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t_a840fb741102d3b62a02edaa36d351f24} 
-procedure camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t\+::initialize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t_a828eef2fadca79a32dc15ca46276aee0} 
+procedure camp\+\_\+rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+::rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t\+::initialize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\+\_\+condensed\+\_\+phase\+\_\+photolysis\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in)}]{aero\+\_\+phase}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})}
 
 
 
@@ -167,6 +167,8 @@ Reaction initialization.
 \mbox{\texttt{ in,out}}  & {\em this} & Reaction data \\
 \hline
 \mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+phase} & Aerosol phase data \\
 \hline
 \mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations \\
 \hline

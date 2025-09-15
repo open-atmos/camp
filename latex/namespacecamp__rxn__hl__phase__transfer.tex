@@ -15,7 +15,7 @@ type \mbox{\hyperlink{structcamp__rxn__hl__phase__transfer_1_1rxn__hl__phase__tr
 \item 
 type(\mbox{\hyperlink{structcamp__rxn__hl__phase__transfer_1_1rxn__hl__phase__transfer__t}{rxn\+\_\+hl\+\_\+phase\+\_\+transfer\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__hl__phase__transfer_aa09a3b6a2e6ca859559927960d7963d0}{constructor}} ()
 \begin{DoxyCompactList}\small\item\em Constructor for Phase transfer reaction. \end{DoxyCompactList}\item 
-subroutine \mbox{\hyperlink{namespacecamp__rxn__hl__phase__transfer_a0b94771e5f6c98324272ff10f27d6c2f}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+subroutine \mbox{\hyperlink{namespacecamp__rxn__hl__phase__transfer_abbc7d36f9c428be888050478150da1be}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+phase, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__hl__phase__transfer_a4d75890d66324cef7cc7396ab558402e}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
@@ -61,7 +61,7 @@ Finalize the reaction.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8_f90_source_l00424}{424}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8_f90_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8_f90_source_l00426}{426}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8_f90_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__hl__phase__transfer_a38288ca26b8a28eb47195fb5160cc0c0}\index{camp\_rxn\_hl\_phase\_transfer@{camp\_rxn\_hl\_phase\_transfer}!finalize\_array@{finalize\_array}}
 \index{finalize\_array@{finalize\_array}!camp\_rxn\_hl\_phase\_transfer@{camp\_rxn\_hl\_phase\_transfer}}
@@ -80,7 +80,7 @@ Finalize an array of reactions.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8_f90_source_l00441}{441}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8_f90_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn___h_l__phase__transfer_8_f90_source_l00443}{443}} of file \mbox{\hyperlink{rxn___h_l__phase__transfer_8_f90_source}{rxn\+\_\+\+HL\+\_\+phase\+\_\+transfer.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -90,11 +90,11 @@ Here is the call graph for this function\+:
 \includegraphics[width=350pt]{namespacecamp__rxn__hl__phase__transfer_a38288ca26b8a28eb47195fb5160cc0c0_cgraph}
 \end{center}
 \end{figure}
-\Hypertarget{namespacecamp__rxn__hl__phase__transfer_a0b94771e5f6c98324272ff10f27d6c2f}\index{camp\_rxn\_hl\_phase\_transfer@{camp\_rxn\_hl\_phase\_transfer}!initialize@{initialize}}
+\Hypertarget{namespacecamp__rxn__hl__phase__transfer_abbc7d36f9c428be888050478150da1be}\index{camp\_rxn\_hl\_phase\_transfer@{camp\_rxn\_hl\_phase\_transfer}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_hl\_phase\_transfer@{camp\_rxn\_hl\_phase\_transfer}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily \label{namespacecamp__rxn__hl__phase__transfer_a0b94771e5f6c98324272ff10f27d6c2f} 
-subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+hl\+\_\+phase\+\_\+transfer\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__hl__phase__transfer_1_1rxn__hl__phase__transfer__t}{rxn\+\_\+hl\+\_\+phase\+\_\+transfer\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily \label{namespacecamp__rxn__hl__phase__transfer_abbc7d36f9c428be888050478150da1be} 
+subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+hl\+\_\+phase\+\_\+transfer\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__hl__phase__transfer_1_1rxn__hl__phase__transfer__t}{rxn\+\_\+hl\+\_\+phase\+\_\+transfer\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in)}]{aero\+\_\+phase}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -105,6 +105,8 @@ Initialize the reaction data, validating component data and loading any required
 \mbox{\texttt{ in,out}}  & {\em this} & Reaction data \\
 \hline
 \mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+phase} & Aerosol phase data \\
 \hline
 \mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations \\
 \hline
@@ -120,6 +122,6 @@ Here is the call graph for this function\+:
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacecamp__rxn__hl__phase__transfer_a0b94771e5f6c98324272ff10f27d6c2f_cgraph}
+\includegraphics[width=350pt]{namespacecamp__rxn__hl__phase__transfer_abbc7d36f9c428be888050478150da1be_cgraph}
 \end{center}
 \end{figure}

@@ -1,16 +1,32 @@
 <map id="camp_aero_phase_data::pack_size" name="camp_aero_phase_data::pack_size">
-<area shape="rect" id="Node000001" title="Determine the size of a binary required to pack the aerosol representation data." alt="" coords="373,173,532,214"/>
-<area shape="poly" id="edge5_Node000001_Node000001" title=" " alt="" coords="489,160,475,154,453,151,432,153,419,158,414,164,416,172,411,173,409,163,416,154,430,148,453,146,477,149,491,155"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__rxn__condensed__phase__photolysis.html#a60e574eee0bc40e96cddb2c8e0c8138e" title="Determine the size of a binary required to pack the reaction data." alt="" coords="143,5,319,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="422,163,378,119,323,75,304,64,306,59,327,71,381,115,426,159"/>
-<area shape="rect" id="Node000003" href="$namespacecamp__aero__rep__modal__binned__mass.html#a9920f00c282b728d22fdb6a31d513220" title="Determine the size of a binary required to pack the reaction data." alt="" coords="154,85,308,141"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="379,170,307,143,309,138,381,165"/>
-<area shape="rect" id="Node000004" href="$namespacecamp__aero__rep__modal__binned__mass.html#ab973efc29931da1013cbaf9d91502413" title="Determine the size of a binary required to pack the reaction data." alt="" coords="154,165,308,221"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="358,196,308,196,308,190,358,190"/>
-<area shape="rect" id="Node000005" href="$namespacecamp__aero__rep__single__particle.html#a0544cb13e3473655abef7c470fb1c1fc" title="Determine the size of a binary required to pack the reaction data." alt="" coords="154,245,308,301"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="381,222,309,248,307,243,379,217"/>
-<area shape="rect" id="Node000006" href="$namespacecamp__camp__core.html#acbb7425e5bdb0e8af60c1d7b1d372fd2" title="Determine the size of a binary required to pack the mechanism." alt="" coords="137,326,325,351"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="427,227,383,273,356,296,326,316,299,327,297,323,324,311,353,292,380,269,424,224"/>
-<area shape="rect" id="Node000007" href="$part__4__code_2box__model_8_f90.html#a3f8c0234515cc17b2f3e366868b8646b" title=" " alt="" coords="5,326,89,351"/>
-<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="121,341,89,341,89,336,121,336"/>
+<area shape="rect" id="Node000001" title="Determine the size of a binary required to pack the aerosol representation data." alt="" coords="477,393,636,434"/>
+<area shape="poly" id="edge9_Node000001_Node000001" title=" " alt="" coords="593,380,579,374,557,371,536,373,523,378,518,384,520,392,515,393,513,383,520,374,534,368,557,366,581,369,595,375"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__rxn__condensed__phase__photolysis.html#a60e574eee0bc40e96cddb2c8e0c8138e" title="Determine the size of a binary required to pack the reaction data." alt="" coords="247,5,423,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="549,378,537,314,515,233,499,191,480,149,456,110,427,75,414,64,417,59,431,71,460,107,484,147,504,189,520,232,543,313,554,377"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__rxn__emission.html#a39eb8f193083fa40ef8d84643aa04ac2" title="Determine the size of a binary required to pack the reaction data." alt="" coords="264,85,406,126"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="546,378,532,326,508,262,474,197,452,167,427,141,405,126,408,121,431,136,456,164,478,194,513,260,537,324,551,377"/>
+<area shape="rect" id="Node000004" href="$namespacecamp__rxn__first__order__loss.html#a89cafcfa5470cf801f0b142f3c5a3965" title="Determine the size of a binary required to pack the reaction data." alt="" coords="252,150,418,191"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="541,380,523,340,499,293,467,246,427,206,408,194,411,189,431,202,471,243,503,290,528,337,545,378"/>
+<area shape="rect" id="Node000005" href="$namespacecamp__rxn__photolysis.html#a2cabb5f83401fb4ee6a7da9d8db3b52a" title="Determine the size of a binary required to pack the reaction data." alt="" coords="264,216,406,256"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="532,382,487,326,459,297,428,271,405,259,408,254,430,267,463,293,491,322,536,379"/>
+<area shape="rect" id="Node000006" href="$namespacecamp__rxn__wet__deposition.html#ad301ae9ff9a860e7b2a24e4593875180" title="Determine the size of a binary required to pack the reaction data." alt="" coords="249,281,420,322"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="513,386,472,360,428,336,402,324,404,320,430,331,475,355,516,381"/>
+<area shape="rect" id="Node000007" href="$namespacecamp__aero__rep__modal__binned__mass.html#a9920f00c282b728d22fdb6a31d513220" title="Determine the size of a binary required to pack the reaction data." alt="" coords="258,345,412,401"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="461,399,411,390,412,384,462,393"/>
+<area shape="rect" id="Node000008" href="$namespacecamp__aero__rep__modal__binned__mass.html#ab973efc29931da1013cbaf9d91502413" title="Determine the size of a binary required to pack the reaction data." alt="" coords="258,425,412,481"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="462,433,412,442,411,437,461,428"/>
+<area shape="rect" id="Node000009" href="$namespacecamp__aero__rep__single__particle.html#a0544cb13e3473655abef7c470fb1c1fc" title="Determine the size of a binary required to pack the reaction data." alt="" coords="258,505,412,561"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="514,445,430,496,406,507,404,502,428,491,512,440"/>
+<area shape="rect" id="Node000010" href="$namespacecamp__camp__core.html#acbb7425e5bdb0e8af60c1d7b1d372fd2" title="Determine the size of a binary required to pack the mechanism." alt="" coords="241,586,429,611"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="539,449,496,513,465,547,430,575,406,587,404,583,428,571,462,543,491,510,535,446"/>
+<area shape="rect" id="Node000012" href="$namespacecamp__mechanism__data.html#a07d730e121af5fd3035f6ccddb855b72" title="Determine the size of a binary required to pack the mechanism." alt="" coords="255,636,414,676"/>
+<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="546,449,528,490,504,537,471,585,431,626,414,637,411,633,427,622,467,581,499,534,524,487,541,447"/>
+<area shape="rect" id="Node000013" href="$namespacecamp__rxn__data.html#a03c2677e2905ea3b28ba1c1b77d79f90" title="Determine the size of a binary required to pack the reaction data." alt="" coords="248,700,422,726"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="552,450,538,503,515,568,480,634,457,664,431,690,411,702,408,698,427,686,453,660,475,631,510,566,533,501,546,448"/>
+<area shape="rect" id="Node000015" href="$namespacecamp__rxn__data.html#ae08ddb27fa7f7d4a0910a990719f70f7" title="Determine the size of a binary required to pack the reaction data." alt="" coords="253,750,417,791"/>
+<area shape="poly" id="edge15_Node000001_Node000015" title=" " alt="" coords="554,450,543,512,521,589,504,630,484,670,460,707,431,740,416,752,413,748,427,737,456,704,480,667,500,628,515,588,537,510,549,449"/>
+<area shape="rect" id="Node000011" href="$part__4__code_2box__model_8_f90.html#a3f8c0234515cc17b2f3e366868b8646b" title=" " alt="" coords="57,586,141,611"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="225,601,141,601,141,596,225,596"/>
+<area shape="rect" id="Node000014" href="$namespacecamp__rxn__factory.html#a6222bd3f74c00727487b7e9f01602682" title="Determine the size of a binary required to pack a reaction." alt="" coords="5,700,193,726"/>
+<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="233,716,193,716,193,710,233,710"/>
 </map>

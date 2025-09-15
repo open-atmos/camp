@@ -15,7 +15,7 @@ type \mbox{\hyperlink{structcamp__rxn__ternary__chemical__activation_1_1rxn__ter
 \item 
 type(\mbox{\hyperlink{structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__ternary__chemical__activation_a4a8da3de2e3c8a8465cea4604be3c8bc}{constructor}} ()
 \begin{DoxyCompactList}\small\item\em Constructor for Ternary Chemical Activation reaction. \end{DoxyCompactList}\item 
-subroutine \mbox{\hyperlink{namespacecamp__rxn__ternary__chemical__activation_a84bcd38b7a8b4aaba3b38e22a99efb13}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+subroutine \mbox{\hyperlink{namespacecamp__rxn__ternary__chemical__activation_af0ca4a2e947cde4ed1cca0590c4f6bd6}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+phase, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__ternary__chemical__activation_a641fc0e058e6668c7f7871b850384e1c}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
@@ -42,7 +42,7 @@ A new reaction instance
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source_l00124}{124}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source_l00125}{125}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__ternary__chemical__activation_a641fc0e058e6668c7f7871b850384e1c}\index{camp\_rxn\_ternary\_chemical\_activation@{camp\_rxn\_ternary\_chemical\_activation}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_ternary\_chemical\_activation@{camp\_rxn\_ternary\_chemical\_activation}}
@@ -61,7 +61,7 @@ Finalize the reaction.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source_l00304}{304}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source_l00307}{307}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__ternary__chemical__activation_acd4ac72feab0ada46f3fef8e1f92336a}\index{camp\_rxn\_ternary\_chemical\_activation@{camp\_rxn\_ternary\_chemical\_activation}!finalize\_array@{finalize\_array}}
 \index{finalize\_array@{finalize\_array}!camp\_rxn\_ternary\_chemical\_activation@{camp\_rxn\_ternary\_chemical\_activation}}
@@ -80,7 +80,7 @@ Finalize an array of reactions.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source_l00321}{321}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source_l00324}{324}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -90,11 +90,11 @@ Here is the call graph for this function\+:
 \includegraphics[width=350pt]{namespacecamp__rxn__ternary__chemical__activation_acd4ac72feab0ada46f3fef8e1f92336a_cgraph}
 \end{center}
 \end{figure}
-\Hypertarget{namespacecamp__rxn__ternary__chemical__activation_a84bcd38b7a8b4aaba3b38e22a99efb13}\index{camp\_rxn\_ternary\_chemical\_activation@{camp\_rxn\_ternary\_chemical\_activation}!initialize@{initialize}}
+\Hypertarget{namespacecamp__rxn__ternary__chemical__activation_af0ca4a2e947cde4ed1cca0590c4f6bd6}\index{camp\_rxn\_ternary\_chemical\_activation@{camp\_rxn\_ternary\_chemical\_activation}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_ternary\_chemical\_activation@{camp\_rxn\_ternary\_chemical\_activation}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily \label{namespacecamp__rxn__ternary__chemical__activation_a84bcd38b7a8b4aaba3b38e22a99efb13} 
-subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily \label{namespacecamp__rxn__ternary__chemical__activation_af0ca4a2e947cde4ed1cca0590c4f6bd6} 
+subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in)}]{aero\+\_\+phase}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -106,6 +106,8 @@ Initialize the reaction data, validating component data and loading any required
 \hline
 \mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data \\
 \hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+phase} & Aerosol phase data \\
+\hline
 \mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations \\
 \hline
 \mbox{\texttt{ in}}  & {\em n\+\_\+cells} & Number of grid cells to solve simultaneously \\
@@ -113,13 +115,13 @@ Initialize the reaction data, validating component data and loading any required
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source_l00139}{139}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source_l00140}{140}} of file \mbox{\hyperlink{rxn__ternary__chemical__activation_8_f90_source}{rxn\+\_\+ternary\+\_\+chemical\+\_\+activation.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacecamp__rxn__ternary__chemical__activation_a84bcd38b7a8b4aaba3b38e22a99efb13_cgraph}
+\includegraphics[width=350pt]{namespacecamp__rxn__ternary__chemical__activation_af0ca4a2e947cde4ed1cca0590c4f6bd6_cgraph}
 \end{center}
 \end{figure}

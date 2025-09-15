@@ -103,7 +103,7 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00099}00099\ \ \ \textcolor{keyword}{type},\ \textcolor{keyword}{extends}(\mbox{\hyperlink{structcamp__rxn__data_1_1rxn__data__t}{rxn\_data\_t}})\ ::\ \mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\_condensed\_phase\_photolysis\_t}}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00100}00100\ \ \ \textcolor{keyword}{contains}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00101}00101\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ initialization}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00102}\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t_a840fb741102d3b62a02edaa36d351f24}{00102}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00102}\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t_a828eef2fadca79a32dc15ca46276aee0}{00102}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00103}00103\ \textcolor{comment}{\ \ \ \ !>\ Get\ the\ reaction\ property\ set}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00104}\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t_ad608b49fb727d39b6dabc8b60ed73a70}{00104}}\ \ \ \ \ \textcolor{keywordtype}{procedure}\ ::\ \mbox{\hyperlink{namespacecamp__aero__phase__data_a50c5c02187f8f075971e71bf4e1654e5}{get\_property\_set}}\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00105}00105\ \textcolor{comment}{\ \ \ \ !>\ Initialize\ update\ data}}
@@ -189,511 +189,513 @@
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00185}00185\ \textcolor{comment}{\ \ !>\ Initialize\ the\ reaction\ data,\ validating\ component\ data\ and\ loading}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00186}00186\ \textcolor{comment}{\ \ !!\ any\ required\ information\ into\ the\ condensed\ data\ arrays\ for\ use\ during}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00187}00187\ \textcolor{comment}{\ \ !!\ solving}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00188}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a0f0bc449287b8404cf2baccd8a14caaa}{00188}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}(this,\ chem\_spec\_data,\ aero\_rep,\ n\_cells)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00188}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ab8441a0bb4d3acdcf84b9024fc0273eb}{00188}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}(this,\ chem\_spec\_data,\ aero\_phase,\ aero\_rep,\ n\_cells)}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00189}00189\ \textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00190}00190\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00191}00191\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00192}00192\ \textcolor{comment}{\ \ \ \ !>\ Chemical\ species\ data}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00193}00193\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\_spec\_data\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ chem\_spec\_data\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00194}00194\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representations}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00195}00195\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\_rep\_data\_ptr}}),\ \textcolor{keywordtype}{pointer},\ \textcolor{keywordtype}{intent(in)}\ ::\ aero\_rep(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00196}00196\ \textcolor{comment}{\ \ \ \ !>\ Number\ of\ grid\ cells\ to\ solve\ simultaneously}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00197}00197\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)}\ ::\ n\_cells}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00198}00198\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00199}00199\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ spec\_props,\ reactants,\ products}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00200}00200\ \ \ \ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ key\_name,\ spec\_name,\ water\_name,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ phase\_name,\ temp\_string}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00202}00202\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_spec,\ i\_phase\_inst,\ i\_qty,\ i\_aero\_rep,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ i\_aero\_phase,\ num\_spec\_per\_phase,\ num\_phase,\ num\_react,\ num\_prod}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00204}00204\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}}),\ \textcolor{keywordtype}{allocatable}\ ::\ unique\_names(:)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00205}00205\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}}),\ \textcolor{keywordtype}{allocatable}\ ::\ react\_names(:),\ prod\_names(:)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00206}00206\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00207}00207\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ temp\_int}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00208}00208\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ temp\_real}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00209}00209\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ is\_aqueous}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00210}00210\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00211}00211\ \ \ \ \ is\_aqueous\ =\ .false.}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00194}00194\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ phase\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00195}00195\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\_phase\_data\_ptr}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ aero\_phase(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00196}00196\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representations}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00197}00197\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\_rep\_data\_ptr}}),\ \textcolor{keywordtype}{pointer},\ \textcolor{keywordtype}{intent(in)}\ ::\ aero\_rep(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00198}00198\ \textcolor{comment}{\ \ \ \ !>\ Number\ of\ grid\ cells\ to\ solve\ simultaneously}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00199}00199\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)}\ ::\ n\_cells}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00200}00200\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00201}00201\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ spec\_props,\ reactants,\ products}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00202}00202\ \ \ \ \ \textcolor{keywordtype}{character(len=:)},\ \textcolor{keywordtype}{allocatable}\ ::\ key\_name,\ spec\_name,\ water\_name,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ phase\_name,\ temp\_string}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00204}00204\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_spec,\ i\_phase\_inst,\ i\_qty,\ i\_aero\_rep,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ i\_aero\_phase,\ num\_spec\_per\_phase,\ num\_phase,\ num\_react,\ num\_prod}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00206}00206\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}}),\ \textcolor{keywordtype}{allocatable}\ ::\ unique\_names(:)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00207}00207\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__util_1_1string__t}{string\_t}}),\ \textcolor{keywordtype}{allocatable}\ ::\ react\_names(:),\ prod\_names(:)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00208}00208\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00209}00209\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ temp\_int}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00210}00210\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})\ ::\ temp\_real}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00211}00211\ \ \ \ \ \textcolor{keywordtype}{logical}\ ::\ is\_aqueous}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00212}00212\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00213}00213\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ property\ set}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00214}00214\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(852163263,\ \textcolor{keyword}{associated}(this\%property\_set),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ property\ set\ needed\ to\ initialize\ reaction"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00216}00216\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00217}00217\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ aerosol\ phase\ name}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00218}00218\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}aerosol\ phase"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00219}00219\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(845445717,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_string(key\_name,\ phase\_name),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ aerosol\ phase\ in\ condensed-\/phase\ Photolysis\ reaction"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00222}00222\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00223}00223\ \ \ \ \ \textcolor{comment}{!\ Get\ reactant\ species}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00224}00224\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}reactants"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00225}00225\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(501773136,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_property\_t(key\_name,\ reactants),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ reactant\ species\ in\ condensed-\/phase\ Photolysis\ reaction"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00228}00228\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00229}00229\ \ \ \ \ \textcolor{comment}{!\ Get\ product\ species}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00230}00230\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}products"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00231}00231\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(556252922,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_property\_t(key\_name,\ products),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ product\ species\ in\ condensed-\/phase\ Photolysis\ reaction"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00234}00234\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00235}00235\ \ \ \ \ \textcolor{comment}{!\ Count\ the\ number\ of\ species\ per\ phase\ instance\ (including\ reactants}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00236}00236\ \ \ \ \ \textcolor{comment}{!\ with\ a\ "{}qty"{}\ specified)}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00237}00237\ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_reset()}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00238}00238\ \ \ \ \ num\_react\ =\ 0}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00239}00239\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (reactants\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00240}00240\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ properties\ included\ with\ this\ reactant\ in\ the\ reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00241}00241\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(428593951,\ reactants\%get\_property\_t(val=spec\_props))}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00242}00242\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}qty"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00243}00243\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_int(key\_name,\ temp\_int))\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00244}00244\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_react\ =\ num\_react\ +\ temp\_int\ -\/\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00245}00245\ \ \ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_next()}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00246}00246\ \ \ \ \ \ \ num\_react\ =\ num\_react\ +\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00247}00247\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00248}00248\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00249}00249\ \ \ \ \ \textcolor{comment}{!\ Photolysis\ reactions\ only\ have\ 1\ reactant,\ enforce\ that\ here}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00250}00250\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(890212987,\ num\_react\ .eq.\ 1,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00251}00251\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Too\ many\ species\ in\ condensed-\/phase\ Photolysis\ reaction.\ Only\ one\ reactant\ is\ expected."{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00252}00252\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00253}00253\ \ \ \ \ num\_prod\ =\ products\%size()}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00254}00254\ \ \ \ \ num\_spec\_per\_phase\ =\ num\_prod\ +\ num\_react}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00255}00255\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00256}00256\ \ \ \ \ \textcolor{comment}{!\ Check\ for\ aerosol\ representations}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00257}00257\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(370755392,\ \textcolor{keyword}{associated}(aero\_rep),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00258}00258\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ aerosol\ representation\ for\ condensed-\/phase\ "{}}//\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00259}00259\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Photolysis\ reaction"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00260}00260\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(483073737,\ \textcolor{keyword}{size}(aero\_rep).gt.0,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ aerosol\ representation\ for\ condensed-\/phase\ "{}}//\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00262}00262\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Photolysis\ reaction"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00263}00263\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00264}00264\ \ \ \ \ \textcolor{comment}{!\ Count\ the\ instances\ of\ the\ specified\ aerosol\ phase}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00265}00265\ \ \ \ \ num\_phase\ =\ 0}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00266}00266\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_aero\_rep\ =\ 1,\ \textcolor{keyword}{size}(aero\_rep)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00267}00267\ \ \ \ \ \ \ num\_phase\ =\ num\_phase\ +\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aero\_rep(i\_aero\_rep)\%val\%num\_phase\_instances(phase\_name)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00269}00269\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00270}00270\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00271}00271\ \ \ \ \ \textcolor{comment}{!\ Allocate\ space\ in\ the\ condensed\ data\ arrays}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00272}00272\ \ \ \ \ \textcolor{keyword}{allocate}(this\%condensed\_data\_int(num\_int\_prop\_\ +\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00273}00273\ \ \ \ \ \ \ \ \ \ \ \ \ num\_phase\ *\ (num\_spec\_per\_phase\ *\ (num\_react\ +\ 3)\ +\ 1)))}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00274}00274\ \ \ \ \ \textcolor{keyword}{allocate}(this\%condensed\_data\_real(num\_real\_prop\_\ +\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ num\_spec\_per\_phase\ +\ num\_prod))}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00276}00276\ \ \ \ \ this\%condensed\_data\_int(:)\ =\ int(0,\ kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00277}00277\ \ \ \ \ this\%condensed\_data\_real(:)\ =\ real(0.0,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00278}00278\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00279}00279\ \ \ \ \ \textcolor{comment}{!\ Save\ space\ for\ the\ environment-\/dependent\ parameters}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00280}00280\ \ \ \ \ this\%num\_env\_params\ =\ num\_env\_param\_}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00281}00281\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00282}00282\ \ \ \ \ \textcolor{comment}{!\ Set\ the\ number\ of\ products,\ reactants\ and\ aerosol\ phase\ instances}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00283}00283\ \ \ \ \ num\_react\_\ =\ num\_react}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00284}00284\ \ \ \ \ num\_prod\_\ =\ num\_prod}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00285}00285\ \ \ \ \ num\_aero\_phase\_\ =\ num\_phase}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00286}00286\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00287}00287\ \ \ \ \ \textcolor{comment}{!\ Get\ reaction\ parameters\ (it\ might\ be\ easiest\ to\ keep\ these\ at\ the}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00288}00288\ \ \ \ \ \textcolor{comment}{!\ beginning\ of\ the\ condensed\ data\ array,\ so\ they\ can\ be\ accessed\ using}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00289}00289\ \ \ \ \ \textcolor{comment}{!\ compliler\ flags)}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00290}00290\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}scaling\ factor"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00291}00291\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ scaling\_))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00292}00292\ \ \ \ \ \ \ scaling\_\ =\ real(1.0,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00293}00293\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00294}00294\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00295}00295\ \ \ \ \ \textcolor{comment}{!\ Set\ up\ an\ array\ to\ the\ reactant\ and\ product\ names}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00296}00296\ \ \ \ \ \textcolor{keyword}{allocate}(react\_names(num\_react\_))}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00297}00297\ \ \ \ \ \textcolor{keyword}{allocate}(prod\_names(num\_prod\_))}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00298}00298\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00299}00299\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ chemical\ properties\ for\ the\ reactants}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00300}00300\ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_reset()}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00301}00301\ \ \ \ \ i\_spec\ =\ 0}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00302}00302\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (reactants\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00303}00303\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00304}00304\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ the\ reactant\ species\ properties}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00305}00305\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(365229559,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ \ chem\_spec\_data\%get\_property\_set(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}},\ spec\_props),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ properties\ required\ for\ condensed-\/phase\ Photolysis\ "{}}//\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}reaction\ involving\ species\ '"{}}//trim(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})//\textcolor{stringliteral}{"{}'"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00309}00309\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00310}00310\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ the\ molecular\ weight}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00311}00311\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}molecular\ weight\ [kg\ mol-\/1]"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00312}00312\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(409180731,\ spec\_props\%get\_real(key\_name,\ temp\_real),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00313}00313\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ 'molecular\ weight'\ for\ species\ '"{}}//trim(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})//\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}'\ in\ condensed-\/phase\ Photolysis\ reaction."{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00315}00315\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00316}00316\ \ \ \ \ \ \ \textcolor{comment}{!\ Set\ properties\ for\ each\ occurance\ of\ a\ reactant\ in\ the\ rxn\ equation}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00317}00317\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(186449575,\ reactants\%get\_property\_t(val=spec\_props))}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00318}00318\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}qty"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00319}00319\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.spec\_props\%get\_int(key\_name,\ temp\_int))\ temp\_int\ =\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00320}00320\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_qty\ =\ 1,\ temp\_int}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00321}00321\ \ \ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00322}00322\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00323}00323\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Add\ the\ reactant\ name\ to\ the\ list}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00324}00324\ \ \ \ \ \ \ \ \ react\_names(i\_spec)\%string\ =\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00325}00325\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00326}00326\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Use\ the\ MW\ to\ calculate\ the\ kg/m3\ -\/>\ mol/m3\ conversion}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00327}00327\ \ \ \ \ \ \ \ \ kgm3\_to\_molm3\_(i\_spec)\ =\ 1.0/temp\_real}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00328}00328\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00329}00329\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00213}00213\ \ \ \ \ is\_aqueous\ =\ .false.}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00214}00214\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00215}00215\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ property\ set}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00216}00216\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(852163263,\ \textcolor{keyword}{associated}(this\%property\_set),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ property\ set\ needed\ to\ initialize\ reaction"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00218}00218\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00219}00219\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ aerosol\ phase\ name}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00220}00220\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}aerosol\ phase"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00221}00221\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(845445717,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_string(key\_name,\ phase\_name),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ aerosol\ phase\ in\ condensed-\/phase\ Photolysis\ reaction"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00224}00224\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00225}00225\ \ \ \ \ \textcolor{comment}{!\ Get\ reactant\ species}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00226}00226\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}reactants"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00227}00227\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(501773136,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_property\_t(key\_name,\ reactants),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ reactant\ species\ in\ condensed-\/phase\ Photolysis\ reaction"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00231}00231\ \ \ \ \ \textcolor{comment}{!\ Get\ product\ species}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00232}00232\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}products"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00233}00233\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(556252922,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_property\_t(key\_name,\ products),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ product\ species\ in\ condensed-\/phase\ Photolysis\ reaction"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00236}00236\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00237}00237\ \ \ \ \ \textcolor{comment}{!\ Count\ the\ number\ of\ species\ per\ phase\ instance\ (including\ reactants}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00238}00238\ \ \ \ \ \textcolor{comment}{!\ with\ a\ "{}qty"{}\ specified)}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00239}00239\ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_reset()}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00240}00240\ \ \ \ \ num\_react\ =\ 0}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00241}00241\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (reactants\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00242}00242\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ properties\ included\ with\ this\ reactant\ in\ the\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00243}00243\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(428593951,\ reactants\%get\_property\_t(val=spec\_props))}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00244}00244\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}qty"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00245}00245\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_int(key\_name,\ temp\_int))\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ num\_react\ =\ num\_react\ +\ temp\_int\ -\/\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00247}00247\ \ \ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_next()}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00248}00248\ \ \ \ \ \ \ num\_react\ =\ num\_react\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00249}00249\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00251}00251\ \ \ \ \ \textcolor{comment}{!\ Photolysis\ reactions\ only\ have\ 1\ reactant,\ enforce\ that\ here}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00252}00252\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(890212987,\ num\_react\ .eq.\ 1,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00253}00253\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Too\ many\ species\ in\ condensed-\/phase\ Photolysis\ reaction.\ Only\ one\ reactant\ is\ expected."{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00254}00254\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00255}00255\ \ \ \ \ num\_prod\ =\ products\%size()}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00256}00256\ \ \ \ \ num\_spec\_per\_phase\ =\ num\_prod\ +\ num\_react}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00257}00257\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00258}00258\ \ \ \ \ \textcolor{comment}{!\ Check\ for\ aerosol\ representations}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00259}00259\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(370755392,\ \textcolor{keyword}{associated}(aero\_rep),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00260}00260\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ aerosol\ representation\ for\ condensed-\/phase\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00261}00261\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Photolysis\ reaction"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00262}00262\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(483073737,\ \textcolor{keyword}{size}(aero\_rep).gt.0,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00263}00263\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ aerosol\ representation\ for\ condensed-\/phase\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00264}00264\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Photolysis\ reaction"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00265}00265\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00266}00266\ \ \ \ \ \textcolor{comment}{!\ Count\ the\ instances\ of\ the\ specified\ aerosol\ phase}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00267}00267\ \ \ \ \ num\_phase\ =\ 0}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00268}00268\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_aero\_rep\ =\ 1,\ \textcolor{keyword}{size}(aero\_rep)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00269}00269\ \ \ \ \ \ \ num\_phase\ =\ num\_phase\ +\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aero\_rep(i\_aero\_rep)\%val\%num\_phase\_instances(phase\_name)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00271}00271\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00272}00272\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00273}00273\ \ \ \ \ \textcolor{comment}{!\ Allocate\ space\ in\ the\ condensed\ data\ arrays}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00274}00274\ \ \ \ \ \textcolor{keyword}{allocate}(this\%condensed\_data\_int(num\_int\_prop\_\ +\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \ \ num\_phase\ *\ (num\_spec\_per\_phase\ *\ (num\_react\ +\ 3)\ +\ 1)))}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00276}00276\ \ \ \ \ \textcolor{keyword}{allocate}(this\%condensed\_data\_real(num\_real\_prop\_\ +\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00277}00277\ \ \ \ \ \ \ \ \ \ \ \ \ num\_spec\_per\_phase\ +\ num\_prod))}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00278}00278\ \ \ \ \ this\%condensed\_data\_int(:)\ =\ int(0,\ kind=\mbox{\hyperlink{namespacecamp__constants_aec214d61ec1cbcbe6ad8bea430b9b957}{i\_kind}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00279}00279\ \ \ \ \ this\%condensed\_data\_real(:)\ =\ real(0.0,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00280}00280\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00281}00281\ \ \ \ \ \textcolor{comment}{!\ Save\ space\ for\ the\ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00282}00282\ \ \ \ \ this\%num\_env\_params\ =\ num\_env\_param\_}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00283}00283\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00284}00284\ \ \ \ \ \textcolor{comment}{!\ Set\ the\ number\ of\ products,\ reactants\ and\ aerosol\ phase\ instances}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00285}00285\ \ \ \ \ num\_react\_\ =\ num\_react}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00286}00286\ \ \ \ \ num\_prod\_\ =\ num\_prod}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00287}00287\ \ \ \ \ num\_aero\_phase\_\ =\ num\_phase}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00288}00288\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00289}00289\ \ \ \ \ \textcolor{comment}{!\ Get\ reaction\ parameters\ (it\ might\ be\ easiest\ to\ keep\ these\ at\ the}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00290}00290\ \ \ \ \ \textcolor{comment}{!\ beginning\ of\ the\ condensed\ data\ array,\ so\ they\ can\ be\ accessed\ using}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00291}00291\ \ \ \ \ \textcolor{comment}{!\ compliler\ flags)}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00292}00292\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}scaling\ factor"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00293}00293\ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.\ this\%property\_set\%get\_real(key\_name,\ scaling\_))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00294}00294\ \ \ \ \ \ \ scaling\_\ =\ real(1.0,\ kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00295}00295\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00296}00296\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00297}00297\ \ \ \ \ \textcolor{comment}{!\ Set\ up\ an\ array\ to\ the\ reactant\ and\ product\ names}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00298}00298\ \ \ \ \ \textcolor{keyword}{allocate}(react\_names(num\_react\_))}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00299}00299\ \ \ \ \ \textcolor{keyword}{allocate}(prod\_names(num\_prod\_))}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00300}00300\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00301}00301\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ chemical\ properties\ for\ the\ reactants}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00302}00302\ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_reset()}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00303}00303\ \ \ \ \ i\_spec\ =\ 0}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00304}00304\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (reactants\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00305}00305\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00306}00306\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ the\ reactant\ species\ properties}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00307}00307\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(365229559,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ chem\_spec\_data\%get\_property\_set(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}},\ spec\_props),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ properties\ required\ for\ condensed-\/phase\ Photolysis\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}reaction\ involving\ species\ '"{}}//trim(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})//\textcolor{stringliteral}{"{}'"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00311}00311\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00312}00312\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ the\ molecular\ weight}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00313}00313\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}molecular\ weight\ [kg\ mol-\/1]"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00314}00314\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(409180731,\ spec\_props\%get\_real(key\_name,\ temp\_real),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ 'molecular\ weight'\ for\ species\ '"{}}//trim(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}'\ in\ condensed-\/phase\ Photolysis\ reaction."{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00317}00317\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00318}00318\ \ \ \ \ \ \ \textcolor{comment}{!\ Set\ properties\ for\ each\ occurance\ of\ a\ reactant\ in\ the\ rxn\ equation}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00319}00319\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(186449575,\ reactants\%get\_property\_t(val=spec\_props))}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00320}00320\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}qty"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00321}00321\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (.not.spec\_props\%get\_int(key\_name,\ temp\_int))\ temp\_int\ =\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00322}00322\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_qty\ =\ 1,\ temp\_int}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00323}00323\ \ \ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00324}00324\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00325}00325\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Add\ the\ reactant\ name\ to\ the\ list}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00326}00326\ \ \ \ \ \ \ \ \ react\_names(i\_spec)\%string\ =\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00327}00327\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00328}00328\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Use\ the\ MW\ to\ calculate\ the\ kg/m3\ -\/>\ mol/m3\ conversion}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00329}00329\ \ \ \ \ \ \ \ \ kgm3\_to\_molm3\_(i\_spec)\ =\ 1.0/temp\_real}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00330}00330\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00331}00331\ \ \ \ \ \ \ \textcolor{comment}{!\ Go\ to\ the\ next\ reactant}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00332}00332\ \ \ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_next()}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00333}00333\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00334}00334\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00331}00331\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00332}00332\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00333}00333\ \ \ \ \ \ \ \textcolor{comment}{!\ Go\ to\ the\ next\ reactant}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00334}00334\ \ \ \ \ \ \ \textcolor{keyword}{call\ }reactants\%iter\_next()}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00335}00335\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00336}00336\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ chemical\ properties\ for\ the\ products}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00337}00337\ \ \ \ \ \textcolor{keyword}{call\ }products\%iter\_reset()}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00338}00338\ \ \ \ \ i\_spec\ =\ 0}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00339}00339\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (products\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00340}00340\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00341}00341\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ the\ product\ species\ properties}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00342}00342\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(450225425,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ chem\_spec\_data\%get\_property\_set(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}},\ spec\_props),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ properties\ required\ for\ condensed-\/phase\ Photolysis\ "{}}//\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}reaction\ involving\ species\ '"{}}//trim(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})//\textcolor{stringliteral}{"{}'"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00346}00346\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00347}00347\ \ \ \ \ \ \ \textcolor{comment}{!\ Increment\ the\ product\ counter}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00348}00348\ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00349}00349\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00350}00350\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ the\ molecular\ weight}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00351}00351\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}molecular\ weight\ [kg\ mol-\/1]"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00352}00352\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(504705211,\ spec\_props\%get\_real(key\_name,\ temp\_real),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ 'molecular\ weight'\ for\ species\ '"{}}//trim(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})//\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00354}00354\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}'\ in\ condensed\ phase\ Photolysis\ reaction."{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00355}00355\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00356}00356\ \ \ \ \ \ \ \textcolor{comment}{!\ Use\ the\ MW\ to\ calculate\ the\ kg/m3\ -\/>\ mol/m3\ conversion}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00357}00357\ \ \ \ \ \ \ kgm3\_to\_molm3\_(num\_react\_+i\_spec)\ =\ 1.0/temp\_real}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00358}00358\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00359}00359\ \ \ \ \ \ \ \textcolor{comment}{!\ Set\ properties\ for\ each\ occurance\ of\ a\ reactant\ in\ the\ rxn\ equation}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00360}00360\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(846924553,\ products\%get\_property\_t(val=spec\_props))}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00361}00361\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}yield"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00362}00362\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_real(key\_name,\ temp\_real))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00363}00363\ \ \ \ \ \ \ \ \ yield\_(i\_spec)\ =\ temp\_real}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00364}00364\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00365}00365\ \ \ \ \ \ \ \ \ yield\_(i\_spec)\ =\ 1.0d0}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00366}00366\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00367}00367\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00368}00368\ \ \ \ \ \ \ \textcolor{comment}{!\ Add\ the\ product\ name\ to\ the\ list}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00369}00369\ \ \ \ \ \ \ prod\_names(i\_spec)\%string\ =\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00370}00370\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00371}00371\ \ \ \ \ \ \ \textcolor{comment}{!\ Go\ to\ the\ next\ product}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00372}00372\ \ \ \ \ \ \ \textcolor{keyword}{call\ }products\%iter\_next()}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00373}00373\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00374}00374\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00336}00336\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00337}00337\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00338}00338\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ chemical\ properties\ for\ the\ products}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00339}00339\ \ \ \ \ \textcolor{keyword}{call\ }products\%iter\_reset()}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00340}00340\ \ \ \ \ i\_spec\ =\ 0}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00341}00341\ \ \ \ \ \textcolor{keywordflow}{do}\ \textcolor{keywordflow}{while}\ (products\%get\_key(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}))}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00342}00342\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00343}00343\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ the\ product\ species\ properties}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00344}00344\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(450225425,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00345}00345\ \ \ \ \ \ \ \ \ \ \ \ chem\_spec\_data\%get\_property\_set(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}},\ spec\_props),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00346}00346\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ properties\ required\ for\ condensed-\/phase\ Photolysis\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}reaction\ involving\ species\ '"{}}//trim(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})//\textcolor{stringliteral}{"{}'"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00348}00348\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00349}00349\ \ \ \ \ \ \ \textcolor{comment}{!\ Increment\ the\ product\ counter}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00350}00350\ \ \ \ \ \ \ i\_spec\ =\ i\_spec\ +\ 1}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00351}00351\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00352}00352\ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ the\ molecular\ weight}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00353}00353\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}molecular\ weight\ [kg\ mol-\/1]"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00354}00354\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(504705211,\ spec\_props\%get\_real(key\_name,\ temp\_real),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00355}00355\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ 'molecular\ weight'\ for\ species\ '"{}}//trim(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}})//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00356}00356\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}'\ in\ condensed\ phase\ Photolysis\ reaction."{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00357}00357\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00358}00358\ \ \ \ \ \ \ \textcolor{comment}{!\ Use\ the\ MW\ to\ calculate\ the\ kg/m3\ -\/>\ mol/m3\ conversion}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00359}00359\ \ \ \ \ \ \ kgm3\_to\_molm3\_(num\_react\_+i\_spec)\ =\ 1.0/temp\_real}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00360}00360\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00361}00361\ \ \ \ \ \ \ \textcolor{comment}{!\ Set\ properties\ for\ each\ occurance\ of\ a\ reactant\ in\ the\ rxn\ equation}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00362}00362\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(846924553,\ products\%get\_property\_t(val=spec\_props))}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00363}00363\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}yield"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00364}00364\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (spec\_props\%get\_real(key\_name,\ temp\_real))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00365}00365\ \ \ \ \ \ \ \ \ yield\_(i\_spec)\ =\ temp\_real}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00366}00366\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00367}00367\ \ \ \ \ \ \ \ \ yield\_(i\_spec)\ =\ 1.0d0}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00368}00368\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00369}00369\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00370}00370\ \ \ \ \ \ \ \textcolor{comment}{!\ Add\ the\ product\ name\ to\ the\ list}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00371}00371\ \ \ \ \ \ \ prod\_names(i\_spec)\%string\ =\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00372}00372\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00373}00373\ \ \ \ \ \ \ \textcolor{comment}{!\ Go\ to\ the\ next\ product}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00374}00374\ \ \ \ \ \ \ \textcolor{keyword}{call\ }products\%iter\_next()}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00375}00375\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00376}00376\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ units\ for\ the\ reactants\ and\ products\ and\ name\ for\ water}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00377}00377\ \ \ \ \ \textcolor{comment}{!\ if\ this\ is\ an\ aqueous\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00378}00378\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}units"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00379}00379\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(348722817,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00380}00380\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_string(key\_name,\ temp\_string),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ units\ for\ condensed-\/phase\ Photolysis\ reaction."{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00382}00382\ \ \ \ \ \textcolor{keywordflow}{if}\ (trim(temp\_string).eq.\textcolor{stringliteral}{"{}mol\ m-\/3"{}})\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00383}00383\ \ \ \ \ \ \ is\_aqueous\ =\ .false.}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00384}00384\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}aerosol-\/phase\ water"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00385}00385\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(767767240,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00386}00386\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .not.this\%property\_set\%get\_string(key\_name,\ temp\_string),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00387}00387\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Aerosol-\/phase\ water\ specified\ for\ non-\/aqueous\ condensed-\/"{}}//\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}phase\ Photolysis\ reaction.\ Change\ units\ to\ 'M'\ or\ remove\ "{}}//\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}aerosol-\/phase\ water"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00390}00390\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (trim(temp\_string).eq.\textcolor{stringliteral}{"{}M"{}})\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00391}00391\ \ \ \ \ \ \ is\_aqueous\ =\ .true.}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00392}00392\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}aerosol-\/phase\ water"{}}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00393}00393\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(199910264,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00394}00394\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_string(key\_name,\ water\_name),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00395}00395\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ aerosol-\/phase\ water\ for\ aqeuous\ condensed-\/phase\ "{}}//\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00396}00396\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Photolysis\ reaction."{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00397}00397\ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00398}00398\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(161772048,\ \textcolor{stringliteral}{"{}Received\ invalid\ units\ for\ condensed-\/"{}}//\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00399}00399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}phase\ Photolysis\ reaction:\ '"{}}//temp\_string//\textcolor{stringliteral}{"{}'.\ Valid\ "{}}//\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00400}00400\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}units\ are\ 'mol\ m-\/3'\ or\ 'M'."{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00401}00401\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00402}00402\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00403}00403\ \ \ \ \ \textcolor{comment}{!\ Set\ the\ state\ array\ indices\ for\ the\ reactants,\ products\ and\ water}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00404}00404\ \ \ \ \ i\_aero\_phase\ =\ 0}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00405}00405\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_aero\_rep\ =\ 1,\ \textcolor{keyword}{size}(aero\_rep)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00406}00406\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00407}00407\ \ \ \ \ \ \ \textcolor{comment}{!\ Check\ for\ the\ specified\ phase\ in\ this\ aero\ rep}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00408}00408\ \ \ \ \ \ \ num\_phase\ =\ aero\_rep(i\_aero\_rep)\%val\%num\_phase\_instances(phase\_name)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00409}00409\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (num\_phase.eq.0)\ cycle}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00410}00410\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00411}00411\ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ state\ ids\ for\ aerosol-\/phase\ water\ for\ aqueous\ reactions.}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00412}00412\ \ \ \ \ \ \ \textcolor{comment}{!\ For\ non-\/aqueous\ reactions,\ set\ the\ water\ id\ to\ -\/1}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00413}00413\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_aqueous)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00414}00414\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00415}00415\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ the\ unique\ names\ for\ aerosol-\/phase\ water}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00416}00416\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}\ =\ aero\_rep(i\_aero\_rep)\%val\%unique\_names(\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00417}00417\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ phase\_name\ =\ phase\_name,\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}\ =\ water\_name)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00418}00418\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00419}00419\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Make\ sure\ water\ is\ present}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00420}00420\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(196838614,\ \textcolor{keyword}{size}(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}).eq.num\_phase,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00421}00421\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ aerosol-\/phase\ water\ species\ '"{}}//water\_name//\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00422}00422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}'\ in\ phase\ '"{}}//phase\_name//\textcolor{stringliteral}{"{}'\ in\ aqueous\ condensed-\/"{}}//\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00423}00423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}phase\ Photolysis\ reacion."{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00424}00424\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00425}00425\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ ids\ for\ water\ in\ this\ phase}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00426}00426\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\_inst\ =\ 1,\ num\_phase}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00427}00427\ \ \ \ \ \ \ \ \ \ \ water\_(i\_aero\_phase\ +\ i\_phase\_inst)\ =\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00428}00428\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aero\_rep(i\_aero\_rep)\%val\%spec\_state\_id(\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}(i\_phase\_inst)\%string)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00430}00430\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00431}00431\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00432}00432\ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00376}00376\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00377}00377\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00378}00378\ \ \ \ \ \textcolor{comment}{!\ Get\ the\ units\ for\ the\ reactants\ and\ products\ and\ name\ for\ water}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00379}00379\ \ \ \ \ \textcolor{comment}{!\ if\ this\ is\ an\ aqueous\ reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00380}00380\ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}units"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00381}00381\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(348722817,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_string(key\_name,\ temp\_string),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00383}00383\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ units\ for\ condensed-\/phase\ Photolysis\ reaction."{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00384}00384\ \ \ \ \ \textcolor{keywordflow}{if}\ (trim(temp\_string).eq.\textcolor{stringliteral}{"{}mol\ m-\/3"{}})\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00385}00385\ \ \ \ \ \ \ is\_aqueous\ =\ .false.}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00386}00386\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}aerosol-\/phase\ water"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00387}00387\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(767767240,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00388}00388\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ .not.this\%property\_set\%get\_string(key\_name,\ temp\_string),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Aerosol-\/phase\ water\ specified\ for\ non-\/aqueous\ condensed-\/"{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00390}00390\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}phase\ Photolysis\ reaction.\ Change\ units\ to\ 'M'\ or\ remove\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00391}00391\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}aerosol-\/phase\ water"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00392}00392\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (trim(temp\_string).eq.\textcolor{stringliteral}{"{}M"{}})\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00393}00393\ \ \ \ \ \ \ is\_aqueous\ =\ .true.}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00394}00394\ \ \ \ \ \ \ key\_name\ =\ \textcolor{stringliteral}{"{}aerosol-\/phase\ water"{}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00395}00395\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(199910264,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00396}00396\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%property\_set\%get\_string(key\_name,\ water\_name),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00397}00397\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ aerosol-\/phase\ water\ for\ aqeuous\ condensed-\/phase\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00398}00398\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Photolysis\ reaction."{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00399}00399\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00400}00400\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a970b40b46d26e937fb3cdc0b9217b86c}{die\_msg}}(161772048,\ \textcolor{stringliteral}{"{}Received\ invalid\ units\ for\ condensed-\/"{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00401}00401\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}phase\ Photolysis\ reaction:\ '"{}}//temp\_string//\textcolor{stringliteral}{"{}'.\ Valid\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00402}00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}units\ are\ 'mol\ m-\/3'\ or\ 'M'."{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00403}00403\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00404}00404\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00405}00405\ \ \ \ \ \textcolor{comment}{!\ Set\ the\ state\ array\ indices\ for\ the\ reactants,\ products\ and\ water}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00406}00406\ \ \ \ \ i\_aero\_phase\ =\ 0}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00407}00407\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_aero\_rep\ =\ 1,\ \textcolor{keyword}{size}(aero\_rep)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00408}00408\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00409}00409\ \ \ \ \ \ \ \textcolor{comment}{!\ Check\ for\ the\ specified\ phase\ in\ this\ aero\ rep}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00410}00410\ \ \ \ \ \ \ num\_phase\ =\ aero\_rep(i\_aero\_rep)\%val\%num\_phase\_instances(phase\_name)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00411}00411\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (num\_phase.eq.0)\ cycle}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00412}00412\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00413}00413\ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ state\ ids\ for\ aerosol-\/phase\ water\ for\ aqueous\ reactions.}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00414}00414\ \ \ \ \ \ \ \textcolor{comment}{!\ For\ non-\/aqueous\ reactions,\ set\ the\ water\ id\ to\ -\/1}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00415}00415\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (is\_aqueous)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00416}00416\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00417}00417\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ the\ unique\ names\ for\ aerosol-\/phase\ water}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00418}00418\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}\ =\ aero\_rep(i\_aero\_rep)\%val\%unique\_names(\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00419}00419\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ phase\_name\ =\ phase\_name,\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}\ =\ water\_name)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00420}00420\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00421}00421\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Make\ sure\ water\ is\ present}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00422}00422\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(196838614,\ \textcolor{keyword}{size}(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}).eq.num\_phase,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00423}00423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Missing\ aerosol-\/phase\ water\ species\ '"{}}//water\_name//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00424}00424\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}'\ in\ phase\ '"{}}//phase\_name//\textcolor{stringliteral}{"{}'\ in\ aqueous\ condensed-\/"{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00425}00425\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}phase\ Photolysis\ reacion."{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00426}00426\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00427}00427\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ ids\ for\ water\ in\ this\ phase}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00428}00428\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\_inst\ =\ 1,\ num\_phase}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00429}00429\ \ \ \ \ \ \ \ \ \ \ water\_(i\_aero\_phase\ +\ i\_phase\_inst)\ =\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00430}00430\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aero\_rep(i\_aero\_rep)\%val\%spec\_state\_id(\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00431}00431\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}(i\_phase\_inst)\%string)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00432}00432\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00433}00433\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00434}00434\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00434}00434\ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}})}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00435}00435\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00436}00436\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Set\ the\ water\ ids\ to\ -\/1\ for\ non-\/aqueous\ condensed-\/phase\ reactions}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00437}00437\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\_inst\ =\ 1,\ num\_phase}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00438}00438\ \ \ \ \ \ \ \ \ \ \ water\_(i\_aero\_phase\ +\ i\_phase\_inst)\ =\ -\/1}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00439}00439\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00440}00440\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00441}00441\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00436}00436\ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00437}00437\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00438}00438\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Set\ the\ water\ ids\ to\ -\/1\ for\ non-\/aqueous\ condensed-\/phase\ reactions}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00439}00439\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\_inst\ =\ 1,\ num\_phase}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00440}00440\ \ \ \ \ \ \ \ \ \ \ water\_(i\_aero\_phase\ +\ i\_phase\_inst)\ =\ -\/1}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00441}00441\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00442}00442\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00443}00443\ \ \ \ \ \ \ \textcolor{comment}{!\ Loop\ through\ the\ reactants}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00444}00444\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_spec\ =\ 1,\ num\_react\_}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00445}00445\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00446}00446\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ the\ unique\ names\ for\ the\ reactants}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00447}00447\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}\ =\ aero\_rep(i\_aero\_rep)\%val\%unique\_names(\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00448}00448\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ phase\_name\ =\ phase\_name,\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}\ =\ react\_names(i\_spec)\%string)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00449}00449\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00450}00450\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Make\ sure\ the\ right\ number\ of\ instances\ are\ present}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00451}00451\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(360730267,\ \textcolor{keyword}{size}(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}).eq.num\_phase,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00452}00452\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Incorrect\ instances\ of\ reactant\ '"{}}//\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00453}00453\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ react\_names(i\_spec)\%string//\textcolor{stringliteral}{"{}'\ in\ phase\ '"{}}//phase\_name//\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00454}00454\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}'\ in\ a\ condensed-\/phase\ Photolysis\ reaction"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00455}00455\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00456}00456\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ state\ ids\ for\ the\ reactant\ concentration}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00457}00457\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ IDs\ are\ grouped\ by\ phase\ instance:}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00458}00458\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ \ \ R1(phase1),\ R2(phase1),\ ...,\ R1(phase2)...}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00459}00459\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\_inst\ =\ 1,\ num\_phase}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00460}00460\ \ \ \ \ \ \ \ \ \ \ react\_((i\_aero\_phase+i\_phase\_inst-\/1)*num\_react\_\ +\ i\_spec)\ =\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00461}00461\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aero\_rep(i\_aero\_rep)\%val\%spec\_state\_id(\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00462}00462\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}(i\_phase\_inst)\%string)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00463}00463\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00464}00464\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00465}00465\ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00443}00443\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00444}00444\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00445}00445\ \ \ \ \ \ \ \textcolor{comment}{!\ Loop\ through\ the\ reactants}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00446}00446\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_spec\ =\ 1,\ num\_react\_}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00447}00447\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00448}00448\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ the\ unique\ names\ for\ the\ reactants}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00449}00449\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}\ =\ aero\_rep(i\_aero\_rep)\%val\%unique\_names(\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00450}00450\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ phase\_name\ =\ phase\_name,\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}\ =\ react\_names(i\_spec)\%string)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00451}00451\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00452}00452\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Make\ sure\ the\ right\ number\ of\ instances\ are\ present}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00453}00453\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(360730267,\ \textcolor{keyword}{size}(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}).eq.num\_phase,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00454}00454\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Incorrect\ instances\ of\ reactant\ '"{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00455}00455\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ react\_names(i\_spec)\%string//\textcolor{stringliteral}{"{}'\ in\ phase\ '"{}}//phase\_name//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00456}00456\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}'\ in\ a\ condensed-\/phase\ Photolysis\ reaction"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00457}00457\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00458}00458\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ state\ ids\ for\ the\ reactant\ concentration}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00459}00459\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ IDs\ are\ grouped\ by\ phase\ instance:}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00460}00460\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ \ \ R1(phase1),\ R2(phase1),\ ...,\ R1(phase2)...}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00461}00461\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\_inst\ =\ 1,\ num\_phase}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00462}00462\ \ \ \ \ \ \ \ \ \ \ react\_((i\_aero\_phase+i\_phase\_inst-\/1)*num\_react\_\ +\ i\_spec)\ =\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00463}00463\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aero\_rep(i\_aero\_rep)\%val\%spec\_state\_id(\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00464}00464\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}(i\_phase\_inst)\%string)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00465}00465\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00466}00466\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00467}00467\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00467}00467\ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}})}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00468}00468\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00469}00469\ \ \ \ \ \ \ \textcolor{comment}{!\ Loop\ through\ the\ products}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00470}00470\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_spec\ =\ 1,\ num\_prod\_}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00471}00471\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00472}00472\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ the\ unique\ names\ for\ the\ products}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00473}00473\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}\ =\ aero\_rep(i\_aero\_rep)\%val\%unique\_names(\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00474}00474\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ phase\_name\ =\ phase\_name,\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}\ =\ prod\_names(i\_spec)\%string)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00475}00475\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00476}00476\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Make\ sure\ the\ right\ number\ of\ instances\ are\ present}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00477}00477\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(399869427,\ \textcolor{keyword}{size}(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}).eq.num\_phase,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00478}00478\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Incorrect\ instances\ of\ product\ '"{}}//\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00479}00479\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prod\_names(i\_spec)\%string//\textcolor{stringliteral}{"{}'\ in\ phase\ '"{}}//phase\_name//\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00480}00480\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}'\ in\ a\ condensed-\/phase\ Photolysis\ reaction"{}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00481}00481\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00482}00482\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ state\ ids\ for\ the\ product\ concentration}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00483}00483\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ IDs\ are\ grouped\ by\ phase\ instance:}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00484}00484\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ \ \ P1(phase1),\ P2(phase1),\ ...,\ P1(phase2)...}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00485}00485\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\_inst\ =\ 1,\ num\_phase}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00486}00486\ \ \ \ \ \ \ \ \ \ \ prod\_((i\_aero\_phase+i\_phase\_inst-\/1)*num\_prod\_\ +\ i\_spec)\ =\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aero\_rep(i\_aero\_rep)\%val\%spec\_state\_id(\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}(i\_phase\_inst)\%string)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00489}00489\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00490}00490\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00491}00491\ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00469}00469\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00470}00470\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00471}00471\ \ \ \ \ \ \ \textcolor{comment}{!\ Loop\ through\ the\ products}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00472}00472\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_spec\ =\ 1,\ num\_prod\_}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00473}00473\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00474}00474\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Get\ the\ unique\ names\ for\ the\ products}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00475}00475\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}\ =\ aero\_rep(i\_aero\_rep)\%val\%unique\_names(\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00476}00476\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ phase\_name\ =\ phase\_name,\ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1spec__name}{spec\_name}}\ =\ prod\_names(i\_spec)\%string)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00477}00477\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00478}00478\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Make\ sure\ the\ right\ number\ of\ instances\ are\ present}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00479}00479\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_ab4e745d4a05763568bf773598f30e91f}{assert\_msg}}(399869427,\ \textcolor{keyword}{size}(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}).eq.num\_phase,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00480}00480\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Incorrect\ instances\ of\ product\ '"{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00481}00481\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ prod\_names(i\_spec)\%string//\textcolor{stringliteral}{"{}'\ in\ phase\ '"{}}//phase\_name//\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00482}00482\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}'\ in\ a\ condensed-\/phase\ Photolysis\ reaction"{}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00483}00483\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00484}00484\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ Save\ the\ state\ ids\ for\ the\ product\ concentration}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00485}00485\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ IDs\ are\ grouped\ by\ phase\ instance:}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00486}00486\ \ \ \ \ \ \ \ \ \textcolor{comment}{!\ \ \ P1(phase1),\ P2(phase1),\ ...,\ P1(phase2)...}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00487}00487\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\_inst\ =\ 1,\ num\_phase}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00488}00488\ \ \ \ \ \ \ \ \ \ \ prod\_((i\_aero\_phase+i\_phase\_inst-\/1)*num\_prod\_\ +\ i\_spec)\ =\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00489}00489\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aero\_rep(i\_aero\_rep)\%val\%spec\_state\_id(\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00490}00490\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}}(i\_phase\_inst)\%string)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00491}00491\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00492}00492\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00493}00493\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00493}00493\ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1unique__names}{unique\_names}})}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00494}00494\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00495}00495\ \ \ \ \ \ \ \textcolor{comment}{!\ Increment\ the\ index\ offset\ for\ the\ next\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00496}00496\ \ \ \ \ \ \ i\_aero\_phase\ =\ i\_aero\_phase\ +\ num\_phase}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00497}00497\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00498}00498\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00495}00495\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00496}00496\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00497}00497\ \ \ \ \ \ \ \textcolor{comment}{!\ Increment\ the\ index\ offset\ for\ the\ next\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00498}00498\ \ \ \ \ \ \ i\_aero\_phase\ =\ i\_aero\_phase\ +\ num\_phase}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00499}00499\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00500}00500\ \ \ \ \ \textcolor{comment}{!\ Initialize\ the\ reaction\ id}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00501}00501\ \ \ \ \ rxn\_id\_\ =\ -\/1}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00502}00502\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00503}00503\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00500}00500\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00501}00501\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00502}00502\ \ \ \ \ \textcolor{comment}{!\ Initialize\ the\ reaction\ id}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00503}00503\ \ \ \ \ rxn\_id\_\ =\ -\/1}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00504}00504\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00505}00505\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00506}00506\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00507}00507\ \textcolor{comment}{\ \ !>\ Get\ the\ reaction\ properties.\ (For\ use\ by\ external\ photolysis\ modules.)}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00508}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a80ba2df3166d8cd40ef07ebcec6293db}{00508}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a50c5c02187f8f075971e71bf4e1654e5}{get\_property\_set}}(this)\ \textcolor{keyword}{result}(prop\_set)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00509}00509\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00510}00510\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ properties}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00511}00511\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ prop\_set\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00512}00512\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00513}00513\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00514}00514\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00515}00515\ \ \ \ \ prop\_set\ =>\ this\%property\_set}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00505}00505\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{initialize}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00506}00506\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00507}00507\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00508}00508\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00509}00509\ \textcolor{comment}{\ \ !>\ Get\ the\ reaction\ properties.\ (For\ use\ by\ external\ photolysis\ modules.)}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00510}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a80ba2df3166d8cd40ef07ebcec6293db}{00510}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a50c5c02187f8f075971e71bf4e1654e5}{get\_property\_set}}(this)\ \textcolor{keyword}{result}(prop\_set)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00511}00511\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00512}00512\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ properties}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00513}00513\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__property_1_1property__t}{property\_t}}),\ \textcolor{keywordtype}{pointer}\ ::\ prop\_set\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00514}00514\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00515}00515\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00516}00516\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00517}00517\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a50c5c02187f8f075971e71bf4e1654e5}{get\_property\_set}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00517}00517\ \ \ \ \ prop\_set\ =>\ this\%property\_set}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00518}00518\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00519}00519\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00520}00520\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00521}00521\ \textcolor{comment}{\ \ !>\ Finalize\ the\ reaction}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00522}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a7ce26320f77748fadf951eeea28a2f59}{00522}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00523}00523\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00524}00524\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00525}00525\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00526}00526\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00527}00527\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{associated}(this\%property\_set))\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00528}00528\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%property\_set)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00529}00529\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_real))\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00530}00530\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_real)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00531}00531\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_int))\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00532}00532\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_int)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00533}00533\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00534}00534\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00519}00519\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a50c5c02187f8f075971e71bf4e1654e5}{get\_property\_set}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00520}00520\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00521}00521\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00522}00522\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00523}00523\ \textcolor{comment}{\ \ !>\ Finalize\ the\ reaction}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00524}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a7ce26320f77748fadf951eeea28a2f59}{00524}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00525}00525\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00526}00526\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00527}00527\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00528}00528\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00529}00529\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{associated}(this\%property\_set))\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00530}00530\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%property\_set)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00531}00531\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_real))\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00532}00532\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_real)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00533}00533\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_int))\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00534}00534\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_int)}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00535}00535\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00536}00536\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00537}00537\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00538}00538\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ reactions}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00539}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a0d12a2703cb61b56bf39e3e68fde2bc5}{00539}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}(this)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00540}00540\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00541}00541\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00542}00542\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00543}00543\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00544}00544\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00536}00536\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00537}00537\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00538}00538\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00539}00539\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00540}00540\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ reactions}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00541}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a0d12a2703cb61b56bf39e3e68fde2bc5}{00541}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00542}00542\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00543}00543\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00544}00544\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00545}00545\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00546}00546\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(this)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00547}00547\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this(i))}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00548}00548\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00549}00549\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00550}00550\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00546}00546\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00547}00547\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00548}00548\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00549}00549\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this(i))}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00550}00550\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00551}00551\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00552}00552\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00553}00553\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00554}00554\ \textcolor{comment}{\ \ !>\ Set\ packed\ update\ data\ for\ photolysis\ rate\ constants}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00555}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ae70f9b706dc52f1be044d2aedd2dad22}{00555}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ae70f9b706dc52f1be044d2aedd2dad22}{update\_data\_rate\_set}}(this,\ base\_rate)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00556}00556\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00557}00557\ \textcolor{comment}{\ \ \ \ !>\ Update\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00558}00558\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{rxn\_update\_data\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00559}00559\ \textcolor{comment}{\ \ \ \ !>\ Updated\ pre-\/scaling\ photolysis\ rate}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00560}00560\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ base\_rate}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00561}00561\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00562}00562\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{interfacecamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__set__rate__update__data}{rxn\_condensed\_phase\_photolysis\_set\_rate\_update\_data}}(this\%get\_data(),\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00563}00563\ \ \ \ \ \ \ \ \ \ \ \ \ this\%rxn\_unique\_id,\ base\_rate)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00564}00564\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00565}00565\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ae70f9b706dc52f1be044d2aedd2dad22}{update\_data\_rate\_set}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00552}00552\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00553}00553\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00554}00554\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00555}00555\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00556}00556\ \textcolor{comment}{\ \ !>\ Set\ packed\ update\ data\ for\ photolysis\ rate\ constants}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00557}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ae70f9b706dc52f1be044d2aedd2dad22}{00557}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ae70f9b706dc52f1be044d2aedd2dad22}{update\_data\_rate\_set}}(this,\ base\_rate)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00558}00558\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00559}00559\ \textcolor{comment}{\ \ \ \ !>\ Update\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00560}00560\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{rxn\_update\_data\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00561}00561\ \textcolor{comment}{\ \ \ \ !>\ Updated\ pre-\/scaling\ photolysis\ rate}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00562}00562\ \textcolor{keywordtype}{\ \ \ \ real}(kind=\mbox{\hyperlink{namespacecamp__constants_a0119047cbd11c89a02f10be5c5edf7ab}{dp}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ base\_rate}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00563}00563\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00564}00564\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{interfacecamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__set__rate__update__data}{rxn\_condensed\_phase\_photolysis\_set\_rate\_update\_data}}(this\%get\_data(),\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00565}00565\ \ \ \ \ \ \ \ \ \ \ \ \ this\%rxn\_unique\_id,\ base\_rate)}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00566}00566\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00567}00567\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00568}00568\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00569}00569\ \textcolor{comment}{\ \ !>\ Initialize\ update\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00570}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a75d0d118062d5bfd38e0f36e64aab706}{00570}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a75d0d118062d5bfd38e0f36e64aab706}{update\_data\_initialize}}(this,\ update\_data,\ rxn\_type)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00571}00571\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00572}00572\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rand}{camp\_rand}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}\ :\ \mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{generate\_int\_id}}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00573}00573\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00574}00574\ \textcolor{comment}{\ \ \ \ !>\ The\ reaction\ to\ update}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00575}00575\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00576}00576\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ object}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00577}00577\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{rxn\_update\_data\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(out)}\ ::\ update\_data\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00578}00578\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ type\ id}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00579}00579\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)}\ ::\ rxn\_type}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00580}00580\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00581}00581\ \ \ \ \ \textcolor{comment}{!\ If\ a\ reaction\ id\ has\ not\ yet\ been\ generated,\ do\ it\ now}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00582}00582\ \ \ \ \ \textcolor{keywordflow}{if}\ (rxn\_id\_.eq.-\/1)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00583}00583\ \ \ \ \ \ \ rxn\_id\_\ =\ \mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{generate\_int\_id}}()}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00584}00584\ \textcolor{keywordflow}{\ \ \ \ endif}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00585}00585\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00586}00586\ \ \ \ \ update\_data\%rxn\_unique\_id\ =\ rxn\_id\_}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00587}00587\ \ \ \ \ update\_data\%rxn\_type\ =\ int(rxn\_type,\ kind=c\_int)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00588}00588\ \ \ \ \ update\_data\%update\_data\ =\ \mbox{\hyperlink{interfacecamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__create__rate__update__data}{rxn\_condensed\_phase\_photolysis\_create\_rate\_update\_data}}()}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00589}00589\ \ \ \ \ update\_data\%is\_malloced\ =\ .true.}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00590}00590\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00591}00591\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a75d0d118062d5bfd38e0f36e64aab706}{update\_data\_initialize}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00567}00567\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ae70f9b706dc52f1be044d2aedd2dad22}{update\_data\_rate\_set}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00568}00568\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00569}00569\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00570}00570\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00571}00571\ \textcolor{comment}{\ \ !>\ Initialize\ update\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00572}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a75d0d118062d5bfd38e0f36e64aab706}{00572}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a75d0d118062d5bfd38e0f36e64aab706}{update\_data\_initialize}}(this,\ update\_data,\ rxn\_type)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00573}00573\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00574}00574\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rand}{camp\_rand}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}\ :\ \mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{generate\_int\_id}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00575}00575\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00576}00576\ \textcolor{comment}{\ \ \ \ !>\ The\ reaction\ to\ update}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00577}00577\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t}{rxn\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00578}00578\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00579}00579\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{rxn\_update\_data\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(out)}\ ::\ update\_data\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00580}00580\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ type\ id}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00581}00581\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)}\ ::\ rxn\_type}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00582}00582\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00583}00583\ \ \ \ \ \textcolor{comment}{!\ If\ a\ reaction\ id\ has\ not\ yet\ been\ generated,\ do\ it\ now}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00584}00584\ \ \ \ \ \textcolor{keywordflow}{if}\ (rxn\_id\_.eq.-\/1)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00585}00585\ \ \ \ \ \ \ rxn\_id\_\ =\ \mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{generate\_int\_id}}()}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00586}00586\ \textcolor{keywordflow}{\ \ \ \ endif}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00587}00587\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00588}00588\ \ \ \ \ update\_data\%rxn\_unique\_id\ =\ rxn\_id\_}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00589}00589\ \ \ \ \ update\_data\%rxn\_type\ =\ int(rxn\_type,\ kind=c\_int)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00590}00590\ \ \ \ \ update\_data\%update\_data\ =\ \mbox{\hyperlink{interfacecamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__create__rate__update__data}{rxn\_condensed\_phase\_photolysis\_create\_rate\_update\_data}}()}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00591}00591\ \ \ \ \ update\_data\%is\_malloced\ =\ .true.}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00592}00592\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00593}00593\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00594}00594\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00595}00595\ \textcolor{comment}{\ \ !>\ Determine\ the\ size\ of\ a\ binary\ required\ to\ pack\ the\ reaction\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00596}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a60e574eee0bc40e96cddb2c8e0c8138e}{00596}}\ \ \ \textcolor{keyword}{integer(kind=i\_kind)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__pack__size}{internal\_pack\_size}}(this,\ comm)\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00597}00597\ \ \ \ \ \ \ result(\mbox{\hyperlink{namespacecamp__aero__phase__data_a8f3f446ed030f9ec8af894715c950807}{pack\_size}})}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00598}00598\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00599}00599\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ update\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00600}00600\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{rxn\_update\_data\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00601}00601\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00602}00602\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00603}00603\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00604}00604\ \ \ \ \ \mbox{\hyperlink{namespacecamp__aero__phase__data_a8f3f446ed030f9ec8af894715c950807}{pack\_size}}\ =\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00605}00605\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_a91e386d6f20f660ab0762c32bb55e3a7}{camp\_mpi\_pack\_size\_logical}}(this\%is\_malloced,\ comm)\ +\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00606}00606\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(this\%rxn\_unique\_id,\ comm)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00607}00607\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00608}00608\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__pack__size}{internal\_pack\_size}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00593}00593\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a75d0d118062d5bfd38e0f36e64aab706}{update\_data\_initialize}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00594}00594\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00595}00595\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00596}00596\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00597}00597\ \textcolor{comment}{\ \ !>\ Determine\ the\ size\ of\ a\ binary\ required\ to\ pack\ the\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00598}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a60e574eee0bc40e96cddb2c8e0c8138e}{00598}}\ \ \ \textcolor{keyword}{integer(kind=i\_kind)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__pack__size}{internal\_pack\_size}}(this,\ comm)\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00599}00599\ \ \ \ \ \ \ result(\mbox{\hyperlink{namespacecamp__aero__phase__data_a8f3f446ed030f9ec8af894715c950807}{pack\_size}})}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00600}00600\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00601}00601\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ update\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00602}00602\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{rxn\_update\_data\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00603}00603\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00604}00604\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00605}00605\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00606}00606\ \ \ \ \ \mbox{\hyperlink{namespacecamp__aero__phase__data_a8f3f446ed030f9ec8af894715c950807}{pack\_size}}\ =\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00607}00607\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_a91e386d6f20f660ab0762c32bb55e3a7}{camp\_mpi\_pack\_size\_logical}}(this\%is\_malloced,\ comm)\ +\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00608}00608\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(this\%rxn\_unique\_id,\ comm)}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00609}00609\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00610}00610\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00611}00611\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00612}00612\ \textcolor{comment}{\ \ !>\ Pack\ the\ given\ value\ to\ the\ buffer,\ advancing\ position}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00613}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_aae53d862b91a9a903e1d67659f704999}{00613}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__pack}{internal\_bin\_pack}}(this,\ buffer,\ pos,\ comm)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00614}00614\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00615}00615\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ update\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00616}00616\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{rxn\_update\_data\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00617}00617\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00618}00618\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00619}00619\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00620}00620\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00621}00621\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00622}00622\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00623}00623\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00624}00624\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00625}00625\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00626}00626\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00627}00627\ \ \ \ \ prev\_position\ =\ pos}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00628}00628\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a478c2ca36da605f816ccb99988201acc}{camp\_mpi\_pack\_logical}}(buffer,\ pos,\ this\%is\_malloced,\ comm)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00629}00629\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer,\ pos,\ this\%rxn\_unique\_id,\ comm)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00630}00630\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(649543400,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00631}00631\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(comm))}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00632}00632\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00633}00633\ \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00634}00634\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__pack}{internal\_bin\_pack}}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00635}00635\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00636}00636\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00637}00637\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00638}00638\ \textcolor{comment}{\ \ !>\ Unpack\ the\ given\ value\ from\ the\ buffer,\ advancing\ position}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00639}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_aa5e3c77ac0528b0109a890a25d56b2a9}{00639}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__unpack}{internal\_bin\_unpack}}(this,\ buffer,\ pos,\ comm)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00640}00640\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00641}00641\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ update\ data}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00642}00642\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{rxn\_update\_data\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00643}00643\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00644}00644\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00645}00645\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00646}00646\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00647}00647\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00648}00648\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00649}00649\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00650}00650\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00651}00651\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00652}00652\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00653}00653\ \ \ \ \ prev\_position\ =\ pos}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00654}00654\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a6280c3d9ec2de483b881f0ab7280ddbb}{camp\_mpi\_unpack\_logical}}(buffer,\ pos,\ this\%is\_malloced,\ comm)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00655}00655\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer,\ pos,\ this\%rxn\_unique\_id,\ comm)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00656}00656\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(254749806,\ \&}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00657}00657\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(comm))}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00658}00658\ \ \ \ \ this\%update\_data\ =\ \mbox{\hyperlink{interfacecamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__create__rate__update__data}{rxn\_condensed\_phase\_photolysis\_create\_rate\_update\_data}}()}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00659}00659\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00660}00660\ \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00661}00661\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__unpack}{internal\_bin\_unpack}}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00662}00662\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00663}00663\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00664}00664\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00665}00665\ \textcolor{comment}{\ \ !>\ Finalize\ an\ update\ data\ object}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00666}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ad77a924a5f63d0e06ac24eb437f63733}{00666}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ad77a924a5f63d0e06ac24eb437f63733}{update\_data\_finalize}}(this)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00667}00667\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00668}00668\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ object\ to\ free}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00669}00669\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{rxn\_update\_data\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00670}00670\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00671}00671\ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%is\_malloced)\ \textcolor{keyword}{call\ }\mbox{\hyperlink{interfacecamp__rxn__condensed__phase__photolysis_1_1rxn__free__update__data}{rxn\_free\_update\_data}}(this\%update\_data)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00610}00610\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__pack__size}{internal\_pack\_size}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00611}00611\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00612}00612\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00613}00613\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00614}00614\ \textcolor{comment}{\ \ !>\ Pack\ the\ given\ value\ to\ the\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00615}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_aae53d862b91a9a903e1d67659f704999}{00615}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__pack}{internal\_bin\_pack}}(this,\ buffer,\ pos,\ comm)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00616}00616\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00617}00617\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ update\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00618}00618\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{rxn\_update\_data\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00619}00619\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00620}00620\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00621}00621\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00622}00622\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00623}00623\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00624}00624\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00625}00625\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00626}00626\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00627}00627\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00628}00628\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00629}00629\ \ \ \ \ prev\_position\ =\ pos}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00630}00630\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a478c2ca36da605f816ccb99988201acc}{camp\_mpi\_pack\_logical}}(buffer,\ pos,\ this\%is\_malloced,\ comm)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00631}00631\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer,\ pos,\ this\%rxn\_unique\_id,\ comm)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00632}00632\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(649543400,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00633}00633\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(comm))}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00634}00634\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00635}00635\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00636}00636\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__pack}{internal\_bin\_pack}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00637}00637\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00638}00638\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00639}00639\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00640}00640\ \textcolor{comment}{\ \ !>\ Unpack\ the\ given\ value\ from\ the\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00641}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_aa5e3c77ac0528b0109a890a25d56b2a9}{00641}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__unpack}{internal\_bin\_unpack}}(this,\ buffer,\ pos,\ comm)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00642}00642\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00643}00643\ \textcolor{comment}{\ \ \ \ !>\ Reaction\ update\ data}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00644}00644\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{rxn\_update\_data\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00645}00645\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00646}00646\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00647}00647\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00648}00648\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00649}00649\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00650}00650\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00651}00651\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00652}00652\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00653}00653\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00654}00654\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00655}00655\ \ \ \ \ prev\_position\ =\ pos}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00656}00656\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a6280c3d9ec2de483b881f0ab7280ddbb}{camp\_mpi\_unpack\_logical}}(buffer,\ pos,\ this\%is\_malloced,\ comm)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00657}00657\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer,\ pos,\ this\%rxn\_unique\_id,\ comm)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00658}00658\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__util_a32cf43c1b618a3ecf93810383e960ef2}{assert}}(254749806,\ \&}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00659}00659\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(comm))}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00660}00660\ \ \ \ \ this\%update\_data\ =\ \mbox{\hyperlink{interfacecamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__create__rate__update__data}{rxn\_condensed\_phase\_photolysis\_create\_rate\_update\_data}}()}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00661}00661\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00662}00662\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00663}00663\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{interfacecamp__aero__rep__data_1_1internal__bin__unpack}{internal\_bin\_unpack}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00664}00664\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00665}00665\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00666}00666\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00667}00667\ \textcolor{comment}{\ \ !>\ Finalize\ an\ update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00668}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ad77a924a5f63d0e06ac24eb437f63733}{00668}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ad77a924a5f63d0e06ac24eb437f63733}{update\_data\_finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00669}00669\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00670}00670\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ object\ to\ free}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00671}00671\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{rxn\_update\_data\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00672}00672\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00673}00673\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ad77a924a5f63d0e06ac24eb437f63733}{update\_data\_finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00673}00673\ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%is\_malloced)\ \textcolor{keyword}{call\ }\mbox{\hyperlink{interfacecamp__rxn__condensed__phase__photolysis_1_1rxn__free__update__data}{rxn\_free\_update\_data}}(this\%update\_data)}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00674}00674\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00675}00675\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00676}00676\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00677}00677\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ update\ data\ objects}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00678}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a5f4efee9927e338f213d93b4b28a8219}{00678}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a5f4efee9927e338f213d93b4b28a8219}{update\_data\_finalize\_array}}(this)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00679}00679\ \ \ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00680}00680\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ object\ to\ free}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00681}00681\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{rxn\_update\_data\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00682}00682\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00683}00683\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00675}00675\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ad77a924a5f63d0e06ac24eb437f63733}{update\_data\_finalize}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00676}00676\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00677}00677\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00678}00678\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00679}00679\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ update\ data\ objects}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00680}\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a5f4efee9927e338f213d93b4b28a8219}{00680}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a5f4efee9927e338f213d93b4b28a8219}{update\_data\_finalize\_array}}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00681}00681\ \ \ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00682}00682\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ object\ to\ free}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00683}00683\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__rxn__condensed__phase__photolysis_1_1rxn__update__data__condensed__phase__photolysis__t}{rxn\_update\_data\_condensed\_phase\_photolysis\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this(:)}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00684}00684\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00685}00685\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(this)}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00686}00686\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ad77a924a5f63d0e06ac24eb437f63733}{update\_data\_finalize}}(this(i))}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00687}00687\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00688}00688\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00689}00689\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a5f4efee9927e338f213d93b4b28a8219}{update\_data\_finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00685}00685\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00686}00686\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00687}00687\ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00688}00688\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_ad77a924a5f63d0e06ac24eb437f63733}{update\_data\_finalize}}(this(i))}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00689}00689\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00690}00690\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00691}00691\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00691}00691\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis_a5f4efee9927e338f213d93b4b28a8219}{update\_data\_finalize\_array}}}
 \DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00692}00692\ }
-\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00693}00693\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis}{camp\_rxn\_condensed\_phase\_photolysis}}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00693}00693\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00694}00694\ }
+\DoxyCodeLine{\Hypertarget{rxn__condensed__phase__photolysis_8_f90_source_l00695}00695\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__rxn__condensed__phase__photolysis}{camp\_rxn\_condensed\_phase\_photolysis}}}
 
 \end{DoxyCode}

@@ -28,7 +28,7 @@ Collaboration diagram for camp\+\_\+rxn\+\_\+surface\+::rxn\+\_\+surface\+\_\+t\
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-procedure \mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t_abb57f96aeb9fc6b267b5ab03522f916c}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+procedure \mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t_a9bf78d450c88bd4c0b506f08f4ee0f3b}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+phase, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Reaction initialization. \end{DoxyCompactList}\item 
 final \mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t_a75ce35939d28432653065c89892b9be1}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
@@ -126,11 +126,11 @@ Finalize an array of reactions.
 
 Definition at line \mbox{\hyperlink{rxn__surface_8_f90_source_l00116}{116}} of file \mbox{\hyperlink{rxn__surface_8_f90_source}{rxn\+\_\+surface.\+F90}}.
 
-\Hypertarget{structcamp__rxn__surface_1_1rxn__surface__t_abb57f96aeb9fc6b267b5ab03522f916c}\index{camp\_rxn\_surface::rxn\_surface\_t@{camp\_rxn\_surface::rxn\_surface\_t}!initialize@{initialize}}
+\Hypertarget{structcamp__rxn__surface_1_1rxn__surface__t_a9bf78d450c88bd4c0b506f08f4ee0f3b}\index{camp\_rxn\_surface::rxn\_surface\_t@{camp\_rxn\_surface::rxn\_surface\_t}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_surface::rxn\_surface\_t@{camp\_rxn\_surface::rxn\_surface\_t}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily \label{structcamp__rxn__surface_1_1rxn__surface__t_abb57f96aeb9fc6b267b5ab03522f916c} 
-procedure camp\+\_\+rxn\+\_\+surface\+::rxn\+\_\+surface\+\_\+t\+::initialize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\+\_\+surface\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__rxn__surface_1_1rxn__surface__t_a9bf78d450c88bd4c0b506f08f4ee0f3b} 
+procedure camp\+\_\+rxn\+\_\+surface\+::rxn\+\_\+surface\+\_\+t\+::initialize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__surface_1_1rxn__surface__t}{rxn\+\_\+surface\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in)}]{aero\+\_\+phase}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})}
 
 
 
@@ -141,6 +141,8 @@ Reaction initialization.
 \mbox{\texttt{ in,out}}  & {\em this} & Reaction data \\
 \hline
 \mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+phase} & Aerosol phase data \\
 \hline
 \mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations \\
 \hline

@@ -15,7 +15,7 @@ type \mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__r
 \item 
 type(\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_aecae771d97cae8229f9e4e7d49398bd6}{constructor}} ()
 \begin{DoxyCompactList}\small\item\em Constructor for Wennberg no\+\_\+ro2 reaction. \end{DoxyCompactList}\item 
-subroutine \mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_a4380ce12e874ed0fd2dbceb5b4e31284}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+subroutine \mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_a515799c0dd36f9efa495fda495e9a32d}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+phase, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__wennberg__no__ro2_acdc032de368e4ad73c38499a4ececf11}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
@@ -42,7 +42,7 @@ A new reaction instance
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source_l00128}{128}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source_l00129}{129}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__wennberg__no__ro2_acdc032de368e4ad73c38499a4ececf11}\index{camp\_rxn\_wennberg\_no\_ro2@{camp\_rxn\_wennberg\_no\_ro2}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_wennberg\_no\_ro2@{camp\_rxn\_wennberg\_no\_ro2}}
@@ -61,7 +61,7 @@ Finalize the reaction.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source_l00317}{317}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source_l00320}{320}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__wennberg__no__ro2_aafd3ac1652f344d30aad709503996788}\index{camp\_rxn\_wennberg\_no\_ro2@{camp\_rxn\_wennberg\_no\_ro2}!finalize\_array@{finalize\_array}}
 \index{finalize\_array@{finalize\_array}!camp\_rxn\_wennberg\_no\_ro2@{camp\_rxn\_wennberg\_no\_ro2}}
@@ -80,7 +80,7 @@ Finalize an array of reactions.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source_l00334}{334}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source_l00337}{337}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -90,11 +90,11 @@ Here is the call graph for this function\+:
 \includegraphics[width=350pt]{namespacecamp__rxn__wennberg__no__ro2_aafd3ac1652f344d30aad709503996788_cgraph}
 \end{center}
 \end{figure}
-\Hypertarget{namespacecamp__rxn__wennberg__no__ro2_a4380ce12e874ed0fd2dbceb5b4e31284}\index{camp\_rxn\_wennberg\_no\_ro2@{camp\_rxn\_wennberg\_no\_ro2}!initialize@{initialize}}
+\Hypertarget{namespacecamp__rxn__wennberg__no__ro2_a515799c0dd36f9efa495fda495e9a32d}\index{camp\_rxn\_wennberg\_no\_ro2@{camp\_rxn\_wennberg\_no\_ro2}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_wennberg\_no\_ro2@{camp\_rxn\_wennberg\_no\_ro2}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily \label{namespacecamp__rxn__wennberg__no__ro2_a4380ce12e874ed0fd2dbceb5b4e31284} 
-subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily \label{namespacecamp__rxn__wennberg__no__ro2_a515799c0dd36f9efa495fda495e9a32d} 
+subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in)}]{aero\+\_\+phase}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -106,6 +106,8 @@ Initialize the reaction data, validating component data and loading any required
 \hline
 \mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data \\
 \hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+phase} & Aerosol phase data \\
+\hline
 \mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations \\
 \hline
 \mbox{\texttt{ in}}  & {\em n\+\_\+cells} & Number of grid cells being solved simultaneously \\
@@ -113,13 +115,13 @@ Initialize the reaction data, validating component data and loading any required
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source_l00143}{143}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source_l00144}{144}} of file \mbox{\hyperlink{rxn__wennberg__no__ro2_8_f90_source}{rxn\+\_\+wennberg\+\_\+no\+\_\+ro2.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacecamp__rxn__wennberg__no__ro2_a4380ce12e874ed0fd2dbceb5b4e31284_cgraph}
+\includegraphics[width=350pt]{namespacecamp__rxn__wennberg__no__ro2_a515799c0dd36f9efa495fda495e9a32d_cgraph}
 \end{center}
 \end{figure}

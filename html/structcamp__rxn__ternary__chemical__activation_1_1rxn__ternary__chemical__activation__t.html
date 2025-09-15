@@ -103,9 +103,9 @@ Collaboration diagram for camp_rxn_ternary_chemical_activation::rxn_ternary_chem
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae102bbe0a9b0bbde2ea5a28245688dc2" id="r_ae102bbe0a9b0bbde2ea5a28245688dc2"><td class="memItemLeft" align="right" valign="top">procedure&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae102bbe0a9b0bbde2ea5a28245688dc2">initialize</a> (this, chem_spec_data, aero_rep, n_cells)</td></tr>
-<tr class="memdesc:ae102bbe0a9b0bbde2ea5a28245688dc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reaction initialization.  <br /></td></tr>
-<tr class="separator:ae102bbe0a9b0bbde2ea5a28245688dc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9660064cc2ae34de8ac8da8b42630184" id="r_a9660064cc2ae34de8ac8da8b42630184"><td class="memItemLeft" align="right" valign="top">procedure&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9660064cc2ae34de8ac8da8b42630184">initialize</a> (this, chem_spec_data, aero_phase, aero_rep, n_cells)</td></tr>
+<tr class="memdesc:a9660064cc2ae34de8ac8da8b42630184"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reaction initialization.  <br /></td></tr>
+<tr class="separator:a9660064cc2ae34de8ac8da8b42630184"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2b7a5ed35651d6690f4edd869e79491" id="r_ae2b7a5ed35651d6690f4edd869e79491"><td class="memItemLeft" align="right" valign="top">final&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2b7a5ed35651d6690f4edd869e79491">finalize</a> (this)</td></tr>
 <tr class="memdesc:ae2b7a5ed35651d6690f4edd869e79491"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
 <tr class="separator:ae2b7a5ed35651d6690f4edd869e79491"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -158,7 +158,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="textblock"><p>Generic test reaction data type. </p>
 <p>Constructor for <a class="el" href="structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t.html" title="Generic test reaction data type.">rxn_ternary_chemical_activation_t</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html#l00115">115</a> of file <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html">rxn_ternary_chemical_activation.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html#l00116">116</a> of file <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html">rxn_ternary_chemical_activation.F90</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ae2b7a5ed35651d6690f4edd869e79491" name="ae2b7a5ed35651d6690f4edd869e79491"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae2b7a5ed35651d6690f4edd869e79491">&#9670;&#160;</a></span>finalize()</h2>
@@ -191,19 +191,18 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html#l00111">111</a> of file <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html">rxn_ternary_chemical_activation.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html#l00112">112</a> of file <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html">rxn_ternary_chemical_activation.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t_ae2b7a5ed35651d6690f4edd869e79491_cgraph.png" border="0" usemap="#astructcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t_ae2b7a5ed35651d6690f4edd869e79491_cgraph" alt=""/></div>
 <map name="astructcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t_ae2b7a5ed35651d6690f4edd869e79491_cgraph" id="astructcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t_ae2b7a5ed35651d6690f4edd869e79491_cgraph">
-<area shape="rect" title="Finalize the reaction." alt="" coords="5,20,205,75"/>
-<area shape="rect" href="namespacecamp__camp__state.html#a5522f7056d1ff8bb1626e36c97dfff5a" title="Finalize the state." alt="" coords="253,5,426,31"/>
-<area shape="poly" title=" " alt="" coords="205,32,237,28,238,34,206,38"/>
-<area shape="rect" href="namespacecamp__chem__spec__data.html#a161ca7ad4370d191a2b1bf70ec810fcc" title="Finalize the chemical species data." alt="" coords="260,55,419,96"/>
-<area shape="poly" title=" " alt="" coords="206,57,244,62,244,67,205,62"/>
-<area shape="rect" href="namespacecamp__chem__spec__data.html#a254fa8186f63759084357c65d51e9f7f" title="Finalize the chemical species data." alt="" coords="474,55,633,96"/>
-<area shape="poly" title=" " alt="" coords="419,73,458,73,458,78,419,78"/>
+<area shape="rect" title="Finalize the reaction." alt="" coords="5,5,205,61"/>
+<area shape="rect" href="namespacecamp__aero__phase__data.html#a8eebec681f9d24bd7741bb357f7c4e43" title="Finalize the aerosol phase data." alt="" coords="460,13,619,54"/>
+<area shape="poly" title=" " alt="" coords="205,27,253,27,412,27,444,27,444,33,412,32,253,32,205,33"/>
+<area shape="rect" href="namespacecamp__aero__phase__data.html#a0e828293ef8b5cc169dfe653abed14e8" title="Finalize the aerosol phase data." alt="" coords="253,41,412,82"/>
+<area shape="poly" title=" " alt="" coords="205,43,238,47,237,52,205,48"/>
+<area shape="poly" title=" " alt="" coords="412,48,444,43,445,49,413,53"/>
 </map>
 </div>
 
@@ -233,12 +232,12 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html#l00111">111</a> of file <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html">rxn_ternary_chemical_activation.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html#l00112">112</a> of file <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html">rxn_ternary_chemical_activation.F90</a>.</p>
 
 </div>
 </div>
-<a id="ae102bbe0a9b0bbde2ea5a28245688dc2" name="ae102bbe0a9b0bbde2ea5a28245688dc2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae102bbe0a9b0bbde2ea5a28245688dc2">&#9670;&#160;</a></span>initialize()</h2>
+<a id="a9660064cc2ae34de8ac8da8b42630184" name="a9660064cc2ae34de8ac8da8b42630184"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9660064cc2ae34de8ac8da8b42630184">&#9670;&#160;</a></span>initialize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -252,6 +251,11 @@ Here is the call graph for this function:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">type(<a class="el" href="structcamp__chem__spec__data_1_1chem__spec__data__t.html">chem_spec_data_t</a>), intent(in)</td>          <td class="paramname"><span class="paramname"><em>chem_spec_data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structcamp__aero__phase__data_1_1aero__phase__data__ptr.html">aero_phase_data_ptr</a>), dimension(:), intent(in)</td>          <td class="paramname"><span class="paramname"><em>aero_phase</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -271,13 +275,14 @@ Here is the call graph for this function:</div>
   <table class="params">
     <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Reaction data </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">chem_spec_data</td><td>Chemical species data </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">aero_phase</td><td>Aerosol phase data </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">aero_rep</td><td>Aerosol representations </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">n_cells</td><td>Number of grid cells to solve simultaneously </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html#l00109">109</a> of file <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html">rxn_ternary_chemical_activation.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html#l00110">110</a> of file <a class="el" href="rxn__ternary__chemical__activation_8_f90_source.html">rxn_ternary_chemical_activation.F90</a>.</p>
 
 </div>
 </div>

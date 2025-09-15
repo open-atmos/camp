@@ -83,9 +83,9 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:a421d897fb07b66869df3ba8893b342a1" id="r_a421d897fb07b66869df3ba8893b342a1"><td class="memItemLeft" align="right" valign="top">type(<a class="el" href="structcamp__rxn__troe_1_1rxn__troe__t.html">rxn_troe_t</a>) function, pointer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a421d897fb07b66869df3ba8893b342a1">constructor</a> ()</td></tr>
 <tr class="memdesc:a421d897fb07b66869df3ba8893b342a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for Troe reaction.  <br /></td></tr>
 <tr class="separator:a421d897fb07b66869df3ba8893b342a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9722464e9603a64e43d61be72e7c4ebe" id="r_a9722464e9603a64e43d61be72e7c4ebe"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9722464e9603a64e43d61be72e7c4ebe">initialize</a> (this, chem_spec_data, aero_rep, n_cells)</td></tr>
-<tr class="memdesc:a9722464e9603a64e43d61be72e7c4ebe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving.  <br /></td></tr>
-<tr class="separator:a9722464e9603a64e43d61be72e7c4ebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49a161851fd4d890af9465156345b727" id="r_a49a161851fd4d890af9465156345b727"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a49a161851fd4d890af9465156345b727">initialize</a> (this, chem_spec_data, aero_phase, aero_rep, n_cells)</td></tr>
+<tr class="memdesc:a49a161851fd4d890af9465156345b727"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving.  <br /></td></tr>
+<tr class="separator:a49a161851fd4d890af9465156345b727"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af94c6c642fc4c9845245ada2d59f8a38" id="r_af94c6c642fc4c9845245ada2d59f8a38"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af94c6c642fc4c9845245ada2d59f8a38">finalize</a> (this)</td></tr>
 <tr class="memdesc:af94c6c642fc4c9845245ada2d59f8a38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
 <tr class="separator:af94c6c642fc4c9845245ada2d59f8a38"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -119,7 +119,7 @@ Functions/Subroutines</h2></td></tr>
 <p>Constructor for Troe reaction. </p>
 <dl class="section return"><dt>Returns</dt><dd>A new reaction instance </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__troe_8_f90_source.html#l00123">123</a> of file <a class="el" href="rxn__troe_8_f90_source.html">rxn_troe.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__troe_8_f90_source.html#l00124">124</a> of file <a class="el" href="rxn__troe_8_f90_source.html">rxn_troe.F90</a>.</p>
 
 </div>
 </div>
@@ -154,7 +154,7 @@ Functions/Subroutines</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__troe_8_f90_source.html#l00303">303</a> of file <a class="el" href="rxn__troe_8_f90_source.html">rxn_troe.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__troe_8_f90_source.html#l00306">306</a> of file <a class="el" href="rxn__troe_8_f90_source.html">rxn_troe.F90</a>.</p>
 
 </div>
 </div>
@@ -189,22 +189,22 @@ Functions/Subroutines</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__troe_8_f90_source.html#l00320">320</a> of file <a class="el" href="rxn__troe_8_f90_source.html">rxn_troe.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__troe_8_f90_source.html#l00323">323</a> of file <a class="el" href="rxn__troe_8_f90_source.html">rxn_troe.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="namespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e_cgraph.png" border="0" usemap="#anamespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e_cgraph" alt=""/></div>
 <map name="anamespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e_cgraph" id="anamespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e_cgraph">
 <area shape="rect" title="Finalize an array of reactions." alt="" coords="5,5,157,46"/>
-<area shape="rect" href="namespacecamp__camp__state.html#a5522f7056d1ff8bb1626e36c97dfff5a" title="Finalize the state." alt="" coords="205,13,378,38"/>
+<area shape="rect" href="namespacecamp__aero__phase__data.html#a8eebec681f9d24bd7741bb357f7c4e43" title="Finalize the aerosol phase data." alt="" coords="205,5,364,46"/>
 <area shape="poly" title=" " alt="" coords="157,23,189,23,189,28,157,28"/>
 </map>
 </div>
 
 </div>
 </div>
-<a id="a9722464e9603a64e43d61be72e7c4ebe" name="a9722464e9603a64e43d61be72e7c4ebe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9722464e9603a64e43d61be72e7c4ebe">&#9670;&#160;</a></span>initialize()</h2>
+<a id="a49a161851fd4d890af9465156345b727" name="a49a161851fd4d890af9465156345b727"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49a161851fd4d890af9465156345b727">&#9670;&#160;</a></span>initialize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -221,6 +221,11 @@ Here is the call graph for this function:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">type(<a class="el" href="structcamp__chem__spec__data_1_1chem__spec__data__t.html">chem_spec_data_t</a>), intent(in)</td>          <td class="paramname"><span class="paramname"><em>chem_spec_data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structcamp__aero__phase__data_1_1aero__phase__data__ptr.html">aero_phase_data_ptr</a>), dimension(:), intent(in)</td>          <td class="paramname"><span class="paramname"><em>aero_phase</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -245,18 +250,19 @@ Here is the call graph for this function:</div>
   <table class="params">
     <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Reaction data </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">chem_spec_data</td><td>Chemical species data </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">aero_phase</td><td>Aerosol phase data </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">aero_rep</td><td>Aerosol representations </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">n_cells</td><td>Number of grid cells to solve simultaneously </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn__troe_8_f90_source.html#l00138">138</a> of file <a class="el" href="rxn__troe_8_f90_source.html">rxn_troe.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn__troe_8_f90_source.html#l00139">139</a> of file <a class="el" href="rxn__troe_8_f90_source.html">rxn_troe.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespacecamp__rxn__troe_a9722464e9603a64e43d61be72e7c4ebe_cgraph.png" border="0" usemap="#anamespacecamp__rxn__troe_a9722464e9603a64e43d61be72e7c4ebe_cgraph" alt=""/></div>
-<map name="anamespacecamp__rxn__troe_a9722464e9603a64e43d61be72e7c4ebe_cgraph" id="anamespacecamp__rxn__troe_a9722464e9603a64e43d61be72e7c4ebe_cgraph">
+<div class="center"><img src="namespacecamp__rxn__troe_a49a161851fd4d890af9465156345b727_cgraph.png" border="0" usemap="#anamespacecamp__rxn__troe_a49a161851fd4d890af9465156345b727_cgraph" alt=""/></div>
+<map name="anamespacecamp__rxn__troe_a49a161851fd4d890af9465156345b727_cgraph" id="anamespacecamp__rxn__troe_a49a161851fd4d890af9465156345b727_cgraph">
 <area shape="rect" title="Initialize the reaction data, validating component data and loading any required information into the..." alt="" coords="5,56,164,82"/>
 <area shape="rect" href="namespacecamp__util.html#a32cf43c1b618a3ecf93810383e960ef2" title="Errors unless condition_ok is true." alt="" coords="218,5,338,31"/>
 <area shape="poly" title=" " alt="" coords="136,53,211,33,212,38,137,58"/>

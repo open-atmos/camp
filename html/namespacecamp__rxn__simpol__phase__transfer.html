@@ -83,9 +83,9 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:a5621b401b9f6b4fdd17bd7014fc3b546" id="r_a5621b401b9f6b4fdd17bd7014fc3b546"><td class="memItemLeft" align="right" valign="top">type(<a class="el" href="structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t.html">rxn_simpol_phase_transfer_t</a>) function, pointer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5621b401b9f6b4fdd17bd7014fc3b546">constructor</a> ()</td></tr>
 <tr class="memdesc:a5621b401b9f6b4fdd17bd7014fc3b546"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for Phase transfer reaction.  <br /></td></tr>
 <tr class="separator:a5621b401b9f6b4fdd17bd7014fc3b546"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a356ee35a6341ba8f13878ad206b869b3" id="r_a356ee35a6341ba8f13878ad206b869b3"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a356ee35a6341ba8f13878ad206b869b3">initialize</a> (this, chem_spec_data, aero_rep, n_cells)</td></tr>
-<tr class="memdesc:a356ee35a6341ba8f13878ad206b869b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving.  <br /></td></tr>
-<tr class="separator:a356ee35a6341ba8f13878ad206b869b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5eb86378ba374add4185b8c37d4d101c" id="r_a5eb86378ba374add4185b8c37d4d101c"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5eb86378ba374add4185b8c37d4d101c">initialize</a> (this, chem_spec_data, aero_phase, aero_rep, n_cells)</td></tr>
+<tr class="memdesc:a5eb86378ba374add4185b8c37d4d101c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving.  <br /></td></tr>
+<tr class="separator:a5eb86378ba374add4185b8c37d4d101c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5e19666d70bcc791457dba451374dac" id="r_ab5e19666d70bcc791457dba451374dac"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5e19666d70bcc791457dba451374dac">finalize</a> (this)</td></tr>
 <tr class="memdesc:ab5e19666d70bcc791457dba451374dac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the reaction.  <br /></td></tr>
 <tr class="separator:ab5e19666d70bcc791457dba451374dac"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -154,7 +154,7 @@ Functions/Subroutines</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn___s_i_m_p_o_l__phase__transfer_8_f90_source.html#l00438">438</a> of file <a class="el" href="rxn___s_i_m_p_o_l__phase__transfer_8_f90_source.html">rxn_SIMPOL_phase_transfer.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn___s_i_m_p_o_l__phase__transfer_8_f90_source.html#l00440">440</a> of file <a class="el" href="rxn___s_i_m_p_o_l__phase__transfer_8_f90_source.html">rxn_SIMPOL_phase_transfer.F90</a>.</p>
 
 </div>
 </div>
@@ -189,7 +189,7 @@ Functions/Subroutines</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="rxn___s_i_m_p_o_l__phase__transfer_8_f90_source.html#l00455">455</a> of file <a class="el" href="rxn___s_i_m_p_o_l__phase__transfer_8_f90_source.html">rxn_SIMPOL_phase_transfer.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="rxn___s_i_m_p_o_l__phase__transfer_8_f90_source.html#l00457">457</a> of file <a class="el" href="rxn___s_i_m_p_o_l__phase__transfer_8_f90_source.html">rxn_SIMPOL_phase_transfer.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -203,8 +203,8 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="a356ee35a6341ba8f13878ad206b869b3" name="a356ee35a6341ba8f13878ad206b869b3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a356ee35a6341ba8f13878ad206b869b3">&#9670;&#160;</a></span>initialize()</h2>
+<a id="a5eb86378ba374add4185b8c37d4d101c" name="a5eb86378ba374add4185b8c37d4d101c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5eb86378ba374add4185b8c37d4d101c">&#9670;&#160;</a></span>initialize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -221,6 +221,11 @@ Here is the call graph for this function:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">type(<a class="el" href="structcamp__chem__spec__data_1_1chem__spec__data__t.html">chem_spec_data_t</a>), intent(in)</td>          <td class="paramname"><span class="paramname"><em>chem_spec_data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">type(<a class="el" href="structcamp__aero__phase__data_1_1aero__phase__data__ptr.html">aero_phase_data_ptr</a>), dimension(:), intent(in)</td>          <td class="paramname"><span class="paramname"><em>aero_phase</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -245,6 +250,7 @@ Here is the call graph for this function:</div>
   <table class="params">
     <tr><td class="paramdir">[in,out]</td><td class="paramname">this</td><td>Reaction data </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">chem_spec_data</td><td>Chemical species data </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">aero_phase</td><td>Aerosol phase data </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">aero_rep</td><td>Aerosol representations </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">n_cells</td><td>Number of grid cells to solve simultaneously </td></tr>
   </table>
@@ -255,8 +261,8 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="namespacecamp__rxn__simpol__phase__transfer_a356ee35a6341ba8f13878ad206b869b3_cgraph.png" border="0" usemap="#anamespacecamp__rxn__simpol__phase__transfer_a356ee35a6341ba8f13878ad206b869b3_cgraph" alt=""/></div>
-<map name="anamespacecamp__rxn__simpol__phase__transfer_a356ee35a6341ba8f13878ad206b869b3_cgraph" id="anamespacecamp__rxn__simpol__phase__transfer_a356ee35a6341ba8f13878ad206b869b3_cgraph">
+<div class="center"><img src="namespacecamp__rxn__simpol__phase__transfer_a5eb86378ba374add4185b8c37d4d101c_cgraph.png" border="0" usemap="#anamespacecamp__rxn__simpol__phase__transfer_a5eb86378ba374add4185b8c37d4d101c_cgraph" alt=""/></div>
+<map name="anamespacecamp__rxn__simpol__phase__transfer_a5eb86378ba374add4185b8c37d4d101c_cgraph" id="anamespacecamp__rxn__simpol__phase__transfer_a5eb86378ba374add4185b8c37d4d101c_cgraph">
 <area shape="rect" title="Initialize the reaction data, validating component data and loading any required information into the..." alt="" coords="5,5,170,46"/>
 <area shape="rect" href="namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="398,13,549,38"/>
 <area shape="poly" title=" " alt="" coords="170,23,383,23,383,28,170,28"/>

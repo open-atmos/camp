@@ -1,9 +1,8 @@
 <map id="camp_rxn_wennberg_no_ro2::rxn_wennberg_no_ro2_t::finalize" name="camp_rxn_wennberg_no_ro2::rxn_wennberg_no_ro2_t::finalize">
-<area shape="rect" id="Node000001" title="Finalize the reaction." alt="" coords="5,20,167,75"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__camp__state.html#a5522f7056d1ff8bb1626e36c97dfff5a" title="Finalize the state." alt="" coords="215,5,388,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,34,199,29,199,35,167,39"/>
-<area shape="rect" id="Node000003" href="$namespacecamp__chem__spec__data.html#a161ca7ad4370d191a2b1bf70ec810fcc" title="Finalize the chemical species data." alt="" coords="222,55,381,96"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="167,55,206,60,206,66,167,61"/>
-<area shape="rect" id="Node000004" href="$namespacecamp__chem__spec__data.html#a254fa8186f63759084357c65d51e9f7f" title="Finalize the chemical species data." alt="" coords="436,55,595,96"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="381,73,420,73,420,78,381,78"/>
+<area shape="rect" id="Node000001" title="Finalize the reaction." alt="" coords="5,5,167,61"/>
+<area shape="rect" id="Node000002" href="$namespacecamp__aero__phase__data.html#a8eebec681f9d24bd7741bb357f7c4e43" title="Finalize the aerosol phase data." alt="" coords="422,13,581,54"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,28,215,27,374,27,406,27,406,33,374,32,215,32,167,33"/>
+<area shape="rect" id="Node000003" href="$namespacecamp__aero__phase__data.html#a0e828293ef8b5cc169dfe653abed14e8" title="Finalize the aerosol phase data." alt="" coords="215,41,374,82"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="167,41,199,46,199,51,166,47"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="374,48,406,43,407,49,375,53"/>
 </map>

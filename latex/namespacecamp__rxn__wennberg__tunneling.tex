@@ -15,7 +15,7 @@ type \mbox{\hyperlink{structcamp__rxn__wennberg__tunneling_1_1rxn__wennberg__tun
 \item 
 type(\mbox{\hyperlink{structcamp__rxn__wennberg__tunneling_1_1rxn__wennberg__tunneling__t}{rxn\+\_\+wennberg\+\_\+tunneling\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__wennberg__tunneling_aeaf1ee2c3cead3c9320a75a384baff00}{constructor}} ()
 \begin{DoxyCompactList}\small\item\em Constructor for Wennberg tunneling reaction. \end{DoxyCompactList}\item 
-subroutine \mbox{\hyperlink{namespacecamp__rxn__wennberg__tunneling_aea3274c0e9f67632a485c3571c3aa02b}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+subroutine \mbox{\hyperlink{namespacecamp__rxn__wennberg__tunneling_a199a78b663bc3d6af0273fc53fde101e}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+phase, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__wennberg__tunneling_ad5a28b51c2daafa8b79c3bc4ba3297c4}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
@@ -42,7 +42,7 @@ A new reaction instance
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_source_l00107}{107}} of file \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_source}{rxn\+\_\+wennberg\+\_\+tunneling.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_source_l00108}{108}} of file \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_source}{rxn\+\_\+wennberg\+\_\+tunneling.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__wennberg__tunneling_ad5a28b51c2daafa8b79c3bc4ba3297c4}\index{camp\_rxn\_wennberg\_tunneling@{camp\_rxn\_wennberg\_tunneling}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_wennberg\_tunneling@{camp\_rxn\_wennberg\_tunneling}}
@@ -61,7 +61,7 @@ Finalize the reaction.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_source_l00260}{260}} of file \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_source}{rxn\+\_\+wennberg\+\_\+tunneling.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_source_l00263}{263}} of file \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_source}{rxn\+\_\+wennberg\+\_\+tunneling.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__wennberg__tunneling_a3274b6fad784be09ef5fb037fa9fe7c6}\index{camp\_rxn\_wennberg\_tunneling@{camp\_rxn\_wennberg\_tunneling}!finalize\_array@{finalize\_array}}
 \index{finalize\_array@{finalize\_array}!camp\_rxn\_wennberg\_tunneling@{camp\_rxn\_wennberg\_tunneling}}
@@ -80,7 +80,7 @@ Finalize an array of reactions.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_source_l00277}{277}} of file \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_source}{rxn\+\_\+wennberg\+\_\+tunneling.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_source_l00280}{280}} of file \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_source}{rxn\+\_\+wennberg\+\_\+tunneling.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -90,11 +90,11 @@ Here is the call graph for this function\+:
 \includegraphics[width=350pt]{namespacecamp__rxn__wennberg__tunneling_a3274b6fad784be09ef5fb037fa9fe7c6_cgraph}
 \end{center}
 \end{figure}
-\Hypertarget{namespacecamp__rxn__wennberg__tunneling_aea3274c0e9f67632a485c3571c3aa02b}\index{camp\_rxn\_wennberg\_tunneling@{camp\_rxn\_wennberg\_tunneling}!initialize@{initialize}}
+\Hypertarget{namespacecamp__rxn__wennberg__tunneling_a199a78b663bc3d6af0273fc53fde101e}\index{camp\_rxn\_wennberg\_tunneling@{camp\_rxn\_wennberg\_tunneling}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_wennberg\_tunneling@{camp\_rxn\_wennberg\_tunneling}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily \label{namespacecamp__rxn__wennberg__tunneling_aea3274c0e9f67632a485c3571c3aa02b} 
-subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+wennberg\+\_\+tunneling\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__wennberg__tunneling_1_1rxn__wennberg__tunneling__t}{rxn\+\_\+wennberg\+\_\+tunneling\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily \label{namespacecamp__rxn__wennberg__tunneling_a199a78b663bc3d6af0273fc53fde101e} 
+subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+wennberg\+\_\+tunneling\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__wennberg__tunneling_1_1rxn__wennberg__tunneling__t}{rxn\+\_\+wennberg\+\_\+tunneling\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in)}]{aero\+\_\+phase}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -106,6 +106,8 @@ Initialize the reaction data, validating component data and loading any required
 \hline
 \mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data \\
 \hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+phase} & Aerosol phase data \\
+\hline
 \mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations \\
 \hline
 \mbox{\texttt{ in}}  & {\em n\+\_\+cells} & Number of grid cells being solved simultaneously \\
@@ -113,13 +115,13 @@ Initialize the reaction data, validating component data and loading any required
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_source_l00122}{122}} of file \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_source}{rxn\+\_\+wennberg\+\_\+tunneling.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_source_l00123}{123}} of file \mbox{\hyperlink{rxn__wennberg__tunneling_8_f90_source}{rxn\+\_\+wennberg\+\_\+tunneling.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacecamp__rxn__wennberg__tunneling_aea3274c0e9f67632a485c3571c3aa02b_cgraph}
+\includegraphics[width=350pt]{namespacecamp__rxn__wennberg__tunneling_a199a78b663bc3d6af0273fc53fde101e_cgraph}
 \end{center}
 \end{figure}

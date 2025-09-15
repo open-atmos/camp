@@ -28,7 +28,7 @@ Collaboration diagram for camp\+\_\+rxn\+\_\+aqueous\+\_\+equilibrium\+::rxn\+\_
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-procedure \mbox{\hyperlink{structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t_a48a6a8b9c78c2c6d5ad23c955b2c4c68}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+procedure \mbox{\hyperlink{structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t_aaf93c88c1919143cf5b6bf36280dd462}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+phase, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Reaction initialization. \end{DoxyCompactList}\item 
 final \mbox{\hyperlink{structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t_a871b24df62fbbae836cd3359d362b61d}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
@@ -126,11 +126,11 @@ Finalize an array of reactions.
 
 Definition at line \mbox{\hyperlink{rxn__aqueous__equilibrium_8_f90_source_l00115}{115}} of file \mbox{\hyperlink{rxn__aqueous__equilibrium_8_f90_source}{rxn\+\_\+aqueous\+\_\+equilibrium.\+F90}}.
 
-\Hypertarget{structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t_a48a6a8b9c78c2c6d5ad23c955b2c4c68}\index{camp\_rxn\_aqueous\_equilibrium::rxn\_aqueous\_equilibrium\_t@{camp\_rxn\_aqueous\_equilibrium::rxn\_aqueous\_equilibrium\_t}!initialize@{initialize}}
+\Hypertarget{structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t_aaf93c88c1919143cf5b6bf36280dd462}\index{camp\_rxn\_aqueous\_equilibrium::rxn\_aqueous\_equilibrium\_t@{camp\_rxn\_aqueous\_equilibrium::rxn\_aqueous\_equilibrium\_t}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_aqueous\_equilibrium::rxn\_aqueous\_equilibrium\_t@{camp\_rxn\_aqueous\_equilibrium::rxn\_aqueous\_equilibrium\_t}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily \label{structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t_a48a6a8b9c78c2c6d5ad23c955b2c4c68} 
-procedure camp\+\_\+rxn\+\_\+aqueous\+\_\+equilibrium\+::rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+t\+::initialize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t}{rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t_aaf93c88c1919143cf5b6bf36280dd462} 
+procedure camp\+\_\+rxn\+\_\+aqueous\+\_\+equilibrium\+::rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+t\+::initialize (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__aqueous__equilibrium_1_1rxn__aqueous__equilibrium__t}{rxn\+\_\+aqueous\+\_\+equilibrium\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in)}]{aero\+\_\+phase}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})}
 
 
 
@@ -141,6 +141,8 @@ Reaction initialization.
 \mbox{\texttt{ in,out}}  & {\em this} & Reaction data \\
 \hline
 \mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data \\
+\hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+phase} & Aerosol phase data \\
 \hline
 \mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations \\
 \hline

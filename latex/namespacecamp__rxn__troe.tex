@@ -15,7 +15,7 @@ type \mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\+\_\+troe\+\_\+
 \item 
 type(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\+\_\+troe\+\_\+t}}) function, pointer \mbox{\hyperlink{namespacecamp__rxn__troe_a421d897fb07b66869df3ba8893b342a1}{constructor}} ()
 \begin{DoxyCompactList}\small\item\em Constructor for Troe reaction. \end{DoxyCompactList}\item 
-subroutine \mbox{\hyperlink{namespacecamp__rxn__troe_a9722464e9603a64e43d61be72e7c4ebe}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+rep, n\+\_\+cells)
+subroutine \mbox{\hyperlink{namespacecamp__rxn__troe_a49a161851fd4d890af9465156345b727}{initialize}} (this, chem\+\_\+spec\+\_\+data, aero\+\_\+phase, aero\+\_\+rep, n\+\_\+cells)
 \begin{DoxyCompactList}\small\item\em Initialize the reaction data, validating component data and loading any required information into the condensed data arrays for use during solving. \end{DoxyCompactList}\item 
 subroutine \mbox{\hyperlink{namespacecamp__rxn__troe_af94c6c642fc4c9845245ada2d59f8a38}{finalize}} (this)
 \begin{DoxyCompactList}\small\item\em Finalize the reaction. \end{DoxyCompactList}\item 
@@ -42,7 +42,7 @@ A new reaction instance
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{rxn__troe_8_f90_source_l00123}{123}} of file \mbox{\hyperlink{rxn__troe_8_f90_source}{rxn\+\_\+troe.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__troe_8_f90_source_l00124}{124}} of file \mbox{\hyperlink{rxn__troe_8_f90_source}{rxn\+\_\+troe.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__troe_af94c6c642fc4c9845245ada2d59f8a38}\index{camp\_rxn\_troe@{camp\_rxn\_troe}!finalize@{finalize}}
 \index{finalize@{finalize}!camp\_rxn\_troe@{camp\_rxn\_troe}}
@@ -61,7 +61,7 @@ Finalize the reaction.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__troe_8_f90_source_l00303}{303}} of file \mbox{\hyperlink{rxn__troe_8_f90_source}{rxn\+\_\+troe.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__troe_8_f90_source_l00306}{306}} of file \mbox{\hyperlink{rxn__troe_8_f90_source}{rxn\+\_\+troe.\+F90}}.
 
 \Hypertarget{namespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e}\index{camp\_rxn\_troe@{camp\_rxn\_troe}!finalize\_array@{finalize\_array}}
 \index{finalize\_array@{finalize\_array}!camp\_rxn\_troe@{camp\_rxn\_troe}}
@@ -80,21 +80,21 @@ Finalize an array of reactions.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__troe_8_f90_source_l00320}{320}} of file \mbox{\hyperlink{rxn__troe_8_f90_source}{rxn\+\_\+troe.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__troe_8_f90_source_l00323}{323}} of file \mbox{\hyperlink{rxn__troe_8_f90_source}{rxn\+\_\+troe.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e_cgraph}
+\includegraphics[width=349pt]{namespacecamp__rxn__troe_a099415123b17f3d869d6218b4711152e_cgraph}
 \end{center}
 \end{figure}
-\Hypertarget{namespacecamp__rxn__troe_a9722464e9603a64e43d61be72e7c4ebe}\index{camp\_rxn\_troe@{camp\_rxn\_troe}!initialize@{initialize}}
+\Hypertarget{namespacecamp__rxn__troe_a49a161851fd4d890af9465156345b727}\index{camp\_rxn\_troe@{camp\_rxn\_troe}!initialize@{initialize}}
 \index{initialize@{initialize}!camp\_rxn\_troe@{camp\_rxn\_troe}}
 \doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
-{\footnotesize\ttfamily \label{namespacecamp__rxn__troe_a9722464e9603a64e43d61be72e7c4ebe} 
-subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+troe\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\+\_\+troe\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily \label{namespacecamp__rxn__troe_a49a161851fd4d890af9465156345b727} 
+subroutine \mbox{\hyperlink{interfacecamp__aero__rep__data_1_1initialize}{camp\+\_\+rxn\+\_\+troe\+::initialize}} (\begin{DoxyParamCaption}\item[{class(\mbox{\hyperlink{structcamp__rxn__troe_1_1rxn__troe__t}{rxn\+\_\+troe\+\_\+t}}), intent(inout)}]{this}{, }\item[{type(\mbox{\hyperlink{structcamp__chem__spec__data_1_1chem__spec__data__t}{chem\+\_\+spec\+\_\+data\+\_\+t}}), intent(in)}]{chem\+\_\+spec\+\_\+data}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__phase__data_1_1aero__phase__data__ptr}{aero\+\_\+phase\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in)}]{aero\+\_\+phase}{, }\item[{type(\mbox{\hyperlink{structcamp__aero__rep__data_1_1aero__rep__data__ptr}{aero\+\_\+rep\+\_\+data\+\_\+ptr}}), dimension(\+:), intent(in), pointer}]{aero\+\_\+rep}{, }\item[{integer(kind=i\+\_\+kind), intent(in)}]{n\+\_\+cells}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
@@ -106,6 +106,8 @@ Initialize the reaction data, validating component data and loading any required
 \hline
 \mbox{\texttt{ in}}  & {\em chem\+\_\+spec\+\_\+data} & Chemical species data \\
 \hline
+\mbox{\texttt{ in}}  & {\em aero\+\_\+phase} & Aerosol phase data \\
+\hline
 \mbox{\texttt{ in}}  & {\em aero\+\_\+rep} & Aerosol representations \\
 \hline
 \mbox{\texttt{ in}}  & {\em n\+\_\+cells} & Number of grid cells to solve simultaneously \\
@@ -113,13 +115,13 @@ Initialize the reaction data, validating component data and loading any required
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{rxn__troe_8_f90_source_l00138}{138}} of file \mbox{\hyperlink{rxn__troe_8_f90_source}{rxn\+\_\+troe.\+F90}}.
+Definition at line \mbox{\hyperlink{rxn__troe_8_f90_source_l00139}{139}} of file \mbox{\hyperlink{rxn__troe_8_f90_source}{rxn\+\_\+troe.\+F90}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[width=350pt]{namespacecamp__rxn__troe_a9722464e9603a64e43d61be72e7c4ebe_cgraph}
+\includegraphics[width=350pt]{namespacecamp__rxn__troe_a49a161851fd4d890af9465156345b727_cgraph}
 \end{center}
 \end{figure}
