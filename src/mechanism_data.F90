@@ -34,6 +34,7 @@ module camp_mechanism_data
   use mpi
 #endif
   use camp_aero_rep_data
+  use camp_aero_phase_data
   use camp_chem_spec_data
   use camp_constants,                  only : i_kind, dp
   use camp_mpi
@@ -245,12 +246,15 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize the mechanism
-  subroutine initialize(this, chem_spec_data, aero_rep_data, n_cells)
+  subroutine initialize(this, chem_spec_data, aero_phase_data, aero_rep_data, &
+      n_cells)
 
     !> Chemical mechanism
     class(mechanism_data_t), intent(inout) :: this
     !> Chemical species data
     type(chem_spec_data_t), intent(in) :: chem_spec_data
+    !> Aerosol phase data
+    type(aero_phase_data_ptr), intent(in) :: aero_phase_data(:)
     !> Aerosol representation data
     type(aero_rep_data_ptr), pointer, intent(in) :: aero_rep_data(:)
     !> Number of grid cells to solve simultaneously
@@ -260,8 +264,8 @@ contains
 
     do i_rxn = 1, this%num_rxn
       call assert(340397127, associated(this%rxn_ptr(i_rxn)%val))
-      call this%rxn_ptr(i_rxn)%val%initialize(chem_spec_data, aero_rep_data, &
-                                              n_cells)
+      call this%rxn_ptr(i_rxn)%val%initialize(chem_spec_data, aero_phase_data, &
+                                              aero_rep_data, n_cells)
     end do
 
   end subroutine initialize

@@ -252,3 +252,13 @@
    fun:MPI_BCAST
    ...
 }
+{
+   <MPI_finalize>
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:malloc
+   fun:strdup
+   ... 
+   fun:orte_finalize
+   fun:ompi_mpi_finalize
+}

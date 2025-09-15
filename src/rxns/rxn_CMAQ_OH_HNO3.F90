@@ -70,6 +70,7 @@
 !> The rxn_CMAQ_OH_HNO3_t type and associated functions.
 module camp_rxn_CMAQ_OH_HNO3
 
+  use camp_aero_phase_data
   use camp_aero_rep_data
   use camp_chem_spec_data
   use camp_constants,                        only: const
@@ -140,12 +141,14 @@ contains
   !> Initialize the reaction data, validating component data and loading
   !! any required information into the condensed data arrays for use during
   !! solving
-  subroutine initialize(this, chem_spec_data, aero_rep, n_cells)
+  subroutine initialize(this, chem_spec_data, aero_phase, aero_rep, n_cells)
 
     !> Reaction data
     class(rxn_CMAQ_OH_HNO3_t), intent(inout) :: this
     !> Chemical species data
     type(chem_spec_data_t), intent(in) :: chem_spec_data
+    !> Aerosol phase data
+    type(aero_phase_data_ptr), intent(in) :: aero_phase(:)
     !> Aerosol representations
     type(aero_rep_data_ptr), pointer, intent(in) :: aero_rep(:)
     !> Number of grid cells to solve simultaneously

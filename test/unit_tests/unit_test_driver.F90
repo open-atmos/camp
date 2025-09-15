@@ -69,7 +69,7 @@ program unit_test_driver
   passed = .true.
 
   ! Seed the random number generator
-  call camp_srand(0,0)
+  call camp_srand(1,0)
 
 #ifdef CAMP_USE_MPI
   ! Load the model data and initialize the cores on the primary process, then
