@@ -345,6 +345,80 @@ void aero_rep_single_particle_get_interface_surface_area__m2(
   return;
 }
 
+/** \brief Get the thickness of a particle layer (m)
+ *
+ * \param model_data Pointer to the model data, including the state array
+ * \param aero_phase_idx Index of the aerosol phase within the representation
+ * \param layer_thickness Effective layer thickness (m)
+ * \param partial_deriv \f$\frac{\partial r_{eff}}{\partial y}\f$ where \f$y\f$
+ *                      are species on the state array
+ * \param aero_rep_int_data Pointer to the aerosol representation integer data
+ * \param aero_rep_float_data Pointer to the aerosol representation
+ *                            floating-point data
+ * \param aero_rep_env_data Pointer to the aerosol representation
+ *                          environment-dependent parameters
+ */
+
+void aero_rep_single_particle_get_layer_thickness__m(
+    ModelData *model_data, int aero_phase_idx, double *layer_thickness,
+    double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
+    double *aero_rep_env_data) {
+
+  int *int_data = aero_rep_int_data;
+  double *float_data = aero_rep_float_data;
+  double *curr_partial = NULL;
+  int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
+  aero_phase_idx -= i_part * TOTAL_NUM_PHASES_;
+
+  int layer_end_inner = -1;
+  int layer_end_outer = -1;
+  int i_layer_inner = -1;
+  int i_layer_outer = -1;
+  for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
+    if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx &&
+       aero_phase_idx <= LAYER_PHASE_END_(i_layer)) {
+      layer_end_inner = LAYER_PHASE_END_(i_layer);
+      i_layer_inner = i_layer;
+      if (i_layer + 1 < NUM_LAYERS_) {
+        layer_end_outer = LAYER_PHASE_END_(i_layer+1);
+        i_layer_outer = i_layer + 1;
+      } else {
+        layer_end_outer = LAYER_PHASE_END_(i_layer);
+        i_layer_outer = i_layer;
+      }
+    }
+  }
+
+  double volume_inner = 0.0;
+  double volume_outer = 0.0;
+  *layer_thickness = 0.0;
+  if (partial_deriv) curr_partial = partial_deriv;
+  for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
+    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
+      double *state = (double *)(model_data->grid_cell_state);
+      state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase);
+      double volume;
+      aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_layer,i_phase),
+                                   state, &(volume), curr_partial);
+      if (partial_deriv) curr_partial += PHASE_NUM_JAC_ELEM_(i_layer,i_phase);
+      if (i_layer <= i_layer_inner) volume_inner += volume;
+      if (i_layer <= i_layer_outer) volume_outer += volume;
+    }
+  }
+  double radius_inner = pow(((volume_inner) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
+  double radius_outer = pow(((volume_outer) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
+  *layer_thickness = radius_outer - radius_inner;
+  if (!partial_deriv) return;
+  for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
+    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
+      for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_layer,i_phase); ++i_spec) {
+        *(partial_deriv++) = ZERO;
+      }
+    }
+  }
+  return;
+}
+
 /** \brief Get the particle number concentration \f$n\f$
  * (\f$\mbox{\si{\#\per\cubic\metre}}\f$)
  *

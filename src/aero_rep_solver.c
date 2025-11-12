@@ -279,6 +279,52 @@ void aero_rep_get_interface_surface_area__m2(ModelData *model_data, int aero_rep
   return;
 }
 
+/** \brief Get the thickness of a particle layer (m)
+ *
+ * \param model_data Pointer to the model data, including the state array
+ * \param aero_phase_idx Index of the aerosol phase within the representation
+ * \param layer_thickness Effective layer thickness (m)
+ * \param partial_deriv \f$\frac{\partial r_{eff}}{\partial y}\f$ where \f$y\f$
+ *                      are species on the state array
+ * \param aero_rep_int_data Pointer to the aerosol representation integer data
+ * \param aero_rep_float_data Pointer to the aerosol representation
+ *                            floating-point data
+ * \param aero_rep_env_data Pointer to the aerosol representation
+ *                          environment-dependent parameters
+ */
+void aero_rep_get_layer_thickness__m(ModelData *model_data, int aero_rep_idx,
+                                      int aero_phase_idx, double *layer_thickness,
+                                      double *partial_deriv) {
+  // Get pointers to the aerosol data
+  int *aero_rep_int_data = &(
+      model_data
+          ->aero_rep_int_data[model_data->aero_rep_int_indices[aero_rep_idx]]);
+  double *aero_rep_float_data =
+      &(model_data->aero_rep_float_data
+            [model_data->aero_rep_float_indices[aero_rep_idx]]);
+  double *aero_rep_env_data =
+      &(model_data->grid_cell_aero_rep_env_data
+            [model_data->aero_rep_env_idx[aero_rep_idx]]);
+
+  // Get the aerosol representation type
+  int aero_rep_type = *(aero_rep_int_data++);
+
+  // Get the particle radius and set of partial derivatives
+  switch (aero_rep_type) {
+    case AERO_REP_MODAL_BINNED_MASS:
+      aero_rep_modal_binned_mass_get_layer_thickness__m(
+          model_data, aero_phase_idx, layer_thickness, partial_deriv, aero_rep_int_data,
+          aero_rep_float_data, aero_rep_env_data);
+      break;
+    case AERO_REP_SINGLE_PARTICLE:
+      aero_rep_single_particle_get_layer_thickness__m(
+          model_data, aero_phase_idx, layer_thickness, partial_deriv, aero_rep_int_data,
+          aero_rep_float_data, aero_rep_env_data);
+      break;
+  }
+  return;
+}
+
 /** \brief Get the particle number concentration \f$n\f$
  * (\f$\mbox{\si{\#\per\cubic\metre}}\f$)
  *

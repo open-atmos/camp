@@ -358,6 +358,53 @@ void aero_rep_modal_binned_mass_get_interface_surface_area__m2(
   exit(1);
 }
 
+/** \brief Get the thickness of a particle layer (m) 
+ *
+ * The thickness of a particle layer within the modal/binned aerosol 
+ * representation always returns the radius. 
+ *
+ * \param model_data Pointer to the model data, including the state array
+ * \param aero_phase_idx Index of the aerosol phase within the representation
+ * \param layer_thickness Layer thickness which is equivalent to radius (m)
+ * \param partial_deriv \f$\frac{\partial r_{eff}}{\partial y}\f$ where \f$y\f$
+ *                       are species on the state array
+ * \param aero_rep_int_data Pointer to the aerosol representation integer data
+ * \param aero_rep_float_data Pointer to the aerosol representation
+ *                            floating-point data
+ * \param aero_rep_env_data Pointer to the aerosol representation
+ *                          environment-dependent parameters
+ */
+void aero_rep_modal_binned_mass_get_layer_thickness__m(
+    ModelData *model_data, int aero_phase_idx, double *layer_thickness,
+    double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
+    double *aero_rep_env_data) {
+  int *int_data = aero_rep_int_data;
+  double *float_data = aero_rep_float_data;
+
+  for (int i_section = 0; i_section < NUM_SECTION_; i_section++) {
+    for (int i_bin = 0; i_bin < NUM_BINS_(i_section); i_bin++) {
+      aero_phase_idx -= NUM_PHASE_(i_section);
+      if (aero_phase_idx < 0) {
+        *layer_thickness = EFFECTIVE_RADIUS_(i_section, i_bin);
+        // Effective radii are constant for bins and modes
+        if (partial_deriv) {
+          for (int i_phase = 0; i_phase < NUM_PHASE_(i_section); ++i_phase) {
+            for (int i_elem = 0;
+                 i_elem < PHASE_NUM_JAC_ELEM_(i_section, i_phase, i_bin);
+                 ++i_elem) {
+              *(partial_deriv++) = ZERO;
+            }
+          }
+        }
+        i_section = NUM_SECTION_;
+        break;
+      }
+    }
+  }
+
+  return;
+}
+
 /** \brief Get the particle number concentration \f$n\f$
  * (\f$\mbox{\si{\#\per\cubic\metre}}\f$)
  *

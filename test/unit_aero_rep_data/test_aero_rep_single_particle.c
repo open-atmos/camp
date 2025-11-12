@@ -297,6 +297,66 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
   return ret_val;
 }
 
+int test_layer_thickness(ModelData * model_data, N_Vector state) {
+
+  int ret_val = 0;
+  double partial_deriv_1[N_JAC_ELEM+2];
+  double partial_deriv_2[N_JAC_ELEM+2];
+  double layer_thickness_1 = -999.9;
+  double layer_thickness_2 = -999.9;
+
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_1[i] = 999.9;
+
+  aero_rep_get_layer_thickness__m(model_data, AERO_REP_IDX,
+                                AERO_PHASE_IDX_1, &layer_thickness_1, &(partial_deriv_1[1]));
+  aero_rep_get_effective_radius__m(model_data, AERO_REP_IDX,
+                                AERO_PHASE_IDX_2, &layer_thickness_2, &(partial_deriv_2[1]));
+
+  double volume_density_outer = ( CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt +
+                            CONC_almonds / DENSITY_almonds +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_rasberry / DENSITY_rasberry +
+                            CONC_honey / DENSITY_honey +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_lemon / DENSITY_lemon +
+                            CONC_almonds / DENSITY_almonds +
+                            CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_almonds / DENSITY_almonds +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt ); // volume density (m3/m3)
+
+  double volume_density_inner = ( CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt +
+                            CONC_almonds / DENSITY_almonds +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_rasberry / DENSITY_rasberry +
+                            CONC_honey / DENSITY_honey +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_lemon / DENSITY_lemon +
+                            CONC_almonds / DENSITY_almonds +
+                            CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt +
+                            CONC_sugar / DENSITY_sugar ); // volume density (m3/m3)
+
+  double eff_rad_outer = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density_outer ), 1.0/3.0 );
+  double eff_rad_inner = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density_inner ), 1.0/3.0 );
+  double layer_thickness_expected = (eff_rad_outer - eff_rad_inner);
+  ret_val += ASSERT_MSG(fabs(layer_thickness_1-layer_thickness_expected) < 1.0e-6*layer_thickness_expected,
+                        "Bad layer thickness");
+  ret_val += ASSERT_MSG(fabs(layer_thickness_2-eff_rad_outer) < 1.0e-6*eff_rad_outer,
+                        "Bad effective radius");
+  printf("\n\nLayer Thickness Test Pass\n");
+  return ret_val;
+}
 /** \brief Test the number concentration function
  *
  * \param model_data Pointer to the model data
@@ -552,6 +612,7 @@ int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, doubl
   // Run the property tests
   ret_val += test_effective_radius(model_data, solver_state);
   ret_val += test_surface_area_layer(model_data, solver_state);
+  ret_val += test_layer_thickness(model_data, solver_state);
   ret_val += test_aero_phase_mass(model_data, solver_state);
   ret_val += test_aero_phase_avg_MW(model_data, solver_state);
   ret_val += test_number_concentration(model_data, solver_state);
