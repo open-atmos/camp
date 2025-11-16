@@ -377,14 +377,14 @@ void aero_rep_single_particle_get_layer_thickness__m(
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
     if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx &&
        aero_phase_idx <= LAYER_PHASE_END_(i_layer)) {
-      layer_end_inner = LAYER_PHASE_END_(i_layer);
-      i_layer_inner = i_layer;
-      if (i_layer + 1 < NUM_LAYERS_) {
-        layer_end_outer = LAYER_PHASE_END_(i_layer+1);
-        i_layer_outer = i_layer + 1;
+      layer_end_outer = LAYER_PHASE_END_(i_layer);
+      i_layer_outer = i_layer;
+      if (i_layer - 1 >= 0 ) {
+        layer_end_inner = LAYER_PHASE_END_(i_layer-1);
+        i_layer_inner = i_layer - 1;
       } else {
-        layer_end_outer = LAYER_PHASE_END_(i_layer);
-        i_layer_outer = i_layer;
+        layer_end_inner = LAYER_PHASE_END_(i_layer);
+        i_layer_inner = i_layer;
       }
     }
   }
@@ -407,13 +407,26 @@ void aero_rep_single_particle_get_layer_thickness__m(
   }
   double radius_inner = pow(((volume_inner) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
   double radius_outer = pow(((volume_outer) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
-  *layer_thickness = radius_outer - radius_inner;
+  if (i_layer_inner == i_layer_outer) {
+    *layer_thickness = radius_outer;
+  } else {
+    *layer_thickness = radius_outer - radius_inner;
+  }
   if (!partial_deriv) return;
+  int i_phase_count = 0;
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
       for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_layer,i_phase); ++i_spec) {
-        *(partial_deriv++) = ZERO;
+        if (i_layer <= i_layer_outer && i_phase_count == aero_phase_idx) {
+          *partial_deriv =
+           1.0 / 4.0 / 3.14159265359 * (pow(radius_outer, -2.0) - pow(radius_inner, -2.0)) * 
+           (*partial_deriv);
+        } else {
+          *partial_deriv = ZERO;
+        }
+        ++partial_deriv;
       }
+    ++i_phase_count;
     }
   }
   return;
