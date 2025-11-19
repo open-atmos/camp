@@ -370,24 +370,22 @@ void aero_rep_single_particle_get_layer_thickness__m(
   int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
   aero_phase_idx -= i_part * TOTAL_NUM_PHASES_;
 
-  int layer_end_inner = -1;
-  int layer_end_outer = -1;
   int i_layer_inner = -1;
   int i_layer_outer = -1;
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
     if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx &&
-       aero_phase_idx <= LAYER_PHASE_END_(i_layer)) {
-      layer_end_outer = LAYER_PHASE_END_(i_layer);
+      aero_phase_idx <= LAYER_PHASE_END_(i_layer)) {
       i_layer_outer = i_layer;
       if (i_layer - 1 >= 0 ) {
-        layer_end_inner = LAYER_PHASE_END_(i_layer-1);
+        printf("i_layer-1: %d\n", i_layer-1);
         i_layer_inner = i_layer - 1;
-      } else {
-        layer_end_inner = LAYER_PHASE_END_(i_layer);
+      } else if (i_layer - 1 < 0 ) {
+        printf("i_layer: %d\n", i_layer);
         i_layer_inner = i_layer;
       }
     }
   }
+  printf("i_layer_inner: %d, i_layer_outer: %d\n", i_layer_inner, i_layer_outer);
 
   double volume_inner = 0.0;
   double volume_outer = 0.0;
@@ -408,7 +406,8 @@ void aero_rep_single_particle_get_layer_thickness__m(
   double radius_inner = pow(((volume_inner) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
   double radius_outer = pow(((volume_outer) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
   if (i_layer_inner == i_layer_outer) {
-    *layer_thickness = radius_outer;
+    *layer_thickness = radius_inner;
+    printf("layer_thickness (same layer): %e\n", *layer_thickness);
   } else {
     *layer_thickness = radius_outer - radius_inner;
   }
@@ -417,11 +416,17 @@ void aero_rep_single_particle_get_layer_thickness__m(
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
       for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_layer,i_phase); ++i_spec) {
-        if (i_layer <= i_layer_outer && i_phase_count == aero_phase_idx) {
+        if (i_layer == i_layer_outer && i_layer_outer != i_layer_inner) {
           *partial_deriv =
            1.0 / 4.0 / 3.14159265359 * (pow(radius_outer, -2.0) - pow(radius_inner, -2.0)) * 
            (*partial_deriv);
-        } else {
+        } else if (i_layer <= i_layer_inner && i_layer_outer != i_layer_inner) {
+          *partial_deriv =
+           -1.0 / 4.0 / 3.14159265359 * pow(radius_inner, -2.0) * (*partial_deriv);
+        } else if (i_layer == i_layer_inner && i_layer_outer == i_layer_inner) {
+          *partial_deriv =
+           1.0 / 4.0 / 3.14159265359 * pow(radius_inner, -2.0) * (*partial_deriv);
+        } else  {
           *partial_deriv = ZERO;
         }
         ++partial_deriv;
