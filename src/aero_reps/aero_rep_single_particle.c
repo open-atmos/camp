@@ -377,15 +377,12 @@ void aero_rep_single_particle_get_layer_thickness__m(
       aero_phase_idx <= LAYER_PHASE_END_(i_layer)) {
       i_layer_outer = i_layer;
       if (i_layer - 1 >= 0 ) {
-        printf("i_layer-1: %d\n", i_layer-1);
         i_layer_inner = i_layer - 1;
       } else if (i_layer - 1 < 0 ) {
-        printf("i_layer: %d\n", i_layer);
         i_layer_inner = i_layer;
       }
     }
   }
-  printf("i_layer_inner: %d, i_layer_outer: %d\n", i_layer_inner, i_layer_outer);
 
   double volume_inner = 0.0;
   double volume_outer = 0.0;
@@ -407,7 +404,6 @@ void aero_rep_single_particle_get_layer_thickness__m(
   double radius_outer = pow(((volume_outer) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
   if (i_layer_inner == i_layer_outer) {
     *layer_thickness = radius_inner;
-    printf("layer_thickness (same layer): %e\n", *layer_thickness);
   } else {
     *layer_thickness = radius_outer - radius_inner;
   }

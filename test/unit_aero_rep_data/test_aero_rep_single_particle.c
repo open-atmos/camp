@@ -30,6 +30,7 @@
 #define AERO_PHASE_IDX_1 ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+2)
 // (test-particle phase 4 : top layer, bread)
 #define AERO_PHASE_IDX_2 ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+6)
+#define AERO_PHASE_IDX_3 ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+0)
 
 // number of Jacobian elements used for the test phase
 #define N_JAC_ELEM 19
@@ -320,7 +321,7 @@ int test_layer_thickness(ModelData * model_data, N_Vector state) {
   aero_rep_get_layer_thickness__m(model_data, AERO_REP_IDX,
                                 AERO_PHASE_IDX_2, &layer_thickness_2, &(partial_deriv_2[1]));
   aero_rep_get_layer_thickness__m(model_data, AERO_REP_IDX,
-                                1, &layer_thickness_3, &(partial_deriv_3[1]));
+                                AERO_PHASE_IDX_3, &layer_thickness_3, &(partial_deriv_3[1]));
 
   double volume_density_outer_2 = ( CONC_wheat / DENSITY_wheat +
                             CONC_water / DENSITY_water +
@@ -373,17 +374,8 @@ int test_layer_thickness(ModelData * model_data, N_Vector state) {
                         "Bad layer thickness for jam");
   ret_val += ASSERT_MSG(fabs(layer_thickness_2-layer_thickness_expected_2) < 1.0e-6*layer_thickness_expected_2,
                         "Bad effective radius for top bread");
-  //ret_val += ASSERT_MSG(fabs(layer_thickness_3-layer_thickness_expected_3) < 1.0e-6*layer_thickness_expected_3,
-  //                      "Bad effective radius for bottom bread");
-  printf("\n\nLayer Thicknesss:\n");
-  printf(" layer_thickness_1 = %e\n", layer_thickness_1);
-  printf(" layer_thickness_expected_1 = %e\n", layer_thickness_expected_1);
-  printf(" layer_thickness_2 = %e\n", layer_thickness_2);
-  printf(" layer_thickness_expected_2 = %e\n", layer_thickness_expected_2);
-  printf(" layer_thickness_3 = %e\n", layer_thickness_3);
-  printf(" layer_thickness_expected_3 = %e\n", layer_thickness_expected_3);
-  printf("\n\nLayer Thickness Test Pass\n");
-
+  ret_val += ASSERT_MSG(fabs(layer_thickness_3-layer_thickness_expected_3) < 1.0e-6*layer_thickness_expected_3,
+                        "Bad effective radius for bottom bread");
 
   ret_val += ASSERT_MSG(partial_deriv_1[0] = 999.9,
                         "Bad Jacobian (-1)");
@@ -394,22 +386,7 @@ int test_layer_thickness(ModelData * model_data, N_Vector state) {
   double d_layer_thickness_inner_dx = -1.0 / 4.0 / 3.14159265359 *
                         pow( 3.0 / 4.0 / 3.14159265359, -2.0/3.0) *  
                         pow(volume_density_inner_1, -2.0/3.0 );
-  printf("d_layer_thickness_outer_dx = %e\n", d_layer_thickness_outer_dx);
-  printf("d_layer_thickness_inner_dx = %e\n", d_layer_thickness_inner_dx);
-  printf("partial_deriv_1[1] = %e\n", partial_deriv_1[1]);
-  printf("partial_deriv_1[2] = %e\n", partial_deriv_1[2]);
-  printf("partial_deriv_1[3] = %e\n", partial_deriv_1[3]);
-  printf("partial_deriv_1[4] = %e\n", partial_deriv_1[4]);
-  printf("partial_deriv_1[5] = %e\n", partial_deriv_1[5]);
-  printf("partial_deriv_1[6] = %e\n", partial_deriv_1[6]);
-  printf("partial_deriv_1[7] = %e\n", partial_deriv_1[7]);
-  printf("partial_deriv_1[8] = %e\n", partial_deriv_1[8]);
-  printf("partial_deriv_1[9] = %e\n", partial_deriv_1[9]);
-  printf("partial_deriv_1[10] = %e\n", partial_deriv_1[10]);
-  printf("partial_deriv_1[11] = %e\n", partial_deriv_1[11]);
-  printf("partial_deriv_1[12] = %e\n", partial_deriv_1[12]);
-  printf("partial_deriv_1[13] = %e\n", partial_deriv_1[13]);
-  printf("partial_deriv_1[14] = %e\n", partial_deriv_1[14]);    
+   
   ret_val += ASSERT_MSG(fabs(partial_deriv_1[1] - d_layer_thickness_inner_dx / DENSITY_wheat) <
                         1.0e-10 * fabs(partial_deriv_1[1]), "Bad Jacobian element");
   ret_val += ASSERT_MSG(fabs(partial_deriv_1[2] - d_layer_thickness_inner_dx / DENSITY_water) <
