@@ -322,6 +322,9 @@ int test_layer_thickness(ModelData * model_data, N_Vector state) {
                                 AERO_PHASE_IDX_2, &layer_thickness_2, &(partial_deriv_2[1]));
   aero_rep_get_layer_thickness__m(model_data, AERO_REP_IDX,
                                 AERO_PHASE_IDX_3, &layer_thickness_3, &(partial_deriv_3[1]));
+  printf("layer_thickness_1 = %e\n", layer_thickness_1);
+  printf("layer_thickness_2 = %e\n", layer_thickness_2);
+  printf("layer_thickness_3 = %e\n", layer_thickness_3);
 
   double volume_density_outer_2 = ( CONC_wheat / DENSITY_wheat +
                             CONC_water / DENSITY_water +
@@ -365,8 +368,11 @@ int test_layer_thickness(ModelData * model_data, N_Vector state) {
                             CONC_sugar / DENSITY_sugar ); // volume density (m3/m3)
 
   double eff_rad_outer_1 = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density_outer_1 ), 1.0/3.0 );
+  printf("eff_rad_outer_1 = %e\n", eff_rad_outer_1);
   double eff_rad_inner_1 = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density_inner_1 ), 1.0/3.0 );
+  printf("eff_rad_inner_1 = %e\n", eff_rad_inner_1);
   double eff_rad_outer_2 = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density_outer_2 ), 1.0/3.0 );
+  printf("eff_rad_outer_2 = %e\n", eff_rad_outer_2);
   double layer_thickness_expected_1 = (eff_rad_outer_1 - eff_rad_inner_1);
   double layer_thickness_expected_2 = (eff_rad_outer_2 - eff_rad_outer_1);
   double layer_thickness_expected_3 = eff_rad_inner_1;

@@ -169,11 +169,13 @@ void aero_rep_single_particle_get_effective_radius__m(
       double volume;
       aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_layer,i_phase),
                                    state, &(volume), curr_partial);
+      printf("Layer %d, Phase %d, Volume = %e\n", i_layer, i_phase, volume);
       if (partial_deriv) curr_partial += PHASE_NUM_JAC_ELEM_(i_layer,i_phase);
       *radius += volume;
     }
   }
   *radius = pow(((*radius) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
+  printf("Effective radius = %e\n", *radius);
   if (!partial_deriv) return;
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
@@ -366,25 +368,83 @@ void aero_rep_single_particle_get_layer_thickness__m(
 
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
-  double *curr_partial = NULL;
+  int jac_size = PARTICLE_STATE_SIZE_;
+  double radius_inner, radius_outer;
+  //double *curr_partial = NULL;
   int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
   aero_phase_idx -= i_part * TOTAL_NUM_PHASES_;
+  
+  // Temporary Jacobians
+  double *jac_inner = NULL;
+  double *jac_outer = NULL;
+
+  if (partial_deriv) {
+      jac_inner = (double *)calloc(jac_size, sizeof(double));
+      jac_outer = (double *)calloc(jac_size, sizeof(double));
+  }
 
   int i_layer_inner = -1;
   int i_layer_outer = -1;
+  int i_phase_inner = -1;
+  int i_phase_outer = -1;
+  int i_phase_count = 0;
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
-    if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx &&
-      aero_phase_idx <= LAYER_PHASE_END_(i_layer)) {
-      i_layer_outer = i_layer;
-      if (i_layer - 1 >= 0 ) {
-        i_layer_inner = i_layer - 1;
-      } else if (i_layer - 1 < 0 ) {
-        i_layer_inner = i_layer;
+    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
+      if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx &&
+        aero_phase_idx <= LAYER_PHASE_END_(i_layer)) {
+        i_layer_outer = i_layer;
+        i_phase_outer = i_phase_count;
+        if (i_layer - 1 >= 0 ) {
+          i_layer_inner = i_layer - 1;
+        } else if (i_layer - 1 < 0 ) {
+          i_layer_inner = i_layer;
+          i_phase_inner = i_phase_count;
+        }
       }
+      ++i_phase_count;
     }
   }
 
-  double volume_inner = 0.0;
+  aero_rep_single_particle_get_effective_radius__m(
+      model_data, 
+      i_phase_outer,      
+      &radius_outer,
+      jac_outer,
+      aero_rep_int_data, 
+      aero_rep_float_data, 
+      aero_rep_env_data);
+  printf("radius_outer = %e\n", radius_outer);
+
+  aero_rep_single_particle_get_effective_radius__m(
+      model_data,
+      i_phase_inner,
+      &radius_inner,
+      jac_inner,
+      aero_rep_int_data,
+      aero_rep_float_data,
+      aero_rep_env_data);
+  printf("radius_inner = %e\n", radius_inner);
+
+  if (i_layer_inner == i_layer_outer) {
+    *layer_thickness = radius_inner;
+  } else {
+    *layer_thickness = radius_outer - radius_inner;
+  }
+  printf("layer_thickness = %e\n", *layer_thickness);
+
+  if (partial_deriv) {
+      for (int i = 0; i < jac_size; ++i) {
+          partial_deriv[i] = jac_outer[i] - jac_inner[i];
+          printf("partial_deriv[%d] = %e\n", i, partial_deriv[i]);
+      }
+  }
+
+  free(jac_inner);
+  free(jac_outer);
+  return;
+}
+
+  /*double volume_inner = 0.0;
   double volume_outer = 0.0;
   *layer_thickness = 0.0;
   if (partial_deriv) curr_partial = partial_deriv;
@@ -400,6 +460,7 @@ void aero_rep_single_particle_get_layer_thickness__m(
       if (i_layer <= i_layer_outer) volume_outer += volume;
     }
   }
+
   double radius_inner = pow(((volume_inner) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
   double radius_outer = pow(((volume_outer) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
   if (i_layer_inner == i_layer_outer) {
@@ -429,10 +490,12 @@ void aero_rep_single_particle_get_layer_thickness__m(
       }
     ++i_phase_count;
     }
+
   }
+
   return;
 }
-
+*/
 /** \brief Get the particle number concentration \f$n\f$
  * (\f$\mbox{\si{\#\per\cubic\metre}}\f$)
  *
