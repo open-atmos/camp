@@ -387,27 +387,22 @@ void aero_rep_single_particle_get_layer_thickness__m(
   int i_layer_outer = -1;
   int i_phase_inner = -1;
   int i_phase_outer = -1;
-  int i_phase_count = 0;
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
-    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
-      if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx &&
-        aero_phase_idx <= LAYER_PHASE_END_(i_layer)) {
-        i_layer_outer = i_layer;
-        i_phase_outer = i_phase_count;
-        if (i_layer - 1 >= 0 ) {
-          i_layer_inner = i_layer - 1;
-        } else if (i_layer - 1 < 0 ) {
-          i_layer_inner = i_layer;
-          i_phase_inner = i_phase_count;
-        }
+   if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx &&
+      aero_phase_idx <= LAYER_PHASE_END_(i_layer)) {
+      i_layer_outer = i_layer;
+      if (i_layer - 1 >= 0 ) {
+        i_layer_inner = i_layer - 1;
+      } else if (i_layer - 1 < 0 ) {
+        i_layer_inner = i_layer;
       }
-      ++i_phase_count;
     }
   }
+  printf("i_layer_inner = %d, i_layer_outer = %d\n", i_layer_inner, i_layer_outer);
 
   aero_rep_single_particle_get_effective_radius__m(
       model_data, 
-      i_phase_outer,      
+      LAYER_PHASE_END_(i_layer_outer),      
       &radius_outer,
       jac_outer,
       aero_rep_int_data, 
@@ -417,7 +412,7 @@ void aero_rep_single_particle_get_layer_thickness__m(
 
   aero_rep_single_particle_get_effective_radius__m(
       model_data,
-      i_phase_inner,
+      LAYER_PHASE_END_(i_layer_inner),
       &radius_inner,
       jac_inner,
       aero_rep_int_data,
@@ -435,7 +430,7 @@ void aero_rep_single_particle_get_layer_thickness__m(
   if (partial_deriv) {
       for (int i = 0; i < jac_size; ++i) {
           partial_deriv[i] = jac_outer[i] - jac_inner[i];
-          printf("partial_deriv[%d] = %e\n", i, partial_deriv[i]);
+          //printf("partial_deriv[%d] = %e\n", i, partial_deriv[i]);
       }
   }
 
