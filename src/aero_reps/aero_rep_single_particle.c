@@ -399,14 +399,16 @@ void aero_rep_single_particle_get_layer_thickness__m(
     }
   }
   printf("i_layer_inner = %d, i_layer_outer = %d\n", i_layer_inner, i_layer_outer);
+  printf("LAYER_PHASE_END_(i_layer_outer) = %d\n", LAYER_PHASE_END_(i_layer_outer));
+  printf("LAYER_PHASE_END_(i_layer_inner) = %d\n", LAYER_PHASE_END_(i_layer_inner));
 
   aero_rep_single_particle_get_effective_radius__m(
       model_data, 
-      LAYER_PHASE_END_(i_layer_outer),      
+      aero_phase_idx,      
       &radius_outer,
       jac_outer,
-      aero_rep_int_data, 
-      aero_rep_float_data, 
+      int_data, 
+      float_data, 
       aero_rep_env_data);
   printf("radius_outer = %e\n", radius_outer);
 
@@ -415,8 +417,8 @@ void aero_rep_single_particle_get_layer_thickness__m(
       LAYER_PHASE_END_(i_layer_inner),
       &radius_inner,
       jac_inner,
-      aero_rep_int_data,
-      aero_rep_float_data,
+      int_data,
+      float_data,
       aero_rep_env_data);
   printf("radius_inner = %e\n", radius_inner);
 
