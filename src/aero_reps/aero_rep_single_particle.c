@@ -136,11 +136,11 @@ void aero_rep_single_particle_update_state(ModelData *model_data,
   return;
 }
 
-/** \brief Get the effective particle radius \f$r_{eff}\f$ (m)
+/** \brief Get the effective radius of a layer \f$r_{eff}\f$ (m)
  *
  * \param model_data Pointer to the model data, including the state array
  * \param aero_phase_idx Index of the aerosol phase within the representation
- * \param radius Effective particle radius (m)
+ * \param radius Effective layer radius (m)
  * \param partial_deriv \f$\frac{\partial r_{eff}}{\partial y}\f$ where \f$y\f$
  *                      are species on the state array
  * \param aero_rep_int_data Pointer to the aerosol representation integer data
@@ -159,10 +159,20 @@ void aero_rep_single_particle_get_effective_radius__m(
   double *float_data = aero_rep_float_data;
   int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
   double *curr_partial = NULL;
+  int aero_phase_idx_temp = aero_phase_idx;
+  aero_phase_idx_temp -= i_part * TOTAL_NUM_PHASES_;
+  
+  int i_layer_radius = -1;
+  for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
+   if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx_temp &&
+      aero_phase_idx_temp <= LAYER_PHASE_END_(i_layer)) {
+      i_layer_radius = i_layer;
+    }
+  }
 
   *radius = 0.0;
   if (partial_deriv) curr_partial = partial_deriv;
-  for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
+  for (int i_layer = 0; i_layer <= i_layer_radius; ++i_layer) {
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
       double *state = (double *)(model_data->grid_cell_state);
       state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase);
@@ -177,7 +187,7 @@ void aero_rep_single_particle_get_effective_radius__m(
   *radius = pow(((*radius) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
   printf("Effective radius = %e\n", *radius);
   if (!partial_deriv) return;
-  for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
+  for (int i_layer = 0; i_layer <= i_layer_radius; ++i_layer) {
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
       for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_layer,i_phase); ++i_spec) {
         *partial_deriv =
@@ -362,7 +372,7 @@ void aero_rep_single_particle_get_interface_surface_area__m2(
  */
 
 void aero_rep_single_particle_get_layer_thickness__m(
-    ModelData *model_data, int aero_phase_idx, double *layer_thickness,
+    ModelData *model_data, int aero_phase_idx_outer, double *layer_thickness,
     double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
     double *aero_rep_env_data) {
 
@@ -371,8 +381,9 @@ void aero_rep_single_particle_get_layer_thickness__m(
   int jac_size = PARTICLE_STATE_SIZE_;
   double radius_inner, radius_outer;
   //double *curr_partial = NULL;
-  int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
-  aero_phase_idx -= i_part * TOTAL_NUM_PHASES_;
+  int i_part = aero_phase_idx_outer / TOTAL_NUM_PHASES_;
+  int aero_phase_idx_outer_temp = aero_phase_idx_outer;
+  aero_phase_idx_outer_temp -= i_part * TOTAL_NUM_PHASES_;
   
   // Temporary Jacobians
   double *jac_inner = NULL;
@@ -388,8 +399,8 @@ void aero_rep_single_particle_get_layer_thickness__m(
   int i_phase_inner = -1;
   int i_phase_outer = -1;
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
-   if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx &&
-      aero_phase_idx <= LAYER_PHASE_END_(i_layer)) {
+   if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx_outer_temp &&
+      aero_phase_idx_outer_temp <= LAYER_PHASE_END_(i_layer)) {
       i_layer_outer = i_layer;
       if (i_layer - 1 >= 0 ) {
         i_layer_inner = i_layer - 1;
@@ -398,41 +409,42 @@ void aero_rep_single_particle_get_layer_thickness__m(
       }
     }
   }
-  printf("i_layer_inner = %d, i_layer_outer = %d\n", i_layer_inner, i_layer_outer);
-  printf("LAYER_PHASE_END_(i_layer_outer) = %d\n", LAYER_PHASE_END_(i_layer_outer));
-  printf("LAYER_PHASE_END_(i_layer_inner) = %d\n", LAYER_PHASE_END_(i_layer_inner));
+  int offset = aero_phase_idx_outer_temp - (i_part * LAYER_PHASE_START_(i_layer_outer));
+  int aero_phase_idx_inner = -1;
+  if (i_layer_inner == i_layer_outer) {
+    aero_phase_idx_inner = aero_phase_idx_outer;
+  } else {
+    aero_phase_idx_inner = aero_phase_idx_outer - (offset+1);
+  }
 
   aero_rep_single_particle_get_effective_radius__m(
       model_data, 
-      aero_phase_idx,      
+      aero_phase_idx_outer,      
       &radius_outer,
       jac_outer,
       int_data, 
       float_data, 
       aero_rep_env_data);
-  printf("radius_outer = %e\n", radius_outer);
 
   aero_rep_single_particle_get_effective_radius__m(
       model_data,
-      LAYER_PHASE_END_(i_layer_inner),
+      aero_phase_idx_inner,
       &radius_inner,
       jac_inner,
       int_data,
       float_data,
       aero_rep_env_data);
-  printf("radius_inner = %e\n", radius_inner);
 
   if (i_layer_inner == i_layer_outer) {
     *layer_thickness = radius_inner;
   } else {
     *layer_thickness = radius_outer - radius_inner;
   }
-  printf("layer_thickness = %e\n", *layer_thickness);
 
   if (partial_deriv) {
       for (int i = 0; i < jac_size; ++i) {
           partial_deriv[i] = jac_outer[i] - jac_inner[i];
-          //printf("partial_deriv[%d] = %e\n", i, partial_deriv[i]);
+          printf("partial_deriv[%d] = %e\n", i, partial_deriv[i]);
       }
   }
 
