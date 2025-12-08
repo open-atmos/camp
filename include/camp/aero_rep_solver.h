@@ -20,6 +20,9 @@ int aero_rep_get_used_jac_elem(ModelData *model_data, int aero_rep_idx,
 void aero_rep_get_dependencies(ModelData *model_data, bool *state_flags);
 void aero_rep_update_env_state(ModelData *model_data);
 void aero_rep_update_state(ModelData *model_data);
+void aero_rep_single_particle_get_layer_radius__m(ModelData *model_data, int aero_rep_idx,
+                                      int aero_phase_idx, double *layer_radius,
+                                      double *partial_deriv);
 void aero_rep_get_effective_radius__m(ModelData *model_data, int aero_rep_idx,
                                       int aero_phase_idx, double *radius,
                                       double *partial_deriv);

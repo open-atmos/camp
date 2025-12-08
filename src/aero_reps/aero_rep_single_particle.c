@@ -136,11 +136,11 @@ void aero_rep_single_particle_update_state(ModelData *model_data,
   return;
 }
 
-/** \brief Get the effective radius of a layer \f$r_{eff}\f$ (m)
+/** \brief Get the effective radius of a specified layer \f$r_{eff}\f$ (m)
  *
  * \param model_data Pointer to the model data, including the state array
  * \param aero_phase_idx Index of the aerosol phase within the representation
- * \param radius Effective layer radius (m)
+ * \param layer_radius Layer radius (m)
  * \param partial_deriv \f$\frac{\partial r_{eff}}{\partial y}\f$ where \f$y\f$
  *                      are species on the state array
  * \param aero_rep_int_data Pointer to the aerosol representation integer data
@@ -150,8 +150,8 @@ void aero_rep_single_particle_update_state(ModelData *model_data,
  *                          environment-dependent parameters
  */
 
-void aero_rep_single_particle_get_effective_radius__m(
-    ModelData *model_data, int aero_phase_idx, double *radius,
+void aero_rep_single_particle_get_layer_radius__m(
+    ModelData *model_data, int aero_phase_idx, double *layer_radius,
     double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
     double *aero_rep_env_data) {
 
@@ -179,13 +179,11 @@ void aero_rep_single_particle_get_effective_radius__m(
       double volume;
       aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_layer,i_phase),
                                    state, &(volume), curr_partial);
-      printf("Layer %d, Phase %d, Volume = %e\n", i_layer, i_phase, volume);
       if (partial_deriv) curr_partial += PHASE_NUM_JAC_ELEM_(i_layer,i_phase);
       *radius += volume;
     }
   }
   *radius = pow(((*radius) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
-  printf("Effective radius = %e\n", *radius);
   if (!partial_deriv) return;
   for (int i_layer = 0; i_layer <= i_layer_radius; ++i_layer) {
     for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
@@ -196,6 +194,35 @@ void aero_rep_single_particle_get_effective_radius__m(
       }
     }
   }
+  return;
+}
+
+/** \brief Get the effective radius of a specified layer \f$r_{eff}\f$ (m)
+ * Finds the radius of the largest layer in specified particle.
+ *
+ * \param model_data Pointer to the model data, including the state array
+ * \param aero_phase_idx Index of the aerosol phase within the representation
+ * \param layer_radius Layer radius (m)
+ * \param partial_deriv \f$\frac{\partial r_{eff}}{\partial y}\f$ where \f$y\f$
+ *                      are species on the state array
+ * \param aero_rep_int_data Pointer to the aerosol representation integer data
+ * \param aero_rep_float_data Pointer to the aerosol representation
+ *                            floating-point data
+ * \param aero_rep_env_data Pointer to the aerosol representation
+ *                          environment-dependent parameters
+ */
+
+void aero_rep_single_particle_get_layer_radius__m(
+    ModelData *model_data, int aero_phase_idx, double *layer_radius,
+    double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
+    double *aero_rep_env_data) {
+
+  int *int_data = aero_rep_int_data;
+  double *float_data = aero_rep_float_data;
+  int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
+  double *curr_partial = NULL;
+
+  *layer_radius = 0.0;
   return;
 }
 

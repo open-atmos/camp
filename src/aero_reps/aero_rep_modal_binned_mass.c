@@ -265,6 +265,42 @@ void aero_rep_modal_binned_mass_update_state(ModelData *model_data,
   return;
 }
 
+/** \brief Get the radius of a specified layer \f$r_{layer}\f$ (m)
+ *
+ * The modal mass aerosol representation does not assume any internal
+ * structure for modes or bins, so the layer radius function always returns
+ * the radius of the particle.
+ *
+ * \param model_data Pointer to the model data, including the state array
+ * \param aero_phase_idx Index of the aerosol phase within the representation
+ * \param layer_radius Layer radius (m)
+ * \param partial_deriv \f$\frac{\partial r_{layer}}{\partial y}\f$ where \f$y\f$
+ *                       are species on the state array
+ * \param aero_rep_int_data Pointer to the aerosol representation integer data
+ * \param aero_rep_float_data Pointer to the aerosol representation
+ *                            floating-point data
+ * \param aero_rep_env_data Pointer to the aerosol representation
+ *                          environment-dependent parameters
+ */
+void aero_rep_modal_binned_mass_get_layer_radius__m(
+    ModelData *model_data, int aero_phase_idx_outer, double *layer_radius,
+    double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
+    double *aero_rep_env_data) {
+  int *int_data = aero_rep_int_data;
+  double *float_data = aero_rep_float_data;
+
+  aero_rep_modal_binned_mass_get_effective_radius__m(
+      model_data, 
+      aero_phase_idx_outer,      
+      &layer_radius,
+      partial_deriv,
+      int_data, 
+      float_data, 
+      aero_rep_env_data);
+
+  return;
+}
+
 /** \brief Get the effective particle radius \f$r_{eff}\f$ (m)
  *
  * The modal mass effective radius is calculated for a log-normal distribution
