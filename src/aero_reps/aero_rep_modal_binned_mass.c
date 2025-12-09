@@ -292,7 +292,7 @@ void aero_rep_modal_binned_mass_get_layer_radius__m(
   aero_rep_modal_binned_mass_get_effective_radius__m(
       model_data, 
       aero_phase_idx_outer,      
-      &layer_radius,
+      layer_radius,
       partial_deriv,
       int_data, 
       float_data, 
@@ -400,7 +400,7 @@ void aero_rep_modal_binned_mass_get_interface_surface_area__m2(
  * representation always returns the radius. 
  *
  * \param model_data Pointer to the model data, including the state array
- * \param aero_phase_idx Index of the aerosol phase within the representation
+ * \param aero_phase_idx_outer Index of the aerosol phase within the representation
  * \param layer_thickness Layer thickness which is equivalent to radius (m)
  * \param partial_deriv \f$\frac{\partial r_{eff}}{\partial y}\f$ where \f$y\f$
  *                       are species on the state array
@@ -411,7 +411,7 @@ void aero_rep_modal_binned_mass_get_interface_surface_area__m2(
  *                          environment-dependent parameters
  */
 void aero_rep_modal_binned_mass_get_layer_thickness__m(
-    ModelData *model_data, int aero_phase_idx, double *layer_thickness,
+    ModelData *model_data, int aero_phase_idx_outer, double *layer_thickness,
     double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
     double *aero_rep_env_data) {
   int *int_data = aero_rep_int_data;
@@ -419,8 +419,8 @@ void aero_rep_modal_binned_mass_get_layer_thickness__m(
 
   for (int i_section = 0; i_section < NUM_SECTION_; i_section++) {
     for (int i_bin = 0; i_bin < NUM_BINS_(i_section); i_bin++) {
-      aero_phase_idx -= NUM_PHASE_(i_section);
-      if (aero_phase_idx < 0) {
+      aero_phase_idx_outer -= NUM_PHASE_(i_section);
+      if (aero_phase_idx_outer < 0) {
         *layer_thickness = EFFECTIVE_RADIUS_(i_section, i_bin);
         // Effective radii are constant for bins and modes
         if (partial_deriv) {
