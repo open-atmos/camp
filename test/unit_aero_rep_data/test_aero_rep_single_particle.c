@@ -104,7 +104,12 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
                             CONC_wheat / DENSITY_wheat +
                             CONC_water / DENSITY_water +
                             CONC_salt / DENSITY_salt + 
-                            CONC_sugar / DENSITY_sugar ); // volume density (m3/m3)
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_almonds / DENSITY_almonds +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt ); // volume density (m3/m3)
 
   double volume_density_top_bread = ( CONC_wheat / DENSITY_wheat +
                             CONC_water / DENSITY_water +
@@ -444,7 +449,7 @@ int test_layer_thickness(ModelData * model_data, N_Vector state) {
                           "Bad Jacobian element");
   ret_val += ASSERT_MSG(partial_deriv_1[N_JAC_ELEM+1] = 999.9,
                         "Bad Jacobian (end+1)");
-*/
+  */
   return ret_val;
 }
 /** \brief Test the number concentration function

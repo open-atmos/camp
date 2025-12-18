@@ -219,16 +219,15 @@ void aero_rep_single_particle_get_effective_radius__m(
 
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
-  int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
+  int i_part = (aero_phase_idx / TOTAL_NUM_PHASES_)+1;
   double *curr_partial = NULL;
 
-  *radius = 0.0;
   int offset = (TOTAL_NUM_PHASES_*i_part) - aero_phase_idx;
-  aero_phase_idx = aero_phase_idx + offset;
+  aero_phase_idx += offset;
   aero_rep_single_particle_get_layer_radius__m(
       model_data, 
-      aero_phase_idx,      
-      &radius,
+      aero_phase_idx-1,      
+      radius,
       partial_deriv,
       int_data, 
       float_data, 
@@ -455,7 +454,7 @@ void aero_rep_single_particle_get_layer_thickness__m(
     aero_phase_idx_inner = aero_phase_idx_outer - (offset+1);
   }
 
-  aero_rep_single_particle_get_effective_radius__m(
+  aero_rep_single_particle_get_layer_radius__m(
       model_data, 
       aero_phase_idx_outer,      
       &radius_outer,
@@ -464,7 +463,7 @@ void aero_rep_single_particle_get_layer_thickness__m(
       float_data, 
       aero_rep_env_data);
 
-  aero_rep_single_particle_get_effective_radius__m(
+  aero_rep_single_particle_get_layer_radius__m(
       model_data,
       aero_phase_idx_inner,
       &radius_inner,
@@ -491,58 +490,6 @@ void aero_rep_single_particle_get_layer_thickness__m(
   return;
 }
 
-  /*double volume_inner = 0.0;
-  double volume_outer = 0.0;
-  *layer_thickness = 0.0;
-  if (partial_deriv) curr_partial = partial_deriv;
-  for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
-    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
-      double *state = (double *)(model_data->grid_cell_state);
-      state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer,i_phase);
-      double volume;
-      aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_layer,i_phase),
-                                   state, &(volume), curr_partial);
-      if (partial_deriv) curr_partial += PHASE_NUM_JAC_ELEM_(i_layer,i_phase);
-      if (i_layer <= i_layer_inner) volume_inner += volume;
-      if (i_layer <= i_layer_outer) volume_outer += volume;
-    }
-  }
-
-  double radius_inner = pow(((volume_inner) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
-  double radius_outer = pow(((volume_outer) * 3.0 / 4.0 / 3.14159265359), 1.0 / 3.0);
-  if (i_layer_inner == i_layer_outer) {
-    *layer_thickness = radius_inner;
-  } else {
-    *layer_thickness = radius_outer - radius_inner;
-  }
-  if (!partial_deriv) return;
-  int i_phase_count = 0;
-  for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
-    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
-      for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_layer,i_phase); ++i_spec) {
-        if (i_layer == i_layer_outer && i_layer_outer != i_layer_inner) {
-          *partial_deriv =
-           1.0 / 4.0 / 3.14159265359 * (pow(radius_outer, -2.0) - pow(radius_inner, -2.0)) * 
-           (*partial_deriv);
-        } else if (i_layer <= i_layer_inner && i_layer_outer != i_layer_inner) {
-          *partial_deriv =
-           -1.0 / 4.0 / 3.14159265359 * pow(radius_inner, -2.0) * (*partial_deriv);
-        } else if (i_layer == i_layer_inner && i_layer_outer == i_layer_inner) {
-          *partial_deriv =
-           1.0 / 4.0 / 3.14159265359 * pow(radius_inner, -2.0) * (*partial_deriv);
-        } else  {
-          *partial_deriv = ZERO;
-        }
-        ++partial_deriv;
-      }
-    ++i_phase_count;
-    }
-
-  }
-
-  return;
-}
-*/
 /** \brief Get the particle number concentration \f$n\f$
  * (\f$\mbox{\si{\#\per\cubic\metre}}\f$)
  *
@@ -643,7 +590,9 @@ void aero_rep_single_particle_get_aero_phase_mass__kg_m3(
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
   int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
+  printf("Getting mass for particle %d, phase idx %d\n", i_part, aero_phase_idx);
   aero_phase_idx -= i_part * TOTAL_NUM_PHASES_;
+  printf("Getting mass Adjusted phase idx: %d\n", aero_phase_idx);
 
   int i_total_phase = 0; 
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
