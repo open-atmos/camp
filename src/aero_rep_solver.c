@@ -180,9 +180,9 @@ void aero_rep_update_state(ModelData *model_data) {
   }
 }
 
-/** \brief Get the radius of a specified layer, \f$r_{layer}\f$ (m)
+/** \brief Get the effective radius of a specified layer, \f$r_{layer}\f$ (m)
  *
- * Calculates the radius of a specified layer \f$r_{layer}\f$ (m), as well as the set of
+ * Calculates the effective radius of a specified layer \f$r_{layer}\f$ (m), as well as the set of
  * \f$\frac{\partial r_{layer}}{\partial y}\f$ where \f$y\f$ are variables on the
  * solver state array.
  *
@@ -190,12 +190,12 @@ void aero_rep_update_state(ModelData *model_data) {
  * \param aero_rep_idx Index of aerosol representation to use for calculation
  * \param aero_phase_idx Index of the aerosol phase within the aerosol
  *                       representation
- * \param radius Pointer to hold effective particle radius (m)
+ * \param radius Pointer to hold effective layer radius (m)
  * \param partial_deriv Pointer to the set of partial derivatives to be
  *                      calculated \f$\frac{\partial r_{eff}}{\partial y}\f$,
  *                      or a NULL pointer if no partial derivatives are needed
  */
-void aero_rep_get_layer_radius__m(ModelData *model_data, int aero_rep_idx,
+void aero_rep_get_effective_layer_radius__m(ModelData *model_data, int aero_rep_idx,
                                       int aero_phase_idx_outer, double *layer_radius,
                                       double *partial_deriv) {
   // Get pointers to the aerosol data
@@ -215,12 +215,12 @@ void aero_rep_get_layer_radius__m(ModelData *model_data, int aero_rep_idx,
   // Get the particle radius and set of partial derivatives
   switch (aero_rep_type) {
     case AERO_REP_MODAL_BINNED_MASS:
-      aero_rep_modal_binned_mass_get_layer_radius__m(
+      aero_rep_modal_binned_mass_get_effective_layer_radius__m(
           model_data, aero_phase_idx_outer, layer_radius, partial_deriv, aero_rep_int_data,
           aero_rep_float_data, aero_rep_env_data);
       break;
     case AERO_REP_SINGLE_PARTICLE:
-      aero_rep_single_particle_get_layer_radius__m(
+      aero_rep_single_particle_get_effective_layer_radius__m(
           model_data, aero_phase_idx_outer, layer_radius, partial_deriv, aero_rep_int_data,
           aero_rep_float_data, aero_rep_env_data);
       break;

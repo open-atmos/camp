@@ -30,6 +30,7 @@
 #define AERO_PHASE_IDX_1 ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+2)
 // (test-particle phase 4 : top layer, bread)
 #define AERO_PHASE_IDX_2 ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+6)
+// (test-particle phase 7 : bottom layer, bread)
 #define AERO_PHASE_IDX_3 ((TEST_PARTICLE_1-1)*NUM_AERO_PHASE+0)
 
 // number of Jacobian elements used for the test phase
@@ -67,6 +68,116 @@
 
 // Externally set properties
 #define PART_NUM_CONC 1.23e3
+
+/** \brief Test the effective layer radius function
+ *
+ * \param model_data Pointer to the model data
+ * \param state Solver state
+ */
+int test_effective_layer_radius(ModelData * model_data, N_Vector state) {
+
+  int ret_val = 0;
+  double partial_deriv_1[N_JAC_ELEM+2];
+  double partial_deriv_2[N_JAC_ELEM+2];
+  double eff_layer_rad_1 = -999.9;
+  double eff_layer_rad_2 = -999.9;
+
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_1[i] = 999.9;
+
+  aero_rep_get_effective_layer_radius__m(model_data, AERO_REP_IDX,
+                                AERO_PHASE_IDX_1, &eff_layer_rad_1, &(partial_deriv_1[1]));
+  aero_rep_get_effective_layer_radius__m(model_data, AERO_REP_IDX,
+                                AERO_PHASE_IDX_2, &eff_layer_rad_2, &(partial_deriv_2[1]));
+
+  double volume_density_jam = ( CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt +
+                            CONC_almonds / DENSITY_almonds +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_rasberry / DENSITY_rasberry +
+                            CONC_honey / DENSITY_honey +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_lemon / DENSITY_lemon +
+                            CONC_almonds / DENSITY_almonds +
+                            CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt + 
+                            CONC_sugar / DENSITY_sugar); // volume density (m3/m3)
+
+  double volume_density_top_bread = ( CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt +
+                            CONC_almonds / DENSITY_almonds +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_rasberry / DENSITY_rasberry +
+                            CONC_honey / DENSITY_honey +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_lemon / DENSITY_lemon +
+                            CONC_almonds / DENSITY_almonds +
+                            CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt + 
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_almonds / DENSITY_almonds +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt ); // volume density (m3/m3)
+  
+  double eff_layer_rad_expected_jam = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density_jam ), 1.0/3.0 );
+  double eff_layer_rad_expected_top_bread = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density_top_bread ), 1.0/3.0 );
+  ret_val += ASSERT_MSG(fabs(eff_layer_rad_1-eff_layer_rad_expected_jam) < 1.0e-6*eff_layer_rad_expected_jam,
+                        "Bad effective layer radius");
+  ret_val += ASSERT_MSG(fabs(eff_layer_rad_2-eff_layer_rad_expected_top_bread) < 1.0e-6*eff_layer_rad_expected_top_bread,
+                        "Bad effective layer radius");
+  ret_val += ASSERT_MSG(partial_deriv_2[0] = 999.9,
+                        "Bad Jacobian (-1)");
+  double d_eff_layer_rad_dx = 1.0 / 4.0 / 3.14159265359 *
+                        pow( 3.0 / 4.0 / 3.14159265359 * volume_density_top_bread, -2.0/3.0 );
+
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[1] - d_eff_layer_rad_dx / DENSITY_wheat) <
+                        1.0e-10 * partial_deriv_2[1], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[2] - d_eff_layer_rad_dx / DENSITY_water) <
+                        1.0e-10 * partial_deriv_2[2], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[3] - d_eff_layer_rad_dx / DENSITY_salt) <
+                        1.0e-10 * partial_deriv_2[3], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[4] - d_eff_layer_rad_dx / DENSITY_almonds) <
+                        1.0e-10 * partial_deriv_2[4], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[5] - d_eff_layer_rad_dx / DENSITY_sugar) <
+                        1.0e-10 * partial_deriv_2[5], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[6] - d_eff_layer_rad_dx / DENSITY_rasberry) <
+                        1.0e-10 * partial_deriv_2[6], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[7] - d_eff_layer_rad_dx / DENSITY_honey) <
+                        1.0e-10 * partial_deriv_2[7], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[8] - d_eff_layer_rad_dx / DENSITY_sugar) <
+                        1.0e-10 * partial_deriv_2 [8], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[9] - d_eff_layer_rad_dx / DENSITY_lemon) <
+                        1.0e-10 * partial_deriv_2[9], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[10] - d_eff_layer_rad_dx / DENSITY_almonds) <
+                        1.0e-10 * partial_deriv_2[10], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[11] - d_eff_layer_rad_dx / DENSITY_sugar) <
+                        1.0e-10 * partial_deriv_2[11], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[12] - d_eff_layer_rad_dx / DENSITY_wheat) <
+                        1.0e-10 * partial_deriv_2[12], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[13] - d_eff_layer_rad_dx / DENSITY_water) <
+                        1.0e-10 * partial_deriv_2[13], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[14] - d_eff_layer_rad_dx / DENSITY_salt) <
+                        1.0e-10 * partial_deriv_2[14], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[15] - d_eff_layer_rad_dx / DENSITY_almonds) <
+                        1.0e-10 * partial_deriv_2[15], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[16] - d_eff_layer_rad_dx / DENSITY_sugar) <
+                        1.0e-10 * partial_deriv_2[16], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[17] - d_eff_layer_rad_dx / DENSITY_wheat) <
+                        1.0e-10 * partial_deriv_2[17], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[18] - d_eff_layer_rad_dx / DENSITY_water) <
+                        1.0e-10 * partial_deriv_2[18], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[19] - d_eff_layer_rad_dx / DENSITY_salt) <
+                        1.0e-10 * partial_deriv_2[19], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(partial_deriv_2[N_JAC_ELEM+1] = 999.9,
+                        "Bad Jacobian (end+1)");
+
+  return ret_val;
+}
 
 /** \brief Test the effective radius function
  *
@@ -404,6 +515,7 @@ int test_layer_thickness(ModelData * model_data, N_Vector state) {
   ret_val += ASSERT_MSG(fabs(layer_thickness_3-layer_thickness_expected_3) < 1.0e-6*layer_thickness_expected_3,
                         "Bad effective radius for bottom bread");
 
+  // test the partial derivatives
   ret_val += ASSERT_MSG(partial_deriv_1[0] = 999.9,
                         "Bad Jacobian (-1)");
   double d_layer_thickness_outer_dx = 1.0 / 4.0 / 3.14159265359 *
@@ -413,37 +525,51 @@ int test_layer_thickness(ModelData * model_data, N_Vector state) {
   double d_layer_thickness_inner_dx = -1.0 / 4.0 / 3.14159265359 *
                         pow( 3.0 / 4.0 / 3.14159265359, -2.0/3.0) *  
                         pow(volume_density_inner_1, -2.0/3.0 );
+
   printf("d_layer_thickness_outer_dx = %e\n", d_layer_thickness_outer_dx);
   printf("d_layer_thickness_inner_dx = %e\n", d_layer_thickness_inner_dx);
    
-  /*ret_val += ASSERT_MSG(fabs(partial_deriv_1[1] - (d_layer_thickness_inner_dx - d_layer_thickness_inner_dx) / DENSITY_wheat) <
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[1] - (d_layer_thickness_outer_dx) / DENSITY_wheat) <
                         1.0e-10 * fabs(partial_deriv_1[1]), "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv_1[2] - (d_layer_thickness_inner_dx - d_layer_thickness_inner_dx) / DENSITY_water) <
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[2] - (d_layer_thickness_outer_dx) / DENSITY_water) <
                         1.0e-10 * fabs(partial_deriv_1[2]), "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv_1[3] - (d_layer_thickness_inner_dx - d_layer_thickness_inner_dx) / DENSITY_salt) <
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[3] - (d_layer_thickness_outer_dx) / DENSITY_salt) <
                         1.0e-10 * fabs(partial_deriv_1[3]), "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv_1[4] - (d_layer_thickness_inner_dx - d_layer_thickness_inner_dx) / DENSITY_almonds) <
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[4] - (d_layer_thickness_outer_dx) / DENSITY_almonds) <
                         1.0e-10 * fabs(partial_deriv_1[4]), "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv_1[5] - (d_layer_thickness_inner_dx - d_layer_thickness_inner_dx) / DENSITY_sugar) <
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[5] - (d_layer_thickness_outer_dx) / DENSITY_sugar) <
                         1.0e-10 * fabs(partial_deriv_1[5]), "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv_1[6] - (d_layer_thickness_inner_dx - d_layer_thickness_inner_dx) / DENSITY_rasberry) <
+  printf("d_layer_thickness_outer_dx/DENSITY_rasberry = %e\n", (d_layer_thickness_outer_dx) / DENSITY_rasberry);
+  /*ret_val += ASSERT_MSG(fabs(partial_deriv_1[6] - (d_layer_thickness_outer_dx) / DENSITY_rasberry) <
                         1.0e-10 * fabs(partial_deriv_1[6]), "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv_1[7] - (d_layer_thickness_inner_dx - d_layer_thickness_inner_dx) / DENSITY_honey) <
+  printf("d_layer_thickness_outer_dx/DENSITY_honey = %e\n", (d_layer_thickness_outer_dx) / DENSITY_honey);
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[7] - (d_layer_thickness_outer_dx) / DENSITY_honey) <
                         1.0e-10 * fabs(partial_deriv_1[7]), "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv_1[8] - (d_layer_thickness_inner_dx - d_layer_thickness_inner_dx) / DENSITY_sugar) <
+  printf("d_layer_thickness_outer_dx/DENSITY_sugar = %e\n", (d_layer_thickness_outer_dx) / DENSITY_sugar);
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[8] - (d_layer_thickness_outer_dx) / DENSITY_sugar) <
                         1.0e-10 * fabs(partial_deriv_1[8]), "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv_1[9] - (d_layer_thickness_outer_dx - d_layer_thickness_outer_dx) / DENSITY_lemon) <
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[9] - (d_layer_thickness_outer_dx) / DENSITY_lemon) <
                         1.0e-10 * fabs(partial_deriv_1[9]), "Bad Jacobian element");
-    ret_val += ASSERT_MSG(fabs(partial_deriv_1[10] - (d_layer_thickness_outer_dx - d_layer_thickness_outer_dx) / DENSITY_almonds) <
+    ret_val += ASSERT_MSG(fabs(partial_deriv_1[10] - (d_layer_thickness_outer_dx) / DENSITY_almonds) <
                         1.0e-10 * fabs(partial_deriv_1[10]), "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv_1[11] - (d_layer_thickness_outer_dx - d_layer_thickness_outer_dx) / DENSITY_sugar) <
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[11] - (d_layer_thickness_outer_dx) / DENSITY_sugar) <
                         1.0e-10 * fabs(partial_deriv_1[11]), "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv_1[12] - (d_layer_thickness_inner_dx - d_layer_thickness_inner_dx) / DENSITY_wheat) <
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[12] - (d_layer_thickness_outer_dx) / DENSITY_wheat) <
                         1.0e-10 * fabs(partial_deriv_1[12]), "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv_1[13] - (d_layer_thickness_outer_dx - d_layer_thickness_outer_dx) / DENSITY_water) <
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[13] - (d_layer_thickness_outer_dx) / DENSITY_water) <
                         1.0e-10 * fabs(partial_deriv_1[13]), "Bad Jacobian element");
-  ret_val += ASSERT_MSG(fabs(partial_deriv_1[14] - (d_layer_thickness_outer_dx - d_layer_thickness_outer_dx) / DENSITY_salt) <
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[14] - (d_layer_thickness_outer_dx) / DENSITY_salt) <
                         1.0e-10 * fabs(partial_deriv_1[14]), "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[15] - (d_layer_thickness_outer_dx) / DENSITY_almonds) <
+                        1.0e-10 * fabs(partial_deriv_1[15]), "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[16] - (d_layer_thickness_outer_dx) / DENSITY_sugar) <
+                        1.0e-10 * fabs(partial_deriv_1[16]), "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[17] - (d_layer_thickness_outer_dx) / DENSITY_wheat) <
+                        1.0e-10 * fabs(partial_deriv_1[17]), "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[18] - (d_layer_thickness_outer_dx) / DENSITY_water) <
+                        1.0e-10 * fabs(partial_deriv_1[18]), "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[19] - (d_layer_thickness_outer_dx) / DENSITY_salt) <
+                        1.0e-10 * fabs(partial_deriv_1[19]), "Bad Jacobian element");
   for( int i = 15; i < 19; ++i )
     ret_val += ASSERT_MSG(partial_deriv_1[i] == ZERO,
                           "Bad Jacobian element");
@@ -705,6 +831,7 @@ int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, doubl
   aero_rep_print_data(sd);
 
   // Run the property tests
+  ret_val += test_effective_layer_radius(model_data, solver_state);
   ret_val += test_effective_radius(model_data, solver_state);
   ret_val += test_surface_area_layer(model_data, solver_state);
   ret_val += test_layer_thickness(model_data, solver_state);

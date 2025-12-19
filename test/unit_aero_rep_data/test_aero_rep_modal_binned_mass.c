@@ -55,12 +55,43 @@
 #define DENSITY_E 5.0
 #define DENSITY_F 6.0
 
-/** \brief Test the effective radius function
+/** \brief Test the effective layer radius function
  *
  * \param model_data Pointer to the model data
  * \param state Solver state
  */
 #ifdef CAMP_USE_SUNDIALS
+int test_effective_layer_radius(ModelData * model_data, N_Vector state) {
+
+  int ret_val = 0;
+  double partial_deriv[N_JAC_ELEM+2];
+  double partial_deriv_2[N_JAC_ELEM_2+2];
+  double eff_layer_rad = -999.9;
+
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv[i] = 999.9;
+  for( int i = 0; i < N_JAC_ELEM_2+2; ++i ) partial_deriv_2[i] = 999.9;
+
+  aero_rep_get_effective_layer_radius__m(model_data, AERO_REP_IDX,
+                                AERO_PHASE_IDX, &eff_layer_rad, &(partial_deriv[1]));
+
+  double dp_bin4 = pow(10.0,(log10(1.0e-6) - log10(8.0e-9)) / 7.0 * 3.0 + log10(8.0e-9));
+  double real_rad = dp_bin4 / 2.0;
+  ret_val += ASSERT_MSG(fabs(eff_layer_rad-real_rad)<1.0e-10*real_rad,
+                        "Bad effective layer radius");
+
+  double real_rad_2 = 1.2e-6 / 2.0 * exp(5.0 * log(1.2) * log(1.2) / 2.0);
+  aero_rep_get_effective_layer_radius__m(model_data, AERO_REP_IDX,
+                                AERO_PHASE_IDX_2, &eff_layer_rad, &(partial_deriv_2[1]));
+  ret_val += ASSERT_MSG(fabs(eff_layer_rad-real_rad_2)<1.0e-10*real_rad_2,
+                        "Bad effective layer radius");
+  return ret_val;
+}
+
+/** \brief Test the effective radius function
+ *
+ * \param model_data Pointer to the model data
+ * \param state Solver state
+ */
 int test_effective_radius(ModelData * model_data, N_Vector state) {
 
   int ret_val = 0;
@@ -342,6 +373,7 @@ int run_aero_rep_modal_c_tests(void *solver_data, double *state, double *env) {
   aero_rep_update_state(model_data);
 
   // Run the property tests
+  ret_val += test_effective_layer_radius(model_data, solver_state);
   ret_val += test_effective_radius(model_data, solver_state);
   ret_val += test_aero_phase_mass(model_data, solver_state);
   ret_val += test_aero_phase_avg_MW(model_data, solver_state);
