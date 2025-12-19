@@ -223,6 +223,9 @@ void aero_rep_single_particle_get_interface_surface_area__m2(
   int phase_model_data_id_first = -1;
   int phase_model_data_id_second = -1;
   double radius;
+  int i_part = aero_phase_idx_first / TOTAL_NUM_PHASES_;
+  aero_phase_idx_first -= i_part * TOTAL_NUM_PHASES_;
+  aero_phase_idx_second -= i_part * TOTAL_NUM_PHASES_;
  
   // Find the layer each phase (first and second) exist in 
   int i_phase_count = 0;
