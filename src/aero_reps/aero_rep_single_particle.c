@@ -484,6 +484,20 @@ void aero_rep_single_particle_get_layer_thickness__m(
           printf("partial_deriv[%d] = %e\n", i, partial_deriv[i]);
       }
   }
+  /*
+  int i_phase_count = 0;
+  if (!partial_deriv) return;
+  for (int i_layer = 0; i_layer <= i_layer_radius; ++i_layer) {
+    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
+      for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_layer,i_phase); ++i_spec) {
+        *partial_deriv =
+            1.0 / 4.0 / 3.14159265359 * pow(*layer_radius, -2.0) * (*partial_deriv);
+        ++i_phase_count;
+        ++partial_deriv;
+      }
+    }
+  }
+    */
 
   free(jac_inner);
   free(jac_outer);

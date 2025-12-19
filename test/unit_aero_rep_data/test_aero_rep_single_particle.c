@@ -540,7 +540,7 @@ int test_layer_thickness(ModelData * model_data, N_Vector state) {
   ret_val += ASSERT_MSG(fabs(partial_deriv_1[5] - (d_layer_thickness_outer_dx) / DENSITY_sugar) <
                         1.0e-10 * fabs(partial_deriv_1[5]), "Bad Jacobian element");
   printf("d_layer_thickness_outer_dx/DENSITY_rasberry = %e\n", (d_layer_thickness_outer_dx) / DENSITY_rasberry);
-  /*ret_val += ASSERT_MSG(fabs(partial_deriv_1[6] - (d_layer_thickness_outer_dx) / DENSITY_rasberry) <
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[6] - (d_layer_thickness_outer_dx) / DENSITY_rasberry) <
                         1.0e-10 * fabs(partial_deriv_1[6]), "Bad Jacobian element");
   printf("d_layer_thickness_outer_dx/DENSITY_honey = %e\n", (d_layer_thickness_outer_dx) / DENSITY_honey);
   ret_val += ASSERT_MSG(fabs(partial_deriv_1[7] - (d_layer_thickness_outer_dx) / DENSITY_honey) <
@@ -575,7 +575,7 @@ int test_layer_thickness(ModelData * model_data, N_Vector state) {
                           "Bad Jacobian element");
   ret_val += ASSERT_MSG(partial_deriv_1[N_JAC_ELEM+1] = 999.9,
                         "Bad Jacobian (end+1)");
-  */
+
   return ret_val;
 }
 /** \brief Test the number concentration function
