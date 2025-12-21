@@ -127,6 +127,46 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
   return ret_val;
 }
 
+/** \brief Test the layer thickness
+ *
+ * \param model_data Pointer to the model data
+ * \param state Solver state
+ */
+int test_layer_thickness(ModelData * model_data, N_Vector state) {
+
+  int ret_val = 0;
+  double partial_deriv[N_JAC_ELEM+2];
+  double partial_deriv_2[N_JAC_ELEM_2+2];
+  double layer_thickness = -999.9;
+
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv[i] = 999.9;
+  for( int i = 0; i < N_JAC_ELEM_2+2; ++i ) partial_deriv_2[i] = 999.9;
+
+  aero_rep_get_layer_thickness__m(model_data, AERO_REP_IDX,
+                                AERO_PHASE_IDX, &layer_thickness, &(partial_deriv[1]));
+
+  double dp_bin4 = pow(10.0,(log10(1.0e-6) - log10(8.0e-9)) / 7.0 * 3.0 + log10(8.0e-9));
+  double real_rad = dp_bin4 / 2.0;
+  ret_val += ASSERT_MSG(fabs(layer_thickness-real_rad)<1.0e-10*real_rad,
+                        "Bad effective radius");
+
+  double real_rad_2 = 1.2e-6 / 2.0 * exp(5.0 * log(1.2) * log(1.2) / 2.0);
+  aero_rep_get_layer_thickness__m(model_data, AERO_REP_IDX,
+                                AERO_PHASE_IDX_2, &layer_thickness, &(partial_deriv_2[1]));
+  ret_val += ASSERT_MSG(fabs(layer_thickness -real_rad_2)<1.0e-10*real_rad_2,
+                        "Bad effective radius");
+
+  ret_val += ASSERT_MSG(partial_deriv[0] == 999.9,
+                        "Bad Jacobian index (-1)");
+  for( int i = 1; i < N_JAC_ELEM+1; ++i )
+    ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
+                          "Bad Jacobian element");
+  ret_val += ASSERT_MSG(partial_deriv[N_JAC_ELEM+1] == 999.9,
+                        "Bad Jacobian index (end+1)");
+
+  return ret_val;
+}
+
 /** \brief Test the number concentration function
  *
  * \param model_data Pointer to the model data
@@ -375,6 +415,7 @@ int run_aero_rep_modal_c_tests(void *solver_data, double *state, double *env) {
   // Run the property tests
   ret_val += test_effective_layer_radius(model_data, solver_state);
   ret_val += test_effective_radius(model_data, solver_state);
+  ret_val += test_layer_thickness(model_data, solver_state);
   ret_val += test_aero_phase_mass(model_data, solver_state);
   ret_val += test_aero_phase_avg_MW(model_data, solver_state);
   ret_val += test_number_conc(model_data, solver_state);

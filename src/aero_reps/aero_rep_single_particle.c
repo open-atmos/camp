@@ -167,6 +167,7 @@ void aero_rep_single_particle_get_effective_layer_radius__m(
    if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx_temp &&
       aero_phase_idx_temp <= LAYER_PHASE_END_(i_layer)) {
       i_layer_radius = i_layer;
+      break;
     }
   }
 
@@ -219,14 +220,14 @@ void aero_rep_single_particle_get_effective_radius__m(
 
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
-  int i_part = (aero_phase_idx / TOTAL_NUM_PHASES_)+1;
   double *curr_partial = NULL;
-
-  int offset = (TOTAL_NUM_PHASES_*i_part) - aero_phase_idx;
+  // Adjust aero_phase_idx to the last phase in the particle.
+  // Add 1 to aero_phase_idx/TOTAL_NUM_PHASES_ to account for c indexing starting at 0.
+  int offset = (TOTAL_NUM_PHASES_*((aero_phase_idx / TOTAL_NUM_PHASES_)+1)) - aero_phase_idx;
   aero_phase_idx += offset;
   aero_rep_single_particle_get_effective_layer_radius__m(
       model_data, 
-      aero_phase_idx-1,      
+      aero_phase_idx-1, // Adjusted to last phase in particle.
       radius,
       partial_deriv,
       int_data, 
@@ -481,7 +482,6 @@ void aero_rep_single_particle_get_layer_thickness__m(
   if (partial_deriv) {
       for (int i = 0; i < jac_size; ++i) {
           partial_deriv[i] = jac_outer[i] - jac_inner[i];
-          printf("partial_deriv[%d] = %e\n", i, partial_deriv[i]);
       }
   }
   /*
@@ -604,9 +604,7 @@ void aero_rep_single_particle_get_aero_phase_mass__kg_m3(
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
   int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
-  printf("Getting mass for particle %d, phase idx %d\n", i_part, aero_phase_idx);
   aero_phase_idx -= i_part * TOTAL_NUM_PHASES_;
-  printf("Getting mass Adjusted phase idx: %d\n", aero_phase_idx);
 
   int i_total_phase = 0; 
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
