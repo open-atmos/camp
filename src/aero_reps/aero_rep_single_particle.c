@@ -221,6 +221,7 @@ void aero_rep_single_particle_get_effective_radius__m(
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
   double *curr_partial = NULL;
+  
   // Adjust aero_phase_idx to the last phase in the particle.
   // Add 1 to aero_phase_idx/TOTAL_NUM_PHASES_ to account for c indexing starting at 0.
   int offset = (TOTAL_NUM_PHASES_*((aero_phase_idx / TOTAL_NUM_PHASES_)+1)) - aero_phase_idx;
@@ -421,7 +422,6 @@ void aero_rep_single_particle_get_layer_thickness__m(
   double *float_data = aero_rep_float_data;
   int jac_size = PARTICLE_STATE_SIZE_;
   double radius_inner, radius_outer;
-  //double *curr_partial = NULL;
   int i_part = aero_phase_idx_outer / TOTAL_NUM_PHASES_;
   int aero_phase_idx_outer_temp = aero_phase_idx_outer;
   aero_phase_idx_outer_temp -= i_part * TOTAL_NUM_PHASES_;
@@ -487,20 +487,6 @@ void aero_rep_single_particle_get_layer_thickness__m(
           partial_deriv[i] = jac_outer[i] - jac_inner[i];
       }
   }
-  /*
-  int i_phase_count = 0;
-  if (!partial_deriv) return;
-  for (int i_layer = 0; i_layer <= i_layer_radius; ++i_layer) {
-    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
-      for (int i_spec = 0; i_spec < PHASE_NUM_JAC_ELEM_(i_layer,i_phase); ++i_spec) {
-        *partial_deriv =
-            1.0 / 4.0 / 3.14159265359 * pow(*layer_radius, -2.0) * (*partial_deriv);
-        ++i_phase_count;
-        ++partial_deriv;
-      }
-    }
-  }
-    */
 
   free(jac_inner);
   free(jac_outer);
