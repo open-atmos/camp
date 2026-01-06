@@ -196,7 +196,7 @@ void aero_rep_update_state(ModelData *model_data) {
  *                      or a NULL pointer if no partial derivatives are needed
  */
 void aero_rep_get_effective_layer_radius__m(ModelData *model_data, int aero_rep_idx,
-                                      int aero_phase_idx_outer, double *layer_radius,
+                                      int aero_phase_idx, double *layer_radius,
                                       double *partial_deriv) {
   // Get pointers to the aerosol data
   int *aero_rep_int_data = &(
