@@ -340,7 +340,7 @@ void aero_rep_get_interface_surface_area__m2(ModelData *model_data, int aero_rep
  *                          environment-dependent parameters
  */
 void aero_rep_get_layer_thickness__m(ModelData *model_data, int aero_rep_idx,
-                                      int aero_phase_idx_outer, double *layer_thickness,
+                                      int aero_phase_idx, double *layer_thickness,
                                       double *partial_deriv) {
   // Get pointers to the aerosol data
   int *aero_rep_int_data = &(
