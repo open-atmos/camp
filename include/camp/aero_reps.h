@@ -42,7 +42,7 @@ void aero_rep_modal_binned_mass_get_interface_surface_area__m2(
     double *surface_area, double *partial_deriv, int *aero_rep_int_data, 
     double *aero_rep_float_data, double *aero_rep_env_data);
 void aero_rep_modal_binned_mass_get_layer_thickness__m(
-    ModelData *model_data, int aero_phase_idx_outer, double *layer_thickness,
+    ModelData *model_data, int aero_phase_idx, double *layer_thickness,
     double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
     double *aero_rep_env_data);
 void aero_rep_modal_binned_mass_get_number_conc__n_m3(
