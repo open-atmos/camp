@@ -422,9 +422,9 @@ void aero_rep_single_particle_get_layer_thickness__m(
   double *float_data = aero_rep_float_data;
   int jac_size = PARTICLE_STATE_SIZE_;
   double radius_inner, radius_outer;
-  int i_part = aero_phase_idx_outer / TOTAL_NUM_PHASES_;
-  int aero_phase_idx_outer_temp = aero_phase_idx_outer;
-  aero_phase_idx_outer_temp -= i_part * TOTAL_NUM_PHASES_;
+  int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
+  int aero_phase_idx_temp = aero_phase_idx;
+  aero_phase_idx_temp -= i_part * TOTAL_NUM_PHASES_;
   
   // Temporary Jacobians
   double *jac_inner = NULL;
@@ -440,8 +440,8 @@ void aero_rep_single_particle_get_layer_thickness__m(
   int i_phase_inner = -1;
   int i_phase_outer = -1;
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
-   if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx_outer_temp &&
-      aero_phase_idx_outer_temp <= LAYER_PHASE_END_(i_layer)) {
+   if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx_temp &&
+      aero_phase_idx_temp <= LAYER_PHASE_END_(i_layer)) {
       i_layer_outer = i_layer;
       if (i_layer - 1 >= 0 ) {
         i_layer_inner = i_layer - 1;
@@ -450,17 +450,17 @@ void aero_rep_single_particle_get_layer_thickness__m(
       }
     }
   }
-  int offset = aero_phase_idx_outer_temp - (i_part * LAYER_PHASE_START_(i_layer_outer));
+  int offset = aero_phase_idx_temp - (i_part * LAYER_PHASE_START_(i_layer_outer));
   int aero_phase_idx_inner = -1;
   if (i_layer_inner == i_layer_outer) {
-    aero_phase_idx_inner = aero_phase_idx_outer;
+    aero_phase_idx_inner = aero_phase_idx;
   } else {
-    aero_phase_idx_inner = aero_phase_idx_outer - (offset+1);
+    aero_phase_idx_inner = aero_phase_idx - (offset+1);
   }
 
   aero_rep_single_particle_get_effective_layer_radius__m(
       model_data, 
-      aero_phase_idx_outer,      
+      aero_phase_idx,      
       &radius_outer,
       jac_outer,
       int_data, 

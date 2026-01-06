@@ -30,7 +30,7 @@ void aero_rep_modal_binned_mass_update_state(ModelData *model_data,
                                              double *aero_rep_float_data,
                                              double *aero_rep_env_data);
 void aero_rep_modal_binned_mass_get_effective_layer_radius__m(
-    ModelData *model_data, int aero_phase_idx_outer, double *layer_radius,
+    ModelData *model_data, int aero_phase_idx, double *layer_radius,
     double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
     double *aero_rep_env_data);
 void aero_rep_modal_binned_mass_get_effective_radius__m(

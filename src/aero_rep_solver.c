@@ -216,12 +216,12 @@ void aero_rep_get_effective_layer_radius__m(ModelData *model_data, int aero_rep_
   switch (aero_rep_type) {
     case AERO_REP_MODAL_BINNED_MASS:
       aero_rep_modal_binned_mass_get_effective_layer_radius__m(
-          model_data, aero_phase_idx_outer, layer_radius, partial_deriv, aero_rep_int_data,
+          model_data, aero_phase_idx, layer_radius, partial_deriv, aero_rep_int_data,
           aero_rep_float_data, aero_rep_env_data);
       break;
     case AERO_REP_SINGLE_PARTICLE:
       aero_rep_single_particle_get_effective_layer_radius__m(
-          model_data, aero_phase_idx_outer, layer_radius, partial_deriv, aero_rep_int_data,
+          model_data, aero_phase_idx, layer_radius, partial_deriv, aero_rep_int_data,
           aero_rep_float_data, aero_rep_env_data);
       break;
   }
@@ -360,12 +360,12 @@ void aero_rep_get_layer_thickness__m(ModelData *model_data, int aero_rep_idx,
   switch (aero_rep_type) {
     case AERO_REP_MODAL_BINNED_MASS:
       aero_rep_modal_binned_mass_get_layer_thickness__m(
-          model_data, aero_phase_idx_outer, layer_thickness, partial_deriv, aero_rep_int_data,
+          model_data, aero_phase_idx, layer_thickness, partial_deriv, aero_rep_int_data,
           aero_rep_float_data, aero_rep_env_data);
       break;
     case AERO_REP_SINGLE_PARTICLE:
       aero_rep_single_particle_get_layer_thickness__m(
-          model_data, aero_phase_idx_outer, layer_thickness, partial_deriv, aero_rep_int_data,
+          model_data, aero_phase_idx, layer_thickness, partial_deriv, aero_rep_int_data,
           aero_rep_float_data, aero_rep_env_data);
       break;
   }
