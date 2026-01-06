@@ -291,7 +291,7 @@ void aero_rep_modal_binned_mass_get_effective_layer_radius__m(
 
   aero_rep_modal_binned_mass_get_effective_radius__m(
       model_data, 
-      aero_phase_idx_outer,      
+      aero_phase_idx,      
       layer_radius,
       partial_deriv,
       int_data, 
