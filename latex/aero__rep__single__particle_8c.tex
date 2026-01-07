@@ -63,10 +63,14 @@ void \mbox{\hyperlink{aero__rep__single__particle_8c_abb3778ac04df76a32ac3359b8c
 \begin{DoxyCompactList}\small\item\em Update aerosol representation data for new environmental conditions. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{aero__rep__single__particle_8c_afc5e4c6a81bf52bf0c8ee88037a4954d}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+update\+\_\+state}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Update aerosol representation data for a new state. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__rep__single__particle_8c_ae83f56379c60d1fc674f0fd9e9726418}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+effective\+\_\+layer\+\_\+radius\+\_\+\+\_\+m}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}layer\+\_\+radius, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Get the effective radius of a specified layer $r_{layer}$ (m) \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+effective\+\_\+radius\+\_\+\+\_\+m}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}radius, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
-\begin{DoxyCompactList}\small\item\em Get the effective particle radius $r_{eff}$ (m) \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Get the effective particle radius $r_{eff}$ (m) Finds the radius of the largest layer in specified particle. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{aero__rep__single__particle_8c_a788ee00930db343356a0cbe7c53ea600}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+interface\+\_\+surface\+\_\+area\+\_\+\+\_\+m2}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx\+\_\+first, int aero\+\_\+phase\+\_\+idx\+\_\+second, double \texorpdfstring{$\ast$}{*}surface\+\_\+area, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Get the surface area of specified particle layer $r_{eff}$ (m) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{aero__rep__single__particle_8c_abbf8978e943e07663bd8d92f7a3aae23}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+layer\+\_\+thickness\+\_\+\+\_\+m}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}layer\+\_\+thickness, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Get the thickness of a particle layer (m) \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{aero__rep__single__particle_8c_afa7d35b774d0ab4d7cad7fb30d75e897}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+number\+\_\+conc\+\_\+\+\_\+n\+\_\+m3}} (Model\+Data \texorpdfstring{$\ast$}{*}model\+\_\+data, int aero\+\_\+phase\+\_\+idx, double \texorpdfstring{$\ast$}{*}number\+\_\+conc, double \texorpdfstring{$\ast$}{*}partial\+\_\+deriv, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
 \begin{DoxyCompactList}\small\item\em Get the particle number concentration $n$ ( $\mbox{\si{\#\per\cubic\metre}}$) \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{aero__rep__single__particle_8c_a59114de73dd305d5825a8547155b8946}{aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+aero\+\_\+conc\+\_\+type}} (int aero\+\_\+phase\+\_\+idx, int \texorpdfstring{$\ast$}{*}aero\+\_\+conc\+\_\+type, int \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+int\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+float\+\_\+data, double \texorpdfstring{$\ast$}{*}aero\+\_\+rep\+\_\+env\+\_\+data)
@@ -328,7 +332,7 @@ Pointer to a new number update data object
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00605}{605}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00750}{750}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 \Hypertarget{aero__rep__single__particle_8c_a59114de73dd305d5825a8547155b8946}\index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_aero\_conc\_type@{aero\_rep\_single\_particle\_get\_aero\_conc\_type}}
 \index{aero\_rep\_single\_particle\_get\_aero\_conc\_type@{aero\_rep\_single\_particle\_get\_aero\_conc\_type}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
@@ -357,7 +361,7 @@ Single particle concentrations are per-\/particle.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00411}{411}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00556}{556}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -398,7 +402,7 @@ The single particle mass is set for each new state as the sum of the masses of t
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00492}{492}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00637}{637}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -447,7 +451,7 @@ The single particle mass is set for each new state as the sum of the masses of t
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00443}{443}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00588}{588}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -498,6 +502,53 @@ Here is the caller graph for this function\+:
 \includegraphics[width=350pt]{aero__rep__single__particle_8c_ac118d92685e58dda51e1a4a7ac16ddda_icgraph}
 \end{center}
 \end{figure}
+\Hypertarget{aero__rep__single__particle_8c_ae83f56379c60d1fc674f0fd9e9726418}\index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_effective\_layer\_radius\_\_m@{aero\_rep\_single\_particle\_get\_effective\_layer\_radius\_\_m}}
+\index{aero\_rep\_single\_particle\_get\_effective\_layer\_radius\_\_m@{aero\_rep\_single\_particle\_get\_effective\_layer\_radius\_\_m}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_get\_effective\_layer\_radius\_\_m()}{aero\_rep\_single\_particle\_get\_effective\_layer\_radius\_\_m()}}
+{\footnotesize\ttfamily \label{aero__rep__single__particle_8c_ae83f56379c60d1fc674f0fd9e9726418} 
+void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+effective\+\_\+layer\+\_\+radius\+\_\+\+\_\+m (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{layer\+\_\+radius}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
+
+
+
+Get the effective radius of a specified layer $r_{layer}$ (m) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data, including the state array \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase within the representation \\
+\hline
+{\em layer\+\_\+radius} & Effective layer radius (m) \\
+\hline
+{\em partial\+\_\+deriv} & $\frac{\partial r_{eff}}{\partial y}$ where $y$ are species on the state array \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00153}{153}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__single__particle_8c_ae83f56379c60d1fc674f0fd9e9726418_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__single__particle_8c_ae83f56379c60d1fc674f0fd9e9726418_icgraph}
+\end{center}
+\end{figure}
 \Hypertarget{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891}\index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_effective\_radius\_\_m@{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m}}
 \index{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m@{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
 \doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m()}{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m()}}
@@ -506,7 +557,7 @@ void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+effective\+\_\+radius
 
 
 
-Get the effective particle radius $r_{eff}$ (m) 
+Get the effective particle radius $r_{eff}$ (m) Finds the radius of the largest layer in specified particle. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -527,7 +578,7 @@ Get the effective particle radius $r_{eff}$ (m)
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00153}{153}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00216}{216}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -580,7 +631,7 @@ Solve for the surface area of the interfacial layer that exists between the two 
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00212}{212}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00263}{263}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the call graph for this function\+:
 \nopagebreak
@@ -596,6 +647,53 @@ Here is the caller graph for this function\+:
 \begin{center}
 \leavevmode
 \includegraphics[width=350pt]{aero__rep__single__particle_8c_a788ee00930db343356a0cbe7c53ea600_icgraph}
+\end{center}
+\end{figure}
+\Hypertarget{aero__rep__single__particle_8c_abbf8978e943e07663bd8d92f7a3aae23}\index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_layer\_thickness\_\_m@{aero\_rep\_single\_particle\_get\_layer\_thickness\_\_m}}
+\index{aero\_rep\_single\_particle\_get\_layer\_thickness\_\_m@{aero\_rep\_single\_particle\_get\_layer\_thickness\_\_m}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
+\doxysubsubsection{\texorpdfstring{aero\_rep\_single\_particle\_get\_layer\_thickness\_\_m()}{aero\_rep\_single\_particle\_get\_layer\_thickness\_\_m()}}
+{\footnotesize\ttfamily \label{aero__rep__single__particle_8c_abbf8978e943e07663bd8d92f7a3aae23} 
+void aero\+\_\+rep\+\_\+single\+\_\+particle\+\_\+get\+\_\+layer\+\_\+thickness\+\_\+\+\_\+m (\begin{DoxyParamCaption}\item[{Model\+Data \texorpdfstring{$\ast$}{*}}]{model\+\_\+data}{, }\item[{int}]{aero\+\_\+phase\+\_\+idx}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{layer\+\_\+thickness}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{partial\+\_\+deriv}{, }\item[{int \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+int\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+float\+\_\+data}{, }\item[{double \texorpdfstring{$\ast$}{*}}]{aero\+\_\+rep\+\_\+env\+\_\+data}{}\end{DoxyParamCaption})}
+
+
+
+Get the thickness of a particle layer (m) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em model\+\_\+data} & Pointer to the model data, including the state array \\
+\hline
+{\em aero\+\_\+phase\+\_\+idx} & Index of the aerosol phase within the representation \\
+\hline
+{\em layer\+\_\+thickness} & Effective layer thickness (m) \\
+\hline
+{\em partial\+\_\+deriv} & $\frac{\partial r_{eff}}{\partial y}$ where $y$ are species on the state array \\
+\hline
+{\em aero\+\_\+rep\+\_\+int\+\_\+data} & Pointer to the aerosol representation integer data \\
+\hline
+{\em aero\+\_\+rep\+\_\+float\+\_\+data} & Pointer to the aerosol representation floating-\/point data \\
+\hline
+{\em aero\+\_\+rep\+\_\+env\+\_\+data} & Pointer to the aerosol representation environment-\/dependent parameters \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00416}{416}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{aero__rep__single__particle_8c_abbf8978e943e07663bd8d92f7a3aae23_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=340pt]{aero__rep__single__particle_8c_abbf8978e943e07663bd8d92f7a3aae23_icgraph}
 \end{center}
 \end{figure}
 \Hypertarget{aero__rep__single__particle_8c_afa7d35b774d0ab4d7cad7fb30d75e897}\index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3@{aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3}}
@@ -629,7 +727,7 @@ This single particle number concentration is set by the aerosol model prior to s
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00373}{373}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00518}{518}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -704,7 +802,7 @@ Print the Single Particle reaction parameters.
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00575}{575}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00720}{720}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak
@@ -737,7 +835,7 @@ Set number update data (\#/m3)
 \end{DoxyParams}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00621}{621}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00766}{766}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 \Hypertarget{aero__rep__single__particle_8c_abe4da510bed46cee8a75f90917764311}\index{aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}!aero\_rep\_single\_particle\_update\_data@{aero\_rep\_single\_particle\_update\_data}}
 \index{aero\_rep\_single\_particle\_update\_data@{aero\_rep\_single\_particle\_update\_data}!aero\_rep\_single\_particle.c@{aero\_rep\_single\_particle.c}}
@@ -774,7 +872,7 @@ Flag indicating whether this is the aerosol representation to update
 \end{DoxyReturn}
 
 
-Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00544}{544}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
+Definition at line \mbox{\hyperlink{aero__rep__single__particle_8c_source_l00689}{689}} of file \mbox{\hyperlink{aero__rep__single__particle_8c_source}{aero\+\_\+rep\+\_\+single\+\_\+particle.\+c}}.
 
 Here is the caller graph for this function\+:
 \nopagebreak

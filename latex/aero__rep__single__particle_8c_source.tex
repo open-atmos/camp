@@ -140,11 +140,11 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00136}00136\ \ \ \textcolor{keywordflow}{return};}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00137}00137\ \}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00138}00138\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00139}00139\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ effective\ particle\ radius\ \(\backslash\)f\$r\_\{eff\}\(\backslash\)f\$\ (m)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00139}00139\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ effective\ radius\ of\ a\ specified\ layer\ \(\backslash\)f\$r\_\{layer\}\(\backslash\)f\$\ (m)}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00140}00140\ \textcolor{comment}{\ *}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00141}00141\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00142}00142\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00143}00143\ \textcolor{comment}{\ *\ \(\backslash\)param\ radius\ Effective\ particle\ radius\ (m)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00143}00143\ \textcolor{comment}{\ *\ \(\backslash\)param\ layer\_radius\ Effective\ layer\ radius\ (m)}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00144}00144\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ r\_\{eff\}\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00145}00145\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ are\ species\ on\ the\ state\ array}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00146}00146\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
@@ -154,8 +154,8 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00150}00150\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00151}00151\ \textcolor{comment}{\ */}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00152}00152\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00153}\mbox{\hyperlink{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891}{00153}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891}{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m}}(}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00154}00154\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,\ \textcolor{keywordtype}{double}\ *radius,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00153}\mbox{\hyperlink{aero__rep__single__particle_8c_ae83f56379c60d1fc674f0fd9e9726418}{00153}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_ae83f56379c60d1fc674f0fd9e9726418}{aero\_rep\_single\_particle\_get\_effective\_layer\_radius\_\_m}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00154}00154\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,\ \textcolor{keywordtype}{double}\ *layer\_radius,}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00155}00155\ \ \ \ \ \textcolor{keywordtype}{double}\ *partial\_deriv,\ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00156}00156\ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00157}00157\ }
@@ -163,478 +163,623 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00159}00159\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00160}00160\ \ \ \textcolor{keywordtype}{int}\ i\_part\ =\ aero\_phase\_idx\ /\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00161}00161\ \ \ \textcolor{keywordtype}{double}\ *curr\_partial\ =\ NULL;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00162}00162\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00163}00163\ \ \ *radius\ =\ 0.0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00164}00164\ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ curr\_partial\ =\ partial\_deriv;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00165}00165\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00166}00166\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00167}00167\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\ =\ (\textcolor{keywordtype}{double}\ *)(model\_data-\/>grid\_cell\_state);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00168}00168\ \ \ \ \ \ \ state\ +=\ i\_part\ *\ \mbox{\hyperlink{aero__rep__single__particle_8c_a5362f2b785d3da92675466d9256f3cfd}{PARTICLE\_STATE\_SIZE\_}}\ +\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab3956491dbbbf0687d3c0ae80d483ebf}{PHASE\_STATE\_ID\_}}(i\_layer,i\_phase);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00169}00169\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ volume;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00170}00170\ \ \ \ \ \ \ \mbox{\hyperlink{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}{aero\_phase\_get\_volume\_\_m3\_m3}}(model\_data,\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,i\_phase),}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state,\ \&(volume),\ curr\_partial);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00172}00172\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ curr\_partial\ +=\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00173}00173\ \ \ \ \ \ \ *radius\ +=\ volume;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00174}00174\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00175}00175\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00176}00176\ \ \ *radius\ =\ pow(((*radius)\ *\ 3.0\ /\ 4.0\ /\ 3.14159265359),\ 1.0\ /\ 3.0);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00177}00177\ \ \ \textcolor{keywordflow}{if}\ (!partial\_deriv)\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00178}00178\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00179}00179\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00180}00180\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_spec\ =\ 0;\ i\_spec\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);\ ++i\_spec)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00181}00181\ \ \ \ \ \ \ \ \ *partial\_deriv\ =}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ 1.0\ /\ 4.0\ /\ 3.14159265359\ *\ pow(*radius,\ -\/2.0)\ *\ (*partial\_deriv);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00183}00183\ \ \ \ \ \ \ \ \ ++partial\_deriv;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00184}00184\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00162}00162\ \ \ \textcolor{keywordtype}{int}\ aero\_phase\_idx\_temp\ =\ aero\_phase\_idx;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00163}00163\ \ \ aero\_phase\_idx\_temp\ -\/=\ i\_part\ *\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00164}00164\ \ \ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00165}00165\ \ \ \textcolor{keywordtype}{int}\ i\_layer\_radius\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00166}00166\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00167}00167\ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\_PHASE\_START\_}}(i\_layer)\ <=\ aero\_phase\_idx\_temp\ \&\&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00168}00168\ \ \ \ \ \ \ aero\_phase\_idx\_temp\ <=\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\_PHASE\_END\_}}(i\_layer))\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00169}00169\ \ \ \ \ \ \ i\_layer\_radius\ =\ i\_layer;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00170}00170\ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00171}00171\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00172}00172\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00173}00173\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00174}00174\ \ \ *layer\_radius\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00175}00175\ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ curr\_partial\ =\ partial\_deriv;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00176}00176\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <=\ i\_layer\_radius;\ ++i\_layer)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00177}00177\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00178}00178\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\ =\ (\textcolor{keywordtype}{double}\ *)(model\_data-\/>grid\_cell\_state);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00179}00179\ \ \ \ \ \ \ state\ +=\ i\_part\ *\ \mbox{\hyperlink{aero__rep__single__particle_8c_a5362f2b785d3da92675466d9256f3cfd}{PARTICLE\_STATE\_SIZE\_}}\ +\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab3956491dbbbf0687d3c0ae80d483ebf}{PHASE\_STATE\_ID\_}}(i\_layer,i\_phase);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00180}00180\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ volume;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00181}00181\ \ \ \ \ \ \ \mbox{\hyperlink{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}{aero\_phase\_get\_volume\_\_m3\_m3}}(model\_data,\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,i\_phase),}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state,\ \&(volume),\ curr\_partial);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00183}00183\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ curr\_partial\ +=\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00184}00184\ \ \ \ \ \ \ *layer\_radius\ +=\ volume;}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00185}00185\ \ \ \ \ \}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00186}00186\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00187}00187\ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00188}00188\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00189}00189\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00190}00190\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ surface\ area\ of\ specified\ particle\ layer\ \(\backslash\)f\$r\_\{eff\}\(\backslash\)f\$\ (m)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00191}00191\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00192}00192\ \textcolor{comment}{\ *\ Solve\ for\ the\ surface\ area\ of\ the\ interfacial\ layer\ that\ exists\ between\ the\ }}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00193}00193\ \textcolor{comment}{\ *\ two\ phases\ considered\ in\ aerosol\ phase\ mass\ tranfer\ between\ layers.\ When\ more}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00194}00194\ \textcolor{comment}{\ *\ than\ one\ phase\ exists\ in\ a\ layer,\ a\ "{}fractional\ volume\ overlap"{}\ configuration\ }}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00195}00195\ \textcolor{comment}{\ *\ is\ applied\ (see\ the\ single\ particle\ description\ in\ the\ Fortran\ script\ and\ }}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00196}00196\ \textcolor{comment}{\ *\ CAMP\ Github\ Documentation\ for\ details).}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00197}00197\ \textcolor{comment}{\ *\ }}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00198}00198\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00199}00199\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\_first\ Index\ of\ the\ first\ aerosol\ phase\ within\ the\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00200}00200\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\_second\ Index\ of\ the\ second\ aerosol\ phase\ within\ the\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00201}00201\ \textcolor{comment}{\ *\ \(\backslash\)param\ surface\_area\ Pointer\ to\ surface\ area\ of\ inner\ layer\ (m\string^2)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00202}00202\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ sa\_\{eff\}\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00203}00203\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ are\ species\ on\ the\ state\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00204}00204\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00205}00205\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00206}00206\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00207}00207\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00208}00208\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00209}00209\ \textcolor{comment}{\ *\ \(\backslash\)param\ surface\_area\ Surface\ area\ of\ specified\ layer\ (m2)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00210}00210\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00211}00211\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00212}\mbox{\hyperlink{aero__rep__single__particle_8c_a788ee00930db343356a0cbe7c53ea600}{00212}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_a788ee00930db343356a0cbe7c53ea600}{aero\_rep\_single\_particle\_get\_interface\_surface\_area\_\_m2}}(}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00213}00213\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx\_first,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx\_second,\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00214}00214\ \ \ \ \ \textcolor{keywordtype}{double}\ *surface\_area,\ \textcolor{keywordtype}{double}\ *partial\_deriv,\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00215}00215\ \ \ \ \ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00216}00216\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00217}00217\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00218}00218\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00219}00219\ \ \ \textcolor{keywordtype}{double}\ *curr\_partial\ =\ NULL;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00220}00220\ \ \ \textcolor{keywordtype}{int}\ layer\_first\ =\ -\/1;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00221}00221\ \ \ \textcolor{keywordtype}{int}\ layer\_second\ =\ -\/1;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00222}00222\ \ \ \textcolor{keywordtype}{int}\ layer\_interface\ =\ -\/1;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00223}00223\ \ \ \textcolor{keywordtype}{int}\ phase\_model\_data\_id\_first\ =\ -\/1;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00224}00224\ \ \ \textcolor{keywordtype}{int}\ phase\_model\_data\_id\_second\ =\ -\/1;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00225}00225\ \ \ \textcolor{keywordtype}{double}\ radius;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00226}00226\ \ \ \textcolor{keywordtype}{int}\ i\_part\ =\ aero\_phase\_idx\_first\ /\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00227}00227\ \ \ aero\_phase\_idx\_first\ -\/=\ i\_part\ *\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00228}00228\ \ \ aero\_phase\_idx\_second\ -\/=\ i\_part\ *\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00229}00229\ \ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00230}00230\ \ \ \textcolor{comment}{//\ Find\ the\ layer\ each\ phase\ (first\ and\ second)\ exist\ in\ }}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00231}00231\ \ \ \textcolor{keywordtype}{int}\ i\_phase\_count\ =\ 0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00232}00232\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00233}00233\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00234}00234\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\_PHASE\_START\_}}(i\_layer)\ <=\ aero\_phase\_idx\_first\ \&\&\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ aero\_phase\_idx\_first\ <=\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\_PHASE\_END\_}}(i\_layer)\ \&\&\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ i\_phase\_count\ ==\ aero\_phase\_idx\_first)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00237}00237\ \ \ \ \ \ \ \ \ layer\_first\ =\ i\_layer;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00238}00238\ \ \ \ \ \ \ \ \ phase\_model\_data\_id\_first\ =\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,\ i\_phase);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00239}00239\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\_PHASE\_START\_}}(i\_layer)\ <=\ aero\_phase\_idx\_second\ \&\&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00240}00240\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aero\_phase\_idx\_second\ <=\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\_PHASE\_END\_}}(i\_layer)\ \&\&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00241}00241\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_phase\_count\ ==\ aero\_phase\_idx\_second)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00242}00242\ \ \ \ \ \ \ \ \ layer\_second\ =\ i\_layer;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00243}00243\ \ \ \ \ \ \ \ \ phase\_model\_data\_id\_second\ =\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,\ i\_phase);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00244}00244\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00245}00245\ \ \ \ \ \ \ ++i\_phase\_count;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00246}00246\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00247}00247\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00248}00248\ \ \ \textcolor{comment}{//\ Find\ the\ interface\ between\ the\ first\ and\ second\ layer}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00249}00249\ \ \ layer\_interface\ =\ layer\_first\ >\ layer\_second\ ?\ layer\_second\ :\ layer\_first;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00250}00250\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00251}00251\ \ \ \textcolor{comment}{/*\ Solve\ for\ the\ total\ volume,\ total\ volume\ of\ the\ layer\ with\ the\ first\ phase,\ }}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00252}00252\ \textcolor{comment}{\ \ \ *\ total\ volume\ of\ the\ layer\ with\ the\ second\ phase,\ volume\ of\ first\ phase\ (within}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00253}00253\ \textcolor{comment}{\ \ \ *\ first\ layer)\ and\ volume\ of\ second\ phase\ (within\ second\ layer).}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00254}00254\ \textcolor{comment}{\ \ \ */}\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00255}00255\ \ \ \textcolor{keywordtype}{double}\ interface\_volume\ =\ 0.0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00256}00256\ \ \ \textcolor{keywordtype}{double}\ total\_volume\_layer\_first\ =\ 0.0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00257}00257\ \ \ \textcolor{keywordtype}{double}\ total\_volume\_layer\_second\ =\ 0.0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00258}00258\ \ \ \textcolor{keywordtype}{double}\ volume\_phase\_first\ =\ 0.0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00259}00259\ \ \ \textcolor{keywordtype}{double}\ volume\_phase\_second\ =\ 0.0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00260}00260\ \ \ i\_phase\_count\ =\ 0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00261}00261\ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ curr\_partial\ =\ partial\_deriv;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00262}00262\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00263}00263\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00264}00264\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\ =\ (\textcolor{keywordtype}{double}\ *)(model\_data-\/>grid\_cell\_state);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00265}00265\ \ \ \ \ \ \ state\ +=\ \mbox{\hyperlink{aero__rep__single__particle_8c_a5362f2b785d3da92675466d9256f3cfd}{PARTICLE\_STATE\_SIZE\_}}\ +\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab3956491dbbbf0687d3c0ae80d483ebf}{PHASE\_STATE\_ID\_}}(i\_layer,i\_phase);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00266}00266\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ volume;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00267}00267\ \ \ \ \ \ \ \mbox{\hyperlink{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}{aero\_phase\_get\_volume\_\_m3\_m3}}(model\_data,\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,i\_phase),}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00268}00268\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state,\ \&(volume),\ curr\_partial);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00269}00269\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_layer\ ==\ layer\_first)\ total\_volume\_layer\_first\ +=\ volume;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00270}00270\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_phase\_count\ ==\ aero\_phase\_idx\_first\ \&\&\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00271}00271\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,\ i\_phase)\ ==\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00272}00272\ \ \ \ \ \ \ \ \ \ \ phase\_model\_data\_id\_first)\ volume\_phase\_first\ =\ volume;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00273}00273\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_layer\ ==\ layer\_second)\ total\_volume\_layer\_second\ +=\ volume;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00274}00274\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_phase\_count\ ==\ aero\_phase\_idx\_second\ \&\&\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00275}00275\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,\ i\_phase)\ ==\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00276}00276\ \ \ \ \ \ \ \ \ \ \ phase\_model\_data\_id\_second)\ volume\_phase\_second\ =\ volume;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00277}00277\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_layer\ <=\ layer\_interface)\ interface\_volume\ +=\ volume;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00278}00278\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ curr\_partial\ +=\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00279}00279\ \ \ \ \ \ \ ++i\_phase\_count;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00280}00280\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00281}00281\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00282}00282\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00283}00283\ \ \ \textcolor{comment}{/*\ Calculate\ the\ fractional\ volume\ of\ first\ and\ second\ phase\ in\ their\ }}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00284}00284\ \textcolor{comment}{\ \ *\ assocaited\ layers.\ Calculate\ the\ radius\ and\ surface\ area\ of\ the\ interface}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00285}00285\ \textcolor{comment}{\ \ *\ between\ the\ first\ and\ second\ layer.}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00286}00286\ \textcolor{comment}{\ \ */}\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00287}00287\ \ \ \textcolor{keywordtype}{double}\ f\_first\ =\ volume\_phase\_first\ /\ total\_volume\_layer\_first;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00288}00288\ \ \ \textcolor{keywordtype}{double}\ f\_second\ =\ volume\_phase\_second\ /\ total\_volume\_layer\_second;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00289}00289\ \ \ radius\ =\ pow(((interface\_volume)\ *\ 3.0\ /\ 4.0\ /\ M\_PI),\ 1.0\ /\ 3.0);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00290}00290\ \ \ *surface\_area\ =\ f\_first\ *\ f\_second\ *\ 4\ *\ M\_PI\ *\ pow(radius,\ 2.0);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00291}00291\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00292}00292\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00293}00293\ \ \ \textcolor{comment}{//\ Calculate\ the\ partial\ derivatives\ for\ each\ layer/phase\ combination.\ }}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00294}00294\ \ \ \textcolor{keywordflow}{if}\ (!partial\_deriv)\ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00295}00295\ \ \ i\_phase\_count\ =\ 0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00296}00296\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00297}00297\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00298}00298\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\ =\ (\textcolor{keywordtype}{double}\ *)(model\_data-\/>grid\_cell\_state);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00299}00299\ \ \ \ \ \ \ state\ +=\ \mbox{\hyperlink{aero__rep__single__particle_8c_a5362f2b785d3da92675466d9256f3cfd}{PARTICLE\_STATE\_SIZE\_}}\ +\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab3956491dbbbf0687d3c0ae80d483ebf}{PHASE\_STATE\_ID\_}}(i\_layer,i\_phase);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00300}00300\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ volume\_phase;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00301}00301\ \ \ \ \ \ \ \mbox{\hyperlink{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}{aero\_phase\_get\_volume\_\_m3\_m3}}(model\_data,\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,i\_phase),}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00302}00302\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state,\ \&(volume\_phase),\ NULL);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00303}00303\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_spec\ =\ 0;\ i\_spec\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);\ ++i\_spec)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00304}00304\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ layer\ =\ layer\_first,\ phase\ =\ aero\_phase\_idx\_first\ }}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00305}00305\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_layer\ ==\ layer\_first\ \&\&\ i\_phase\_count\ ==\ aero\_phase\_idx\_first)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00306}00306\ \ \ \ \ \ \ \ \ \ \ *partial\_deriv\ =}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00307}00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (((total\_volume\_layer\_first\ -\/\ volume\_phase\_first)\ *\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00308}00308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pow(total\_volume\_layer\_first,\ -\/2.0)\ *\ f\_second\ *\ (*surface\_area))\ +}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00309}00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2.0\ *\ f\_first\ *\ f\_second\ *\ pow(radius,\ -\/1.0))\ \ *\ (*partial\_deriv);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00310}00310\ \ \ \ \ \ \ \ \ \ \ ++partial\_deriv;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00311}00311\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00312}00312\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ layer\ =\ layer\_first,\ phase\ !=\ aero\_phase\_idx\_first}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00313}00313\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (i\_layer\ ==\ layer\_first\ \&\&\ i\_phase\_count\ !=\ aero\_phase\_idx\_first)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00314}00314\ \ \ \ \ \ \ \ \ \ \ *partial\_deriv\ =}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00315}00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (((-\/1\ *\ volume\_phase)\ *\ pow(total\_volume\_layer\_first,\ -\/2.0)\ *\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00316}00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\_second\ *\ (*surface\_area))\ +\ 2.0\ *\ f\_first\ *\ f\_second\ *\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pow(radius,\ -\/1.0))\ \ *\ (*partial\_deriv);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ ++partial\_deriv;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00319}00319\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00320}00320\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ layer\ =\ layer\_second,\ phase\ =\ aero\_phase\_idx\_second}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00321}00321\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (i\_layer\ ==\ layer\_second\ \&\&\ i\_phase\_count\ ==\ aero\_phase\_idx\_second)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00322}00322\ \ \ \ \ \ \ \ \ \ \ *partial\_deriv\ =}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (((total\_volume\_layer\_second\ -\/\ volume\_phase\_second)\ *}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00324}00324\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pow(total\_volume\_layer\_second,\ -\/2.0)\ *\ f\_first\ *\ (*surface\_area))\ +}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2.0\ *\ f\_first\ *\ f\_second\ *\ pow(radius,\ -\/1.0))\ \ *\ (*partial\_deriv);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ ++partial\_deriv;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00327}00327\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00328}00328\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ layer\ =\ layer\_second,\ phase\ !=\ aero\_phase\_idx\_second}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00329}00329\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (i\_layer\ ==\ layer\_second\ \&\&\ i\_phase\_count\ !=\ aero\_phase\_idx\_second)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00330}00330\ \ \ \ \ \ \ \ \ \ \ *partial\_deriv\ =}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00331}00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (((-\/1\ *\ volume\_phase)\ *\ pow(total\_volume\_layer\_second,\ -\/2.0)\ *}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\_first\ *\ (*surface\_area))\ +\ 2.0\ *\ f\_first\ *\ f\_second\ *}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pow(radius,\ -\/1.0))\ \ *\ (*partial\_deriv);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ ++partial\_deriv;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00335}00335\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00336}00336\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Set\ partial\_derivative\ =\ 0\ for\ all\ other\ layers.\ }}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00337}00337\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (i\_layer\ !=\ layer\_first\ \&\&\ i\_layer\ !=\ layer\_second)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00338}00338\ \ \ \ \ \ \ \ \ \ \ *(partial\_deriv++)\ =\ ZERO;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00339}00339\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00340}00340\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00341}00341\ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ No\ conditions\ met\ for\ surface\ area\ partial\ derivative.\(\backslash\)n\(\backslash\)n"{}});}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00342}00342\ \ \ \ \ \ \ \ \ \ \ \ \ exit(1);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00343}00343\ \ \ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00344}00344\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00345}00345\ \ \ \ \ ++i\_phase\_count;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00346}00346\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00347}00347\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00348}00348\ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00349}00349\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00350}00350\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00351}00351\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ particle\ number\ concentration\ \(\backslash\)f\$n\(\backslash\)f\$}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00352}00352\ \textcolor{comment}{\ *\ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)\#\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00353}00353\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00354}00354\ \textcolor{comment}{\ *\ This\ single\ particle\ number\ concentration\ is\ set\ by\ the\ aerosol\ model\ prior}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00355}00355\ \textcolor{comment}{\ *\ to\ solving\ the\ chemistry.\ Thus,\ all\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ n\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ are}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00356}00356\ \textcolor{comment}{\ *\ zero.\ Also,\ there\ is\ only\ one\ set\ of\ particles\ in\ the\ single\ particle}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00357}00357\ \textcolor{comment}{\ *\ representation,\ so\ the\ phase\ index\ is\ not\ used.}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00358}00358\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00359}00359\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00360}00360\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00361}00361\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (not\ used)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00362}00362\ \textcolor{comment}{\ *\ \(\backslash\)param\ number\_conc\ Particle\ number\ concentration,\ \(\backslash\)f\$n\(\backslash\)f\$}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00363}00363\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)\#\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00364}00364\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ n\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$\ are}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00365}00365\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ species\ on\ the\ state\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00366}00366\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00367}00367\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00368}00368\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00369}00369\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00370}00370\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00371}00371\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00372}00372\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00373}\mbox{\hyperlink{aero__rep__single__particle_8c_afa7d35b774d0ab4d7cad7fb30d75e897}{00373}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_afa7d35b774d0ab4d7cad7fb30d75e897}{aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3}}(}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00374}00374\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,\ \textcolor{keywordtype}{double}\ *number\_conc,}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00375}00375\ \ \ \ \ \textcolor{keywordtype}{double}\ *partial\_deriv,\ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00376}00376\ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00377}00377\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00378}00378\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00379}00379\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00380}00380\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00381}00381\ \ \ \textcolor{keywordtype}{int}\ i\_part\ =\ aero\_phase\_idx\ /\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00382}00382\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00383}00383\ \ \ *number\_conc\ =\ \mbox{\hyperlink{aero__rep__single__particle_8c_af2c159c650af709701e7c5ae2f153ce3}{NUMBER\_CONC\_}}(i\_part);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00384}00384\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00385}00385\ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00386}00386\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00387}00387\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00388}00388\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_spec\ =\ 0;\ i\_spec\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);\ ++i\_spec)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00187}00187\ \ \ *layer\_radius\ =\ pow(((*layer\_radius)\ *\ 3.0\ /\ 4.0\ /\ 3.14159265359),\ 1.0\ /\ 3.0);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00188}00188\ \ \ \textcolor{keywordflow}{if}\ (!partial\_deriv)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00189}00189\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <=\ i\_layer\_radius;\ ++i\_layer)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00190}00190\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00191}00191\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_spec\ =\ 0;\ i\_spec\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);\ ++i\_spec)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00192}00192\ \ \ \ \ \ \ \ \ *partial\_deriv\ =}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ 1.0\ /\ 4.0\ /\ 3.14159265359\ *\ pow(*layer\_radius,\ -\/2.0)\ *\ (*partial\_deriv);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00194}00194\ \ \ \ \ \ \ \ \ ++partial\_deriv;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00195}00195\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00196}00196\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00197}00197\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00198}00198\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00199}00199\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00200}00200\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00201}00201\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ effective\ particle\ radius\ \(\backslash\)f\$r\_\{eff\}\(\backslash\)f\$\ (m)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00202}00202\ \textcolor{comment}{\ *\ Finds\ the\ radius\ of\ the\ largest\ layer\ in\ specified\ particle.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00203}00203\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00204}00204\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00205}00205\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00206}00206\ \textcolor{comment}{\ *\ \(\backslash\)param\ radius\ Effective\ particle\ radius\ (m)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00207}00207\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ r\_\{eff\}\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00208}00208\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ are\ species\ on\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00209}00209\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00210}00210\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00211}00211\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00212}00212\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00213}00213\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00214}00214\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00215}00215\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00216}\mbox{\hyperlink{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891}{00216}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_a48b11d345d89071d34e67b5063b1b891}{aero\_rep\_single\_particle\_get\_effective\_radius\_\_m}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00217}00217\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,\ \textcolor{keywordtype}{double}\ *radius,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00218}00218\ \ \ \ \ \textcolor{keywordtype}{double}\ *partial\_deriv,\ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00219}00219\ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00220}00220\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00221}00221\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00222}00222\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00223}00223\ \ \ \textcolor{keywordtype}{double}\ *curr\_partial\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00224}00224\ \ \ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00225}00225\ \ \ \textcolor{comment}{//\ Adjust\ aero\_phase\_idx\ to\ the\ last\ phase\ in\ the\ particle.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00226}00226\ \ \ \textcolor{comment}{//\ Add\ 1\ to\ aero\_phase\_idx/TOTAL\_NUM\_PHASES\_\ to\ account\ for\ c\ indexing\ starting\ at\ 0.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00227}00227\ \ \ \textcolor{keywordtype}{int}\ offset\ =\ (\mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}}*((aero\_phase\_idx\ /\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}})+1))\ -\/\ aero\_phase\_idx;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00228}00228\ \ \ aero\_phase\_idx\ +=\ offset;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00229}00229\ \ \ \mbox{\hyperlink{aero__rep__single__particle_8c_ae83f56379c60d1fc674f0fd9e9726418}{aero\_rep\_single\_particle\_get\_effective\_layer\_radius\_\_m}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00230}00230\ \ \ \ \ \ \ model\_data,\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00231}00231\ \ \ \ \ \ \ aero\_phase\_idx-\/1,\ \textcolor{comment}{//\ Adjusted\ to\ last\ phase\ in\ particle.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00232}00232\ \ \ \ \ \ \ radius,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00233}00233\ \ \ \ \ \ \ partial\_deriv,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00234}00234\ \ \ \ \ \ \ int\_data,\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00235}00235\ \ \ \ \ \ \ float\_data,\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00236}00236\ \ \ \ \ \ \ aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00237}00237\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00238}00238\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00239}00239\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00240}00240\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00241}00241\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ surface\ area\ of\ specified\ particle\ layer\ \(\backslash\)f\$r\_\{eff\}\(\backslash\)f\$\ (m)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00242}00242\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00243}00243\ \textcolor{comment}{\ *\ Solve\ for\ the\ surface\ area\ of\ the\ interfacial\ layer\ that\ exists\ between\ the\ }}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00244}00244\ \textcolor{comment}{\ *\ two\ phases\ considered\ in\ aerosol\ phase\ mass\ tranfer\ between\ layers.\ When\ more}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00245}00245\ \textcolor{comment}{\ *\ than\ one\ phase\ exists\ in\ a\ layer,\ a\ "{}fractional\ volume\ overlap"{}\ configuration\ }}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00246}00246\ \textcolor{comment}{\ *\ is\ applied\ (see\ the\ single\ particle\ description\ in\ the\ Fortran\ script\ and\ }}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00247}00247\ \textcolor{comment}{\ *\ CAMP\ Github\ Documentation\ for\ details).}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00248}00248\ \textcolor{comment}{\ *\ }}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00249}00249\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00250}00250\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\_first\ Index\ of\ the\ first\ aerosol\ phase\ within\ the\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00251}00251\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\_second\ Index\ of\ the\ second\ aerosol\ phase\ within\ the\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00252}00252\ \textcolor{comment}{\ *\ \(\backslash\)param\ surface\_area\ Pointer\ to\ surface\ area\ of\ inner\ layer\ (m\string^2)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00253}00253\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ sa\_\{eff\}\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00254}00254\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ are\ species\ on\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00255}00255\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00256}00256\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00257}00257\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00258}00258\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00259}00259\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00260}00260\ \textcolor{comment}{\ *\ \(\backslash\)param\ surface\_area\ Surface\ area\ of\ specified\ layer\ (m2)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00261}00261\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00262}00262\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00263}\mbox{\hyperlink{aero__rep__single__particle_8c_a788ee00930db343356a0cbe7c53ea600}{00263}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_a788ee00930db343356a0cbe7c53ea600}{aero\_rep\_single\_particle\_get\_interface\_surface\_area\_\_m2}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00264}00264\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx\_first,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx\_second,\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00265}00265\ \ \ \ \ \textcolor{keywordtype}{double}\ *surface\_area,\ \textcolor{keywordtype}{double}\ *partial\_deriv,\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00266}00266\ \ \ \ \ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00267}00267\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00268}00268\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00269}00269\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00270}00270\ \ \ \textcolor{keywordtype}{double}\ *curr\_partial\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00271}00271\ \ \ \textcolor{keywordtype}{int}\ layer\_first\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00272}00272\ \ \ \textcolor{keywordtype}{int}\ layer\_second\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00273}00273\ \ \ \textcolor{keywordtype}{int}\ layer\_interface\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00274}00274\ \ \ \textcolor{keywordtype}{int}\ phase\_model\_data\_id\_first\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00275}00275\ \ \ \textcolor{keywordtype}{int}\ phase\_model\_data\_id\_second\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00276}00276\ \ \ \textcolor{keywordtype}{double}\ radius;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00277}00277\ \ \ \textcolor{keywordtype}{int}\ i\_part\ =\ aero\_phase\_idx\_first\ /\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00278}00278\ \ \ aero\_phase\_idx\_first\ -\/=\ i\_part\ *\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00279}00279\ \ \ aero\_phase\_idx\_second\ -\/=\ i\_part\ *\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00280}00280\ \ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00281}00281\ \ \ \textcolor{comment}{//\ Find\ the\ layer\ each\ phase\ (first\ and\ second)\ exist\ in\ }}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00282}00282\ \ \ \textcolor{keywordtype}{int}\ i\_phase\_count\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00283}00283\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00284}00284\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00285}00285\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\_PHASE\_START\_}}(i\_layer)\ <=\ aero\_phase\_idx\_first\ \&\&\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00286}00286\ \ \ \ \ \ \ \ \ \ \ aero\_phase\_idx\_first\ <=\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\_PHASE\_END\_}}(i\_layer)\ \&\&\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00287}00287\ \ \ \ \ \ \ \ \ \ \ i\_phase\_count\ ==\ aero\_phase\_idx\_first)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00288}00288\ \ \ \ \ \ \ \ \ layer\_first\ =\ i\_layer;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00289}00289\ \ \ \ \ \ \ \ \ phase\_model\_data\_id\_first\ =\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,\ i\_phase);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00290}00290\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\_PHASE\_START\_}}(i\_layer)\ <=\ aero\_phase\_idx\_second\ \&\&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00291}00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ aero\_phase\_idx\_second\ <=\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\_PHASE\_END\_}}(i\_layer)\ \&\&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00292}00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_phase\_count\ ==\ aero\_phase\_idx\_second)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00293}00293\ \ \ \ \ \ \ \ \ layer\_second\ =\ i\_layer;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00294}00294\ \ \ \ \ \ \ \ \ phase\_model\_data\_id\_second\ =\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,\ i\_phase);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00295}00295\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00296}00296\ \ \ \ \ \ \ ++i\_phase\_count;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00297}00297\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00298}00298\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00299}00299\ \ \ \textcolor{comment}{//\ Find\ the\ interface\ between\ the\ first\ and\ second\ layer}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00300}00300\ \ \ layer\_interface\ =\ layer\_first\ >\ layer\_second\ ?\ layer\_second\ :\ layer\_first;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00301}00301\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00302}00302\ \ \ \textcolor{comment}{/*\ Solve\ for\ the\ total\ volume,\ total\ volume\ of\ the\ layer\ with\ the\ first\ phase,\ }}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00303}00303\ \textcolor{comment}{\ \ \ *\ total\ volume\ of\ the\ layer\ with\ the\ second\ phase,\ volume\ of\ first\ phase\ (within}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00304}00304\ \textcolor{comment}{\ \ \ *\ first\ layer)\ and\ volume\ of\ second\ phase\ (within\ second\ layer).}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00305}00305\ \textcolor{comment}{\ \ \ */}\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00306}00306\ \ \ \textcolor{keywordtype}{double}\ interface\_volume\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00307}00307\ \ \ \textcolor{keywordtype}{double}\ total\_volume\_layer\_first\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00308}00308\ \ \ \textcolor{keywordtype}{double}\ total\_volume\_layer\_second\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00309}00309\ \ \ \textcolor{keywordtype}{double}\ volume\_phase\_first\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00310}00310\ \ \ \textcolor{keywordtype}{double}\ volume\_phase\_second\ =\ 0.0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00311}00311\ \ \ i\_phase\_count\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00312}00312\ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ curr\_partial\ =\ partial\_deriv;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00313}00313\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00314}00314\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00315}00315\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\ =\ (\textcolor{keywordtype}{double}\ *)(model\_data-\/>grid\_cell\_state);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00316}00316\ \ \ \ \ \ \ state\ +=\ \mbox{\hyperlink{aero__rep__single__particle_8c_a5362f2b785d3da92675466d9256f3cfd}{PARTICLE\_STATE\_SIZE\_}}\ +\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab3956491dbbbf0687d3c0ae80d483ebf}{PHASE\_STATE\_ID\_}}(i\_layer,i\_phase);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00317}00317\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ volume;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00318}00318\ \ \ \ \ \ \ \mbox{\hyperlink{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}{aero\_phase\_get\_volume\_\_m3\_m3}}(model\_data,\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,i\_phase),}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state,\ \&(volume),\ curr\_partial);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00320}00320\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_layer\ ==\ layer\_first)\ total\_volume\_layer\_first\ +=\ volume;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00321}00321\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_phase\_count\ ==\ aero\_phase\_idx\_first\ \&\&\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00322}00322\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,\ i\_phase)\ ==\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00323}00323\ \ \ \ \ \ \ \ \ \ \ phase\_model\_data\_id\_first)\ volume\_phase\_first\ =\ volume;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00324}00324\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_layer\ ==\ layer\_second)\ total\_volume\_layer\_second\ +=\ volume;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00325}00325\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_phase\_count\ ==\ aero\_phase\_idx\_second\ \&\&\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,\ i\_phase)\ ==\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00327}00327\ \ \ \ \ \ \ \ \ \ \ phase\_model\_data\_id\_second)\ volume\_phase\_second\ =\ volume;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00328}00328\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_layer\ <=\ layer\_interface)\ interface\_volume\ +=\ volume;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00329}00329\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ curr\_partial\ +=\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00330}00330\ \ \ \ \ \ \ ++i\_phase\_count;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00331}00331\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00332}00332\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00333}00333\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00334}00334\ \ \ \textcolor{comment}{/*\ Calculate\ the\ fractional\ volume\ of\ first\ and\ second\ phase\ in\ their\ }}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00335}00335\ \textcolor{comment}{\ \ *\ assocaited\ layers.\ Calculate\ the\ radius\ and\ surface\ area\ of\ the\ interface}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00336}00336\ \textcolor{comment}{\ \ *\ between\ the\ first\ and\ second\ layer.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00337}00337\ \textcolor{comment}{\ \ */}\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00338}00338\ \ \ \textcolor{keywordtype}{double}\ f\_first\ =\ volume\_phase\_first\ /\ total\_volume\_layer\_first;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00339}00339\ \ \ \textcolor{keywordtype}{double}\ f\_second\ =\ volume\_phase\_second\ /\ total\_volume\_layer\_second;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00340}00340\ \ \ radius\ =\ pow(((interface\_volume)\ *\ 3.0\ /\ 4.0\ /\ M\_PI),\ 1.0\ /\ 3.0);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00341}00341\ \ \ *surface\_area\ =\ f\_first\ *\ f\_second\ *\ 4\ *\ M\_PI\ *\ pow(radius,\ 2.0);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00342}00342\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00343}00343\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00344}00344\ \ \ \textcolor{comment}{//\ Calculate\ the\ partial\ derivatives\ for\ each\ layer/phase\ combination.\ }}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00345}00345\ \ \ \textcolor{keywordflow}{if}\ (!partial\_deriv)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00346}00346\ \ \ i\_phase\_count\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00347}00347\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00348}00348\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00349}00349\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\ =\ (\textcolor{keywordtype}{double}\ *)(model\_data-\/>grid\_cell\_state);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00350}00350\ \ \ \ \ \ \ state\ +=\ \mbox{\hyperlink{aero__rep__single__particle_8c_a5362f2b785d3da92675466d9256f3cfd}{PARTICLE\_STATE\_SIZE\_}}\ +\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab3956491dbbbf0687d3c0ae80d483ebf}{PHASE\_STATE\_ID\_}}(i\_layer,i\_phase);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00351}00351\ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ volume\_phase;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00352}00352\ \ \ \ \ \ \ \mbox{\hyperlink{aero__phase__solver_8c_a6e493e863924f29d6bd06598fa657f08}{aero\_phase\_get\_volume\_\_m3\_m3}}(model\_data,\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,i\_phase),}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00353}00353\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state,\ \&(volume\_phase),\ NULL);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00354}00354\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_spec\ =\ 0;\ i\_spec\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);\ ++i\_spec)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00355}00355\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ layer\ =\ layer\_first,\ phase\ =\ aero\_phase\_idx\_first\ }}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00356}00356\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_layer\ ==\ layer\_first\ \&\&\ i\_phase\_count\ ==\ aero\_phase\_idx\_first)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00357}00357\ \ \ \ \ \ \ \ \ \ \ *partial\_deriv\ =}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00358}00358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (((total\_volume\_layer\_first\ -\/\ volume\_phase\_first)\ *\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00359}00359\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pow(total\_volume\_layer\_first,\ -\/2.0)\ *\ f\_second\ *\ (*surface\_area))\ +}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00360}00360\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2.0\ *\ f\_first\ *\ f\_second\ *\ pow(radius,\ -\/1.0))\ \ *\ (*partial\_deriv);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00361}00361\ \ \ \ \ \ \ \ \ \ \ ++partial\_deriv;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00362}00362\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00363}00363\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ layer\ =\ layer\_first,\ phase\ !=\ aero\_phase\_idx\_first}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00364}00364\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (i\_layer\ ==\ layer\_first\ \&\&\ i\_phase\_count\ !=\ aero\_phase\_idx\_first)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00365}00365\ \ \ \ \ \ \ \ \ \ \ *partial\_deriv\ =}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00366}00366\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (((-\/1\ *\ volume\_phase)\ *\ pow(total\_volume\_layer\_first,\ -\/2.0)\ *\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\_second\ *\ (*surface\_area))\ +\ 2.0\ *\ f\_first\ *\ f\_second\ *\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pow(radius,\ -\/1.0))\ \ *\ (*partial\_deriv);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00369}00369\ \ \ \ \ \ \ \ \ \ \ ++partial\_deriv;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00370}00370\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00371}00371\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ layer\ =\ layer\_second,\ phase\ =\ aero\_phase\_idx\_second}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00372}00372\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (i\_layer\ ==\ layer\_second\ \&\&\ i\_phase\_count\ ==\ aero\_phase\_idx\_second)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00373}00373\ \ \ \ \ \ \ \ \ \ \ *partial\_deriv\ =}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00374}00374\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (((total\_volume\_layer\_second\ -\/\ volume\_phase\_second)\ *}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00375}00375\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pow(total\_volume\_layer\_second,\ -\/2.0)\ *\ f\_first\ *\ (*surface\_area))\ +}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00376}00376\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2.0\ *\ f\_first\ *\ f\_second\ *\ pow(radius,\ -\/1.0))\ \ *\ (*partial\_deriv);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00377}00377\ \ \ \ \ \ \ \ \ \ \ ++partial\_deriv;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00378}00378\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00379}00379\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ layer\ =\ layer\_second,\ phase\ !=\ aero\_phase\_idx\_second}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00380}00380\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (i\_layer\ ==\ layer\_second\ \&\&\ i\_phase\_count\ !=\ aero\_phase\_idx\_second)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ *partial\_deriv\ =}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (((-\/1\ *\ volume\_phase)\ *\ pow(total\_volume\_layer\_second,\ -\/2.0)\ *}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00383}00383\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ f\_first\ *\ (*surface\_area))\ +\ 2.0\ *\ f\_first\ *\ f\_second\ *}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pow(radius,\ -\/1.0))\ \ *\ (*partial\_deriv);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ ++partial\_deriv;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00386}00386\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00387}00387\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Set\ partial\_derivative\ =\ 0\ for\ all\ other\ layers.\ }}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00388}00388\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (i\_layer\ !=\ layer\_first\ \&\&\ i\_layer\ !=\ layer\_second)\ \{}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00389}00389\ \ \ \ \ \ \ \ \ \ \ *(partial\_deriv++)\ =\ ZERO;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00390}00390\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00391}00391\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00392}00392\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00393}00393\ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00394}00394\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00395}00395\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00396}00396\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ type\ of\ aerosol\ concentration\ used.}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00397}00397\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00398}00398\ \textcolor{comment}{\ *\ Single\ particle\ concentrations\ are\ per-\/particle.}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00399}00399\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00400}00400\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00401}00401\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_conc\_type\ Pointer\ to\ int\ that\ will\ hold\ the\ concentration\ type}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00402}00402\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ code\ (0\ =\ per\ particle\ mass\ concentrations;}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00403}00403\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1\ =\ total\ particle\ mass\ concentrations)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00404}00404\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00405}00405\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00406}00406\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00407}00407\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00408}00408\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00409}00409\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00410}00410\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00411}\mbox{\hyperlink{aero__rep__single__particle_8c_a59114de73dd305d5825a8547155b8946}{00411}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_a59114de73dd305d5825a8547155b8946}{aero\_rep\_single\_particle\_get\_aero\_conc\_type}}(\textcolor{keywordtype}{int}\ aero\_phase\_idx,}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00412}00412\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *aero\_conc\_type,}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00413}00413\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00414}00414\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00415}00415\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00416}00416\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00417}00417\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00418}00418\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00419}00419\ \ \ *aero\_conc\_type\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00390}00390\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00391}00391\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00392}00392\ \ \ \ \ \ \ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ No\ conditions\ met\ for\ surface\ area\ partial\ derivative.\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00393}00393\ \ \ \ \ \ \ \ \ \ \ \ \ exit(1);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00394}00394\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00395}00395\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00396}00396\ \ \ \ \ ++i\_phase\_count;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00397}00397\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00398}00398\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00399}00399\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00400}00400\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00401}00401\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00402}00402\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ thickness\ of\ a\ particle\ layer\ (m)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00403}00403\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00404}00404\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00405}00405\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00406}00406\ \textcolor{comment}{\ *\ \(\backslash\)param\ layer\_thickness\ Effective\ layer\ thickness\ (m)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00407}00407\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ r\_\{eff\}\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00408}00408\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ are\ species\ on\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00409}00409\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00410}00410\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00411}00411\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00412}00412\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00413}00413\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00414}00414\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00415}00415\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00416}\mbox{\hyperlink{aero__rep__single__particle_8c_abbf8978e943e07663bd8d92f7a3aae23}{00416}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_abbf8978e943e07663bd8d92f7a3aae23}{aero\_rep\_single\_particle\_get\_layer\_thickness\_\_m}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00417}00417\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,\ \textcolor{keywordtype}{double}\ *layer\_thickness,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00418}00418\ \ \ \ \ \textcolor{keywordtype}{double}\ *partial\_deriv,\ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00419}00419\ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00420}00420\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00421}00421\ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00422}00422\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00423}00423\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00424}00424\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ total\ mass\ in\ an\ aerosol\ phase\ \(\backslash\)f\$m\(\backslash\)f\$}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00425}00425\ \textcolor{comment}{\ *\ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00426}00426\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00427}00427\ \textcolor{comment}{\ *\ The\ single\ particle\ mass\ is\ set\ for\ each\ new\ state\ as\ the\ sum\ of\ the\ masses}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00428}00428\ \textcolor{comment}{\ *\ of\ the\ aerosol\ phases\ that\ compose\ the\ particle}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00429}00429\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00430}00430\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00431}00431\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00432}00432\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_mass\ Total\ mass\ in\ the\ aerosol\ phase,\ \(\backslash\)f\$m\(\backslash\)f\$}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00433}00433\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00434}00434\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ m\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$\ are}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00435}00435\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ species\ on\ the\ state\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00436}00436\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00437}00437\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00438}00438\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00439}00439\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00440}00440\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00441}00441\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00442}00442\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00443}\mbox{\hyperlink{aero__rep__single__particle_8c_ad49c89b34b57e5b644d6506ead9dea34}{00443}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad49c89b34b57e5b644d6506ead9dea34}{aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3}}(}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00444}00444\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,\ \textcolor{keywordtype}{double}\ *aero\_phase\_mass,}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00445}00445\ \ \ \ \ \textcolor{keywordtype}{double}\ *partial\_deriv,\ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00446}00446\ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00447}00447\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00448}00448\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00449}00449\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00450}00450\ \ \ \textcolor{keywordtype}{int}\ i\_part\ =\ aero\_phase\_idx\ /\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00451}00451\ \ \ aero\_phase\_idx\ -\/=\ i\_part\ *\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00452}00452\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00453}00453\ \ \ \textcolor{keywordtype}{int}\ i\_total\_phase\ =\ 0;\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00454}00454\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00455}00455\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{\ \ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00456}00456\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ i\_total\_phase\ ==\ aero\_phase\_idx\ )\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00457}00457\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\ =\ (\textcolor{keywordtype}{double}\ *)(model\_data-\/>grid\_cell\_state);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00458}00458\ \ \ \ \ \ \ \ \ state\ +=\ i\_part\ *\ \mbox{\hyperlink{aero__rep__single__particle_8c_a5362f2b785d3da92675466d9256f3cfd}{PARTICLE\_STATE\_SIZE\_}}\ +\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab3956491dbbbf0687d3c0ae80d483ebf}{PHASE\_STATE\_ID\_}}(i\_layer,i\_phase);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00459}00459\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ mw;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00460}00460\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}{aero\_phase\_get\_mass\_\_kg\_m3}}(model\_data,\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,i\_phase),}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00461}00461\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state,\ aero\_phase\_mass,\ \&mw,\ partial\_deriv,\ NULL);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00462}00462\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ partial\_deriv\ +=\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00463}00463\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00464}00464\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_spec\ =\ 0;\ i\_spec\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);\ ++i\_spec)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00465}00465\ \ \ \ \ \ \ \ \ \ \ *(partial\_deriv++)\ =\ ZERO;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00466}00466\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00467}00467\ \ \ \ \ \ \ ++i\_total\_phase;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00468}00468\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00469}00469\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00470}00470\ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00471}00471\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00472}00472\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00473}00473\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ average\ molecular\ weight\ in\ an\ aerosol\ phase}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00474}00474\ \textcolor{comment}{\ **\ \ \ \ \ \ \ \ \(\backslash\)f\$m\(\backslash\)f\$\ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilo\(\backslash\)gram\(\backslash\)per\(\backslash\)mol\}\}\(\backslash\)f\$)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00475}00475\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00476}00476\ \textcolor{comment}{\ *\ The\ single\ particle\ mass\ is\ set\ for\ each\ new\ state\ as\ the\ sum\ of\ the\ masses}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00477}00477\ \textcolor{comment}{\ *\ of\ the\ aerosol\ phases\ that\ compose\ the\ particle}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00478}00478\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00479}00479\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00480}00480\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00481}00481\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_avg\_MW\ Average\ molecular\ weight\ in\ the\ aerosol\ phase}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00482}00482\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)mole\}\}\(\backslash\)f\$)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00483}00483\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ m\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$\ are}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00484}00484\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ species\ on\ the\ state\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00485}00485\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00486}00486\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00487}00487\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00488}00488\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00489}00489\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00490}00490\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00491}00491\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00492}\mbox{\hyperlink{aero__rep__single__particle_8c_a203b6931fd5a504b7cc1750eb582b60c}{00492}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_a203b6931fd5a504b7cc1750eb582b60c}{aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}}(}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00493}00493\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,\ \textcolor{keywordtype}{double}\ *aero\_phase\_avg\_MW,}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00494}00494\ \ \ \ \ \textcolor{keywordtype}{double}\ *partial\_deriv,\ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00495}00495\ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00496}00496\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00497}00497\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00498}00498\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00499}00499\ \ \ \textcolor{keywordtype}{int}\ i\_part\ =\ aero\_phase\_idx\ /\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00500}00500\ \ \ aero\_phase\_idx\ -\/=\ i\_part\ *\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00501}00501\ \ \ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00502}00502\ \ \ \textcolor{keywordtype}{int}\ i\_total\_phase\ =\ 0;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00503}00503\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00504}00504\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00505}00505\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ i\_total\_phase\ ==\ aero\_phase\_idx\ )\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00506}00506\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\ =\ (\textcolor{keywordtype}{double}\ *)(model\_data-\/>grid\_cell\_state);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00507}00507\ \ \ \ \ \ \ \ \ state\ +=\ i\_part\ *\ \mbox{\hyperlink{aero__rep__single__particle_8c_a5362f2b785d3da92675466d9256f3cfd}{PARTICLE\_STATE\_SIZE\_}}\ +\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab3956491dbbbf0687d3c0ae80d483ebf}{PHASE\_STATE\_ID\_}}(i\_layer,i\_phase);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00508}00508\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ mass;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00509}00509\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}{aero\_phase\_get\_mass\_\_kg\_m3}}(model\_data,\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,i\_phase),}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00510}00510\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state,\ \&mass,\ aero\_phase\_avg\_MW,\ NULL,\ partial\_deriv);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00511}00511\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ partial\_deriv\ +=\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00512}00512\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00513}00513\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_spec\ =\ 0;\ i\_spec\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);\ ++i\_spec)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00514}00514\ \ \ \ \ \ \ \ \ \ \ *(partial\_deriv++)\ =\ ZERO;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00515}00515\ \ \ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00516}00516\ \ \ \ \ \ \ ++i\_total\_phase;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00517}00517\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00518}00518\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00519}00519\ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00520}00520\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00521}00521\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00522}00522\ \textcolor{comment}{/**\ \(\backslash\)brief\ Update\ aerosol\ representation\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00523}00523\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00524}00524\ \textcolor{comment}{\ *\ Single\ particle\ aerosol\ representation\ update\ data\ is\ structured\ as\ follows:}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00525}00525\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00526}00526\ \textcolor{comment}{\ *\ \ -\/\ \(\backslash\)b\ int\ aero\_rep\_id\ (Id\ of\ one\ or\ more\ aerosol\ representations\ set\ by\ the}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00527}00527\ \textcolor{comment}{\ *\ \ \ \ \ \ \ host\ model\ using\ the}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00528}00528\ \textcolor{comment}{\ *\ \ \ \ \ \ \ camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t::set\_id}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00529}00529\ \textcolor{comment}{\ *\ \ \ \ \ \ \ function\ prior\ to\ initializing\ the\ solver.)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00530}00530\ \textcolor{comment}{\ *\ \ -\/\ \(\backslash\)b\ int\ update\_type\ (Type\ of\ update\ to\ perform.\ Can\ be\ UPDATE\_NUMBER}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00531}00531\ \textcolor{comment}{\ *\ \ \ \ \ \ \ only.)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00532}00532\ \textcolor{comment}{\ *\ \ -\/\ \(\backslash\)b\ double\ new\_value\ (Either\ the\ new\ radius\ (m)\ or\ the\ new\ number}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00533}00533\ \textcolor{comment}{\ *\ \ \ \ \ \ \ concentration\ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)\#\(\backslash\)per\(\backslash\)cubic\(\backslash\)centi\(\backslash\)metre\}\}\(\backslash\)f\$).)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00534}00534\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00535}00535\ \textcolor{comment}{\ *\ \(\backslash\)param\ update\_data\ Pointer\ to\ the\ updated\ aerosol\ representation\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00536}00536\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00537}00537\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00538}00538\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00539}00539\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00540}00540\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00541}00541\ \textcolor{comment}{\ *\ \(\backslash\)return\ Flag\ indicating\ whether\ this\ is\ the\ aerosol\ representation\ to\ update}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00542}00542\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00543}00543\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00544}\mbox{\hyperlink{aero__rep__single__particle_8c_abe4da510bed46cee8a75f90917764311}{00544}}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{aero__rep__single__particle_8c_abe4da510bed46cee8a75f90917764311}{aero\_rep\_single\_particle\_update\_data}}(\textcolor{keywordtype}{void}\ *update\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00545}00545\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00546}00546\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00547}00547\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00548}00548\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00549}00549\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00550}00550\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00551}00551\ \ \ \textcolor{keywordtype}{int}\ *aero\_rep\_id\ =\ (\textcolor{keywordtype}{int}\ *)update\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00552}00552\ \ \ \textcolor{keywordtype}{int}\ *update\_type\ =\ (\textcolor{keywordtype}{int}\ *)\&(aero\_rep\_id[1]);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00553}00553\ \ \ \textcolor{keywordtype}{int}\ *particle\_id\ =\ (\textcolor{keywordtype}{int}\ *)\&(update\_type[1]);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00554}00554\ \ \ \textcolor{keywordtype}{double}\ *new\_value\ =\ (\textcolor{keywordtype}{double}\ *)\&(update\_type[2]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00421}00421\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00422}00422\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00423}00423\ \ \ \textcolor{keywordtype}{int}\ jac\_size\ =\ \mbox{\hyperlink{aero__rep__single__particle_8c_a5362f2b785d3da92675466d9256f3cfd}{PARTICLE\_STATE\_SIZE\_}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00424}00424\ \ \ \textcolor{keywordtype}{double}\ radius\_inner,\ radius\_outer;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00425}00425\ \ \ \textcolor{keywordtype}{int}\ i\_part\ =\ aero\_phase\_idx\ /\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00426}00426\ \ \ \textcolor{keywordtype}{int}\ aero\_phase\_idx\_temp\ =\ aero\_phase\_idx;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00427}00427\ \ \ aero\_phase\_idx\_temp\ -\/=\ i\_part\ *\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00428}00428\ \ \ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00429}00429\ \ \ \textcolor{comment}{//\ Temporary\ Jacobians}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00430}00430\ \ \ \textcolor{keywordtype}{double}\ *jac\_inner\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00431}00431\ \ \ \textcolor{keywordtype}{double}\ *jac\_outer\ =\ NULL;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00432}00432\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00433}00433\ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00434}00434\ \ \ \ \ \ \ jac\_inner\ =\ (\textcolor{keywordtype}{double}\ *)calloc(jac\_size,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{double}));}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00435}00435\ \ \ \ \ \ \ jac\_outer\ =\ (\textcolor{keywordtype}{double}\ *)calloc(jac\_size,\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{double}));}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00436}00436\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00437}00437\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00438}00438\ \ \ \textcolor{keywordtype}{int}\ i\_layer\_inner\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00439}00439\ \ \ \textcolor{keywordtype}{int}\ i\_layer\_outer\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00440}00440\ \ \ \textcolor{keywordtype}{int}\ i\_phase\_inner\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00441}00441\ \ \ \textcolor{keywordtype}{int}\ i\_phase\_outer\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00442}00442\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00443}00443\ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\_PHASE\_START\_}}(i\_layer)\ <=\ aero\_phase\_idx\_temp\ \&\&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00444}00444\ \ \ \ \ \ \ aero\_phase\_idx\_temp\ <=\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\_PHASE\_END\_}}(i\_layer))\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00445}00445\ \ \ \ \ \ \ i\_layer\_outer\ =\ i\_layer;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00446}00446\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_layer\ -\/\ 1\ >=\ 0\ )\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00447}00447\ \ \ \ \ \ \ \ \ i\_layer\_inner\ =\ i\_layer\ -\/\ 1;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00448}00448\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (i\_layer\ -\/\ 1\ <\ 0\ )\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00449}00449\ \ \ \ \ \ \ \ \ i\_layer\_inner\ =\ i\_layer;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00450}00450\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00451}00451\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00452}00452\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00453}00453\ \ \ \textcolor{keywordtype}{int}\ offset\ =\ aero\_phase\_idx\_temp\ -\/\ (i\_part\ *\ \mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\_PHASE\_START\_}}(i\_layer\_outer));}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00454}00454\ \ \ \textcolor{keywordtype}{int}\ aero\_phase\_idx\_inner\ =\ -\/1;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00455}00455\ \ \ \textcolor{keywordflow}{if}\ (i\_layer\_inner\ ==\ i\_layer\_outer)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00456}00456\ \ \ \ \ aero\_phase\_idx\_inner\ =\ aero\_phase\_idx;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00457}00457\ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00458}00458\ \ \ \ \ aero\_phase\_idx\_inner\ =\ aero\_phase\_idx\ -\/\ (offset+1);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00459}00459\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00460}00460\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00461}00461\ \ \ \mbox{\hyperlink{aero__rep__single__particle_8c_ae83f56379c60d1fc674f0fd9e9726418}{aero\_rep\_single\_particle\_get\_effective\_layer\_radius\_\_m}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00462}00462\ \ \ \ \ \ \ model\_data,\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00463}00463\ \ \ \ \ \ \ aero\_phase\_idx,\ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00464}00464\ \ \ \ \ \ \ \&radius\_outer,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00465}00465\ \ \ \ \ \ \ jac\_outer,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00466}00466\ \ \ \ \ \ \ int\_data,\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00467}00467\ \ \ \ \ \ \ float\_data,\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00468}00468\ \ \ \ \ \ \ aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00469}00469\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00470}00470\ \ \ \mbox{\hyperlink{aero__rep__single__particle_8c_ae83f56379c60d1fc674f0fd9e9726418}{aero\_rep\_single\_particle\_get\_effective\_layer\_radius\_\_m}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00471}00471\ \ \ \ \ \ \ model\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00472}00472\ \ \ \ \ \ \ aero\_phase\_idx\_inner,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00473}00473\ \ \ \ \ \ \ \&radius\_inner,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00474}00474\ \ \ \ \ \ \ jac\_inner,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00475}00475\ \ \ \ \ \ \ int\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00476}00476\ \ \ \ \ \ \ float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00477}00477\ \ \ \ \ \ \ aero\_rep\_env\_data);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00478}00478\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00479}00479\ \ \ \textcolor{keywordflow}{if}\ (i\_layer\_inner\ ==\ i\_layer\_outer)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00480}00480\ \ \ \ \ *layer\_thickness\ =\ radius\_inner;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00481}00481\ \ \ \}\ \textcolor{keywordflow}{else}\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00482}00482\ \ \ \ \ *layer\_thickness\ =\ radius\_outer\ -\/\ radius\_inner;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00483}00483\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00484}00484\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00485}00485\ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00486}00486\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ jac\_size;\ ++i)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ partial\_deriv[i]\ =\ jac\_outer[i]\ -\/\ jac\_inner[i];}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00488}00488\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00489}00489\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00490}00490\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00491}00491\ \ \ free(jac\_inner);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00492}00492\ \ \ free(jac\_outer);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00493}00493\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00494}00494\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00495}00495\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00496}00496\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ particle\ number\ concentration\ \(\backslash\)f\$n\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00497}00497\ \textcolor{comment}{\ *\ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)\#\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00498}00498\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00499}00499\ \textcolor{comment}{\ *\ This\ single\ particle\ number\ concentration\ is\ set\ by\ the\ aerosol\ model\ prior}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00500}00500\ \textcolor{comment}{\ *\ to\ solving\ the\ chemistry.\ Thus,\ all\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ n\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ are}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00501}00501\ \textcolor{comment}{\ *\ zero.\ Also,\ there\ is\ only\ one\ set\ of\ particles\ in\ the\ single\ particle}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00502}00502\ \textcolor{comment}{\ *\ representation,\ so\ the\ phase\ index\ is\ not\ used.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00503}00503\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00504}00504\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00505}00505\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00506}00506\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (not\ used)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00507}00507\ \textcolor{comment}{\ *\ \(\backslash\)param\ number\_conc\ Particle\ number\ concentration,\ \(\backslash\)f\$n\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00508}00508\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)\#\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00509}00509\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ n\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$\ are}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00510}00510\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ species\ on\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00511}00511\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00512}00512\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00513}00513\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00514}00514\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00515}00515\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00516}00516\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00517}00517\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00518}\mbox{\hyperlink{aero__rep__single__particle_8c_afa7d35b774d0ab4d7cad7fb30d75e897}{00518}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_afa7d35b774d0ab4d7cad7fb30d75e897}{aero\_rep\_single\_particle\_get\_number\_conc\_\_n\_m3}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00519}00519\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,\ \textcolor{keywordtype}{double}\ *number\_conc,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00520}00520\ \ \ \ \ \textcolor{keywordtype}{double}\ *partial\_deriv,\ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00521}00521\ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00522}00522\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00523}00523\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00524}00524\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00525}00525\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00526}00526\ \ \ \textcolor{keywordtype}{int}\ i\_part\ =\ aero\_phase\_idx\ /\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00527}00527\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00528}00528\ \ \ *number\_conc\ =\ \mbox{\hyperlink{aero__rep__single__particle_8c_af2c159c650af709701e7c5ae2f153ce3}{NUMBER\_CONC\_}}(i\_part);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00529}00529\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00530}00530\ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00531}00531\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00532}00532\ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00533}00533\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_spec\ =\ 0;\ i\_spec\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);\ ++i\_spec)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00534}00534\ \ \ \ \ \ \ \ \ \ \ *(partial\_deriv++)\ =\ ZERO;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00535}00535\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00536}00536\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00537}00537\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00538}00538\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00539}00539\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00540}00540\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00541}00541\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ type\ of\ aerosol\ concentration\ used.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00542}00542\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00543}00543\ \textcolor{comment}{\ *\ Single\ particle\ concentrations\ are\ per-\/particle.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00544}00544\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00545}00545\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00546}00546\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_conc\_type\ Pointer\ to\ int\ that\ will\ hold\ the\ concentration\ type}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00547}00547\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ code\ (0\ =\ per\ particle\ mass\ concentrations;}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00548}00548\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 1\ =\ total\ particle\ mass\ concentrations)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00549}00549\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00550}00550\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00551}00551\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00552}00552\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00553}00553\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00554}00554\ \textcolor{comment}{\ */}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00555}00555\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00556}00556\ \ \ \textcolor{comment}{//\ Set\ the\ new\ radius\ or\ number\ concentration\ for\ matching\ aerosol}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00557}00557\ \ \ \textcolor{comment}{//\ representations}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00558}00558\ \ \ \textcolor{keywordflow}{if}\ (*aero\_rep\_id\ ==\ \mbox{\hyperlink{aero__rep__single__particle_8c_a7f41adc102bb4117dcf37be9d4580b0a}{AERO\_REP\_ID\_}}\ \&\&\ \mbox{\hyperlink{aero__rep__single__particle_8c_a7f41adc102bb4117dcf37be9d4580b0a}{AERO\_REP\_ID\_}}\ !=\ 0)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00559}00559\ \ \ \ \ \textcolor{keywordflow}{if}\ (*update\_type\ ==\ \mbox{\hyperlink{aero__rep__single__particle_8c_ace9813ffc99004762e44840f0df22ff5}{UPDATE\_NUMBER}})\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00560}00560\ \ \ \ \ \ \ \mbox{\hyperlink{aero__rep__single__particle_8c_af2c159c650af709701e7c5ae2f153ce3}{NUMBER\_CONC\_}}(*particle\_id)\ =\ (double)*new\_value;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00561}00561\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00562}00562\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00563}00563\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00564}00564\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00565}00565\ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00566}00566\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00567}00567\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00568}00568\ \textcolor{comment}{/**\ \(\backslash\)brief\ Print\ the\ Single\ Particle\ reaction\ parameters}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00569}00569\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00570}00570\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00571}00571\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00572}00572\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00573}00573\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00574}00574\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00575}\mbox{\hyperlink{aero__rep__single__particle_8c_a93b022b244ab389f594b3c1ee8956d26}{00575}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_a93b022b244ab389f594b3c1ee8956d26}{aero\_rep\_single\_particle\_print}}(\textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00576}00576\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00577}00577\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00578}00578\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00579}00579\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00580}00580\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nSingle\ particle\ aerosol\ representation\(\backslash\)n"{}});}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00581}00581\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nNumber\ of\ phases:\ \%d"{}},\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}});}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00582}00582\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nAerosol\ representation\ id:\ \%d"{}},\ \mbox{\hyperlink{aero__rep__single__particle_8c_a7f41adc102bb4117dcf37be9d4580b0a}{AERO\_REP\_ID\_}});}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00583}00583\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nMax\ computational\ particles:\ \%d"{}},\ \mbox{\hyperlink{aero__rep__single__particle_8c_a9a8f20dcd00b20eb44f20a23b8483562}{MAX\_PARTICLES\_}});}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00584}00584\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nParticle\ state\ size:\ \%d"{}},\ \mbox{\hyperlink{aero__rep__single__particle_8c_a5362f2b785d3da92675466d9256f3cfd}{PARTICLE\_STATE\_SIZE\_}});}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00585}00585\ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00586}00586\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nLayer:\ \%d"{}},\ i\_layer);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00587}00587\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ Start\ phase:\ \%d\ End\ phase:\ \%d"{}},\ \mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\_PHASE\_START\_}}(i\_layer),\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\_PHASE\_END\_}}(i\_layer));}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00588}00588\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ Number\ of\ phases:\ \%d"{}},\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer));}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00589}00589\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)n\ \ \ -\/\ Phases\ -\/"{}});}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00590}00590\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00591}00591\ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ state\ id:\ \%d\ model\ data\ id:\ \%d\ num\ Jac\ elements:\ \%d"{}},}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00592}00592\ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__rep__single__particle_8c_ab3956491dbbbf0687d3c0ae80d483ebf}{PHASE\_STATE\_ID\_}}(i\_layer,i\_phase),\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,i\_phase),}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00593}00593\ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase));}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00594}00594\ \ \ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00595}00595\ \ \ \}\ \ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00596}00596\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nEnd\ single\ particle\ aerosol\ representation\(\backslash\)n"{}});}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00597}00597\ \ \ \textcolor{keywordflow}{return};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00598}00598\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00599}00599\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00600}00600\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00601}00601\ \textcolor{comment}{/**\ \(\backslash\)brief\ Create\ update\ data\ for\ new\ particle\ number}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00602}00602\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00603}00603\ \textcolor{comment}{\ *\ \(\backslash\)return\ Pointer\ to\ a\ new\ number\ update\ data\ object}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00604}00604\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00605}\mbox{\hyperlink{aero__rep__single__particle_8c_a66f59ead26878bf26b00ac2f7447662c}{00605}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{aero__rep__single__particle_8c_a66f59ead26878bf26b00ac2f7447662c}{aero\_rep\_single\_particle\_create\_number\_update\_data}}()\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00606}00606\ \ \ \textcolor{keywordtype}{int}\ *update\_data\ =\ (\textcolor{keywordtype}{int}\ *)malloc(3\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ +\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{double}));}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00607}00607\ \ \ \textcolor{keywordflow}{if}\ (update\_data\ ==\ NULL)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00608}00608\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ number\ update\ data\(\backslash\)n\(\backslash\)n"{}});}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00609}00609\ \ \ \ \ exit(1);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00610}00610\ \ \ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00611}00611\ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{void}\ *)update\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00612}00612\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00613}00613\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00614}00614\ \textcolor{comment}{/**\ \(\backslash\)brief\ Set\ number\ update\ data\ (\#/m3)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00615}00615\ \textcolor{comment}{\ *}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00616}00616\ \textcolor{comment}{\ *\ \(\backslash\)param\ update\_data\ Pointer\ to\ an\ allocated\ number\ update\ data\ object}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00617}00617\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_id\ Id\ of\ the\ aerosol\ representation(s)\ to\ update}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00618}00618\ \textcolor{comment}{\ *\ \(\backslash\)param\ particle\_id\ Id\ of\ the\ computational\ particle}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00619}00619\ \textcolor{comment}{\ *\ \(\backslash\)param\ number\_conc\ New\ particle\ number\ (\#/m3)}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00620}00620\ \textcolor{comment}{\ */}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00621}\mbox{\hyperlink{aero__rep__single__particle_8c_afc23dec55d2720c18e17a3cdbb6b6a7f}{00621}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_afc23dec55d2720c18e17a3cdbb6b6a7f}{aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3}}(\textcolor{keywordtype}{void}\ *update\_data,}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00622}00622\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ aero\_rep\_id,}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00623}00623\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ particle\_id,}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00624}00624\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ number\_conc)\ \{}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00625}00625\ \ \ \textcolor{keywordtype}{int}\ *new\_aero\_rep\_id\ =\ (\textcolor{keywordtype}{int}\ *)update\_data;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00626}00626\ \ \ \textcolor{keywordtype}{int}\ *update\_type\ =\ (\textcolor{keywordtype}{int}\ *)\&(new\_aero\_rep\_id[1]);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00627}00627\ \ \ \textcolor{keywordtype}{int}\ *new\_particle\_id\ =\ (\textcolor{keywordtype}{int}\ *)\&(update\_type[1]);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00628}00628\ \ \ \textcolor{keywordtype}{double}\ *new\_number\_conc\ =\ (\textcolor{keywordtype}{double}\ *)\&(update\_type[2]);}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00629}00629\ \ \ *new\_aero\_rep\_id\ =\ aero\_rep\_id;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00630}00630\ \ \ *update\_type\ =\ \mbox{\hyperlink{aero__rep__single__particle_8c_ace9813ffc99004762e44840f0df22ff5}{UPDATE\_NUMBER}};}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00631}00631\ \ \ *new\_particle\_id\ =\ particle\_id;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00632}00632\ \ \ *new\_number\_conc\ =\ number\_conc;}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00633}00633\ \}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00634}00634\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00556}\mbox{\hyperlink{aero__rep__single__particle_8c_a59114de73dd305d5825a8547155b8946}{00556}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_a59114de73dd305d5825a8547155b8946}{aero\_rep\_single\_particle\_get\_aero\_conc\_type}}(\textcolor{keywordtype}{int}\ aero\_phase\_idx,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00557}00557\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *aero\_conc\_type,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00558}00558\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00559}00559\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00560}00560\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00561}00561\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00562}00562\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00563}00563\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00564}00564\ \ \ *aero\_conc\_type\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00565}00565\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00566}00566\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00567}00567\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00568}00568\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00569}00569\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ total\ mass\ in\ an\ aerosol\ phase\ \(\backslash\)f\$m\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00570}00570\ \textcolor{comment}{\ *\ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00571}00571\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00572}00572\ \textcolor{comment}{\ *\ The\ single\ particle\ mass\ is\ set\ for\ each\ new\ state\ as\ the\ sum\ of\ the\ masses}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00573}00573\ \textcolor{comment}{\ *\ of\ the\ aerosol\ phases\ that\ compose\ the\ particle}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00574}00574\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00575}00575\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00576}00576\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00577}00577\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_mass\ Total\ mass\ in\ the\ aerosol\ phase,\ \(\backslash\)f\$m\(\backslash\)f\$}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00578}00578\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)cubic\(\backslash\)metre\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00579}00579\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ m\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$\ are}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00580}00580\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ species\ on\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00581}00581\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00582}00582\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00583}00583\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00584}00584\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00585}00585\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00586}00586\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00587}00587\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00588}\mbox{\hyperlink{aero__rep__single__particle_8c_ad49c89b34b57e5b644d6506ead9dea34}{00588}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad49c89b34b57e5b644d6506ead9dea34}{aero\_rep\_single\_particle\_get\_aero\_phase\_mass\_\_kg\_m3}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00589}00589\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,\ \textcolor{keywordtype}{double}\ *aero\_phase\_mass,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00590}00590\ \ \ \ \ \textcolor{keywordtype}{double}\ *partial\_deriv,\ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00591}00591\ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00592}00592\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00593}00593\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00594}00594\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00595}00595\ \ \ \textcolor{keywordtype}{int}\ i\_part\ =\ aero\_phase\_idx\ /\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00596}00596\ \ \ aero\_phase\_idx\ -\/=\ i\_part\ *\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00597}00597\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00598}00598\ \ \ \textcolor{keywordtype}{int}\ i\_total\_phase\ =\ 0;\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00599}00599\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00600}00600\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{\ \ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00601}00601\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ i\_total\_phase\ ==\ aero\_phase\_idx\ )\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00602}00602\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\ =\ (\textcolor{keywordtype}{double}\ *)(model\_data-\/>grid\_cell\_state);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00603}00603\ \ \ \ \ \ \ \ \ state\ +=\ i\_part\ *\ \mbox{\hyperlink{aero__rep__single__particle_8c_a5362f2b785d3da92675466d9256f3cfd}{PARTICLE\_STATE\_SIZE\_}}\ +\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab3956491dbbbf0687d3c0ae80d483ebf}{PHASE\_STATE\_ID\_}}(i\_layer,i\_phase);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00604}00604\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ mw;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00605}00605\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}{aero\_phase\_get\_mass\_\_kg\_m3}}(model\_data,\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,i\_phase),}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00606}00606\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state,\ aero\_phase\_mass,\ \&mw,\ partial\_deriv,\ NULL);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00607}00607\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ partial\_deriv\ +=\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00608}00608\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00609}00609\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_spec\ =\ 0;\ i\_spec\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);\ ++i\_spec)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00610}00610\ \ \ \ \ \ \ \ \ \ \ *(partial\_deriv++)\ =\ ZERO;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00611}00611\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00612}00612\ \ \ \ \ \ \ ++i\_total\_phase;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00613}00613\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00614}00614\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00615}00615\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00616}00616\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00617}00617\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00618}00618\ \textcolor{comment}{/**\ \(\backslash\)brief\ Get\ the\ average\ molecular\ weight\ in\ an\ aerosol\ phase}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00619}00619\ \textcolor{comment}{\ **\ \ \ \ \ \ \ \ \(\backslash\)f\$m\(\backslash\)f\$\ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilo\(\backslash\)gram\(\backslash\)per\(\backslash\)mol\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00620}00620\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00621}00621\ \textcolor{comment}{\ *\ The\ single\ particle\ mass\ is\ set\ for\ each\ new\ state\ as\ the\ sum\ of\ the\ masses}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00622}00622\ \textcolor{comment}{\ *\ of\ the\ aerosol\ phases\ that\ compose\ the\ particle}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00623}00623\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00624}00624\ \textcolor{comment}{\ *\ \(\backslash\)param\ model\_data\ Pointer\ to\ the\ model\ data,\ including\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00625}00625\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_idx\ Index\ of\ the\ aerosol\ phase\ within\ the\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00626}00626\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_phase\_avg\_MW\ Average\ molecular\ weight\ in\ the\ aerosol\ phase}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00627}00627\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)kilogram\(\backslash\)per\(\backslash\)mole\}\}\(\backslash\)f\$)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00628}00628\ \textcolor{comment}{\ *\ \(\backslash\)param\ partial\_deriv\ \(\backslash\)f\$\(\backslash\)frac\{\(\backslash\)partial\ m\}\{\(\backslash\)partial\ y\}\(\backslash\)f\$\ where\ \(\backslash\)f\$y\(\backslash\)f\$\ are}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00629}00629\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ the\ species\ on\ the\ state\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00630}00630\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00631}00631\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00632}00632\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00633}00633\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00634}00634\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00635}00635\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00636}00636\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00637}\mbox{\hyperlink{aero__rep__single__particle_8c_a203b6931fd5a504b7cc1750eb582b60c}{00637}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_a203b6931fd5a504b7cc1750eb582b60c}{aero\_rep\_single\_particle\_get\_aero\_phase\_avg\_MW\_\_kg\_mol}}(}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00638}00638\ \ \ \ \ ModelData\ *model\_data,\ \textcolor{keywordtype}{int}\ aero\_phase\_idx,\ \textcolor{keywordtype}{double}\ *aero\_phase\_avg\_MW,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00639}00639\ \ \ \ \ \textcolor{keywordtype}{double}\ *partial\_deriv,\ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,\ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00640}00640\ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00641}00641\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00642}00642\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00643}00643\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00644}00644\ \ \ \textcolor{keywordtype}{int}\ i\_part\ =\ aero\_phase\_idx\ /\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00645}00645\ \ \ aero\_phase\_idx\ -\/=\ i\_part\ *\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00646}00646\ \ \ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00647}00647\ \ \ \textcolor{keywordtype}{int}\ i\_total\_phase\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00648}00648\ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00649}00649\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00650}00650\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\ i\_total\_phase\ ==\ aero\_phase\_idx\ )\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00651}00651\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *state\ =\ (\textcolor{keywordtype}{double}\ *)(model\_data-\/>grid\_cell\_state);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00652}00652\ \ \ \ \ \ \ \ \ state\ +=\ i\_part\ *\ \mbox{\hyperlink{aero__rep__single__particle_8c_a5362f2b785d3da92675466d9256f3cfd}{PARTICLE\_STATE\_SIZE\_}}\ +\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab3956491dbbbf0687d3c0ae80d483ebf}{PHASE\_STATE\_ID\_}}(i\_layer,i\_phase);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00653}00653\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ mass;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00654}00654\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__phase__solver_8c_a965e0b9fc79db694be201edd05377dd1}{aero\_phase\_get\_mass\_\_kg\_m3}}(model\_data,\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,i\_phase),}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00655}00655\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ state,\ \&mass,\ aero\_phase\_avg\_MW,\ NULL,\ partial\_deriv);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00656}00656\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (partial\_deriv)\ partial\_deriv\ +=\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00657}00657\ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (partial\_deriv)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00658}00658\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_spec\ =\ 0;\ i\_spec\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase);\ ++i\_spec)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00659}00659\ \ \ \ \ \ \ \ \ \ \ *(partial\_deriv++)\ =\ ZERO;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00660}00660\ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00661}00661\ \ \ \ \ \ \ ++i\_total\_phase;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00662}00662\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00663}00663\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00664}00664\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00665}00665\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00666}00666\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00667}00667\ \textcolor{comment}{/**\ \(\backslash\)brief\ Update\ aerosol\ representation\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00668}00668\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00669}00669\ \textcolor{comment}{\ *\ Single\ particle\ aerosol\ representation\ update\ data\ is\ structured\ as\ follows:}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00670}00670\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00671}00671\ \textcolor{comment}{\ *\ \ -\/\ \(\backslash\)b\ int\ aero\_rep\_id\ (Id\ of\ one\ or\ more\ aerosol\ representations\ set\ by\ the}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00672}00672\ \textcolor{comment}{\ *\ \ \ \ \ \ \ host\ model\ using\ the}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00673}00673\ \textcolor{comment}{\ *\ \ \ \ \ \ \ camp\_aero\_rep\_single\_particle::aero\_rep\_single\_particle\_t::set\_id}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00674}00674\ \textcolor{comment}{\ *\ \ \ \ \ \ \ function\ prior\ to\ initializing\ the\ solver.)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00675}00675\ \textcolor{comment}{\ *\ \ -\/\ \(\backslash\)b\ int\ update\_type\ (Type\ of\ update\ to\ perform.\ Can\ be\ UPDATE\_NUMBER}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00676}00676\ \textcolor{comment}{\ *\ \ \ \ \ \ \ only.)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00677}00677\ \textcolor{comment}{\ *\ \ -\/\ \(\backslash\)b\ double\ new\_value\ (Either\ the\ new\ radius\ (m)\ or\ the\ new\ number}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00678}00678\ \textcolor{comment}{\ *\ \ \ \ \ \ \ concentration\ (\(\backslash\)f\$\(\backslash\)mbox\{\(\backslash\)si\{\(\backslash\)\#\(\backslash\)per\(\backslash\)cubic\(\backslash\)centi\(\backslash\)metre\}\}\(\backslash\)f\$).)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00679}00679\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00680}00680\ \textcolor{comment}{\ *\ \(\backslash\)param\ update\_data\ Pointer\ to\ the\ updated\ aerosol\ representation\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00681}00681\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00682}00682\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00683}00683\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00684}00684\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_env\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00685}00685\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ environment-\/dependent\ parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00686}00686\ \textcolor{comment}{\ *\ \(\backslash\)return\ Flag\ indicating\ whether\ this\ is\ the\ aerosol\ representation\ to\ update}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00687}00687\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00688}00688\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00689}\mbox{\hyperlink{aero__rep__single__particle_8c_abe4da510bed46cee8a75f90917764311}{00689}}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{aero__rep__single__particle_8c_abe4da510bed46cee8a75f90917764311}{aero\_rep\_single\_particle\_update\_data}}(\textcolor{keywordtype}{void}\ *update\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00690}00690\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00691}00691\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00692}00692\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_env\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00693}00693\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00694}00694\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00695}00695\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00696}00696\ \ \ \textcolor{keywordtype}{int}\ *aero\_rep\_id\ =\ (\textcolor{keywordtype}{int}\ *)update\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00697}00697\ \ \ \textcolor{keywordtype}{int}\ *update\_type\ =\ (\textcolor{keywordtype}{int}\ *)\&(aero\_rep\_id[1]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00698}00698\ \ \ \textcolor{keywordtype}{int}\ *particle\_id\ =\ (\textcolor{keywordtype}{int}\ *)\&(update\_type[1]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00699}00699\ \ \ \textcolor{keywordtype}{double}\ *new\_value\ =\ (\textcolor{keywordtype}{double}\ *)\&(update\_type[2]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00700}00700\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00701}00701\ \ \ \textcolor{comment}{//\ Set\ the\ new\ radius\ or\ number\ concentration\ for\ matching\ aerosol}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00702}00702\ \ \ \textcolor{comment}{//\ representations}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00703}00703\ \ \ \textcolor{keywordflow}{if}\ (*aero\_rep\_id\ ==\ \mbox{\hyperlink{aero__rep__single__particle_8c_a7f41adc102bb4117dcf37be9d4580b0a}{AERO\_REP\_ID\_}}\ \&\&\ \mbox{\hyperlink{aero__rep__single__particle_8c_a7f41adc102bb4117dcf37be9d4580b0a}{AERO\_REP\_ID\_}}\ !=\ 0)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00704}00704\ \ \ \ \ \textcolor{keywordflow}{if}\ (*update\_type\ ==\ \mbox{\hyperlink{aero__rep__single__particle_8c_ace9813ffc99004762e44840f0df22ff5}{UPDATE\_NUMBER}})\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00705}00705\ \ \ \ \ \ \ \mbox{\hyperlink{aero__rep__single__particle_8c_af2c159c650af709701e7c5ae2f153ce3}{NUMBER\_CONC\_}}(*particle\_id)\ =\ (double)*new\_value;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00706}00706\ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00707}00707\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00708}00708\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00709}00709\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00710}00710\ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00711}00711\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00712}00712\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00713}00713\ \textcolor{comment}{/**\ \(\backslash\)brief\ Print\ the\ Single\ Particle\ reaction\ parameters}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00714}00714\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00715}00715\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_int\_data\ Pointer\ to\ the\ aerosol\ representation\ integer\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00716}00716\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_float\_data\ Pointer\ to\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00717}00717\ \textcolor{comment}{\ *\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ floating-\/point\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00718}00718\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00719}00719\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00720}\mbox{\hyperlink{aero__rep__single__particle_8c_a93b022b244ab389f594b3c1ee8956d26}{00720}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_a93b022b244ab389f594b3c1ee8956d26}{aero\_rep\_single\_particle\_print}}(\textcolor{keywordtype}{int}\ *aero\_rep\_int\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00721}00721\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ *aero\_rep\_float\_data)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00722}00722\ \ \ \textcolor{keywordtype}{int}\ *int\_data\ =\ aero\_rep\_int\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00723}00723\ \ \ \textcolor{keywordtype}{double}\ *float\_data\ =\ aero\_rep\_float\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00724}00724\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00725}00725\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nSingle\ particle\ aerosol\ representation\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00726}00726\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nNumber\ of\ phases:\ \%d"{}},\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab37e3edc0c0f19448dd1cbf98a0d7bad}{TOTAL\_NUM\_PHASES\_}});}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00727}00727\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nAerosol\ representation\ id:\ \%d"{}},\ \mbox{\hyperlink{aero__rep__single__particle_8c_a7f41adc102bb4117dcf37be9d4580b0a}{AERO\_REP\_ID\_}});}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00728}00728\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nMax\ computational\ particles:\ \%d"{}},\ \mbox{\hyperlink{aero__rep__single__particle_8c_a9a8f20dcd00b20eb44f20a23b8483562}{MAX\_PARTICLES\_}});}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00729}00729\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nParticle\ state\ size:\ \%d"{}},\ \mbox{\hyperlink{aero__rep__single__particle_8c_a5362f2b785d3da92675466d9256f3cfd}{PARTICLE\_STATE\_SIZE\_}});}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00730}00730\ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i\_layer\ =\ 0;\ i\_layer\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad48ca302910c2a8aad81f046147e1a89}{NUM\_LAYERS\_}};\ ++i\_layer)\{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00731}00731\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)nLayer:\ \%d"{}},\ i\_layer);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00732}00732\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ Start\ phase:\ \%d\ End\ phase:\ \%d"{}},\ \mbox{\hyperlink{aero__rep__single__particle_8c_aa4e0d141752bdc2ada9292d63f26ba9e}{LAYER\_PHASE\_START\_}}(i\_layer),\ \mbox{\hyperlink{aero__rep__single__particle_8c_ad7b8ff651402a06142748ac4600fd62c}{LAYER\_PHASE\_END\_}}(i\_layer));}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00733}00733\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ Number\ of\ phases:\ \%d"{}},\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer));}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00734}00734\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)n\ \ \ -\/\ Phases\ -\/"{}});}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00735}00735\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\_phase\ =\ 0;\ i\_phase\ <\ \mbox{\hyperlink{aero__rep__single__particle_8c_a3921ba6f631d8716adc5c5ff9e52cf44}{NUM\_PHASES\_}}(i\_layer);\ ++i\_phase)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00736}00736\ \ \ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\ \ state\ id:\ \%d\ model\ data\ id:\ \%d\ num\ Jac\ elements:\ \%d"{}},}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00737}00737\ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__rep__single__particle_8c_ab3956491dbbbf0687d3c0ae80d483ebf}{PHASE\_STATE\_ID\_}}(i\_layer,i\_phase),\ \mbox{\hyperlink{aero__rep__single__particle_8c_ab1cd2d82d1a9128509fa78a239be7ad9}{PHASE\_MODEL\_DATA\_ID\_}}(i\_layer,i\_phase),}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00738}00738\ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{aero__rep__single__particle_8c_a6a458d59ce6542ae6e65394e2757c5c9}{PHASE\_NUM\_JAC\_ELEM\_}}(i\_layer,i\_phase));}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00739}00739\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00740}00740\ \ \ \}\ \ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00741}00741\ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nEnd\ single\ particle\ aerosol\ representation\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00742}00742\ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00743}00743\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00744}00744\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00745}00745\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00746}00746\ \textcolor{comment}{/**\ \(\backslash\)brief\ Create\ update\ data\ for\ new\ particle\ number}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00747}00747\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00748}00748\ \textcolor{comment}{\ *\ \(\backslash\)return\ Pointer\ to\ a\ new\ number\ update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00749}00749\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00750}\mbox{\hyperlink{aero__rep__single__particle_8c_a66f59ead26878bf26b00ac2f7447662c}{00750}}\ \textcolor{keywordtype}{void}\ *\mbox{\hyperlink{aero__rep__single__particle_8c_a66f59ead26878bf26b00ac2f7447662c}{aero\_rep\_single\_particle\_create\_number\_update\_data}}()\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00751}00751\ \ \ \textcolor{keywordtype}{int}\ *update\_data\ =\ (\textcolor{keywordtype}{int}\ *)malloc(3\ *\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{int})\ +\ \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{double}));}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00752}00752\ \ \ \textcolor{keywordflow}{if}\ (update\_data\ ==\ NULL)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00753}00753\ \ \ \ \ printf(\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)nERROR\ allocating\ space\ for\ number\ update\ data\(\backslash\)n\(\backslash\)n"{}});}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00754}00754\ \ \ \ \ exit(1);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00755}00755\ \ \ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00756}00756\ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{void}\ *)update\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00757}00757\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00758}00758\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00759}00759\ \textcolor{comment}{/**\ \(\backslash\)brief\ Set\ number\ update\ data\ (\#/m3)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00760}00760\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00761}00761\ \textcolor{comment}{\ *\ \(\backslash\)param\ update\_data\ Pointer\ to\ an\ allocated\ number\ update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00762}00762\ \textcolor{comment}{\ *\ \(\backslash\)param\ aero\_rep\_id\ Id\ of\ the\ aerosol\ representation(s)\ to\ update}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00763}00763\ \textcolor{comment}{\ *\ \(\backslash\)param\ particle\_id\ Id\ of\ the\ computational\ particle}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00764}00764\ \textcolor{comment}{\ *\ \(\backslash\)param\ number\_conc\ New\ particle\ number\ (\#/m3)}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00765}00765\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00766}\mbox{\hyperlink{aero__rep__single__particle_8c_afc23dec55d2720c18e17a3cdbb6b6a7f}{00766}}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{aero__rep__single__particle_8c_afc23dec55d2720c18e17a3cdbb6b6a7f}{aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3}}(\textcolor{keywordtype}{void}\ *update\_data,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00767}00767\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ aero\_rep\_id,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00768}00768\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ particle\_id,}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00769}00769\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ number\_conc)\ \{}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00770}00770\ \ \ \textcolor{keywordtype}{int}\ *new\_aero\_rep\_id\ =\ (\textcolor{keywordtype}{int}\ *)update\_data;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00771}00771\ \ \ \textcolor{keywordtype}{int}\ *update\_type\ =\ (\textcolor{keywordtype}{int}\ *)\&(new\_aero\_rep\_id[1]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00772}00772\ \ \ \textcolor{keywordtype}{int}\ *new\_particle\_id\ =\ (\textcolor{keywordtype}{int}\ *)\&(update\_type[1]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00773}00773\ \ \ \textcolor{keywordtype}{double}\ *new\_number\_conc\ =\ (\textcolor{keywordtype}{double}\ *)\&(update\_type[2]);}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00774}00774\ \ \ *new\_aero\_rep\_id\ =\ aero\_rep\_id;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00775}00775\ \ \ *update\_type\ =\ \mbox{\hyperlink{aero__rep__single__particle_8c_ace9813ffc99004762e44840f0df22ff5}{UPDATE\_NUMBER}};}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00776}00776\ \ \ *new\_particle\_id\ =\ particle\_id;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00777}00777\ \ \ *new\_number\_conc\ =\ number\_conc;}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00778}00778\ \}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8c_source_l00779}00779\ }
 
 \end{DoxyCode}

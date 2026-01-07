@@ -2,19 +2,21 @@
 <area shape="rect" id="Node000001" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="5,136,160,177"/>
 <area shape="rect" id="Node000002" href="$aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="208,71,360,111"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,133,204,114,205,119,148,138"/>
-<area shape="rect" id="Node000006" href="$aero__rep__solver_8c.html#aa56870eb4fe20532461b1634d7688210" title="Get the particle number concentration &#160;( )" alt="" coords="211,136,357,177"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="160,154,195,154,195,159,160,159"/>
-<area shape="rect" id="Node000009" href="$time__derivative_8c.html#af4c9ab5040b544a8ec4b63a1c75922e2" title=" " alt="" coords="215,201,352,242"/>
-<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="148,175,205,193,204,199,146,180"/>
-<area shape="rect" id="Node000003" href="$aero__rep__modal__binned__mass_8c.html#a8d5bf734337581d90c2280ab858ccf96" title="Get the effective particle radius &#160;(m)" alt="" coords="412,5,620,46"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="358,68,426,48,427,53,359,73"/>
-<area shape="rect" id="Node000004" href="$aero__rep__single__particle_8c.html#a48b11d345d89071d34e67b5063b1b891" title="Get the effective particle radius &#160;(m)" alt="" coords="432,71,601,111"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="360,88,416,88,416,94,360,94"/>
-<area shape="rect" id="Node000005" href="$aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="672,104,835,145"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="601,100,657,108,657,113,601,105"/>
-<area shape="rect" id="Node000007" href="$aero__rep__modal__binned__mass_8c.html#a2e585253c19aa48dec8c55b963999e9d" title="Get the particle number concentration &#160;( )" alt="" coords="408,136,624,177"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="357,154,392,154,392,159,357,159"/>
-<area shape="rect" id="Node000008" href="$aero__rep__single__particle_8c.html#afa7d35b774d0ab4d7cad7fb30d75e897" title="Get the particle number concentration &#160;( )" alt="" coords="428,201,605,242"/>
-<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="358,174,428,194,426,199,356,179"/>
-<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="625,139,656,135,657,140,625,144"/>
+<area shape="rect" id="Node000007" href="$aero__rep__solver_8c.html#aa56870eb4fe20532461b1634d7688210" title="Get the particle number concentration &#160;( )" alt="" coords="211,136,357,177"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="160,154,195,154,195,159,160,159"/>
+<area shape="rect" id="Node000010" href="$time__derivative_8c.html#af4c9ab5040b544a8ec4b63a1c75922e2" title=" " alt="" coords="215,201,352,242"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="148,175,205,193,204,199,146,180"/>
+<area shape="rect" id="Node000003" href="$aero__rep__modal__binned__mass_8c.html#a8d5bf734337581d90c2280ab858ccf96" title="Get the effective particle radius &#160;(m)" alt="" coords="408,5,616,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="356,68,423,48,425,53,358,73"/>
+<area shape="rect" id="Node000004" href="$aero__rep__single__particle_8c.html#a48b11d345d89071d34e67b5063b1b891" title="Get the effective particle radius &#160;(m) Finds the radius of the largest layer in specified particle." alt="" coords="428,71,597,111"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="360,88,412,88,412,94,360,94"/>
+<area shape="rect" id="Node000005" href="$aero__rep__single__particle_8c.html#ae83f56379c60d1fc674f0fd9e9726418" title="Get the effective radius of a specified layer &#160;(m)" alt="" coords="671,71,874,111"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="597,88,655,88,655,94,597,94"/>
+<area shape="rect" id="Node000006" href="$aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="929,104,1091,145"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="875,103,913,108,913,113,874,108"/>
+<area shape="rect" id="Node000008" href="$aero__rep__modal__binned__mass_8c.html#a2e585253c19aa48dec8c55b963999e9d" title="Get the particle number concentration &#160;( )" alt="" coords="664,136,881,177"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="357,154,649,154,649,159,357,159"/>
+<area shape="rect" id="Node000009" href="$aero__rep__single__particle_8c.html#afa7d35b774d0ab4d7cad7fb30d75e897" title="Get the particle number concentration &#160;( )" alt="" coords="424,193,601,234"/>
+<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="358,172,415,186,413,192,357,177"/>
+<area shape="poly" id="edge8_Node000008_Node000006" title=" " alt="" coords="881,139,913,135,913,140,882,144"/>
 </map>

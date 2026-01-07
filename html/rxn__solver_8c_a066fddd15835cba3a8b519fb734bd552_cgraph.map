@@ -1,51 +1,53 @@
 <map id="rxn_calc_deriv_specific_types" name="rxn_calc_deriv_specific_types">
-<area shape="rect" id="Node000001" title="Calculate the time derivative &#160;for only some specific types." alt="" coords="5,268,161,309"/>
-<area shape="rect" id="Node000002" href="$rxn___h_l__phase__transfer_8c.html#aa82a07e921e3d22fda1d52073b16219d" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="225,235,382,275"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,274,210,266,210,272,161,279"/>
-<area shape="rect" id="Node000014" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html#a8387f10a0a5aa0b38cc545859542f3c4" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="209,300,398,341"/>
-<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="161,297,193,302,192,307,161,302"/>
-<area shape="rect" id="Node000003" href="$aero__rep__solver_8c.html#a00aee7bec2d9284a74c0eb26d346dc81" title="Check whether aerosol concentrations are per&#45;particle or total for each phase." alt="" coords="446,116,640,141"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="343,232,503,146,505,151,345,236"/>
-<area shape="rect" id="Node000006" href="$aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="467,201,619,242"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="381,242,451,232,452,237,382,247"/>
-<area shape="rect" id="Node000010" href="$aero__rep__solver_8c.html#aa56870eb4fe20532461b1634d7688210" title="Get the particle number concentration &#160;( )" alt="" coords="470,267,616,307"/>
-<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="382,263,455,273,454,278,381,268"/>
-<area shape="rect" id="Node000013" href="$time__derivative_8c.html#af4c9ab5040b544a8ec4b63a1c75922e2" title=" " alt="" coords="474,332,612,373"/>
-<area shape="poly" id="edge13_Node000002_Node000013" title=" " alt="" coords="370,273,399,286,423,301,447,317,462,323,460,328,445,321,421,306,397,291,368,278"/>
-<area shape="rect" id="Node000004" href="$aero__rep__modal__binned__mass_8c.html#a5806fae1fe7d70369bfb7a0d9c54d12f" title="Get the type of aerosol concentration used." alt="" coords="705,5,888,46"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="568,113,622,85,687,57,708,49,710,54,689,61,625,90,571,117"/>
-<area shape="rect" id="Node000005" href="$aero__rep__single__particle_8c.html#a59114de73dd305d5825a8547155b8946" title="Get the type of aerosol concentration used." alt="" coords="716,71,877,111"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="635,112,700,102,701,108,635,117"/>
-<area shape="rect" id="Node000007" href="$aero__rep__modal__binned__mass_8c.html#a8d5bf734337581d90c2280ab858ccf96" title="Get the effective particle radius &#160;(m)" alt="" coords="692,136,901,177"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="619,199,700,179,701,184,620,205"/>
-<area shape="rect" id="Node000008" href="$aero__rep__single__particle_8c.html#a48b11d345d89071d34e67b5063b1b891" title="Get the effective particle radius &#160;(m)" alt="" coords="712,201,881,242"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="620,219,696,219,696,224,620,224"/>
-<area shape="rect" id="Node000009" href="$aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="953,235,1115,275"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="882,231,938,239,937,244,881,236"/>
-<area shape="rect" id="Node000011" href="$aero__rep__modal__binned__mass_8c.html#a2e585253c19aa48dec8c55b963999e9d" title="Get the particle number concentration &#160;( )" alt="" coords="688,267,905,307"/>
-<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="617,284,673,284,673,290,617,290"/>
-<area shape="rect" id="Node000012" href="$aero__rep__single__particle_8c.html#afa7d35b774d0ab4d7cad7fb30d75e897" title="Get the particle number concentration &#160;( )" alt="" coords="708,332,885,373"/>
-<area shape="poly" id="edge12_Node000010_Node000012" title=" " alt="" coords="617,303,701,325,699,330,616,308"/>
-<area shape="poly" id="edge11_Node000011_Node000009" title=" " alt="" coords="905,270,937,265,937,271,906,275"/>
-<area shape="poly" id="edge15_Node000014_Node000003" title=" " alt="" coords="378,297,396,285,414,262,421,239,428,214,444,188,470,165,498,147,501,151,473,169,448,191,432,217,426,241,419,265,400,289,381,302"/>
-<area shape="poly" id="edge26_Node000014_Node000006" title=" " alt="" coords="369,297,397,285,421,269,445,253,460,246,462,250,447,257,423,273,399,289,371,302"/>
-<area shape="poly" id="edge27_Node000014_Node000010" title=" " alt="" coords="398,305,454,297,455,302,399,310"/>
-<area shape="poly" id="edge28_Node000014_Node000013" title=" " alt="" coords="399,330,460,339,459,344,398,336"/>
-<area shape="rect" id="Node000015" href="$aero__rep__solver_8c.html#a513044e29b338d17d02b5bc472a8046f" title="Get the average molecular weight of an aerosol phase in this representation &#160;( )" alt="" coords="458,548,628,589"/>
-<area shape="poly" id="edge16_Node000014_Node000015" title=" " alt="" coords="326,339,514,535,510,539,323,343"/>
-<area shape="rect" id="Node000019" href="$aero__rep__solver_8c.html#a0d5fc5c14f5fc182d80811b27c644e86" title="Get the total mass of an aerosol phase in this representation &#160;( )" alt="" coords="458,404,628,445"/>
-<area shape="poly" id="edge21_Node000014_Node000019" title=" " alt="" coords="351,339,447,382,478,395,476,400,445,387,349,344"/>
-<area shape="rect" id="Node000016" href="$aero__rep__modal__binned__mass_8c.html#a2c1fd8badaa6ebffd2b45ab5314c1279" title="Get the average molecular weight in an aerosol phase &#160;( )" alt="" coords="717,540,876,596"/>
-<area shape="poly" id="edge17_Node000015_Node000016" title=" " alt="" coords="629,566,701,566,701,571,629,571"/>
-<area shape="rect" id="Node000018" href="$aero__rep__single__particle_8c.html#a203b6931fd5a504b7cc1750eb582b60c" title="Get the average molecular weight in an aerosol phase &#160;( )" alt="" coords="707,620,886,676"/>
-<area shape="poly" id="edge19_Node000015_Node000018" title=" " alt="" coords="611,587,693,613,691,618,609,592"/>
-<area shape="rect" id="Node000017" href="$aero__phase__solver_8c.html#a965e0b9fc79db694be201edd05377dd1" title="Get the mass and average MW in an aerosol phase." alt="" coords="958,512,1110,553"/>
-<area shape="poly" id="edge18_Node000016_Node000017" title=" " alt="" coords="876,554,942,544,943,549,877,559"/>
-<area shape="poly" id="edge20_Node000018_Node000017" title=" " alt="" coords="877,617,903,606,987,559,990,563,906,611,879,622"/>
-<area shape="rect" id="Node000020" href="$aero__rep__modal__binned__mass_8c.html#aa84e95ce69656ab640edfdb32cc71d4c" title="Get the total mass in an aerosol phase &#160;( )" alt="" coords="717,396,876,452"/>
-<area shape="poly" id="edge22_Node000019_Node000020" title=" " alt="" coords="629,422,701,422,701,427,629,427"/>
-<area shape="rect" id="Node000021" href="$aero__rep__single__particle_8c.html#ad49c89b34b57e5b644d6506ead9dea34" title="Get the total mass in an aerosol phase &#160;( )" alt="" coords="690,476,903,517"/>
-<area shape="poly" id="edge24_Node000019_Node000021" title=" " alt="" coords="618,443,708,469,707,474,617,448"/>
-<area shape="poly" id="edge23_Node000020_Node000017" title=" " alt="" coords="878,450,906,462,984,502,982,506,904,467,875,455"/>
-<area shape="poly" id="edge25_Node000021_Node000017" title=" " alt="" coords="904,510,943,516,942,521,903,515"/>
+<area shape="rect" id="Node000001" title="Calculate the time derivative &#160;for only some specific types." alt="" coords="5,256,161,297"/>
+<area shape="rect" id="Node000002" href="$rxn___h_l__phase__transfer_8c.html#aa82a07e921e3d22fda1d52073b16219d" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="225,223,382,263"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,262,210,254,210,260,161,267"/>
+<area shape="rect" id="Node000015" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html#a8387f10a0a5aa0b38cc545859542f3c4" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="209,288,398,329"/>
+<area shape="poly" id="edge15_Node000001_Node000015" title=" " alt="" coords="161,285,193,290,192,295,161,290"/>
+<area shape="rect" id="Node000003" href="$aero__rep__solver_8c.html#a00aee7bec2d9284a74c0eb26d346dc81" title="Check whether aerosol concentrations are per&#45;particle or total for each phase." alt="" coords="446,108,640,133"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="344,220,502,138,504,143,346,225"/>
+<area shape="rect" id="Node000006" href="$aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="467,255,619,295"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="382,251,452,260,451,265,381,256"/>
+<area shape="rect" id="Node000011" href="$aero__rep__solver_8c.html#aa56870eb4fe20532461b1634d7688210" title="Get the particle number concentration &#160;( )" alt="" coords="470,189,616,230"/>
+<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="381,230,454,219,455,225,382,235"/>
+<area shape="rect" id="Node000014" href="$time__derivative_8c.html#af4c9ab5040b544a8ec4b63a1c75922e2" title=" " alt="" coords="474,320,612,361"/>
+<area shape="poly" id="edge14_Node000002_Node000014" title=" " alt="" coords="370,261,399,274,423,289,447,305,462,311,460,316,445,309,421,294,397,279,368,266"/>
+<area shape="rect" id="Node000004" href="$aero__rep__modal__binned__mass_8c.html#a5806fae1fe7d70369bfb7a0d9c54d12f" title="Get the type of aerosol concentration used." alt="" coords="703,5,886,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="572,105,687,57,709,49,711,54,689,61,574,110"/>
+<area shape="rect" id="Node000005" href="$aero__rep__single__particle_8c.html#a59114de73dd305d5825a8547155b8946" title="Get the type of aerosol concentration used." alt="" coords="714,71,875,111"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="641,106,698,100,699,105,641,112"/>
+<area shape="rect" id="Node000007" href="$aero__rep__modal__binned__mass_8c.html#a8d5bf734337581d90c2280ab858ccf96" title="Get the effective particle radius &#160;(m)" alt="" coords="690,316,899,357"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="620,291,694,309,693,314,619,296"/>
+<area shape="rect" id="Node000008" href="$aero__rep__single__particle_8c.html#a48b11d345d89071d34e67b5063b1b891" title="Get the effective particle radius &#160;(m) Finds the radius of the largest layer in specified particle." alt="" coords="710,251,879,291"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="620,271,694,270,694,275,620,276"/>
+<area shape="rect" id="Node000009" href="$aero__rep__single__particle_8c.html#ae83f56379c60d1fc674f0fd9e9726418" title="Get the effective radius of a specified layer &#160;(m)" alt="" coords="955,255,1158,295"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="880,270,939,271,939,276,880,275"/>
+<area shape="rect" id="Node000010" href="$aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="1213,223,1375,263"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="1159,259,1197,253,1198,259,1159,264"/>
+<area shape="rect" id="Node000012" href="$aero__rep__modal__binned__mass_8c.html#a2e585253c19aa48dec8c55b963999e9d" title="Get the particle number concentration &#160;( )" alt="" coords="949,189,1165,230"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="617,207,933,207,933,212,617,212"/>
+<area shape="rect" id="Node000013" href="$aero__rep__single__particle_8c.html#afa7d35b774d0ab4d7cad7fb30d75e897" title="Get the particle number concentration &#160;( )" alt="" coords="706,136,883,177"/>
+<area shape="poly" id="edge13_Node000011_Node000013" title=" " alt="" coords="616,192,690,176,691,181,617,197"/>
+<area shape="poly" id="edge12_Node000012_Node000010" title=" " alt="" coords="1166,222,1198,227,1197,232,1165,228"/>
+<area shape="poly" id="edge16_Node000015_Node000003" title=" " alt="" coords="378,285,396,273,414,250,421,227,427,202,444,176,468,155,495,138,498,143,471,159,448,179,432,204,426,228,418,252,400,277,381,290"/>
+<area shape="poly" id="edge27_Node000015_Node000006" title=" " alt="" coords="398,293,451,285,452,290,399,298"/>
+<area shape="poly" id="edge28_Node000015_Node000011" title=" " alt="" coords="369,285,397,273,421,257,445,241,460,234,462,238,447,245,423,261,399,277,371,290"/>
+<area shape="poly" id="edge29_Node000015_Node000014" title=" " alt="" coords="399,318,460,327,459,332,398,324"/>
+<area shape="rect" id="Node000016" href="$aero__rep__solver_8c.html#a513044e29b338d17d02b5bc472a8046f" title="Get the average molecular weight of an aerosol phase in this representation &#160;( )" alt="" coords="458,532,628,573"/>
+<area shape="poly" id="edge17_Node000015_Node000016" title=" " alt="" coords="327,327,513,519,509,523,323,331"/>
+<area shape="rect" id="Node000020" href="$aero__rep__solver_8c.html#a0d5fc5c14f5fc182d80811b27c644e86" title="Get the total mass of an aerosol phase in this representation &#160;( )" alt="" coords="458,388,628,429"/>
+<area shape="poly" id="edge22_Node000015_Node000020" title=" " alt="" coords="350,327,447,370,471,380,469,385,445,375,348,332"/>
+<area shape="rect" id="Node000017" href="$aero__rep__modal__binned__mass_8c.html#a2c1fd8badaa6ebffd2b45ab5314c1279" title="Get the average molecular weight in an aerosol phase &#160;( )" alt="" coords="715,524,874,580"/>
+<area shape="poly" id="edge18_Node000016_Node000017" title=" " alt="" coords="629,550,699,550,699,555,629,555"/>
+<area shape="rect" id="Node000019" href="$aero__rep__single__particle_8c.html#a203b6931fd5a504b7cc1750eb582b60c" title="Get the average molecular weight in an aerosol phase &#160;( )" alt="" coords="705,604,884,660"/>
+<area shape="poly" id="edge20_Node000016_Node000019" title=" " alt="" coords="610,571,692,597,690,602,608,576"/>
+<area shape="rect" id="Node000018" href="$aero__phase__solver_8c.html#a965e0b9fc79db694be201edd05377dd1" title="Get the mass and average MW in an aerosol phase." alt="" coords="981,496,1133,537"/>
+<area shape="poly" id="edge19_Node000017_Node000018" title=" " alt="" coords="874,539,965,526,965,532,875,544"/>
+<area shape="poly" id="edge21_Node000019_Node000018" title=" " alt="" coords="872,601,900,590,1001,541,1004,546,902,595,874,606"/>
+<area shape="rect" id="Node000021" href="$aero__rep__modal__binned__mass_8c.html#aa84e95ce69656ab640edfdb32cc71d4c" title="Get the total mass in an aerosol phase &#160;( )" alt="" coords="715,380,874,436"/>
+<area shape="poly" id="edge23_Node000020_Node000021" title=" " alt="" coords="629,406,699,406,699,411,629,411"/>
+<area shape="rect" id="Node000022" href="$aero__rep__single__particle_8c.html#ad49c89b34b57e5b644d6506ead9dea34" title="Get the total mass in an aerosol phase &#160;( )" alt="" coords="688,460,901,501"/>
+<area shape="poly" id="edge25_Node000020_Node000022" title=" " alt="" coords="618,427,707,453,705,458,616,432"/>
+<area shape="poly" id="edge24_Node000021_Node000018" title=" " alt="" coords="873,434,902,446,996,487,994,492,900,451,871,439"/>
+<area shape="poly" id="edge26_Node000022_Node000018" title=" " alt="" coords="901,492,966,501,965,507,901,498"/>
 </map>

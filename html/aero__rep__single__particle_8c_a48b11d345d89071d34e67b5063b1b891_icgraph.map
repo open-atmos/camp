@@ -1,5 +1,5 @@
 <map id="aero_rep_single_particle_get_effective_radius__m" name="aero_rep_single_particle_get_effective_radius__m">
-<area shape="rect" id="Node000001" title="Get the effective particle radius &#160;(m)" alt="" coords="1245,169,1414,210"/>
+<area shape="rect" id="Node000001" title="Get the effective particle radius &#160;(m) Finds the radius of the largest layer in specified particle." alt="" coords="1245,169,1414,210"/>
 <area shape="rect" id="Node000002" href="$aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="1044,169,1197,210"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1229,192,1197,192,1197,187,1229,187"/>
 <area shape="rect" id="Node000003" href="$rxn___h_l__phase__transfer_8c.html#aa82a07e921e3d22fda1d52073b16219d" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="824,71,980,111"/>

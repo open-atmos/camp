@@ -171,12 +171,18 @@ Functions</h2></td></tr>
 <tr class="memitem:a567e448c1ea25085add6257c6b8930c6" id="r_a567e448c1ea25085add6257c6b8930c6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a567e448c1ea25085add6257c6b8930c6">aero_rep_modal_binned_mass_update_state</a> (ModelData *model_data, int *aero_rep_int_data, double *aero_rep_float_data, double *aero_rep_env_data)</td></tr>
 <tr class="memdesc:a567e448c1ea25085add6257c6b8930c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update aerosol representation data for a new state.  <br /></td></tr>
 <tr class="separator:a567e448c1ea25085add6257c6b8930c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab56589a98da2414d4225ef8bd3178991" id="r_ab56589a98da2414d4225ef8bd3178991"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab56589a98da2414d4225ef8bd3178991">aero_rep_modal_binned_mass_get_effective_layer_radius__m</a> (ModelData *model_data, int aero_phase_idx, double *layer_radius, double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data, double *aero_rep_env_data)</td></tr>
+<tr class="memdesc:ab56589a98da2414d4225ef8bd3178991"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the effective radius of a specified layer \(r_{layer}\) (m)  <br /></td></tr>
+<tr class="separator:ab56589a98da2414d4225ef8bd3178991"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d5bf734337581d90c2280ab858ccf96" id="r_a8d5bf734337581d90c2280ab858ccf96"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d5bf734337581d90c2280ab858ccf96">aero_rep_modal_binned_mass_get_effective_radius__m</a> (ModelData *model_data, int aero_phase_idx, double *radius, double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data, double *aero_rep_env_data)</td></tr>
 <tr class="memdesc:a8d5bf734337581d90c2280ab858ccf96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the effective particle radius \(r_{eff}\) (m)  <br /></td></tr>
 <tr class="separator:a8d5bf734337581d90c2280ab858ccf96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab17adf9d167b1c67c4ffa0ea0cf1aa1a" id="r_ab17adf9d167b1c67c4ffa0ea0cf1aa1a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab17adf9d167b1c67c4ffa0ea0cf1aa1a">aero_rep_modal_binned_mass_get_interface_surface_area__m2</a> (ModelData *model_data, int aero_phase_idx_first, int aero_phase_idx_second, double *surface_area, double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data, double *aero_rep_env_data)</td></tr>
 <tr class="memdesc:ab17adf9d167b1c67c4ffa0ea0cf1aa1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the effective particle surface area \(r_{eff}\) (m)  <br /></td></tr>
 <tr class="separator:ab17adf9d167b1c67c4ffa0ea0cf1aa1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b9d22e3d44507c19bb7b26dfd192ba0" id="r_a2b9d22e3d44507c19bb7b26dfd192ba0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b9d22e3d44507c19bb7b26dfd192ba0">aero_rep_modal_binned_mass_get_layer_thickness__m</a> (ModelData *model_data, int aero_phase_idx, double *layer_thickness, double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data, double *aero_rep_env_data)</td></tr>
+<tr class="memdesc:a2b9d22e3d44507c19bb7b26dfd192ba0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the thickness of a particle layer (m)  <br /></td></tr>
+<tr class="separator:a2b9d22e3d44507c19bb7b26dfd192ba0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e585253c19aa48dec8c55b963999e9d" id="r_a2e585253c19aa48dec8c55b963999e9d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e585253c19aa48dec8c55b963999e9d">aero_rep_modal_binned_mass_get_number_conc__n_m3</a> (ModelData *model_data, int aero_phase_idx, double *number_conc, double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data, double *aero_rep_env_data)</td></tr>
 <tr class="memdesc:a2e585253c19aa48dec8c55b963999e9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the particle number concentration \(n\) ( \(\mbox{\si{\#\per\cubic\metre}}\))  <br /></td></tr>
 <tr class="separator:a2e585253c19aa48dec8c55b963999e9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -808,7 +814,7 @@ Functions</h2></td></tr>
 <p>Create update data for new GMD. </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to a new GMD update data object </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00707">707</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00790">790</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 
 </div>
 </div>
@@ -830,7 +836,7 @@ Functions</h2></td></tr>
 <p>Create update data for new GSD. </p>
 <dl class="section return"><dt>Returns</dt><dd>Pointer to a new GSD update data object </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00741">741</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00824">824</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 
 </div>
 </div>
@@ -881,7 +887,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00464">464</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00547">547</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -991,7 +997,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00555">555</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00638">638</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1103,7 +1109,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00492">492</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00575">575</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1206,6 +1212,89 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="ab56589a98da2414d4225ef8bd3178991" name="ab56589a98da2414d4225ef8bd3178991"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab56589a98da2414d4225ef8bd3178991">&#9670;&#160;</a></span>aero_rep_modal_binned_mass_get_effective_layer_radius__m()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void aero_rep_modal_binned_mass_get_effective_layer_radius__m </td>
+          <td>(</td>
+          <td class="paramtype">ModelData *</td>          <td class="paramname"><span class="paramname"><em>model_data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>aero_phase_idx</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *</td>          <td class="paramname"><span class="paramname"><em>layer_radius</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *</td>          <td class="paramname"><span class="paramname"><em>partial_deriv</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *</td>          <td class="paramname"><span class="paramname"><em>aero_rep_int_data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *</td>          <td class="paramname"><span class="paramname"><em>aero_rep_float_data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *</td>          <td class="paramname"><span class="paramname"><em>aero_rep_env_data</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the effective radius of a specified layer \(r_{layer}\) (m) </p>
+<p>The modal mass aerosol representation does not assume any internal structure for modes or bins, so the layer radius function always returns the radius of the particle.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model_data</td><td>Pointer to the model data, including the state array </td></tr>
+    <tr><td class="paramname">aero_phase_idx</td><td>Index of the aerosol phase within the representation </td></tr>
+    <tr><td class="paramname">layer_radius</td><td>Effective layer radius (m) </td></tr>
+    <tr><td class="paramname">partial_deriv</td><td>\(\frac{\partial r_{layer}}{\partial y}\) where \(y\) are species on the state array </td></tr>
+    <tr><td class="paramname">aero_rep_int_data</td><td>Pointer to the aerosol representation integer data </td></tr>
+    <tr><td class="paramname">aero_rep_float_data</td><td>Pointer to the aerosol representation floating-point data </td></tr>
+    <tr><td class="paramname">aero_rep_env_data</td><td>Pointer to the aerosol representation environment-dependent parameters </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00285">285</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="aero__rep__modal__binned__mass_8c_ab56589a98da2414d4225ef8bd3178991_cgraph.png" border="0" usemap="#aaero__rep__modal__binned__mass_8c_ab56589a98da2414d4225ef8bd3178991_cgraph" alt=""/></div>
+<map name="aaero__rep__modal__binned__mass_8c_ab56589a98da2414d4225ef8bd3178991_cgraph" id="aaero__rep__modal__binned__mass_8c_ab56589a98da2414d4225ef8bd3178991_cgraph">
+<area shape="rect" title="Get the effective radius of a specified layer &#160;(m)" alt="" coords="5,5,181,61"/>
+<area shape="rect" href="aero__rep__modal__binned__mass_8c.html#a8d5bf734337581d90c2280ab858ccf96" title="Get the effective particle radius &#160;(m)" alt="" coords="229,13,437,54"/>
+<area shape="poly" title=" " alt="" coords="181,30,213,30,213,36,181,36"/>
+</map>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="aero__rep__modal__binned__mass_8c_ab56589a98da2414d4225ef8bd3178991_icgraph.png" border="0" usemap="#aaero__rep__modal__binned__mass_8c_ab56589a98da2414d4225ef8bd3178991_icgraph" alt=""/></div>
+<map name="aaero__rep__modal__binned__mass_8c_ab56589a98da2414d4225ef8bd3178991_icgraph" id="aaero__rep__modal__binned__mass_8c_ab56589a98da2414d4225ef8bd3178991_icgraph">
+<area shape="rect" title="Get the effective radius of a specified layer &#160;(m)" alt="" coords="206,5,381,61"/>
+<area shape="rect" href="aero__rep__solver_8c.html#a04d5b41ad66420bf1a7f31c2f0a37431" title="Get the effective radius of a specified layer, &#160;(m)" alt="" coords="5,13,158,54"/>
+<area shape="poly" title=" " alt="" coords="190,36,158,36,158,30,190,30"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="a8d5bf734337581d90c2280ab858ccf96" name="a8d5bf734337581d90c2280ab858ccf96"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8d5bf734337581d90c2280ab858ccf96">&#9670;&#160;</a></span>aero_rep_modal_binned_mass_get_effective_radius__m()</h2>
 
@@ -1281,59 +1370,63 @@ r_{eff} = \frac{D_{eff}}{2}
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00300">300</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00336">336</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="aero__rep__modal__binned__mass_8c_a8d5bf734337581d90c2280ab858ccf96_icgraph.png" border="0" usemap="#aaero__rep__modal__binned__mass_8c_a8d5bf734337581d90c2280ab858ccf96_icgraph" alt=""/></div>
 <map name="aaero__rep__modal__binned__mass_8c_a8d5bf734337581d90c2280ab858ccf96_icgraph" id="aaero__rep__modal__binned__mass_8c_a8d5bf734337581d90c2280ab858ccf96_icgraph">
-<area shape="rect" title="Get the effective particle radius &#160;(m)" alt="" coords="1245,169,1453,210"/>
-<area shape="rect" href="aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="1044,169,1197,210"/>
-<area shape="poly" title=" " alt="" coords="1230,192,1197,192,1197,187,1230,187"/>
-<area shape="rect" href="rxn___h_l__phase__transfer_8c.html#aa82a07e921e3d22fda1d52073b16219d" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="824,71,980,111"/>
-<area shape="poly" title=" " alt="" coords="1069,164,995,127,965,114,967,110,997,122,1071,159"/>
-<area shape="rect" href="rxn___h_l__phase__transfer_8c.html#a4e04c50da5215b9886991e6f0c98cccc" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="824,332,980,373"/>
-<area shape="poly" title=" " alt="" coords="1097,224,1054,274,1027,299,998,321,974,334,972,329,995,317,1024,295,1051,270,1093,221"/>
-<area shape="rect" href="rxn___s_i_m_p_o_l__phase__transfer_8c.html#a8387f10a0a5aa0b38cc545859542f3c4" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="807,136,996,177"/>
-<area shape="poly" title=" " alt="" coords="1029,178,997,173,997,168,1030,173"/>
-<area shape="rect" href="rxn___s_i_m_p_o_l__phase__transfer_8c.html#a2c6b4163ab0a9e65eec7dd8286d67885" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="807,267,996,307"/>
-<area shape="poly" title=" " alt="" coords="1070,220,997,256,966,269,964,264,995,251,1068,215"/>
-<area shape="rect" href="rxn__surface_8c.html#a5bb30760087399bd04a9f9e16f0fab1f" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="825,5,979,46"/>
-<area shape="poly" title=" " alt="" coords="1094,159,1051,109,1024,83,995,61,972,49,974,44,998,57,1028,79,1055,105,1098,155"/>
-<area shape="rect" href="rxn__surface_8c.html#a8de73dc2a00c1bc5b91747cbb50086ad" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="830,201,973,242"/>
-<area shape="poly" title=" " alt="" coords="1030,206,974,214,974,209,1029,200"/>
-<area shape="rect" href="rxn__solver_8c.html#af014568140c63dfab9ea1c92b056e3b8" title="Calculate the time derivative ." alt="" coords="629,78,734,104"/>
-<area shape="poly" title=" " alt="" coords="808,94,734,94,734,88,808,88"/>
-<area shape="rect" href="rxn__solver_8c.html#a066fddd15835cba3a8b519fb734bd552" title="Calculate the time derivative &#160;for only some specific types." alt="" coords="604,128,759,169"/>
-<area shape="poly" title=" " alt="" coords="809,118,760,131,759,126,808,113"/>
-<area shape="rect" href="camp__solver_8c.html#ac55302bc18db0d68d78f543aad6a16c4" title="Compute the time derivative f(t,y)" alt="" coords="517,125,556,150"/>
-<area shape="poly" title=" " alt="" coords="625,112,557,134,555,129,624,107"/>
-<area shape="rect" href="camp__solver_8c.html#ad45be595da1a1d6fd40179d9743a9a65" title="Check a Jacobian for accuracy." alt="" coords="338,226,423,252"/>
-<area shape="poly" title=" " alt="" coords="519,164,497,188,471,209,425,231,422,226,468,205,493,184,515,161"/>
-<area shape="rect" href="camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="182,226,224,252"/>
-<area shape="poly" title=" " alt="" coords="503,150,226,235,224,230,502,145"/>
-<area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,176,115,201"/>
-<area shape="poly" title=" " alt="" coords="502,144,115,185,115,180,502,139"/>
-<area shape="rect" href="camp__solver_8c.html#a51bc2a16028d4c72dd39669c31f6fc17" title="Determine if there is anything to solve." alt="" coords="292,74,469,100"/>
-<area shape="poly" title=" " alt="" coords="502,129,422,103,423,98,504,124"/>
-<area shape="rect" href="camp__solver_8c.html#afc5ec8680b419e7ab49530d53a76cee4" title="Solve for a given timestep." alt="" coords="163,49,244,74"/>
-<area shape="poly" title=" " alt="" coords="519,113,497,86,468,64,440,54,410,47,349,43,292,47,245,54,244,49,292,41,349,37,411,42,442,49,471,59,501,82,523,110"/>
-<area shape="poly" title=" " alt="" coords="323,242,225,242,225,236,323,236"/>
-<area shape="poly" title=" " alt="" coords="167,229,97,204,99,199,169,224"/>
-<area shape="poly" title=" " alt="" coords="276,75,244,70,245,65,277,69"/>
-<area shape="poly" title=" " alt="" coords="588,144,556,142,556,136,588,139"/>
-<area shape="rect" href="rxn__solver_8c.html#ad44deb65b9845d05c6bd148e3378b42a" title="Calculate the Jacobian." alt="" coords="635,274,728,300"/>
-<area shape="poly" title=" " alt="" coords="816,330,727,303,728,298,817,325"/>
-<area shape="rect" href="rxn__solver_8c.html#a40f9caeb40a6630edd3d61544ee29922" title="Calculate the Jacobian for only some specific types." alt="" coords="609,324,754,365"/>
-<area shape="poly" title=" " alt="" coords="808,352,754,350,754,344,808,346"/>
-<area shape="poly" title=" " alt="" coords="619,290,470,286,380,279,291,267,224,249,226,244,293,262,381,274,470,281,619,285"/>
-<area shape="poly" title=" " alt="" coords="594,344,450,328,370,313,291,291,253,274,222,254,225,250,256,269,293,286,371,308,451,323,594,338"/>
-<area shape="poly" title=" " alt="" coords="816,134,727,107,728,102,817,129"/>
-<area shape="poly" title=" " alt="" coords="791,155,759,154,760,148,792,150"/>
-<area shape="poly" title=" " alt="" coords="792,290,728,290,728,284,792,284"/>
-<area shape="poly" title=" " alt="" coords="807,314,755,328,753,323,806,309"/>
-<area shape="poly" title=" " alt="" coords="817,53,728,80,727,75,816,48"/>
-<area shape="poly" title=" " alt="" coords="817,249,728,276,727,271,816,244"/>
+<area shape="rect" title="Get the effective particle radius &#160;(m)" alt="" coords="1268,317,1476,357"/>
+<area shape="rect" href="aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="1056,219,1208,260"/>
+<area shape="poly" title=" " alt="" coords="1305,313,1183,263,1185,258,1307,308"/>
+<area shape="rect" href="aero__rep__modal__binned__mass_8c.html#ab56589a98da2414d4225ef8bd3178991" title="Get the effective radius of a specified layer &#160;(m)" alt="" coords="1044,345,1220,401"/>
+<area shape="poly" title=" " alt="" coords="1253,358,1220,362,1220,357,1252,352"/>
+<area shape="rect" href="rxn___h_l__phase__transfer_8c.html#aa82a07e921e3d22fda1d52073b16219d" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="824,89,980,129"/>
+<area shape="poly" title=" " alt="" coords="1093,211,1047,177,995,145,968,132,970,127,998,140,1051,173,1096,207"/>
+<area shape="rect" href="rxn___h_l__phase__transfer_8c.html#a4e04c50da5215b9886991e6f0c98cccc" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="824,285,980,325"/>
+<area shape="poly" title=" " alt="" coords="1044,267,977,287,975,281,1043,262"/>
+<area shape="rect" href="rxn___s_i_m_p_o_l__phase__transfer_8c.html#a8387f10a0a5aa0b38cc545859542f3c4" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="807,154,996,195"/>
+<area shape="poly" title=" " alt="" coords="1043,217,975,198,977,193,1044,212"/>
+<area shape="rect" href="rxn___s_i_m_p_o_l__phase__transfer_8c.html#a2c6b4163ab0a9e65eec7dd8286d67885" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="807,219,996,260"/>
+<area shape="poly" title=" " alt="" coords="1040,242,997,242,997,237,1040,237"/>
+<area shape="rect" href="rxn__surface_8c.html#a5bb30760087399bd04a9f9e16f0fab1f" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="825,23,979,64"/>
+<area shape="poly" title=" " alt="" coords="1109,208,1062,143,1030,109,995,79,973,67,976,62,998,75,1034,105,1066,139,1113,205"/>
+<area shape="rect" href="rxn__surface_8c.html#a8de73dc2a00c1bc5b91747cbb50086ad" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="830,350,973,391"/>
+<area shape="poly" title=" " alt="" coords="1096,272,1051,307,998,339,970,352,968,347,995,335,1047,302,1093,268"/>
+<area shape="rect" href="rxn__solver_8c.html#af014568140c63dfab9ea1c92b056e3b8" title="Calculate the time derivative ." alt="" coords="629,93,734,119"/>
+<area shape="poly" title=" " alt="" coords="808,110,734,110,734,104,808,105"/>
+<area shape="rect" href="rxn__solver_8c.html#a066fddd15835cba3a8b519fb734bd552" title="Calculate the time derivative &#160;for only some specific types." alt="" coords="604,143,759,184"/>
+<area shape="poly" title=" " alt="" coords="809,135,760,147,759,142,808,129"/>
+<area shape="rect" href="camp__solver_8c.html#ac55302bc18db0d68d78f543aad6a16c4" title="Compute the time derivative f(t,y)" alt="" coords="517,93,556,119"/>
+<area shape="poly" title=" " alt="" coords="614,109,556,109,556,104,614,104"/>
+<area shape="rect" href="camp__solver_8c.html#ad45be595da1a1d6fd40179d9743a9a65" title="Check a Jacobian for accuracy." alt="" coords="338,192,423,218"/>
+<area shape="poly" title=" " alt="" coords="518,133,496,155,471,175,424,196,422,192,468,171,493,151,514,129"/>
+<area shape="rect" href="camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="182,192,224,218"/>
+<area shape="poly" title=" " alt="" coords="503,119,226,201,224,196,502,114"/>
+<area shape="rect" href="camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,141,115,167"/>
+<area shape="poly" title=" " alt="" coords="502,112,115,151,115,146,502,107"/>
+<area shape="rect" href="camp__solver_8c.html#a51bc2a16028d4c72dd39669c31f6fc17" title="Determine if there is anything to solve." alt="" coords="292,40,469,66"/>
+<area shape="poly" title=" " alt="" coords="502,97,420,69,422,64,504,92"/>
+<area shape="rect" href="camp__solver_8c.html#afc5ec8680b419e7ab49530d53a76cee4" title="Solve for a given timestep." alt="" coords="163,15,244,40"/>
+<area shape="poly" title=" " alt="" coords="519,82,498,53,484,40,468,30,440,19,410,13,350,8,292,12,245,20,244,15,292,7,350,3,411,7,442,14,471,25,487,36,502,49,524,79"/>
+<area shape="poly" title=" " alt="" coords="323,208,225,208,225,202,323,202"/>
+<area shape="poly" title=" " alt="" coords="167,195,97,170,99,165,169,190"/>
+<area shape="poly" title=" " alt="" coords="276,41,244,36,245,31,277,35"/>
+<area shape="poly" title=" " alt="" coords="613,140,555,116,557,111,615,135"/>
+<area shape="rect" href="rxn__solver_8c.html#ad44deb65b9845d05c6bd148e3378b42a" title="Calculate the Jacobian." alt="" coords="635,293,728,319"/>
+<area shape="poly" title=" " alt="" coords="808,308,728,309,728,303,808,303"/>
+<area shape="rect" href="rxn__solver_8c.html#a40f9caeb40a6630edd3d61544ee29922" title="Calculate the Jacobian for only some specific types." alt="" coords="609,229,754,269"/>
+<area shape="poly" title=" " alt="" coords="808,284,753,270,755,265,809,279"/>
+<area shape="poly" title=" " alt="" coords="619,307,551,303,468,294,379,279,291,255,254,239,223,221,226,216,256,234,293,250,380,274,469,289,551,298,620,302"/>
+<area shape="poly" title=" " alt="" coords="593,253,451,250,371,243,291,233,224,215,226,210,293,228,372,238,452,244,594,248"/>
+<area shape="poly" title=" " alt="" coords="818,151,725,122,727,117,820,146"/>
+<area shape="poly" title=" " alt="" coords="791,172,759,170,760,165,792,166"/>
+<area shape="poly" title=" " alt="" coords="818,267,728,295,726,290,817,262"/>
+<area shape="poly" title=" " alt="" coords="792,247,754,249,754,243,792,242"/>
+<area shape="poly" title=" " alt="" coords="814,71,730,95,729,90,812,66"/>
+<area shape="poly" title=" " alt="" coords="814,348,728,322,729,317,816,343"/>
+<area shape="rect" href="aero__rep__solver_8c.html#a04d5b41ad66420bf1a7f31c2f0a37431" title="Get the effective radius of a specified layer, &#160;(m)" alt="" coords="826,415,978,456"/>
+<area shape="poly" title=" " alt="" coords="1030,403,979,417,978,412,1029,398"/>
 </map>
 </div>
 
@@ -1404,7 +1497,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00349">349</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00385">385</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1413,6 +1506,79 @@ Here is the caller graph for this function:</div>
 <area shape="rect" title="Get the effective particle surface area &#160;(m)" alt="" coords="207,5,399,61"/>
 <area shape="rect" href="aero__rep__solver_8c.html#a122c5a47dece6968347c8f37484951a9" title="Get the surface area of interfacial layer between two phases (m^2)" alt="" coords="5,13,159,54"/>
 <area shape="poly" title=" " alt="" coords="191,36,159,36,159,30,191,30"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a2b9d22e3d44507c19bb7b26dfd192ba0" name="a2b9d22e3d44507c19bb7b26dfd192ba0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b9d22e3d44507c19bb7b26dfd192ba0">&#9670;&#160;</a></span>aero_rep_modal_binned_mass_get_layer_thickness__m()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void aero_rep_modal_binned_mass_get_layer_thickness__m </td>
+          <td>(</td>
+          <td class="paramtype">ModelData *</td>          <td class="paramname"><span class="paramname"><em>model_data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>aero_phase_idx</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *</td>          <td class="paramname"><span class="paramname"><em>layer_thickness</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *</td>          <td class="paramname"><span class="paramname"><em>partial_deriv</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *</td>          <td class="paramname"><span class="paramname"><em>aero_rep_int_data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *</td>          <td class="paramname"><span class="paramname"><em>aero_rep_float_data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *</td>          <td class="paramname"><span class="paramname"><em>aero_rep_env_data</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the thickness of a particle layer (m) </p>
+<p>The thickness of a particle layer within the modal/binned aerosol representation always returns the radius.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model_data</td><td>Pointer to the model data, including the state array </td></tr>
+    <tr><td class="paramname">aero_phase_idx</td><td>Index of the aerosol phase within the representation </td></tr>
+    <tr><td class="paramname">layer_thickness</td><td>Layer thickness which is equivalent to radius (m) </td></tr>
+    <tr><td class="paramname">partial_deriv</td><td>\(\frac{\partial r_{eff}}{\partial y}\) where \(y\) are species on the state array </td></tr>
+    <tr><td class="paramname">aero_rep_int_data</td><td>Pointer to the aerosol representation integer data </td></tr>
+    <tr><td class="paramname">aero_rep_float_data</td><td>Pointer to the aerosol representation floating-point data </td></tr>
+    <tr><td class="paramname">aero_rep_env_data</td><td>Pointer to the aerosol representation environment-dependent parameters </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00413">413</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="aero__rep__modal__binned__mass_8c_a2b9d22e3d44507c19bb7b26dfd192ba0_icgraph.png" border="0" usemap="#aaero__rep__modal__binned__mass_8c_a2b9d22e3d44507c19bb7b26dfd192ba0_icgraph" alt=""/></div>
+<map name="aaero__rep__modal__binned__mass_8c_a2b9d22e3d44507c19bb7b26dfd192ba0_icgraph" id="aaero__rep__modal__binned__mass_8c_a2b9d22e3d44507c19bb7b26dfd192ba0_icgraph">
+<area shape="rect" title="Get the thickness of a particle layer (m)" alt="" coords="184,5,391,46"/>
+<area shape="rect" href="aero__rep__solver_8c.html#a91a1b498193b8d3d75e353b4abad160c" title="Get the thickness of a particle layer (m)" alt="" coords="5,5,136,46"/>
+<area shape="poly" title=" " alt="" coords="168,28,136,28,136,23,168,23"/>
 </map>
 </div>
 
@@ -1496,7 +1662,7 @@ ln(\tilde{\sigma}_g)^2/2} \]
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00398">398</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00481">481</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1677,7 +1843,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00693">693</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00776">776</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1731,7 +1897,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00723">723</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00806">806</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 
 </div>
 </div>
@@ -1775,7 +1941,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00757">757</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00840">840</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 
 </div>
 </div>
@@ -1844,7 +2010,7 @@ r_{eff} = \frac{D_{eff}}{2}
 </p>
 <p> where \(\tilde{D_n}\) is the geometric mean diameter [m], \(\sigma_g\) is the geometric standard deviation [unitless], and \(r_{eff}\) is the effective radius [m].</p>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00624">624</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8c_source.html#l00707">707</a> of file <a class="el" href="aero__rep__modal__binned__mass_8c_source.html">aero_rep_modal_binned_mass.c</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">

@@ -1,49 +1,53 @@
 <map id="aero_rep_modal_binned_mass_get_effective_radius__m" name="aero_rep_modal_binned_mass_get_effective_radius__m">
-<area shape="rect" id="Node000001" title="Get the effective particle radius &#160;(m)" alt="" coords="1245,169,1453,210"/>
-<area shape="rect" id="Node000002" href="$aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="1044,169,1197,210"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1230,192,1197,192,1197,187,1230,187"/>
-<area shape="rect" id="Node000003" href="$rxn___h_l__phase__transfer_8c.html#aa82a07e921e3d22fda1d52073b16219d" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="824,71,980,111"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1069,164,995,127,965,114,967,110,997,122,1071,159"/>
-<area shape="rect" id="Node000012" href="$rxn___h_l__phase__transfer_8c.html#a4e04c50da5215b9886991e6f0c98cccc" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="824,332,980,373"/>
-<area shape="poly" id="edge15_Node000002_Node000012" title=" " alt="" coords="1097,224,1054,274,1027,299,998,321,974,334,972,329,995,317,1024,295,1051,270,1093,221"/>
-<area shape="rect" id="Node000015" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html#a8387f10a0a5aa0b38cc545859542f3c4" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="807,136,996,177"/>
-<area shape="poly" id="edge20_Node000002_Node000015" title=" " alt="" coords="1029,178,997,173,997,168,1030,173"/>
-<area shape="rect" id="Node000016" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html#a2c6b4163ab0a9e65eec7dd8286d67885" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="807,267,996,307"/>
-<area shape="poly" id="edge23_Node000002_Node000016" title=" " alt="" coords="1070,220,997,256,966,269,964,264,995,251,1068,215"/>
-<area shape="rect" id="Node000017" href="$rxn__surface_8c.html#a5bb30760087399bd04a9f9e16f0fab1f" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="825,5,979,46"/>
-<area shape="poly" id="edge26_Node000002_Node000017" title=" " alt="" coords="1094,159,1051,109,1024,83,995,61,972,49,974,44,998,57,1028,79,1055,105,1098,155"/>
-<area shape="rect" id="Node000018" href="$rxn__surface_8c.html#a8de73dc2a00c1bc5b91747cbb50086ad" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="830,201,973,242"/>
-<area shape="poly" id="edge28_Node000002_Node000018" title=" " alt="" coords="1030,206,974,214,974,209,1029,200"/>
-<area shape="rect" id="Node000004" href="$rxn__solver_8c.html#af014568140c63dfab9ea1c92b056e3b8" title="Calculate the time derivative ." alt="" coords="629,78,734,104"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="808,94,734,94,734,88,808,88"/>
-<area shape="rect" id="Node000011" href="$rxn__solver_8c.html#a066fddd15835cba3a8b519fb734bd552" title="Calculate the time derivative &#160;for only some specific types." alt="" coords="604,128,759,169"/>
-<area shape="poly" id="edge13_Node000003_Node000011" title=" " alt="" coords="809,118,760,131,759,126,808,113"/>
-<area shape="rect" id="Node000005" href="$camp__solver_8c.html#ac55302bc18db0d68d78f543aad6a16c4" title="Compute the time derivative f(t,y)" alt="" coords="517,125,556,150"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="625,112,557,134,555,129,624,107"/>
-<area shape="rect" id="Node000006" href="$camp__solver_8c.html#ad45be595da1a1d6fd40179d9743a9a65" title="Check a Jacobian for accuracy." alt="" coords="338,226,423,252"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="519,164,497,188,471,209,425,231,422,226,468,205,493,184,515,161"/>
-<area shape="rect" id="Node000007" href="$camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="182,226,224,252"/>
-<area shape="poly" id="edge10_Node000005_Node000007" title=" " alt="" coords="503,150,226,235,224,230,502,145"/>
-<area shape="rect" id="Node000008" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,176,115,201"/>
-<area shape="poly" id="edge11_Node000005_Node000008" title=" " alt="" coords="502,144,115,185,115,180,502,139"/>
-<area shape="rect" id="Node000009" href="$camp__solver_8c.html#a51bc2a16028d4c72dd39669c31f6fc17" title="Determine if there is anything to solve." alt="" coords="292,74,469,100"/>
-<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="502,129,422,103,423,98,504,124"/>
-<area shape="rect" id="Node000010" href="$camp__solver_8c.html#afc5ec8680b419e7ab49530d53a76cee4" title="Solve for a given timestep." alt="" coords="163,49,244,74"/>
-<area shape="poly" id="edge12_Node000005_Node000010" title=" " alt="" coords="519,113,497,86,468,64,440,54,410,47,349,43,292,47,245,54,244,49,292,41,349,37,411,42,442,49,471,59,501,82,523,110"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="323,242,225,242,225,236,323,236"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="167,229,97,204,99,199,169,224"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="276,75,244,70,245,65,277,69"/>
-<area shape="poly" id="edge14_Node000011_Node000005" title=" " alt="" coords="588,144,556,142,556,136,588,139"/>
-<area shape="rect" id="Node000013" href="$rxn__solver_8c.html#ad44deb65b9845d05c6bd148e3378b42a" title="Calculate the Jacobian." alt="" coords="635,274,728,300"/>
-<area shape="poly" id="edge16_Node000012_Node000013" title=" " alt="" coords="816,330,727,303,728,298,817,325"/>
-<area shape="rect" id="Node000014" href="$rxn__solver_8c.html#a40f9caeb40a6630edd3d61544ee29922" title="Calculate the Jacobian for only some specific types." alt="" coords="609,324,754,365"/>
-<area shape="poly" id="edge18_Node000012_Node000014" title=" " alt="" coords="808,352,754,350,754,344,808,346"/>
-<area shape="poly" id="edge17_Node000013_Node000007" title=" " alt="" coords="619,290,470,286,380,279,291,267,224,249,226,244,293,262,381,274,470,281,619,285"/>
-<area shape="poly" id="edge19_Node000014_Node000007" title=" " alt="" coords="594,344,450,328,370,313,291,291,253,274,222,254,225,250,256,269,293,286,371,308,451,323,594,338"/>
-<area shape="poly" id="edge21_Node000015_Node000004" title=" " alt="" coords="816,134,727,107,728,102,817,129"/>
-<area shape="poly" id="edge22_Node000015_Node000011" title=" " alt="" coords="791,155,759,154,760,148,792,150"/>
-<area shape="poly" id="edge24_Node000016_Node000013" title=" " alt="" coords="792,290,728,290,728,284,792,284"/>
-<area shape="poly" id="edge25_Node000016_Node000014" title=" " alt="" coords="807,314,755,328,753,323,806,309"/>
-<area shape="poly" id="edge27_Node000017_Node000004" title=" " alt="" coords="817,53,728,80,727,75,816,48"/>
-<area shape="poly" id="edge29_Node000018_Node000013" title=" " alt="" coords="817,249,728,276,727,271,816,244"/>
+<area shape="rect" id="Node000001" title="Get the effective particle radius &#160;(m)" alt="" coords="1268,317,1476,357"/>
+<area shape="rect" id="Node000002" href="$aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b" title="Get the effective particle radius, &#160;(m)" alt="" coords="1056,219,1208,260"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1305,313,1183,263,1185,258,1307,308"/>
+<area shape="rect" id="Node000019" href="$aero__rep__modal__binned__mass_8c.html#ab56589a98da2414d4225ef8bd3178991" title="Get the effective radius of a specified layer &#160;(m)" alt="" coords="1044,345,1220,401"/>
+<area shape="poly" id="edge30_Node000001_Node000019" title=" " alt="" coords="1253,358,1220,362,1220,357,1252,352"/>
+<area shape="rect" id="Node000003" href="$rxn___h_l__phase__transfer_8c.html#aa82a07e921e3d22fda1d52073b16219d" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="824,89,980,129"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1093,211,1047,177,995,145,968,132,970,127,998,140,1051,173,1096,207"/>
+<area shape="rect" id="Node000012" href="$rxn___h_l__phase__transfer_8c.html#a4e04c50da5215b9886991e6f0c98cccc" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="824,285,980,325"/>
+<area shape="poly" id="edge15_Node000002_Node000012" title=" " alt="" coords="1044,267,977,287,975,281,1043,262"/>
+<area shape="rect" id="Node000015" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html#a8387f10a0a5aa0b38cc545859542f3c4" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="807,154,996,195"/>
+<area shape="poly" id="edge20_Node000002_Node000015" title=" " alt="" coords="1043,217,975,198,977,193,1044,212"/>
+<area shape="rect" id="Node000016" href="$rxn___s_i_m_p_o_l__phase__transfer_8c.html#a2c6b4163ab0a9e65eec7dd8286d67885" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="807,219,996,260"/>
+<area shape="poly" id="edge23_Node000002_Node000016" title=" " alt="" coords="1040,242,997,242,997,237,1040,237"/>
+<area shape="rect" id="Node000017" href="$rxn__surface_8c.html#a5bb30760087399bd04a9f9e16f0fab1f" title="Calculate contributions to the time derivative &#160;from this reaction." alt="" coords="825,23,979,64"/>
+<area shape="poly" id="edge26_Node000002_Node000017" title=" " alt="" coords="1109,208,1062,143,1030,109,995,79,973,67,976,62,998,75,1034,105,1066,139,1113,205"/>
+<area shape="rect" id="Node000018" href="$rxn__surface_8c.html#a8de73dc2a00c1bc5b91747cbb50086ad" title="Calculate contributions to the Jacobian from this reaction." alt="" coords="830,350,973,391"/>
+<area shape="poly" id="edge28_Node000002_Node000018" title=" " alt="" coords="1096,272,1051,307,998,339,970,352,968,347,995,335,1047,302,1093,268"/>
+<area shape="rect" id="Node000004" href="$rxn__solver_8c.html#af014568140c63dfab9ea1c92b056e3b8" title="Calculate the time derivative ." alt="" coords="629,93,734,119"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="808,110,734,110,734,104,808,105"/>
+<area shape="rect" id="Node000011" href="$rxn__solver_8c.html#a066fddd15835cba3a8b519fb734bd552" title="Calculate the time derivative &#160;for only some specific types." alt="" coords="604,143,759,184"/>
+<area shape="poly" id="edge13_Node000003_Node000011" title=" " alt="" coords="809,135,760,147,759,142,808,129"/>
+<area shape="rect" id="Node000005" href="$camp__solver_8c.html#ac55302bc18db0d68d78f543aad6a16c4" title="Compute the time derivative f(t,y)" alt="" coords="517,93,556,119"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="614,109,556,109,556,104,614,104"/>
+<area shape="rect" id="Node000006" href="$camp__solver_8c.html#ad45be595da1a1d6fd40179d9743a9a65" title="Check a Jacobian for accuracy." alt="" coords="338,192,423,218"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="518,133,496,155,471,175,424,196,422,192,468,171,493,151,514,129"/>
+<area shape="rect" id="Node000007" href="$camp__solver_8c.html#a13451d507558a61a2353adfed58db468" title="Compute the Jacobian." alt="" coords="182,192,224,218"/>
+<area shape="poly" id="edge10_Node000005_Node000007" title=" " alt="" coords="503,119,226,201,224,196,502,114"/>
+<area shape="rect" id="Node000008" href="$camp__solver_8c.html#a599ffdef916b139a1690bfd41aa386b6" title="Solver initialization." alt="" coords="5,141,115,167"/>
+<area shape="poly" id="edge11_Node000005_Node000008" title=" " alt="" coords="502,112,115,151,115,146,502,107"/>
+<area shape="rect" id="Node000009" href="$camp__solver_8c.html#a51bc2a16028d4c72dd39669c31f6fc17" title="Determine if there is anything to solve." alt="" coords="292,40,469,66"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="502,97,420,69,422,64,504,92"/>
+<area shape="rect" id="Node000010" href="$camp__solver_8c.html#afc5ec8680b419e7ab49530d53a76cee4" title="Solve for a given timestep." alt="" coords="163,15,244,40"/>
+<area shape="poly" id="edge12_Node000005_Node000010" title=" " alt="" coords="519,82,498,53,484,40,468,30,440,19,410,13,350,8,292,12,245,20,244,15,292,7,350,3,411,7,442,14,471,25,487,36,502,49,524,79"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="323,208,225,208,225,202,323,202"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="167,195,97,170,99,165,169,190"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="276,41,244,36,245,31,277,35"/>
+<area shape="poly" id="edge14_Node000011_Node000005" title=" " alt="" coords="613,140,555,116,557,111,615,135"/>
+<area shape="rect" id="Node000013" href="$rxn__solver_8c.html#ad44deb65b9845d05c6bd148e3378b42a" title="Calculate the Jacobian." alt="" coords="635,293,728,319"/>
+<area shape="poly" id="edge16_Node000012_Node000013" title=" " alt="" coords="808,308,728,309,728,303,808,303"/>
+<area shape="rect" id="Node000014" href="$rxn__solver_8c.html#a40f9caeb40a6630edd3d61544ee29922" title="Calculate the Jacobian for only some specific types." alt="" coords="609,229,754,269"/>
+<area shape="poly" id="edge18_Node000012_Node000014" title=" " alt="" coords="808,284,753,270,755,265,809,279"/>
+<area shape="poly" id="edge17_Node000013_Node000007" title=" " alt="" coords="619,307,551,303,468,294,379,279,291,255,254,239,223,221,226,216,256,234,293,250,380,274,469,289,551,298,620,302"/>
+<area shape="poly" id="edge19_Node000014_Node000007" title=" " alt="" coords="593,253,451,250,371,243,291,233,224,215,226,210,293,228,372,238,452,244,594,248"/>
+<area shape="poly" id="edge21_Node000015_Node000004" title=" " alt="" coords="818,151,725,122,727,117,820,146"/>
+<area shape="poly" id="edge22_Node000015_Node000011" title=" " alt="" coords="791,172,759,170,760,165,792,166"/>
+<area shape="poly" id="edge24_Node000016_Node000013" title=" " alt="" coords="818,267,728,295,726,290,817,262"/>
+<area shape="poly" id="edge25_Node000016_Node000014" title=" " alt="" coords="792,247,754,249,754,243,792,242"/>
+<area shape="poly" id="edge27_Node000017_Node000004" title=" " alt="" coords="814,71,730,95,729,90,812,66"/>
+<area shape="poly" id="edge29_Node000018_Node000013" title=" " alt="" coords="814,348,728,322,729,317,816,343"/>
+<area shape="rect" id="Node000020" href="$aero__rep__solver_8c.html#a04d5b41ad66420bf1a7f31c2f0a37431" title="Get the effective radius of a specified layer, &#160;(m)" alt="" coords="826,415,978,456"/>
+<area shape="poly" id="edge31_Node000019_Node000020" title=" " alt="" coords="1030,403,979,417,978,412,1029,398"/>
 </map>
