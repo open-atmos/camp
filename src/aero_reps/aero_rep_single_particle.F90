@@ -814,7 +814,8 @@ contains
       integer(kind=i_kind), allocatable :: layer_second(:)
       integer(kind=i_kind), allocatable :: phase_id_first_(:)
       integer(kind=i_kind), allocatable :: phase_id_second_(:)
-      integer(kind=i_kind) :: i_layer, i_phase, i_instance, j_phase
+      integer(kind=i_kind) :: i_layer, i_phase, i_instance, j_phase, i_particle, i
+      integer(kind=i_kind) :: offset, num_adjacent_pairs
 
       allocate(layer_first(NUM_LAYERS_))
       allocate(layer_second(NUM_LAYERS_))
@@ -876,10 +877,19 @@ contains
           end do
         end do
       end do
-      
-      allocate(index_pairs(i_instance-1))
-      index_pairs(:)%first_ = temp_index_pairs(1:i_instance-1)%first_
-      index_pairs(:)%second_ = temp_index_pairs(1:i_instance-1)%second_
+
+      ! Now expand to all particles
+      allocate(index_pairs((i_instance-1) * MAX_PARTICLES_))
+      num_adjacent_pairs = i_instance - 1
+      do i_particle = 1, MAX_PARTICLES_
+        offset = (i_particle -1) * TOTAL_NUM_PHASES_
+        do i = 1, num_adjacent_pairs
+          index_pairs((i_particle -1) * num_adjacent_pairs + i)%first_ = &
+              temp_index_pairs(i)%first_ + offset
+          index_pairs((i_particle -1) * num_adjacent_pairs + i)%second_ = &
+              temp_index_pairs(i)%second_ + offset
+        end do
+      end do
       deallocate(temp_index_pairs)
 
     end function adjacent_phases
