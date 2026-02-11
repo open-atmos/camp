@@ -818,326 +818,336 @@
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00814}00814\ \ \ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{allocatable}\ ::\ layer\_second(:)}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00815}00815\ \ \ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{allocatable}\ ::\ phase\_id\_first\_(:)}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00816}00816\ \ \ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{allocatable}\ ::\ phase\_id\_second\_(:)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00817}00817\ \ \ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_layer,\ i\_phase,\ i\_instance,\ j\_phase}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00818}00818\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00819}00819\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(layer\_first(num\_layers\_))}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00820}00820\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(layer\_second(num\_layers\_))}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00821}00821\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(phase\_id\_first\_(num\_layers\_))}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00822}00822\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(phase\_id\_second\_(num\_layers\_))}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00823}00823\ \ \ \ \ \ \ layer\_first\ =\ -\/9999}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00824}00824\ \ \ \ \ \ \ layer\_second\ =\ -\/9999}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00825}00825\ \ \ \ \ \ \ phase\_id\_first\_\ =\ -\/9999}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00826}00826\ \ \ \ \ \ \ phase\_id\_second\_\ =\ -\/9999}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00827}00827\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00828}00828\ \ \ \ \ \ \ \textcolor{comment}{!\ Loop\ over\ layers\ and\ phases\ to\ determine\ where\ each\ input\ phase\ exists}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00829}00829\ \ \ \ \ \ \ i\_instance\ =\ 1}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00830}00830\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_layer\ =\ 1,\ num\_layers\_}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00831}00831\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\ =\ 1,\ num\_phases\_(i\_layer)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00832}00832\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (phase\_name\_first\ .eq.\ phase\_name\_second)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00833}00833\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%aero\_phase(i\_instance)\%val\%name()\ .eq.\ phase\_name\_first)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00834}00834\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ layer\_first(i\_layer)\ =\ phase\_model\_data\_id\_(i\_layer,\ i\_phase)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00835}00835\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ phase\_id\_first\_(i\_layer)\ =\ i\_instance}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00836}00836\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00837}00837\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00838}00838\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%aero\_phase(i\_instance)\%val\%name()\ .eq.\ phase\_name\_first)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00839}00839\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ layer\_first(i\_layer)\ =\ phase\_model\_data\_id\_(i\_layer,\ i\_phase)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00840}00840\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ phase\_id\_first\_(i\_layer)\ =\ i\_instance}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00841}00841\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (this\%aero\_phase(i\_instance)\%val\%name()\ .eq.\ phase\_name\_second)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00842}00842\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ layer\_second(i\_layer)\ =\ phase\_model\_data\_id\_(i\_layer,\ i\_phase)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00843}00843\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ phase\_id\_second\_(i\_layer)\ =\ i\_instance}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00844}00844\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00845}00845\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00846}00846\ \ \ \ \ \ \ \ \ \ \ i\_instance\ =\ i\_instance\ +\ 1}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00847}00847\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00848}00848\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00849}00849\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00850}00850\ \ \ \ \ \ \ \textcolor{comment}{!\ Find\ out\ where\ the\ pairs\ exist\ and\ assign\ to\ temp\_index\_pairs}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00851}00851\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(temp\_index\_pairs(i\_instance))}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00852}00852\ \ \ \ \ \ \ i\_instance\ =\ 1}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00853}00853\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_layer\ =\ 1,\ num\_layers\_-\/1}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00854}00854\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\ =\ 1,\ num\_phases\_(i\_layer)\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00855}00855\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ j\_phase\ =\ 1,\ num\_phases\_(i\_layer+1)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00856}00856\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (phase\_name\_first\ .eq.\ phase\_name\_second)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00857}00857\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (layer\_first(i\_layer)\ .eq.\ phase\_model\_data\_id\_(i\_layer,i\_phase)\ .and.\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00858}00858\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ layer\_first(i\_layer+1)\ .eq.\ phase\_model\_data\_id\_(i\_layer+1,j\_phase))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00859}00859\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\_index\_pairs(i\_instance)\%first\_\ =\ phase\_id\_first\_(i\_layer)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00860}00860\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\_index\_pairs(i\_instance)\%second\_\ =\ phase\_id\_first\_(i\_layer+1)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00861}00861\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_instance\ =\ i\_instance\ +\ 1}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00862}00862\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00863}00863\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00864}00864\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (layer\_first(i\_layer)\ .eq.\ phase\_model\_data\_id\_(i\_layer,\ i\_phase)\ .and.\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00865}00865\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ layer\_second(i\_layer+1)\ .eq.\ phase\_model\_data\_id\_(i\_layer+1,\ j\_phase))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00866}00866\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\_index\_pairs(i\_instance)\%first\_\ =\ phase\_id\_first\_(i\_layer)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00867}00867\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\_index\_pairs(i\_instance)\%second\_\ =\ phase\_id\_second\_(i\_layer+1)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00868}00868\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_instance\ =\ i\_instance\ +\ 1}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00869}00869\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (layer\_second(i\_layer)\ .eq.\ phase\_model\_data\_id\_(i\_layer,\ i\_phase)\ .and.\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00870}00870\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ layer\_first(i\_layer+1)\ .eq.\ phase\_model\_data\_id\_(i\_layer+1,\ j\_phase))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00871}00871\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\_index\_pairs(i\_instance)\%first\_\ =\ phase\_id\_second\_(i\_layer)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00872}00872\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\_index\_pairs(i\_instance)\%second\_\ =\ phase\_id\_first\_(i\_layer+1)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00873}00873\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_instance\ =\ i\_instance\ +\ 1}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00874}00874\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00875}00875\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00876}00876\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00877}00877\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00878}00878\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00879}00879\ \ \ \ \ \ \ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00880}00880\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(index\_pairs(i\_instance-\/1))}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00881}00881\ \ \ \ \ \ \ index\_pairs(:)\%first\_\ =\ temp\_index\_pairs(1:i\_instance-\/1)\%first\_}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00882}00882\ \ \ \ \ \ \ index\_pairs(:)\%second\_\ =\ temp\_index\_pairs(1:i\_instance-\/1)\%second\_}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00883}00883\ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(temp\_index\_pairs)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00884}00884\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00885}00885\ \ \ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a6712abcf1445609b4ec085bcc84c099e}{adjacent\_phases}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00886}00886\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00887}00887\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00888}00888\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00889}00889\ \textcolor{comment}{\ \ !>\ Finalize\ the\ aerosol\ representation}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00890}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_aa04907b92cfcfefd74758da3ca7607cb}{00890}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00891}00891\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00892}00892\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00893}00893\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\_rep\_single\_particle\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00817}00817\ \ \ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_layer,\ i\_phase,\ i\_instance,\ j\_phase,\ i\_particle,\ i}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00818}00818\ \ \ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ offset,\ num\_adjacent\_pairs}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00819}00819\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00820}00820\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(layer\_first(num\_layers\_))}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00821}00821\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(layer\_second(num\_layers\_))}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00822}00822\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(phase\_id\_first\_(num\_layers\_))}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00823}00823\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(phase\_id\_second\_(num\_layers\_))}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00824}00824\ \ \ \ \ \ \ layer\_first\ =\ -\/9999}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00825}00825\ \ \ \ \ \ \ layer\_second\ =\ -\/9999}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00826}00826\ \ \ \ \ \ \ phase\_id\_first\_\ =\ -\/9999}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00827}00827\ \ \ \ \ \ \ phase\_id\_second\_\ =\ -\/9999}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00828}00828\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00829}00829\ \ \ \ \ \ \ \textcolor{comment}{!\ Loop\ over\ layers\ and\ phases\ to\ determine\ where\ each\ input\ phase\ exists}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00830}00830\ \ \ \ \ \ \ i\_instance\ =\ 1}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00831}00831\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_layer\ =\ 1,\ num\_layers\_}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00832}00832\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\ =\ 1,\ num\_phases\_(i\_layer)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00833}00833\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (phase\_name\_first\ .eq.\ phase\_name\_second)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00834}00834\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%aero\_phase(i\_instance)\%val\%name()\ .eq.\ phase\_name\_first)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00835}00835\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ layer\_first(i\_layer)\ =\ phase\_model\_data\_id\_(i\_layer,\ i\_phase)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00836}00836\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ phase\_id\_first\_(i\_layer)\ =\ i\_instance}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00837}00837\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00838}00838\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00839}00839\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%aero\_phase(i\_instance)\%val\%name()\ .eq.\ phase\_name\_first)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00840}00840\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ layer\_first(i\_layer)\ =\ phase\_model\_data\_id\_(i\_layer,\ i\_phase)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00841}00841\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ phase\_id\_first\_(i\_layer)\ =\ i\_instance}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00842}00842\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (this\%aero\_phase(i\_instance)\%val\%name()\ .eq.\ phase\_name\_second)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00843}00843\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ layer\_second(i\_layer)\ =\ phase\_model\_data\_id\_(i\_layer,\ i\_phase)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00844}00844\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ phase\_id\_second\_(i\_layer)\ =\ i\_instance}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00845}00845\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00846}00846\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00847}00847\ \ \ \ \ \ \ \ \ \ \ i\_instance\ =\ i\_instance\ +\ 1}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00848}00848\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00849}00849\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00850}00850\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00851}00851\ \ \ \ \ \ \ \textcolor{comment}{!\ Find\ out\ where\ the\ pairs\ exist\ and\ assign\ to\ temp\_index\_pairs}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00852}00852\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(temp\_index\_pairs(i\_instance))}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00853}00853\ \ \ \ \ \ \ i\_instance\ =\ 1}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00854}00854\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_layer\ =\ 1,\ num\_layers\_-\/1}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00855}00855\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_phase\ =\ 1,\ num\_phases\_(i\_layer)\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00856}00856\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ j\_phase\ =\ 1,\ num\_phases\_(i\_layer+1)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00857}00857\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (phase\_name\_first\ .eq.\ phase\_name\_second)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00858}00858\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (layer\_first(i\_layer)\ .eq.\ phase\_model\_data\_id\_(i\_layer,i\_phase)\ .and.\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00859}00859\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ layer\_first(i\_layer+1)\ .eq.\ phase\_model\_data\_id\_(i\_layer+1,j\_phase))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00860}00860\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\_index\_pairs(i\_instance)\%first\_\ =\ phase\_id\_first\_(i\_layer)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00861}00861\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\_index\_pairs(i\_instance)\%second\_\ =\ phase\_id\_first\_(i\_layer+1)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00862}00862\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_instance\ =\ i\_instance\ +\ 1}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00863}00863\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00864}00864\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00865}00865\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (layer\_first(i\_layer)\ .eq.\ phase\_model\_data\_id\_(i\_layer,\ i\_phase)\ .and.\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00866}00866\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ layer\_second(i\_layer+1)\ .eq.\ phase\_model\_data\_id\_(i\_layer+1,\ j\_phase))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00867}00867\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\_index\_pairs(i\_instance)\%first\_\ =\ phase\_id\_first\_(i\_layer)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00868}00868\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\_index\_pairs(i\_instance)\%second\_\ =\ phase\_id\_second\_(i\_layer+1)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00869}00869\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_instance\ =\ i\_instance\ +\ 1}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00870}00870\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (layer\_second(i\_layer)\ .eq.\ phase\_model\_data\_id\_(i\_layer,\ i\_phase)\ .and.\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00871}00871\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ layer\_first(i\_layer+1)\ .eq.\ phase\_model\_data\_id\_(i\_layer+1,\ j\_phase))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00872}00872\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\_index\_pairs(i\_instance)\%first\_\ =\ phase\_id\_second\_(i\_layer)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00873}00873\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\_index\_pairs(i\_instance)\%second\_\ =\ phase\_id\_first\_(i\_layer+1)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00874}00874\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ i\_instance\ =\ i\_instance\ +\ 1}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00875}00875\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00876}00876\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00877}00877\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00878}00878\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00879}00879\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00880}00880\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00881}00881\ \ \ \ \ \ \ \textcolor{comment}{!\ Now\ expand\ to\ all\ particles}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00882}00882\ \ \ \ \ \ \ \textcolor{keyword}{allocate}(index\_pairs((i\_instance-\/1)\ *\ max\_particles\_))}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00883}00883\ \ \ \ \ \ \ num\_adjacent\_pairs\ =\ i\_instance\ -\/\ 1}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00884}00884\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_particle\ =\ 1,\ max\_particles\_}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00885}00885\ \ \ \ \ \ \ \ \ offset\ =\ (i\_particle\ -\/1)\ *\ total\_num\_phases\_}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00886}00886\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\ =\ 1,\ num\_adjacent\_pairs}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00887}00887\ \ \ \ \ \ \ \ \ \ \ index\_pairs((i\_particle\ -\/1)\ *\ num\_adjacent\_pairs\ +\ i)\%first\_\ =\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00888}00888\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\_index\_pairs(i)\%first\_\ +\ offset}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00889}00889\ \ \ \ \ \ \ \ \ \ \ index\_pairs((i\_particle\ -\/1)\ *\ num\_adjacent\_pairs\ +\ i)\%second\_\ =\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00890}00890\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ temp\_index\_pairs(i)\%second\_\ +\ offset}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00891}00891\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00892}00892\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00893}00893\ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(temp\_index\_pairs)}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00894}00894\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00895}00895\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%rep\_name))\ \textcolor{keyword}{deallocate}(this\%rep\_name)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00896}00896\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%aero\_phase))\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00897}00897\ \ \ \ \ \ \ \textcolor{comment}{!\ The\ core\ will\ deallocate\ the\ aerosol\ phases}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00898}00898\ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%aero\_phase(:)\%dereference()}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00899}00899\ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%aero\_phase)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00900}00900\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00901}00901\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%unique\_names\_))\ \textcolor{keyword}{deallocate}(this\%unique\_names\_)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00902}00902\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%layer\_names\_))\ \textcolor{keyword}{deallocate}(this\%layer\_names\_)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00903}00903\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{associated}(this\%property\_set))\ \textcolor{keyword}{deallocate}(this\%property\_set)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00904}00904\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_real))\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00905}00905\ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_real)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00906}00906\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_int))\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00907}00907\ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_int)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00908}00908\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00909}00909\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00910}00910\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00911}00911\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00912}00912\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00913}00913\ \textcolor{comment}{\ \ !>\ Finalize\ the\ aerosol\ representation\ array}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00914}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a3769b1d5fd802c6c09cffb22135961eb}{00914}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}(this\_array)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00915}00915\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00916}00916\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00917}00917\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\_rep\_single\_particle\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\_array(:)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00895}00895\ \ \ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a6712abcf1445609b4ec085bcc84c099e}{adjacent\_phases}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00896}00896\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00897}00897\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00898}00898\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00899}00899\ \textcolor{comment}{\ \ !>\ Finalize\ the\ aerosol\ representation}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00900}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_aa04907b92cfcfefd74758da3ca7607cb}{00900}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00901}00901\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00902}00902\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00903}00903\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\_rep\_single\_particle\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00904}00904\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00905}00905\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%rep\_name))\ \textcolor{keyword}{deallocate}(this\%rep\_name)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00906}00906\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%aero\_phase))\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00907}00907\ \ \ \ \ \ \ \textcolor{comment}{!\ The\ core\ will\ deallocate\ the\ aerosol\ phases}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00908}00908\ \ \ \ \ \ \ \textcolor{keyword}{call\ }this\%aero\_phase(:)\%dereference()}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00909}00909\ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%aero\_phase)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00910}00910\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00911}00911\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%unique\_names\_))\ \textcolor{keyword}{deallocate}(this\%unique\_names\_)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00912}00912\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%layer\_names\_))\ \textcolor{keyword}{deallocate}(this\%layer\_names\_)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00913}00913\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{associated}(this\%property\_set))\ \textcolor{keyword}{deallocate}(this\%property\_set)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00914}00914\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_real))\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00915}00915\ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_real)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00916}00916\ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{allocated}(this\%condensed\_data\_int))\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00917}00917\ \ \ \ \ \ \ \ \ \textcolor{keyword}{deallocate}(this\%condensed\_data\_int)}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00918}00918\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00919}00919\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_aero}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00919}00919\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00920}00920\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00921}00921\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_aero\ =\ 1,\ \textcolor{keyword}{size}(this\_array)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00922}00922\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this\_array(i\_aero))}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00923}00923\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00924}00924\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00925}00925\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00926}00926\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00927}00927\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00928}00928\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00929}00929\ \textcolor{comment}{\ \ !>\ Initialize\ an\ update\ data\ object}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00930}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a0cf95e9e46b97393e5654f5f65e417eb}{00930}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a0cf95e9e46b97393e5654f5f65e417eb}{update\_data\_init\_number}}(this,\ update\_data,\ aero\_rep\_type)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00931}00931\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00932}00932\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rand}{camp\_rand}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}\ :\ \mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{generate\_int\_id}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00933}00933\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00934}00934\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ to\ update}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00935}00935\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\_rep\_single\_particle\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00936}00936\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ object}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00937}00937\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}}),\ \textcolor{keywordtype}{intent(out)}\ ::\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00938}00938\ \ \ \ \ \ \ \ \ update\_data\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00939}00939\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representaiton\ id}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00940}00940\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)}\ ::\ aero\_rep\_type}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00921}00921\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00922}00922\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00923}00923\ \textcolor{comment}{\ \ !>\ Finalize\ the\ aerosol\ representation\ array}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00924}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a3769b1d5fd802c6c09cffb22135961eb}{00924}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}(this\_array)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00925}00925\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00926}00926\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00927}00927\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\_rep\_single\_particle\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\_array(:)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00928}00928\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00929}00929\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_aero}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00930}00930\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00931}00931\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_aero\ =\ 1,\ \textcolor{keyword}{size}(this\_array)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00932}00932\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a8eebec681f9d24bd7741bb357f7c4e43}{finalize}}(this\_array(i\_aero))}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00933}00933\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00934}00934\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00935}00935\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__phase__data_a0e828293ef8b5cc169dfe653abed14e8}{finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00936}00936\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00937}00937\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00938}00938\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00939}00939\ \textcolor{comment}{\ \ !>\ Initialize\ an\ update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00940}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a0cf95e9e46b97393e5654f5f65e417eb}{00940}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a0cf95e9e46b97393e5654f5f65e417eb}{update\_data\_init\_number}}(this,\ update\_data,\ aero\_rep\_type)}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00941}00941\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00942}00942\ \ \ \ \ \textcolor{comment}{!\ If\ an\ aerosol\ representation\ id\ has\ not\ been\ generated,\ do\ it\ now}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00943}00943\ \ \ \ \ \textcolor{keywordflow}{if}\ (aero\_rep\_id\_.eq.-\/1)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00944}00944\ \ \ \ \ \ \ aero\_rep\_id\_\ =\ \mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{generate\_int\_id}}()}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00945}00945\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00946}00946\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00947}00947\ \ \ \ \ update\_data\%aero\_rep\_unique\_id\ =\ aero\_rep\_id\_}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00948}00948\ \ \ \ \ update\_data\%maximum\_computational\_particles\ =\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00949}00949\ \ \ \ \ \ \ \ \ this\%maximum\_computational\_particles(\ )}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00950}00950\ \ \ \ \ update\_data\%aero\_rep\_type\ =\ int(aero\_rep\_type,\ kind=c\_int)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00951}00951\ \ \ \ \ update\_data\%update\_data\ =\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00952}00952\ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__single__particle_1_1aero__rep__single__particle__create__number__update__data}{aero\_rep\_single\_particle\_create\_number\_update\_data}}()}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00953}00953\ \ \ \ \ update\_data\%is\_malloced\ =\ .true.}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00954}00954\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00955}00955\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a0cf95e9e46b97393e5654f5f65e417eb}{update\_data\_init\_number}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00942}00942\ \ \ \ \ \textcolor{keywordtype}{use\ }\mbox{\hyperlink{namespacecamp__rand}{camp\_rand}},\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{only}\ :\ \mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{generate\_int\_id}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00943}00943\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00944}00944\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ to\ update}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00945}00945\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t}{aero\_rep\_single\_particle\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00946}00946\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00947}00947\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}}),\ \textcolor{keywordtype}{intent(out)}\ ::\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00948}00948\ \ \ \ \ \ \ \ \ update\_data\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00949}00949\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representaiton\ id}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00950}00950\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)}\ ::\ aero\_rep\_type}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00951}00951\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00952}00952\ \ \ \ \ \textcolor{comment}{!\ If\ an\ aerosol\ representation\ id\ has\ not\ been\ generated,\ do\ it\ now}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00953}00953\ \ \ \ \ \textcolor{keywordflow}{if}\ (aero\_rep\_id\_.eq.-\/1)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00954}00954\ \ \ \ \ \ \ aero\_rep\_id\_\ =\ \mbox{\hyperlink{namespacecamp__rand_aa2d31e625be99eaff5c548c8283cfab3}{generate\_int\_id}}()}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00955}00955\ \textcolor{keywordflow}{\ \ \ \ end\ if}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00956}00956\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00957}00957\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00958}00958\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00959}00959\ \textcolor{comment}{\ \ !>\ Order\ layer\ array\ from\ inner\ most\ layer\ to\ outermost\ }}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00960}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{00960}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{ordered\_layer\_ids}}(layer\_names\_unordered,\ cover\_names\_unordered)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00961}00961\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00962}00962\ \textcolor{comment}{\ \ \ \ !>\ Layer\ names\ in\ original\ order}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00963}00963\ \ \ \ \ \textcolor{keywordtype}{type}(string\_t),\ \textcolor{keywordtype}{intent(in)}\ ::\ layer\_names\_unordered(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00964}00964\ \textcolor{comment}{\ \ \ \ !>\ Name\ of\ "{}covered"{}\ layer\ for\ each\ layer\ in\ layer\_name\_unordered}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00965}00965\ \ \ \ \ \textcolor{keywordtype}{type}(string\_t),\ \textcolor{keywordtype}{intent(in)}\ ::\ cover\_names\_unordered(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00966}00966\ \textcolor{comment}{\ \ \ \ !>\ Index\ of\ name\ in\ layer\_name\_unordered\ for\ each\ layer\ after\ reordering}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00967}00967\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{allocatable}\ ::\ \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{ordered\_layer\_ids}}(:)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00968}00968\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00969}00969\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_layer,\ j\_layer,\ i\_cover}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00970}00970\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00971}00971\ \ \ \ \ \textcolor{comment}{!\ Ensure\ layer\ names\ do\ not\ repeat\ }}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00972}00972\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_layer\ =\ 1,\ \textcolor{keyword}{size}(layer\_names\_unordered)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00973}00973\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ j\_layer\ =\ 1,\ \textcolor{keyword}{size}(layer\_names\_unordered)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00974}00974\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_layer\ .eq.\ j\_layer)\ cycle}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00975}00975\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }assert\_msg(781626922,\ layer\_names\_unordered(i\_layer)\%string\ .ne.\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00976}00976\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ layer\_names\_unordered(j\_layer)\%string,\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00977}00977\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Duplicate\ layer\ name\ in\ single\ particle\ "{}}//\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00978}00978\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}representation:\ '"{}}//\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00979}00979\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(layer\_names\_unordered(i\_layer)\%string)//\textcolor{stringliteral}{"{}'"{}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00980}00980\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00981}00981\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00982}00982\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00983}00983\ \ \ \ \ \textcolor{keyword}{allocate}(\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{ordered\_layer\_ids}}(\textcolor{keyword}{size}(layer\_names\_unordered)))}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00984}00984\ \ \ \ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00985}00985\ \ \ \ \ \textcolor{comment}{!\ Search\ for\ innermost\ layer\ with\ cover\ set\ to\ 'none'}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00986}00986\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_layer\ =\ 1,\ \textcolor{keyword}{size}(layer\_names\_unordered)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00987}00987\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cover\_names\_unordered(i\_layer)\%string\ ==\ \textcolor{stringliteral}{"{}none"{}})\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00988}00988\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{ordered\_layer\_ids}}(1)\ =\ i\_layer}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00989}00989\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00990}00990\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00991}00991\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00992}00992\ \ \ \ \ \textcolor{comment}{!\ Assign\ each\ layer\ working\ outwards\ from\ center\ of\ particle}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00993}00993\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_cover\ =\ 2,\ \textcolor{keyword}{size}(\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{ordered\_layer\_ids}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00994}00994\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_layer\ =\ 1,\ \textcolor{keyword}{size}(layer\_names\_unordered)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00995}00995\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (layer\_names\_unordered(\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{ordered\_layer\_ids}}(i\_cover-\/1))\%string\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00996}00996\ \ \ \ \ \ \ \ \ \ \ \ \ .eq.\ cover\_names\_unordered(i\_layer)\%string)\ \textcolor{keywordflow}{then}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00997}00997\ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{ordered\_layer\_ids}}(i\_cover)\ =\ i\_layer}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00998}00998\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{exit}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00999}00999\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ if}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01000}01000\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01001}01001\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01002}01002\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01003}01003\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{ordered\_layer\_ids}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01004}01004\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01005}01005\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01006}01006\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01007}01007\ \textcolor{comment}{\ \ !>\ Set\ packed\ update\ data\ for\ particle\ number\ (\#/m3)\ for\ a\ particular}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01008}01008\ \textcolor{comment}{\ \ !!\ computational\ particle.}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01009}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a4a7413970e88f0efdaa1a10e3aeed0d3}{01009}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a4a7413970e88f0efdaa1a10e3aeed0d3}{update\_data\_set\_number\_\_n\_m3}}(this,\ particle\_id,\ number\_conc)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01010}01010\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01011}01011\ \textcolor{comment}{\ \ \ \ !>\ Update\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01012}01012\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01013}01013\ \ \ \ \ \ \ \ \ \ \ \ \ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01014}01014\ \textcolor{comment}{\ \ \ \ !>\ Computational\ particle\ index}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01015}01015\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)}\ ::\ particle\_id\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01016}01016\ \textcolor{comment}{\ \ \ \ !>\ Updated\ number}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01017}01017\ \textcolor{keywordtype}{\ \ \ \ real}(kind=dp),\ \textcolor{keywordtype}{intent(in)}\ ::\ number\_conc}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01018}01018\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01019}01019\ \ \ \ \ \textcolor{keyword}{call\ }assert\_msg(611967802,\ this\%is\_malloced,\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01020}01020\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Trying\ to\ set\ number\ of\ uninitialized\ update\ object."{}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01021}01021\ \ \ \ \ \textcolor{keyword}{call\ }assert\_msg(689085496,\ particle\_id\ .ge.\ 1\ .and.\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01022}01022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ particle\_id\ .le.\ this\%maximum\_computational\_particles,\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01023}01023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Invalid\ computational\ particle\ index:\ "{}}//\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01024}01024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(integer\_to\_string(particle\_id)))}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01025}01025\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{interfacecamp__aero__rep__single__particle_1_1aero__rep__single__particle__set__number__update__data____n__m3}{aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3}}(\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01026}01026\ \ \ \ \ \ \ \ \ \ \ \ \ this\%get\_data(),\ this\%aero\_rep\_unique\_id,\ particle\_id-\/1,\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01027}01027\ \ \ \ \ \ \ \ \ \ \ \ \ number\_conc)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00957}00957\ \ \ \ \ update\_data\%aero\_rep\_unique\_id\ =\ aero\_rep\_id\_}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00958}00958\ \ \ \ \ update\_data\%maximum\_computational\_particles\ =\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00959}00959\ \ \ \ \ \ \ \ \ this\%maximum\_computational\_particles(\ )}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00960}00960\ \ \ \ \ update\_data\%aero\_rep\_type\ =\ int(aero\_rep\_type,\ kind=c\_int)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00961}00961\ \ \ \ \ update\_data\%update\_data\ =\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00962}00962\ \ \ \ \ \ \ \mbox{\hyperlink{interfacecamp__aero__rep__single__particle_1_1aero__rep__single__particle__create__number__update__data}{aero\_rep\_single\_particle\_create\_number\_update\_data}}()}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00963}00963\ \ \ \ \ update\_data\%is\_malloced\ =\ .true.}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00964}00964\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00965}00965\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a0cf95e9e46b97393e5654f5f65e417eb}{update\_data\_init\_number}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00966}00966\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00967}00967\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00968}00968\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00969}00969\ \textcolor{comment}{\ \ !>\ Order\ layer\ array\ from\ inner\ most\ layer\ to\ outermost\ }}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00970}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{00970}}\ \ \ \textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{ordered\_layer\_ids}}(layer\_names\_unordered,\ cover\_names\_unordered)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00971}00971\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00972}00972\ \textcolor{comment}{\ \ \ \ !>\ Layer\ names\ in\ original\ order}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00973}00973\ \ \ \ \ \textcolor{keywordtype}{type}(string\_t),\ \textcolor{keywordtype}{intent(in)}\ ::\ layer\_names\_unordered(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00974}00974\ \textcolor{comment}{\ \ \ \ !>\ Name\ of\ "{}covered"{}\ layer\ for\ each\ layer\ in\ layer\_name\_unordered}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00975}00975\ \ \ \ \ \textcolor{keywordtype}{type}(string\_t),\ \textcolor{keywordtype}{intent(in)}\ ::\ cover\_names\_unordered(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00976}00976\ \textcolor{comment}{\ \ \ \ !>\ Index\ of\ name\ in\ layer\_name\_unordered\ for\ each\ layer\ after\ reordering}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00977}00977\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{allocatable}\ ::\ \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{ordered\_layer\_ids}}(:)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00978}00978\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00979}00979\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_layer,\ j\_layer,\ i\_cover}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00980}00980\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00981}00981\ \ \ \ \ \textcolor{comment}{!\ Ensure\ layer\ names\ do\ not\ repeat\ }}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00982}00982\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_layer\ =\ 1,\ \textcolor{keyword}{size}(layer\_names\_unordered)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00983}00983\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ j\_layer\ =\ 1,\ \textcolor{keyword}{size}(layer\_names\_unordered)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00984}00984\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (i\_layer\ .eq.\ j\_layer)\ cycle}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00985}00985\ \ \ \ \ \ \ \ \ \textcolor{keyword}{call\ }assert\_msg(781626922,\ layer\_names\_unordered(i\_layer)\%string\ .ne.\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00986}00986\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ layer\_names\_unordered(j\_layer)\%string,\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00987}00987\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Duplicate\ layer\ name\ in\ single\ particle\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00988}00988\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}representation:\ '"{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00989}00989\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(layer\_names\_unordered(i\_layer)\%string)//\textcolor{stringliteral}{"{}'"{}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00990}00990\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00991}00991\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00992}00992\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00993}00993\ \ \ \ \ \textcolor{keyword}{allocate}(\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{ordered\_layer\_ids}}(\textcolor{keyword}{size}(layer\_names\_unordered)))}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00994}00994\ \ \ \ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00995}00995\ \ \ \ \ \textcolor{comment}{!\ Search\ for\ innermost\ layer\ with\ cover\ set\ to\ 'none'}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00996}00996\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_layer\ =\ 1,\ \textcolor{keyword}{size}(layer\_names\_unordered)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00997}00997\ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (cover\_names\_unordered(i\_layer)\%string\ ==\ \textcolor{stringliteral}{"{}none"{}})\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00998}00998\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{ordered\_layer\_ids}}(1)\ =\ i\_layer}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l00999}00999\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01000}01000\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01001}01001\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01002}01002\ \ \ \ \ \textcolor{comment}{!\ Assign\ each\ layer\ working\ outwards\ from\ center\ of\ particle}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01003}01003\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_cover\ =\ 2,\ \textcolor{keyword}{size}(\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{ordered\_layer\_ids}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01004}01004\ \ \ \ \ \ \ \textcolor{keywordflow}{do}\ i\_layer\ =\ 1,\ \textcolor{keyword}{size}(layer\_names\_unordered)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01005}01005\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (layer\_names\_unordered(\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{ordered\_layer\_ids}}(i\_cover-\/1))\%string\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01006}01006\ \ \ \ \ \ \ \ \ \ \ \ \ .eq.\ cover\_names\_unordered(i\_layer)\%string)\ \textcolor{keywordflow}{then}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01007}01007\ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{ordered\_layer\_ids}}(i\_cover)\ =\ i\_layer}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01008}01008\ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{exit}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01009}01009\ \textcolor{keywordflow}{\ \ \ \ \ \ \ \ end\ if}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01010}01010\ \textcolor{keywordflow}{\ \ \ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01011}01011\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01012}01012\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01013}01013\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a514ff3d31ecc4139a0ca4c48e051b34c}{ordered\_layer\_ids}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01014}01014\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01015}01015\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01016}01016\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01017}01017\ \textcolor{comment}{\ \ !>\ Set\ packed\ update\ data\ for\ particle\ number\ (\#/m3)\ for\ a\ particular}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01018}01018\ \textcolor{comment}{\ \ !!\ computational\ particle.}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01019}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a4a7413970e88f0efdaa1a10e3aeed0d3}{01019}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a4a7413970e88f0efdaa1a10e3aeed0d3}{update\_data\_set\_number\_\_n\_m3}}(this,\ particle\_id,\ number\_conc)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01020}01020\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01021}01021\ \textcolor{comment}{\ \ \ \ !>\ Update\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01022}01022\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01023}01023\ \ \ \ \ \ \ \ \ \ \ \ \ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01024}01024\ \textcolor{comment}{\ \ \ \ !>\ Computational\ particle\ index}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01025}01025\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)},\ \textcolor{keywordtype}{intent(in)}\ ::\ particle\_id\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01026}01026\ \textcolor{comment}{\ \ \ \ !>\ Updated\ number}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01027}01027\ \textcolor{keywordtype}{\ \ \ \ real}(kind=dp),\ \textcolor{keywordtype}{intent(in)}\ ::\ number\_conc}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01028}01028\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01029}01029\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a4a7413970e88f0efdaa1a10e3aeed0d3}{update\_data\_set\_number\_\_n\_m3}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01030}01030\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01031}01031\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01032}01032\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01033}01033\ \textcolor{comment}{\ \ !>\ Determine\ the\ size\ of\ a\ binary\ required\ to\ pack\ the\ reaction\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01034}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a0544cb13e3473655abef7c470fb1c1fc}{01034}}\ \ \ \textcolor{keyword}{integer(kind=i\_kind)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a0544cb13e3473655abef7c470fb1c1fc}{internal\_pack\_size\_number}}(this,\ comm)\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01035}01035\ \ \ \ \ \ \ result(\mbox{\hyperlink{namespacecamp__aero__phase__data_a8f3f446ed030f9ec8af894715c950807}{pack\_size}})}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01036}01036\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01037}01037\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ update\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01038}01038\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01039}01039\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01040}01040\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01041}01041\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01042}01042\ \ \ \ \ \mbox{\hyperlink{namespacecamp__aero__phase__data_a8f3f446ed030f9ec8af894715c950807}{pack\_size}}\ =\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01043}01043\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_a91e386d6f20f660ab0762c32bb55e3a7}{camp\_mpi\_pack\_size\_logical}}(this\%is\_malloced,\ comm)\ +\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01044}01044\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(this\%maximum\_computational\_particles,\ comm)\ +\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01045}01045\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(this\%aero\_rep\_unique\_id,\ comm)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01046}01046\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01047}01047\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a0544cb13e3473655abef7c470fb1c1fc}{internal\_pack\_size\_number}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01048}01048\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01049}01049\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01050}01050\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01051}01051\ \textcolor{comment}{\ \ !>\ Pack\ the\ given\ value\ to\ the\ buffer,\ advancing\ position}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01052}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a60e0785526528d4fcb3646a9855d5393}{01052}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a60e0785526528d4fcb3646a9855d5393}{internal\_bin\_pack\_number}}(this,\ buffer,\ pos,\ comm)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01053}01053\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01054}01054\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ update\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01055}01055\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01056}01056\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01057}01057\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01058}01058\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01059}01059\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01060}01060\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01061}01061\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01062}01062\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01063}01063\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01064}01064\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01065}01065\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01066}01066\ \ \ \ \ prev\_position\ =\ pos}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01067}01067\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a478c2ca36da605f816ccb99988201acc}{camp\_mpi\_pack\_logical}}(buffer,\ pos,\ this\%is\_malloced,\ comm)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01068}01068\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer,\ pos,\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01069}01069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%maximum\_computational\_particles,\ comm)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01070}01070\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer,\ pos,\ this\%aero\_rep\_unique\_id,\ comm)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01071}01071\ \ \ \ \ \textcolor{keyword}{call\ }assert(411585487,\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01072}01072\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(comm))}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01073}01073\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01074}01074\ \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01075}01075\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a60e0785526528d4fcb3646a9855d5393}{internal\_bin\_pack\_number}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01076}01076\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01077}01077\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01078}01078\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01079}01079\ \textcolor{comment}{\ \ !>\ Unpack\ the\ given\ value\ from\ the\ buffer,\ advancing\ position}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01080}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a3fb691978e783fdfad253b8e745443be}{01080}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a3fb691978e783fdfad253b8e745443be}{internal\_bin\_unpack\_number}}(this,\ buffer,\ pos,\ comm)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01081}01081\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01082}01082\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ update\ data}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01083}01083\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01084}01084\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01085}01085\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01086}01086\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01087}01087\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01088}01088\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01089}01089\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01090}01090\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01091}01091\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01092}01092\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01093}01093\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01094}01094\ \ \ \ \ prev\_position\ =\ pos}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01095}01095\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a6280c3d9ec2de483b881f0ab7280ddbb}{camp\_mpi\_unpack\_logical}}(buffer,\ pos,\ this\%is\_malloced,\ comm)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01096}01096\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer,\ pos,\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01097}01097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%maximum\_computational\_particles,\ comm)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01098}01098\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer,\ pos,\ this\%aero\_rep\_unique\_id,\ comm)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01099}01099\ \ \ \ \ \textcolor{keyword}{call\ }assert(351557153,\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01100}01100\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(comm))}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01101}01101\ \ \ \ \ this\%update\_data\ =\ \mbox{\hyperlink{interfacecamp__aero__rep__single__particle_1_1aero__rep__single__particle__create__number__update__data}{aero\_rep\_single\_particle\_create\_number\_update\_data}}()}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01102}01102\ \textcolor{preprocessor}{\#endif}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01103}01103\ \textcolor{preprocessor}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01104}01104\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a3fb691978e783fdfad253b8e745443be}{internal\_bin\_unpack\_number}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01105}01105\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01106}01106\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01107}01107\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01108}01108\ \textcolor{comment}{\ \ !>\ Finalize\ a\ number\ update\ data\ object}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01109}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a48a29e244d03622902168c47b290cc93}{01109}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a48a29e244d03622902168c47b290cc93}{update\_data\_number\_finalize}}(this)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01110}01110\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01111}01111\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ object\ to\ free}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01112}01112\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01113}01113\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01114}01114\ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%is\_malloced)\ \textcolor{keyword}{call\ }\mbox{\hyperlink{interfacecamp__aero__rep__single__particle_1_1aero__rep__free__update__data}{aero\_rep\_free\_update\_data}}(this\%update\_data)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01029}01029\ \ \ \ \ \textcolor{keyword}{call\ }assert\_msg(611967802,\ this\%is\_malloced,\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01030}01030\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Trying\ to\ set\ number\ of\ uninitialized\ update\ object."{}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01031}01031\ \ \ \ \ \textcolor{keyword}{call\ }assert\_msg(689085496,\ particle\_id\ .ge.\ 1\ .and.\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01032}01032\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ particle\_id\ .le.\ this\%maximum\_computational\_particles,\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01033}01033\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}Invalid\ computational\ particle\ index:\ "{}}//\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01034}01034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ trim(integer\_to\_string(particle\_id)))}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01035}01035\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{interfacecamp__aero__rep__single__particle_1_1aero__rep__single__particle__set__number__update__data____n__m3}{aero\_rep\_single\_particle\_set\_number\_update\_data\_\_n\_m3}}(\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01036}01036\ \ \ \ \ \ \ \ \ \ \ \ \ this\%get\_data(),\ this\%aero\_rep\_unique\_id,\ particle\_id-\/1,\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01037}01037\ \ \ \ \ \ \ \ \ \ \ \ \ number\_conc)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01038}01038\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01039}01039\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a4a7413970e88f0efdaa1a10e3aeed0d3}{update\_data\_set\_number\_\_n\_m3}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01040}01040\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01041}01041\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01042}01042\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01043}01043\ \textcolor{comment}{\ \ !>\ Determine\ the\ size\ of\ a\ binary\ required\ to\ pack\ the\ reaction\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01044}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a0544cb13e3473655abef7c470fb1c1fc}{01044}}\ \ \ \textcolor{keyword}{integer(kind=i\_kind)\ }\textcolor{keyword}{function\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a0544cb13e3473655abef7c470fb1c1fc}{internal\_pack\_size\_number}}(this,\ comm)\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01045}01045\ \ \ \ \ \ \ result(\mbox{\hyperlink{namespacecamp__aero__phase__data_a8f3f446ed030f9ec8af894715c950807}{pack\_size}})}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01046}01046\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01047}01047\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ update\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01048}01048\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01049}01049\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01050}01050\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01051}01051\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01052}01052\ \ \ \ \ \mbox{\hyperlink{namespacecamp__aero__phase__data_a8f3f446ed030f9ec8af894715c950807}{pack\_size}}\ =\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01053}01053\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_a91e386d6f20f660ab0762c32bb55e3a7}{camp\_mpi\_pack\_size\_logical}}(this\%is\_malloced,\ comm)\ +\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01054}01054\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(this\%maximum\_computational\_particles,\ comm)\ +\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01055}01055\ \ \ \ \ \ \ \mbox{\hyperlink{namespacecamp__mpi_abfca35b6c1f158dcb853326861d7e558}{camp\_mpi\_pack\_size\_integer}}(this\%aero\_rep\_unique\_id,\ comm)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01056}01056\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01057}01057\ \ \ \textcolor{keyword}{end\ function\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a0544cb13e3473655abef7c470fb1c1fc}{internal\_pack\_size\_number}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01058}01058\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01059}01059\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01060}01060\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01061}01061\ \textcolor{comment}{\ \ !>\ Pack\ the\ given\ value\ to\ the\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01062}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a60e0785526528d4fcb3646a9855d5393}{01062}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a60e0785526528d4fcb3646a9855d5393}{internal\_bin\_pack\_number}}(this,\ buffer,\ pos,\ comm)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01063}01063\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01064}01064\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ update\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01065}01065\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}}),\ \textcolor{keywordtype}{intent(in)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01066}01066\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01067}01067\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01068}01068\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01069}01069\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01070}01070\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01071}01071\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01072}01072\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01073}01073\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01074}01074\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01075}01075\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01076}01076\ \ \ \ \ prev\_position\ =\ pos}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01077}01077\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a478c2ca36da605f816ccb99988201acc}{camp\_mpi\_pack\_logical}}(buffer,\ pos,\ this\%is\_malloced,\ comm)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01078}01078\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer,\ pos,\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01079}01079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%maximum\_computational\_particles,\ comm)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01080}01080\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_ab8a9c9d3285d44ca8d229efc25a436e0}{camp\_mpi\_pack\_integer}}(buffer,\ pos,\ this\%aero\_rep\_unique\_id,\ comm)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01081}01081\ \ \ \ \ \textcolor{keyword}{call\ }assert(411585487,\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01082}01082\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(comm))}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01083}01083\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01084}01084\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01085}01085\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a60e0785526528d4fcb3646a9855d5393}{internal\_bin\_pack\_number}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01086}01086\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01087}01087\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01088}01088\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01089}01089\ \textcolor{comment}{\ \ !>\ Unpack\ the\ given\ value\ from\ the\ buffer,\ advancing\ position}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01090}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a3fb691978e783fdfad253b8e745443be}{01090}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a3fb691978e783fdfad253b8e745443be}{internal\_bin\_unpack\_number}}(this,\ buffer,\ pos,\ comm)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01091}01091\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01092}01092\ \textcolor{comment}{\ \ \ \ !>\ Aerosol\ representation\ update\ data}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01093}01093\ \ \ \ \ \textcolor{keywordtype}{class}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01094}01094\ \textcolor{comment}{\ \ \ \ !>\ Memory\ buffer}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01095}01095\ \ \ \ \ \textcolor{keywordtype}{character},\ \textcolor{keywordtype}{intent(inout)}\ ::\ buffer(:)\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01096}01096\ \textcolor{comment}{\ \ \ \ !>\ Current\ buffer\ position}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01097}01097\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(inout)}\ ::\ pos\textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01098}01098\ \textcolor{comment}{\ \ \ \ !>\ MPI\ communicator}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01099}01099\ \ \ \ \ \textcolor{keywordtype}{integer},\ \textcolor{keywordtype}{intent(in)}\ ::\ comm}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01100}01100\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01101}01101\ \textcolor{preprocessor}{\#ifdef\ CAMP\_USE\_MPI}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01102}01102\ \textcolor{preprocessor}{}\ \ \ \ \textcolor{keywordtype}{integer}\ ::\ prev\_position}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01103}01103\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01104}01104\ \ \ \ \ prev\_position\ =\ pos}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01105}01105\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a6280c3d9ec2de483b881f0ab7280ddbb}{camp\_mpi\_unpack\_logical}}(buffer,\ pos,\ this\%is\_malloced,\ comm)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01106}01106\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer,\ pos,\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01107}01107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ this\%maximum\_computational\_particles,\ comm)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01108}01108\ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__mpi_a5da126550d7cb5d3127b31f09464670f}{camp\_mpi\_unpack\_integer}}(buffer,\ pos,\ this\%aero\_rep\_unique\_id,\ comm)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01109}01109\ \ \ \ \ \textcolor{keyword}{call\ }assert(351557153,\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01110}01110\ \ \ \ \ \ \ \ \ \ pos\ -\/\ prev\_position\ <=\ this\%pack\_size(comm))}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01111}01111\ \ \ \ \ this\%update\_data\ =\ \mbox{\hyperlink{interfacecamp__aero__rep__single__particle_1_1aero__rep__single__particle__create__number__update__data}{aero\_rep\_single\_particle\_create\_number\_update\_data}}()}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01112}01112\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01113}01113\ \textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01114}01114\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a3fb691978e783fdfad253b8e745443be}{internal\_bin\_unpack\_number}}}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01115}01115\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01116}01116\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a48a29e244d03622902168c47b290cc93}{update\_data\_number\_finalize}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01117}01117\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01118}01118\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01119}01119\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01120}01120\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ number\ update\ data\ objects}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01121}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a352b6c95b34347dda7296463d9f3ae82}{01121}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a352b6c95b34347dda7296463d9f3ae82}{update\_data\_number\_finalize\_array}}(this)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01122}01122\ \textcolor{comment}{}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01123}01123\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ objects\ to\ free}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01124}01124\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ \&}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01125}01125\ \ \ \ \ \ \ \ \ \ \ \ \ this(:)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01126}01126\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01127}01127\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_aero}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01128}01128\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01129}01129\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_aero\ =\ 1,\ \textcolor{keyword}{size}(this)}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01130}01130\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a48a29e244d03622902168c47b290cc93}{update\_data\_number\_finalize}}(this(i\_aero))}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01131}01131\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01132}01132\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01133}01133\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a352b6c95b34347dda7296463d9f3ae82}{update\_data\_number\_finalize\_array}}}
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01134}01134\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01135}01135\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01116}01116\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01117}01117\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01118}01118\ \textcolor{comment}{\ \ !>\ Finalize\ a\ number\ update\ data\ object}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01119}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a48a29e244d03622902168c47b290cc93}{01119}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a48a29e244d03622902168c47b290cc93}{update\_data\_number\_finalize}}(this)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01120}01120\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01121}01121\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ object\ to\ free}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01122}01122\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ this}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01123}01123\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01124}01124\ \ \ \ \ \textcolor{keywordflow}{if}\ (this\%is\_malloced)\ \textcolor{keyword}{call\ }\mbox{\hyperlink{interfacecamp__aero__rep__single__particle_1_1aero__rep__free__update__data}{aero\_rep\_free\_update\_data}}(this\%update\_data)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01125}01125\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01126}01126\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a48a29e244d03622902168c47b290cc93}{update\_data\_number\_finalize}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01127}01127\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01128}01128\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01129}01129\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01130}01130\ \textcolor{comment}{\ \ !>\ Finalize\ an\ array\ of\ number\ update\ data\ objects}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01131}\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a352b6c95b34347dda7296463d9f3ae82}{01131}}\ \ \ \textcolor{keyword}{subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a352b6c95b34347dda7296463d9f3ae82}{update\_data\_number\_finalize\_array}}(this)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01132}01132\ \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01133}01133\ \textcolor{comment}{\ \ \ \ !>\ Update\ data\ objects\ to\ free}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01134}01134\ \ \ \ \ \textcolor{keywordtype}{type}(\mbox{\hyperlink{structcamp__aero__rep__single__particle_1_1aero__rep__update__data__single__particle__number__t}{aero\_rep\_update\_data\_single\_particle\_number\_t}}),\ \textcolor{keywordtype}{intent(inout)}\ ::\ \&}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01135}01135\ \ \ \ \ \ \ \ \ \ \ \ \ this(:)}
 \DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01136}01136\ }
-\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01137}01137\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle}{camp\_aero\_rep\_single\_particle}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01137}01137\ \ \ \ \ \textcolor{keywordtype}{integer(kind=i\_kind)}\ ::\ i\_aero}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01138}01138\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01139}01139\ \ \ \ \ \textcolor{keywordflow}{do}\ i\_aero\ =\ 1,\ \textcolor{keyword}{size}(this)}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01140}01140\ \ \ \ \ \ \ \textcolor{keyword}{call\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a48a29e244d03622902168c47b290cc93}{update\_data\_number\_finalize}}(this(i\_aero))}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01141}01141\ \textcolor{keywordflow}{\ \ \ \ end\ do}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01142}01142\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01143}01143\ \ \ \textcolor{keyword}{end\ subroutine\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle_a352b6c95b34347dda7296463d9f3ae82}{update\_data\_number\_finalize\_array}}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01144}01144\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01145}01145\ \textcolor{comment}{!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!}}
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01146}01146\ }
+\DoxyCodeLine{\Hypertarget{aero__rep__single__particle_8_f90_source_l01147}01147\ \textcolor{keyword}{end\ module\ }\mbox{\hyperlink{namespacecamp__aero__rep__single__particle}{camp\_aero\_rep\_single\_particle}}}
 
 \end{DoxyCode}
