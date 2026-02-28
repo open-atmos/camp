@@ -1,22 +1,28 @@
-# Build and deloy documentation to GitHub Pages
+# Build and deploy documentation to GitHub Pages
 name: GitHub Pages
 
 on:
   push:
     branches: [ main ]
+  pull_request:
 
 jobs:
-  build:
+  build-docs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build Doxygen documentation
-        uses: mattnotmitt/doxygen-action@v1
-        with:
-          working-directory: 'doc/'
+      - name: Build documentation in Docker
+        run: docker build -t camp-docs . -f Dockerfile.docs
+
+      - name: Extract documentation from Docker
+        run: |
+          docker create --name camp-docs-container camp-docs
+          docker cp camp-docs-container:/camp/doc/html ./doc/html
+          docker rm camp-docs-container
 
       - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
