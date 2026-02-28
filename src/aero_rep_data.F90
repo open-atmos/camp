@@ -267,11 +267,11 @@ interface
   !> Get the size of the section of the
   !! \c camp_camp_state::camp_state_t::state_var array required for this
   !! aerosol representation
+  !! @return Size of the state array section
   function get_size(this) result (state_size)
     use camp_util,                                     only : i_kind
     import :: aero_rep_data_t
 
-    !> Size of the state array section
     integer(kind=i_kind) :: state_size
     !> Aerosol representation data
     class(aero_rep_data_t), intent(in) :: this
@@ -283,12 +283,12 @@ interface
   !> Get a list of unique names for each element on the
   !! \c camp_camp_state::camp_state_t::state_var array for this aerosol
   !! representation.
+  !! @return List of unique names
   function unique_names(this, phase_name, tracer_type, spec_name,             &
       phase_is_at_surface)
     use camp_util,                                     only : string_t, i_kind
     import :: aero_rep_data_t
 
-    !> List of unique names
     type(string_t), allocatable :: unique_names(:)
     !> Aerosol representation data
     class(aero_rep_data_t), intent(in) :: this
@@ -320,11 +320,11 @@ interface
   !! this aerosol representation.
   !!
   !! If the name is not found, the return value is 0.
+  !! @return Species state id
   function spec_state_id(this, unique_name) result (spec_id)
     use camp_util,                                     only : i_kind
     import :: aero_rep_data_t
 
-    !> Species state id
     integer(kind=i_kind) :: spec_id
     !> Aerosol representation data
     class(aero_rep_data_t), intent(in) :: this
@@ -336,11 +336,11 @@ interface
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get the non-unique name of a chemical species by its unique name
+  !! @return Chemical species name
   function spec_name(this, unique_name)
     use camp_util,                                       only : i_kind
     import :: aero_rep_data_t
 
-    !> Chemical species name
     character(len=:), allocatable :: spec_name
     !> Aerosol representation data
     class(aero_rep_data_t), intent(in) :: this
@@ -352,11 +352,11 @@ interface
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get the number of instances of a specified aerosol phase
+  !! @return Number of instances of the aerosol phase
   function num_phase_instances(this, phase_name, is_at_surface)
     use camp_util,                                       only : i_kind
     import :: aero_rep_data_t
 
-    !> Number of instances of the aerosol phase
     integer(kind=i_kind) :: num_phase_instances
     !> Aerosol representation data
     class(aero_rep_data_t), intent(in) :: this
@@ -371,11 +371,11 @@ interface
 
   !> Get the number of Jacobian elements used in calculations of aerosol mass,
   !! volume, number, etc. for a particular phase
+  !! @return Number of Jacobian elements used
   function num_jac_elem(this, phase_id)
     use camp_util,                                       only : i_kind
     import :: aero_rep_data_t
 
-    !> Number of Jacobian elements used
     integer(kind=i_kind) :: num_jac_elem
     !> Aerosol respresentation data
     class(aero_rep_data_t), intent(in) :: this

@@ -190,7 +190,7 @@ void aero_rep_update_state(ModelData *model_data) {
  * \param aero_rep_idx Index of aerosol representation to use for calculation
  * \param aero_phase_idx Index of the aerosol phase within the aerosol
  *                       representation
- * \param radius Pointer to hold effective layer radius (m)
+ * \param layer_radius Pointer to hold effective layer radius (m)
  * \param partial_deriv Pointer to the set of partial derivatives to be
  *                      calculated \f$\frac{\partial r_{eff}}{\partial y}\f$,
  *                      or a NULL pointer if no partial derivatives are needed
@@ -329,15 +329,11 @@ void aero_rep_get_interface_surface_area__m2(ModelData *model_data, int aero_rep
 /** \brief Get the thickness of a particle layer (m)
  *
  * \param model_data Pointer to the model data, including the state array
+ * \param aero_rep_idx Index of aerosol representation to use for calculation
  * \param aero_phase_idx Index of the aerosol phase within the representation
  * \param layer_thickness Effective layer thickness (m)
  * \param partial_deriv \f$\frac{\partial r_{eff}}{\partial y}\f$ where \f$y\f$
  *                      are species on the state array
- * \param aero_rep_int_data Pointer to the aerosol representation integer data
- * \param aero_rep_float_data Pointer to the aerosol representation
- *                            floating-point data
- * \param aero_rep_env_data Pointer to the aerosol representation
- *                          environment-dependent parameters
  */
 void aero_rep_get_layer_thickness__m(ModelData *model_data, int aero_rep_idx,
                                       int aero_phase_idx, double *layer_thickness,

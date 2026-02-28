@@ -273,7 +273,7 @@
 !! (We'll create this a little later in the tutorial.) The
 !! constructor reads the input data and creates internal objects to
 !! describe the system (reactions, species, etc.). The
-!! \ref camp_camp_core::initialize "initialize()"
+!! `initialize()`
 !! function instructs these model elements to validate their input data
 !! and assemble the information they will need during solving.
 !!
@@ -307,7 +307,7 @@
 !!
 !! \snippet camp_tutorial/boot_camp/part_1_code/box_model.F90 Set initial conditions
 !!
-!! The \ref camp_camp_core::solver_initialize "solver_initialize()" function
+!! The `solver_initialize()` function
 !! gets the external solver
 !! (<a href="https://computing.llnl.gov/projects/sundials/cvode">CVODE</a>)
 !! ready to solve the chemical system.
@@ -570,8 +570,7 @@
 !! \ref camp_rxn_wet_deposition::rxn_wet_deposition_t "wet deposition".
 !!
 !! Let's update our box model to set the \f$\ce{NO2}\f$ photolysis rate.
-!! Before the call to \ref camp_camp_core::solver_initialize
-!! "solver_initialize()", we'll add the following code:
+!! Before the call to `solver_initialize()`, we'll add the following code:
 !!
 !! \snippet camp_tutorial/boot_camp/part_3_code/box_model.F90 NO2 photolysis modules
 !! \snippet camp_tutorial/boot_camp/part_3_code/box_model.F90 NO2 photolysis variables
@@ -737,17 +736,17 @@
 !! you will not have access
 !! to the raw input data or model \ref camp_property::property_t "property_t"
 !! objects that we used to set up the
-!! \ref camp_rxn_data::rxn_update_data_t "rxn_update_data_t" objects in
+!! `rxn_update_data_t` objects in
 !! \ref camp_tutorial_part_3 "part 3".
 !! Thus, all the setup of
-!! \ref camp_rxn_data::rxn_update_data_t "rxn_update_data_t"
+!! `rxn_update_data_t`
 !! objects must be done on the
 !! primary process, before passing the core and update objects to the
 !! other processes.
 !!
 !! So, let's end our first MPI conditional block after we setup
 !! the \f$\ce{NO2}\f$ photolysis
-!! \ref camp_rxn_data::rxn_update_data "rxn_update_data_t" object and
+!! `rxn_update_data_t` object and
 !! before the call to `camp_core_t::solver_initialize()`.
 !! The first step is to get the size of the buffer to be used to pass
 !! the objects

@@ -1,0 +1,22 @@
+FROM fedora:37
+
+# Install documentation build dependencies
+RUN dnf -y update \
+    && dnf -y install \
+        doxygen \
+        graphviz \
+        python3 \
+        perl \
+        texlive-bibtex-bin \
+    && dnf clean all
+
+# Copy CAMP source code
+COPY . /camp
+
+# Set working directory
+WORKDIR /camp/doc
+
+# Build documentation
+RUN doxygen
+
+# The documentation will be in /camp/doc/html

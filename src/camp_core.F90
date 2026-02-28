@@ -56,9 +56,8 @@
 !!   make install
 !! \endcode
 !!
-!! You can also check out
-!! \ref ./Dockerfile
-!! (or \ref ./Dockerfile.mpi for MPI applications) to see how CAMP
+!! You can also check out `Dockerfile`
+!! (or `Dockerfile.mpi` for MPI applications) to see how CAMP
 !! is built for automated testing.
 !!
 !!## Input files ##

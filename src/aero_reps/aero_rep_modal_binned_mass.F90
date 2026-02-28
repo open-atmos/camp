@@ -258,10 +258,10 @@ module camp_aero_rep_modal_binned_mass
   interface
 
     !> Allocate space for a GMD update object
+    !! @return Allocated update data object
     function aero_rep_modal_binned_mass_create_gmd_update_data() &
               result (update_data) bind (c)
       use iso_c_binding
-      !> Allocated update data object
       type(c_ptr) :: update_data
     end function aero_rep_modal_binned_mass_create_gmd_update_data
 
@@ -281,10 +281,10 @@ module camp_aero_rep_modal_binned_mass
     end subroutine aero_rep_modal_binned_mass_set_gmd_update_data
 
     !> Allocate space for a GSD update object
+    !! @return Allocated update data object
     function aero_rep_modal_binned_mass_create_gsd_update_data() &
               result (update_data) bind (c)
       use iso_c_binding
-      !> Allocated update data object
       type(c_ptr) :: update_data
     end function aero_rep_modal_binned_mass_create_gsd_update_data
 
@@ -1053,7 +1053,9 @@ contains
                            phase_name_second) result(index_pairs)
     !> Aerosol representation data
     class(aero_rep_modal_binned_mass_t), intent(in) :: this
+    !> Name of first phase
     character(len=*), intent(in) :: phase_name_first
+    !> Name of second phase
     character(len=*), intent(in) :: phase_name_second
     type(index_pair_t), allocatable :: index_pairs(:)
 

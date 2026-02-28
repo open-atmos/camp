@@ -222,12 +222,12 @@ interface
   !> Return a real number representing the priority of the sub model
   !! calculations. Low priority sub models may use the results of higher
   !! priority sub models. Lower numbers indicate higher priority.
+  !! @return Sub model priority
   function priority(this)
 
     use camp_constants,                           only : dp
     import :: sub_model_data_t
 
-    !> Sub model priority
     real(kind=dp) :: priority
     !> Sub model data
     class(sub_model_data_t), intent(in) :: this

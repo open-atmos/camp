@@ -257,7 +257,6 @@ void aero_rep_single_particle_get_effective_radius__m(
  *                            floating-point data
  * \param aero_rep_env_data Pointer to the aerosol representation
  *                          environment-dependent parameters
- * \param surface_area Surface area of specified layer (m2)
  */
 
 void aero_rep_single_particle_get_interface_surface_area__m2(

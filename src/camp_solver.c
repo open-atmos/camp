@@ -1148,6 +1148,7 @@ bool check_Jac(realtype t, N_Vector y, SUNMatrix J, N_Vector deriv,
   return retval;
 }
 
+#ifdef CAMP_CUSTOM_CVODE
 /** \brief Try to improve guesses of y sent to the linear solver
  *
  * This function checks if there are any negative guessed concentrations,
@@ -1178,7 +1179,6 @@ bool check_Jac(realtype t, N_Vector y, SUNMatrix J, N_Vector deriv,
  * \param corr Vector of calculated adjustments to \f$y(t_n)\f$ [output]
  * \return 1 if corrections were calculated, 0 if not
  */
-#ifdef CAMP_CUSTOM_CVODE
 int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
                  N_Vector y_n1, N_Vector hf, void *solver_data, N_Vector tmp1,
                  N_Vector corr) {

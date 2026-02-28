@@ -190,10 +190,10 @@ module camp_aero_rep_single_particle
   interface
 
     !> Allocate space for a number update
+    !! @return Allocated update_data object
     function aero_rep_single_particle_create_number_update_data() &
               result (update_data) bind (c)
       use iso_c_binding
-      !> Allocated update_data object
       type(c_ptr) :: update_data
     end function aero_rep_single_particle_create_number_update_data
 
@@ -806,7 +806,9 @@ contains
 
       !> Aerosol representation data
       class(aero_rep_single_particle_t), intent(in) :: this
+      !> Name of first phase
       character(len=*), intent(in) :: phase_name_first
+      !> Name of second phase
       character(len=*), intent(in) :: phase_name_second
       type(index_pair_t), allocatable :: temp_index_pairs(:), index_pairs(:)
 

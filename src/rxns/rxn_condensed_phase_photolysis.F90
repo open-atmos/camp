@@ -137,10 +137,10 @@ module camp_rxn_condensed_phase_photolysis
   interface
 
     !> Allocate space for a rate update
+    !! @return Allocated update_data object
     function rxn_condensed_phase_photolysis_create_rate_update_data() result (update_data) &
               bind (c)
       use iso_c_binding
-      !> Allocated update_data object
       type(c_ptr) :: update_data
     end function rxn_condensed_phase_photolysis_create_rate_update_data
 

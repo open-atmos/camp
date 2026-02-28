@@ -122,10 +122,10 @@ public :: rxn_wet_deposition_t, rxn_update_data_wet_deposition_t
   interface
 
     !> Allocate space for a rate update
+    !! @return Allocated update_data object
     function rxn_wet_deposition_create_rate_update_data() &
               result (update_data) bind (c)
       use iso_c_binding
-      !> Allocated update_data object
       type(c_ptr) :: update_data
     end function rxn_wet_deposition_create_rate_update_data
 
