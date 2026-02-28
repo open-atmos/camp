@@ -262,3 +262,12 @@
    fun:orte_finalize
    fun:ompi_mpi_finalize
 }
+
+{
+   <MPI printf>
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   fun:__vasprintf_internal
+   ...
+}
