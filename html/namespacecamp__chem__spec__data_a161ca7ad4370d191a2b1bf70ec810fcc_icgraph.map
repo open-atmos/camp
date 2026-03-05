@@ -1,5 +1,4 @@
 <map id="camp_chem_spec_data::finalize_array" name="camp_chem_spec_data::finalize_array">
-<area shape="rect" id="Node000001" title="Finalize the chemical species data." alt="" coords="213,13,372,54"/>
-<area shape="rect" id="Node000002" href="$structcamp__chem__spec__data_1_1chem__spec__data__t.html#abf3743b860bd1602298c4540312320bd" title="Finalize the chemical species data." alt="" coords="5,5,165,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,36,165,36,165,30,197,30"/>
+<area shape="rect" id="node1" title="Finalize the chemical species data." alt="" coords="216,13,379,53"/>
+<area shape="rect" id="node2" href="$structcamp__chem__spec__data_1_1chem__spec__data__t.html#aebd886f980f383d369948746be160ca7" title="Finalize the chemical species data." alt="" coords="5,5,168,60"/>
 </map>

@@ -1,7 +1,5 @@
 <map id="aero_rep_single_particle_get_effective_radius__m" name="aero_rep_single_particle_get_effective_radius__m">
-<area shape="rect" id="Node000001" title="Get the effective particle radius &#160;(m) Finds the radius of the largest layer in specified particle." alt="" coords="5,5,175,46"/>
-<area shape="rect" id="Node000002" href="$aero__rep__single__particle_8c.html#ae83f56379c60d1fc674f0fd9e9726418" title="Get the effective radius of a specified layer &#160;(m)" alt="" coords="223,5,426,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,23,207,23,207,28,175,28"/>
-<area shape="rect" id="Node000003" href="$aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="474,5,636,46"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="426,23,458,23,458,28,426,28"/>
+<area shape="rect" id="node1" title="Get the effective particle radius &#160;(m) Finds the radius of the largest layer in specified particle." alt="" coords="5,5,181,45"/>
+<area shape="rect" id="node2" href="$aero__rep__single__particle_8c.html#ae83f56379c60d1fc674f0fd9e9726418" title="Get the effective radius of a specified layer &#160;(m)" alt="" coords="229,5,443,45"/>
+<area shape="rect" id="node3" href="$aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="491,5,663,45"/>
 </map>

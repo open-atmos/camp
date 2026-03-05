@@ -1,5 +1,4 @@
 <map id="camp_rxn_wet_deposition::finalize_array" name="camp_rxn_wet_deposition::finalize_array">
-<area shape="rect" id="Node000001" title="Finalize an array of reactions." alt="" coords="5,5,177,46"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__aero__phase__data.html#a8eebec681f9d24bd7741bb357f7c4e43" title="Finalize the aerosol phase data." alt="" coords="225,5,384,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,23,209,23,209,28,177,28"/>
+<area shape="rect" id="node1" title="Finalize an array of reactions." alt="" coords="5,5,188,45"/>
+<area shape="rect" id="node2" href="$namespacecamp__aero__phase__data.html#a8eebec681f9d24bd7741bb357f7c4e43" title="Finalize the aerosol phase data." alt="" coords="236,5,401,45"/>
 </map>

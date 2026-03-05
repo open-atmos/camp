@@ -1,5 +1,4 @@
 <map id="aero_rep_modal_binned_mass_get_effective_layer_radius__m" name="aero_rep_modal_binned_mass_get_effective_layer_radius__m">
-<area shape="rect" id="Node000001" title="Get the effective radius of a specified layer &#160;(m)" alt="" coords="5,5,181,61"/>
-<area shape="rect" id="Node000002" href="$aero__rep__modal__binned__mass_8c.html#a8d5bf734337581d90c2280ab858ccf96" title="Get the effective particle radius &#160;(m)" alt="" coords="229,13,437,54"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="181,30,213,30,213,36,181,36"/>
+<area shape="rect" id="node1" title="Get the effective radius of a specified layer &#160;(m)" alt="" coords="5,5,188,60"/>
+<area shape="rect" id="node2" href="$aero__rep__modal__binned__mass_8c.html#a8d5bf734337581d90c2280ab858ccf96" title="Get the effective particle radius &#160;(m)" alt="" coords="236,13,449,53"/>
 </map>

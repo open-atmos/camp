@@ -1,8 +1,5 @@
 <map id="camp_aero_rep_data::pack_size" name="camp_aero_rep_data::pack_size">
-<area shape="rect" id="Node000001" title="Determine the size of a binary required to pack the aerosol representation data." alt="" coords="210,49,352,90"/>
-<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="313,36,301,30,281,27,262,29,251,34,247,40,248,48,243,49,241,39,248,30,261,24,281,22,302,25,315,31"/>
-<area shape="rect" id="Node000002" href="$namespacecamp__aero__rep__data.html#a2cbe750986350959de8042b064fa4678" title="Determine the size of a binary required to pack the reaction data." alt="" coords="6,5,161,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,56,161,50,162,45,195,51"/>
-<area shape="rect" id="Node000003" href="$namespacecamp__aero__rep__factory.html#a253696180679d443a17dc5d00973d2b1" title="Determine the size of a binary required to pack an aerosol representation." alt="" coords="5,85,162,126"/>
-<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="195,88,163,93,162,88,194,82"/>
+<area shape="rect" id="node1" title="Determine the size of a binary required to pack the aerosol representation data." alt="" coords="221,49,371,89"/>
+<area shape="rect" id="node2" href="$namespacecamp__aero__rep__data.html#a2cbe750986350959de8042b064fa4678" title="Determine the size of a binary required to pack the reaction data." alt="" coords="5,5,173,60"/>
+<area shape="rect" id="node3" href="$namespacecamp__aero__rep__factory.html#a253696180679d443a17dc5d00973d2b1" title="Determine the size of a binary required to pack an aerosol representation." alt="" coords="6,85,173,125"/>
 </map>

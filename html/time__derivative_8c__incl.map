@@ -1,9 +1,6 @@
 <map id="time_derivative.c" name="time_derivative.c">
-<area shape="rect" id="Node000001" title="Functions of the time derivative structure." alt="" coords="155,5,275,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,161,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,34,120,74,117,69,191,29"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="185,79,245,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="218,31,218,63,212,63,212,31"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="269,79,329,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="231,30,275,67,272,71,228,34"/>
+<area shape="rect" id="node1" title="Functions of the time derivative structure." alt="" coords="167,5,295,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,79,173,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="197,79,264,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="288,79,352,104"/>
 </map>

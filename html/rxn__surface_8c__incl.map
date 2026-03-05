@@ -1,15 +1,9 @@
 <map id="rxn_surface.c" name="rxn_surface.c">
-<area shape="rect" id="Node000001" title="Surface reaction solver functions." alt="" coords="222,5,321,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,66,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="232,34,82,79,80,74,231,29"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="90,79,149,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="247,34,160,74,158,70,245,29"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="174,79,236,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="262,33,228,69,225,66,259,29"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="260,79,419,105"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="285,29,320,66,316,70,281,33"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="443,79,534,105"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="309,29,438,71,437,76,308,34"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="559,79,643,105"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="322,28,544,76,543,81,321,33"/>
+<area shape="rect" id="node1" title="Surface reaction solver functions." alt="" coords="235,5,341,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,79,72,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="96,79,160,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="184,79,251,104"/>
+<area shape="rect" id="node5" title=" " alt="" coords="275,79,443,104"/>
+<area shape="rect" id="node6" title=" " alt="" coords="467,79,565,104"/>
+<area shape="rect" id="node7" title=" " alt="" coords="589,79,680,104"/>
 </map>

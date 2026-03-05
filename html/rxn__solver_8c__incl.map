@@ -1,11 +1,7 @@
 <map id="rxn_solver.c" name="rxn_solver.c">
-<area shape="rect" id="Node000001" title="Reaction solver functions." alt="" coords="206,5,296,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,132,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="221,34,115,75,113,71,219,29"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="156,79,248,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="245,33,221,68,216,65,241,30"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="272,79,332,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="262,30,287,65,282,68,257,33"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="356,79,418,105"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="275,29,352,69,349,74,273,34"/>
+<area shape="rect" id="node1" title="Reaction solver functions." alt="" coords="219,5,313,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,79,140,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="165,79,263,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="287,79,351,104"/>
+<area shape="rect" id="node5" title=" " alt="" coords="375,79,442,104"/>
 </map>

@@ -1,13 +1,8 @@
 <map id="sub_model_UNIFAC.c" name="sub_model_UNIFAC.c">
-<area shape="rect" id="Node000001" title="UNIFAC activity coefficient calculation." alt="" coords="129,5,280,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,66,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,34,80,75,77,70,175,29"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="90,79,149,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="192,34,147,71,144,67,189,29"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="174,79,236,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="208,31,208,63,202,63,202,31"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="260,79,379,105"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="226,29,288,68,286,73,223,34"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="403,79,540,105"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="251,29,412,72,411,77,249,34"/>
+<area shape="rect" id="node1" title="UNIFAC activity coefficient calculation." alt="" coords="141,5,294,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,79,72,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="96,79,160,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="184,79,251,104"/>
+<area shape="rect" id="node5" title=" " alt="" coords="275,79,397,104"/>
+<area shape="rect" id="node6" title=" " alt="" coords="422,79,567,104"/>
 </map>

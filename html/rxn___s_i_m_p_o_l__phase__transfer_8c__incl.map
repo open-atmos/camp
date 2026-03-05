@@ -1,17 +1,10 @@
 <map id="rxn_SIMPOL_phase_transfer.c" name="rxn_SIMPOL_phase_transfer.c">
-<area shape="rect" id="Node000001" title="Phase Transfer reaction solver functions." alt="" coords="240,5,439,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,66,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="284,34,81,81,80,76,283,29"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="90,79,149,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="303,34,165,79,163,74,301,29"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="174,79,236,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="318,34,242,74,240,69,315,29"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="260,79,419,105"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="342,31,342,63,337,63,337,31"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="443,79,534,105"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="366,29,451,70,449,74,364,34"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="559,79,731,105"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="392,29,579,72,578,78,391,34"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="755,79,839,105"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="434,29,575,49,740,76,739,81,574,54,434,34"/>
+<area shape="rect" id="node1" title="Phase Transfer reaction solver functions." alt="" coords="257,5,461,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,79,72,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="96,79,160,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="184,79,251,104"/>
+<area shape="rect" id="node5" title=" " alt="" coords="275,79,443,104"/>
+<area shape="rect" id="node6" title=" " alt="" coords="467,79,565,104"/>
+<area shape="rect" id="node7" title=" " alt="" coords="590,79,770,104"/>
+<area shape="rect" id="node8" title=" " alt="" coords="795,79,885,104"/>
 </map>
