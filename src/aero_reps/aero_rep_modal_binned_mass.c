@@ -364,6 +364,48 @@ void aero_rep_modal_binned_mass_get_effective_radius__m(
   return;
 }
 
+/** \brief Get the phase volume \f$V_{phase}\f$ (m³/m³)
+ *
+ * The phase volume is calculated as the sum of the volumes of each species in
+ * the phase, which are calculated by dividing the mass of each species by its
+ * density. The mass of each species is calculated from the state array and
+ * model data using the aero_phase_get_mass function.
+ *
+ * \param model_data Pointer to the model data, including the state array
+ * \param aero_phase_idx Index of the aerosol phase within the representation
+ * \param phase_volume Phase volume (m³/m³)
+ * \param partial_deriv \f$\frac{\partial V_{phase}}{\partial y}\f$ where \f$y\f$
+ *                       are species on the state array
+ * \param aero_rep_int_data Pointer to the aerosol representation integer data
+ * \param aero_rep_float_data Pointer to the aerosol representation
+ *                            floating-point data
+ * \param aero_rep_env_data Pointer to the aerosol representation
+ *                          environment-dependent parameters
+ */
+void aero_rep_modal_binned_mass_get_phase_volume__m3_m3(
+    ModelData *model_data, int aero_phase_idx, double *phase_volume,
+    double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
+    double *aero_rep_env_data) {
+  int *int_data = aero_rep_int_data;
+  double *float_data = aero_rep_float_data;
+  for (int i_section = 0; i_section < NUM_SECTION_; i_section++) {
+    for (int i_bin = 0; i_bin < NUM_BINS_(i_section); i_bin++) {
+      aero_phase_idx -= NUM_PHASE_(i_section);
+      if (aero_phase_idx < 0) {
+        // Get a pointer to the phase on the state array
+        double *state = (double *)(model_data->grid_cell_state);
+        state += PHASE_STATE_ID_(i_section, 0, i_bin);
+
+        aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_section, 0, i_bin),
+                                    state, phase_volume, partial_deriv);
+        i_section = NUM_SECTION_;
+        break;
+      }
+    }
+  }
+  return;
+}
+
 /** \brief Get the effective particle surface area \f$r_{eff}\f$ (m)
  *
  * The surface area interface that exists between two specified phases within

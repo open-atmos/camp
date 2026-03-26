@@ -309,11 +309,11 @@ void aero_rep_get_phase_volume__m3_m3(ModelData *model_data, int aero_rep_idx,
 
   // Get the particle radius and set of partial derivatives
   switch (aero_rep_type) {
-    //case AERO_REP_MODAL_BINNED_MASS:
-    //  aero_rep_modal_binned_mass_get_phase_volume__m3_m3(
-    //      model_data, aero_phase_idx, phase_volume, partial_deriv, aero_rep_int_data,
-    //      aero_rep_float_data, aero_rep_env_data);
-    //  break;
+    case AERO_REP_MODAL_BINNED_MASS:
+      aero_rep_modal_binned_mass_get_phase_volume__m3_m3(
+          model_data, aero_phase_idx, phase_volume, partial_deriv, aero_rep_int_data,
+          aero_rep_float_data, aero_rep_env_data);
+      break;
     case AERO_REP_SINGLE_PARTICLE:
       aero_rep_single_particle_get_phase_volume__m3_m3(
           model_data, aero_phase_idx, phase_volume, partial_deriv, aero_rep_int_data,
