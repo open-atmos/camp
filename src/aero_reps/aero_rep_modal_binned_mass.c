@@ -388,23 +388,56 @@ void aero_rep_modal_binned_mass_get_phase_volume__m3_m3(
     double *aero_rep_env_data) {
   int *int_data = aero_rep_int_data;
   double *float_data = aero_rep_float_data;
-  for (int i_section = 0; i_section < NUM_SECTION_; i_section++) {
-    for (int i_bin = 0; i_bin < NUM_BINS_(i_section); i_bin++) {
-      aero_phase_idx -= NUM_PHASE_(i_section);
-      if (aero_phase_idx < 0) {
-        // Get a pointer to the phase on the state array
-        double *state = (double *)(model_data->grid_cell_state);
-        state += PHASE_STATE_ID_(i_section, 0, i_bin);
 
-        aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_section, 0, i_bin),
-                                    state, phase_volume, partial_deriv);
-        i_section = NUM_SECTION_;
-        break;
+  for (int i_section = 0; i_section < NUM_SECTION_ && aero_phase_idx >= 0;
+       ++i_section) {
+    for (int i_bin = 0; i_bin < NUM_BINS_(i_section) && aero_phase_idx >= 0;
+         ++i_bin) {
+      if (aero_phase_idx < 0 || aero_phase_idx >= NUM_PHASE_(i_section)) {
+        aero_phase_idx -= NUM_PHASE_(i_section);
+        continue;
+      }
+      for (int i_phase = 0; i_phase < NUM_PHASE_(i_section); ++i_phase) {
+        if (aero_phase_idx == 0) {
+          // Get a pointer to the phase on the state array
+          double *state = (double *)(model_data->grid_cell_state);
+          state += PHASE_STATE_ID_(i_section, i_phase, i_bin);
+          aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_section, i_phase, i_bin),
+                                      state, phase_volume, partial_deriv);
+          partial_deriv += PHASE_NUM_JAC_ELEM_(i_section, i_phase, i_bin);
+          // Other phases present in the bin or mode do not contribute to
+          // the aerosol phase mass
+        } else if (partial_deriv) {
+          for (int i_elem = 0;
+               i_elem < PHASE_NUM_JAC_ELEM_(i_section, i_phase, i_bin);
+               ++i_elem) {
+            *(partial_deriv++) = ZERO;
+          }
+        }
+        aero_phase_idx -= 1;
       }
     }
   }
+
   return;
 }
+  //for (int i_section = 0; i_section < NUM_SECTION_; i_section++) {
+  //  for (int i_bin = 0; i_bin < NUM_BINS_(i_section); i_bin++) {
+  //    aero_phase_idx -= NUM_PHASE_(i_section);
+  //    if (aero_phase_idx < 0) {
+  //      // Get a pointer to the phase on the state array
+  //      double *state = (double *)(model_data->grid_cell_state);
+  //      state += PHASE_STATE_ID_(i_section, 0, i_bin);
+
+  //      aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_section, 0, i_bin),
+  //                                  state, phase_volume, partial_deriv);
+  //      i_section = NUM_SECTION_;
+  //      break;
+  //    }
+  //  }
+ // }
+ // return;
+//}
 
 /** \brief Get the effective particle surface area \f$r_{eff}\f$ (m)
  *
