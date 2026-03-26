@@ -102,6 +102,10 @@ void aero_rep_single_particle_get_effective_radius__m(
     ModelData *model_data, int aero_phase_idx, double *radius,
     double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
     double *aero_rep_env_data);
+void aero_rep_single_particle_get_phase_volume__m3_m3(
+    ModelData *model_data, int aero_phase_idx, double *phase_volume,
+    double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
+    double *aero_rep_env_data);
 void aero_rep_single_particle_get_interface_surface_area__m2(
     ModelData *model_data, int aero_phase_idx_first, int aero_phase_idx_second, 
     double *surface_area, double *partial_deriv, 

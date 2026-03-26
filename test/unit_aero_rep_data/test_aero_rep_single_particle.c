@@ -298,6 +298,63 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
   return ret_val;
 }
 
+/** \brief Test the volume of a single phase function
+ * 
+ * \param model_data Pointer to the model data
+ * \param state Solver state
+ */
+
+ int test_phase_volume(ModelData * model_data, N_Vector state) {
+
+  int ret_val = 0;
+  double partial_deriv_1[N_JAC_ELEM+2];
+  double partial_deriv_2[N_JAC_ELEM+2];
+  double phase_volume_1 = -999.9;
+  double phase_volume_2 = -999.9;
+
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_1[i] = 999.9;
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_2[i] = 999.9;
+
+  aero_rep_get_phase_volume__m3_m3(model_data, AERO_REP_IDX,
+                                AERO_PHASE_IDX_1, &phase_volume_1, &(partial_deriv_1[1]));
+  aero_rep_get_phase_volume__m3_m3(model_data, AERO_REP_IDX,
+                                AERO_PHASE_IDX_2, &phase_volume_2, &(partial_deriv_2[1]));
+
+  double volume_density_jam = ( 
+                            CONC_rasberry / DENSITY_rasberry +
+                            CONC_honey / DENSITY_honey +
+                            CONC_sugar / DENSITY_sugar +
+                            CONC_lemon / DENSITY_lemon ); // volume density (m3/m3)
+  double volume_density_top_bread = ( CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt ); // volume density (m3/m3)
+
+  ret_val += ASSERT_MSG(fabs(phase_volume_1-volume_density_jam) < 1.0e-6*volume_density_jam,
+                        "Bad phase volume");
+  ret_val += ASSERT_MSG(fabs(phase_volume_2-volume_density_top_bread) < 1.0e-6*volume_density_top_bread,
+                        "Bad phase volume");
+
+  ret_val += ASSERT_MSG(partial_deriv_1[0] = 999.9,
+                        "Bad Jacobian (-1)");
+  ret_val += ASSERT_MSG(partial_deriv_2[0] = 999.9,
+                        "Bad Jacobian (-1)");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[1] - 1.0 / DENSITY_rasberry) <
+                        1.0e-10 * partial_deriv_1[1], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[2] - 1.0 / DENSITY_honey) <
+                        1.0e-10 * partial_deriv_1[2], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[3] - 1.0 / DENSITY_sugar) <
+                        1.0e-10 * partial_deriv_1[3], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_1[4] - 1.0 / DENSITY_lemon) <
+                        1.0e-10 * partial_deriv_1[4], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[1] - 1.0 / DENSITY_wheat) <
+                        1.0e-10 * partial_deriv_2[1], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[2] - 1.0 / DENSITY_water) <
+                        1.0e-10 * partial_deriv_2[2], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_2[3] - 1.0 / DENSITY_salt) <
+                        1.0e-10 * partial_deriv_2[3], "Bad Jacobian element");
+  return ret_val;
+ }
+
 /** \brief Test the surface area of interfacial layer function
  *
  * \param model_data Pointer to the model data
@@ -822,6 +879,7 @@ int run_aero_rep_single_particle_c_tests(void *solver_data, double *state, doubl
   ret_val += test_effective_layer_radius(model_data, solver_state);
   ret_val += test_effective_radius(model_data, solver_state);
   ret_val += test_surface_area_layer(model_data, solver_state);
+  ret_val += test_phase_volume(model_data, solver_state);
   ret_val += test_layer_thickness(model_data, solver_state);
   ret_val += test_aero_phase_mass(model_data, solver_state);
   ret_val += test_aero_phase_avg_MW(model_data, solver_state);

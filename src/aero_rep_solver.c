@@ -276,6 +276,53 @@ void aero_rep_get_effective_radius__m(ModelData *model_data, int aero_rep_idx,
   return;
 }
 
+/** \brief Get the volume of a specified phase in the corresponding layer
+ * 
+ * \param model_data Pointer to the model data, including the state array
+ * \param aero_phase_idx Index of the aerosol phase within the representation
+ * \param phase_volume Volume of the phase (m^3)
+ * \param partial_deriv \f$\frac{\partial V}{\partial y}\f$ where \f$y\f$
+ *                     are species on the state array
+ * \param aero_rep_int_data Pointer to the aerosol representation integer data
+ * \param aero_rep_float_data Pointer to the aerosol representation
+ *                           floating-point data
+ * \param aero_rep_env_data Pointer to the aerosol representation
+ *                         environment-dependent parameters
+ */
+
+void aero_rep_get_phase_volume__m3_m3(ModelData *model_data, int aero_rep_idx,
+                                      int aero_phase_idx, double *phase_volume,
+                                      double *partial_deriv) {
+  // Get pointers to the aerosol data
+  int *aero_rep_int_data = &(
+      model_data
+          ->aero_rep_int_data[model_data->aero_rep_int_indices[aero_rep_idx]]);
+  double *aero_rep_float_data =
+      &(model_data->aero_rep_float_data
+            [model_data->aero_rep_float_indices[aero_rep_idx]]);
+  double *aero_rep_env_data =
+      &(model_data->grid_cell_aero_rep_env_data
+            [model_data->aero_rep_env_idx[aero_rep_idx]]);
+
+  // Get the aerosol representation type
+  int aero_rep_type = *(aero_rep_int_data++);
+
+  // Get the particle radius and set of partial derivatives
+  switch (aero_rep_type) {
+    //case AERO_REP_MODAL_BINNED_MASS:
+    //  aero_rep_modal_binned_mass_get_phase_volume__m3_m3(
+    //      model_data, aero_phase_idx, phase_volume, partial_deriv, aero_rep_int_data,
+    //      aero_rep_float_data, aero_rep_env_data);
+    //  break;
+    case AERO_REP_SINGLE_PARTICLE:
+      aero_rep_single_particle_get_phase_volume__m3_m3(
+          model_data, aero_phase_idx, phase_volume, partial_deriv, aero_rep_int_data,
+          aero_rep_float_data, aero_rep_env_data);
+      break;
+  }
+  return;
+}
+
 /** \brief Get the surface area of interfacial layer between two phases (m^2)
  *
  * Calculates surface area of a interfacial layer (m^2), as well as the set of

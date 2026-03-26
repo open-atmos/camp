@@ -238,6 +238,69 @@ void aero_rep_single_particle_get_effective_radius__m(
   return;
 }
 
+/** \brief Get the volume of a specified phase in the corresponding layer
+ * 
+ * \param model_data Pointer to the model data, including the state array
+ * \param aero_phase_idx Index of the aerosol phase within the representation
+ * \param phase_volume Volume of the phase (m^3)
+ * \param partial_deriv \f$\frac{\partial V}{\partial y}\f$ where \f$y\f$
+ *                     are species on the state array
+ * \param aero_rep_int_data Pointer to the aerosol representation integer data
+ * \param aero_rep_float_data Pointer to the aerosol representation
+ *                           floating-point data
+ * \param aero_rep_env_data Pointer to the aerosol representation
+ *                         environment-dependent parameters
+ */
+
+ void aero_rep_single_particle_get_phase_volume__m3_m3(
+    ModelData *model_data, int aero_phase_idx, double *phase_volume,
+    double *partial_deriv, int *aero_rep_int_data, double *aero_rep_float_data,
+    double *aero_rep_env_data) {
+
+  int *int_data = aero_rep_int_data;
+  double *float_data = aero_rep_float_data;
+  int i_part = aero_phase_idx / TOTAL_NUM_PHASES_;
+  double *curr_partial = NULL;
+  int aero_phase_idx_temp = aero_phase_idx;
+  aero_phase_idx_temp -= i_part * TOTAL_NUM_PHASES_;
+  
+  int i_layer_phase = -1;
+  for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
+   if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx_temp &&
+      aero_phase_idx_temp <= LAYER_PHASE_END_(i_layer)) {
+      i_layer_phase = i_layer-1;
+      break;
+    }
+  }
+  
+  int total_num_phases = 0;
+  for (int i_layer = 0; i_layer < i_layer_phase; ++i_layer) {
+    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
+      total_num_phases += NUM_PHASES_(i_layer); 
+    }
+  }
+
+  int i_phase = -1;
+  if (i_layer_phase == 0) {
+    i_phase = aero_phase_idx - i_part * TOTAL_NUM_PHASES_;
+  } else if (i_layer_phase > 0) {
+    i_phase = aero_phase_idx - total_num_phases - i_part * TOTAL_NUM_PHASES_;
+  } else {
+    printf("\n\nERROR: No conditions met for phase volume calculation.\n\n");
+    exit(1);
+  }
+
+  if (partial_deriv) curr_partial = partial_deriv;
+  double *state = (double *)(model_data->grid_cell_state);
+  state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer_phase,i_phase);
+  double volume;
+  aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_layer_phase,i_phase),
+                                state, &(volume), curr_partial);
+  *phase_volume = volume;
+  if (partial_deriv) curr_partial += PHASE_NUM_JAC_ELEM_(i_layer_phase,i_phase);
+    
+  }
+
 /** \brief Get the surface area of specified particle layer \f$r_{eff}\f$ (m)
  *
  * Solve for the surface area of the interfacial layer that exists between the 
