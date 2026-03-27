@@ -404,16 +404,20 @@ void aero_rep_modal_binned_mass_get_phase_volume__m3_m3(
           state += PHASE_STATE_ID_(i_section, i_phase, i_bin);
           aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_section, i_phase, i_bin),
                                       state, phase_volume, partial_deriv);
-          partial_deriv += PHASE_NUM_JAC_ELEM_(i_section, i_phase, i_bin);
-          // Other phases present in the bin or mode do not contribute to
-          // the aerosol phase mass
+          if (partial_deriv)
+            partial_deriv +=
+                PHASE_NUM_JAC_ELEM_(i_section, i_phase, i_bin);
+
         } else if (partial_deriv) {
+
+          /* Other phases contribute zero to this phase volume */
           for (int i_elem = 0;
                i_elem < PHASE_NUM_JAC_ELEM_(i_section, i_phase, i_bin);
                ++i_elem) {
             *(partial_deriv++) = ZERO;
           }
         }
+
         aero_phase_idx -= 1;
       }
     }
