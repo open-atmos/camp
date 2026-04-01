@@ -278,16 +278,16 @@ void aero_rep_get_effective_radius__m(ModelData *model_data, int aero_rep_idx,
 
 /** \brief Get the volume of a specified phase in the corresponding layer
  * 
+ * Calculates the volume of a specified phase (m^3), as well as the set of
+ * \f$\frac{\partial V}{\partial y}\f$ where \f$y\f$ are variables on the
+ * solver state array.
+ *
  * \param model_data Pointer to the model data, including the state array
+ * \param aero_rep_idx Index of aerosol representation to use for calculation
  * \param aero_phase_idx Index of the aerosol phase within the representation
- * \param phase_volume Volume of the phase (m^3)
+ * \param phase_volume Pointer to hold volume of the phase (m^3)
  * \param partial_deriv \f$\frac{\partial V}{\partial y}\f$ where \f$y\f$
  *                     are species on the state array
- * \param aero_rep_int_data Pointer to the aerosol representation integer data
- * \param aero_rep_float_data Pointer to the aerosol representation
- *                           floating-point data
- * \param aero_rep_env_data Pointer to the aerosol representation
- *                         environment-dependent parameters
  */
 
 void aero_rep_get_phase_volume__m3_m3(ModelData *model_data, int aero_rep_idx,

@@ -399,7 +399,6 @@ void aero_rep_modal_binned_mass_get_phase_volume__m3_m3(
       }
       for (int i_phase = 0; i_phase < NUM_PHASE_(i_section); ++i_phase) {
         if (aero_phase_idx == 0) {
-          // Get a pointer to the phase on the state array
           double *state = (double *)(model_data->grid_cell_state);
           state += PHASE_STATE_ID_(i_section, i_phase, i_bin);
           aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_section, i_phase, i_bin),
@@ -410,7 +409,6 @@ void aero_rep_modal_binned_mass_get_phase_volume__m3_m3(
 
         } else if (partial_deriv) {
 
-          /* Other phases contribute zero to this phase volume */
           for (int i_elem = 0;
                i_elem < PHASE_NUM_JAC_ELEM_(i_section, i_phase, i_bin);
                ++i_elem) {
