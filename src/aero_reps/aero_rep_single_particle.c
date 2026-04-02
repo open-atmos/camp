@@ -268,27 +268,16 @@ void aero_rep_single_particle_get_effective_radius__m(
   for (int i_layer = 0; i_layer < NUM_LAYERS_; ++i_layer) {
    if (LAYER_PHASE_START_(i_layer) <= aero_phase_idx_temp &&
       aero_phase_idx_temp <= LAYER_PHASE_END_(i_layer)) {
-      i_layer_phase = i_layer-1;
+      i_layer_phase = i_layer;
       break;
     }
   }
   
-  int total_num_phases = 0;
+  int total_phases_previous_layers = 0;
   for (int i_layer = 0; i_layer < i_layer_phase; ++i_layer) {
-    for (int i_phase = 0; i_phase < NUM_PHASES_(i_layer); ++i_phase) {
-      total_num_phases += NUM_PHASES_(i_layer); 
-    }
+    total_phases_previous_layers += NUM_PHASES_(i_layer);
   }
-
-  int i_phase = -1;
-  if (i_layer_phase == 0) {
-    i_phase = aero_phase_idx - i_part * TOTAL_NUM_PHASES_;
-  } else if (i_layer_phase > 0) {
-    i_phase = aero_phase_idx - total_num_phases - i_part * TOTAL_NUM_PHASES_;
-  } else {
-    printf("\n\nERROR: No conditions met for phase volume calculation.\n\n");
-    exit(1);
-  }
+  int i_phase = aero_phase_idx_temp - total_phases_previous_layers;
 
   if (partial_deriv) curr_partial = partial_deriv;
   double *state = (double *)(model_data->grid_cell_state);
