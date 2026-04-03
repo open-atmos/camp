@@ -309,16 +309,21 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
   int ret_val = 0;
   double partial_deriv_1[N_JAC_ELEM+2];
   double partial_deriv_2[N_JAC_ELEM+2];
+  double partial_deriv_3[N_JAC_ELEM+2];
   double phase_volume_1 = -999.9;
   double phase_volume_2 = -999.9;
+  double phase_volume_3 = -999.9;
 
   for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_1[i] = 999.9;
   for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_2[i] = 999.9;
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_3[i] = 999.9;
 
   aero_rep_get_phase_volume__m3_m3(model_data, AERO_REP_IDX,
                                 AERO_PHASE_IDX_1, &phase_volume_1, &(partial_deriv_1[1]));
   aero_rep_get_phase_volume__m3_m3(model_data, AERO_REP_IDX,
                                 AERO_PHASE_IDX_2, &phase_volume_2, &(partial_deriv_2[1]));
+  aero_rep_get_phase_volume__m3_m3(model_data, AERO_REP_IDX,
+                                AERO_PHASE_IDX_3, &phase_volume_3, &(partial_deriv_3[1]));
 
   double volume_density_jam = ( 
                             CONC_rasberry / DENSITY_rasberry +
@@ -333,10 +338,14 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
                         "Bad phase volume");
   ret_val += ASSERT_MSG(fabs(phase_volume_2-volume_density_top_bread) < 1.0e-6*volume_density_top_bread,
                         "Bad phase volume");
+  ret_val += ASSERT_MSG(fabs(phase_volume_3-volume_density_top_bread) < 1.0e-6*volume_density_top_bread,
+                        "Bad phase volume");
 
   ret_val += ASSERT_MSG(partial_deriv_1[0] = 999.9,
                         "Bad Jacobian (-1)");
   ret_val += ASSERT_MSG(partial_deriv_2[0] = 999.9,
+                        "Bad Jacobian (-1)");
+  ret_val += ASSERT_MSG(partial_deriv_3[0] = 999.9,
                         "Bad Jacobian (-1)");
   ret_val += ASSERT_MSG(fabs(partial_deriv_1[1] - 1.0 / DENSITY_rasberry) <
                         1.0e-10 * partial_deriv_1[1], "Bad Jacobian element");
@@ -352,6 +361,18 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
                         1.0e-10 * partial_deriv_2[2], "Bad Jacobian element");
   ret_val += ASSERT_MSG(fabs(partial_deriv_2[3] - 1.0 / DENSITY_salt) <
                         1.0e-10 * partial_deriv_2[3], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_3[1] - 1.0 / DENSITY_wheat) <
+                        1.0e-10 * partial_deriv_3[1], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_3[2] - 1.0 / DENSITY_water) <
+                        1.0e-10 * partial_deriv_3[2], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv_3[3] - 1.0 / DENSITY_salt) <
+                        1.0e-10 * partial_deriv_3[3], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(partial_deriv_1[N_JAC_ELEM+1] = 999.9,
+                        "Bad Jacobian (end+1)");
+  ret_val += ASSERT_MSG(partial_deriv_2[N_JAC_ELEM+1] = 999.9,
+                        "Bad Jacobian (end+1)");
+  ret_val += ASSERT_MSG(partial_deriv_3[N_JAC_ELEM+1] = 999.9,
+                        "Bad Jacobian (end+1)");
   return ret_val;
  }
 
