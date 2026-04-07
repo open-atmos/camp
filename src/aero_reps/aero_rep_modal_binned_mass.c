@@ -423,23 +423,6 @@ void aero_rep_modal_binned_mass_get_phase_volume__m3_m3(
 
   return;
 }
-  //for (int i_section = 0; i_section < NUM_SECTION_; i_section++) {
-  //  for (int i_bin = 0; i_bin < NUM_BINS_(i_section); i_bin++) {
-  //    aero_phase_idx -= NUM_PHASE_(i_section);
-  //    if (aero_phase_idx < 0) {
-  //      // Get a pointer to the phase on the state array
-  //      double *state = (double *)(model_data->grid_cell_state);
-  //      state += PHASE_STATE_ID_(i_section, 0, i_bin);
-
-  //      aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_section, 0, i_bin),
-  //                                  state, phase_volume, partial_deriv);
-  //      i_section = NUM_SECTION_;
-  //      break;
-  //    }
-  //  }
- // }
- // return;
-//}
 
 /** \brief Get the effective particle surface area \f$r_{eff}\f$ (m)
  *
