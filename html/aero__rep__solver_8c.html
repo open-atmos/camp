@@ -104,6 +104,9 @@ Functions</h2></td></tr>
 <tr class="memitem:aab8fc9de2c9bfe5d012e80322a5b653b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b">aero_rep_get_effective_radius__m</a> (ModelData *model_data, int aero_rep_idx, int aero_phase_idx, double *radius, double *partial_deriv)</td></tr>
 <tr class="memdesc:aab8fc9de2c9bfe5d012e80322a5b653b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the effective particle radius, \(r_{eff}\) (m)  <a href="aero__rep__solver_8c.html#aab8fc9de2c9bfe5d012e80322a5b653b">More...</a><br /></td></tr>
 <tr class="separator:aab8fc9de2c9bfe5d012e80322a5b653b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5e93028629bd730b4a0b7c42d3a85d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aero__rep__solver_8c.html#ab5e93028629bd730b4a0b7c42d3a85d7">aero_rep_get_phase_volume__m3_m3</a> (ModelData *model_data, int aero_rep_idx, int aero_phase_idx, double *phase_volume, double *partial_deriv)</td></tr>
+<tr class="memdesc:ab5e93028629bd730b4a0b7c42d3a85d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the volume of a specified phase in the corresponding layer.  <a href="aero__rep__solver_8c.html#ab5e93028629bd730b4a0b7c42d3a85d7">More...</a><br /></td></tr>
+<tr class="separator:ab5e93028629bd730b4a0b7c42d3a85d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a122c5a47dece6968347c8f37484951a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="aero__rep__solver_8c.html#a122c5a47dece6968347c8f37484951a9">aero_rep_get_interface_surface_area__m2</a> (ModelData *model_data, int aero_rep_idx, int aero_phase_idx_first, int aero_phase_idx_second, double *surface_area, double *partial_deriv)</td></tr>
 <tr class="memdesc:a122c5a47dece6968347c8f37484951a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the surface area of interfacial layer between two phases (m^2)  <a href="aero__rep__solver_8c.html#a122c5a47dece6968347c8f37484951a9">More...</a><br /></td></tr>
 <tr class="separator:a122c5a47dece6968347c8f37484951a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -243,7 +246,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00582">582</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00629">629</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
 
 </div>
 </div>
@@ -271,7 +274,7 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00728">728</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00775">775</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
 
 </div>
 </div>
@@ -318,7 +321,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>0 for per-particle; 1 for total for each phase </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00431">431</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00478">478</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -411,7 +414,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00537">537</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00584">584</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -503,7 +506,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00485">485</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00532">532</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -821,7 +824,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00296">296</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00343">343</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -892,7 +895,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00338">338</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00385">385</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -965,7 +968,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00389">389</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00436">436</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -999,6 +1002,78 @@ Here is the caller graph for this function:</div>
 <area shape="rect" href="camp__solver_8c.html#afc5ec8680b419e7ab49530d53a76cee4" title="Solve for a given timestep." alt="" coords="168,43,256,69"/>
 <area shape="rect" href="rxn__solver_8c.html#ad44deb65b9845d05c6bd148e3378b42a" title="Calculate the Jacobian." alt="" coords="661,269,755,294"/>
 <area shape="rect" href="rxn__solver_8c.html#a40f9caeb40a6630edd3d61544ee29922" title="Calculate the Jacobian for only some specific types." alt="" coords="636,319,780,359"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ab5e93028629bd730b4a0b7c42d3a85d7" name="ab5e93028629bd730b4a0b7c42d3a85d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5e93028629bd730b4a0b7c42d3a85d7">&#9670;&#160;</a></span>aero_rep_get_phase_volume__m3_m3()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void aero_rep_get_phase_volume__m3_m3 </td>
+          <td>(</td>
+          <td class="paramtype">ModelData *&#160;</td>
+          <td class="paramname"><em>model_data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>aero_rep_idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>aero_phase_idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>phase_volume</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>partial_deriv</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the volume of a specified phase in the corresponding layer. </p>
+<p >Calculates the volume of a specified phase (m^3), as well as the set of \(\frac{\partial V}{\partial y}\) where \(y\) are variables on the solver state array.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">model_data</td><td>Pointer to the model data, including the state array </td></tr>
+    <tr><td class="paramname">aero_rep_idx</td><td>Index of aerosol representation to use for calculation </td></tr>
+    <tr><td class="paramname">aero_phase_idx</td><td>Index of the aerosol phase within the representation </td></tr>
+    <tr><td class="paramname">phase_volume</td><td>Pointer to hold volume of the phase (m^3) </td></tr>
+    <tr><td class="paramname">partial_deriv</td><td>\(\frac{\partial V}{\partial y}\) where \(y\) are species on the state array </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00293">293</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="aero__rep__solver_8c_ab5e93028629bd730b4a0b7c42d3a85d7_cgraph.png" border="0" usemap="#aaero__rep__solver_8c_ab5e93028629bd730b4a0b7c42d3a85d7_cgraph" alt=""/></div>
+<map name="aaero__rep__solver_8c_ab5e93028629bd730b4a0b7c42d3a85d7_cgraph" id="aaero__rep__solver_8c_ab5e93028629bd730b4a0b7c42d3a85d7_cgraph">
+<area shape="rect" title="Get the volume of a specified phase in the corresponding layer." alt="" coords="5,49,152,89"/>
+<area shape="rect" href="aero__rep__modal__binned__mass_8c.html#ae3fa3ea82f3c59027debd93ccbde6edb" title="Get the phase volume &#160;(m³/m³)" alt="" coords="211,5,392,60"/>
+<area shape="rect" href="aero__rep__single__particle_8c.html#aba4fa8e5576b9e16abf94ec66f6f7c6f" title="Get the volume of a specified phase in the corresponding layer." alt="" coords="200,85,403,125"/>
+<area shape="rect" href="aero__phase__solver_8c.html#a6e493e863924f29d6bd06598fa657f08" title="Get the volume of an aerosol phase." alt="" coords="451,49,623,89"/>
 </map>
 </div>
 
@@ -1107,7 +1182,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00685">685</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00732">732</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1177,7 +1252,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00631">631</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__solver_8c_source.html#l00678">678</a> of file <a class="el" href="aero__rep__solver_8c_source.html">aero_rep_solver.c</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
