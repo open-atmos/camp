@@ -288,10 +288,8 @@ void aero_rep_single_particle_get_effective_radius__m(
   if (partial_deriv) curr_partial = partial_deriv;
   double *state = (double *)(model_data->grid_cell_state);
   state += i_part * PARTICLE_STATE_SIZE_ + PHASE_STATE_ID_(i_layer_phase,i_phase);
-  double volume;
   aero_phase_get_volume__m3_m3(model_data, PHASE_MODEL_DATA_ID_(i_layer_phase,i_phase),
-                                state, &(volume), curr_partial);
-  *phase_volume = volume;
+                                state, phase_volume, curr_partial);
   if (partial_deriv) curr_partial += PHASE_NUM_JAC_ELEM_(i_layer_phase,i_phase);
     
   }
