@@ -273,6 +273,12 @@ void aero_rep_single_particle_get_effective_radius__m(
     }
   }
   
+  if (i_layer_phase == -1) {
+    printf("\n\nERROR: aero_rep_single_particle_get_phase_volume__m3_m3: Could not determine i_layer_phase ");
+    printf("for aero_phase_idx=%d.\n\n", aero_phase_idx);
+    exit(1);
+  }
+
   int total_phases_previous_layers = 0;
   for (int i_layer = 0; i_layer < i_layer_phase; ++i_layer) {
     total_phases_previous_layers += NUM_PHASES_(i_layer);
