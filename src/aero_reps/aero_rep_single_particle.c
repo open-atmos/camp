@@ -439,8 +439,12 @@ void aero_rep_single_particle_get_interface_surface_area__m2(
               pow(radius, -1.0))  * (*partial_deriv);
           ++partial_deriv;
         }
+        else if (i_layer < layer_first) {
+          *partial_deriv = 2.0 * f_first * f_second * pow(radius, -1.0) * (*partial_deriv);
+          ++partial_deriv;
+        }
         // Set partial_derivative = 0 for all other layers. 
-        else if (i_layer != layer_first && i_layer != layer_second) {
+        else if (i_layer > layer_second) {
           *(partial_deriv++) = ZERO;
         }
         else {
