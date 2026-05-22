@@ -108,8 +108,8 @@ contains
 
     type(solver_stats_t), target :: solver_stats
     real(kind=dp), target :: radius, number_conc
-    real(kind=dp) :: layer_thickness_l4_p1, layer_thickness_l4_p2, layer_thickness_l4_p3, layer_thickness_l4_p4
-    real(kind=dp) :: layer_thickness_l1_p1, layer_thickness_l2_p1, layer_thickness_l3_p1
+    real(kind=dp) :: layer_thickness_l1_p1, layer_thickness_l2_p1, layer_thickness_l3_p1, layer_thickness_l4_p1
+    real(kind=dp) :: surface_area_l2, surface_area_l3, surface_area_l4
 
     integer(kind=i_kind) :: i_sect_unused, i_sect_the_mode
 
@@ -123,6 +123,7 @@ contains
     integer(kind=i_kind) :: i_rxn, num_adjacent_pairs
     real(kind=dp) :: expected_diff_coeff
     real(kind=dp), allocatable :: diff_coeff_first(:), diff_coeff_second(:)
+    real(kind=dp) :: rate_first
 
     call assert_msg(227053212, scenario.eq.1, &
               "Invalid scenario specified: "//to_string( scenario ))
@@ -430,6 +431,11 @@ contains
       number_conc = 1.3e6         ! particle number concentration (#/cc)
       true_conc(0,:) = true_conc(0,:) / (number_conc * 1000.0) ! convert to kg/m3 per particle
       model_conc(0,:) = true_conc(0,:)
+      print *, "Initial concentrations (kg/m3 per particle):"
+      print *, "Layer 1 : ", true_conc(0,idx_solute_l1_p1) + true_conc(0,idx_H2O_l1_p1)
+      print *, "Layer 2 : ", true_conc(0,idx_solute_l2_p1) + true_conc(0,idx_H2O_l2_p1)
+      print *, "Layer 3 : ", true_conc(0,idx_solute_l3_p1) + true_conc(0,idx_H2O_l3_p1)
+      print *, "Layer 4 : ", true_conc(0,idx_solute_l4_p1) + true_conc(0,idx_H2O_l4_p1)
 
       ! single particle aerosol mass concentrations are per particle
       ! radius (m) calculated based on particle mass
@@ -478,27 +484,32 @@ contains
                    ( (true_conc(0,idx_solute_l4_p1) + &
                    true_conc(0,idx_H2O_l4_p1) ) &
                    * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
+        layer_thickness_l4_p1 = ( ( true_conc(0,idx_solute_l4_p1) +  &
+                   true_conc(0,idx_H2O_l4_p1) ) &
+                   * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
+        surface_area_l2 = 4.0 * 3.14159265359 * ( ( true_conc(0,idx_solute_l2_p1) +  &
+                   true_conc(0,idx_solute_l3_p1) +  &
+                   true_conc(0,idx_solute_l4_p1) + &
+                   true_conc(0,idx_H2O_l2_p1) + & 
+                   true_conc(0,idx_H2O_l3_p1) + & 
+                   true_conc(0,idx_H2O_l4_p1) ) &
+                   * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0)
+        surface_area_l3 = 4.0 * 3.14159265359 * ( ( true_conc(0,idx_solute_l3_p1) +  &
+                   true_conc(0,idx_solute_l4_p1) + &
+                   true_conc(0,idx_H2O_l3_p1) + & 
+                   true_conc(0,idx_H2O_l4_p1) ) &
+                   * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0)
+        surface_area_l4 = 4.0 * 3.14159265359 * ( ( true_conc(0,idx_solute_l4_p1) +  &
+                   true_conc(0,idx_H2O_l4_p1) ) &
+                   * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0)
 
       print *, "Calculated particle radius (m): ", radius
       print *, "Calculated layer thickness 1 (m): ", layer_thickness_l1_p1
       print *, "Calculated layer thickness 2 (m): ", layer_thickness_l2_p1
       print *, "Calculated layer thickness 3 (m): ", layer_thickness_l3_p1
-
-      ! Any phase in layer 4 should have the same layer thickness.
-      layer_thickness_l4_p1 = ( ( true_conc(0,idx_solute_l4_p1) +  &
-                   true_conc(0,idx_H2O_l4_p1) ) &
-                   * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
-      layer_thickness_l4_p2 = ( ( true_conc(0,idx_solute_l4_p2) +  &
-                   true_conc(0,idx_H2O_l4_p2) ) &
-                   * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
-      layer_thickness_l4_p3 = ( ( true_conc(0,idx_solute_l4_p3) +  &
-                   true_conc(0,idx_H2O_l4_p3) ) &
-                   * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
-      layer_thickness_l4_p4 = ( ( true_conc(0,idx_solute_l4_p4) +  &
-                   true_conc(0,idx_H2O_l4_p4) ) &
-                   * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
-      print *, "Calculated layer thickness for layer 4 (m): ", layer_thickness_l4_p1, &
-               layer_thickness_l4_p2, layer_thickness_l4_p3, layer_thickness_l4_p4
+      print *, "Calculated surface area (m2): ", surface_area_l2
+      print *, "Calculated surface area (m2): ", surface_area_l3
+      print *, "Calculated surface area (m2): ", surface_area_l4
 
       ! Update the aerosol representation (single particle only)
       call number_update%set_number__n_m3(1, number_conc)
@@ -568,6 +579,11 @@ contains
                                 trim(to_string(diff_coeff_second(i)))//" expected "// &
                                 trim(to_string(expected_diff_coeff)))
               end do
+              rate_first = -((surface_area_l2 * diff_coeff_first(1)) / (layer_thickness_l1_p1 * (true_conc(0,idx_solute_l1_p1) + true_conc(0,idx_H2O_l1_p1)))) * &
+                            true_conc(0,idx_solute_l1_p1) + &
+                            ((surface_area_l2 * diff_coeff_second(1)) / (layer_thickness_l2_p1 * (true_conc(0,idx_solute_l2_p1) + true_conc(0,idx_H2O_l2_p1)))) * &
+                            true_conc(0,idx_solute_l2_p1)
+              print *, "Calculated rate first layer: ", rate_first
           end select
         end do
       end if
