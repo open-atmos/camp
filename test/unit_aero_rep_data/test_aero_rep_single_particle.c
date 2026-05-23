@@ -391,6 +391,7 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
   double eff_sa_2 = -999.9;
 
   for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv[i] = 999.9;
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_2[i] = 999.9;
 
   aero_rep_get_interface_surface_area__m2(model_data, AERO_REP_IDX,
                                 AERO_PHASE_IDX_1, 
@@ -534,7 +535,7 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
   ret_val += ASSERT_MSG(fabs(partial_deriv[19] - d_eff_sa_top_bread_bread_dx / DENSITY_salt) <
                         1.0e-10 * partial_deriv[19], "Bad Jacobian element");
 
-  for( int i = 15; i < 19; ++i )
+  for( int i = 15; i < 20; ++i )
     ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
                           "Bad Jacobian element");
   
