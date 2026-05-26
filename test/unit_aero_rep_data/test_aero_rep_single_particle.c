@@ -141,6 +141,8 @@ int test_effective_layer_radius(ModelData * model_data, N_Vector state) {
                         "Bad effective layer radius");
   ret_val += ASSERT_MSG(fabs(eff_layer_rad_2-eff_layer_rad_expected_top_bread) < 1.0e-6*eff_layer_rad_expected_top_bread,
                         "Bad effective layer radius");
+  ret_val += ASSERT_MSG(fabs(eff_layer_rad_3-eff_layer_rad_expected_bottom_bread) < 1.0e-6*eff_layer_rad_expected_bottom_bread,
+                        "Bad effective layer radius");
   ret_val += ASSERT_MSG(partial_deriv_2[0] == 999.9,
                         "Bad Jacobian (-1)");
   double d_eff_layer_rad_dx = 1.0 / 4.0 / 3.14159265359 *
