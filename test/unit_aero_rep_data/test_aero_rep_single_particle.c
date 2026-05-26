@@ -85,6 +85,7 @@ int test_effective_layer_radius(ModelData * model_data, N_Vector state) {
   double eff_layer_rad_3 = -999.9;
 
   for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_1[i] = 999.9;
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_2[i] = 999.9;
 
   aero_rep_get_effective_layer_radius__m(model_data, AERO_REP_IDX,
                                 AERO_PHASE_IDX_1, &eff_layer_rad_1, &(partial_deriv_1[1]));
@@ -140,9 +141,7 @@ int test_effective_layer_radius(ModelData * model_data, N_Vector state) {
                         "Bad effective layer radius");
   ret_val += ASSERT_MSG(fabs(eff_layer_rad_2-eff_layer_rad_expected_top_bread) < 1.0e-6*eff_layer_rad_expected_top_bread,
                         "Bad effective layer radius");
-  ret_val += ASSERT_MSG(fabs(eff_layer_rad_3-eff_layer_rad_expected_bottom_bread) < 1.0e-6*eff_layer_rad_expected_bottom_bread,
-                        "Bad effective layer radius");
-  ret_val += ASSERT_MSG(partial_deriv_2[0] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_2[0] == 999.9,
                         "Bad Jacobian (-1)");
   double d_eff_layer_rad_dx = 1.0 / 4.0 / 3.14159265359 *
                         pow( 3.0 / 4.0 / 3.14159265359 * volume_density_top_bread, -2.0/3.0 );
@@ -208,6 +207,7 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
   double eff_rad_2 = -999.9;
 
   for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_1[i] = 999.9;
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_2[i] = 999.9;
 
   aero_rep_get_effective_radius__m(model_data, AERO_REP_IDX,
                                 AERO_PHASE_IDX_1, &eff_rad_1, &(partial_deriv_1[1]));
@@ -261,7 +261,7 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
   ret_val += ASSERT_MSG(fabs(eff_rad_2-eff_rad_expected_top_bread) < 1.0e-6*eff_rad_expected_top_bread,
                         "Bad effective radius");
 
-  ret_val += ASSERT_MSG(partial_deriv_2[0] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_2[0] == 999.9,
                         "Bad Jacobian (-1)");
   double d_eff_rad_dx = 1.0 / 4.0 / 3.14159265359 *
                         pow( 3.0 / 4.0 / 3.14159265359 * volume_density_top_bread, -2.0/3.0 );
@@ -353,11 +353,11 @@ int test_effective_radius(ModelData * model_data, N_Vector state) {
   ret_val += ASSERT_MSG(fabs(phase_volume_3-volume_density_top_bread) < 1.0e-6*volume_density_top_bread,
                         "Bad phase volume");
 
-  ret_val += ASSERT_MSG(partial_deriv_1[0] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_1[0] == 999.9,
                         "Bad Jacobian (-1)");
-  ret_val += ASSERT_MSG(partial_deriv_2[0] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_2[0] == 999.9,
                         "Bad Jacobian (-1)");
-  ret_val += ASSERT_MSG(partial_deriv_3[0] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_3[0] == 999.9,
                         "Bad Jacobian (-1)");
   ret_val += ASSERT_MSG(fabs(partial_deriv_1[1] - 1.0 / DENSITY_rasberry) <
                         1.0e-10 * partial_deriv_1[1], "Bad Jacobian element");
@@ -398,14 +398,21 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
 
   int ret_val = 0;
   double partial_deriv[N_JAC_ELEM+2];
+  double partial_deriv_2[N_JAC_ELEM+2];
   double eff_sa = -999.9;
+  double eff_sa_2 = -999.9;
 
   for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv[i] = 999.9;
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_2[i] = 999.9;
 
   aero_rep_get_interface_surface_area__m2(model_data, AERO_REP_IDX,
                                 AERO_PHASE_IDX_1, 
                                 AERO_PHASE_IDX_2, 
                                 &eff_sa, &(partial_deriv[1]));
+  aero_rep_get_interface_surface_area__m2(model_data, AERO_REP_IDX,
+                                AERO_PHASE_IDX_3, 
+                                AERO_PHASE_IDX_1, 
+                                &eff_sa_2, &(partial_deriv_2[1]));
 
   // calculate the volume density of the layer interface
   double volume_density = ( CONC_wheat / DENSITY_wheat +
@@ -421,6 +428,13 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
                             CONC_wheat / DENSITY_wheat +
                             CONC_water / DENSITY_water +
                             CONC_salt / DENSITY_salt +
+                            CONC_sugar / DENSITY_sugar ); // volume density (m3/m3)
+
+    // calculate the volume density of the layer interface
+  double volume_density_2 = ( CONC_wheat / DENSITY_wheat +
+                            CONC_water / DENSITY_water +
+                            CONC_salt / DENSITY_salt +
+                            CONC_almonds / DENSITY_almonds +
                             CONC_sugar / DENSITY_sugar ); // volume density (m3/m3)
 
   // calcualte the volume density of the first phase and associated layer
@@ -458,12 +472,18 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
   double eff_rad_expected = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density ), 1.0/3.0 );
   double f_jam = volume_density_jam / volume_density_layer_2;
   double f_bread = volume_density_bread / volume_density_layer_3;
-
   double eff_sa_expected = f_jam * f_bread * 4.0 * 3.14159265359 * pow( eff_rad_expected, 2.0 );
   ret_val += ASSERT_MSG(fabs(eff_sa-eff_sa_expected) < 1.0e-4*eff_sa_expected,
                         "Bad surface area layer");
 
-  // calculate the partial derivatives for first and second phase
+  // calculate the expeted interface surface area and phase fractional volume
+  double eff_rad_expected_2 = pow( ( 3.0 / 4.0 / 3.14159265359 * volume_density_2 ), 1.0/3.0 );
+  double eff_sa_expected_2 = f_jam * f_bread * 4.0 * 3.14159265359 * pow( eff_rad_expected_2, 2.0 );
+  ret_val += ASSERT_MSG(fabs(eff_sa_2-eff_sa_expected_2) < 1.0e-4*eff_sa_expected_2,
+                        "Bad surface area layer");
+
+  // calculate the partial derivatives
+  double d_eff_sa_below_dx = (2.0 * f_jam * f_bread * pow(volume_density * 3.0 / 4.0 / 3.14159265359, -1.0 / 3.0));
   double d_eff_sa_filling_jam_dx = ((volume_density_layer_2 - volume_density_jam) *
               pow(volume_density_layer_2, -2.0) * f_bread * eff_sa_expected) +
               (2.0 * f_jam * f_bread * pow(volume_density * 3.0 / 4.0 / 3.14159265359, -1.0 / 3.0)) ;
@@ -482,12 +502,21 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
               (2.0 * f_jam * f_bread * pow(volume_density * 3.0 / 4.0 / 3.14159265359, -1.0 / 3.0)) ;
 
   // test the partial derivatives 
-  ret_val += ASSERT_MSG(partial_deriv[0] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv[0] == 999.9,
+                        "Bad Jacobian (-1)");
+  ret_val += ASSERT_MSG(partial_deriv_2[0] == 999.9,
                         "Bad Jacobian (-1)");
 
-  for( int i = 1; i < 6; ++i )
-    ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
-                          "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[1] - d_eff_sa_below_dx / DENSITY_wheat) <
+                        1.0e-10 * partial_deriv[1], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[2] - d_eff_sa_below_dx / DENSITY_water) <
+                        1.0e-10 * partial_deriv[2], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[3] - d_eff_sa_below_dx / DENSITY_salt) <
+                        1.0e-10 * partial_deriv[3], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[4] - d_eff_sa_below_dx / DENSITY_almonds) <
+                        1.0e-10 * partial_deriv[4], "Bad Jacobian element");
+  ret_val += ASSERT_MSG(fabs(partial_deriv[5] - d_eff_sa_below_dx / DENSITY_sugar) <
+                        1.0e-10 * partial_deriv[5], "Bad Jacobian element");
   ret_val += ASSERT_MSG(fabs(partial_deriv[6] - d_eff_sa_filling_jam_dx / DENSITY_rasberry) <
                         1.0e-10 * partial_deriv[6], "Bad Jacobian element");
   ret_val += ASSERT_MSG(fabs(partial_deriv[7] - d_eff_sa_filling_jam_dx / DENSITY_honey) <
@@ -517,6 +546,11 @@ int test_surface_area_layer(ModelData * model_data, N_Vector state) {
                         1.0e-10 * partial_deriv[18], "Bad Jacobian element");
   ret_val += ASSERT_MSG(fabs(partial_deriv[19] - d_eff_sa_top_bread_bread_dx / DENSITY_salt) <
                         1.0e-10 * partial_deriv[19], "Bad Jacobian element");
+
+  for( int i = 15; i < 20; ++i )
+    ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
+                          "Bad Jacobian element");
+  
   return ret_val;
 }
 
@@ -537,6 +571,8 @@ int test_layer_thickness(ModelData * model_data, N_Vector state) {
   double layer_thickness_3 = -999.9;
 
   for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_1[i] = 999.9;
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_2[i] = 999.9;
+  for( int i = 0; i < N_JAC_ELEM+2; ++i ) partial_deriv_3[i] = 999.9;
 
   aero_rep_get_layer_thickness__m(model_data, AERO_REP_IDX,
                                 AERO_PHASE_IDX_1, &layer_thickness_1, &(partial_deriv_1[1]));
@@ -610,7 +646,7 @@ int test_layer_thickness(ModelData * model_data, N_Vector state) {
                         pow(volume_density_inner_1, -2.0/3.0 );
 
   // test the partial derivatives
-  ret_val += ASSERT_MSG(partial_deriv_1[0] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_1[0] == 999.9,
                         "Bad Jacobian (-1)");
   ret_val += ASSERT_MSG(fabs(partial_deriv_1[1] - (d_layer_thickness_outer_jam_dx -  d_layer_thickness_inner_jam_dx) / DENSITY_wheat) <
                         1.0e-10 * fabs(partial_deriv_1[1]), "Bad Jacobian element");
@@ -643,15 +679,15 @@ int test_layer_thickness(ModelData * model_data, N_Vector state) {
   for( int i = 15; i <= 19; ++i )
     ret_val += ASSERT_MSG(partial_deriv_1[i] == ZERO,
                           "Bad Jacobian element");
-  ret_val += ASSERT_MSG(partial_deriv_1[N_JAC_ELEM+1] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_1[N_JAC_ELEM+1] == 999.9,
                         "Bad Jacobian (end+1)");
 
-  ret_val += ASSERT_MSG(partial_deriv_3[0] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_3[0] == 999.9,
                         "Bad Jacobian (-1)");
   for( int i = 1; i <= 19; ++i )
     ret_val += ASSERT_MSG(partial_deriv_3[i] == ZERO,
                           "Bad Jacobian element");
-  ret_val += ASSERT_MSG(partial_deriv_3[N_JAC_ELEM+1] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_3[N_JAC_ELEM+1] == 999.9,
                         "Bad Jacobian (end+1)");
 
   return ret_val;
@@ -681,7 +717,7 @@ int test_number_concentration(ModelData * model_data, N_Vector state) {
   for( int i = 6; i < N_JAC_ELEM+1; ++i )
     ret_val += ASSERT_MSG(partial_deriv[i] == ZERO,
                           "Bad Jacobian element");
-  ret_val += ASSERT_MSG(partial_deriv[N_JAC_ELEM+1] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv[N_JAC_ELEM+1] == 999.9,
                         "Bad Jacobian (end+1)");
 
   return ret_val;
@@ -717,7 +753,7 @@ int test_aero_phase_mass(ModelData * model_data, N_Vector state) {
   ret_val += ASSERT_MSG(fabs(phase_mass_1-mass_1) < 1.0e-10*mass_1,
                         "Bad aerosol phase mass");
 
-  ret_val += ASSERT_MSG(partial_deriv_1[0] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_1[0] == 999.9,
                         "Bad Jacobian (-1)");
   for( int i = 1; i < 6; ++i )
     ret_val += ASSERT_MSG(partial_deriv_1[i] == ZERO,
@@ -796,7 +832,7 @@ int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
   ret_val += ASSERT_MSG(fabs(avg_mw_1-avg_mw_real_1) < 1.0e-10*avg_mw_real_1,
                         "Bad average MW");
 
-  ret_val += ASSERT_MSG(partial_deriv_1[0] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_1[0] == 999.9,
                         "Bad Jacobian (-1)");
   for( int i = 1; i < 6; ++i )
     ret_val += ASSERT_MSG(partial_deriv_1[i] == ZERO,
@@ -812,14 +848,14 @@ int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
   for( int i = 10; i < N_JAC_ELEM+1; ++i )
     ret_val += ASSERT_MSG(partial_deriv_1[i] == ZERO,
                           "Bad Jacobian element");
-  ret_val += ASSERT_MSG(partial_deriv_1[N_JAC_ELEM+1] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_1[N_JAC_ELEM+1] == 999.9,
                         "Bad Jacobian (end+1)");
 
 
   ret_val += ASSERT_MSG(fabs(avg_mw_2-avg_mw_real_2) < 1.0e-10*avg_mw_real_2,
                         "Bad average MW");
 
-  ret_val += ASSERT_MSG(partial_deriv_2[0] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_2[0] == 999.9,
                         "Bad Jacobian (-1)");
   for( int i = 1; i < 16; ++i )
     ret_val += ASSERT_MSG(partial_deriv_2[i] == ZERO,
@@ -830,7 +866,7 @@ int test_aero_phase_avg_MW(ModelData * model_data, N_Vector state) {
                         "Bad Jacobian (-1)");
   ret_val += ASSERT_MSG(fabs(partial_deriv_2[19]-dMW_dsalt) < 1.0e-10*fabs(dMW_dsalt),
                         "Bad Jacobian (-1)");
-  ret_val += ASSERT_MSG(partial_deriv_2[N_JAC_ELEM+1] = 999.9,
+  ret_val += ASSERT_MSG(partial_deriv_2[N_JAC_ELEM+1] == 999.9,
                         "Bad Jacobian (end+1)");
   return ret_val;
 }
