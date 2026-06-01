@@ -64,17 +64,17 @@
                     "phases": [
                                "aqueous aerosol"
                     ],
-                    "covers": "two layer"
+                    "covers": "zero layer"
             },
             {
                     "name": "two layer",
                     "phases": [
                                "aqueous aerosol"
                     ],
-                    "covers": "three layer"
+                    "covers": "one layer"
             },
             {
-                    "name": "four layer",
+                    "name": "zero layer",
                     "phases": [
                                "aqueous aerosol"
                     ],
@@ -85,7 +85,7 @@
                     "phases": [
                                "aqueous aerosol"
                     ],
-                    "covers": "four layer"
+                    "covers": "two layer"
             }
        ]
     },
