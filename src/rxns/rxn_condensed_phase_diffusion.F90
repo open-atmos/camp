@@ -71,8 +71,9 @@ module camp_rxn_condensed_phase_diffusion
 #define PHASE_ID_FIRST_(x) this%condensed_data_int(NUM_INT_PROP_ + (x))
 #define PHASE_ID_SECOND_(x) this%condensed_data_int(NUM_INT_PROP_ + NUM_ADJACENT_PAIRS_ + (x))
 #define AERO_REP_ID_(x) this%condensed_data_int(NUM_INT_PROP_ + 2*NUM_ADJACENT_PAIRS_ + (x))
-
-#define DERIV_ID_(x) this%condensed_data_int(NUM_INT_PROP_ + 3*NUM_ADJACENT_PAIRS_ + (x))
+#define AERO_SPEC_FIRST_(x) this%condensed_data_int(NUM_INT_PROP_ + 3*NUM_ADJACENT_PAIRS_ + (x))
+#define AERO_SPEC_SECOND_(x) this%condensed_data_int(NUM_INT_PROP_ + 4*NUM_ADJACENT_PAIRS_ + (x))
+#define DERIV_ID_(x) this%condensed_data_int(NUM_INT_PROP_ + 5*NUM_ADJACENT_PAIRS_ + (x))
 !#define JAC_ID_(x) this%condensed_data_int(4*BLOCK_SIZE_ + x)
 !#define PHASE_INT_LOC_(x) this%condensed_data_int(5*BLOCK_SIZE_ + x) 
 !#define PHASE_REAL_LOC_(x) this%condensed_data_int(6*BLOCK_SIZE_ + x)
@@ -150,6 +151,7 @@ contains
     type(string_t), allocatable :: unique_spec_names(:)
     integer(kind=i_kind), allocatable :: adj_phase_size(:)
     type(index_pair_t), allocatable :: adjacent_phases(:)
+    integer(kind=i_kind), allocatable :: phase_ids(:)
     real(kind=dp) :: temp_real
 
     ! Get the property set
@@ -305,6 +307,30 @@ contains
             "Missing aerosol representation"//error_msg)
     call assert_msg(411220610, size(aero_rep).gt.0, &
             "Missing aerosol representation"//error_msg)
+
+    ! Set aerosol species indices for each adjacent phase pair
+    do i_aero_rep = 1, size(aero_rep)
+      unique_spec_names = aero_rep(i_aero_rep)%val%unique_names( &
+        phase_name = phase_name, spec_name = species_name, &
+        phase_is_at_surface = .false.)
+      ! Get the phase ids for this aerosol phase
+      phase_ids = aero_rep(i_aero_rep)%val%phase_ids(phase_name, is_at_surface=.false.)
+      do i_adj_pairs = 1, NUM_ADJACENT_PAIRS_`
+        do i_phase = 1, size(phase_ids)
+            if (phase_ids(i_phase) == PHASE_ID_FIRST_(i_adj_pairs)) then
+              AERO_SPEC_FIRST_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id( &
+              unique_spec_names(i_spec)%string)
+            else if (phase_ids(i_phase) == PHASE_ID_SECOND_(i_adj_pairs)) then
+              AERO_SPEC_SECOND_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id( &
+              unique_spec_names(i_spec)%string)
+            end if
+        end do
+        print *, "unique_spec_names(", i_spec, ") = ", unique_spec_names(i_spec)%string
+        print *, "i_spec = ", i_spec
+        print *, "AERO_SPEC_FIRST_(", i_adj_pairs, ") = ", AERO_SPEC_FIRST_(i_adj_pairs)
+        print *, "AERO_SPEC_SECOND_(", i_adj_pairs, ") = ", AERO_SPEC_SECOND_(i_adj_pairs)
+      end do
+    end do
 
     ! Save space for the environment-dependent parameters
     this%num_env_params = NUM_ENV_PARAM_

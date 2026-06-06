@@ -315,6 +315,9 @@ void rxn_condensed_phase_diffusion_calc_deriv_contrib(
     printf("DERIV_IDs: %d %d\n",
        DERIV_ID_(i_adj_pairs),
        DERIV_ID_(i_adj_pairs + NUM_ADJACENT_PAIRS_));
+    printf("state[0]: %g\n", state[0]);
+    printf("state[1]: %g\n", state[1]);
+    printf("state[2]: %g\n", state[2]);
     
     // Add to time derivative
     //if (DERIV_ID_(i_adj_pairs) >= 0) {
