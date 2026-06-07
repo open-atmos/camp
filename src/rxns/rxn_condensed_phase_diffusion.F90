@@ -308,30 +308,6 @@ contains
     call assert_msg(411220610, size(aero_rep).gt.0, &
             "Missing aerosol representation"//error_msg)
 
-    ! Set aerosol species indices for each adjacent phase pair
-    do i_aero_rep = 1, size(aero_rep)
-      unique_spec_names = aero_rep(i_aero_rep)%val%unique_names( &
-        phase_name = phase_name, spec_name = species_name, &
-        phase_is_at_surface = .false.)
-      ! Get the phase ids for this aerosol phase
-      phase_ids = aero_rep(i_aero_rep)%val%phase_ids(phase_name, is_at_surface=.false.)
-      do i_adj_pairs = 1, NUM_ADJACENT_PAIRS_`
-        do i_phase = 1, size(phase_ids)
-            if (phase_ids(i_phase) == PHASE_ID_FIRST_(i_adj_pairs)) then
-              AERO_SPEC_FIRST_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id( &
-              unique_spec_names(i_spec)%string)
-            else if (phase_ids(i_phase) == PHASE_ID_SECOND_(i_adj_pairs)) then
-              AERO_SPEC_SECOND_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id( &
-              unique_spec_names(i_spec)%string)
-            end if
-        end do
-        print *, "unique_spec_names(", i_spec, ") = ", unique_spec_names(i_spec)%string
-        print *, "i_spec = ", i_spec
-        print *, "AERO_SPEC_FIRST_(", i_adj_pairs, ") = ", AERO_SPEC_FIRST_(i_adj_pairs)
-        print *, "AERO_SPEC_SECOND_(", i_adj_pairs, ") = ", AERO_SPEC_SECOND_(i_adj_pairs)
-      end do
-    end do
-
     ! Save space for the environment-dependent parameters
     this%num_env_params = NUM_ENV_PARAM_
 
