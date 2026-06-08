@@ -160,6 +160,7 @@ contains
     integer :: i_name, num_bread, max_part, bread_phase_instance
     integer :: num_jam, jam_phase_instance
     type(index_pair_t), allocatable :: adjacent_phases(:)
+    integer :: spec_id
     character(len=:), allocatable :: phase_name_first, phase_name_second
     integer, dimension(3) :: bread_phase_id, jam_phase_id
     integer, allocatable :: jam_phase_id_correct(:), bread_phase_id_correct(:)
@@ -283,6 +284,10 @@ contains
         call assert(987654321, adjacent_phases(12)%second_ .eq. 20)
         call assert(123456789, 12 .eq. size(adjacent_phases))
         deallocate(adjacent_phases)
+
+        ! test the corresponding spec_id function for a phase and species name
+        spec_id = aero_rep%spec_state_id_by_phase(1, "wheat")
+        call assert(224332386, spec_id .eq. 1)
         
         phase_name_first = "jam"
         phase_name_second = "almond butter"
