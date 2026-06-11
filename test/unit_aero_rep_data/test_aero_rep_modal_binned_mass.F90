@@ -120,7 +120,7 @@ contains
     type(aero_rep_factory_t) :: aero_rep_factory
     type(aero_rep_data_ptr), allocatable :: aero_rep_passed_data_set(:)
     character, allocatable :: buffer(:)
-    integer(kind=i_kind) :: pos, pack_size, i_prop, i_rep
+    integer(kind=i_kind) :: pos, pack_size, i_prop, i_rep, spec_id
 #endif
 
     build_aero_rep_data_set_test = .true.
@@ -145,6 +145,11 @@ contains
         phase_name_second = "my test phase two"
         adjacent_phases = aero_rep%adjacent_phases(phase_name_first,phase_name_second)
         call assert(919038338, size(adjacent_phases) .eq. 0)
+
+        ! Check the spec_state_id_by_phase function
+        spec_name = "species a"
+        spec_id = aero_rep%spec_state_id_by_phase(1, spec_name)
+        call assert(237861905, spec_id .gt. 0)
 
       class default
         call die_msg(570113680, rep_name)

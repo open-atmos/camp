@@ -286,8 +286,9 @@ contains
         deallocate(adjacent_phases)
 
         ! test the corresponding spec_id function for a phase and species name
-        spec_id = aero_rep%spec_state_id_by_phase(1, "wheat")
-        call assert(224332386, spec_id .eq. 1)
+        spec_id = aero_rep%spec_state_id_by_phase(13, "sugar")
+        print *, "spec_id for phase 13 is ", spec_id
+        call assert(224332386, spec_id .eq. 35)
         
         phase_name_first = "jam"
         phase_name_second = "almond butter"
