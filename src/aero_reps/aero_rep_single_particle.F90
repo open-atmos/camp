@@ -934,7 +934,7 @@ contains
           phase_name = this%aero_phase(phase_in_particle)%val%name()
           unique_name = 'P' // trim(integer_to_string(particle_number)) // '.' // &
                         this%layer_names_(i_layer)%string // '.' // &
-                        phase_name // '.' // spec_name
+                        phase_name // '.' // trim(spec_name)
           spec_id = this%spec_state_id(unique_name)
           return
         end if
