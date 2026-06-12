@@ -920,10 +920,7 @@ contains
 
       ! Determine particle number and phase index within particle
       particle_number = (phase_id - 1) / TOTAL_NUM_PHASES_ + 1
-      print *, "particle number is ", particle_number
       phase_in_particle = mod(phase_id - 1, TOTAL_NUM_PHASES_) + 1
-      print *, "phase in particle is ", phase_in_particle
-
       ! Validate particle number
       call assert_msg(918734061, particle_number .ge. 1 .and. &
                             particle_number .le. MAX_PARTICLES_, &
