@@ -120,7 +120,7 @@ contains
     type(aero_rep_factory_t) :: aero_rep_factory
     type(aero_rep_data_ptr), allocatable :: aero_rep_passed_data_set(:)
     character, allocatable :: buffer(:)
-    integer(kind=i_kind) :: pos, pack_size, i_prop, i_rep, spec_id
+    integer(kind=i_kind) :: pos, pack_size, i_prop, i_rep
 #endif
 
     build_aero_rep_data_set_test = .true.
