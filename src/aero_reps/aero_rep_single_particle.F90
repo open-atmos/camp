@@ -902,6 +902,9 @@ contains
 
     !> Get the species id on the state array by phase_id and species name
     function spec_state_id_by_phase(this, phase_id, spec_name) result(spec_id)
+
+      use camp_util, only : integer_to_string
+      
       !> Species state id
       integer(kind=i_kind) :: spec_id
       !> Aerosol representation data
