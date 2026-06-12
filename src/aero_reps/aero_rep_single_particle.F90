@@ -932,12 +932,10 @@ contains
            phase_in_particle .le. LAYER_PHASE_END_(i_layer)) then
           ! Found the layer
           phase_name = this%aero_phase(phase_in_particle)%val%name()
-          print *, "phase name is ", phase_name
           unique_name = 'P' // trim(integer_to_string(particle_number)) // '.' // &
                         this%layer_names_(i_layer)%string // '.' // &
                         phase_name // '.' // spec_name
           spec_id = this%spec_state_id(unique_name)
-          print *, "spec_id is ", spec_id
           return
         end if
       end do
