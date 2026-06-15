@@ -121,6 +121,10 @@ module camp_aero_rep_data
     !> Get the number of Jacobian elements for calculations of mass, volume,
     !! number, etc for a particular phase
     procedure(num_jac_elem), deferred :: num_jac_elem
+    !> Determine if specified phase(s) exist in adjacent layers.
+    procedure(adjacent_phases), deferred :: adjacent_phases
+    !> Get the species id on the state array by phase_id and species name
+    procedure(spec_state_id_by_phase), deferred :: spec_state_id_by_phase
     !> Load data from an input file
     procedure :: load
     !> Get the name of the aerosol representation
@@ -383,6 +387,46 @@ interface
     integer(kind=i_kind), intent(in) :: phase_id
 
   end function num_jac_elem
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Determine if specified phase(s) exist in adjacent layers. Returns array
+  !! of phase_ids for adjacent phases first and second.
+
+  function adjacent_phases(this, phase_name_first, &
+                           phase_name_second) result (index_pairs)
+    use camp_util,                                       only : i_kind
+    import :: aero_rep_data_t, index_pair_t
+
+    !> Aerosol respresentation data
+    class(aero_rep_data_t), intent(in) :: this
+    !> Function output of phase_ids for first and second phase
+    type(index_pair_t), allocatable :: index_pairs(:)
+    !> Phase names
+    character(len=*), intent(in) :: phase_name_first
+    character(len=*), intent(in) :: phase_name_second
+
+
+    end function adjacent_phases
+  
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    !> Get the species id on the state array by phase_id and species name
+
+    function spec_state_id_by_phase(this, phase_id, spec_name) result(spec_id)
+      use camp_util,                          only : i_kind, integer_to_string
+      import :: aero_rep_data_t
+
+      !> Species state id
+      integer(kind=i_kind) :: spec_id
+      !> Aerosol representation data
+      class(aero_rep_data_t), intent(in) :: this
+      !> Phase id
+      integer(kind=i_kind), intent(in) :: phase_id
+      !> Species name
+      character(len=*), intent(in) :: spec_name
+
+    end function spec_state_id_by_phase
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
