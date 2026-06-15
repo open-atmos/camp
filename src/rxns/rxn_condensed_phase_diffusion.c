@@ -32,9 +32,11 @@
 #define DIFF_COEFF_SECOND_(x) (float_data[(NUM_FLOAT_PROP_) + (NUM_ADJACENT_PAIRS_) + (x)])
 #define PHASE_ID_FIRST_(x) (int_data[(NUM_INT_PROP_) + (x)]-1)
 #define PHASE_ID_SECOND_(x) (int_data[(NUM_INT_PROP_) + (NUM_ADJACENT_PAIRS_) + (x)]-1)
-#define AERO_REP_ID_(x) (int_data[(NUM_INT_PROP_) + (2*NUM_ADJACENT_PAIRS_) + (x)]-1)
+#define AERO_SPEC_FIRST_(x) (int_data[(NUM_INT_PROP_) + (2*NUM_ADJACENT_PAIRS_) + (x)]-1)
+#define AERO_SPEC_SECOND_(x) (int_data[(NUM_INT_PROP_) + (3*NUM_ADJACENT_PAIRS_) + (x)]-1)
+#define AERO_REP_ID_(x) (int_data[(NUM_INT_PROP_) + (4*NUM_ADJACENT_PAIRS_) + (x)]-1)
 
-#define DERIV_ID_(x) (int_data[(NUM_INT_PROP_) + (3*NUM_ADJACENT_PAIRS_) + (x)])
+#define DERIV_ID_(x) (int_data[(NUM_INT_PROP_) + (5*NUM_ADJACENT_PAIRS_) + (x)])
 //#define JAC_ID_(x) (int_data[4*BLOCK_SIZE_ + x]-1)
 //#define PHASE_INT_LOC_(x) (int_data[5*BLOCK_SIZE_ + x]-1)
 //#define PHASE_FLOAT_LOC_(x) (int_data[9*BLOCK_SIZE_ + x]-1)
@@ -146,11 +148,6 @@ void rxn_condensed_phase_diffusion_update_ids(ModelData *model_data, int *deriv_
   for (int i_adj_pair = 0, i_deriv = NUM_ADJACENT_PAIRS_; i_adj_pair < NUM_ADJACENT_PAIRS_; i_adj_pair++) {
       DERIV_ID_(i_deriv++) = deriv_ids[PHASE_ID_SECOND_(i_adj_pair)];
   }
-  printf("Updated derivative ids for condensed phase diffusion reaction: ");
-  for (int i = 0; i < NUM_ADJACENT_PAIRS_ * 2; i++) {
-      printf("deriv id %d ", DERIV_ID_(i));
-  }
-  printf("\n");
 
 /*
   // Update the Jacobian ids
@@ -242,10 +239,6 @@ void rxn_condensed_phase_diffusion_calc_deriv_contrib(
 
   // Calculate derivative contributions for each aerosol phase
   for (int i_adj_pairs = 0, i_deriv = 0; i_adj_pairs < NUM_ADJACENT_PAIRS_; i_adj_pairs++) {
-    printf("Calculating condensed phase diffusion for adjacent pair %d\n", i_adj_pairs);
-    printf("  Phase ids: %d, %d\n", PHASE_ID_FIRST_(i_adj_pairs), PHASE_ID_SECOND_(i_adj_pairs));
-    printf("  Diffusion coefficients: %g, %g\n", DIFF_COEFF_FIRST_(i_adj_pairs), DIFF_COEFF_SECOND_(i_adj_pairs));
-    printf("  Aerosol representation id: %d\n", AERO_REP_ID_(i_adj_pairs));
 
     /* Get the layer thickness for first phase id (m) */
     realtype layer_thickness_first;
@@ -299,26 +292,20 @@ void rxn_condensed_phase_diffusion_calc_deriv_contrib(
     long double rate_second = eff_sa / volume_phase_second;
 
     rate_first *= ((-DIFF_COEFF_FIRST_(i_adj_pairs) / layer_thickness_first) 
-                    * state[PHASE_ID_FIRST_(i_adj_pairs)] +
+                    * state[AERO_SPEC_FIRST_(i_adj_pairs)] +
                     (DIFF_COEFF_SECOND_(i_adj_pairs) / layer_thickness_second) 
-                    * state[PHASE_ID_SECOND_(i_adj_pairs)]); 
+                    * state[AERO_SPEC_SECOND_(i_adj_pairs)]); 
     rate_second *= ((DIFF_COEFF_FIRST_(i_adj_pairs) / layer_thickness_first)
-                    * state[PHASE_ID_FIRST_(i_adj_pairs)] -
+                    * state[AERO_SPEC_FIRST_(i_adj_pairs)] -
                     (DIFF_COEFF_SECOND_(i_adj_pairs) / layer_thickness_second)
-                    * state[PHASE_ID_SECOND_(i_adj_pairs)]);
+                    * state[AERO_SPEC_SECOND_(i_adj_pairs)]);
     printf("  Layer thicknesses: %g, %g\n", layer_thickness_first, layer_thickness_second);
-    printf("  State values: %g, %g\n", state[PHASE_ID_FIRST_(i_adj_pairs)], state[PHASE_ID_SECOND_(i_adj_pairs)]);
+    printf("  State values: %g, %g\n", state[AERO_SPEC_FIRST_(i_adj_pairs)], state[AERO_SPEC_SECOND_(i_adj_pairs)]);
+    printf("  AERO_SPEC values: %d, %d\n", AERO_SPEC_FIRST_(i_adj_pairs), AERO_SPEC_SECOND_(i_adj_pairs));
     printf("  Interface surface area: %g\n", eff_sa);
     printf("  Phase volumes: %g, %g\n", volume_phase_first, volume_phase_second);
     printf("  Rate constants: %g, %g\n", eff_sa / volume_phase_first, eff_sa / volume_phase_second);
     printf("  Calculated rates: %g, %g\n", rate_first, rate_second);
-    printf("DERIV_IDs: %d %d\n",
-       DERIV_ID_(i_adj_pairs),
-       DERIV_ID_(i_adj_pairs + NUM_ADJACENT_PAIRS_));
-    printf("state[0]: %g\n", state[0]);
-    printf("state[1]: %g\n", state[1]);
-    printf("state[2]: %g\n", state[2]);
-    
     // Add to time derivative
     //if (DERIV_ID_(i_adj_pairs) >= 0) {
     //  time_derivative_add_value(time_deriv,
@@ -332,10 +319,6 @@ void rxn_condensed_phase_diffusion_calc_deriv_contrib(
     //                            rate_second);
    // }
 
-  }
-  printf("Updated derivative ids for condensed phase diffusion reaction: ");
-  for (int i = 0; i < NUM_ADJACENT_PAIRS_ * 2; i++) {
-    printf("updated deriv id %d ", DERIV_ID_(i));
   }
   return;
 }

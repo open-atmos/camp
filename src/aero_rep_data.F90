@@ -122,6 +122,7 @@ module camp_aero_rep_data
     !! number, etc for a particular phase
     procedure(num_jac_elem), deferred :: num_jac_elem
     procedure(adjacent_phases), deferred :: adjacent_phases
+    procedure(spec_state_id_by_phase), deferred :: spec_state_id_by_phase
     !> Load data from an input file
     procedure :: load
     !> Get the name of the aerosol representation
@@ -403,6 +404,24 @@ interface
     character(len=*), intent(in) :: phase_name_second
 
   end function adjacent_phases
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Get the state id of a chemical species by its phase
+  !! @return Species state id
+  function spec_state_id_by_phase(this, phase_id, spec_name) result (spec_id)
+    use camp_util,                                     only : i_kind
+    import :: aero_rep_data_t
+
+    integer(kind=i_kind) :: spec_id
+    !> Aerosol representation data
+    class(aero_rep_data_t), intent(in) :: this
+    !> Aerosol phase id
+    integer(kind=i_kind), intent(in) :: phase_id
+    !> Species name
+    character(len=*), intent(in) :: spec_name
+
+  end function spec_state_id_by_phase
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

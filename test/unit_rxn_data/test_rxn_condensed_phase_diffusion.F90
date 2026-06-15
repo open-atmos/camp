@@ -174,38 +174,30 @@ contains
       idx_prefix = "P1.zero layer."
       key = idx_prefix//"aqueous aerosol.solute_aq"
       idx_solute_l0 = aero_rep_ptr%spec_state_id(key);
-      print *, "idx_solute_l0: ", idx_solute_l0
 
       key = idx_prefix//"aqueous aerosol.H2O_aq"
       idx_H2O_l0 = aero_rep_ptr%spec_state_id(key);
-      print *, "idx_H2O_l0: ", idx_H2O_l0
 
       idx_prefix = "P1.one layer."
       key = idx_prefix//"aqueous aerosol.solute_aq"
       idx_solute_l1 = aero_rep_ptr%spec_state_id(key);
-      print *, "idx_solute_l1: ", idx_solute_l1
 
       key = idx_prefix//"aqueous aerosol.H2O_aq"
       idx_H2O_l1 = aero_rep_ptr%spec_state_id(key);
-      print *, "idx_H2O_l1: ", idx_H2O_l1
 
       idx_prefix = "P1.two layer."
       key = idx_prefix//"aqueous aerosol.solute_aq"
       idx_solute_l2 = aero_rep_ptr%spec_state_id(key);
-      print *, "idx_solute_l2: ", idx_solute_l2
 
       key = idx_prefix//"aqueous aerosol.H2O_aq"
       idx_H2O_l2 = aero_rep_ptr%spec_state_id(key);
-      print *, "idx_H2O_l2: ", idx_H2O_l2
 
       idx_prefix = "P1.three layer."
       key = idx_prefix//"aqueous aerosol.solute_aq"
       idx_solute_l3 = aero_rep_ptr%spec_state_id(key);
-      print *, "idx_solute_l3: ", idx_solute_l3
 
       key = idx_prefix//"aqueous aerosol.H2O_aq"
       idx_H2O_l3 = aero_rep_ptr%spec_state_id(key);
-      print *, "idx_H2O_l3: ", idx_H2O_l3
 
       ! Make sure the expected species are in the model
       call assert(050889938, idx_solute_l0.gt.0)
@@ -294,11 +286,6 @@ contains
       number_conc = 1.3e6         ! particle number concentration (#/cc)
       true_conc(0,:) = true_conc(0,:) / (number_conc * 1000.0) ! convert to kg/m3 per particle
       model_conc(0,:) = true_conc(0,:)
-      print *, "Initial concentrations (kg/m3 per particle):"
-      print *, "Layer 1 : ", true_conc(0,idx_solute_l0) + true_conc(0,idx_H2O_l0)
-      print *, "Layer 2 : ", true_conc(0,idx_solute_l1) + true_conc(0,idx_H2O_l1)
-      print *, "Layer 3 : ", true_conc(0,idx_solute_l2) + true_conc(0,idx_H2O_l2)
-      print *, "Layer 4 : ", true_conc(0,idx_solute_l3) + true_conc(0,idx_H2O_l3)
 
       ! single particle aerosol mass concentrations are per particle
       ! radius (m) calculated based on particle mass
@@ -370,15 +357,6 @@ contains
       call assert(384750295, abs(layer_thickness_l1 - 0.0000420152d0) < 1.0d-9)
       call assert(384750296, abs(layer_thickness_l0 - 0.0001616460d0) < 1.0d-9)
 
-      print *, "Calculated particle radius (m): ", radius
-      print *, "Calculated layer thickness 0 (m): ", layer_thickness_l0
-      print *, "Calculated layer thickness 1 (m): ", layer_thickness_l1
-      print *, "Calculated layer thickness 2 (m): ", layer_thickness_l2
-      print *, "Calculated layer thickness 3 (m): ", layer_thickness_l3
-      print *, "Calculated surface area l0 (m2): ", surface_area_l0
-      print *, "Calculated surface area l1 (m2): ", surface_area_l1
-      print *, "Calculated surface area l2 (m2): ", surface_area_l2
- 
 
       ! Update the aerosol representation (single particle only)
       call number_update%set_number__n_m3(1, number_conc)
@@ -386,7 +364,6 @@ contains
 
       ! Set the initial state in the model
       camp_state%state_var(:) = model_conc(0,:)
-      print *, "Initial state_var values (first 10):", camp_state%state_var(13:min(44, size(camp_state%state_var)))
 
 #ifdef CAMP_DEBUG
       ! Evaluate the Jacobian during solving
@@ -400,14 +377,7 @@ contains
         call camp_core%solve(camp_state, time_step, &
                               solver_stats = solver_stats)
         model_conc(i_time,:) = camp_state%state_var(:)
-        !if (i_time <= 3) then
-        !  print *, "state_var after step", i_time, ":", camp_state%state_var(13:min(44, size(camp_state%state_var)))
-        !end if
       end do
-      print *, "model_conc at all time steps for solute in layer 1: ", model_conc(:,idx_solute_l0)
-      print *, "model_conc at all time steps for solute in layer 2: ", model_conc(:,idx_solute_l1)
-      print *, "model_conc at all time steps for solute in layer 3: ", model_conc(:,idx_solute_l2)
-      print *, "model_conc at all time steps for solute in layer 4: ", model_conc(:,idx_solute_l3)
 
 #ifdef CAMP_DEBUG
         ! Check the Jacobian evaluations
@@ -475,9 +445,7 @@ contains
               
               ! Calculate volume (mass) of each phase
               volume_phase_l3 = true_conc(0,idx_solute_l3) + true_conc(0,idx_H2O_l3)
-              print *, "Calculated volume_phase_l3 (kg per particle): ", volume_phase_l3
               volume_phase_l2 = true_conc(0,idx_solute_l2) + true_conc(0,idx_H2O_l2)
-              print *, "Calculated volume_phase_l2 (kg per particle): ", volume_phase_l2
 
               ! Calculate expected rate_first
               ! rate_first = (eff_sa / volume_phase_first) * (

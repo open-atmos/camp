@@ -70,9 +70,9 @@ module camp_rxn_condensed_phase_diffusion
 ! length NUM_ADJACENT_PAIRS_
 #define PHASE_ID_FIRST_(x) this%condensed_data_int(NUM_INT_PROP_ + (x))
 #define PHASE_ID_SECOND_(x) this%condensed_data_int(NUM_INT_PROP_ + NUM_ADJACENT_PAIRS_ + (x))
-#define AERO_REP_ID_(x) this%condensed_data_int(NUM_INT_PROP_ + 2*NUM_ADJACENT_PAIRS_ + (x))
-#define AERO_SPEC_FIRST_(x) this%condensed_data_int(NUM_INT_PROP_ + 3*NUM_ADJACENT_PAIRS_ + (x))
-#define AERO_SPEC_SECOND_(x) this%condensed_data_int(NUM_INT_PROP_ + 4*NUM_ADJACENT_PAIRS_ + (x))
+#define AERO_SPEC_FIRST_(x) this%condensed_data_int(NUM_INT_PROP_ + 2*NUM_ADJACENT_PAIRS_ + (x))
+#define AERO_SPEC_SECOND_(x) this%condensed_data_int(NUM_INT_PROP_ + 3*NUM_ADJACENT_PAIRS_ + (x))
+#define AERO_REP_ID_(x) this%condensed_data_int(NUM_INT_PROP_ + 4*NUM_ADJACENT_PAIRS_ + (x))
 #define DERIV_ID_(x) this%condensed_data_int(NUM_INT_PROP_ + 5*NUM_ADJACENT_PAIRS_ + (x))
 !#define JAC_ID_(x) this%condensed_data_int(4*BLOCK_SIZE_ + x)
 !#define PHASE_INT_LOC_(x) this%condensed_data_int(5*BLOCK_SIZE_ + x) 
@@ -198,9 +198,6 @@ contains
               "Missing species name in condensed phase reaction for species "// &
               species_name)
       diffusion_species_names(i_species)%string = species_name
-      print *, "Condensed phase diffusion reaction species ", i_species, ": '", &
-               diffusion_species_names(i_species)%string, "' in phase '", &
-               diffusion_phase_names(i_species)%string, "'."
 
       call species%iter_next()
     end do
@@ -237,8 +234,6 @@ contains
       adjacent_phases = aero_rep(i_aero_rep)%val%adjacent_phases(diffusion_phase_names(1)%string, &
          diffusion_phase_names(SIZE(diffusion_phase_names))%string)
       adj_phase_size(i_aero_rep) = size(adjacent_phases)
-      !print *, "Aerosol representation ", i_aero_rep, " has ", size(adjacent_phases), " adjacent phase pairs for diffusion between '", &
-      !         diffusion_phase_names(1)%string, "' and '", diffusion_phase_names(SIZE(diffusion_phase_names))%string, "'."
       if (size(adjacent_phases) .gt. 0) then
         do i = 1, size(adjacent_phases)
           num_adjacent_pairs = num_adjacent_pairs + 1
@@ -259,7 +254,22 @@ contains
         end do
       end if
     end do
-    
+
+    i_adj_pairs = 0
+    do i_aero_rep = 1, size(aero_rep)
+      adjacent_phases = aero_rep(i_aero_rep)%val%adjacent_phases(diffusion_phase_names(1)%string, &
+         diffusion_phase_names(SIZE(diffusion_phase_names))%string)
+      if (size(adjacent_phases) .gt. 0) then
+        do i = 1, size(adjacent_phases)
+          i_adj_pairs = i_adj_pairs + 1
+          AERO_SPEC_FIRST_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id_by_phase( &
+               adjacent_phases(i)%first_, diffusion_species_names(1)%string)
+          AERO_SPEC_SECOND_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id_by_phase( &
+               adjacent_phases(i)%second_, diffusion_species_names(SIZE(diffusion_species_names))%string)
+        end do
+      end if
+    end do
+
     call assert_msg(051987857, num_adjacent_pairs .gt. 0, &
        "No adjacent phases found condensed phase diffusion reaction.")
 

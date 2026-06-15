@@ -154,6 +154,7 @@ module camp_aero_rep_single_particle
     procedure :: phase_state_size
     !> Returns index_pair_t type with phase_ids of adjacent phases
     procedure :: adjacent_phases
+    procedure :: spec_state_id_by_phase
     !> Finalize the aerosol representation
     final :: finalize, finalize_array
   end type aero_rep_single_particle_t
@@ -895,6 +896,57 @@ contains
       deallocate(temp_index_pairs)
 
     end function adjacent_phases
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    !> Get the species id on the state array by phase_id and species name
+    function spec_state_id_by_phase(this, phase_id, spec_name) result(spec_id)
+
+      use camp_util, only : integer_to_string
+      
+      !> Species state id
+      integer(kind=i_kind) :: spec_id
+      !> Aerosol representation data
+      class(aero_rep_single_particle_t), intent(in) :: this
+      !> Phase id
+      integer(kind=i_kind), intent(in) :: phase_id
+      !> Species name
+      character(len=*), intent(in) :: spec_name
+      integer(kind=i_kind) :: particle_number, phase_in_particle, i_layer
+      character(len=:), allocatable :: unique_name, phase_name
+
+      ! Validate phase_id
+      call assert_msg(782814629, phase_id .ge. 1 .and. &
+                            phase_id .le. size(this%aero_phase), &
+                            "Phase id out of range")
+
+      ! Determine particle number and phase index within particle
+      particle_number = (phase_id - 1) / TOTAL_NUM_PHASES_ + 1
+      phase_in_particle = mod(phase_id - 1, TOTAL_NUM_PHASES_) + 1
+      ! Validate particle number
+      call assert_msg(918734061, particle_number .ge. 1 .and. &
+                            particle_number .le. MAX_PARTICLES_, &
+                      "Invalid particle number from phase_id")
+
+      ! Find which layer contains this phase
+      do i_layer = 1, NUM_LAYERS_
+        if (phase_in_particle .ge. LAYER_PHASE_START_(i_layer) .and. &
+           phase_in_particle .le. LAYER_PHASE_END_(i_layer)) then
+          ! Found the layer
+          phase_name = this%aero_phase(phase_in_particle)%val%name()
+          unique_name = 'P' // trim(integer_to_string(particle_number)) // '.' // &
+                        this%layer_names_(i_layer)%string // '.' // &
+                        phase_name // '.' // trim(spec_name)
+          spec_id = this%spec_state_id(unique_name)
+          return
+        end if
+      end do
+
+      ! Should not reach here
+      call die_msg(649201846, "Could not find layer for phase id "// &
+                  trim(integer_to_string(phase_id)))
+
+    end function spec_state_id_by_phase
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
