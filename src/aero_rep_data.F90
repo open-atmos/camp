@@ -392,6 +392,8 @@ interface
 
   !> Determine if specified phase(s) exist in adjacent layers. Returns array
   !! of phase_ids for adjacent phases first and second.
+  !! @param phase_name_first First phase name
+  !! @param phase_name_second Second phase name
   !! @return Array of index pairs for adjacent phases
 
   function adjacent_phases(this, phase_name_first, &
@@ -412,6 +414,8 @@ interface
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get the species id on the state array by phase_id and species name
+  !! @param phase_id Aerosol phase id
+  !! @param spec_name Species name
   !! @return Species state id
 
   function spec_state_id_by_phase(this, phase_id, spec_name) result(spec_id)

@@ -913,6 +913,7 @@ contains
       integer(kind=i_kind), intent(in) :: phase_id
       !> Species name
       character(len=*), intent(in) :: spec_name
+      
       integer(kind=i_kind) :: particle_number, phase_in_particle, i_layer
       character(len=:), allocatable :: unique_name, phase_name
 
