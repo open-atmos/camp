@@ -798,7 +798,7 @@ contains
     end function phase_state_size
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
+    
     !> Determine if specified phase(s) exist in adjacent layers. Returns array
     !! of phase_ids for adjacent phases first and second.
 
@@ -912,6 +912,7 @@ contains
       integer(kind=i_kind), intent(in) :: phase_id
       !> Species name
       character(len=*), intent(in) :: spec_name
+      
       integer(kind=i_kind) :: particle_number, phase_in_particle, i_layer
       character(len=:), allocatable :: unique_name, phase_name
 
