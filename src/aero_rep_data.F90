@@ -390,49 +390,49 @@ interface
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Determine if specified phase(s) exist in adjacent layers. Returns array
-  !! of phase_ids for adjacent phases first and second.
-  !! @param phase_name_first First phase name
-  !! @param phase_name_second Second phase name
-  !! @return Array of index pairs for adjacent phases
+   !> Determine if specified phase(s) exist in adjacent layers. Returns array
+   !! of phase_ids for adjacent phases first and second.
+   !! @param phase_name_first First phase name
+   !! @param phase_name_second Second phase name
+   !! @return Array of index pairs for adjacent phases
 
-  function adjacent_phases(this, phase_name_first, &
-                           phase_name_second) result (index_pairs)
-    use camp_util,                                       only : i_kind
-    import :: aero_rep_data_t, index_pair_t
+   function adjacent_phases(this, phase_name_first, &
+                            phase_name_second) result (index_pairs)
+     use camp_util,                                       only : i_kind
+     import :: aero_rep_data_t, index_pair_t
 
-    !> Aerosol respresentation data
-    class(aero_rep_data_t), intent(in) :: this
-    !> Function output of phase_ids for first and second phase
-    type(index_pair_t), allocatable :: index_pairs(:)
-    !> Name of first phase
-    character(len=*), intent(in) :: phase_name_first
-    !> Name of second phase
-    character(len=*), intent(in) :: phase_name_second
+     !> Function output of phase_ids for first and second phase
+     type(index_pair_t), allocatable :: index_pairs(:)
+     !> Aerosol respresentation data
+     class(aero_rep_data_t), intent(in) :: this
+     !> Name of first phase
+     character(len=*), intent(in) :: phase_name_first
+     !> Name of second phase
+     character(len=*), intent(in) :: phase_name_second
 
-    end function adjacent_phases
+   end function adjacent_phases
   
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Get the species id on the state array by phase_id and species name
-  !! @param phase_id Aerosol phase id
-  !! @param spec_name Species name
-  !! @return Species state id
+   !> Get the species id on the state array by phase_id and species name
+   !! @param phase_id Aerosol phase id
+   !! @param spec_name Species name
+   !! @return Species state id
 
-  function spec_state_id_by_phase(this, phase_id, spec_name) result(spec_id)
-      use camp_util,                          only : i_kind, integer_to_string
-      import :: aero_rep_data_t
+   function spec_state_id_by_phase(this, phase_id, spec_name) result(spec_id)
+       use camp_util,                          only : i_kind, integer_to_string
+       import :: aero_rep_data_t
 
-      !> Aerosol representation data
-      class(aero_rep_data_t), intent(in) :: this
-      !> Phase id
-      integer(kind=i_kind), intent(in) :: phase_id
-      !> Species name
-      character(len=*), intent(in) :: spec_name
-      !> Species state id
-      integer(kind=i_kind) :: spec_id
+       !> Species state id
+       integer(kind=i_kind) :: spec_id
+       !> Aerosol representation data
+       class(aero_rep_data_t), intent(in) :: this
+       !> Phase id
+       integer(kind=i_kind), intent(in) :: phase_id
+       !> Species name
+       character(len=*), intent(in) :: spec_name
 
-    end function spec_state_id_by_phase
+   end function spec_state_id_by_phase
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
