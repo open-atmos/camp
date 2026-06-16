@@ -199,7 +199,7 @@ module camp_aero_rep_modal_binned_mass
     !> Get the number of Jacobian elements used in calculations of aerosol mass,
     !! volume, number, etc. for a particular phase
     procedure :: num_jac_elem
-        !> Returns index_pair_t type with phase_ids of adjacent phases
+    !> Returns index_pair_t type with phase_ids of adjacent phases
     !! for modal/binned representation there are no adjacent phases
     procedure :: adjacent_phases
     !> Get the species id for a phase and species name
