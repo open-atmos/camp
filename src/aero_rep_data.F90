@@ -405,8 +405,9 @@ interface
     class(aero_rep_data_t), intent(in) :: this
     !> Function output of phase_ids for first and second phase
     type(index_pair_t), allocatable :: index_pairs(:)
-    !> Phase names
+    !> Name of first phase
     character(len=*), intent(in) :: phase_name_first
+    !> Name of second phase
     character(len=*), intent(in) :: phase_name_second
 
     end function adjacent_phases
@@ -422,14 +423,14 @@ interface
       use camp_util,                          only : i_kind, integer_to_string
       import :: aero_rep_data_t
 
-      !> Species state id
-      integer(kind=i_kind) :: spec_id
       !> Aerosol representation data
       class(aero_rep_data_t), intent(in) :: this
       !> Phase id
       integer(kind=i_kind), intent(in) :: phase_id
       !> Species name
       character(len=*), intent(in) :: spec_name
+      !> Species state id
+      integer(kind=i_kind) :: spec_id
 
     end function spec_state_id_by_phase
 
