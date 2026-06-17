@@ -154,6 +154,7 @@ module camp_aero_rep_single_particle
     procedure :: phase_state_size
     !> Returns index_pair_t type with phase_ids of adjacent phases
     procedure :: adjacent_phases
+    !> Get the spec_state_id for a phase_id and species name
     procedure :: spec_state_id_by_phase
     !> Finalize the aerosol representation
     final :: finalize, finalize_array
