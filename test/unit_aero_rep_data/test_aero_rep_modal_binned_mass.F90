@@ -149,7 +149,7 @@ contains
         ! Check the spec_state_id_by_phase function
         spec_name = "species a"
         spec_id = aero_rep%spec_state_id_by_phase(1, spec_name)
-        call assert(237861905, spec_id .gt. 0)
+        call assert(237861905, spec_id .eq. 1)
 
       class default
         call die_msg(570113680, rep_name)
