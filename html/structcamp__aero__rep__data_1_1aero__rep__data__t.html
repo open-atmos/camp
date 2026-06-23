@@ -96,6 +96,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a55af47cac735c3b4b2d6aad0572fbc6e"><td class="memItemLeft" align="right" valign="top">procedure(<a class="el" href="interfacecamp__aero__rep__data_1_1num__jac__elem.html">num_jac_elem</a>), deferred&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcamp__aero__rep__data_1_1aero__rep__data__t.html#a55af47cac735c3b4b2d6aad0572fbc6e">num_jac_elem</a></td></tr>
 <tr class="memdesc:a55af47cac735c3b4b2d6aad0572fbc6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of Jacobian elements for calculations of mass, volume, number, etc for a particular phase.  <a href="structcamp__aero__rep__data_1_1aero__rep__data__t.html#a55af47cac735c3b4b2d6aad0572fbc6e">More...</a><br /></td></tr>
 <tr class="separator:a55af47cac735c3b4b2d6aad0572fbc6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b2ea15ac1c74b094710f3fc25586397"><td class="memItemLeft" align="right" valign="top">procedure(<a class="el" href="interfacecamp__aero__rep__data_1_1adjacent__phases.html">adjacent_phases</a>), deferred&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcamp__aero__rep__data_1_1aero__rep__data__t.html#a1b2ea15ac1c74b094710f3fc25586397">adjacent_phases</a></td></tr>
+<tr class="memdesc:a1b2ea15ac1c74b094710f3fc25586397"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if specified phase(s) exist in adjacent layers.  <a href="structcamp__aero__rep__data_1_1aero__rep__data__t.html#a1b2ea15ac1c74b094710f3fc25586397">More...</a><br /></td></tr>
+<tr class="separator:a1b2ea15ac1c74b094710f3fc25586397"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4ee621c23d5cf5021e76b5a47801a8d"><td class="memItemLeft" align="right" valign="top">procedure(<a class="el" href="interfacecamp__aero__rep__data_1_1spec__state__id__by__phase.html">spec_state_id_by_phase</a>), deferred&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcamp__aero__rep__data_1_1aero__rep__data__t.html#ab4ee621c23d5cf5021e76b5a47801a8d">spec_state_id_by_phase</a></td></tr>
+<tr class="memdesc:ab4ee621c23d5cf5021e76b5a47801a8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the species id on the state array by phase_id and species name.  <a href="structcamp__aero__rep__data_1_1aero__rep__data__t.html#ab4ee621c23d5cf5021e76b5a47801a8d">More...</a><br /></td></tr>
+<tr class="separator:ab4ee621c23d5cf5021e76b5a47801a8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee9d87eafd6644e1acc08d48aa22c23e"><td class="memItemLeft" align="right" valign="top">procedure&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcamp__aero__rep__data_1_1aero__rep__data__t.html#aee9d87eafd6644e1acc08d48aa22c23e">load</a></td></tr>
 <tr class="memdesc:aee9d87eafd6644e1acc08d48aa22c23e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load data from an input file.  <a href="structcamp__aero__rep__data_1_1aero__rep__data__t.html#aee9d87eafd6644e1acc08d48aa22c23e">More...</a><br /></td></tr>
 <tr class="separator:aee9d87eafd6644e1acc08d48aa22c23e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,6 +155,24 @@ Public Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00055">55</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 </div><h2 class="groupheader">Member Function/Subroutine Documentation</h2>
+<a id="a1b2ea15ac1c74b094710f3fc25586397" name="a1b2ea15ac1c74b094710f3fc25586397"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b2ea15ac1c74b094710f3fc25586397">&#9670;&#160;</a></span>adjacent_phases()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">procedure(<a class="el" href="interfacecamp__aero__rep__data_1_1adjacent__phases.html">adjacent_phases</a>), deferred camp_aero_rep_data::aero_rep_data_t::adjacent_phases</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Determine if specified phase(s) exist in adjacent layers. </p>
+
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00125">125</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+
+</div>
+</div>
 <a id="a3f954ea454a8961bb32f7ce6c6104acc" name="a3f954ea454a8961bb32f7ce6c6104acc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3f954ea454a8961bb32f7ce6c6104acc">&#9670;&#160;</a></span>bin_pack()</h2>
 
@@ -163,7 +187,7 @@ Public Attributes</h2></td></tr>
 
 <p>Packs the given value into the buffer, advancing position. </p>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00134">134</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00138">138</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 
 </div>
 </div>
@@ -181,7 +205,7 @@ Public Attributes</h2></td></tr>
 
 <p>Unpacks the given value from the buffer, advancing position. </p>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00136">136</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00140">140</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 
 </div>
 </div>
@@ -217,7 +241,7 @@ Public Attributes</h2></td></tr>
 
 <p>Load data from an input file. </p>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00125">125</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00129">129</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 
 </div>
 </div>
@@ -235,7 +259,7 @@ Public Attributes</h2></td></tr>
 
 <p>Get the name of the aerosol representation. </p>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00127">127</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00131">131</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 
 </div>
 </div>
@@ -289,7 +313,7 @@ Public Attributes</h2></td></tr>
 
 <p>Determine the number of bytes required to pack the given value. </p>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00132">132</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00136">136</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 
 </div>
 </div>
@@ -307,7 +331,7 @@ Public Attributes</h2></td></tr>
 
 <p>Get ids for all instances of a phase in this aerosol representation for use during solving. </p>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00130">130</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00134">134</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 
 </div>
 </div>
@@ -325,7 +349,7 @@ Public Attributes</h2></td></tr>
 
 <p>Print the aerosol representation data. </p>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00138">138</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00142">142</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 
 </div>
 </div>
@@ -384,6 +408,24 @@ Public Attributes</h2></td></tr>
 <p >where \(x_u\) is the id of the element corresponding to the species with unique name \(u\) on the <code><a class="el" href="structcamp__camp__state_1_1camp__state__t.html#a5405d5023175234c25e2c2371d924c67" title="State variable array. This array includes one entry for each variable whose state will be solved for ...">camp_camp_state::camp_state_t::state_var</a></code> array, \(x_f\) is the index of the first element for this aerosol representation on the state array and \(n\) is the total number of variables on the state array from this aerosol representation. </p>
 
 <p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00116">116</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+
+</div>
+</div>
+<a id="ab4ee621c23d5cf5021e76b5a47801a8d" name="ab4ee621c23d5cf5021e76b5a47801a8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4ee621c23d5cf5021e76b5a47801a8d">&#9670;&#160;</a></span>spec_state_id_by_phase()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">procedure(<a class="el" href="interfacecamp__aero__rep__data_1_1spec__state__id__by__phase.html">spec_state_id_by_phase</a>), deferred camp_aero_rep_data::aero_rep_data_t::spec_state_id_by_phase</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the species id on the state array by phase_id and species name. </p>
+
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00127">127</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 
 </div>
 </div>

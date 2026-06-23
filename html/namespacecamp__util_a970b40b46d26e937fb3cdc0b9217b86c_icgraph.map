@@ -1,5 +1,5 @@
 <map id="camp_util::die_msg" name="camp_util::die_msg">
-<area shape="rect" id="node1" title="Error immediately." alt="" coords="700,1743,839,1768"/>
+<area shape="rect" id="node1" title="Error immediately." alt="" coords="700,1800,839,1825"/>
 <area shape="rect" id="node2" href="$namespacecamp__camp__box__model__data.html#a8af4bb4693b7646b5850d93fe7c638fd" title="Constructor for aero_rep_profile_t." alt="" coords="459,5,627,60"/>
 <area shape="rect" id="node3" href="$namespacecamp__aero__rep__factory.html#ac86219905f216bd3e27e13f9146346a9" title="Pack the given value to the buffer, advancing position." alt="" coords="460,85,627,125"/>
 <area shape="rect" id="node4" href="$namespacecamp__rxn__factory.html#af36f0101aafa792b21df852065e91c78" title="Pack the given value to the buffer, advancing position." alt="" coords="447,149,640,175"/>
@@ -50,12 +50,14 @@
 <area shape="rect" id="node55" href="$namespacecamp__property.html#a92d9df64e91f97e476a79887341a6eee" title="Set the value of a property key&#45;value pair." alt="" coords="472,2993,615,3033"/>
 <area shape="rect" id="node56" href="$namespacecamp__camp__core.html#a2c930e794dab3e8c87b47cbc35ea28a0" title="Integrate the chemical mechanism." alt="" coords="460,3057,627,3083"/>
 <area shape="rect" id="node57" href="$namespacecamp__aero__rep__modal__binned__mass.html#a3dc87e8d9809ffd313963effe9ff6346" title="Get a species id on the camp_camp_state::camp_state_t::state_var array by its unique name...." alt="" coords="444,3107,643,3147"/>
-<area shape="rect" id="node58" href="$namespacecamp__util.html#abc2afd0472a33bd2c397ebc139b0bb61" title="Convert a string to a logical." alt="" coords="472,3195,615,3235"/>
-<area shape="rect" id="node59" href="$namespacecamp__property.html#a606edaac8e2cffaf4bed45a5fdc2d918" title="Get the int value of a property." alt="" coords="454,3260,633,3285"/>
-<area shape="rect" id="node60" href="$namespacecamp__property.html#aea742a930f0a969f663212add29f9f84" title="Get the logical value of a property." alt="" coords="465,3310,622,3350"/>
-<area shape="rect" id="node61" href="$namespacecamp__property.html#a938bf81f9e3809d6d9655e9140a4189b" title="Get the property_t value of a property." alt="" coords="465,3374,622,3414"/>
-<area shape="rect" id="node62" href="$namespacecamp__property.html#a420619bf3ac48faac5fd32fb1ae8577f" title="Get the real value of a property." alt="" coords="450,3439,637,3464"/>
-<area shape="rect" id="node63" href="$namespacecamp__property.html#a37bba149bb92ca864ee33ff129ad0585" title="Get the string value of a property." alt="" coords="465,3489,622,3529"/>
+<area shape="rect" id="node58" href="$namespacecamp__aero__rep__modal__binned__mass.html#ac71631c8a561fd2b6fe37dfb6c60436e" title="Get the species id on the state array by phase_id and species name." alt="" coords="453,3172,634,3227"/>
+<area shape="rect" id="node59" href="$namespacecamp__aero__rep__single__particle.html#a914e9b58dc54cccb6b6c9ff77fc53dd8" title="Get the species id on the state array by phase_id and species name." alt="" coords="464,3251,623,3305"/>
+<area shape="rect" id="node60" href="$namespacecamp__util.html#abc2afd0472a33bd2c397ebc139b0bb61" title="Convert a string to a logical." alt="" coords="472,3354,615,3394"/>
+<area shape="rect" id="node61" href="$namespacecamp__property.html#a606edaac8e2cffaf4bed45a5fdc2d918" title="Get the int value of a property." alt="" coords="454,3419,633,3444"/>
+<area shape="rect" id="node62" href="$namespacecamp__property.html#aea742a930f0a969f663212add29f9f84" title="Get the logical value of a property." alt="" coords="465,3469,622,3509"/>
+<area shape="rect" id="node63" href="$namespacecamp__property.html#a938bf81f9e3809d6d9655e9140a4189b" title="Get the property_t value of a property." alt="" coords="465,3533,622,3573"/>
+<area shape="rect" id="node64" href="$namespacecamp__property.html#a420619bf3ac48faac5fd32fb1ae8577f" title="Get the real value of a property." alt="" coords="450,3597,637,3623"/>
+<area shape="rect" id="node65" href="$namespacecamp__property.html#a37bba149bb92ca864ee33ff129ad0585" title="Get the string value of a property." alt="" coords="465,3647,622,3687"/>
 <area shape="rect" id="node18" href="$namespacecamp__util.html#aa871934a2e528c6b844a9ba1a761a317" title="Open a file for reading with an automatically assigned unit and test that it succeeds...." alt="" coords="208,924,387,949"/>
 <area shape="rect" id="node20" href="$namespacecamp__util.html#a2d260aa74996f977a1b83ad54ceaa763" title="Open a file for writing with an automatically assigned unit and test that it succeeds...." alt="" coords="225,974,370,1014"/>
 <area shape="rect" id="node19" href="$namespacecamp__util.html#a8880473ee9de8b37a6612c3a110661df" title="Load a real array from a text file." alt="" coords="17,924,148,949"/>

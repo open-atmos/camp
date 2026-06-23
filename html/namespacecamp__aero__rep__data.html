@@ -60,6 +60,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Data Types</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">interface &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfacecamp__aero__rep__data_1_1adjacent__phases.html">adjacent_phases</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if specified phase(s) exist in adjacent layers. Returns array of phase_ids for adjacent phases first and second.  <a href="interfacecamp__aero__rep__data_1_1adjacent__phases.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">type &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcamp__aero__rep__data_1_1aero__rep__data__ptr.html">aero_rep_data_ptr</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to <a class="el" href="structcamp__aero__rep__data_1_1aero__rep__data__t.html" title="Abstract aerosol representation data type.">aero_rep_data_t</a> extending types.  <a href="structcamp__aero__rep__data_1_1aero__rep__data__ptr.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -73,7 +76,7 @@ Data Types</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of the section of the <code><a class="el" href="structcamp__camp__state_1_1camp__state__t.html#a5405d5023175234c25e2c2371d924c67" title="State variable array. This array includes one entry for each variable whose state will be solved for ...">camp_camp_state::camp_state_t::state_var</a></code> array required for this aerosol representation.  <a href="interfacecamp__aero__rep__data_1_1get__size.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">type &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcamp__aero__rep__data_1_1index__pair__t.html">index_pair_t</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define index_pair array for adjacent_phases functions.  <a href="structcamp__aero__rep__data_1_1index__pair__t.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define index_pair array for <a class="el" href="interfacecamp__aero__rep__data_1_1adjacent__phases.html" title="Determine if specified phase(s) exist in adjacent layers. Returns array of phase_ids for adjacent pha...">adjacent_phases</a> functions.  <a href="structcamp__aero__rep__data_1_1index__pair__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">interface &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfacecamp__aero__rep__data_1_1initialize.html">initialize</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the aerosol representation data, validating component data and loading any required information from the <code><a class="el" href="structcamp__aero__rep__data_1_1aero__rep__data__t.html#acf1f8af8cd9982684614af214f64759e" title="Aerosol representation parameters. These will be available during initialization, but not during solv...">aero_rep_data_t::property_set</a></code>. This routine should be called once for each aerosol representation at the beginning of a model run after all the input files have been read in. It ensures all data required during the model run are included in the condensed data arrays.  <a href="interfacecamp__aero__rep__data_1_1initialize.html#details">More...</a><br /></td></tr>
@@ -98,6 +101,9 @@ Data Types</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">interface &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfacecamp__aero__rep__data_1_1spec__state__id.html">spec_state_id</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a species id on the <code><a class="el" href="structcamp__camp__state_1_1camp__state__t.html#a5405d5023175234c25e2c2371d924c67" title="State variable array. This array includes one entry for each variable whose state will be solved for ...">camp_camp_state::camp_state_t::state_var</a></code> array by unique name. These are unique ids for each element on the state array for this <a class="el" href="camp_aero_rep.html">aerosol representation</a> and are numbered:  <a href="interfacecamp__aero__rep__data_1_1spec__state__id.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">interface &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfacecamp__aero__rep__data_1_1spec__state__id__by__phase.html">spec_state_id_by_phase</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the species id on the state array by phase_id and species name.  <a href="interfacecamp__aero__rep__data_1_1spec__state__id__by__phase.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">interface &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="interfacecamp__aero__rep__data_1_1unique__names.html">unique_names</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a list of unique names for each element on the <code><a class="el" href="structcamp__camp__state_1_1camp__state__t.html#a5405d5023175234c25e2c2371d924c67" title="State variable array. This array includes one entry for each variable whose state will be solved for ...">camp_camp_state::camp_state_t::state_var</a></code> array for this aerosol representation.  <a href="interfacecamp__aero__rep__data_1_1unique__names.html#details">More...</a><br /></td></tr>
@@ -217,7 +223,7 @@ Functions/Subroutines</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00770">770</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00812">812</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -294,7 +300,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00806">806</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00848">848</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -347,7 +353,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00710">710</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00752">752</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 
 </div>
 </div>
@@ -384,7 +390,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00724">724</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00766">766</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 
 </div>
 </div>
@@ -421,7 +427,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00696">696</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00738">738</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 
 </div>
 </div>
@@ -468,7 +474,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00738">738</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00780">780</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -548,7 +554,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00577">577</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00619">619</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -631,7 +637,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00604">604</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00646">646</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -689,7 +695,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00656">656</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00698">698</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 
 </div>
 </div>
@@ -736,7 +742,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00842">842</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00884">884</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 
 </div>
 </div>
@@ -783,7 +789,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00632">632</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00674">674</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 
 </div>
 </div>
@@ -820,7 +826,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00493">493</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00535">535</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -890,7 +896,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00433">433</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00475">475</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 
 </div>
 </div>
@@ -937,7 +943,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00560">560</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00602">602</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1020,7 +1026,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00508">508</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00550">550</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1072,7 +1078,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00668">668</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00710">710</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1117,7 +1123,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00680">680</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__data_8_f90_source.html#l00722">722</a> of file <a class="el" href="aero__rep__data_8_f90_source.html">aero_rep_data.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">

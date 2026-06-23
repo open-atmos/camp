@@ -118,6 +118,9 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memitem:a3d590e81ce75e181d6747b6210ab4a75"><td class="memItemLeft" align="right" valign="top">type(<a class="el" href="structcamp__aero__rep__data_1_1index__pair__t.html">index_pair_t</a>) function, dimension(:), allocatable&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__aero__rep__modal__binned__mass.html#a3d590e81ce75e181d6747b6210ab4a75">adjacent_phases</a> (this, phase_name_first, phase_name_second)</td></tr>
 <tr class="memdesc:a3d590e81ce75e181d6747b6210ab4a75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine is specified phase(s) exist in adjacent layers. Returns array of phase_ids for adjacent phases first and second.  <a href="namespacecamp__aero__rep__modal__binned__mass.html#a3d590e81ce75e181d6747b6210ab4a75">More...</a><br /></td></tr>
 <tr class="separator:a3d590e81ce75e181d6747b6210ab4a75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac71631c8a561fd2b6fe37dfb6c60436e"><td class="memItemLeft" align="right" valign="top">integer(kind=i_kind) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__aero__rep__modal__binned__mass.html#ac71631c8a561fd2b6fe37dfb6c60436e">spec_state_id_by_phase</a> (this, phase_id, <a class="el" href="interfacecamp__aero__rep__data_1_1spec__name.html">spec_name</a>)</td></tr>
+<tr class="memdesc:ac71631c8a561fd2b6fe37dfb6c60436e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the species id on the state array by phase_id and species name.  <a href="namespacecamp__aero__rep__modal__binned__mass.html#ac71631c8a561fd2b6fe37dfb6c60436e">More...</a><br /></td></tr>
+<tr class="separator:ac71631c8a561fd2b6fe37dfb6c60436e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a2f50822837357ce16a3973ef71525a"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__aero__rep__modal__binned__mass.html#a1a2f50822837357ce16a3973ef71525a">finalize</a> (this)</td></tr>
 <tr class="memdesc:a1a2f50822837357ce16a3973ef71525a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the aerosol representation.  <a href="namespacecamp__aero__rep__modal__binned__mass.html#a1a2f50822837357ce16a3973ef71525a">More...</a><br /></td></tr>
 <tr class="separator:a1a2f50822837357ce16a3973ef71525a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -187,7 +190,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">type(<a class="el" href="structcamp__aero__rep__data_1_1index__pair__t.html">index_pair_t</a>) function, dimension(:), allocatable camp_aero_rep_modal_binned_mass::adjacent_phases </td>
+          <td class="memname">type(<a class="el" href="structcamp__aero__rep__data_1_1index__pair__t.html">index_pair_t</a>) function, dimension(:), allocatable <a class="el" href="interfacecamp__aero__rep__data_1_1adjacent__phases.html">camp_aero_rep_modal_binned_mass::adjacent_phases</a> </td>
           <td>(</td>
           <td class="paramtype">class(<a class="el" href="structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t.html">aero_rep_modal_binned_mass_t</a>), intent(in)&#160;</td>
           <td class="paramname"><em>this</em>, </td>
@@ -227,7 +230,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01052">1052</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01054">1054</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 
 </div>
 </div>
@@ -246,7 +249,7 @@ Variables</h2></td></tr>
 <p>Constructor for <a class="el" href="structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t.html" title="Modal mass aerosol representation.">aero_rep_modal_binned_mass_t</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>New aerosol representation </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00320">320</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00322">322</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 
 </div>
 </div>
@@ -282,7 +285,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01069">1069</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01108">1108</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 
 </div>
 </div>
@@ -318,7 +321,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01092">1092</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01131">1131</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -382,7 +385,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00674">674</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00676">676</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -429,7 +432,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00711">711</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00713">713</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 
 </div>
 </div>
@@ -483,7 +486,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00337">337</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00339">339</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -556,7 +559,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01170">1170</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01209">1209</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -635,7 +638,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01314">1314</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01353">1353</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -714,7 +717,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01196">1196</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01235">1235</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -793,7 +796,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01340">1340</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01379">1379</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -858,7 +861,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01153">1153</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01192">1192</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -924,7 +927,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01297">1297</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01336">1336</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -991,7 +994,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01011">1011</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01013">1013</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 
 </div>
 </div>
@@ -1046,7 +1049,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00965">965</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00967">967</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1105,7 +1108,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00926">926</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00928">928</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 
 </div>
 </div>
@@ -1156,7 +1159,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00899">899</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00901">901</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1166,6 +1169,72 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="252,13,391,38"/>
 <area shape="rect" href="namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="439,13,597,38"/>
 <area shape="rect" href="namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="645,5,780,45"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ac71631c8a561fd2b6fe37dfb6c60436e" name="ac71631c8a561fd2b6fe37dfb6c60436e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac71631c8a561fd2b6fe37dfb6c60436e">&#9670;&#160;</a></span>spec_state_id_by_phase()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">integer(kind=i_kind) function <a class="el" href="interfacecamp__aero__rep__data_1_1spec__state__id__by__phase.html">camp_aero_rep_modal_binned_mass::spec_state_id_by_phase</a> </td>
+          <td>(</td>
+          <td class="paramtype">class(<a class="el" href="structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t.html">aero_rep_modal_binned_mass_t</a>), intent(in)&#160;</td>
+          <td class="paramname"><em>this</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">integer(kind=i_kind), intent(in)&#160;</td>
+          <td class="paramname"><em>phase_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">character(len=*), intent(in)&#160;</td>
+          <td class="paramname"><em>spec_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the species id on the state array by phase_id and species name. </p>
+<dl class="section return"><dt>Returns</dt><dd>Species state id </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">this</td><td>Aerosol representation data </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">phase_id</td><td>Phase id </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">spec_name</td><td>Species name </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01071">1071</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacecamp__aero__rep__modal__binned__mass_ac71631c8a561fd2b6fe37dfb6c60436e_cgraph.png" border="0" usemap="#anamespacecamp__aero__rep__modal__binned__mass_ac71631c8a561fd2b6fe37dfb6c60436e_cgraph" alt=""/></div>
+<map name="anamespacecamp__aero__rep__modal__binned__mass_ac71631c8a561fd2b6fe37dfb6c60436e_cgraph" id="anamespacecamp__aero__rep__modal__binned__mass_ac71631c8a561fd2b6fe37dfb6c60436e_cgraph">
+<area shape="rect" title="Get the species id on the state array by phase_id and species name." alt="" coords="5,5,187,60"/>
+<area shape="rect" href="namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="421,20,580,45"/>
+<area shape="rect" href="namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="235,45,373,71"/>
+<area shape="rect" href="namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="628,13,763,53"/>
 </map>
 </div>
 
@@ -1242,7 +1311,7 @@ Here is the call graph for this function:</div>
 </li>
 </ul>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00740">740</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l00742">742</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 
 </div>
 </div>
@@ -1278,7 +1347,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01223">1223</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01262">1262</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1324,7 +1393,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01235">1235</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01274">1274</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1378,7 +1447,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01367">1367</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01406">1406</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1424,7 +1493,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01379">1379</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01418">1418</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1496,7 +1565,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01108">1108</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01147">1147</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1566,7 +1635,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01252">1252</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01291">1291</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1628,7 +1697,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01135">1135</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01174">1174</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 
 </div>
 </div>
@@ -1674,7 +1743,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01279">1279</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html#l01318">1318</a> of file <a class="el" href="aero__rep__modal__binned__mass_8_f90_source.html">aero_rep_modal_binned_mass.F90</a>.</p>
 
 </div>
 </div>

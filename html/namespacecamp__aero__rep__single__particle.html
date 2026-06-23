@@ -120,8 +120,11 @@ Functions/Subroutines</h2></td></tr>
 <tr class="memdesc:ad9d74330579c43a815e0cb46d546dc53"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of state variables for a layer and phase.  <a href="namespacecamp__aero__rep__single__particle.html#ad9d74330579c43a815e0cb46d546dc53">More...</a><br /></td></tr>
 <tr class="separator:ad9d74330579c43a815e0cb46d546dc53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6712abcf1445609b4ec085bcc84c099e"><td class="memItemLeft" align="right" valign="top">type(<a class="el" href="structcamp__aero__rep__data_1_1index__pair__t.html">index_pair_t</a>) function, dimension(:), allocatable&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__aero__rep__single__particle.html#a6712abcf1445609b4ec085bcc84c099e">adjacent_phases</a> (this, phase_name_first, phase_name_second)</td></tr>
-<tr class="memdesc:a6712abcf1445609b4ec085bcc84c099e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine is specified phase(s) exist in adjacent layers. Returns array of phase_ids for adjacent phases first and second.  <a href="namespacecamp__aero__rep__single__particle.html#a6712abcf1445609b4ec085bcc84c099e">More...</a><br /></td></tr>
+<tr class="memdesc:a6712abcf1445609b4ec085bcc84c099e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if specified phase(s) exist in adjacent layers. Returns array of phase_ids for adjacent phases first and second.  <a href="namespacecamp__aero__rep__single__particle.html#a6712abcf1445609b4ec085bcc84c099e">More...</a><br /></td></tr>
 <tr class="separator:a6712abcf1445609b4ec085bcc84c099e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a914e9b58dc54cccb6b6c9ff77fc53dd8"><td class="memItemLeft" align="right" valign="top">integer(kind=i_kind) function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__aero__rep__single__particle.html#a914e9b58dc54cccb6b6c9ff77fc53dd8">spec_state_id_by_phase</a> (this, phase_id, <a class="el" href="interfacecamp__aero__rep__data_1_1spec__name.html">spec_name</a>)</td></tr>
+<tr class="memdesc:a914e9b58dc54cccb6b6c9ff77fc53dd8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the species id on the state array by phase_id and species name.  <a href="namespacecamp__aero__rep__single__particle.html#a914e9b58dc54cccb6b6c9ff77fc53dd8">More...</a><br /></td></tr>
+<tr class="separator:a914e9b58dc54cccb6b6c9ff77fc53dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa04907b92cfcfefd74758da3ca7607cb"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacecamp__aero__rep__single__particle.html#aa04907b92cfcfefd74758da3ca7607cb">finalize</a> (this)</td></tr>
 <tr class="memdesc:aa04907b92cfcfefd74758da3ca7607cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finalize the aerosol representation.  <a href="namespacecamp__aero__rep__single__particle.html#aa04907b92cfcfefd74758da3ca7607cb">More...</a><br /></td></tr>
 <tr class="separator:aa04907b92cfcfefd74758da3ca7607cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -168,7 +171,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">type(<a class="el" href="structcamp__aero__rep__data_1_1index__pair__t.html">index_pair_t</a>) function, dimension(:), allocatable camp_aero_rep_single_particle::adjacent_phases </td>
+          <td class="memname">type(<a class="el" href="structcamp__aero__rep__data_1_1index__pair__t.html">index_pair_t</a>) function, dimension(:), allocatable <a class="el" href="interfacecamp__aero__rep__data_1_1adjacent__phases.html">camp_aero_rep_single_particle::adjacent_phases</a> </td>
           <td>(</td>
           <td class="paramtype">class(<a class="el" href="structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t.html">aero_rep_single_particle_t</a>), intent(in)&#160;</td>
           <td class="paramname"><em>this</em>, </td>
@@ -193,7 +196,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Determine is specified phase(s) exist in adjacent layers. Returns array of phase_ids for adjacent phases first and second. </p>
+<p>Determine if specified phase(s) exist in adjacent layers. Returns array of phase_ids for adjacent phases first and second. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">this</td><td>Aerosol representation data </td></tr>
@@ -203,7 +206,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00804">804</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00805">805</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 
 </div>
 </div>
@@ -222,7 +225,7 @@ Variables</h2></td></tr>
 <p>Constructor for <a class="el" href="structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t.html" title="Single particle aerosol representation.">aero_rep_single_particle_t</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>New aerosol representation </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00229">229</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00231">231</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 
 </div>
 </div>
@@ -231,9 +234,6 @@ Variables</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">subroutine camp_aero_rep_single_particle::finalize </td>
@@ -243,11 +243,6 @@ Variables</h2></td></tr>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Finalize the aerosol representation. </p>
@@ -258,7 +253,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00902">902</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00955">955</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 
 </div>
 </div>
@@ -294,7 +289,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00926">926</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00979">979</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -340,7 +335,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00460">460</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00462">462</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 
 </div>
 </div>
@@ -394,7 +389,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00246">246</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00248">248</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -467,7 +462,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l01064">1064</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l01117">1117</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -546,7 +541,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l01092">1092</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l01145">1145</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -611,7 +606,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l01046">1046</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l01099">1099</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -666,7 +661,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00442">442</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00444">444</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -730,7 +725,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00703">703</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00705">705</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 
 </div>
 </div>
@@ -766,7 +761,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00730">730</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00732">732</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -837,7 +832,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00663">663</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00665">665</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 
 </div>
 </div>
@@ -884,7 +879,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00742">742</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00744">744</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -940,7 +935,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Index of name in layer_name_unordered for each layer after reordering </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00972">972</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l01025">1025</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -994,7 +989,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00478">478</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00480">480</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 
 </div>
 </div>
@@ -1048,7 +1043,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00760">760</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00762">762</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1115,7 +1110,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00639">639</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00641">641</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 
 </div>
 </div>
@@ -1158,7 +1153,73 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00613">613</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00615">615</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+
+</div>
+</div>
+<a id="a914e9b58dc54cccb6b6c9ff77fc53dd8" name="a914e9b58dc54cccb6b6c9ff77fc53dd8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a914e9b58dc54cccb6b6c9ff77fc53dd8">&#9670;&#160;</a></span>spec_state_id_by_phase()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">integer(kind=i_kind) function <a class="el" href="interfacecamp__aero__rep__data_1_1spec__state__id__by__phase.html">camp_aero_rep_single_particle::spec_state_id_by_phase</a> </td>
+          <td>(</td>
+          <td class="paramtype">class(<a class="el" href="structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t.html">aero_rep_single_particle_t</a>), intent(in)&#160;</td>
+          <td class="paramname"><em>this</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">integer(kind=i_kind), intent(in)&#160;</td>
+          <td class="paramname"><em>phase_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">character(len=*), intent(in)&#160;</td>
+          <td class="paramname"><em>spec_name</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the species id on the state array by phase_id and species name. </p>
+<dl class="section return"><dt>Returns</dt><dd>Species state id </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">this</td><td>Aerosol representation data </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">phase_id</td><td>Phase id </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">spec_name</td><td>Species name </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00903">903</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="namespacecamp__aero__rep__single__particle_a914e9b58dc54cccb6b6c9ff77fc53dd8_cgraph.png" border="0" usemap="#anamespacecamp__aero__rep__single__particle_a914e9b58dc54cccb6b6c9ff77fc53dd8_cgraph" alt=""/></div>
+<map name="anamespacecamp__aero__rep__single__particle_a914e9b58dc54cccb6b6c9ff77fc53dd8_cgraph" id="anamespacecamp__aero__rep__single__particle_a914e9b58dc54cccb6b6c9ff77fc53dd8_cgraph">
+<area shape="rect" title="Get the species id on the state array by phase_id and species name." alt="" coords="5,8,164,63"/>
+<area shape="rect" href="namespacecamp__util.html#ab4e745d4a05763568bf773598f30e91f" title="Errors unless condition_ok is true." alt="" coords="399,23,557,48"/>
+<area shape="rect" href="namespacecamp__util.html#acd72e4626dcfefffaa08c42cfa7949bc" title="Convert an integer to a string format." alt="" coords="605,41,740,81"/>
+<area shape="rect" href="namespacecamp__util.html#a970b40b46d26e937fb3cdc0b9217b86c" title="Error immediately." alt="" coords="212,23,351,48"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -1227,7 +1288,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00499">499</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00501">501</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1290,7 +1351,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00942">942</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l00995">995</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1342,7 +1403,7 @@ Here is the call graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l01121">1121</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l01174">1174</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1388,7 +1449,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l01133">1133</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l01186">1186</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1460,7 +1521,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l01021">1021</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="aero__rep__single__particle_8_f90_source.html#l01074">1074</a> of file <a class="el" href="aero__rep__single__particle_8_f90_source.html">aero_rep_single_particle.F90</a>.</p>
 
 </div>
 </div>
