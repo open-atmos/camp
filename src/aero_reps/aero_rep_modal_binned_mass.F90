@@ -202,6 +202,8 @@ module camp_aero_rep_modal_binned_mass
     !> Returns index_pair_t type with phase_ids of adjacent phases
     !! for modal/binned representation there are no adjacent phases
     procedure :: adjacent_phases
+    !> Get the species id for a phase and species name
+    procedure :: spec_state_id_by_phase
     !> Finalize the aerosol representation
     final :: finalize, finalize_array
 
@@ -1062,6 +1064,43 @@ contains
     allocate(index_pairs(0))
 
   end function adjacent_phases
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    !> Get the species id on the state array by phase_id and species name
+    function spec_state_id_by_phase(this, phase_id, spec_name) result(spec_id)
+
+    !> Species state id
+    integer(kind=i_kind) :: spec_id
+    !> Aerosol representation data
+    class(aero_rep_modal_binned_mass_t), intent(in) :: this
+    !> Phase id
+    integer(kind=i_kind), intent(in) :: phase_id
+    !> Species name
+    character(len=*), intent(in) :: spec_name
+
+    type(string_t), allocatable :: spec_names(:)
+    integer(kind=i_kind) :: i_spec
+
+    call assert_msg(237861905, phase_id .ge. 1 .and. phase_id .le. size(this%phase_state_id), &
+         "Phase id out of range")
+
+    spec_names = this%aero_phase(phase_id)%val%get_species_names()
+    spec_id = 0
+    do i_spec = 1, size(spec_names)
+      if (spec_name .eq. spec_names(i_spec)%string) then
+        spec_id = this%phase_state_id(phase_id) + i_spec - 1
+        exit
+      end if
+    end do
+    deallocate(spec_names)
+
+    if (spec_id .eq. 0) then
+      call die_msg(509274806, "Cannot find species '"//trim(spec_name)//"' for phase id "// &
+                   trim(to_string(phase_id)))
+    end if
+
+  end function spec_state_id_by_phase
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

@@ -146,6 +146,11 @@ contains
         adjacent_phases = aero_rep%adjacent_phases(phase_name_first,phase_name_second)
         call assert(919038338, size(adjacent_phases) .eq. 0)
 
+        ! Check the spec_state_id_by_phase function
+        spec_name = "species a"
+        spec_id = aero_rep%spec_state_id_by_phase(1, spec_name)
+        call assert(237861905, spec_id .eq. 1)
+
       class default
         call die_msg(570113680, rep_name)
     end select
