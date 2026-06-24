@@ -1067,7 +1067,7 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!> Get the species id on the state array by phase_id and species name
+    !> Get the species id on the state array by phase_id and species name
     function spec_state_id_by_phase(this, phase_id, spec_name) result(spec_id)
 
     !> Species state id
