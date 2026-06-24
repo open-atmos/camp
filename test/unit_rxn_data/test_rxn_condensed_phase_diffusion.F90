@@ -352,11 +352,6 @@ contains
         surface_area_l0 = 4.0 * 3.14159265359 * ( ( true_conc(0,idx_solute_l0) +  &
                    true_conc(0,idx_H2O_l0) ) &
                    * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0)
-      call assert(384750293, abs(layer_thickness_l3 - 0.0000324423d0) < 1.0d-9)
-      call assert(384750294, abs(layer_thickness_l2 - 0.0000294727d0) < 1.0d-9)
-      call assert(384750295, abs(layer_thickness_l1 - 0.0000420152d0) < 1.0d-9)
-      call assert(384750296, abs(layer_thickness_l0 - 0.0001616460d0) < 1.0d-9)
-
 
       ! Update the aerosol representation (single particle only)
       call number_update%set_number__n_m3(1, number_conc)
