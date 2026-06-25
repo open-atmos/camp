@@ -119,8 +119,12 @@ contains
     type(mechanism_data_t), pointer :: mechanism
     class(rxn_data_t), pointer :: rxn
     integer(kind=i_kind) :: i_rxn, num_adjacent_pairs
-    real(kind=dp) :: expected_diff_coeff
+    real(kind=dp) :: expected_diff_coeff, num_int_prop
     real(kind=dp), allocatable :: diff_coeff_first(:), diff_coeff_second(:)
+    real(kind=dp), allocatable :: phase_id_first(:), phase_id_second(:)
+    real(kind=dp), allocatable :: aero_spec_first(:), aero_spec_second(:)
+    real(kind=dp), allocatable :: phase_id_first_expected(:), phase_id_second_expected(:)
+    real(kind=dp), allocatable :: aero_spec_first_expected(:), aero_spec_second_expected(:)
     real(kind=dp) :: rate_first
 
     call assert_msg(227053212, scenario.eq.1, &
@@ -398,15 +402,36 @@ contains
                 allocate(diff_coeff_first(num_adjacent_pairs))
                 allocate(diff_coeff_second(num_adjacent_pairs))
               end if
+              if (.not. allocated(phase_id_first)) then
+                allocate(phase_id_first(num_adjacent_pairs))
+                allocate(phase_id_first_expected(num_adjacent_pairs))
+                allocate(phase_id_second(num_adjacent_pairs))
+                allocate(phase_id_second_expected(num_adjacent_pairs))
+              end if
+              if (.not. allocated(aero_spec_first)) then
+                allocate(aero_spec_first(num_adjacent_pairs))
+                allocate(aero_spec_first_expected(num_adjacent_pairs))
+                allocate(aero_spec_second(num_adjacent_pairs))
+                allocate(aero_spec_second_expected(num_adjacent_pairs))
+              end if
               
               ! Extract diffusion coefficients from condensed data
+              num_int_prop = 1
               do i = 1, num_adjacent_pairs
                 diff_coeff_first(i) = rxn_diffusion%condensed_data_real(i)
                 diff_coeff_second(i) = rxn_diffusion%condensed_data_real(num_adjacent_pairs + i)
+                phase_id_first(i) = rxn_diffusion%condensed_data_int(i + num_int_prop)
+                phase_id_second(i) = rxn_diffusion%condensed_data_int(num_adjacent_pairs + i + num_int_prop)
+                aero_spec_first(i) = rxn_diffusion%condensed_data_int((2 * num_adjacent_pairs) + i + num_int_prop)
+                aero_spec_second(i) = rxn_diffusion%condensed_data_int((3 * num_adjacent_pairs) + i + num_int_prop)
               end do
               
               ! Test that all diffusion coefficients match the expected value
               expected_diff_coeff = 1.5d-5
+              phase_id_first_expected = (/1,3,5,1,2,3,5,6,7,9,10,11,13,14,15,1,3/)
+              phase_id_second_expected = (/2,4,6,2,3,4,6,7,8,10,11,12,14,15,16,2,4/)
+              aero_spec_first_expected = (/1,5,9,13,15,17,21,23,25,29,31,33,37,39,41,45,49/)
+              aero_spec_second_expected = (/3,7,11,15,17,19,23,25,27,31,33,35,39,41,43,47,51/)
               do i = 1, num_adjacent_pairs - 1
                 call assert_msg(449021345, almost_equal(diff_coeff_first(i), expected_diff_coeff, 1.0d-15), &
                                 "DIFF_COEFF_FIRST_ for pair "//trim(to_string(i))//" is "// &
@@ -416,6 +441,22 @@ contains
                                 "DIFF_COEFF_SECOND_ for pair "//trim(to_string(i))//" is "// &
                                 trim(to_string(diff_coeff_second(i)))//" expected "// &
                                 trim(to_string(expected_diff_coeff)))
+                call assert_msg(678901234, almost_equal(phase_id_first(i), phase_id_first_expected(i), 1.0d-15), &
+                                "PHASE_ID_FIRST_ for pair "//trim(to_string(i))//" is "// &
+                                trim(to_string(phase_id_first(i)))//" expected "// &
+                                trim(to_string(phase_id_first_expected(i))))
+                call assert_msg(789012345, almost_equal(phase_id_second(i), phase_id_second_expected(i), 1.0d-15), &
+                                "PHASE_ID_SECOND_ for pair "//trim(to_string(i))//" is "// &
+                                trim(to_string(phase_id_second(i)))//" expected "// &
+                                trim(to_string(phase_id_second_expected(i))))
+                call assert_msg(890123456, almost_equal(aero_spec_first(i), aero_spec_first_expected(i), 1.0d-15), &
+                                "AERO_SPEC_FIRST_ for pair "//trim(to_string(i))//" is "// &
+                                trim(to_string(aero_spec_first(i)))//" expected "// &
+                                trim(to_string(aero_spec_first_expected(i))))
+                call assert_msg(901234567, almost_equal(aero_spec_second(i), aero_spec_second_expected(i), 1.0d-15), &
+                                "AERO_SPEC_SECOND_ for pair "//trim(to_string(i))//" is "// &
+                                trim(to_string(aero_spec_second(i)))//" expected "// &
+                                trim(to_string(aero_spec_second_expected(i))))
               end do
               ! Test rate_first and rate_second calculations based on surface_area and layer_thickness
               ! 
@@ -448,20 +489,33 @@ contains
               !     (DIFF_COEFF_SECOND_ / layer_thickness_second) * state_l2
               ! )
               expected_rate_first = (surface_area_l2 / volume_phase_l2) * ( &
-                  (-diff_coeff_first(1) / layer_thickness_l2) * true_conc(0,idx_solute_l2) + &
-                  (diff_coeff_second(1) / layer_thickness_l3) * true_conc(0,idx_solute_l3) )
-              
+                  (-diff_coeff_first(6) / layer_thickness_l2) * true_conc(0,idx_solute_l2) + &
+                  (diff_coeff_second(6) / layer_thickness_l3) * true_conc(0,idx_solute_l3) )
+              print *, "Expected rate_first: ", expected_rate_first
+              print *, "surface_area_l2: ", surface_area_l2
+              print *, "volume_phase_l2: ", volume_phase_l2
+              print *, "diff_coeff_first(6): ", diff_coeff_first(6)
+              print *, "layer_thickness_l2: ", layer_thickness_l2
+              print *, "diff_coeff_second(6): ", diff_coeff_second(6)
+              print *, "layer_thickness_l3: ", layer_thickness_l3
+              print *, "true_conc(0,idx_solute_l2): ", true_conc(0,idx_solute_l2)
+              print *, "true_conc(0,idx_solute_l3): ", true_conc(0,idx_solute_l3)
+
               ! Calculate expected rate_second
               ! rate_second = (eff_sa / volume_phase_second) * (
               !     (DIFF_COEFF_FIRST_ / layer_thickness_first) * state_l1 -
               !     (DIFF_COEFF_SECOND_ / layer_thickness_second) * state_l2
               ! )
               expected_rate_second = (surface_area_l2 / volume_phase_l3) * ( &
-                  (diff_coeff_first(1) / layer_thickness_l2) * true_conc(0,idx_solute_l2) - &
-                  (diff_coeff_second(1) / layer_thickness_l3) * true_conc(0,idx_solute_l3) )
-              
-              print *, "Expected rate_first: ", expected_rate_first
+                  (diff_coeff_first(6) / layer_thickness_l2) * true_conc(0,idx_solute_l2) - &
+                  (diff_coeff_second(6) / layer_thickness_l3) * true_conc(0,idx_solute_l3) )
               print *, "Expected rate_second: ", expected_rate_second
+              print *, "surface_area_l2: ", surface_area_l2
+              print *, "volume_phase_l3: ", volume_phase_l3
+              print *, "diff_coeff_first(6): ", diff_coeff_first(6)
+              print *, "layer_thickness_l2: ", layer_thickness_l2
+              print *, "diff_coeff_second(6): ", diff_coeff_second(6)
+              print *, "layer_thickness_l3: ", layer_thickness_l3
               
           end select
         end do
@@ -497,6 +551,10 @@ contains
     ! Deallocate diffusion coefficient arrays if they were allocated
     if (allocated(diff_coeff_first)) deallocate(diff_coeff_first)
     if (allocated(diff_coeff_second)) deallocate(diff_coeff_second)
+    if (allocated(phase_id_first)) deallocate(phase_id_first)
+    if (allocated(phase_id_second)) deallocate(phase_id_second)
+    if (allocated(aero_spec_first)) deallocate(aero_spec_first)
+    if (allocated(aero_spec_second)) deallocate(aero_spec_second)
 
     deallocate(camp_core)
 

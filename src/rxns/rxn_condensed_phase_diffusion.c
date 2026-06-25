@@ -26,7 +26,6 @@
 #define NUM_INT_PROP_ 1
 #define NUM_FLOAT_PROP_ 0
 #define NUM_ENV_PARAM_ 0
-#define BLOCK_SIZE_ 1000
 
 #define DIFF_COEFF_FIRST_(x) (float_data[(NUM_FLOAT_PROP_) + (x)])
 #define DIFF_COEFF_SECOND_(x) (float_data[(NUM_FLOAT_PROP_) + (NUM_ADJACENT_PAIRS_) + (x)])
@@ -212,10 +211,10 @@ void rxn_condensed_phase_diffusion_calc_jac_contrib(ModelData *model_data,
                                                 double *rxn_float_data,
                                                 double *rxn_env_data,
                                                 realtype time_step) {
-  int *int_data = rxn_int_data;
-  double *float_data = rxn_float_data;
-  double *state = model_data->grid_cell_state;
-  double *env_data = model_data->grid_cell_env;
+  //int *int_data = rxn_int_data;
+  //double *float_data = rxn_float_data;
+  //double *state = model_data->grid_cell_state;
+  //double *env_data = model_data->grid_cell_env;
 }
 #endif
 
