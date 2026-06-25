@@ -170,8 +170,8 @@ void rxn_condensed_phase_diffusion_calc_deriv_contrib(
 
     // Calculate the rate constant for diffusion limited mass transfer between
     // particle layers
-    long double rate_first = eff_sa / volume_phase_first;
-    long double rate_second = eff_sa / volume_phase_second;
+    double rate_first = (double)(eff_sa / volume_phase_first);
+    double rate_second = (double)(eff_sa / volume_phase_second);
 
     rate_first *= ((-DIFF_COEFF_FIRST_(i_adj_pairs) / layer_thickness_first) 
                     * state[AERO_SPEC_FIRST_(i_adj_pairs)] +

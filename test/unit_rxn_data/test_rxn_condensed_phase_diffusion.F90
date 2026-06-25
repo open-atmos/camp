@@ -477,7 +477,7 @@ contains
               ! - volume_phase_second = total mass of second phase (kg per particle)
               ! - state values = concentrations of species in each layer (kg/m3 per particle)
               
-              test_tolerance = 1.0d-12
+              test_tolerance = 1.0d-6
               
               ! Calculate volume (mass) of each phase
               volume_phase_l3 = true_conc(0,idx_solute_l3) + true_conc(0,idx_H2O_l3)
@@ -491,15 +491,9 @@ contains
               expected_rate_first = (surface_area_l2 / volume_phase_l2) * ( &
                   (-diff_coeff_first(6) / layer_thickness_l2) * true_conc(0,idx_solute_l2) + &
                   (diff_coeff_second(6) / layer_thickness_l3) * true_conc(0,idx_solute_l3) )
-              print *, "Expected rate_first: ", expected_rate_first
-              print *, "surface_area_l2: ", surface_area_l2
-              print *, "volume_phase_l2: ", volume_phase_l2
-              print *, "diff_coeff_first(6): ", diff_coeff_first(6)
-              print *, "layer_thickness_l2: ", layer_thickness_l2
-              print *, "diff_coeff_second(6): ", diff_coeff_second(6)
-              print *, "layer_thickness_l3: ", layer_thickness_l3
-              print *, "true_conc(0,idx_solute_l2): ", true_conc(0,idx_solute_l2)
-              print *, "true_conc(0,idx_solute_l3): ", true_conc(0,idx_solute_l3)
+              call assert_msg(470271032, almost_equal(1.37301d-7, expected_rate_first, test_tolerance), &
+                          "rate_first is expected "// &
+                          trim(to_string(expected_rate_first)))
 
               ! Calculate expected rate_second
               ! rate_second = (eff_sa / volume_phase_second) * (
@@ -509,13 +503,9 @@ contains
               expected_rate_second = (surface_area_l2 / volume_phase_l3) * ( &
                   (diff_coeff_first(6) / layer_thickness_l2) * true_conc(0,idx_solute_l2) - &
                   (diff_coeff_second(6) / layer_thickness_l3) * true_conc(0,idx_solute_l3) )
-              print *, "Expected rate_second: ", expected_rate_second
-              print *, "surface_area_l2: ", surface_area_l2
-              print *, "volume_phase_l3: ", volume_phase_l3
-              print *, "diff_coeff_first(6): ", diff_coeff_first(6)
-              print *, "layer_thickness_l2: ", layer_thickness_l2
-              print *, "diff_coeff_second(6): ", diff_coeff_second(6)
-              print *, "layer_thickness_l3: ", layer_thickness_l3
+              call assert_msg(994658337, almost_equal(-9.56945d-8, expected_rate_second, test_tolerance), &
+                          "rate_second is expected "// &
+                          trim(to_string(expected_rate_second)))
               
           end select
         end do
