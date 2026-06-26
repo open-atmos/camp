@@ -1,0 +1,72 @@
+{
+  "note": "Condensed phase diffusion with 2 particles, 2 layers, and 2 phases per layer",
+  "camp-data": [
+    {
+      "type": "RELATIVE_TOLERANCE",
+      "value": 1.0e-15
+    },
+    {
+      "name": "solute_aq",
+      "type": "CHEM_SPEC",
+      "phase": "AEROSOL",
+      "molecular weight [kg mol-1]": 0.058,
+      "density [kg m-3]": 1.0,
+      "absolute tolerance": 1.0e-20
+    },
+    {
+      "name": "organic_sp",
+      "type": "CHEM_SPEC",
+      "phase": "AEROSOL",
+      "molecular weight [kg mol-1]": 0.100,
+      "density [kg m-3]": 1.0,
+      "absolute tolerance": 1.0e-20
+    },
+    {
+      "name": "aqueous aerosol",
+      "type": "AERO_PHASE",
+      "species": [
+        {
+          "name": "solute_aq",
+          "diffusion coefficient [m2 s-1]": 1.5e-5
+        }
+      ]
+    },
+    {
+      "name": "organic aerosol",
+      "type": "AERO_PHASE",
+      "species": ["organic_sp"]
+    },
+    {
+      "type": "AERO_REP_SINGLE_PARTICLE",
+      "name": "my aero rep 2",
+      "maximum computational particles": 2,
+      "layers": [
+        {
+          "name": "inner layer",
+          "phases": ["aqueous aerosol", "organic aerosol"],
+          "covers": "none"
+        },
+        {
+          "name": "outer layer",
+          "phases": ["aqueous aerosol", "organic aerosol"],
+          "covers": "inner layer"
+        }
+      ]
+    },
+    {
+      "name": "condensed phase diffusion",
+      "type": "MECHANISM",
+      "reactions": [
+        {
+          "type": "CONDENSED_PHASE_DIFFUSION",
+          "species": [
+            {
+              "phase": "aqueous aerosol",
+              "name": "solute_aq"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

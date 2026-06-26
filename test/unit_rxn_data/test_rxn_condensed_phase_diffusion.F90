@@ -61,6 +61,7 @@ contains
 
     if (camp_solver_data%is_solver_available()) then
       passed = run_condensed_phase_diffusion_test(1)
+      passed = passed .and. run_condensed_phase_diffusion_test(2)
     else
       call warn_msg(723042853, "No solver available")
       passed = .true.
@@ -74,8 +75,10 @@ contains
 
   !> Solve a mechanism consisting of a solute diffusing through the condensed phase
   !!
-  !! One scenario is tested:
-  !! (1) single-particle aerosol representation 
+  !! Two scenarios are tested:
+  !! (1) single-particle aerosol representation with 4 layers and 1 phase
+  !! (2) single-particle aerosol representation with 2 particles, 2 layers,
+  !!     and 2 phases per layer
   logical function run_condensed_phase_diffusion_test(scenario)
 
     use camp_constants
@@ -94,6 +97,7 @@ contains
     integer(kind=i_kind) :: idx_solute_l0, idx_solute_l1, idx_solute_l2, &
             idx_solute_l3, idx_H2O_l0, idx_H2O_l1, idx_H2O_l2, idx_H2O_l3, &
             i_time, i_spec, i
+    integer(kind=i_kind) :: idx_org_l0, idx_org_l1
     real(kind=dp) :: time_step, time, conc_water, MW_solute, D_solute
 #ifdef CAMP_USE_MPI
     character, allocatable :: buffer(:), buffer_copy(:)
@@ -108,6 +112,7 @@ contains
     real(kind=dp) :: rate_second, expected_rate_first, expected_rate_second
     real(kind=dp) :: test_tolerance
     real(kind=dp) :: volume_phase_l3, volume_phase_l2
+    real(kind=dp) :: volume_phase_l1, volume_phase_l0
 
     integer(kind=i_kind) :: i_sect_unused, i_sect_the_mode
 
@@ -127,13 +132,17 @@ contains
     real(kind=dp), allocatable :: aero_spec_first_expected(:), aero_spec_second_expected(:)
     real(kind=dp) :: rate_first
 
-    call assert_msg(227053212, scenario.eq.1, &
+    call assert_msg(227053212, scenario.ge.1 .and. scenario.le.2, &
               "Invalid scenario specified: "//to_string( scenario ))
 
     run_condensed_phase_diffusion_test = .true.
 
     ! Allocate space for the results
-    num_state_var = 52 ! particles * layers * species ** this needs to be looked at**
+    if (scenario.eq.1) then
+      num_state_var = 52
+    else
+      num_state_var = 8
+    end if
     allocate(model_conc(0:NUM_TIME_STEP, num_state_var))
     allocate(true_conc(0:NUM_TIME_STEP, num_state_var))
 
@@ -152,7 +161,11 @@ contains
 #endif
 
       ! Get the condensed_phase_diffusion reaction mechanism json file
-      input_file_path = 'test_condensed_phase_diffusion_config.json'
+      if (scenario.eq.1) then
+        input_file_path = 'test_condensed_phase_diffusion_config.json'
+      else
+        input_file_path = 'test_condensed_phase_diffusion_config_2.json'
+      end if
 
       ! Construct a camp_core variable
       camp_core => camp_core_t(input_file_path)
@@ -175,43 +188,62 @@ contains
       end select
 
       ! Get species indices
-      idx_prefix = "P1.zero layer."
-      key = idx_prefix//"aqueous aerosol.solute_aq"
-      idx_solute_l0 = aero_rep_ptr%spec_state_id(key);
+      if (scenario.eq.1) then
+        idx_prefix = "P1.zero layer."
+        key = idx_prefix//"aqueous aerosol.solute_aq"
+        idx_solute_l0 = aero_rep_ptr%spec_state_id(key);
 
-      key = idx_prefix//"aqueous aerosol.H2O_aq"
-      idx_H2O_l0 = aero_rep_ptr%spec_state_id(key);
+        key = idx_prefix//"aqueous aerosol.H2O_aq"
+        idx_H2O_l0 = aero_rep_ptr%spec_state_id(key);
 
-      idx_prefix = "P1.one layer."
-      key = idx_prefix//"aqueous aerosol.solute_aq"
-      idx_solute_l1 = aero_rep_ptr%spec_state_id(key);
+        idx_prefix = "P1.one layer."
+        key = idx_prefix//"aqueous aerosol.solute_aq"
+        idx_solute_l1 = aero_rep_ptr%spec_state_id(key);
 
-      key = idx_prefix//"aqueous aerosol.H2O_aq"
-      idx_H2O_l1 = aero_rep_ptr%spec_state_id(key);
+        key = idx_prefix//"aqueous aerosol.H2O_aq"
+        idx_H2O_l1 = aero_rep_ptr%spec_state_id(key);
 
-      idx_prefix = "P1.two layer."
-      key = idx_prefix//"aqueous aerosol.solute_aq"
-      idx_solute_l2 = aero_rep_ptr%spec_state_id(key);
+        idx_prefix = "P1.two layer."
+        key = idx_prefix//"aqueous aerosol.solute_aq"
+        idx_solute_l2 = aero_rep_ptr%spec_state_id(key);
 
-      key = idx_prefix//"aqueous aerosol.H2O_aq"
-      idx_H2O_l2 = aero_rep_ptr%spec_state_id(key);
+        key = idx_prefix//"aqueous aerosol.H2O_aq"
+        idx_H2O_l2 = aero_rep_ptr%spec_state_id(key);
 
-      idx_prefix = "P1.three layer."
-      key = idx_prefix//"aqueous aerosol.solute_aq"
-      idx_solute_l3 = aero_rep_ptr%spec_state_id(key);
+        idx_prefix = "P1.three layer."
+        key = idx_prefix//"aqueous aerosol.solute_aq"
+        idx_solute_l3 = aero_rep_ptr%spec_state_id(key);
 
-      key = idx_prefix//"aqueous aerosol.H2O_aq"
-      idx_H2O_l3 = aero_rep_ptr%spec_state_id(key);
+        key = idx_prefix//"aqueous aerosol.H2O_aq"
+        idx_H2O_l3 = aero_rep_ptr%spec_state_id(key);
 
-      ! Make sure the expected species are in the model
-      call assert(050889938, idx_solute_l0.gt.0)
-      call assert(599205790, idx_solute_l1.gt.0)
-      call assert(434244152, idx_solute_l2.gt.0)
-      call assert(260481458, idx_solute_l3.gt.0)
-      call assert(149096792, idx_H2O_l0.gt.0)
-      call assert(011666208, idx_H2O_l1.gt.0)
-      call assert(465533442, idx_H2O_l2.gt.0)
-      call assert(250659956, idx_H2O_l3.gt.0)
+        ! Make sure the expected species are in the model
+        call assert(050889938, idx_solute_l0.gt.0)
+        call assert(599205790, idx_solute_l1.gt.0)
+        call assert(434244152, idx_solute_l2.gt.0)
+        call assert(260481458, idx_solute_l3.gt.0)
+        call assert(149096792, idx_H2O_l0.gt.0)
+        call assert(011666208, idx_H2O_l1.gt.0)
+        call assert(465533442, idx_H2O_l2.gt.0)
+        call assert(250659956, idx_H2O_l3.gt.0)
+      else
+        idx_prefix = "P1.inner layer."
+        key = idx_prefix//"aqueous aerosol.solute_aq"
+        idx_solute_l0 = aero_rep_ptr%spec_state_id(key)
+        key = idx_prefix//"organic aerosol.organic_sp"
+        idx_org_l0 = aero_rep_ptr%spec_state_id(key)
+
+        idx_prefix = "P1.outer layer."
+        key = idx_prefix//"aqueous aerosol.solute_aq"
+        idx_solute_l1 = aero_rep_ptr%spec_state_id(key)
+        key = idx_prefix//"organic aerosol.organic_sp"
+        idx_org_l1 = aero_rep_ptr%spec_state_id(key)
+
+        call assert(670125843, idx_solute_l0.gt.0)
+        call assert(188857221, idx_solute_l1.gt.0)
+        call assert(102439885, idx_org_l0.gt.0)
+        call assert(309792114, idx_org_l1.gt.0)
+      end if
 
 #ifdef CAMP_USE_MPI
       ! pack the camp core
@@ -226,14 +258,21 @@ contains
     end if
 
     ! broadcast the species ids
-    call camp_mpi_bcast_integer(idx_solute_l0)
-    call camp_mpi_bcast_integer(idx_solute_l1)
-    call camp_mpi_bcast_integer(idx_solute_l2)
-    call camp_mpi_bcast_integer(idx_solute_l3)
-    call camp_mpi_bcast_integer(idx_H2O_l0)
-    call camp_mpi_bcast_integer(idx_H2O_l1)
-    call camp_mpi_bcast_integer(idx_H2O_l2)
-    call camp_mpi_bcast_integer(idx_H2O_l3)
+    if(scenario.eq.1) then
+      call camp_mpi_bcast_integer(idx_solute_l0)
+      call camp_mpi_bcast_integer(idx_solute_l1)
+      call camp_mpi_bcast_integer(idx_solute_l2)
+      call camp_mpi_bcast_integer(idx_solute_l3)
+      call camp_mpi_bcast_integer(idx_H2O_l0)
+      call camp_mpi_bcast_integer(idx_H2O_l1)
+      call camp_mpi_bcast_integer(idx_H2O_l2)
+      call camp_mpi_bcast_integer(idx_H2O_l3)
+    else
+      call camp_mpi_bcast_integer(idx_solute_l0)
+      call camp_mpi_bcast_integer(idx_solute_l1)
+      call camp_mpi_bcast_integer(idx_org_l0)
+      call camp_mpi_bcast_integer(idx_org_l1)
+    end if
 
     ! broadcast the buffer size
     call camp_mpi_bcast_integer(pack_size)
@@ -279,83 +318,117 @@ contains
 
       ! Save the initial concentrations
       true_conc(:,:) = 0.0
-      true_conc(0,idx_solute_l0) = 0.0
-      true_conc(0,idx_solute_l1) = 0.0
-      true_conc(0,idx_solute_l2) = 0.0
-      true_conc(0,idx_solute_l3) = 1.0d-2
-      true_conc(:,idx_H2O_l0) = conc_water
-      true_conc(:,idx_H2O_l1) = conc_water
-      true_conc(:,idx_H2O_l2) = conc_water
-      true_conc(:,idx_H2O_l3) = conc_water
+      if (scenario.eq.1) then
+        true_conc(0,idx_solute_l0) = 0.0
+        true_conc(0,idx_solute_l1) = 0.0
+        true_conc(0,idx_solute_l2) = 0.0
+        true_conc(0,idx_solute_l3) = 1.0d-2
+        true_conc(:,idx_H2O_l0) = conc_water
+        true_conc(:,idx_H2O_l1) = conc_water
+        true_conc(:,idx_H2O_l2) = conc_water
+        true_conc(:,idx_H2O_l3) = conc_water
+      else
+        true_conc(0,idx_solute_l0) = 1.0d-6
+        true_conc(0,idx_solute_l1) = 1.0d-2
+        true_conc(:,idx_org_l0) = 2.0d-3
+        true_conc(:,idx_org_l1) = 2.0d-3
+      end if
       number_conc = 1.3e6         ! particle number concentration (#/cc)
       true_conc(0,:) = true_conc(0,:) / (number_conc * 1000.0) ! convert to kg/m3 per particle
       model_conc(0,:) = true_conc(0,:)
 
       ! single particle aerosol mass concentrations are per particle
       ! radius (m) calculated based on particle mass
-      radius = ( ( true_conc(0,idx_solute_l0) +  &
-                   true_conc(0,idx_solute_l1) +  &
-                    true_conc(0,idx_solute_l2) +  &
-                   true_conc(0,idx_solute_l3) + &
-                   true_conc(0,idx_H2O_l0) + & 
-                   true_conc(0,idx_H2O_l1) + & 
-                   true_conc(0,idx_H2O_l2) + & 
-                   true_conc(0,idx_H2O_l3) ) &
-                   * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
-      layer_thickness_l3 = ( ( true_conc(0,idx_solute_l0) +  &
-                   true_conc(0,idx_solute_l1) +  &
-                   true_conc(0,idx_solute_l2) +  &
-                   true_conc(0,idx_solute_l3) + &
-                   true_conc(0,idx_H2O_l0) + & 
-                   true_conc(0,idx_H2O_l1) + & 
-                   true_conc(0,idx_H2O_l2) + & 
-                   true_conc(0,idx_H2O_l3) ) &
-                   * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0) - &
-                   ( ( true_conc(0,idx_solute_l0) +  &
-                   true_conc(0,idx_solute_l1) +  &
-                   true_conc(0,idx_solute_l2) + &
-                   true_conc(0,idx_H2O_l0) + & 
-                   true_conc(0,idx_H2O_l1) + & 
-                   true_conc(0,idx_H2O_l2) ) &
-                   * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
-        layer_thickness_l2 = ( ( true_conc(0,idx_solute_l0) +  &
-                   true_conc(0,idx_solute_l1) +  &
-                   true_conc(0,idx_solute_l2) + &
-                   true_conc(0,idx_H2O_l0) + & 
-                   true_conc(0,idx_H2O_l1) + & 
-                   true_conc(0,idx_H2O_l2) ) &
-                   * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0) - &
-                   ( ( true_conc(0,idx_solute_l0) +  &
-                   true_conc(0,idx_solute_l1) + &
-                   true_conc(0,idx_H2O_l0) + & 
-                   true_conc(0,idx_H2O_l1) ) &
-                   * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
+
+      if (scenario.eq.1) then
+        radius = ( ( true_conc(0,idx_solute_l0) +  &
+                     true_conc(0,idx_solute_l1) +  &
+                      true_conc(0,idx_solute_l2) +  &
+                     true_conc(0,idx_solute_l3) + &
+                     true_conc(0,idx_H2O_l0) + & 
+                     true_conc(0,idx_H2O_l1) + & 
+                     true_conc(0,idx_H2O_l2) + & 
+                     true_conc(0,idx_H2O_l3) ) &
+                     * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
+        layer_thickness_l3 = ( ( true_conc(0,idx_solute_l0) +  &
+                     true_conc(0,idx_solute_l1) +  &
+                     true_conc(0,idx_solute_l2) +  &
+                     true_conc(0,idx_solute_l3) + &
+                     true_conc(0,idx_H2O_l0) + & 
+                     true_conc(0,idx_H2O_l1) + & 
+                     true_conc(0,idx_H2O_l2) + & 
+                     true_conc(0,idx_H2O_l3) ) &
+                     * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0) - &
+                     ( ( true_conc(0,idx_solute_l0) +  &
+                     true_conc(0,idx_solute_l1) +  &
+                     true_conc(0,idx_solute_l2) + &
+                     true_conc(0,idx_H2O_l0) + & 
+                     true_conc(0,idx_H2O_l1) + & 
+                     true_conc(0,idx_H2O_l2) ) &
+                     * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
+          layer_thickness_l2 = ( ( true_conc(0,idx_solute_l0) +  &
+                     true_conc(0,idx_solute_l1) +  &
+                     true_conc(0,idx_solute_l2) + &
+                     true_conc(0,idx_H2O_l0) + & 
+                     true_conc(0,idx_H2O_l1) + & 
+                     true_conc(0,idx_H2O_l2) ) &
+                     * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0) - &
+                     ( ( true_conc(0,idx_solute_l0) +  &
+                     true_conc(0,idx_solute_l1) + &
+                     true_conc(0,idx_H2O_l0) + & 
+                     true_conc(0,idx_H2O_l1) ) &
+                     * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
+          layer_thickness_l1 = ( ( true_conc(0,idx_solute_l0) +  &
+                     true_conc(0,idx_solute_l1) + &
+                     true_conc(0,idx_H2O_l0) + & 
+                     true_conc(0,idx_H2O_l1) ) &
+                     * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0) - &
+                     ( (true_conc(0,idx_solute_l0) + &
+                     true_conc(0,idx_H2O_l0) ) &
+                     * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
+          layer_thickness_l0 = ( ( true_conc(0,idx_solute_l0) +  &
+                     true_conc(0,idx_H2O_l0) ) &
+                     * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
+          surface_area_l2 = 4.0 * 3.14159265359 * ( ( true_conc(0,idx_solute_l0) +  &
+                     true_conc(0,idx_solute_l1) +  &
+                     true_conc(0,idx_solute_l2) + &
+                     true_conc(0,idx_H2O_l0) + & 
+                     true_conc(0,idx_H2O_l1) + & 
+                     true_conc(0,idx_H2O_l2) ) &
+                     * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0)
+          surface_area_l1 = 4.0 * 3.14159265359 * ( ( true_conc(0,idx_solute_l0) +  &
+                     true_conc(0,idx_solute_l1) + &
+                     true_conc(0,idx_H2O_l0) + & 
+                     true_conc(0,idx_H2O_l1) ) &
+                     * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0)
+          surface_area_l0 = 4.0 * 3.14159265359 * ( ( true_conc(0,idx_solute_l0) +  &
+                     true_conc(0,idx_H2O_l0) ) &
+                     * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0)
+      else
+        radius = ( ( true_conc(0,idx_solute_l0) +  &
+                     true_conc(0,idx_solute_l1) +  &
+                     true_conc(0,idx_org_l0) +  &
+                     true_conc(0,idx_org_l1) ) &
+                     * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
         layer_thickness_l1 = ( ( true_conc(0,idx_solute_l0) +  &
-                   true_conc(0,idx_solute_l1) + &
-                   true_conc(0,idx_H2O_l0) + & 
-                   true_conc(0,idx_H2O_l1) ) &
-                   * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0) - &
-                   ( (true_conc(0,idx_solute_l0) + &
-                   true_conc(0,idx_H2O_l0) ) &
-                   * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
+                     true_conc(0,idx_solute_l1) +  &
+                     true_conc(0,idx_org_l0) +  &
+                     true_conc(0,idx_org_l1) ) &
+                     * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0) - &
+                     ( ( true_conc(0,idx_solute_l0) +  &
+                     true_conc(0,idx_org_l0) ) &
+                     * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
         layer_thickness_l0 = ( ( true_conc(0,idx_solute_l0) +  &
-                   true_conc(0,idx_H2O_l0) ) &
-                   * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
-        surface_area_l2 = 4.0 * 3.14159265359 * ( ( true_conc(0,idx_solute_l0) +  &
-                   true_conc(0,idx_solute_l1) +  &
-                   true_conc(0,idx_solute_l2) + &
-                   true_conc(0,idx_H2O_l0) + & 
-                   true_conc(0,idx_H2O_l1) + & 
-                   true_conc(0,idx_H2O_l2) ) &
-                   * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0)
-        surface_area_l1 = 4.0 * 3.14159265359 * ( ( true_conc(0,idx_solute_l0) +  &
-                   true_conc(0,idx_solute_l1) + &
-                   true_conc(0,idx_H2O_l0) + & 
-                   true_conc(0,idx_H2O_l1) ) &
-                   * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0)
-        surface_area_l0 = 4.0 * 3.14159265359 * ( ( true_conc(0,idx_solute_l0) +  &
-                   true_conc(0,idx_H2O_l0) ) &
-                   * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0)
+                     true_conc(0,idx_org_l0) ) &
+                     * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
+        surface_area_l0 = (true_conc(0,idx_solute_l0) / &
+                    (true_conc(0,idx_solute_l0) + true_conc(0,idx_org_l0))) * &
+                    (true_conc(0,idx_solute_l1) / &
+                    (true_conc(0,idx_solute_l1) + true_conc(0,idx_org_l1))) * &
+                    (4.0 * 3.14159265359 * ( ( true_conc(0,idx_solute_l0) + &
+                     true_conc(0,idx_org_l0) ) &
+                     * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0))
+      end if
 
       ! Update the aerosol representation (single particle only)
       call number_update%set_number__n_m3(1, number_conc)
@@ -428,36 +501,73 @@ contains
               
               ! Test that all diffusion coefficients match the expected value
               expected_diff_coeff = 1.5d-5
-              phase_id_first_expected = (/1,3,5,1,2,3,5,6,7,9,10,11,13,14,15,1,3/)
-              phase_id_second_expected = (/2,4,6,2,3,4,6,7,8,10,11,12,14,15,16,2,4/)
-              aero_spec_first_expected = (/1,5,9,13,15,17,21,23,25,29,31,33,37,39,41,45,49/)
-              aero_spec_second_expected = (/3,7,11,15,17,19,23,25,27,31,33,35,39,41,43,47,51/)
-              do i = 1, num_adjacent_pairs - 1
-                call assert_msg(449021345, almost_equal(diff_coeff_first(i), expected_diff_coeff, 1.0d-15), &
-                                "DIFF_COEFF_FIRST_ for pair "//trim(to_string(i))//" is "// &
-                                trim(to_string(diff_coeff_first(i)))//" expected "// &
-                                trim(to_string(expected_diff_coeff)))
-                call assert_msg(593847156, almost_equal(diff_coeff_second(i), expected_diff_coeff, 1.0d-15), &
-                                "DIFF_COEFF_SECOND_ for pair "//trim(to_string(i))//" is "// &
-                                trim(to_string(diff_coeff_second(i)))//" expected "// &
-                                trim(to_string(expected_diff_coeff)))
-                call assert_msg(678901234, almost_equal(phase_id_first(i), phase_id_first_expected(i), 1.0d-15), &
-                                "PHASE_ID_FIRST_ for pair "//trim(to_string(i))//" is "// &
-                                trim(to_string(phase_id_first(i)))//" expected "// &
-                                trim(to_string(phase_id_first_expected(i))))
-                call assert_msg(789012345, almost_equal(phase_id_second(i), phase_id_second_expected(i), 1.0d-15), &
-                                "PHASE_ID_SECOND_ for pair "//trim(to_string(i))//" is "// &
-                                trim(to_string(phase_id_second(i)))//" expected "// &
-                                trim(to_string(phase_id_second_expected(i))))
-                call assert_msg(890123456, almost_equal(aero_spec_first(i), aero_spec_first_expected(i), 1.0d-15), &
-                                "AERO_SPEC_FIRST_ for pair "//trim(to_string(i))//" is "// &
-                                trim(to_string(aero_spec_first(i)))//" expected "// &
-                                trim(to_string(aero_spec_first_expected(i))))
-                call assert_msg(901234567, almost_equal(aero_spec_second(i), aero_spec_second_expected(i), 1.0d-15), &
-                                "AERO_SPEC_SECOND_ for pair "//trim(to_string(i))//" is "// &
-                                trim(to_string(aero_spec_second(i)))//" expected "// &
-                                trim(to_string(aero_spec_second_expected(i))))
-              end do
+              if (scenario.eq.1) then
+                call assert_msg(065137454, num_adjacent_pairs.eq.17, &
+                                "Unexpected adjacent phase pair count: "//trim(to_string(num_adjacent_pairs)))
+                phase_id_first_expected = (/1,3,5,1,2,3,5,6,7,9,10,11,13,14,15,1,3/)
+                phase_id_second_expected = (/2,4,6,2,3,4,6,7,8,10,11,12,14,15,16,2,4/)
+                aero_spec_first_expected = (/1,5,9,13,15,17,21,23,25,29,31,33,37,39,41,45,49/)
+                aero_spec_second_expected = (/3,7,11,15,17,19,23,25,27,31,33,35,39,41,43,47,51/)
+                do i = 1, num_adjacent_pairs - 1
+                  call assert_msg(449021345, almost_equal(diff_coeff_first(i), expected_diff_coeff, 1.0d-15), &
+                                  "DIFF_COEFF_FIRST_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(diff_coeff_first(i)))//" expected "// &
+                                  trim(to_string(expected_diff_coeff)))
+                  call assert_msg(593847156, almost_equal(diff_coeff_second(i), expected_diff_coeff, 1.0d-15), &
+                                  "DIFF_COEFF_SECOND_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(diff_coeff_second(i)))//" expected "// &
+                                  trim(to_string(expected_diff_coeff)))
+                  call assert_msg(678901234, almost_equal(phase_id_first(i), phase_id_first_expected(i), 1.0d-15), &
+                                  "PHASE_ID_FIRST_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(phase_id_first(i)))//" expected "// &
+                                  trim(to_string(phase_id_first_expected(i))))
+                  call assert_msg(789012345, almost_equal(phase_id_second(i), phase_id_second_expected(i), 1.0d-15), &
+                                  "PHASE_ID_SECOND_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(phase_id_second(i)))//" expected "// &
+                                  trim(to_string(phase_id_second_expected(i))))
+                  call assert_msg(861401638, almost_equal(aero_spec_first(i), aero_spec_first_expected(i), 1.0d-15), &
+                                  "AERO_SPEC_FIRST_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(aero_spec_first(i)))//" expected "// &
+                                  trim(to_string(aero_spec_first_expected(i))))
+                  call assert_msg(091211379, almost_equal(aero_spec_second(i), aero_spec_second_expected(i), 1.0d-15), &
+                                  "AERO_SPEC_SECOND_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(aero_spec_second(i)))//" expected "// &
+                                  trim(to_string(aero_spec_second_expected(i))))
+                end do
+              else
+                call assert_msg(318992441, num_adjacent_pairs.eq.2, &
+                                "Unexpected adjacent phase pair count: "//trim(to_string(num_adjacent_pairs)))
+                phase_id_first_expected = (/1,5/)
+                phase_id_second_expected = (/3,7/)
+                aero_spec_first_expected = (/1,5/)
+                aero_spec_second_expected = (/3,7/)
+                do i = 1, num_adjacent_pairs
+                  call assert_msg(198340125, almost_equal(diff_coeff_first(i), expected_diff_coeff, 1.0d-15), &
+                                  "DIFF_COEFF_FIRST_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(diff_coeff_first(i)))//" expected "// &
+                                  trim(to_string(expected_diff_coeff)))
+                  call assert_msg(479211506, almost_equal(diff_coeff_second(i), expected_diff_coeff, 1.0d-15), &
+                                  "DIFF_COEFF_SECOND_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(diff_coeff_second(i)))//" expected "// &
+                                  trim(to_string(expected_diff_coeff)))
+                  call assert_msg(138784229, almost_equal(phase_id_first(i), phase_id_first_expected(i), 1.0d-15), &
+                                  "PHASE_ID_FIRST_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(phase_id_first(i)))//" expected "// &
+                                  trim(to_string(phase_id_first_expected(i))))
+                  call assert_msg(994300121, almost_equal(phase_id_second(i), phase_id_second_expected(i), 1.0d-15), &
+                                  "PHASE_ID_SECOND_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(phase_id_second(i)))//" expected "// &
+                                  trim(to_string(phase_id_second_expected(i))))
+                  call assert_msg(204430899, almost_equal(aero_spec_first(i), aero_spec_first_expected(i), 1.0d-15), &
+                                  "AERO_SPEC_FIRST_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(aero_spec_first(i)))//" expected "// &
+                                  trim(to_string(aero_spec_first_expected(i))))
+                  call assert_msg(538824611, almost_equal(aero_spec_second(i), aero_spec_second_expected(i), 1.0d-15), &
+                                  "AERO_SPEC_SECOND_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(aero_spec_second(i)))//" expected "// &
+                                  trim(to_string(aero_spec_second_expected(i))))
+                end do
+              end if
               ! Test rate_first and rate_second calculations based on surface_area and layer_thickness
               ! 
               ! Formula from condensed phase diffusion solver:
@@ -477,35 +587,48 @@ contains
               ! - volume_phase_second = total mass of second phase (kg per particle)
               ! - state values = concentrations of species in each layer (kg/m3 per particle)
               
-              test_tolerance = 1.0d-6
-              
-              ! Calculate volume (mass) of each phase
-              volume_phase_l3 = true_conc(0,idx_solute_l3) + true_conc(0,idx_H2O_l3)
-              volume_phase_l2 = true_conc(0,idx_solute_l2) + true_conc(0,idx_H2O_l2)
+              if (scenario.eq.1) then
+                test_tolerance = 1.0d-6
+                
+                ! Calculate volume (mass) of each phase
+                volume_phase_l3 = true_conc(0,idx_solute_l3) + true_conc(0,idx_H2O_l3)
+                volume_phase_l2 = true_conc(0,idx_solute_l2) + true_conc(0,idx_H2O_l2)
 
-              ! Calculate expected rate_first
-              ! rate_first = (eff_sa / volume_phase_first) * (
-              !     (-DIFF_COEFF_FIRST_ / layer_thickness_first) * state_l1 +
-              !     (DIFF_COEFF_SECOND_ / layer_thickness_second) * state_l2
-              ! )
-              expected_rate_first = (surface_area_l2 / volume_phase_l2) * ( &
+                ! Calculate expected rate_first
+                expected_rate_first = (surface_area_l2 / volume_phase_l2) * ( &
                   (-diff_coeff_first(6) / layer_thickness_l2) * true_conc(0,idx_solute_l2) + &
                   (diff_coeff_second(6) / layer_thickness_l3) * true_conc(0,idx_solute_l3) )
-              call assert_msg(470271032, almost_equal(1.37301d-7, expected_rate_first, test_tolerance), &
-                          "rate_first is expected "// &
-                          trim(to_string(expected_rate_first)))
+                call assert_msg(470271032, almost_equal(1.37301d-7, expected_rate_first, test_tolerance), &
+                      "rate_first is expected "// &
+                      trim(to_string(expected_rate_first)))
 
-              ! Calculate expected rate_second
-              ! rate_second = (eff_sa / volume_phase_second) * (
-              !     (DIFF_COEFF_FIRST_ / layer_thickness_first) * state_l1 -
-              !     (DIFF_COEFF_SECOND_ / layer_thickness_second) * state_l2
-              ! )
-              expected_rate_second = (surface_area_l2 / volume_phase_l3) * ( &
+                ! Calculate expected rate_second
+                expected_rate_second = (surface_area_l2 / volume_phase_l3) * ( &
                   (diff_coeff_first(6) / layer_thickness_l2) * true_conc(0,idx_solute_l2) - &
                   (diff_coeff_second(6) / layer_thickness_l3) * true_conc(0,idx_solute_l3) )
-              call assert_msg(994658337, almost_equal(-9.56945d-8, expected_rate_second, test_tolerance), &
-                          "rate_second is expected "// &
-                          trim(to_string(expected_rate_second)))
+                call assert_msg(994658337, almost_equal(-9.56945d-8, expected_rate_second, test_tolerance), &
+                      "rate_second is expected "// &
+                      trim(to_string(expected_rate_second)))
+              else 
+                test_tolerance = 1.0d-6
+                ! Calculate volume (mass) of each phase
+                volume_phase_l1 = true_conc(0,idx_solute_l1)
+                volume_phase_l0 = true_conc(0,idx_solute_l0)
+                ! Calculate expected rate_first
+                expected_rate_first = (surface_area_l0 / volume_phase_l0) * ( &
+                  (-diff_coeff_first(1) / layer_thickness_l0) * true_conc(0,idx_solute_l0) + &
+                  (diff_coeff_second(1) / layer_thickness_l1) * true_conc(0,idx_solute_l1) )
+                call assert_msg(470271032, almost_equal(6.16023d-08, expected_rate_first, test_tolerance), &
+                      "rate_first is expected "// &
+                      trim(to_string(expected_rate_first)))
+                ! Calculate expected rate_second
+                expected_rate_second = (surface_area_l0 / volume_phase_l1) * ( &
+                  (diff_coeff_first(1) / layer_thickness_l0) * true_conc(0,idx_solute_l0) - &
+                  (diff_coeff_second(1) / layer_thickness_l1) * true_conc(0,idx_solute_l1) )
+                call assert_msg(994658337, almost_equal(-6.16023d-12, expected_rate_second, test_tolerance), &
+                      "rate_second is expected "// &
+                      trim(to_string(expected_rate_second)))
+              end if
               
           end select
         end do

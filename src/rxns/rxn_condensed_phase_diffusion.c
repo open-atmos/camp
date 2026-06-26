@@ -181,16 +181,6 @@ void rxn_condensed_phase_diffusion_calc_deriv_contrib(
                     * state[AERO_SPEC_FIRST_(i_adj_pairs)] -
                     (DIFF_COEFF_SECOND_(i_adj_pairs) / layer_thickness_second)
                     * state[AERO_SPEC_SECOND_(i_adj_pairs)]);
-    printf("  Phase id first: %d", PHASE_ID_FIRST_(i_adj_pairs));
-    printf("  Phase id second: %d", PHASE_ID_SECOND_(i_adj_pairs));
-    printf("  Layer thicknesses: %g, %g\n", layer_thickness_first, layer_thickness_second);
-    printf("  State values: %g, %g\n", state[AERO_SPEC_FIRST_(i_adj_pairs)], state[AERO_SPEC_SECOND_(i_adj_pairs)]);
-    printf("  AERO_SPEC values: %d, %d\n", AERO_SPEC_FIRST_(i_adj_pairs), AERO_SPEC_SECOND_(i_adj_pairs));
-    printf("  Interface surface area: %g\n", eff_sa);
-    printf("  Phase volumes: %g, %g\n", volume_phase_first, volume_phase_second);
-    printf("  Rate constants: %g, %g\n", eff_sa / volume_phase_first, eff_sa / volume_phase_second);
-    printf("  Calculated rates: %g, %g\n", rate_first, rate_second);
-
   }
   return;
 }
