@@ -5,11 +5,12 @@
 !> \file
 !> The camp_rxn_condensed_phase_diffusion module.
 
-!> \page camp_rxn_condensed_phase_diffusion CAMP: Condensed Phase Diffusion Reaction
+!> \page camp_rxn_condensed_phase_diffusion CAMP: Condensed Phase Diffusion Reactions
 !!
-!! Condensed phase diffusion reactions are based on Fick's Law of 
-!! diffusion and align with kinetic modeling (e.g., \cite{Shiraiwa2012})
-!! diffusion representation.
+!! Condensed phase diffusion reactions are based on Fick's Law of
+!! diffusion and align with kinetic modeling approaches
+!! (e.g., \cite{Shiraiwa2012}).
+!!
 !!
 !!
 !! Input data for condensed phase diffusion reactions have the following format :
