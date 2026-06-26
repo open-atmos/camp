@@ -486,28 +486,23 @@ contains
       spec_name = "wheat"
       unique_names = aero_rep%unique_names()
       i_spec = aero_rep%spec_state_id(unique_names(1)%string)
-      print *, "spec_state_id i_spec 1: ", i_spec
       call assert_msg(258227897, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 1.5
       spec_name = "water"
       i_spec = aero_rep%spec_state_id(unique_names(2)%string)
-      print *, "spec_state_id i_spec 2: ", i_spec
       call assert_msg(418308482, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 2.5
       spec_name = "salt"
       i_spec = aero_rep%spec_state_id(unique_names(3)%string)
-      print *, "spec_state_id i_spec 3: ", i_spec
       call assert_msg(420214016, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 3.5
       phase_name = "almond butter"
       spec_name = "almonds"
-      i_spec = aero_rep%spec_state_id(unique_names(4)%string)
-      print *, "spec_state_id i_spec 4: ", i_spec 
+      i_spec = aero_rep%spec_state_id(unique_names(4)%string) 
       call assert_msg(717816750, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 4.5
       spec_name = "sugar"
       i_spec = aero_rep%spec_state_id(unique_names(5)%string)
-      print *, "spec_state_id i_spec 5: ", i_spec
       call assert_msg(482104738, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 5.5
       phase_name = "jam"
@@ -575,7 +570,6 @@ contains
       spec_name = "wheat"
       unique_names = aero_rep%unique_names()
       i_spec = aero_rep%spec_state_id(unique_names(20)%string)
-      print *, "spec_state_id i_spec 20: ", i_spec
       call assert_msg(752656273, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 1.5
       spec_name = "water"

@@ -9,7 +9,7 @@
 !!
 !! Condensed phase diffusion reactions are based on Fick's Law of
 !! diffusion and align with kinetic modeling approaches
-!! (e.g., \cite{Shiraiwa2012}).
+!! (e.g., \cite Shiraiwa2012 ).
 !!
 !!
 !!
@@ -190,15 +190,15 @@ contains
       ! Get the phase names
       key_name = "phase"
       call assert_msg(354574496, spec_props%get_string(key_name, phase_name), &
-              "Missing phase name in condensed phase diffusion reaction for species "// &
-              phase_name)
+               "Missing phase name in condensed phase diffusion reaction for species entry "// &
+               trim(to_string(i_species)))
       diffusion_phase_names(i_species)%string = phase_name
 
       ! Get the associated species names
       key_name = "name"
       call assert_msg(629919883, spec_props%get_string(key_name, species_name), &
-              "Missing species name in condensed phase reaction for species "// &
-              species_name)
+              "Missing species name in condensed phase diffusion reaction for species entry "// &
+               trim(to_string(i_species)))
       diffusion_species_names(i_species)%string = species_name
 
       call species%iter_next()
@@ -222,7 +222,7 @@ contains
     
     ! Allocate space in the condensed data arrays early so macros can be used
     allocate(this%condensed_data_int(BLOCK_SIZE_ * 20 ))
-    allocate(this%condensed_data_real(BLOCK_SIZE_ * 1 ))
+    allocate(this%condensed_data_real(BLOCK_SIZE_ * 2 ))
     this%condensed_data_int(:) = int(0, kind=i_kind)
     this%condensed_data_real(:) = real(0.0, kind=dp)
 
@@ -298,11 +298,14 @@ contains
           if (aero_phase(i_phase)%val%name() .eq. diffusion_phase_names(SIZE(diffusion_phase_names))%string) then
             spec_property_set => aero_phase(i_phase)%val%get_spec_property_set( &
                     diffusion_species_names(SIZE(diffusion_species_names))%string)
-            key_name = "diffusion coefficient [m2 s-1]"
-            if (spec_property_set%get_real(key_name, temp_real)) then
-             DIFF_COEFF_SECOND_(i_adj_pairs) = temp_real
-            else
-              print *, "WARNING: Could not find diffusion coefficient for pair ", i_adj_pairs
+           	
+              key_name = "diffusion coefficient [m2 s-1]"
+              if (spec_property_set%get_real(key_name, temp_real)) then
+                DIFF_COEFF_SECOND_(i_adj_pairs) = temp_real
+              else
+               call die_msg(857293144, "Missing diffusion coefficient [m2 s-1] for species '"// &
+                            diffusion_species_names(SIZE(diffusion_species_names))%string//"' in phase '"// &
+                            diffusion_phase_names(SIZE(diffusion_phase_names))%string//"'")
             end if
           end if
         end do

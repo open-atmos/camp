@@ -2,11 +2,11 @@
  * Illinois at Urbana-Champaign
  * SPDX-License-Identifier: MIT
  *
- * Phase Transfer reaction solver functions
+ * Condensed phase diffusion reaction solver functions
  *
  */
 /** \file
- * \brief Phase Transfer reaction solver functions
+ * \brief Condensed phase diffusion reaction solver functions
  */
 #include <math.h>
 #include <stdio.h>

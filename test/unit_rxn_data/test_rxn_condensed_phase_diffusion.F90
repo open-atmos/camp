@@ -10,9 +10,9 @@ program camp_test_condensed_phase_diffusion
 
   use iso_c_binding
 
-  use camp_util,                         only: i_kind, dp, assert, &
-                                              almost_equal, string_t, &
-                                              warn_msg, to_string
+   use camp_util,                         only: i_kind, dp, assert, assert_msg, &
+                                               almost_equal, string_t, warn_msg, &
+                                               to_string, die_msg
   use camp_camp_core
   use camp_camp_state
   use camp_aero_rep_data
@@ -124,7 +124,8 @@ contains
     type(mechanism_data_t), pointer :: mechanism
     class(rxn_data_t), pointer :: rxn
     integer(kind=i_kind) :: i_rxn, num_adjacent_pairs
-    real(kind=dp) :: expected_diff_coeff, num_int_prop
+    real(kind=dp) :: expected_diff_coeff
+    integer(kind=i_kind) :: num_int_prop
     real(kind=dp), allocatable :: diff_coeff_first(:), diff_coeff_second(:)
     real(kind=dp), allocatable :: phase_id_first(:), phase_id_second(:)
     real(kind=dp), allocatable :: aero_spec_first(:), aero_spec_second(:)
@@ -508,7 +509,7 @@ contains
                 phase_id_second_expected = (/2,4,6,2,3,4,6,7,8,10,11,12,14,15,16,2,4/)
                 aero_spec_first_expected = (/1,5,9,13,15,17,21,23,25,29,31,33,37,39,41,45,49/)
                 aero_spec_second_expected = (/3,7,11,15,17,19,23,25,27,31,33,35,39,41,43,47,51/)
-                do i = 1, num_adjacent_pairs - 1
+                do i = 1, num_adjacent_pairs
                   call assert_msg(449021345, almost_equal(diff_coeff_first(i), expected_diff_coeff, 1.0d-15), &
                                   "DIFF_COEFF_FIRST_ for pair "//trim(to_string(i))//" is "// &
                                   trim(to_string(diff_coeff_first(i)))//" expected "// &
