@@ -62,6 +62,25 @@ void rxn_condensed_phase_diffusion_get_used_jac_elem(ModelData *model_data,
 
   bool *aero_jac_elem =
       (bool *)malloc(sizeof(bool) * model_data->n_per_cell_state_var);
+  if (aero_jac_elem == NULL) {
+    printf(
+        "\n\nERROR allocating space for 1D Jacobian structure array for "
+        "condensed phase diffusion reaction\n\n");
+    exit(1);
+  }
+
+  for (int i_adj_pairs = 0; i_adj_pairs < NUM_ADJACENT_PAIRS_; ++i_adj_pairs) {
+     jacobian_register_element(jac, AERO_SPEC_FIRST_(i_adj_pairs),
+                               AERO_SPEC_FIRST_(i_adj_pairs));
+     jacobian_register_element(jac, AERO_SPEC_FIRST_(i_adj_pairs),
+                               AERO_SPEC_SECOND_(i_adj_pairs));
+     jacobian_register_element(jac, AERO_SPEC_SECOND_(i_adj_pairs),
+                               AERO_SPEC_FIRST_(i_adj_pairs));
+     jacobian_register_element(jac, AERO_SPEC_SECOND_(i_adj_pairs),
+                               AERO_SPEC_SECOND_(i_adj_pairs));
+  }
+  free(aero_jac_elem);
+
 }
 
 /** \brief Update the time derivative and Jacbobian array indices
@@ -77,6 +96,11 @@ void rxn_condensed_phase_diffusion_update_ids(ModelData *model_data, int *deriv_
                                           double *rxn_float_data) {
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
+
+  for (int i_adj_pairs = 0; i_adj_pairs < NUM_ADJACENT_PAIRS_; ++i_adj_pairs) {
+     DERIV_ID_FIRST_(i_adj_pairs) = deriv_ids[AERO_SPEC_FIRST_(i_adj_pairs)];
+     DERIV_ID_SECOND_(i_adj_pairs) = deriv_ids[AERO_SPEC_SECOND_(i_adj_pairs)];
+  }
 }
 
 /** \brief Update reaction data for new environmental conditions
