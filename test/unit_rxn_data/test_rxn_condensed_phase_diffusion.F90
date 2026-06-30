@@ -109,7 +109,7 @@ contains
     real(kind=dp) :: layer_thickness_l0, layer_thickness_l1, layer_thickness_l2, layer_thickness_l3
     real(kind=dp) :: surface_area_l0, surface_area_l1, surface_area_l2
     real(kind=dp) :: volume_phase_l1_p1, volume_phase_l2_p1
-    real(kind=dp) :: rate_second, expected_rate_first, expected_rate_second
+    real(kind=dp) :: rate_outer, expected_rate_inner, expected_rate_outer
     real(kind=dp) :: test_tolerance
     real(kind=dp) :: volume_phase_l3, volume_phase_l2
     real(kind=dp) :: volume_phase_l1, volume_phase_l0
@@ -126,12 +126,12 @@ contains
     integer(kind=i_kind) :: i_rxn, num_adjacent_pairs
     real(kind=dp) :: expected_diff_coeff
     integer(kind=i_kind) :: num_int_prop
-    real(kind=dp), allocatable :: diff_coeff_first(:), diff_coeff_second(:)
-    real(kind=dp), allocatable :: phase_id_first(:), phase_id_second(:)
-    real(kind=dp), allocatable :: aero_spec_first(:), aero_spec_second(:)
-    real(kind=dp), allocatable :: phase_id_first_expected(:), phase_id_second_expected(:)
-    real(kind=dp), allocatable :: aero_spec_first_expected(:), aero_spec_second_expected(:)
-    real(kind=dp) :: rate_first
+    real(kind=dp), allocatable :: diff_coeff_inner(:), diff_coeff_outer(:)
+    real(kind=dp), allocatable :: phase_id_inner(:), phase_id_outer(:)
+    real(kind=dp), allocatable :: aero_spec_inner(:), aero_spec_outer(:)
+    real(kind=dp), allocatable :: phase_id_inner_expected(:), phase_id_outer_expected(:)
+    real(kind=dp), allocatable :: aero_spec_inner_expected(:), aero_spec_outer_expected(:)
+    real(kind=dp) :: rate_inner
 
     call assert_msg(227053212, scenario.ge.1 .and. scenario.le.2, &
               "Invalid scenario specified: "//to_string( scenario ))
@@ -472,32 +472,32 @@ contains
               num_adjacent_pairs = rxn_diffusion%condensed_data_int(1)
               
               ! Allocate arrays for diffusion coefficients
-              if (.not. allocated(diff_coeff_first)) then
-                allocate(diff_coeff_first(num_adjacent_pairs))
-                allocate(diff_coeff_second(num_adjacent_pairs))
+              if (.not. allocated(diff_coeff_inner)) then
+                allocate(diff_coeff_inner(num_adjacent_pairs))
+                allocate(diff_coeff_outer(num_adjacent_pairs))
               end if
-              if (.not. allocated(phase_id_first)) then
-                allocate(phase_id_first(num_adjacent_pairs))
-                allocate(phase_id_first_expected(num_adjacent_pairs))
-                allocate(phase_id_second(num_adjacent_pairs))
-                allocate(phase_id_second_expected(num_adjacent_pairs))
+              if (.not. allocated(phase_id_inner)) then
+                allocate(phase_id_inner(num_adjacent_pairs))
+                allocate(phase_id_inner_expected(num_adjacent_pairs))
+                allocate(phase_id_outer(num_adjacent_pairs))
+                allocate(phase_id_outer_expected(num_adjacent_pairs))
               end if
-              if (.not. allocated(aero_spec_first)) then
-                allocate(aero_spec_first(num_adjacent_pairs))
-                allocate(aero_spec_first_expected(num_adjacent_pairs))
-                allocate(aero_spec_second(num_adjacent_pairs))
-                allocate(aero_spec_second_expected(num_adjacent_pairs))
+              if (.not. allocated(aero_spec_inner)) then
+                allocate(aero_spec_inner(num_adjacent_pairs))
+                allocate(aero_spec_inner_expected(num_adjacent_pairs))
+                allocate(aero_spec_outer(num_adjacent_pairs))
+                allocate(aero_spec_outer_expected(num_adjacent_pairs))
               end if
               
               ! Extract diffusion coefficients from condensed data
               num_int_prop = 1
               do i = 1, num_adjacent_pairs
-                diff_coeff_first(i) = rxn_diffusion%condensed_data_real(i)
-                diff_coeff_second(i) = rxn_diffusion%condensed_data_real(num_adjacent_pairs + i)
-                phase_id_first(i) = rxn_diffusion%condensed_data_int(i + num_int_prop)
-                phase_id_second(i) = rxn_diffusion%condensed_data_int(num_adjacent_pairs + i + num_int_prop)
-                aero_spec_first(i) = rxn_diffusion%condensed_data_int((2 * num_adjacent_pairs) + i + num_int_prop)
-                aero_spec_second(i) = rxn_diffusion%condensed_data_int((3 * num_adjacent_pairs) + i + num_int_prop)
+                diff_coeff_inner(i) = rxn_diffusion%condensed_data_real(i)
+                diff_coeff_outer(i) = rxn_diffusion%condensed_data_real(num_adjacent_pairs + i)
+                phase_id_inner(i) = rxn_diffusion%condensed_data_int(i + num_int_prop)
+                phase_id_outer(i) = rxn_diffusion%condensed_data_int(num_adjacent_pairs + i + num_int_prop)
+                aero_spec_inner(i) = rxn_diffusion%condensed_data_int((2 * num_adjacent_pairs) + i + num_int_prop)
+                aero_spec_outer(i) = rxn_diffusion%condensed_data_int((3 * num_adjacent_pairs) + i + num_int_prop)
               end do
               
               ! Test that all diffusion coefficients match the expected value
@@ -505,87 +505,87 @@ contains
               if (scenario.eq.1) then
                 call assert_msg(065137454, num_adjacent_pairs.eq.17, &
                                 "Unexpected adjacent phase pair count: "//trim(to_string(num_adjacent_pairs)))
-                phase_id_first_expected = (/1,3,5,1,2,3,5,6,7,9,10,11,13,14,15,1,3/)
-                phase_id_second_expected = (/2,4,6,2,3,4,6,7,8,10,11,12,14,15,16,2,4/)
-                aero_spec_first_expected = (/1,5,9,13,15,17,21,23,25,29,31,33,37,39,41,45,49/)
-                aero_spec_second_expected = (/3,7,11,15,17,19,23,25,27,31,33,35,39,41,43,47,51/)
+                phase_id_inner_expected = (/1,3,5,1,2,3,5,6,7,9,10,11,13,14,15,1,3/)
+                phase_id_outer_expected = (/2,4,6,2,3,4,6,7,8,10,11,12,14,15,16,2,4/)
+                aero_spec_inner_expected = (/1,5,9,13,15,17,21,23,25,29,31,33,37,39,41,45,49/)
+                aero_spec_outer_expected = (/3,7,11,15,17,19,23,25,27,31,33,35,39,41,43,47,51/)
                 do i = 1, num_adjacent_pairs
-                  call assert_msg(449021345, almost_equal(diff_coeff_first(i), expected_diff_coeff, 1.0d-15), &
-                                  "DIFF_COEFF_FIRST_ for pair "//trim(to_string(i))//" is "// &
-                                  trim(to_string(diff_coeff_first(i)))//" expected "// &
+                  call assert_msg(449021345, almost_equal(diff_coeff_inner(i), expected_diff_coeff, 1.0d-15), &
+                                  "DIFF_COEFF_INNER_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(diff_coeff_inner(i)))//" expected "// &
                                   trim(to_string(expected_diff_coeff)))
-                  call assert_msg(593847156, almost_equal(diff_coeff_second(i), expected_diff_coeff, 1.0d-15), &
-                                  "DIFF_COEFF_SECOND_ for pair "//trim(to_string(i))//" is "// &
-                                  trim(to_string(diff_coeff_second(i)))//" expected "// &
+                  call assert_msg(593847156, almost_equal(diff_coeff_outer(i), expected_diff_coeff, 1.0d-15), &
+                                  "DIFF_COEFF_OUTER_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(diff_coeff_outer(i)))//" expected "// &
                                   trim(to_string(expected_diff_coeff)))
-                  call assert_msg(678901234, almost_equal(phase_id_first(i), phase_id_first_expected(i), 1.0d-15), &
-                                  "PHASE_ID_FIRST_ for pair "//trim(to_string(i))//" is "// &
-                                  trim(to_string(phase_id_first(i)))//" expected "// &
-                                  trim(to_string(phase_id_first_expected(i))))
-                  call assert_msg(789012345, almost_equal(phase_id_second(i), phase_id_second_expected(i), 1.0d-15), &
-                                  "PHASE_ID_SECOND_ for pair "//trim(to_string(i))//" is "// &
-                                  trim(to_string(phase_id_second(i)))//" expected "// &
-                                  trim(to_string(phase_id_second_expected(i))))
-                  call assert_msg(861401638, almost_equal(aero_spec_first(i), aero_spec_first_expected(i), 1.0d-15), &
-                                  "AERO_SPEC_FIRST_ for pair "//trim(to_string(i))//" is "// &
-                                  trim(to_string(aero_spec_first(i)))//" expected "// &
-                                  trim(to_string(aero_spec_first_expected(i))))
-                  call assert_msg(091211379, almost_equal(aero_spec_second(i), aero_spec_second_expected(i), 1.0d-15), &
-                                  "AERO_SPEC_SECOND_ for pair "//trim(to_string(i))//" is "// &
-                                  trim(to_string(aero_spec_second(i)))//" expected "// &
-                                  trim(to_string(aero_spec_second_expected(i))))
+                  call assert_msg(678901234, almost_equal(phase_id_inner(i), phase_id_inner_expected(i), 1.0d-15), &
+                                  "PHASE_ID_INNER_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(phase_id_inner(i)))//" expected "// &
+                                  trim(to_string(phase_id_inner_expected(i))))
+                  call assert_msg(789012345, almost_equal(phase_id_outer(i), phase_id_outer_expected(i), 1.0d-15), &
+                                  "PHASE_ID_OUTER_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(phase_id_outer(i)))//" expected "// &
+                                  trim(to_string(phase_id_outer_expected(i))))
+                  call assert_msg(861401638, almost_equal(aero_spec_inner(i), aero_spec_inner_expected(i), 1.0d-15), &
+                                  "AERO_SPEC_INNER_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(aero_spec_inner(i)))//" expected "// &
+                                  trim(to_string(aero_spec_inner_expected(i))))
+                  call assert_msg(091211379, almost_equal(aero_spec_outer(i), aero_spec_outer_expected(i), 1.0d-15), &
+                                  "AERO_SPEC_OUTER_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(aero_spec_outer(i)))//" expected "// &
+                                  trim(to_string(aero_spec_outer_expected(i))))
                 end do
               else
                 call assert_msg(318992441, num_adjacent_pairs.eq.2, &
                                 "Unexpected adjacent phase pair count: "//trim(to_string(num_adjacent_pairs)))
-                phase_id_first_expected = (/1,5/)
-                phase_id_second_expected = (/3,7/)
-                aero_spec_first_expected = (/1,5/)
-                aero_spec_second_expected = (/3,7/)
+                phase_id_inner_expected = (/1,5/)
+                phase_id_outer_expected = (/3,7/)
+                aero_spec_inner_expected = (/1,5/)
+                aero_spec_outer_expected = (/3,7/)
                 do i = 1, num_adjacent_pairs
-                  call assert_msg(198340125, almost_equal(diff_coeff_first(i), expected_diff_coeff, 1.0d-15), &
-                                  "DIFF_COEFF_FIRST_ for pair "//trim(to_string(i))//" is "// &
-                                  trim(to_string(diff_coeff_first(i)))//" expected "// &
+                  call assert_msg(198340125, almost_equal(diff_coeff_inner(i), expected_diff_coeff, 1.0d-15), &
+                                  "DIFF_COEFF_INNER_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(diff_coeff_inner(i)))//" expected "// &
                                   trim(to_string(expected_diff_coeff)))
-                  call assert_msg(479211506, almost_equal(diff_coeff_second(i), expected_diff_coeff, 1.0d-15), &
-                                  "DIFF_COEFF_SECOND_ for pair "//trim(to_string(i))//" is "// &
-                                  trim(to_string(diff_coeff_second(i)))//" expected "// &
+                  call assert_msg(479211506, almost_equal(diff_coeff_outer(i), expected_diff_coeff, 1.0d-15), &
+                                  "DIFF_COEFF_OUTER_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(diff_coeff_outer(i)))//" expected "// &
                                   trim(to_string(expected_diff_coeff)))
-                  call assert_msg(138784229, almost_equal(phase_id_first(i), phase_id_first_expected(i), 1.0d-15), &
-                                  "PHASE_ID_FIRST_ for pair "//trim(to_string(i))//" is "// &
-                                  trim(to_string(phase_id_first(i)))//" expected "// &
-                                  trim(to_string(phase_id_first_expected(i))))
-                  call assert_msg(994300121, almost_equal(phase_id_second(i), phase_id_second_expected(i), 1.0d-15), &
-                                  "PHASE_ID_SECOND_ for pair "//trim(to_string(i))//" is "// &
-                                  trim(to_string(phase_id_second(i)))//" expected "// &
-                                  trim(to_string(phase_id_second_expected(i))))
-                  call assert_msg(204430899, almost_equal(aero_spec_first(i), aero_spec_first_expected(i), 1.0d-15), &
-                                  "AERO_SPEC_FIRST_ for pair "//trim(to_string(i))//" is "// &
-                                  trim(to_string(aero_spec_first(i)))//" expected "// &
-                                  trim(to_string(aero_spec_first_expected(i))))
-                  call assert_msg(538824611, almost_equal(aero_spec_second(i), aero_spec_second_expected(i), 1.0d-15), &
-                                  "AERO_SPEC_SECOND_ for pair "//trim(to_string(i))//" is "// &
-                                  trim(to_string(aero_spec_second(i)))//" expected "// &
-                                  trim(to_string(aero_spec_second_expected(i))))
+                  call assert_msg(138784229, almost_equal(phase_id_inner(i), phase_id_inner_expected(i), 1.0d-15), &
+                                  "PHASE_ID_INNER_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(phase_id_inner(i)))//" expected "// &
+                                  trim(to_string(phase_id_inner_expected(i))))
+                  call assert_msg(994300121, almost_equal(phase_id_outer(i), phase_id_outer_expected(i), 1.0d-15), &
+                                  "PHASE_ID_OUTER_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(phase_id_outer(i)))//" expected "// &
+                                  trim(to_string(phase_id_outer_expected(i))))
+                  call assert_msg(204430899, almost_equal(aero_spec_inner(i), aero_spec_inner_expected(i), 1.0d-15), &
+                                  "AERO_SPEC_INNER_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(aero_spec_inner(i)))//" expected "// &
+                                  trim(to_string(aero_spec_inner_expected(i))))
+                  call assert_msg(538824611, almost_equal(aero_spec_outer(i), aero_spec_outer_expected(i), 1.0d-15), &
+                                  "AERO_SPEC_OUTER_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(aero_spec_outer(i)))//" expected "// &
+                                  trim(to_string(aero_spec_outer_expected(i))))
                 end do
               end if
-              ! Test rate_first and rate_second calculations based on surface_area and layer_thickness
+              ! Test rate_inner and rate_outer calculations based on surface_area and layer_thickness
               ! 
               ! Formula from condensed phase diffusion solver:
-              ! rate_first = (eff_sa / volume_phase_first) * (
-              !     (-DIFF_COEFF_FIRST_ / layer_thickness_first) * state[PHASE_ID_FIRST_] +
-              !     (DIFF_COEFF_SECOND_ / layer_thickness_second) * state[PHASE_ID_SECOND_]
+              ! rate_inner = (eff_sa / volume_phase_inner) * (
+              !     (-DIFF_COEFF_INNER_ / layer_thickness_inner) * state[PHASE_ID_INNER_] +
+              !     (DIFF_COEFF_OUTER_ / layer_thickness_outer) * state[PHASE_ID_OUTER_]
               ! )
               !
-              ! rate_second = (eff_sa / volume_phase_second) * (
-              !     (DIFF_COEFF_FIRST_ / layer_thickness_first) * state[PHASE_ID_FIRST_] -
-              !     (DIFF_COEFF_SECOND_ / layer_thickness_second) * state[PHASE_ID_SECOND_]
+              ! rate_outer = (eff_sa / volume_phase_outer) * (
+              !     (DIFF_COEFF_INNER_ / layer_thickness_inner) * state[PHASE_ID_INNER_] -
+              !     (DIFF_COEFF_OUTER_ / layer_thickness_outer) * state[PHASE_ID_OUTER_]
               ! )
               !
               ! Where:
               ! - eff_sa = interface surface area between layers (m2)
-              ! - volume_phase_first = total mass of first phase (kg per particle)
-              ! - volume_phase_second = total mass of second phase (kg per particle)
+              ! - volume_phase_inner = total mass of inner phase (kg per particle)
+              ! - volume_phase_outer = total mass of outer phase (kg per particle)
               ! - state values = concentrations of species in each layer (kg/m3 per particle)
               
               if (scenario.eq.1) then
@@ -595,40 +595,40 @@ contains
                 volume_phase_l3 = true_conc(0,idx_solute_l3) + true_conc(0,idx_H2O_l3)
                 volume_phase_l2 = true_conc(0,idx_solute_l2) + true_conc(0,idx_H2O_l2)
 
-                ! Calculate expected rate_first
-                expected_rate_first = (surface_area_l2 / volume_phase_l2) * ( &
-                  (-diff_coeff_first(6) / layer_thickness_l2) * true_conc(0,idx_solute_l2) + &
-                  (diff_coeff_second(6) / layer_thickness_l3) * true_conc(0,idx_solute_l3) )
-                call assert_msg(470271032, almost_equal(1.37301d-7, expected_rate_first, test_tolerance), &
-                      "rate_first is expected "// &
-                      trim(to_string(expected_rate_first)))
+                ! Calculate expected rate_inner
+                expected_rate_inner = (surface_area_l2 / volume_phase_l2) * ( &
+                  (-diff_coeff_inner(6) / layer_thickness_l2) * true_conc(0,idx_solute_l2) + &
+                  (diff_coeff_outer(6) / layer_thickness_l3) * true_conc(0,idx_solute_l3) )
+                call assert_msg(470271032, almost_equal(1.37301d-7, expected_rate_inner, test_tolerance), &
+                      "rate_inner is expected "// &
+                      trim(to_string(expected_rate_inner)))
 
-                ! Calculate expected rate_second
-                expected_rate_second = (surface_area_l2 / volume_phase_l3) * ( &
-                  (diff_coeff_first(6) / layer_thickness_l2) * true_conc(0,idx_solute_l2) - &
-                  (diff_coeff_second(6) / layer_thickness_l3) * true_conc(0,idx_solute_l3) )
-                call assert_msg(994658337, almost_equal(-9.56945d-8, expected_rate_second, test_tolerance), &
-                      "rate_second is expected "// &
-                      trim(to_string(expected_rate_second)))
+                ! Calculate expected rate_outer
+                expected_rate_outer = (surface_area_l2 / volume_phase_l3) * ( &
+                  (diff_coeff_inner(6) / layer_thickness_l2) * true_conc(0,idx_solute_l2) - &
+                  (diff_coeff_outer(6) / layer_thickness_l3) * true_conc(0,idx_solute_l3) )
+                call assert_msg(994658337, almost_equal(-9.56945d-8, expected_rate_outer, test_tolerance), &
+                      "rate_outer is expected "// &
+                      trim(to_string(expected_rate_outer)))
               else 
                 test_tolerance = 1.0d-6
                 ! Calculate volume (mass) of each phase
                 volume_phase_l1 = true_conc(0,idx_solute_l1)
                 volume_phase_l0 = true_conc(0,idx_solute_l0)
-                ! Calculate expected rate_first
-                expected_rate_first = (surface_area_l0 / volume_phase_l0) * ( &
-                  (-diff_coeff_first(1) / layer_thickness_l0) * true_conc(0,idx_solute_l0) + &
-                  (diff_coeff_second(1) / layer_thickness_l1) * true_conc(0,idx_solute_l1) )
-                call assert_msg(470271032, almost_equal(6.16023d-08, expected_rate_first, test_tolerance), &
-                      "rate_first is expected "// &
-                      trim(to_string(expected_rate_first)))
-                ! Calculate expected rate_second
-                expected_rate_second = (surface_area_l0 / volume_phase_l1) * ( &
-                  (diff_coeff_first(1) / layer_thickness_l0) * true_conc(0,idx_solute_l0) - &
-                  (diff_coeff_second(1) / layer_thickness_l1) * true_conc(0,idx_solute_l1) )
-                call assert_msg(994658337, almost_equal(-6.16023d-12, expected_rate_second, test_tolerance), &
-                      "rate_second is expected "// &
-                      trim(to_string(expected_rate_second)))
+                ! Calculate expected rate_inner
+                expected_rate_inner = (surface_area_l0 / volume_phase_l0) * ( &
+                  (-diff_coeff_inner(1) / layer_thickness_l0) * true_conc(0,idx_solute_l0) + &
+                  (diff_coeff_outer(1) / layer_thickness_l1) * true_conc(0,idx_solute_l1) )
+                call assert_msg(470271032, almost_equal(6.16023d-08, expected_rate_inner, test_tolerance), &
+                      "rate_inner is expected "// &
+                      trim(to_string(expected_rate_inner)))
+                ! Calculate expected rate_outer
+                expected_rate_outer = (surface_area_l0 / volume_phase_l1) * ( &
+                  (diff_coeff_inner(1) / layer_thickness_l0) * true_conc(0,idx_solute_l0) - &
+                  (diff_coeff_outer(1) / layer_thickness_l1) * true_conc(0,idx_solute_l1) )
+                call assert_msg(994658337, almost_equal(-6.16023d-12, expected_rate_outer, test_tolerance), &
+                      "rate_outer is expected "// &
+                      trim(to_string(expected_rate_outer)))
               end if
               
           end select
@@ -663,12 +663,12 @@ contains
 #endif
 
     ! Deallocate diffusion coefficient arrays if they were allocated
-    if (allocated(diff_coeff_first)) deallocate(diff_coeff_first)
-    if (allocated(diff_coeff_second)) deallocate(diff_coeff_second)
-    if (allocated(phase_id_first)) deallocate(phase_id_first)
-    if (allocated(phase_id_second)) deallocate(phase_id_second)
-    if (allocated(aero_spec_first)) deallocate(aero_spec_first)
-    if (allocated(aero_spec_second)) deallocate(aero_spec_second)
+    if (allocated(diff_coeff_inner)) deallocate(diff_coeff_inner)
+    if (allocated(diff_coeff_outer)) deallocate(diff_coeff_outer)
+    if (allocated(phase_id_inner)) deallocate(phase_id_inner)
+    if (allocated(phase_id_outer)) deallocate(phase_id_outer)
+    if (allocated(aero_spec_inner)) deallocate(aero_spec_inner)
+    if (allocated(aero_spec_outer)) deallocate(aero_spec_outer)
 
     deallocate(camp_core)
 

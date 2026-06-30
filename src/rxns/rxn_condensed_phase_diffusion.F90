@@ -15,22 +15,21 @@
 !!
 !! Input data for condensed phase diffusion reactions have the following format :
 !! \code{.json}
-!!     {
-!!    "name" : "condensed phase diffusion",
-!!    "type" : "MECHANISM",
-!!    "reactions" : [
-!!      {
-!!        "type" : "CONDENSED_PHASE_DIFFUSION",
-!!        "species": [{
-!!          "phase": "aqueous",
-!!          "name": "H2O_aq"
-!!      },
-!!      {
-!!        "phase": "organic",
-!!        "name": "H2O_org"
-!!      }]
-!!      }
-!!    ]}
+!!   {
+!!     "name" : "condensed phase diffusion",
+!!     "type" : "MECHANISM",
+!!     "reactions" : [
+!!       {
+!!         "type" : "CONDENSED_PHASE_DIFFUSION",
+!!         "species": [{
+!!         "phase": "aqueous",
+!!         "name": "H2O_aq"
+!!       },
+!!       {
+!!         "phase": "organic",
+!!         "name": "H2O_org"
+!!       }]
+!!   }
 !! \endcode
 !! The key-value pairs \b condensed phase and associated \b species 
 !! of the diffusing species are required. The species indicated must 
@@ -65,22 +64,22 @@ module camp_rxn_condensed_phase_diffusion
 #define NUM_ENV_PARAM_ 0
 #define BLOCK_SIZE_ 1000
 
-#define DIFF_COEFF_FIRST_(x) this%condensed_data_real(NUM_REAL_PROP_ + (x)) 
-#define DIFF_COEFF_SECOND_(x) this%condensed_data_real(NUM_REAL_PROP_ + NUM_ADJACENT_PAIRS_ + (x))
-! PHASE_ID_FIRST_ and PHASE_ID_SECOND_ are arrays of 
+#define DIFF_COEFF_INNER_(x) this%condensed_data_real(NUM_REAL_PROP_ + (x)) 
+#define DIFF_COEFF_OUTER_(x) this%condensed_data_real(NUM_REAL_PROP_ + NUM_ADJACENT_PAIRS_ + (x))
+! PHASE_ID_INNER_ and PHASE_ID_OUTER_ are arrays of 
 ! length NUM_ADJACENT_PAIRS_
-#define PHASE_ID_FIRST_(x) this%condensed_data_int(NUM_INT_PROP_ + (x))
-#define PHASE_ID_SECOND_(x) this%condensed_data_int(NUM_INT_PROP_ + NUM_ADJACENT_PAIRS_ + (x))
-#define AERO_SPEC_FIRST_(x) this%condensed_data_int(NUM_INT_PROP_ + 2*NUM_ADJACENT_PAIRS_ + (x))
-#define AERO_SPEC_SECOND_(x) this%condensed_data_int(NUM_INT_PROP_ + 3*NUM_ADJACENT_PAIRS_ + (x))
+#define PHASE_ID_INNER_(x) this%condensed_data_int(NUM_INT_PROP_ + (x))
+#define PHASE_ID_OUTER_(x) this%condensed_data_int(NUM_INT_PROP_ + NUM_ADJACENT_PAIRS_ + (x))
+#define AERO_SPEC_INNER_(x) this%condensed_data_int(NUM_INT_PROP_ + 2*NUM_ADJACENT_PAIRS_ + (x))
+#define AERO_SPEC_OUTER_(x) this%condensed_data_int(NUM_INT_PROP_ + 3*NUM_ADJACENT_PAIRS_ + (x))
 #define AERO_REP_ID_(x) this%condensed_data_int(NUM_INT_PROP_ + 4*NUM_ADJACENT_PAIRS_ + (x))
-#define DERIV_ID_FIRST_(x) this%condensed_data_int(NUM_INT_PROP_ + 5*NUM_ADJACENT_PAIRS_ + (x))
-#define DERIV_ID_SECOND_(x) this%condensed_data_int(NUM_INT_PROP_ + 6*NUM_ADJACENT_PAIRS_ + (x))
+#define DERIV_ID_INNER_(x) this%condensed_data_int(NUM_INT_PROP_ + 5*NUM_ADJACENT_PAIRS_ + (x))
+#define DERIV_ID_OUTER_(x) this%condensed_data_int(NUM_INT_PROP_ + 6*NUM_ADJACENT_PAIRS_ + (x))
 !#define JAC_ID_(x) this%condensed_data_int(4*BLOCK_SIZE_ + x)
 !#define PHASE_INT_LOC_(x) this%condensed_data_int(5*BLOCK_SIZE_ + x) 
 !#define PHASE_REAL_LOC_(x) this%condensed_data_int(6*BLOCK_SIZE_ + x)
-!#define NUM_AERO_PHASE_JAC_ELEM_FIRST_(x) this%condensed_data_int(10*BLOCK_SIZE_ + x)
-!#define NUM_AERO_PHASE_JAC_ELEM_SECOND_(x) this%condensed_data_int(11*BLOCK_SIZE_ + x)
+!#define NUM_AERO_PHASE_JAC_ELEM_INNER_(x) this%condensed_data_int(10*BLOCK_SIZE_ + x)
+!#define NUM_AERO_PHASE_JAC_ELEM_OUTER_(x) this%condensed_data_int(11*BLOCK_SIZE_ + x)
 !#define PHASE_JAC_ID_(x) this%condensed_data_int(12*BLOCK_SIZE_ + x)
 !#define NUM_CONC_JAC_ELEM_(x) this%condensed_data_int(13*BLOCK_SIZE_ + x)
 !#define MASS_JAC_ELEM_(x) this%condensed_data_int(14*BLOCK_SIZE_ + x)
@@ -135,8 +134,6 @@ contains
     !> Number of grid cells to solve simultaneously
     integer(kind=i_kind), intent(in) :: n_cells
 
-    character(len=:), allocatable :: phase_names_first(:), spec_names_first(:)
-    character(len=:), allocatable :: phase_names_second(:), spec_names_second(:)
     type(aero_phase_data_t), pointer :: aero_phase_data
 
     type(string_t), allocatable :: diffusion_phase_names(:)
@@ -148,7 +145,7 @@ contains
     integer(kind=i_kind) :: state_size, max_particles, offset, i_particle 
     integer(kind=i_kind) :: i_spec, i_aero_rep, i_aero_id, i, i_adj_rep_id
     integer(kind=i_kind) :: i_phase, i_species, tmp_size
-    integer(kind=i_kind) :: n_aero_jac_elem_first, n_aero_jac_elem_second
+    integer(kind=i_kind) :: n_aero_jac_elem_inner, n_aero_jac_elem_outer
     integer(kind=i_kind) :: i_adj_pairs, i_phase_ids
     type(string_t), allocatable :: unique_spec_names(:)
     integer(kind=i_kind), allocatable :: adj_phase_size(:)
@@ -239,7 +236,7 @@ contains
       if (size(adjacent_phases) .gt. 0) then
         do i = 1, size(adjacent_phases)
           num_adjacent_pairs = num_adjacent_pairs + 1
-          PHASE_ID_FIRST_(num_adjacent_pairs) = adjacent_phases(i)%first_
+          PHASE_ID_INNER_(num_adjacent_pairs) = adjacent_phases(i)%first_
         end do
         NUM_ADJACENT_PAIRS_ = num_adjacent_pairs
       end if
@@ -252,7 +249,7 @@ contains
       if (size(adjacent_phases) .gt. 0) then
         do i = 1, size(adjacent_phases)
           num_adjacent_pairs = num_adjacent_pairs + 1
-          PHASE_ID_SECOND_(num_adjacent_pairs) = adjacent_phases(i)%second_
+          PHASE_ID_OUTER_(num_adjacent_pairs) = adjacent_phases(i)%second_
         end do
       end if
     end do
@@ -264,9 +261,9 @@ contains
       if (size(adjacent_phases) .gt. 0) then
         do i = 1, size(adjacent_phases)
           i_adj_pairs = i_adj_pairs + 1
-          AERO_SPEC_FIRST_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id_by_phase( &
+          AERO_SPEC_INNER_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id_by_phase( &
                adjacent_phases(i)%first_, diffusion_species_names(1)%string)
-          AERO_SPEC_SECOND_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id_by_phase( &
+          AERO_SPEC_OUTER_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id_by_phase( &
                adjacent_phases(i)%second_, diffusion_species_names(SIZE(diffusion_species_names))%string)
         end do
       end if
@@ -279,29 +276,28 @@ contains
     do i_aero_rep = 1, size(aero_rep) 
       do i_phase = 1, size(aero_phase)
         do i_adj_pairs = 1, num_adjacent_pairs
-          ! Find the FIRST phase in the pair
+          ! Find the INNER phase in the pair
           if (aero_phase(i_phase)%val%name() .eq. diffusion_phase_names(1)%string) then
             spec_property_set => aero_phase(i_phase)%val%get_spec_property_set( &
                     diffusion_species_names(1)%string)
             key_name = "diffusion coefficient [m2 s-1]"
             if (spec_property_set%get_real(key_name, temp_real)) then
-              DIFF_COEFF_FIRST_(i_adj_pairs) = temp_real
+              DIFF_COEFF_INNER_(i_adj_pairs) = temp_real
             end if
           end if
         end do
       end do
       
-      ! Find the SECOND phase in the pair
+      ! Find the OUTER phase in the pair
       do i_phase = 1, size(aero_phase)
         do i_adj_pairs = 1, num_adjacent_pairs
-         ! Find the SECOND phase in the pair
           if (aero_phase(i_phase)%val%name() .eq. diffusion_phase_names(SIZE(diffusion_phase_names))%string) then
             spec_property_set => aero_phase(i_phase)%val%get_spec_property_set( &
                     diffusion_species_names(SIZE(diffusion_species_names))%string)
            	
               key_name = "diffusion coefficient [m2 s-1]"
               if (spec_property_set%get_real(key_name, temp_real)) then
-                DIFF_COEFF_SECOND_(i_adj_pairs) = temp_real
+                DIFF_COEFF_OUTER_(i_adj_pairs) = temp_real
               else
                call die_msg(857293144, "Missing diffusion coefficient [m2 s-1] for species '"// &
                             diffusion_species_names(SIZE(diffusion_species_names))%string//"' in phase '"// &
