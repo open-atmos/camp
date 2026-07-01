@@ -139,7 +139,7 @@ void rxn_SIMPOL_phase_transfer_get_used_jac_elem(ModelData *model_data,
 
     // Loop through the set of flags (one per state variable) and for each flagged
     // variable:
-    // - register two non-zero Jaocbian elements:
+    // - register two non-zero Jacobian elements:
     //   - one for the gas phase species dependence on each flagged variable
     //   - one for the aerosol phase species dependence on each flagged variable
     // - store the state variable index in the PHASE_JAC_ID_ array for later
