@@ -221,10 +221,9 @@ void rxn_SIMPOL_phase_transfer_update_ids(ModelData *model_data, int *deriv_ids,
     }
 
     // Save non-zero Jacobian element indices for aerosol representation
-    // function dependencies. We use the index saved previously in the 
-    // PHASE_JAC_ID_ array to get the state variable index for each independent
-    // variable and use that to look up the Jacobian element index in the
-    // flattened sparse matrix.
+    // function dependencies. We use the state-variable indices stored
+    // previously in PHASE_JAC_ID_ to look up the corresponding Jacobian
+    // element index in the flattened sparse matrix.
     // We do this for both the dependence of the gas phase species and the
     // aerosol phase species on each independent variable used by the aerosol
     // representation functions.
