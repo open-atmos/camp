@@ -32,9 +32,10 @@
 !!   }
 !! \endcode
 !! The key-value pairs \b condensed phase and associated \b species 
-!! of the diffusing species are required. The species indicated must 
-!! have an associated diffusion coefficient [m2 s-1] listed as a
-!! property assocaited with the phase it exists in.
+!! of the diffusing species are required. One phase/species pair is 
+!! required, with a maximum of two phase/species pairs. The species 
+!! indicated must have an associated diffusion coefficient [m2 s-1] 
+!! listed as a property associated with the phase it exists in.
 !!
 !!
 
@@ -233,13 +234,11 @@ contains
       adjacent_phases = aero_rep(i_aero_rep)%val%adjacent_phases(diffusion_phase_names(1)%string, &
          diffusion_phase_names(SIZE(diffusion_phase_names))%string)
       adj_phase_size(i_aero_rep) = size(adjacent_phases)
-      if (size(adjacent_phases) .gt. 0) then
-        do i = 1, size(adjacent_phases)
-          num_adjacent_pairs = num_adjacent_pairs + 1
-          PHASE_ID_INNER_(num_adjacent_pairs) = adjacent_phases(i)%first_
-        end do
-        NUM_ADJACENT_PAIRS_ = num_adjacent_pairs
-      end if
+      do i = 1, size(adjacent_phases)
+        num_adjacent_pairs = num_adjacent_pairs + 1
+        PHASE_ID_INNER_(num_adjacent_pairs) = adjacent_phases(i)%first_
+      end do
+      NUM_ADJACENT_PAIRS_ = num_adjacent_pairs
     end do
 
     num_adjacent_pairs = 0

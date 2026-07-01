@@ -547,17 +547,15 @@ void aero_rep_single_particle_get_layer_thickness__m(
       float_data, 
       aero_rep_env_data);
   
-  // Only calculate the inner layer radius if the inner and outer layers are different
-  if (i_layer_inner != i_layer_outer) {
-    aero_rep_single_particle_get_effective_layer_radius__m(
-        model_data,
-        aero_phase_idx_inner,
-        &radius_inner,
-        jac_inner,
-        int_data,
-        float_data,
-        aero_rep_env_data);
-  } 
+  // For innermost layer, the inner radius is the same as the outer radius
+  aero_rep_single_particle_get_effective_layer_radius__m(
+      model_data,
+      aero_phase_idx_inner,
+      &radius_inner,
+      jac_inner,
+      int_data,
+      float_data,
+      aero_rep_env_data);
 
   if (i_layer_inner == i_layer_outer) {
     *layer_thickness = radius_outer;
@@ -566,9 +564,9 @@ void aero_rep_single_particle_get_layer_thickness__m(
   }
 
   if (partial_deriv) {
-      for (int i = 0; i < jac_size; ++i) {
-          partial_deriv[i] = jac_outer[i] - jac_inner[i];
-      }
+    for (int i = 0; i < jac_size; ++i) {
+      partial_deriv[i] = jac_outer[i] - jac_inner[i];
+    }    
   }
 
   free(jac_inner);
