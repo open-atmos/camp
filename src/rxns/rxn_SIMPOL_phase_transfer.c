@@ -197,10 +197,10 @@ void rxn_SIMPOL_phase_transfer_update_ids(ModelData *model_data, int *deriv_ids,
   for (int i = 0; i < NUM_AERO_PHASE_; i++)
     DERIV_ID_(i + 1) = deriv_ids[AERO_SPEC_(i)];
 
-  // Save the index of each non-zero Jacobian element in the flattened
-  // sparse matrix.
-  // Note that the order elements are added to the Jacobian is the same order
-  // as they will be accessed in the Jacobian update function.
+  // Save the index of each non-zero Jacobian element in the flattened sparse
+  // matrix.
+  // Note that the order the elements are added to the Jacobian is the same
+  // order as they will be accessed in the Jacobian update function.
   int i_jac = 0;
   JAC_ID_(i_jac++) = jacobian_get_element_id(jac, GAS_SPEC_, GAS_SPEC_);
   for (int i_aero_phase = 0; i_aero_phase < NUM_AERO_PHASE_; i_aero_phase++) {
