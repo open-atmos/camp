@@ -126,9 +126,9 @@ void rxn_SIMPOL_phase_transfer_get_used_jac_elem(ModelData *model_data,
         aero_rep_get_used_jac_elem(model_data, AERO_REP_ID_(i_aero_phase),
                                    AERO_PHASE_ID_(i_aero_phase), aero_jac_elem);
 
-      // The array used to store Jacobian indices was allocated during the
-      // initialization of the reaction (Fortran code). Make sure the allocated
-      // size is large enough. (just a sanity check)
+    // The array used to store Jacobian indices was allocated during the
+    // initialization of the reaction (Fortran code). Make sure the allocated
+    // size is large enough (sanity check).
     if (n_jac_elem > NUM_AERO_PHASE_JAC_ELEM_(i_aero_phase)) {
       printf(
           "\n\nERROR Received more Jacobian elements than expected for SIMPOL "
