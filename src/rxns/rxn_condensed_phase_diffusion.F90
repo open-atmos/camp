@@ -148,6 +148,7 @@ contains
     integer(kind=i_kind) :: i_phase, i_species, tmp_size
     integer(kind=i_kind) :: n_aero_jac_elem_inner, n_aero_jac_elem_outer
     integer(kind=i_kind) :: i_adj_pairs, i_phase_ids
+    logical :: found_inner_coeff, found_outer_coeff
     type(string_t), allocatable :: unique_spec_names(:)
     integer(kind=i_kind), allocatable :: adj_phase_size(:)
     type(index_pair_t), allocatable :: adjacent_phases(:)
@@ -234,23 +235,19 @@ contains
       adjacent_phases = aero_rep(i_aero_rep)%val%adjacent_phases(diffusion_phase_names(1)%string, &
          diffusion_phase_names(SIZE(diffusion_phase_names))%string)
       adj_phase_size(i_aero_rep) = size(adjacent_phases)
-      do i = 1, size(adjacent_phases)
-        num_adjacent_pairs = num_adjacent_pairs + 1
-        PHASE_ID_INNER_(num_adjacent_pairs) = adjacent_phases(i)%first_
-      end do
-      NUM_ADJACENT_PAIRS_ = num_adjacent_pairs
+      num_adjacent_pairs = num_adjacent_pairs + size(adjacent_phases)
     end do
+    NUM_ADJACENT_PAIRS_ = num_adjacent_pairs
 
-    num_adjacent_pairs = 0
-    do i_aero_rep = 1, size(aero_rep) 
+    i_adj_pairs = 0
+    do i_aero_rep = 1, size(aero_rep)
       adjacent_phases = aero_rep(i_aero_rep)%val%adjacent_phases(diffusion_phase_names(1)%string, &
          diffusion_phase_names(SIZE(diffusion_phase_names))%string)
-      if (size(adjacent_phases) .gt. 0) then
-        do i = 1, size(adjacent_phases)
-          num_adjacent_pairs = num_adjacent_pairs + 1
-          PHASE_ID_OUTER_(num_adjacent_pairs) = adjacent_phases(i)%second_
-        end do
-      end if
+      do i = 1, size(adjacent_phases)
+        i_adj_pairs = i_adj_pairs + 1
+        PHASE_ID_INNER_(i_adj_pairs) = adjacent_phases(i)%first_
+        PHASE_ID_OUTER_(i_adj_pairs) = adjacent_phases(i)%second_
+      end do
     end do
 
     i_adj_pairs = 0
@@ -272,40 +269,42 @@ contains
        "No adjacent phases found condensed phase diffusion reaction.")
 
     ! Create the arrays of diffusion coefficients for each adjacent phase pair
-    do i_aero_rep = 1, size(aero_rep) 
-      do i_phase = 1, size(aero_phase)
-        do i_adj_pairs = 1, num_adjacent_pairs
-          ! Find the INNER phase in the pair
-          if (aero_phase(i_phase)%val%name() .eq. diffusion_phase_names(1)%string) then
-            spec_property_set => aero_phase(i_phase)%val%get_spec_property_set( &
-                    diffusion_species_names(1)%string)
-            key_name = "diffusion coefficient [m2 s-1]"
-            if (spec_property_set%get_real(key_name, temp_real)) then
-              DIFF_COEFF_INNER_(i_adj_pairs) = temp_real
-            end if
-          end if
-        end do
-      end do
-      
-      ! Find the OUTER phase in the pair
-      do i_phase = 1, size(aero_phase)
-        do i_adj_pairs = 1, num_adjacent_pairs
-          if (aero_phase(i_phase)%val%name() .eq. diffusion_phase_names(SIZE(diffusion_phase_names))%string) then
-            spec_property_set => aero_phase(i_phase)%val%get_spec_property_set( &
-                    diffusion_species_names(SIZE(diffusion_species_names))%string)
-           	
-              key_name = "diffusion coefficient [m2 s-1]"
-              if (spec_property_set%get_real(key_name, temp_real)) then
-                DIFF_COEFF_OUTER_(i_adj_pairs) = temp_real
-              else
-               call die_msg(857293144, "Missing diffusion coefficient [m2 s-1] for species '"// &
-                            diffusion_species_names(SIZE(diffusion_species_names))%string//"' in phase '"// &
-                            diffusion_phase_names(SIZE(diffusion_phase_names))%string//"'")
-            end if
-          end if
-        end do
-      end do
+    found_inner_coeff = .false.
+    found_outer_coeff = .false.
+    do i_phase = 1, size(aero_phase)
+      ! Get INNER diffusion coefficient
+      if (aero_phase(i_phase)%val%name() .eq. diffusion_phase_names(1)%string) then
+        spec_property_set => aero_phase(i_phase)%val%get_spec_property_set( &
+                diffusion_species_names(1)%string)
+        key_name = "diffusion coefficient [m2 s-1]"
+        if (spec_property_set%get_real(key_name, temp_real)) then
+          do i_adj_pairs = 1, num_adjacent_pairs
+            DIFF_COEFF_INNER_(i_adj_pairs) = temp_real
+          end do
+          found_inner_coeff = .true.
+        end if
+      end if
+
+      ! Get OUTER diffusion coefficient
+      if (aero_phase(i_phase)%val%name() .eq. diffusion_phase_names(SIZE(diffusion_phase_names))%string) then
+        spec_property_set => aero_phase(i_phase)%val%get_spec_property_set( &
+                diffusion_species_names(SIZE(diffusion_species_names))%string)
+        key_name = "diffusion coefficient [m2 s-1]"
+        if (spec_property_set%get_real(key_name, temp_real)) then
+          do i_adj_pairs = 1, num_adjacent_pairs
+            DIFF_COEFF_OUTER_(i_adj_pairs) = temp_real
+          end do
+          found_outer_coeff = .true.
+        end if
+      end if
     end do
+
+    call assert_msg(857293144, found_inner_coeff, "Missing diffusion coefficient [m2 s-1] for species '"// &
+                    diffusion_species_names(1)%string//"' in phase '"// &
+                    diffusion_phase_names(1)%string//"'.")
+    call assert_msg(857293145, found_outer_coeff, "Missing diffusion coefficient [m2 s-1] for species '"// &
+                    diffusion_species_names(SIZE(diffusion_species_names))%string//"' in phase '"// &
+                    diffusion_phase_names(SIZE(diffusion_phase_names))%string//"'.")
 
     ! Set up a general error message
     error_msg = " for condensed phase diffusion of aerosol species '"// &
