@@ -541,14 +541,14 @@ contains
                 aero_spec_inner_expected = (/1,2,5,6/)
                 aero_spec_outer_expected = (/4,3,8,7/)
                 do i = 1, num_adjacent_pairs
-                  !call assert_msg(198340125, almost_equal(diff_coeff_inner(i), diff_coeff_inner_expected(i), 1.0d-15), &
-                  !                "DIFF_COEFF_INNER_ for pair "//trim(to_string(i))//" is "// &
-                  !                trim(to_string(diff_coeff_inner(i)))//" expected "// &
-                  !                trim(to_string(diff_coeff_inner_expected(i))))
-                  !call assert_msg(479211506, almost_equal(diff_coeff_outer(i), diff_coeff_outer_expected(i), 1.0d-15), &
-                  !                "DIFF_COEFF_OUTER_ for pair "//trim(to_string(i))//" is "// &
-                  !                trim(to_string(diff_coeff_outer(i)))//" expected "// &
-                 !                 trim(to_string(diff_coeff_outer_expected(i))))
+                  call assert_msg(198340125, almost_equal(diff_coeff_inner(i), diff_coeff_inner_expected(i), 1.0d-15), &
+                                  "DIFF_COEFF_INNER_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(diff_coeff_inner(i)))//" expected "// &
+                                  trim(to_string(diff_coeff_inner_expected(i))))
+                  call assert_msg(479211506, almost_equal(diff_coeff_outer(i), diff_coeff_outer_expected(i), 1.0d-15), &
+                                  "DIFF_COEFF_OUTER_ for pair "//trim(to_string(i))//" is "// &
+                                  trim(to_string(diff_coeff_outer(i)))//" expected "// &
+                                  trim(to_string(diff_coeff_outer_expected(i))))
                   call assert_msg(138784229, almost_equal(phase_id_inner(i), phase_id_inner_expected(i), 1.0d-15), &
                                   "PHASE_ID_INNER_ for pair "//trim(to_string(i))//" is "// &
                                   trim(to_string(phase_id_inner(i)))//" expected "// &

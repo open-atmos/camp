@@ -336,15 +336,6 @@ contains
         end if
       end do
     end do
-    print *, "DIFF_COEFF_INNER_(1) = ", DIFF_COEFF_INNER_(1)
-    print *, "DIFF_COEFF_INNER_(2) = ", DIFF_COEFF_INNER_(2)
-    print *, "DIFF_COEFF_INNER_(3) = ", DIFF_COEFF_INNER_(3)
-    print *, "DIFF_COEFF_INNER_(4) = ", DIFF_COEFF_INNER_(4)
-
-    print *, "DIFF_COEFF_OUTER_(1) = ", DIFF_COEFF_OUTER_(1)
-    print *, "DIFF_COEFF_OUTER_(2) = ", DIFF_COEFF_OUTER_(2)
-    print *, "DIFF_COEFF_OUTER_(3) = ", DIFF_COEFF_OUTER_(3)
-    print *, "DIFF_COEFF_OUTER_(4) = ", DIFF_COEFF_OUTER_(4)
 
     call assert_msg(857293144, found_inner_coeff, "Missing diffusion coefficient [m2 s-1] for species '"// &
                     diffusion_species_names(1)%string//"' in phase '"// &
