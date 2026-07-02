@@ -108,7 +108,6 @@ contains
     real(kind=dp), target :: radius, number_conc
     real(kind=dp) :: layer_thickness_l0, layer_thickness_l1, layer_thickness_l2, layer_thickness_l3
     real(kind=dp) :: surface_area_l0, surface_area_l1, surface_area_l2
-    real(kind=dp) :: surface_area_l0_inner, surface_area_l0_outer
     real(kind=dp) :: volume_phase_l1_p1, volume_phase_l2_p1
     real(kind=dp) :: rate_outer, expected_rate_inner, expected_rate_outer
     real(kind=dp) :: test_tolerance
@@ -612,30 +611,23 @@ contains
 
               else if (scenario.eq.2) then
                 ! Test rates for pair 1: inner layer (solute) and outer layer (organic)
-                surface_area_l0_inner = (true_conc(0,idx_solute_l0) / &
+                surface_area_l0 = (true_conc(0,idx_solute_l0) / &
                   (true_conc(0,idx_solute_l0) + true_conc(0,idx_org_l0))) * &
                   (true_conc(0,idx_org_l1) / &
                   (true_conc(0,idx_solute_l1) + true_conc(0,idx_org_l1))) * &
                   (4.0 * 3.14159265359 * ( ( true_conc(0,idx_solute_l0) + &
                     true_conc(0,idx_org_l0) ) &
                     * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0))
-                surface_area_l0_outer = (true_conc(0,idx_org_l0) / &
-                  (true_conc(0,idx_solute_l0) + true_conc(0,idx_org_l0))) * &
-                  (true_conc(0,idx_solute_l1) / &
-                  (true_conc(0,idx_solute_l1) + true_conc(0,idx_org_l1))) * &
-                  (4.0 * 3.14159265359 * ( ( true_conc(0,idx_solute_l0) + &
-                    true_conc(0,idx_org_l0) ) &
-                    * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0))
                 test_tolerance = 1.0d-6
                 ! Calculate expected rate_inner
-                expected_rate_inner = (surface_area_l0_inner / true_conc(0,idx_solute_l0)) * ( &
+                expected_rate_inner = (surface_area_l0 / true_conc(0,idx_solute_l0)) * ( &
                   (-diff_coeff_inner(1) / layer_thickness_l0) * true_conc(0,idx_solute_l0) + &
                   (diff_coeff_outer(1) / layer_thickness_l1) * true_conc(0,idx_org_l1) )
                 call assert_msg(138444863, almost_equal(1.64175d-09, expected_rate_inner, test_tolerance), &
                       "rate_inner is expected "// &
                       trim(to_string(expected_rate_inner)))
                 ! Calculate expected rate_outer
-                expected_rate_outer = (surface_area_l0_inner / true_conc(0,idx_org_l1)) * ( &
+                expected_rate_outer = (surface_area_l0 / true_conc(0,idx_org_l1)) * ( &
                   (diff_coeff_inner(1) / layer_thickness_l0) * true_conc(0,idx_solute_l0) - &
                   (diff_coeff_outer(1) / layer_thickness_l1) * true_conc(0,idx_org_l1) )
                 call assert_msg(132778198, almost_equal(-8.20876d-13, expected_rate_outer, test_tolerance), &
@@ -643,30 +635,23 @@ contains
                       trim(to_string(expected_rate_outer)))
 
                 ! Test rates for pair 2: inner layer (organic) and outer layer (solute)
-                surface_area_l0_inner = (true_conc(0,idx_org_l0) / &
+                surface_area_l0 = (true_conc(0,idx_org_l0) / &
                   (true_conc(0,idx_solute_l0) + true_conc(0,idx_org_l0))) * &
                   (true_conc(0,idx_solute_l1) / &
                   (true_conc(0,idx_solute_l1) + true_conc(0,idx_org_l1))) * &
                   (4.0 * 3.14159265359 * ( ( true_conc(0,idx_solute_l0) + &
                     true_conc(0,idx_org_l0) ) &
                     * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0))
-                surface_area_l0_outer = (true_conc(0,idx_solute_l0) / &
-                  (true_conc(0,idx_solute_l0) + true_conc(0,idx_org_l0))) * &
-                  (true_conc(0,idx_org_l1) / &
-                  (true_conc(0,idx_solute_l1) + true_conc(0,idx_org_l1))) * &
-                  (4.0 * 3.14159265359 * ( ( true_conc(0,idx_solute_l0) + &
-                    true_conc(0,idx_org_l0) ) &
-                    * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0))
                 
                 ! Calculate expected rate_inner
-                expected_rate_inner = (surface_area_l0_inner / true_conc(0,idx_org_l0)) * ( &
+                expected_rate_inner = (surface_area_l0 / true_conc(0,idx_org_l0)) * ( &
                   (-diff_coeff_inner(2) / layer_thickness_l0) * true_conc(0,idx_org_l0) + &
                   (diff_coeff_outer(2) / layer_thickness_l1) * true_conc(0,idx_solute_l1) )
                 call assert_msg(337953799, almost_equal(5.4111d-08, expected_rate_inner, test_tolerance), &
                       "rate_inner is expected "// &
                       trim(to_string(expected_rate_inner)))
                 ! Calculate expected rate_outer
-                expected_rate_outer = (surface_area_l0_inner / true_conc(0,idx_solute_l1)) * ( &
+                expected_rate_outer = (surface_area_l0 / true_conc(0,idx_solute_l1)) * ( &
                   (diff_coeff_inner(2) / layer_thickness_l0) * true_conc(0,idx_org_l0) - &
                   (diff_coeff_outer(2) / layer_thickness_l1) * true_conc(0,idx_solute_l1) )
                 call assert_msg(047874970, almost_equal(-1.08222d-08, expected_rate_outer, test_tolerance), &
