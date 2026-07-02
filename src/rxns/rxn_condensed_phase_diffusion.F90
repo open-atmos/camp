@@ -140,6 +140,7 @@ contains
     type(string_t), allocatable :: diffusion_phase_names(:)
     type(string_t), allocatable :: diffusion_species_names(:)
     type(string_t), allocatable :: diffusion_species_names_inner(:), diffusion_species_names_outer(:)
+    type(string_t), allocatable :: diffusion_phase_names_inner(:), diffusion_phase_names_outer(:)
     type(property_t), pointer :: species, spec_props, spec_property_set, aero_phase_property_set
     character(len=:), allocatable :: key_name, aero_spec_name, error_msg
     character(len=:), allocatable :: phase_name, species_name
@@ -251,41 +252,47 @@ contains
       end do
     end do
 
+    ! Map the diffusing phases and species to the inner and outer phases for each adjacent phase pair. 
     i_adj_pairs = 0
+    allocate(diffusion_phase_names_inner(num_adjacent_pairs))
+    allocate(diffusion_phase_names_outer(num_adjacent_pairs))
     allocate(diffusion_species_names_inner(num_adjacent_pairs))
     allocate(diffusion_species_names_outer(num_adjacent_pairs))
-    if (diffusion_phase_names(1)%string .ne. diffusion_phase_names(SIZE(diffusion_phase_names))%string .and. &
-        diffusion_species_names(1)%string .ne. diffusion_species_names(SIZE(diffusion_species_names))%string) then
-      do i_aero_rep = 1, size(aero_rep)
-        adjacent_phases = aero_rep(i_aero_rep)%val%adjacent_phases(diffusion_phase_names(1)%string, &
-           diffusion_phase_names(SIZE(diffusion_phase_names))%string)
-        do i = 1, size(adjacent_phases)
-          i_adj_pairs = i_adj_pairs + 1
-          inner_phase_name = aero_rep(i_aero_rep)%val%aero_phase(adjacent_phases(i)%first_)%val%name()
-          outer_phase_name = aero_rep(i_aero_rep)%val%aero_phase(adjacent_phases(i)%second_)%val%name()
+    do i_aero_rep = 1, size(aero_rep)
+      adjacent_phases = aero_rep(i_aero_rep)%val%adjacent_phases(diffusion_phase_names(1)%string, &
+          diffusion_phase_names(SIZE(diffusion_phase_names))%string)
+      do i = 1, size(adjacent_phases)
+        i_adj_pairs = i_adj_pairs + 1
+        inner_phase_name = aero_rep(i_aero_rep)%val%aero_phase(adjacent_phases(i)%first_)%val%name()
+        outer_phase_name = aero_rep(i_aero_rep)%val%aero_phase(adjacent_phases(i)%second_)%val%name()
 
-          if (inner_phase_name .eq. diffusion_phase_names(1)%string) then
-            diffusion_species_names_inner(i_adj_pairs) = diffusion_species_names(1)
-          else if (inner_phase_name .eq. diffusion_phase_names(SIZE(diffusion_phase_names))%string) then
-            diffusion_species_names_inner(i_adj_pairs) = diffusion_species_names(SIZE(diffusion_species_names))
-          else
-            call die_msg(286189821, "Could not map inner phase name to diffusing species.")
-          end if
+        if (inner_phase_name .eq. diffusion_phase_names(1)%string) then
+          diffusion_species_names_inner(i_adj_pairs) = diffusion_species_names(1)
+          diffusion_phase_names_inner(i_adj_pairs) = diffusion_phase_names(1)
+        else if (inner_phase_name .eq. diffusion_phase_names(SIZE(diffusion_phase_names))%string) then
+          diffusion_species_names_inner(i_adj_pairs) = diffusion_species_names(SIZE(diffusion_species_names))
+          diffusion_phase_names_inner(i_adj_pairs) = diffusion_phase_names(SIZE(diffusion_phase_names))
+        else
+          call die_msg(286189821, "Could not map inner phase name to diffusing species.")
+        end if
 
-          if (outer_phase_name .eq. diffusion_phase_names(1)%string) then
-            diffusion_species_names_outer(i_adj_pairs) = diffusion_species_names(1)
-          else if (outer_phase_name .eq. diffusion_phase_names(SIZE(diffusion_phase_names))%string) then
-            diffusion_species_names_outer(i_adj_pairs) = diffusion_species_names(SIZE(diffusion_species_names))
-          else
-            call die_msg(286189822, "Could not map outer phase name to diffusing species.")
-          end if
-        end do
+        if (outer_phase_name .eq. diffusion_phase_names(1)%string) then
+          diffusion_species_names_outer(i_adj_pairs) = diffusion_species_names(1)
+          diffusion_phase_names_outer(i_adj_pairs) = diffusion_phase_names(1)
+        else if (outer_phase_name .eq. diffusion_phase_names(SIZE(diffusion_phase_names))%string) then
+          diffusion_species_names_outer(i_adj_pairs) = diffusion_species_names(SIZE(diffusion_species_names))
+          diffusion_phase_names_outer(i_adj_pairs) = diffusion_phase_names(SIZE(diffusion_phase_names))
+        else
+          call die_msg(286189822, "Could not map outer phase name to diffusing species.")
+        end if
       end do
-      if (i_adj_pairs .ne. NUM_ADJACENT_PAIRS_ .or. &
-          size(diffusion_species_names_inner) .ne. NUM_ADJACENT_PAIRS_ .or. &
-          size(diffusion_species_names_outer) .ne. NUM_ADJACENT_PAIRS_) then
-        call die_msg(286189821, "Mismatch between number of adjacent phase pairs and number of diffusion species.")
-      end if
+    end do
+    if (i_adj_pairs .ne. NUM_ADJACENT_PAIRS_ .or. &
+        size(diffusion_phase_names_inner) .ne. NUM_ADJACENT_PAIRS_ .or. &
+        size(diffusion_phase_names_outer) .ne. NUM_ADJACENT_PAIRS_ .or. &
+        size(diffusion_species_names_inner) .ne. NUM_ADJACENT_PAIRS_ .or. &
+        size(diffusion_species_names_outer) .ne. NUM_ADJACENT_PAIRS_) then
+      call die_msg(286189821, "Mismatch between number of adjacent phase pairs and number of diffusion species.")
     end if
 
     i_adj_pairs = 0
@@ -293,21 +300,11 @@ contains
       adjacent_phases = aero_rep(i_aero_rep)%val%adjacent_phases(diffusion_phase_names(1)%string, &
          diffusion_phase_names(SIZE(diffusion_phase_names))%string)
       do i = 1, size(adjacent_phases)
-        if (diffusion_phase_names(1)%string .eq. diffusion_phase_names(SIZE(diffusion_phase_names))%string .or. &
-            diffusion_species_names(1)%string .eq. diffusion_species_names(SIZE(diffusion_species_names))%string) then
-          i_adj_pairs = i_adj_pairs + 1
-          AERO_SPEC_INNER_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id_by_phase( &
-                adjacent_phases(i)%first_, diffusion_species_names(1)%string)
-          AERO_SPEC_OUTER_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id_by_phase( &
-                adjacent_phases(i)%second_, diffusion_species_names(SIZE(diffusion_species_names))%string)
-        else if (diffusion_phase_names(1)%string .ne. diffusion_phase_names(SIZE(diffusion_phase_names))%string .and. &
-            diffusion_species_names(1)%string .ne. diffusion_species_names(SIZE(diffusion_species_names))%string) then
-          i_adj_pairs = i_adj_pairs + 1
-          AERO_SPEC_INNER_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id_by_phase( &
-                adjacent_phases(i)%first_, diffusion_species_names_inner(i_adj_pairs)%string)
-          AERO_SPEC_OUTER_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id_by_phase( &
-                adjacent_phases(i)%second_, diffusion_species_names_outer(i_adj_pairs)%string)
-        end if
+        i_adj_pairs = i_adj_pairs + 1
+        AERO_SPEC_INNER_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id_by_phase( &
+              adjacent_phases(i)%first_, diffusion_species_names_inner(i_adj_pairs)%string)
+        AERO_SPEC_OUTER_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id_by_phase( &
+              adjacent_phases(i)%second_, diffusion_species_names_outer(i_adj_pairs)%string)
       end do
     end do
 
@@ -318,36 +315,32 @@ contains
     found_inner_coeff = .false.
     found_outer_coeff = .false.
     do i_phase = 1, size(aero_phase)
-      ! Get INNER diffusion coefficient
-      if (aero_phase(i_phase)%val%name() .eq. diffusion_phase_names(1)%string) then
-        spec_property_set => aero_phase(i_phase)%val%get_spec_property_set( &
-                diffusion_species_names(1)%string)
-        key_name = "diffusion coefficient [m2 s-1]"
-        if (spec_property_set%get_real(key_name, temp_real)) then
-          do i_adj_pairs = 1, num_adjacent_pairs
+      do i_adj_pairs = 1, num_adjacent_pairs
+        if (aero_phase(i_phase)%val%name() .eq. diffusion_phase_names_inner(i_adj_pairs)%string) then
+          spec_property_set => aero_phase(i_phase)%val%get_spec_property_set( &
+                  diffusion_species_names_inner(i_adj_pairs)%string)
+          key_name = "diffusion coefficient [m2 s-1]"
+          if (spec_property_set%get_real(key_name, temp_real)) then
             DIFF_COEFF_INNER_(i_adj_pairs) = temp_real
-          end do
-          found_inner_coeff = .true.
+            found_inner_coeff = .true.
+          end if
         end if
-      end if
-      print *, "DIFF_COEFF_INNER_(1) = ", DIFF_COEFF_INNER_(1)
-      print *, "DIFF_COEFF_INNER_(2) = ", DIFF_COEFF_INNER_(2)
-      print *, "DIFF_COEFF_INNER_(3) = ", DIFF_COEFF_INNER_(3)
-      print *, "DIFF_COEFF_INNER_(4) = ", DIFF_COEFF_INNER_(4)
-
-      ! Get OUTER diffusion coefficient
-      if (aero_phase(i_phase)%val%name() .eq. diffusion_phase_names(SIZE(diffusion_phase_names))%string) then
-        spec_property_set => aero_phase(i_phase)%val%get_spec_property_set( &
-                diffusion_species_names(SIZE(diffusion_species_names))%string)
-        key_name = "diffusion coefficient [m2 s-1]"
-        if (spec_property_set%get_real(key_name, temp_real)) then
-          do i_adj_pairs = 1, num_adjacent_pairs
+        if (aero_phase(i_phase)%val%name() .eq. diffusion_phase_names_outer(i_adj_pairs)%string) then
+          spec_property_set => aero_phase(i_phase)%val%get_spec_property_set( &
+                  diffusion_species_names_outer(i_adj_pairs)%string)
+          key_name = "diffusion coefficient [m2 s-1]"
+          if (spec_property_set%get_real(key_name, temp_real)) then
             DIFF_COEFF_OUTER_(i_adj_pairs) = temp_real
-          end do
-          found_outer_coeff = .true.
+            found_outer_coeff = .true.
+          end if
         end if
-      end if
+      end do
     end do
+    print *, "DIFF_COEFF_INNER_(1) = ", DIFF_COEFF_INNER_(1)
+    print *, "DIFF_COEFF_INNER_(2) = ", DIFF_COEFF_INNER_(2)
+    print *, "DIFF_COEFF_INNER_(3) = ", DIFF_COEFF_INNER_(3)
+    print *, "DIFF_COEFF_INNER_(4) = ", DIFF_COEFF_INNER_(4)
+
     print *, "DIFF_COEFF_OUTER_(1) = ", DIFF_COEFF_OUTER_(1)
     print *, "DIFF_COEFF_OUTER_(2) = ", DIFF_COEFF_OUTER_(2)
     print *, "DIFF_COEFF_OUTER_(3) = ", DIFF_COEFF_OUTER_(3)
