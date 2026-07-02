@@ -34,7 +34,12 @@
     {
       "name": "organic aerosol",
       "type": "AERO_PHASE",
-      "species": ["organic_sp"]
+      "species": [
+        {
+          "name": "organic_sp",
+          "diffusion coefficient [m2 s-1]": 1.0e-5
+        }
+      ]
     },
     {
       "type": "AERO_REP_SINGLE_PARTICLE",
@@ -63,6 +68,10 @@
             {
               "phase": "aqueous aerosol",
               "name": "solute_aq"
+            },
+            {
+              "phase": "organic aerosol",
+              "name": "organic_sp"
             }
           ]
         }
