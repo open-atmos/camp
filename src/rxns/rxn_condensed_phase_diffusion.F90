@@ -275,7 +275,6 @@ contains
         else
           call die_msg(286189821, "Could not map inner phase name to diffusing species.")
         end if
-
         if (outer_phase_name .eq. diffusion_phase_names(1)%string) then
           diffusion_species_names_outer(i_adj_pairs) = diffusion_species_names(1)
           diffusion_phase_names_outer(i_adj_pairs) = diffusion_phase_names(1)
@@ -283,7 +282,7 @@ contains
           diffusion_species_names_outer(i_adj_pairs) = diffusion_species_names(SIZE(diffusion_species_names))
           diffusion_phase_names_outer(i_adj_pairs) = diffusion_phase_names(SIZE(diffusion_phase_names))
         else
-          call die_msg(286189822, "Could not map outer phase name to diffusing species.")
+          call die_msg(286189763, "Could not map outer phase name to diffusing species.")
         end if
       end do
     end do
