@@ -565,8 +565,12 @@ void aero_rep_single_particle_get_layer_thickness__m(
 
   if (partial_deriv) {
     for (int i = 0; i < jac_size; ++i) {
-      partial_deriv[i] = jac_outer[i] - jac_inner[i];
-    }    
+      if (i_layer_inner == i_layer_outer) {
+        partial_deriv[i] = jac_outer[i];
+      } else {
+        partial_deriv[i] = jac_outer[i] - jac_inner[i];
+      }    
+    }
   }
 
   free(jac_inner);
