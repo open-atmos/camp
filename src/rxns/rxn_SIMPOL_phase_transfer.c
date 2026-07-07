@@ -88,6 +88,9 @@ void rxn_SIMPOL_phase_transfer_get_used_jac_elem(ModelData *model_data,
   int *int_data = rxn_int_data;
   double *float_data = rxn_float_data;
 
+  // Allocate a temporary array to flag Jacobian elements used by the aerosol
+  // representation functions. The array is the size of the number of state
+  // variables in the model.
   bool *aero_jac_elem =
       (bool *)malloc(sizeof(bool) * model_data->n_per_cell_state_var);
   if (aero_jac_elem == NULL) {
@@ -110,12 +113,22 @@ void rxn_SIMPOL_phase_transfer_get_used_jac_elem(ModelData *model_data,
                                 AERO_ACT_ID_(i_aero_phase));
     }
 
+    // Reset the aero_jac_elem array to false
     for (int i_elem = 0; i_elem < model_data->n_per_cell_state_var; ++i_elem)
       aero_jac_elem[i_elem] = false;
 
+    // This function will set aero_jac_elem to true for each state variable used
+    // in the various aerosol representation functions. Not every flagged variable
+    // will be used in every aerosol function algorithm, but this covers every
+    // variable that could be used in any of the functions. The number of elements
+    // flagged is returned.
     int n_jac_elem =
         aero_rep_get_used_jac_elem(model_data, AERO_REP_ID_(i_aero_phase),
                                    AERO_PHASE_ID_(i_aero_phase), aero_jac_elem);
+
+    // The array used to store Jacobian indices was allocated during the
+    // initialization of the reaction (Fortran code). Make sure the allocated
+    // size is large enough (sanity check).
     if (n_jac_elem > NUM_AERO_PHASE_JAC_ELEM_(i_aero_phase)) {
       printf(
           "\n\nERROR Received more Jacobian elements than expected for SIMPOL "
@@ -123,6 +136,14 @@ void rxn_SIMPOL_phase_transfer_get_used_jac_elem(ModelData *model_data,
           n_jac_elem, NUM_AERO_PHASE_JAC_ELEM_(i_aero_phase));
       exit(1);
     }
+
+    // Loop through the set of flags (one per state variable) and for each flagged
+    // variable:
+    // - register two non-zero Jacobian elements:
+    //   - one for the gas phase species dependence on each flagged variable
+    //   - one for the aerosol phase species dependence on each flagged variable
+    // - store the state variable index in the PHASE_JAC_ID_ array for later
+    //   use in the Jacobian update function.
     int i_used_elem = 0;
     for (int i_elem = 0; i_elem < model_data->n_per_cell_state_var; ++i_elem) {
       if (aero_jac_elem[i_elem] == true) {
@@ -133,6 +154,11 @@ void rxn_SIMPOL_phase_transfer_get_used_jac_elem(ModelData *model_data,
         ++i_used_elem;
       }
     }
+
+    // The array of Jacobian indices was allocated during the initialization to
+    // be large enough to hold the maximum number of elements that could be used by
+    // the aerosol representation functions. If fewer elements were used, set the
+    // remaining elements to -1 to indicate they are not used.
     for (; i_used_elem < NUM_AERO_PHASE_JAC_ELEM_(i_aero_phase);
          ++i_used_elem) {
       PHASE_JAC_ID_(i_aero_phase, JAC_GAS, i_used_elem) = -1;
@@ -171,7 +197,10 @@ void rxn_SIMPOL_phase_transfer_update_ids(ModelData *model_data, int *deriv_ids,
   for (int i = 0; i < NUM_AERO_PHASE_; i++)
     DERIV_ID_(i + 1) = deriv_ids[AERO_SPEC_(i)];
 
-  // Update the Jacobian ids
+  // Save the index of each non-zero Jacobian element in the flattened sparse
+  // matrix.
+  // Note that the order the elements are added to the Jacobian is the same
+  // order as they will be accessed in the Jacobian update function.
   int i_jac = 0;
   JAC_ID_(i_jac++) = jacobian_get_element_id(jac, GAS_SPEC_, GAS_SPEC_);
   for (int i_aero_phase = 0; i_aero_phase < NUM_AERO_PHASE_; i_aero_phase++) {
@@ -190,6 +219,14 @@ void rxn_SIMPOL_phase_transfer_update_ids(ModelData *model_data, int *deriv_ids,
       GAS_ACT_JAC_ID_(i_aero_phase) = -1;
       AERO_ACT_JAC_ID_(i_aero_phase) = -1;
     }
+
+    // Save non-zero Jacobian element indices for aerosol representation
+    // function dependencies. We use the state-variable indices stored
+    // previously in PHASE_JAC_ID_ to look up the corresponding Jacobian
+    // element index in the flattened sparse matrix.
+    // We do this for both the dependence of the gas phase species and the
+    // aerosol phase species on each independent variable used by the aerosol
+    // representation functions.
     for (int i_elem = 0; i_elem < NUM_AERO_PHASE_JAC_ELEM_(i_aero_phase);
          ++i_elem) {
       if (PHASE_JAC_ID_(i_aero_phase, JAC_GAS, i_elem) > 0) {
