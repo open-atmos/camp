@@ -34,4 +34,6 @@ target_sources(camp
     rxn_wennberg_tunneling.F90
     rxn_wet_deposition.c
     rxn_wet_deposition.F90
+    rxn_condensed_phase_diffusion.c
+    rxn_condensed_phase_diffusion.F90
 )

@@ -39,8 +39,8 @@
 !!   - \subpage camp_rxn_arrhenius "Arrhenius"
 !!   - \subpage camp_rxn_CMAQ_H2O2 "CMAQ special reaction type for 2HO2 (+ H2O) -> H2O2"
 !!   - \subpage camp_rxn_CMAQ_OH_HNO3 "CMAQ special reaction type for OH + HNO3 -> NO3 + H2O"
-!!   - \subpage camp_rxn_condensed_phase_arrhenius "condensed-chase Arrhenius"
-!!   - \subpage camp_rxn_condensed_phase_photolysis "condensed-chase photolysis"
+!!   - \subpage camp_rxn_condensed_phase_arrhenius "condensed-phase Arrhenius"
+!!   - \subpage camp_rxn_condensed_phase_photolysis "condensed-phase photolysis"
 !!   - \subpage camp_rxn_emission "emission"
 !!   - \subpage camp_rxn_first_order_loss "first-order loss"
 !!   - \subpage camp_rxn_HL_phase_transfer "Henry's Law phase transfer"
@@ -48,6 +48,7 @@
 !!   - \subpage camp_rxn_SIMPOL_phase_transfer "SIMPOL.1 phase transfer"
 !!   - \subpage camp_rxn_ternary_chemical_activation "ternary chemical activation"
 !!   - \subpage camp_rxn_surface "surface (heterogeneous)"
+!!   - \subpage camp_rxn_condensed_phase_diffusion "condensed-phase diffusion"
 !!   - \subpage camp_rxn_troe "Troe (fall-off)"
 !!   - \subpage camp_rxn_wennberg_no_ro2 "Wennberg NO + RO2"
 !!   - \subpage camp_rxn_wennberg_tunneling "Wennberg tunneling"
@@ -331,6 +332,7 @@ contains
   !!   - \subpage camp_rxn_SIMPOL_phase_transfer "SIMPOL_PHASE_TRANSFER"
   !!   - \subpage camp_rxn_photolysis "PHOTOLYSIS"
   !!   - \subpage camp_rxn_troe "TROE"
+  !!   - \subpage camp_rxn_condensed_phase_diffusion "CONDENSED_PHASE_DIFFUSION"
   !!
   !! All remaining data are optional and may include any valid \c json value,
   !! including nested objects. However, extending types (i.e. reactions) will

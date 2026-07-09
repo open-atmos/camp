@@ -498,7 +498,7 @@ contains
       camp_state%state_var(i_spec) = 3.5
       phase_name = "almond butter"
       spec_name = "almonds"
-      i_spec = aero_rep%spec_state_id(unique_names(4)%string)
+      i_spec = aero_rep%spec_state_id(unique_names(4)%string) 
       call assert_msg(717816750, i_spec.gt.0, rep_name)
       camp_state%state_var(i_spec) = 4.5
       spec_name = "sugar"

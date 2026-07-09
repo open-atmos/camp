@@ -4,6 +4,7 @@ create_standard_test(NAME rxn_aqueous_equilibrium SOURCES test_rxn_aqueous_equil
 create_standard_test(NAME rxn_CMAQ_H2O2 SOURCES test_rxn_CMAQ_H2O2.F90 RESULT "PASS" WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data)
 create_standard_test(NAME rxn_CMAQ_OH_HNO3 SOURCES test_rxn_CMAQ_OH_HNO3.F90 RESULT "PASS" WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data)
 create_standard_test(NAME rxn_condensed_phase_arrhenius SOURCES test_rxn_condensed_phase_arrhenius.F90 RESULT "PASS" WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data)
+create_standard_test(NAME rxn_condensed_phase_diffusion SOURCES test_rxn_condensed_phase_diffusion.F90 RESULT "PASS" WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data)
 create_standard_test(NAME rxn_condensed_phase_photolysis SOURCES test_rxn_condensed_phase_photolysis.F90 RESULT "PASS" WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data)
 create_standard_test(NAME rxn_emission SOURCES test_rxn_emission.F90 RESULT "PASS" WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data)
 create_standard_test(NAME rxn_first_order_loss SOURCES test_rxn_first_order_loss.F90 RESULT "PASS" WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data)

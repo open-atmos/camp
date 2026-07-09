@@ -1,0 +1,126 @@
+{
+  "note": "Diffusion of solid or liquid mass between particle layers",
+  "camp-data": [
+    {
+      "type": "RELATIVE_TOLERANCE",
+      "value": 1.0e-15
+    },
+    {
+      "name": "solute_aq",
+      "type": "CHEM_SPEC",
+      "phase": "AEROSOL",
+      "molecular weight [kg mol-1]": 0.058,
+      "density [kg m-3]": 1.0,
+      "absolute tolerance": 1.0e-20
+    },
+    {
+      "name": "H2O_aq",
+      "type": "CHEM_SPEC",
+      "phase": "AEROSOL",
+      "density [kg m-3]": 1.0,
+      "molecular weight [kg mol-1]": 0.01801
+    },
+    {
+      "name": "aqueous aerosol",
+      "type": "AERO_PHASE",
+      "species": [
+            {
+                    "name": "solute_aq",
+                    "diffusion coefficient [m2 s-1]": 1.5e-5
+            },
+            {
+                    "name": "H2O_aq"
+            }
+      ]
+    },
+    {
+      "type": "AERO_REP_SINGLE_PARTICLE",
+      "name": "my aero rep 1",
+      "maximum computational particles": 3,
+      "layers": [
+            {
+                    "name": "one layer",
+                    "phases": [
+                               "aqueous aerosol"
+                    ],
+                    "covers": "two layer"
+            },
+            {
+                    "name": "two layer",
+                    "phases": [
+                               "aqueous aerosol"
+                    ],
+                    "covers": "none"
+            }
+       ]
+    },
+    {
+      "type": "AERO_REP_SINGLE_PARTICLE",
+      "name": "my aero rep 2",
+      "maximum computational particles": 4,
+      "layers": [
+            {
+                    "name": "one layer",
+                    "phases": [
+                               "aqueous aerosol"
+                    ],
+                    "covers": "zero layer"
+            },
+            {
+                    "name": "two layer",
+                    "phases": [
+                               "aqueous aerosol"
+                    ],
+                    "covers": "one layer"
+            },
+            {
+                    "name": "zero layer",
+                    "phases": [
+                               "aqueous aerosol"
+                    ],
+                    "covers": "none"
+            },
+            {
+                    "name": "three layer",
+                    "phases": [
+                               "aqueous aerosol"
+                    ],
+                    "covers": "two layer"
+            }
+       ]
+    },
+    {
+      "type": "AERO_REP_SINGLE_PARTICLE",
+      "name": "my aero rep 3",
+      "maximum computational particles": 2,
+      "layers": [
+            {
+                    "name": "one layer",
+                    "phases": [
+                               "aqueous aerosol"
+                    ],
+                    "covers": "two layer"
+            },
+            {
+                    "name": "two layer",
+                    "phases": [
+                               "aqueous aerosol"
+                    ],
+                    "covers": "none"
+            }
+       ]
+    },
+    {
+      "name": "condensed phase diffusion",
+      "type": "MECHANISM",
+      "reactions": [
+      {
+        "type" : "CONDENSED_PHASE_DIFFUSION",
+        "species": [{
+          "phase": "aqueous aerosol",
+          "name": "solute_aq"
+      }]
+      }]
+    }
+  ]
+}
