@@ -131,7 +131,6 @@ contains
     type(aero_phase_data_ptr), intent(in) :: aero_phase(:)
     !> Aerosol representations
     type(aero_rep_data_ptr), pointer, intent(in) :: aero_rep(:)
-    !type(camp_state_t), pointer :: camp_state
     !> Number of grid cells to solve simultaneously
     integer(kind=i_kind), intent(in) :: n_cells
 
