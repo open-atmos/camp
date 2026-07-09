@@ -1,6 +1,6 @@
 <map id="camp_aero_phase_data::finalize" name="camp_aero_phase_data::finalize">
-<area shape="rect" id="node1" title="Finalize the aerosol phase data." alt="" coords="541,1541,707,1581"/>
-<area shape="rect" id="node2" href="$namespacecamp__camp__core.html#a672a6ddc1f764207c4b6aa80b72ea203" title="Unpack the given value from the buffer, advancing position." alt="" coords="305,254,459,294"/>
+<area shape="rect" id="node1" title="Finalize the aerosol phase data." alt="" coords="541,1619,707,1659"/>
+<area shape="rect" id="node2" href="$namespacecamp__camp__core.html#a672a6ddc1f764207c4b6aa80b72ea203" title="Unpack the given value from the buffer, advancing position." alt="" coords="305,282,459,322"/>
 <area shape="rect" id="node3" href="$structcamp__aero__phase__data_1_1aero__phase__data__t.html#a8f7c60df17083ac8a79867eead583e97" title="Finalize the aerosol phase data." alt="" coords="31,5,197,60"/>
 <area shape="rect" id="node4" href="$structcamp__aero__rep__modal__binned__mass_1_1aero__rep__modal__binned__mass__t.html#ad7294b462a4dead5dd6060d95da5a7ea" title="Finalize the aerosol representation." alt="" coords="29,85,199,154"/>
 <area shape="rect" id="node5" href="$structcamp__aero__rep__single__particle_1_1aero__rep__single__particle__t.html#abe6107d0395ce71134a68b6acf36fab8" title="Finalize the aerosol representation." alt="" coords="25,179,203,233"/>
@@ -11,44 +11,46 @@
 <area shape="rect" id="node10" href="$structcamp__rxn__cmaq__h2o2_1_1rxn__cmaq__h2o2__t.html#a3c8bdb6eeb8a49e330a0df342bad4a24" title="Finalize the reaction." alt="" coords="19,545,209,585"/>
 <area shape="rect" id="node11" href="$structcamp__rxn__cmaq__oh__hno3_1_1rxn__cmaq__oh__hno3__t.html#a7bda8e981385d4b31d91aa96891c0911" title="Finalize the reaction." alt="" coords="23,609,205,664"/>
 <area shape="rect" id="node12" href="$structcamp__rxn__condensed__phase__arrhenius_1_1rxn__condensed__phase__arrhenius__t.html#af13c4fb0c0c2868d445bc4f616979704" title="Finalize the reaction." alt="" coords="11,689,217,758"/>
-<area shape="rect" id="node13" href="$structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t.html#abfbf37cc145732cbaaad39059170fe79" title="Finalize the reaction." alt="" coords="11,782,217,851"/>
-<area shape="rect" id="node14" href="$structcamp__rxn__emission_1_1rxn__emission__t.html#ac42ae1f3076714f59fa72b62f0bde55f" title="Finalize the reaction." alt="" coords="31,875,197,915"/>
-<area shape="rect" id="node15" href="$structcamp__rxn__first__order__loss_1_1rxn__first__order__loss__t.html#a1fea89bd468062cda1e9a0e5d726b255" title="Finalize the reaction." alt="" coords="37,940,191,995"/>
-<area shape="rect" id="node16" href="$structcamp__rxn__hl__phase__transfer_1_1rxn__hl__phase__transfer__t.html#ac17e19f875db180d3b306806ca952874" title="Finalize the reaction." alt="" coords="15,1019,213,1073"/>
-<area shape="rect" id="node17" href="$structcamp__rxn__photolysis_1_1rxn__photolysis__t.html#ad60ee828ab13c74ca509c5a0bbd6625a" title="Finalize the reaction." alt="" coords="39,1097,189,1152"/>
-<area shape="rect" id="node18" href="$structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t.html#acb72b63f8e216ac7fa0bf6d25771dfd5" title="Finalize the reaction." alt="" coords="23,1176,205,1231"/>
-<area shape="rect" id="node19" href="$structcamp__rxn__surface_1_1rxn__surface__t.html#a6c486155238136facda8abb85060a0e4" title="Finalize the reaction." alt="" coords="33,1255,195,1295"/>
-<area shape="rect" id="node20" href="$structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t.html#a4cd676d830ddd044ddf1ba8a4f234e75" title="Finalize the reaction." alt="" coords="10,1320,218,1375"/>
-<area shape="rect" id="node21" href="$structcamp__rxn__troe_1_1rxn__troe__t.html#a48b37cce9bb0b6a9d5af3e11bd257452" title="Finalize the reaction." alt="" coords="43,1399,185,1439"/>
-<area shape="rect" id="node22" href="$structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t.html#aec8407abe8410e0404f4a0e3c1376221" title="Finalize the reaction." alt="" coords="27,1464,201,1519"/>
-<area shape="rect" id="node23" href="$structcamp__rxn__wennberg__tunneling_1_1rxn__wennberg__tunneling__t.html#a7e919c4d3e5748e675a2224aefe58e2b" title="Finalize the reaction." alt="" coords="6,1543,222,1597"/>
-<area shape="rect" id="node24" href="$structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t.html#a4ac8b4ef38dbb7c775a091e7ba1fb293" title="Finalize the reaction." alt="" coords="23,1621,205,1676"/>
-<area shape="rect" id="node25" href="$structcamp__sub__model__pdfite_1_1sub__model__pdfite__t.html#acbcb0f0c5f5904cdc704f6e3c8dc7af0" title="Finalize the reaction." alt="" coords="29,1700,199,1755"/>
-<area shape="rect" id="node26" href="$structcamp__sub__model__unifac_1_1sub__model__unifac__t.html#a0711981e502c7c2c932096855d91006d" title="Finalize the sub&#45;model." alt="" coords="29,1779,199,1833"/>
-<area shape="rect" id="node27" href="$structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t.html#ac7a874d30347fcbc5bdcdac143f3a8d2" title="Finalize." alt="" coords="22,1858,206,1927"/>
-<area shape="rect" id="node28" href="$namespacecamp__aero__rep__modal__binned__mass.html#afcb21ccb14795432a4fc65e8e5892c04" title="Finalize the aerosol representation array." alt="" coords="283,1649,481,1689"/>
-<area shape="rect" id="node29" href="$namespacecamp__aero__phase__data.html#a0e828293ef8b5cc169dfe653abed14e8" title="Finalize the aerosol phase data." alt="" coords="299,977,465,1017"/>
-<area shape="rect" id="node30" href="$namespacecamp__camp__core.html#aa5f193ffd1e34445bb71881983998fd4" title="Finalize an array of core data." alt="" coords="293,1713,471,1753"/>
-<area shape="rect" id="node31" href="$namespacecamp__mechanism__data.html#af085d0d70728c3eb44f3926e9db5c6d5" title="Finalize an array of mechanisms." alt="" coords="300,1777,464,1817"/>
-<area shape="rect" id="node32" href="$namespacecamp__rxn__aqueous__equilibrium.html#ac24584b837abae6de0fd789cab0fea70" title="Finalize an array of reactions." alt="" coords="273,1841,491,1881"/>
-<area shape="rect" id="node33" href="$namespacecamp__rxn__arrhenius.html#a1c96564ba1a75e3d097ce62a1fa1d7ec" title="Finalize an array of reactions." alt="" coords="308,1905,456,1945"/>
-<area shape="rect" id="node34" href="$namespacecamp__rxn__cmaq__h2o2.html#a2a28944b4ebb9ba2f8fc80273d302125" title="Finalize an array of reactions." alt="" coords="303,1969,461,2009"/>
-<area shape="rect" id="node35" href="$namespacecamp__rxn__cmaq__oh__hno3.html#a37cf33405db75ef2e0d393ec299316ec" title="Finalize an array of reactions." alt="" coords="291,2033,473,2073"/>
-<area shape="rect" id="node36" href="$namespacecamp__rxn__condensed__phase__arrhenius.html#ab81e61283b914d12d3d3feeed34c7a6f" title="Finalize an array of reactions." alt="" coords="272,2097,492,2137"/>
-<area shape="rect" id="node37" href="$namespacecamp__rxn__condensed__phase__photolysis.html#a0d12a2703cb61b56bf39e3e68fde2bc5" title="Finalize an array of reactions." alt="" coords="271,2161,493,2201"/>
-<area shape="rect" id="node38" href="$namespacecamp__rxn__emission.html#af300f8ec9e50816bf04c96840c70c21d" title="Finalize an array of reactions." alt="" coords="307,2225,457,2265"/>
-<area shape="rect" id="node39" href="$namespacecamp__rxn__first__order__loss.html#adeef5a062a0528a791234f7f7fd67c4f" title="Finalize an array of reactions." alt="" coords="305,2289,459,2329"/>
-<area shape="rect" id="node40" href="$namespacecamp__rxn__hl__phase__transfer.html#a38288ca26b8a28eb47195fb5160cc0c0" title="Finalize an array of reactions." alt="" coords="283,2353,481,2393"/>
-<area shape="rect" id="node41" href="$namespacecamp__rxn__photolysis.html#aacf60cf6d22bc0a0a0e62db608db437f" title="Finalize an array of reactions." alt="" coords="307,2417,457,2457"/>
-<area shape="rect" id="node42" href="$namespacecamp__rxn__simpol__phase__transfer.html#a533664b95c6bee59b9b1dbdb3df40081" title="Finalize an array of reactions." alt="" coords="297,2481,467,2521"/>
-<area shape="rect" id="node43" href="$namespacecamp__rxn__surface.html#a1df33979a57a7faa6ea4d2fb4f39e4ea" title="Finalize an array of reactions." alt="" coords="289,2545,475,2585"/>
-<area shape="rect" id="node44" href="$namespacecamp__rxn__ternary__chemical__activation.html#acd4ac72feab0ada46f3fef8e1f92336a" title="Finalize an array of reactions." alt="" coords="285,2609,479,2649"/>
-<area shape="rect" id="node45" href="$namespacecamp__rxn__troe.html#a099415123b17f3d869d6218b4711152e" title="Finalize an array of reactions." alt="" coords="299,2673,465,2713"/>
-<area shape="rect" id="node46" href="$namespacecamp__rxn__wennberg__no__ro2.html#aafd3ac1652f344d30aad709503996788" title="Finalize an array of reactions." alt="" coords="295,2737,469,2777"/>
-<area shape="rect" id="node47" href="$namespacecamp__rxn__wennberg__tunneling.html#a3274b6fad784be09ef5fb037fa9fe7c6" title="Finalize an array of reactions." alt="" coords="274,2801,490,2841"/>
-<area shape="rect" id="node48" href="$namespacecamp__rxn__wet__deposition.html#a978935e949cb53cfb5ec5cec8e6d3df3" title="Finalize an array of reactions." alt="" coords="291,2865,473,2905"/>
-<area shape="rect" id="node49" href="$namespacecamp__sub__model__pdfite.html#af7f444a3b60e04c4efd12ddff3656aba" title="Finalize an array of reactions." alt="" coords="297,2929,467,2969"/>
-<area shape="rect" id="node50" href="$namespacecamp__sub__model__unifac.html#aa2cfbfb39297b9b5b0e417e389126ec3" title="Finalize an array of sub&#45;models." alt="" coords="297,2993,467,3033"/>
-<area shape="rect" id="node51" href="$namespacecamp__sub__model__zsr__aerosol__water.html#ae5da76c41d1cfe74852090f791974592" title="Finalize an array of sub models." alt="" coords="280,3057,484,3097"/>
-<area shape="rect" id="node52" href="$namespacecamp__aero__rep__single__particle.html#a3769b1d5fd802c6c09cffb22135961eb" title="Finalize the aerosol representation array." alt="" coords="301,3121,463,3161"/>
+<area shape="rect" id="node13" href="$structcamp__rxn__condensed__phase__diffusion_1_1rxn__condensed__phase__diffusion__t.html#a94addb950955400d15f2cccd23c80538" title="Finalize the reaction." alt="" coords="15,782,213,851"/>
+<area shape="rect" id="node14" href="$structcamp__rxn__condensed__phase__photolysis_1_1rxn__condensed__phase__photolysis__t.html#abfbf37cc145732cbaaad39059170fe79" title="Finalize the reaction." alt="" coords="11,875,217,945"/>
+<area shape="rect" id="node15" href="$structcamp__rxn__emission_1_1rxn__emission__t.html#ac42ae1f3076714f59fa72b62f0bde55f" title="Finalize the reaction." alt="" coords="31,969,197,1009"/>
+<area shape="rect" id="node16" href="$structcamp__rxn__first__order__loss_1_1rxn__first__order__loss__t.html#a1fea89bd468062cda1e9a0e5d726b255" title="Finalize the reaction." alt="" coords="37,1033,191,1088"/>
+<area shape="rect" id="node17" href="$structcamp__rxn__hl__phase__transfer_1_1rxn__hl__phase__transfer__t.html#ac17e19f875db180d3b306806ca952874" title="Finalize the reaction." alt="" coords="15,1112,213,1167"/>
+<area shape="rect" id="node18" href="$structcamp__rxn__photolysis_1_1rxn__photolysis__t.html#ad60ee828ab13c74ca509c5a0bbd6625a" title="Finalize the reaction." alt="" coords="39,1191,189,1245"/>
+<area shape="rect" id="node19" href="$structcamp__rxn__simpol__phase__transfer_1_1rxn__simpol__phase__transfer__t.html#acb72b63f8e216ac7fa0bf6d25771dfd5" title="Finalize the reaction." alt="" coords="23,1269,205,1324"/>
+<area shape="rect" id="node20" href="$structcamp__rxn__surface_1_1rxn__surface__t.html#a6c486155238136facda8abb85060a0e4" title="Finalize the reaction." alt="" coords="33,1349,195,1389"/>
+<area shape="rect" id="node21" href="$structcamp__rxn__ternary__chemical__activation_1_1rxn__ternary__chemical__activation__t.html#a4cd676d830ddd044ddf1ba8a4f234e75" title="Finalize the reaction." alt="" coords="10,1413,218,1468"/>
+<area shape="rect" id="node22" href="$structcamp__rxn__troe_1_1rxn__troe__t.html#a48b37cce9bb0b6a9d5af3e11bd257452" title="Finalize the reaction." alt="" coords="43,1493,185,1533"/>
+<area shape="rect" id="node23" href="$structcamp__rxn__wennberg__no__ro2_1_1rxn__wennberg__no__ro2__t.html#aec8407abe8410e0404f4a0e3c1376221" title="Finalize the reaction." alt="" coords="27,1557,201,1612"/>
+<area shape="rect" id="node24" href="$structcamp__rxn__wennberg__tunneling_1_1rxn__wennberg__tunneling__t.html#a7e919c4d3e5748e675a2224aefe58e2b" title="Finalize the reaction." alt="" coords="6,1636,222,1691"/>
+<area shape="rect" id="node25" href="$structcamp__rxn__wet__deposition_1_1rxn__wet__deposition__t.html#a4ac8b4ef38dbb7c775a091e7ba1fb293" title="Finalize the reaction." alt="" coords="23,1715,205,1769"/>
+<area shape="rect" id="node26" href="$structcamp__sub__model__pdfite_1_1sub__model__pdfite__t.html#acbcb0f0c5f5904cdc704f6e3c8dc7af0" title="Finalize the reaction." alt="" coords="29,1793,199,1848"/>
+<area shape="rect" id="node27" href="$structcamp__sub__model__unifac_1_1sub__model__unifac__t.html#a0711981e502c7c2c932096855d91006d" title="Finalize the sub&#45;model." alt="" coords="29,1872,199,1927"/>
+<area shape="rect" id="node28" href="$structcamp__sub__model__zsr__aerosol__water_1_1sub__model__zsr__aerosol__water__t.html#ac7a874d30347fcbc5bdcdac143f3a8d2" title="Finalize." alt="" coords="22,1951,206,2021"/>
+<area shape="rect" id="node29" href="$namespacecamp__aero__rep__modal__binned__mass.html#afcb21ccb14795432a4fc65e8e5892c04" title="Finalize the aerosol representation array." alt="" coords="283,1727,481,1767"/>
+<area shape="rect" id="node30" href="$namespacecamp__aero__phase__data.html#a0e828293ef8b5cc169dfe653abed14e8" title="Finalize the aerosol phase data." alt="" coords="299,1005,465,1045"/>
+<area shape="rect" id="node31" href="$namespacecamp__camp__core.html#aa5f193ffd1e34445bb71881983998fd4" title="Finalize an array of core data." alt="" coords="293,1791,471,1831"/>
+<area shape="rect" id="node32" href="$namespacecamp__mechanism__data.html#af085d0d70728c3eb44f3926e9db5c6d5" title="Finalize an array of mechanisms." alt="" coords="300,1855,464,1895"/>
+<area shape="rect" id="node33" href="$namespacecamp__rxn__aqueous__equilibrium.html#ac24584b837abae6de0fd789cab0fea70" title="Finalize an array of reactions." alt="" coords="273,1919,491,1959"/>
+<area shape="rect" id="node34" href="$namespacecamp__rxn__arrhenius.html#a1c96564ba1a75e3d097ce62a1fa1d7ec" title="Finalize an array of reactions." alt="" coords="308,1983,456,2023"/>
+<area shape="rect" id="node35" href="$namespacecamp__rxn__cmaq__h2o2.html#a2a28944b4ebb9ba2f8fc80273d302125" title="Finalize an array of reactions." alt="" coords="303,2047,461,2087"/>
+<area shape="rect" id="node36" href="$namespacecamp__rxn__cmaq__oh__hno3.html#a37cf33405db75ef2e0d393ec299316ec" title="Finalize an array of reactions." alt="" coords="291,2111,473,2151"/>
+<area shape="rect" id="node37" href="$namespacecamp__rxn__condensed__phase__arrhenius.html#ab81e61283b914d12d3d3feeed34c7a6f" title="Finalize an array of reactions." alt="" coords="272,2175,492,2215"/>
+<area shape="rect" id="node38" href="$namespacecamp__rxn__condensed__phase__diffusion.html#a1c08e5fde4fcb23e3e03ba30df57957f" title="Finalize an array of reactions." alt="" coords="275,2239,489,2279"/>
+<area shape="rect" id="node39" href="$namespacecamp__rxn__condensed__phase__photolysis.html#a0d12a2703cb61b56bf39e3e68fde2bc5" title="Finalize an array of reactions." alt="" coords="271,2303,493,2343"/>
+<area shape="rect" id="node40" href="$namespacecamp__rxn__emission.html#af300f8ec9e50816bf04c96840c70c21d" title="Finalize an array of reactions." alt="" coords="307,2367,457,2407"/>
+<area shape="rect" id="node41" href="$namespacecamp__rxn__first__order__loss.html#adeef5a062a0528a791234f7f7fd67c4f" title="Finalize an array of reactions." alt="" coords="305,2431,459,2471"/>
+<area shape="rect" id="node42" href="$namespacecamp__rxn__hl__phase__transfer.html#a38288ca26b8a28eb47195fb5160cc0c0" title="Finalize an array of reactions." alt="" coords="283,2495,481,2535"/>
+<area shape="rect" id="node43" href="$namespacecamp__rxn__photolysis.html#aacf60cf6d22bc0a0a0e62db608db437f" title="Finalize an array of reactions." alt="" coords="307,2559,457,2599"/>
+<area shape="rect" id="node44" href="$namespacecamp__rxn__simpol__phase__transfer.html#a533664b95c6bee59b9b1dbdb3df40081" title="Finalize an array of reactions." alt="" coords="297,2623,467,2663"/>
+<area shape="rect" id="node45" href="$namespacecamp__rxn__surface.html#a1df33979a57a7faa6ea4d2fb4f39e4ea" title="Finalize an array of reactions." alt="" coords="289,2687,475,2727"/>
+<area shape="rect" id="node46" href="$namespacecamp__rxn__ternary__chemical__activation.html#acd4ac72feab0ada46f3fef8e1f92336a" title="Finalize an array of reactions." alt="" coords="285,2751,479,2791"/>
+<area shape="rect" id="node47" href="$namespacecamp__rxn__troe.html#a099415123b17f3d869d6218b4711152e" title="Finalize an array of reactions." alt="" coords="299,2815,465,2855"/>
+<area shape="rect" id="node48" href="$namespacecamp__rxn__wennberg__no__ro2.html#aafd3ac1652f344d30aad709503996788" title="Finalize an array of reactions." alt="" coords="295,2879,469,2919"/>
+<area shape="rect" id="node49" href="$namespacecamp__rxn__wennberg__tunneling.html#a3274b6fad784be09ef5fb037fa9fe7c6" title="Finalize an array of reactions." alt="" coords="274,2943,490,2983"/>
+<area shape="rect" id="node50" href="$namespacecamp__rxn__wet__deposition.html#a978935e949cb53cfb5ec5cec8e6d3df3" title="Finalize an array of reactions." alt="" coords="291,3007,473,3047"/>
+<area shape="rect" id="node51" href="$namespacecamp__sub__model__pdfite.html#af7f444a3b60e04c4efd12ddff3656aba" title="Finalize an array of reactions." alt="" coords="297,3071,467,3111"/>
+<area shape="rect" id="node52" href="$namespacecamp__sub__model__unifac.html#aa2cfbfb39297b9b5b0e417e389126ec3" title="Finalize an array of sub&#45;models." alt="" coords="297,3135,467,3175"/>
+<area shape="rect" id="node53" href="$namespacecamp__sub__model__zsr__aerosol__water.html#ae5da76c41d1cfe74852090f791974592" title="Finalize an array of sub models." alt="" coords="280,3199,484,3239"/>
+<area shape="rect" id="node54" href="$namespacecamp__aero__rep__single__particle.html#a3769b1d5fd802c6c09cffb22135961eb" title="Finalize the aerosol representation array." alt="" coords="301,3263,463,3303"/>
 </map>
