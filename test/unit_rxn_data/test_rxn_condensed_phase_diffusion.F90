@@ -512,19 +512,19 @@ contains
                                   "DIFF_COEFF_OUTER_ for pair "//trim(to_string(i))//" is "// &
                                   trim(to_string(diff_coeff_outer(i)))//" expected "// &
                                   trim(to_string(diff_coeff_expected)))
-                  call assert_msg(678901234, almost_equal(phase_id_inner(i), phase_id_inner_expected(i), 1.0d-15), &
+                  call assert_msg(678901234, phase_id_inner(i).eq.phase_id_inner_expected(i), &
                                   "PHASE_ID_INNER_ for pair "//trim(to_string(i))//" is "// &
                                   trim(to_string(phase_id_inner(i)))//" expected "// &
                                   trim(to_string(phase_id_inner_expected(i))))
-                  call assert_msg(789012345, almost_equal(phase_id_outer(i), phase_id_outer_expected(i), 1.0d-15), &
+                  call assert_msg(789012345, phase_id_outer(i).eq.phase_id_outer_expected(i), &
                                   "PHASE_ID_OUTER_ for pair "//trim(to_string(i))//" is "// &
                                   trim(to_string(phase_id_outer(i)))//" expected "// &
                                   trim(to_string(phase_id_outer_expected(i))))
-                  call assert_msg(861401638, almost_equal(aero_spec_inner(i), aero_spec_inner_expected(i), 1.0d-15), &
+                  call assert_msg(861401638, aero_spec_inner(i).eq.aero_spec_inner_expected(i), &
                                   "AERO_SPEC_INNER_ for pair "//trim(to_string(i))//" is "// &
                                   trim(to_string(aero_spec_inner(i)))//" expected "// &
                                   trim(to_string(aero_spec_inner_expected(i))))
-                  call assert_msg(091211379, almost_equal(aero_spec_outer(i), aero_spec_outer_expected(i), 1.0d-15), &
+                  call assert_msg(091211379, aero_spec_outer(i).eq.aero_spec_outer_expected(i), &
                                   "AERO_SPEC_OUTER_ for pair "//trim(to_string(i))//" is "// &
                                   trim(to_string(aero_spec_outer(i)))//" expected "// &
                                   trim(to_string(aero_spec_outer_expected(i))))
@@ -585,6 +585,8 @@ contains
               ! - volume_phase_inner = total mass of inner phase (kg per particle)
               ! - volume_phase_outer = total mass of outer phase (kg per particle)
               ! - state values = concentrations of species in each layer (kg/m3 per particle)
+              
+              ! TODO: Temporary tests for forcing function. Update when the full implementation is available.
               
               if (scenario.eq.1) then
                 test_tolerance = 1.0d-6

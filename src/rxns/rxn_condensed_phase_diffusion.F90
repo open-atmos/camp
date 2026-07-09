@@ -105,7 +105,7 @@ contains
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Constructor for Phase transfer reaction
+  !> Constructor for condensed phase diffusion reaction
   function constructor() result(new_obj)
 
     !> A new reaction instance
@@ -131,7 +131,7 @@ contains
     type(aero_phase_data_ptr), intent(in) :: aero_phase(:)
     !> Aerosol representations
     type(aero_rep_data_ptr), pointer, intent(in) :: aero_rep(:)
-    type(camp_state_t), pointer :: camp_state
+    !type(camp_state_t), pointer :: camp_state
     !> Number of grid cells to solve simultaneously
     integer(kind=i_kind), intent(in) :: n_cells
 
@@ -142,15 +142,12 @@ contains
     type(string_t), allocatable :: diffusion_species_names_inner(:), diffusion_species_names_outer(:)
     type(string_t), allocatable :: diffusion_phase_names_inner(:), diffusion_phase_names_outer(:)
     type(property_t), pointer :: species, spec_props, spec_property_set, aero_phase_property_set
-    character(len=:), allocatable :: key_name, aero_spec_name, error_msg
+    character(len=:), allocatable :: key_name, error_msg
     character(len=:), allocatable :: phase_name, species_name
     character(len=:), allocatable :: inner_phase_name, outer_phase_name
-    integer(kind=i_kind) :: num_adjacent_pairs, phase_id_array_size
-    integer(kind=i_kind) :: state_size, max_particles, offset, i_particle 
-    integer(kind=i_kind) :: i_spec, i_aero_rep, i_aero_id, i, i_adj_rep_id
-    integer(kind=i_kind) :: i_phase, i_species, tmp_size
-    integer(kind=i_kind) :: n_aero_jac_elem_inner, n_aero_jac_elem_outer
-    integer(kind=i_kind) :: i_adj_pairs, i_phase_ids
+    integer(kind=i_kind) :: num_adjacent_pairs
+    integer(kind=i_kind) :: i_aero_rep, i_aero_id, i, i_adj_rep_id
+    integer(kind=i_kind) :: i_phase, i_species, i_adj_pairs
     logical :: found_inner_coeff, found_outer_coeff
     integer(kind=i_kind), allocatable :: adj_phase_size(:)
     type(index_pair_t), allocatable :: adjacent_phases(:)
@@ -222,13 +219,14 @@ contains
        "Too many diffusing species in diffusion_species_names array.") 
     
     ! Allocate space in the condensed data arrays early so macros can be used
+    ! TODO: allocate int data and real data once length is known
     allocate(this%condensed_data_int(BLOCK_SIZE_ * 20 ))
     allocate(this%condensed_data_real(BLOCK_SIZE_ * 2 ))
     this%condensed_data_int(:) = int(0, kind=i_kind)
     this%condensed_data_real(:) = real(0.0, kind=dp)
 
     ! Check that the species exist in adjacent layers. 
-    ! For the modal/binned aerosol represetnation (no layers) the adjacent_phases array
+    ! For the modal/binned aerosol representation (no layers) the adjacent_phases array
     ! is always 0.
     ! Accumulate adjacent phase pairs from all aerosol representations
     allocate(adj_phase_size(size(aero_rep)))
@@ -273,7 +271,7 @@ contains
           diffusion_species_names_inner(i_adj_pairs) = diffusion_species_names(SIZE(diffusion_species_names))
           diffusion_phase_names_inner(i_adj_pairs) = diffusion_phase_names(SIZE(diffusion_phase_names))
         else
-          call die_msg(286189821, "Could not map inner phase name to diffusing species.")
+          call die_msg(918766455, "Could not map inner phase name to diffusing species.")
         end if
         if (outer_phase_name .eq. diffusion_phase_names(1)%string) then
           diffusion_species_names_outer(i_adj_pairs) = diffusion_species_names(1)
