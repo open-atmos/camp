@@ -1,0 +1,27 @@
+#TODO: Change bsc account to a new account from support@bsc.es, that will be used only for tests, instead of cguzman account.
+# Then set ssh key of new bsc account as file and visible, but the bsc user to hidden and protected.
+# The set of ssh key to visible, even when everyone from gitlb can see that, does not matter, because anyway anyone 
+# can push a commit so everyone can inject code.
+# Then, do: https://docs.gitlab.com/ci/jobs/ssh_keys/#verifying-the-ssh-host-keys
+ssh_test:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  stage: deploy
+  image: ubuntu:22.04
+  tags:
+    - atm_comp
+  variables:
+    HOSTNAME: alogin1.bsc.es
+  before_script:
+    - echo "$HOSTNAME"
+    - apt-get update -y && apt-get install openssh-client -y
+    - eval $(ssh-agent -s)
+    - chmod 400 "$SSH_KEY_BSC_USER_FOR_TESTS"
+    - ssh-add "$SSH_KEY_BSC_USER_FOR_TESTS"
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    #- cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
+    #- chmod 644 ~/.ssh/known_hosts
+  script:
+    - ssh $BSC_USER_FOR_TESTS@$HOSTNAME "echo 'Connection successful'"
+    - echo "hi"

@@ -1,0 +1,75 @@
+#!/bin/bash
+#SBATCH --job-name=boxmodel_v2
+#SBATCH --account=bsc32
+#SBATCH --qos=acc_debug
+####SBATCH --qos=gp_bsces
+#SBATCH --time=0:10:00
+#SBATCH --output=%j.out
+#SBATCH --error=%j.err
+#SBATCH --ntasks=1
+#SBATCH --gres=gpu:1
+#SBATCH --cpus-per-task=80
+###SBATCH --exclusive
+###SBATCH --constraint='medmem'
+
+set -euv
+
+module purge
+module load intel
+source ../compile/load.modules.camp.sh intel
+
+boxmodel_path=$(pwd)
+local_scratch_path=${TMPDIR}
+output_scratch_path=/gpfs/scratch/bsc32/${USER}
+echo ncpus: ${SLURM_NTASKS}
+
+(
+  cd ../build
+  make boxmodel_v2
+)
+
+outdir=${output_scratch_path}/out/${SLURM_JOB_ID}
+mkdir -p ${outdir}
+rundir=${output_scratch_path}/run/${SLURM_JOB_ID}
+mkdir -p ${rundir}
+
+input_files_dir=$1
+if [ -d ${input_files_dir} ]; then
+  config_file=${input_files_dir}/config.json
+  interface_file=${input_files_dir}/interface_boxmodel.json
+  if [ ! -f ${config_file} ]; then
+    echo "could not find config file" ${config_file}
+    exit 1
+  fi
+  if [ ! -f ${interface_file} ]; then
+    echo "could not find interface file" ${interface_file}
+    exit 1
+  fi
+else
+  echo "could not find input files directory ${input_files_dir}"
+  exit 1
+fi
+
+cp -v ${config_file} ${interface_file} ${rundir}
+local_config_file=$(basename ${config_file})
+local_interface_file=$(basename ${interface_file})
+
+grep \.csv\" ${interface_file} | cut -d'"' -f4 | xargs -r cp -v --parents -t ${rundir}
+(
+  cd ${rundir}
+  sed -i "s,__BOXMODELPATH__,${boxmodel_path},g" ${local_config_file}
+  # save input files to outdir
+  grep \.json\" ${local_config_file} | cut -d'"' -f 2 | xargs cp -t ${outdir}
+  cp -v ${local_interface_file} ${local_config_file} ${outdir}
+  # link photolysis input tables
+  ln -sf ${boxmodel_path}/tables ${boxmodel_path}/atmosphere_profile.dat .
+  ln -sf ${boxmodel_path}/DATAE1 ${boxmodel_path}/DATAJ1 ${boxmodel_path}/DATAS1 .
+  # run simulation
+  mpirun -n ${SLURM_NTASKS} ${boxmodel_path}/../build/boxmodel_v2 ${local_config_file} ${local_interface_file} ./simu
+  mv ${boxmodel_path}/${SLURM_JOB_ID}.out ${outdir}/out.log
+  mv ${boxmodel_path}/${SLURM_JOB_ID}.err ${outdir}/err.log
+  mv ./simu* ${outdir}
+  mv ./*_table_*.csv ${outdir}
+)
+
+set +euv

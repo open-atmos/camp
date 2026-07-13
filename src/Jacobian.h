@@ -20,23 +20,22 @@
 
 /* Registered elements for a column in the Jacobian */
 typedef struct {
-  unsigned int array_size;  // Size of the array of flagged elements
+  unsigned int array_size; // Size of the array of flagged elements
   unsigned int
-      number_of_elements;  // Number of registered elements in the column
+      number_of_elements; // Number of registered elements in the column
   unsigned int
-      *row_ids;  // Array of row ids for each registered element in the column
+      *row_ids; // Array of row ids for each registered element in the column
 } JacobianColumnElements;
 
 /* Jacobian for solver species */
 typedef struct {
-  unsigned int num_spec;   // Number of species
-  unsigned int num_elem;   // Number of potentially non-zero Jacobian elements
-  unsigned int *col_ptrs;  // Index of start/end of each column in data array
-  unsigned int *row_ids;   // Row id of each Jacobian element in data array
-  double
-      *production_partials;  // Data array for productions rate partial derivs
-  double *loss_partials;     // Data array for loss rate partial derivs
-  JacobianColumnElements *elements;  // Jacobian elements flagged for inclusion
+  unsigned int num_spec;  // Number of species
+  unsigned int num_elem;  // Number of potentially non-zero Jacobian elements
+  unsigned int *col_ptrs; // Index of start/end of each column in data array
+  unsigned int *row_ids;  // Row id of each Jacobian element in data array
+  double *production_partials; // Data array for productions rate partial derivs
+  double *loss_partials;       // Data array for loss rate partial derivs
+  JacobianColumnElements *elements; // Jacobian elements flagged for inclusion
 } Jacobian;
 
 /** \brief Initialize the Jacobian

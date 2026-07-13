@@ -1,0 +1,400 @@
+{
+  "multiple-boxes": "monte carlo",
+  "random_type": "SOBOL",
+  "experiment-name": "cb05_2prod",
+  "boxmodel-data": [
+    {
+      "name": "species map",
+      "type": "SPECIES_MAP",
+      "mechanism_name": "MONARCH mod37",
+      "gas-phase water": "H2O",
+      "gas-phase water dimer": "H2O_dimer",
+      "photolysis_method": "TUV"
+    },
+    {
+      "name": "everything related to time",
+      "type": "TIME_CONTROL",
+      "time_control": {
+        "start_time": {
+          "year": 2018,
+          "month": 8,
+          "day": 13,
+          "hour": 0,
+          "tz": 0
+        },
+        "simulation_length": {
+          "time": 1,
+          "unit": "days"
+        },
+        "timestep": {
+          "time": 15.0,
+          "unit": "min"
+        }
+      }
+    },
+    {
+      "name": "Constrained concentrations",
+      "type": "FORCED_CONC",
+      "aerosol-phase species": {
+        "aqueous_sulfate.1.organic_matter.POA": {
+          "constant_constraint": {
+            "value": 1.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.2.organic_matter.POA": {
+          "constant_constraint": {
+            "value": 1.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.3.organic_matter.POA": {
+          "constant_constraint": {
+            "value": 1.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.4.organic_matter.POA": {
+          "constant_constraint": {
+            "value": 4.0,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.5.organic_matter.POA": {
+          "constant_constraint": {
+            "value": 4.0,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.6.organic_matter.POA": {
+          "constant_constraint": {
+            "value": 4.0,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.7.organic_matter.POA": {
+          "constant_constraint": {
+            "value": 26.0,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.8.organic_matter.POA": {
+          "constant_constraint": {
+            "value": 26.0,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.3.aqueous_sulfate.NO3_m": {
+          "constant_constraint": {
+            "value": 1e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.4.aqueous_sulfate.NO3_m": {
+          "constant_constraint": {
+            "value": 2.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.5.aqueous_sulfate.NO3_m": {
+          "constant_constraint": {
+            "value": 1e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.6.aqueous_sulfate.NO3_m": {
+          "constant_constraint": {
+            "value": 5e-3,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.7.aqueous_sulfate.NO3_m": {
+          "constant_constraint": {
+            "value": 1.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.8.aqueous_sulfate.NO3_m": {
+          "constant_constraint": {
+            "value": 1.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.3.aqueous_sulfate.NH4_p": {
+          "constant_constraint": {
+            "value": 1e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.4.aqueous_sulfate.NH4_p": {
+          "constant_constraint": {
+            "value": 2.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.5.aqueous_sulfate.NH4_p": {
+          "constant_constraint": {
+            "value": 1e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.6.aqueous_sulfate.NH4_p": {
+          "constant_constraint": {
+            "value": 5.0e-3,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.7.aqueous_sulfate.NH4_p": {
+          "constant_constraint": {
+            "value": 1.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.8.aqueous_sulfate.NH4_p": {
+          "constant_constraint": {
+            "value": 1.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        }
+      }
+    },
+    {
+      "name": "Initial concentrations",
+      "type": "INIT_CONC",
+      "gas-phase species": {
+        "ISOP": {
+          "init conc": 1.0,
+          "unit": "ppb"
+        },
+        "SO2": {
+          "init conc": 1.0,
+          "unit": "ppb"
+        },
+        "NO2": {
+          "init conc": 0.3,
+          "unit": "ppb"
+        },
+        "HNO3": {
+          "init conc": 0.3,
+          "unit": "ppb"
+        },
+        "O3": {
+          "init conc": 0.0,
+          "unit": "ppb"
+        },
+        "H2O2": {
+          "init conc": 1.0,
+          "unit": "ppb"
+        },
+        "CO": {
+          "init conc": 150.0,
+          "unit": "ppb"
+        },
+        "FACD": {
+          "init conc": 0.5,
+          "unit": "ppb"
+        },
+        "MEOH": {
+          "init conc": 2.0,
+          "unit": "ppb"
+        },
+        "MEPX": {
+          "init conc": 0.01,
+          "unit": "ppb"
+        },
+        "CH4": {
+          "init conc": 1700.0,
+          "unit": "ppb"
+        },
+        "M": {
+          "note": "by definition the third body is the concentration of air molecules = 1 ppp",
+          "init conc": 1.0,
+          "unit": "ppp"
+        },
+        "O2": {
+          "note": "molecular oxygen is a constant fraction of air molecules = 0.2095 ppp",
+          "init conc": 0.2095,
+          "unit": "ppp"
+        }
+      },
+      "aerosol-phase species": {
+        "aqueous_sulfate.1.organic_matter.POA": {
+          "init conc": 1.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.2.organic_matter.POA": {
+          "init conc": 1.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.3.organic_matter.POA": {
+          "init conc": 1.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.4.organic_matter.POA": {
+          "init conc": 4.0,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.5.organic_matter.POA": {
+          "init conc": 4.0,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.6.organic_matter.POA": {
+          "init conc": 4.0,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.7.organic_matter.POA": {
+          "init conc": 26.0,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.8.organic_matter.POA": {
+          "init conc": 26.0,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.3.aqueous_sulfate.NO3_m": {
+          "init conc": 1e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.4.aqueous_sulfate.NO3_m": {
+          "init conc": 2.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.5.aqueous_sulfate.NO3_m": {
+          "init conc": 1e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.6.aqueous_sulfate.NO3_m": {
+          "init conc": 5e-3,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.7.aqueous_sulfate.NO3_m": {
+          "init conc": 1.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.8.aqueous_sulfate.NO3_m": {
+          "init conc": 1.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.3.aqueous_sulfate.NH4_p": {
+          "init conc": 1e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.4.aqueous_sulfate.NH4_p": {
+          "init conc": 2.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.5.aqueous_sulfate.NH4_p": {
+          "init conc": 1e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.6.aqueous_sulfate.NH4_p": {
+          "init conc": 5e-3,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.7.aqueous_sulfate.NH4_p": {
+          "init conc": 1.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.8.aqueous_sulfate.NH4_p": {
+          "init conc": 1.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        }
+      }
+    },
+    {
+      "name": "latitude",
+      "type": "LATITUDE",
+      "constant_constraint": {
+        "value": 41.382778,
+        "unit": "deg"
+      }
+    },
+    {
+      "name": "longitude",
+      "type": "LONGITUDE",
+      "constant_constraint": {
+        "value": 2.176944,
+        "unit": "deg"
+      }
+    },
+    {
+      "name": "altitude",
+      "type": "ALTITUDE",
+      "constant_constraint": {
+        "value": 200.0,
+        "unit": "m"
+      }
+    },
+    {
+      "name": "pressure",
+      "type": "PRESSURE",
+      "constant_constraint": {
+        "value": 1.0,
+        "unit": "atm"
+      }
+    },
+    {
+      "name": "temperature",
+      "type": "TEMPERATURE",
+      "constant_constraint": {
+        "value": 298.0,
+        "unit": "K"
+      }
+    },
+    {
+      "name": "humidity",
+      "type": "HUMIDITY",
+      "constant_constraint": {
+        "value": 90.0,
+        "unit": "%"
+      }
+    },
+    {
+      "name": "box height",
+      "type": "HEIGHT",
+      "constant_constraint": {
+        "value": 1.0,
+        "unit": "km"
+      }
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "notes": [
+    "VBS NOx dependent SOA scheme from Shrivastava et al. (2019)",
+    "Gas-phase rate constants taken from CB05 reactions with same reactants"
+  ],
+  "camp-data": [
+    {
+      "name": "MONARCH mod37",
+      "type": "MECHANISM",
+      "reactions": [
+        {
+          "type": "RAOULT_PHASE_TRANSFER",
+          "gas-phase species": "VBS1",
+          "aerosol phase": "organic_matter",
+          "aerosol-phase species": "VBS1_aero",
+          "pvap": 0.1,
+          "pvap_unit": "C*_ug_m3",
+          "delta_h_vap": 1234.5,
+          "C*_ref_temp": 300.0
+        },
+        {
+          "type": "RAOULT_PHASE_TRANSFER",
+          "gas-phase species": "VBS2",
+          "aerosol phase": "organic_matter",
+          "aerosol-phase species": "VBS2_aero",
+          "pvap": 1.0,
+          "pvap_unit": "C*_ug_m3",
+          "delta_h_vap": 1234.5,
+          "C*_ref_temp": 300.0
+        },
+        {
+          "type": "RAOULT_PHASE_TRANSFER",
+          "gas-phase species": "VBS3",
+          "aerosol phase": "organic_matter",
+          "aerosol-phase species": "VBS3_aero",
+          "pvap": 10.0,
+          "pvap_unit": "C*_ug_m3",
+          "delta_h_vap": 1234.5,
+          "C*_ref_temp": 300.0
+        },
+        {
+          "type": "RAOULT_PHASE_TRANSFER",
+          "gas-phase species": "VBS4",
+          "aerosol phase": "organic_matter",
+          "aerosol-phase species": "VBS4_aero",
+          "pvap": 100.0,
+          "pvap_unit": "C*_ug_m3",
+          "delta_h_vap": 1234.5,
+          "C*_ref_temp": 300.0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "camp-files": [
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/gas/cb6/v1.0.0/cb6_mechanism.json",
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/gas/cb6/v1.0.0/cb6_emissions.json",
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/cvode_configuration.json"
+  ]
+}

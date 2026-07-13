@@ -8,10 +8,10 @@
 /** \file
  * \brief Troe reaction solver functions
  */
+#include "../rxns.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../rxns.h"
 
 // TODO Lookup environmental indicies during initialization
 #define TEMPERATURE_K_ env_data[0]
@@ -75,7 +75,8 @@ void rxn_troe_update_ids(ModelData *model_data, int *deriv_ids, Jacobian jac,
   double *float_data = rxn_float_data;
 
   // Update the time derivative ids
-  for (int i = 0; i < NUM_REACT_; i++) DERIV_ID_(i) = deriv_ids[REACT_(i)];
+  for (int i = 0; i < NUM_REACT_; i++)
+    DERIV_ID_(i) = deriv_ids[REACT_(i)];
   for (int i = 0; i < NUM_PROD_; i++)
     DERIV_ID_(i + NUM_REACT_) = deriv_ids[PROD_(i)];
 
@@ -114,7 +115,7 @@ void rxn_troe_update_env_state(ModelData *model_data, int *rxn_int_data,
   // k = (k0[M] / (1 + k0[M]/kinf)) * Fc^(1/(1+(1/N*log(k0[M]/kinf))^2))
   double conv = CONV_ * PRESSURE_PA_ / TEMPERATURE_K_;
   double k0 =
-      K0_A_  // [M] is included in K0_A_
+      K0_A_ // [M] is included in K0_A_
       * (K0_C_ == 0.0 ? 1.0 : exp(K0_C_ / TEMPERATURE_K_)) *
       (K0_B_ == 0.0 ? 1.0 : pow(TEMPERATURE_K_ / ((double)300.0), K0_B_)) *
       conv;
@@ -158,11 +159,13 @@ void rxn_troe_calc_deriv_contrib(ModelData *model_data,
   if (rate != ZERO) {
     int i_dep_var = 0;
     for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++, i_dep_var++) {
-      if (DERIV_ID_(i_dep_var) < 0) continue;
+      if (DERIV_ID_(i_dep_var) < 0)
+        continue;
       time_derivative_add_value(time_deriv, DERIV_ID_(i_dep_var), -rate);
     }
     for (int i_spec = 0; i_spec < NUM_PROD_; i_spec++, i_dep_var++) {
-      if (DERIV_ID_(i_dep_var) < 0) continue;
+      if (DERIV_ID_(i_dep_var) < 0)
+        continue;
       // Negative yields are allowed, but prevented from causing negative
       // concentrations that lead to solver failures
       if (-rate * YIELD_(i_spec) * time_step <= state[PROD_(i_spec)]) {
@@ -200,15 +203,18 @@ void rxn_troe_calc_jac_contrib(ModelData *model_data, Jacobian jac,
     // Calculate d_rate / d_i_ind
     realtype rate = RATE_CONSTANT_;
     for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++)
-      if (i_ind != i_spec) rate *= state[REACT_(i_spec)];
+      if (i_ind != i_spec)
+        rate *= state[REACT_(i_spec)];
 
     for (int i_dep = 0; i_dep < NUM_REACT_; i_dep++, i_elem++) {
-      if (JAC_ID_(i_elem) < 0) continue;
+      if (JAC_ID_(i_elem) < 0)
+        continue;
       jacobian_add_value(jac, (unsigned int)JAC_ID_(i_elem), JACOBIAN_LOSS,
                          rate);
     }
     for (int i_dep = 0; i_dep < NUM_PROD_; i_dep++, i_elem++) {
-      if (JAC_ID_(i_elem) < 0) continue;
+      if (JAC_ID_(i_elem) < 0)
+        continue;
       // Negative yields are allowed, but prevented from causing negative
       // concentrations that lead to solver failures
       if (-rate * state[REACT_(i_ind)] * YIELD_(i_dep) * time_step <=

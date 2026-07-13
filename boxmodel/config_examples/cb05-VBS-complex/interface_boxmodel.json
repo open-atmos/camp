@@ -1,0 +1,416 @@
+{
+  "boxmodel-data": [
+    {
+      "name": "species map",
+      "type": "SPECIES_MAP",
+      "mechanism_name": "MONARCH mod37",
+      "gas-phase water": "H2O",
+      "gas-phase water dimer": "H2O_dimer"
+    },
+    {
+      "name": "everything related to time",
+      "type": "TIME_CONTROL",
+      "time_control": {
+        "start_time": {
+          "year": 2018,
+          "month": 8,
+          "day": 13,
+          "hour": 0,
+          "tz": 0
+        },
+        "simulation_length": {
+          "time": 3,
+          "unit": "days"
+        },
+        "timestep": {
+          "time": 15.0,
+          "unit": "min"
+        }
+      }
+    },
+    {
+      "name": "Initial concentrations",
+      "type": "INIT_CONC",
+      "gas-phase species": {
+        "NO": {
+          "init conc": 0.1,
+          "unit": "ppb"
+        },
+        "NO2": {
+          "init conc": 1.0,
+          "unit": "ppb"
+        },
+        "HNO3": {
+          "init conc": 1,
+          "unit": "ppb"
+        },
+        "O3": {
+          "init conc": 50.0,
+          "unit": "ppb"
+        },
+        "H2O2": {
+          "init conc": 1.1,
+          "unit": "ppb"
+        },
+        "CO": {
+          "init conc": 210.0,
+          "unit": "ppb"
+        },
+        "SO2": {
+          "init conc": 0.8,
+          "unit": "ppb"
+        },
+        "NH3": {
+          "init conc": 0.5,
+          "unit": "ppb"
+        },
+        "HCL": {
+          "init conc": 0.7,
+          "unit": "ppb"
+        },
+        "CH4": {
+          "init conc": 2200.0,
+          "unit": "ppb"
+        },
+        "ETHA": {
+          "init conc": 1.0,
+          "unit": "ppb"
+        },
+        "FORM": {
+          "init conc": 1.2,
+          "unit": "ppb"
+        },
+        "MEOH": {
+          "init conc": 0.12,
+          "unit": "ppb"
+        },
+        "MEPX": {
+          "init conc": 0.2,
+          "unit": "ppb"
+        },
+        "ALD2": {
+          "init conc": 1.0,
+          "unit": "ppb"
+        },
+        "PAR": {
+          "init conc": 2.0,
+          "unit": "ppb"
+        },
+        "ETH": {
+          "init conc": 0.2,
+          "unit": "ppb"
+        },
+        "OLE": {
+          "init conc": 0.023,
+          "unit": "ppb"
+        },
+        "IOLE": {
+          "init conc": 3.1e-4,
+          "unit": "ppb"
+        },
+        "TOL": {
+          "init conc": 0.1,
+          "unit": "ppb"
+        },
+        "XYL": {
+          "init conc": 0.1,
+          "unit": "ppb"
+        },
+        "NTR": {
+          "init conc": 0.1,
+          "unit": "ppb"
+        },
+        "PAN": {
+          "init conc": 0.8,
+          "unit": "ppb"
+        },
+        "AACD": {
+          "init conc": 0.2,
+          "unit": "ppb"
+        },
+        "ROOH": {
+          "init conc": 2.5e-2,
+          "unit": "ppb"
+        },
+        "ISOP": {
+          "init conc": 5.0,
+          "unit": "ppb"
+        },
+        "M": {
+          "note": "by definition the third body is the concentration of air molecules = 1 ppp",
+          "init conc": 1.0,
+          "unit": "ppp"
+        },
+        "O2": {
+          "note": "molecular oxygen is a constant fraction of air molecules = 0.2095 ppp",
+          "init conc": 0.2095,
+          "unit": "ppp"
+        },
+        "N2": {
+          "note": "molecular nitrogen is a constant fraction of air molecules = 0.2095 ppp",
+          "init conc": 0.78,
+          "unit": "ppp"
+        },
+        "H2": {
+          "note": "molecular hydrogen is a constant fraction of air molecules = 0.2095 ppp",
+          "init conc": 0.056,
+          "unit": "ppp"
+        }
+      },
+      "aerosol-phase species": {
+        "aqueous_sulfate.1.organic_matter.POA": {
+          "init conc": 1.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.2.organic_matter.POA": {
+          "init conc": 1.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.3.organic_matter.POA": {
+          "init conc": 1.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.4.organic_matter.POA": {
+          "init conc": 4.0,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.5.organic_matter.POA": {
+          "init conc": 4.0,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.6.organic_matter.POA": {
+          "init conc": 4.0,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.7.organic_matter.POA": {
+          "init conc": 26.0,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.8.organic_matter.POA": {
+          "init conc": 26.0,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.3.aqueous_sulfate.NO3_m": {
+          "init conc": 1e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.4.aqueous_sulfate.NO3_m": {
+          "init conc": 2.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.5.aqueous_sulfate.NO3_m": {
+          "init conc": 1e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.6.aqueous_sulfate.NO3_m": {
+          "init conc": 5e-3,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.7.aqueous_sulfate.NO3_m": {
+          "init conc": 1.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.8.aqueous_sulfate.NO3_m": {
+          "init conc": 1.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.3.aqueous_sulfate.NH4_p": {
+          "init conc": 1e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.4.aqueous_sulfate.NH4_p": {
+          "init conc": 2.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.5.aqueous_sulfate.NH4_p": {
+          "init conc": 1e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.6.aqueous_sulfate.NH4_p": {
+          "init conc": 5e-3,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.7.aqueous_sulfate.NH4_p": {
+          "init conc": 1.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.8.aqueous_sulfate.NH4_p": {
+          "init conc": 1.5e-2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        }
+      }
+    },
+    {
+      "name": "Emissions",
+      "type": "EMISSIONS",
+      "gas-phase species": {
+        "NO": {
+          "constant_constraint": {
+            "value": 1.44e10,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "NO2": {
+          "constant_constraint": {
+            "value": 7.56e-12,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "CO": {
+          "constant_constraint": {
+            "value": 1.96e-9,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "SO2": {
+          "constant_constraint": {
+            "value": 1.06e-9,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "NH3": {
+          "constant_constraint": {
+            "value": 8.93e-9,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "FORM": {
+          "constant_constraint": {
+            "value": 1.02e-11,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "MEOH": {
+          "constant_constraint": {
+            "value": 5.92e-13,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "ALD2": {
+          "constant_constraint": {
+            "value": 4.25e-12,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "PAR": {
+          "constant_constraint": {
+            "value": 4.27e-10,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "ETH": {
+          "constant_constraint": {
+            "value": 4.62e-11,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "OLE": {
+          "constant_constraint": {
+            "value": 1.49e-11,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "IOLE": {
+          "constant_constraint": {
+            "value": 1.49e-11,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "TOL": {
+          "constant_constraint": {
+            "value": 1.53e-11,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "XYL": {
+          "constant_constraint": {
+            "value": 1.4e-11,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "ISOP": {
+          "constant_constraint": {
+            "value": 6.03e-12,
+            "unit": "molec/cm2/s"
+          }
+        }
+      }
+    },
+    {
+      "name": "latitude",
+      "type": "LATITUDE",
+      "constant_constraint": {
+        "value": 41.382778,
+        "unit": "deg"
+      }
+    },
+    {
+      "name": "longitude",
+      "type": "LONGITUDE",
+      "constant_constraint": {
+        "value": 2.176944,
+        "unit": "deg"
+      }
+    },
+    {
+      "name": "altitude",
+      "type": "ALTITUDE",
+      "constant_constraint": {
+        "value": 200.0,
+        "unit": "m"
+      }
+    },
+    {
+      "name": "pressure",
+      "type": "PRESSURE",
+      "constant_constraint": {
+        "value": 1.0,
+        "unit": "atm"
+      }
+    },
+    {
+      "name": "temperature",
+      "type": "TEMPERATURE",
+      "constant_constraint": {
+        "value": 290.0,
+        "unit": "K"
+      }
+    },
+    {
+      "name": "humidity",
+      "type": "HUMIDITY",
+      "constant_constraint": {
+        "value": 90.0,
+        "unit": "%"
+      }
+    },
+    {
+      "name": "box height",
+      "type": "HEIGHT",
+      "constant_constraint": {
+        "value": 1.0,
+        "unit": "m"
+      }
+    }
+  ]
+}

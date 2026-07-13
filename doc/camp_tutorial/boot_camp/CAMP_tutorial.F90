@@ -550,7 +550,6 @@
 ! ***********************************************************************
 ! ***********************************************************************
 
-
 !> \page camp_tutorial_part_3 Boot CAMP: Part 3 - Updating CAMP Parameters
 !!
 !! So far, we've \ref camp_tutorial_part_1 "built a simple box model"
@@ -673,7 +672,6 @@
 ! ***********************************************************************
 ! ***********************************************************************
 ! ***********************************************************************
-
 
 !> \page camp_tutorial_part_4 Boot CAMP: Part 4 - Message Passing
 !!
@@ -803,7 +801,7 @@
 !! flag definition:
 !! \code{.sh}
 !!   mpif90 -o run_box_model box_model.F90 -DCAMP_USE_MPI -lcamp -I/usr/local/include/camp
-!!   mpirun -v -np 2 run_box_model > output.txt
+!!   mpirun -np 2 run_box_model > output.txt
 !! \endcode
 !!
 !! In later installments of \ref camp_tutorial "Boot CAMP" we'll include
@@ -831,7 +829,7 @@
 !!   cd boot-camp
 !!   cp ../camp/doc/camp_tutorial/boot_camp/part_4_code/* .
 !!   mpif90 -o run_box_model box_model.F90 -DCAMP_USE_MPI -lcamp -I/usr/local/include/camp
-!!   mpirun -v -np 2 run_box_model > output.txt
+!!   mpirun -np 2 run_box_model > output.txt
 !!   gnuplot plot.conf
 !!   exit
 !! \endcode

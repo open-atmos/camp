@@ -21,7 +21,6 @@ More info at the README.md included in this directory" &
 done
 scriptdir="$(dirname "$0")"
 cd "$scriptdir"
-unset I_MPI_PMI_LIBRARY
 make_and_check() {
   initial_dir=$(pwd)
   cd ../../build
@@ -40,8 +39,9 @@ make_and_check() {
 make_run() {
   initial_dir=$(pwd)
   cd ../../build
-  make -j 4
+  make -j 8
   cd $initial_dir
+  unset I_MPI_PMI_LIBRARY
   python TestMonarch.py
 }
 

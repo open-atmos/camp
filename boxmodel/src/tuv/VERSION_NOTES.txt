@@ -1,0 +1,331 @@
+April 2021:  in r30 (CH3Cl photolysis) fixed wrong index:
+        t = MAX(255.,MIN(tlev(iz),296.))
+was using i instead of iz.  Thanks to Stacy Walters for point out bug.
+Nov 2020:  added calculation of sza for solar noon.
+Jan 2019: In disort, changed
+DATA ABSCUT/10./    to
+DATA ABSCUT/10000./
+This is because disort was reporting zero irradiance at surface, for wavelengths
+shorter than about 290 nm.  Radiation is zeroed out if a layer has absorption
+optical depth larger than ABSCUT.
+***
+Dec 2018: Found and corrected bug in NO3 spectrum interpolation of JPL94 data.  
+Default setting used JPL2015 data so default outpu not affected by this bug.
+Thanks to Peter Brauer for pointing out bug.
+***
+Oct 2018 S. Madronich:
+corrected dimensioning inconsistency in DISORT, specifically:
+now ANGCOS is declared as a REAL array with dimension (1) to avoid conflict
+with subroutine.
+now in LEPOLY, MU and YLM are explicitly assigned dimensions NMU (not *).
+These issues were identified by Julia Lee-Taylor when compiling under
+gfortran (pedantic option)
+New output for defin1 and defin2 was checked successfully against files in
+SAMPLES/*
+***
+July 2018 S. Madronich:
+found that g_any (asymmetry factor for test species) was not propagating
+correctly in rtlink.  It was effectively using g_any = 0.
+Rtlink was modified to propagate g_any into both 2-stream and discrete ordinates.
+Only affects simulations in which g_any was used.
+________________________________________
+Version 5.4, May 2018, S. Madronich
+** In la_srb.f corrected error in wavelengths specifying the Schumann-Runge
+Band parameterization.  There were typos in the original paper by Koppers and Murtagh (1996).
+The value 174.4 nm was corrected to be 175.4 nm, and the value 205.8 nm was
+corrected to be 206.2.  The 175.5 nm change results in changes in JO2 of up to
+8% in the 90-110 km region, in agreement with Fernandez et al. 2007.
+Thanks to Jonas Debosscher (Belgian Inst. of Aeronomy) for pointing out the error in
+the Koppers and Murtagh paper (noted that should have equal intervals of 500 cm-1).
+***********************
+
+Jan 2018 S. Madronich
+ in vpair.f, change from logarithmic integration to geometric average. This avoids
+ numerical errors when using very thin layers, e.g. 1 cm in snow.  Thanks to Veronica
+ Chan for reporting the errors.
+
+************
+Version 5.3.1, Oct 2016 S. Madronich
+*** fix a few bugs in cross sections:
+   - for acetone (absorption option 4) added T^3 term (previously had corrected
+     only option 3)
+   - for HCFC-123 (rxn32); HCFC-124 (rxn33); and HCFC-142b:
+     corrected indexing problem, was
+      t = MIN(295.,MAC(tlev(i),203.))-TBar
+     changed to:
+      t = MIN(295.,MAC(tlev(iz),203.))-TBar
+
+________________________________________
+Version 5.3, June 2016, S. Madronich
+
+*** MOLECULAR DATA, CORRECTIONS AND ADDITIONS:
+
+- In subroutine qyacet (acetone quantum yields) change 
+      IF(w .GE. 302. .AND. w .LT. 327.) THEN
+   to
+      IF(w .GE. 302. .AND. w .LE. 327.) THEN
+   to avoid possibility of undefined value at exactly w=327.
+   (thanks to Peter Braeuer for pointing out error)
+   Also added exponent overflow protection in qyacet.
+
+- Corrected acetone cross section, was missing T^3 term in temperature
+  correction equation.  Thanks to Glenn Wolfe (NASA) for pointing out this 
+  error.
+
+- For acetaledhyde qy1 pressure dependence, replace use of slope/intercept
+  from Horowitz and Calvert, with direct Stern-Volmer assuming total yield = 1
+  at zero pressure.  Makes some difference at altitudes about 30 km.
+
+- Corrected read of methyl-ethyl-ketone absorption cross section from 
+  Martinez et al. (was reading di-ethyl ketone by mistake). Thank you Peter Brauer 
+  for pointing this out.
+   (thanks to Peter Braeuer, U. of York, for pointing out error)
+
+- Added photolysis of I2, IO, HOI
+
+- Corrected typo in swbiol.f, Green's fit to Caldwell generalized
+  plant action spectrum, preexonential changed to 2.618 from 2.628. Difference
+  is about 0.4% is using this action spectrum (but not default).
+  (thanks to Pedro Aphalo, U. Helsinki, for point out this problem)
+
+- Changed CIE erythemal and UV Index spectrum to reflect CIE1998 definition rather
+  than older (1987) definition.
+
+- Re-normalize the DNA (Setlwo) action spectrum at 254 nm, in order to match with
+  germicidal Hg lamps.
+
+*** CODE BUG FIXES:
+
+- Corrected line in addpnt.f:
+  old:  IF(xnew. GT. x(i)) insert = i + 1
+  new:  IF(xnew. GT. x(i-1)) insert = i
+
+*** NEW FEATURES:
+
+- Added absorption by surface waters, including the following subroutines,
+  collected in file waters.f:
+   WATERS(sza,kabs, ny, y, se_y, de_y) = driver for waters
+       INTRFC(sza_a,se_a,sza_w,se_w, nang,dza_ai,df_a,dza_wi,de_wi) = 
+           = computes interface angles, reflection for direct and diffuse
+           SNEFRE(sza_a, sza_w, r) = Snell's refraction and Fresnel reflection
+           ANGDIF(nang, dza_ai) = subdivides atmospheric diffuse ligth into 
+                  NANG-1 equal areas (cosine-weighted), reports central angle.
+  Results are reported as a function of detph, in meters.  Note that values just
+  below the interface are slightly different than just above.
+  For now, these routines are kept together in waters.f and are called from the 
+  innermost loop (wavelength) of TUV.f.  However, many related parameters could be calculated
+  externally saving computational time, e.g. refraction and reflection depend only on 
+  solar zenith angle, and diffuse discretization depends only on chosen number of angles.
+
+- Arbitrary constituent: Option to add any additional absorber or scatterer 
+  (useful for sensitivity studies)
+    dt_any(kz,kw) = optical depth for additional constituent
+    om_any(kz,kw) = single scattering albedo for additional 
+    g_any(kz,kw) 
+  Can set manually or write a routine "setany" similar to other set routines
+
+- Light pollution at night: Option to enable studying light pollution from sources at the surface, e.g.
+  urban light sources.  Do this by turning off the incident solar beam, and adding diffuse emission from
+  the surface.  For now, do only 2-stream, not with discrete ordinates.
+  In subroutine ps2str, normally pifs = incident beam at top of atmospehre = 1.  But want to 
+  keep pifs arbitrary, so carry into equations:  Replace
+           fdr(lev) = EXP( -tausla(0) )
+  with:      
+	   fdr(lev) = pifs * EXP( -tausla(0) )
+  and
+         fdr(lev) = EXP(-tausla(lev-1))
+  with
+         fdr(lev) = pifs * EXP(-tausla(lev-1))
+  So if night, pifs = 0.
+  Also added surface (lower boundary) source in addition to albedo:
+  so replaced
+      ssfc = rsfc*mu*EXP(-tausla(nlayer))*pifs 
+  with
+      ssfc = rsfc*mu*EXP(-tausla(nlayer))*pifs + surfem
+  where surfem = irradiance emission by the surface, e.g. normalized to 1.0
+
+*** CODE ORGANIZATION
+
+- Added new subroutine terint.f to TERminate and INTerpolate input data arrays.
+  Takes the place of calling addpint 4 times and inter2 once.  Final two arguments
+  specify if terminate with last constant (value = 1) or terminate with zero (value=0)
+
+- Moved out of main TUV.f into subroutines:
+    WRFLUT = look up table for WRF-Chem.  Code stops after table output.
+    NEWLST = create new list of reactions. Code stops after list output.
+  These are special applications that should not occupy much space in
+  the driver TUV.f 
+_____________________________________
+Version 5.2, October 2014, S. Madronich
+
+Moved correction for refraction to gridw routine, option 6
+
+Create defin5 option, to generate molecular spectra x qy for use in wrf-chem.
+For now, output to file ../sq_wrfc.txt
+
+BrONO2 yields of NO2 and NO3 were reversed, now corrected.
+
+Corrected error on CH2O qy molecular channel (was using pre-interpolation value).
+_____________________________________
+Version 5.1, Oct 2014, S. Madronich
+
+August 2014:
+added perfluoro 1-iodopropane photolysis 
+
+July 2014:
+Added several organic nitrate reactions from IUPAC 2006 (Atkinson et al. ACP).
+
+July 2013:
+updated most Ox, NOx, HOx, and HC reactions to jpl2011:
+Reordered the reactions to follow JPL 2011.
+
+Updated: HONO (thanks to Patryk Wojtal for pointing out need)
+Updated: CH2O (note several errors in qy formulae in JPL 2011)
+
+January 2012
+Added photolysis reactions:
+F 87 BrNO -> Br + NO                                   
+F 88 BrNO2 -> Br + NO2                                 
+F 89 BrONO -> Br + NO2                                 
+F 90 BrONO -> BrO + NO                                 
+F 91 HOCl -> HO + Cl                                   
+F 92 NOCl -> NO + Cl                                   
+F 93 OClO -> Products                                  
+F 94 BrCl -> Br + Cl                                   
+F 95 CH3(OONO2) -> CH3(OO) + NO2                       
+F 96 C(CH3)3(ONO) -> C(CH3)3(O) + NO                   
+F 97 ClONO -> Cl + NO2                                 
+F 98 ClOOCl -> ClOO + Cl                               
+
+Corrected error in calculation of qy for acetone at 327.5nm.
+_________________________________________
+Version 5.0, November 2010, S. Madronich
+
+Added some data files on O3 column and profile climatology in directory 
+DATAE1/ATM.  At this point, the code does not ingest the data but this can
+be easily modified, and will be in the future.
+
+Wrote individual read routines for O3 cross section data (WMO1985, Molina and Molina,
+JPL2006, Reims group, Bass et al.).  This makes it easier to switch between the different
+data sets.
+
+Corrected O3 cross section wavelengths.  Original data is in standard air, 
+now converted to vacuum wavelengths for use in TUV which is assumed in vacuum.
+Previous versions of TUV did not make this conversion, so there was a slight
+misalignment between wavelengths of the O3 cross sections (which were in air)
+and the extraterrestrial flux (which was in vac)
+
+Added O3 cross section from Reims group (Malicet et al., Brion et al.)
+and also from JPL2006
+
+Added ET flux from Chance and Kurucz (200-1000 nm by 0.01 nm steps)
+
+Removed orphan references to ftrim (in savout.f) and to plkavg (in rtrans.f)
+
+Added ClO photolysis per JPL2006
+
+Corrected error in acetone quantum yield enforcing upper/lower bounds of 1./0.
+(most likely inconsequential)  for Blitz qy (thanks to Barron Henderson, U. North Carolina,  for catching this)
+      
+Updated to JPL2006:
+   NO2 absorption and quantum yield
+Also moved NO2 absorption read/interpolate data into subroutines for different data sets,
+so can call for (1) transmission, and (2) photolysis.
+
+_________________________________________
+Version 4.6 March 2009, Sasha Madronich
+Corrected indexing problem for PAN and PPN, two channels:
+        j = j+1
+        jlabel(j) = 'CH3CO(OONO2) -> CH3CO(OO) + NO2'
+        j = j+1
+        jlabel(j) = 'CH3CO(OONO2) -> CH3CO(O) + NO3'
+    The sq assignment was to j and j+1 rather than to j-1 and j.  Therefore the 
+    NO2 channel was not assigned (zeros) and the NO3 channel contained the NO2 channel
+    instead.  Same problem for PPN.
+Deleted old input files in directory INPUTS (mex, j01, t1).  The order of reactions was 
+    old and different than new order. Their potential use would lead to mis-assignment of reactions.
+Changed interopolation schemes in vpair.  Now interpolating log concentrations onto z-grid, 
+    then doing log integration to get column increments.  Also changed notation.
+Changed interpolation schemes in vpo3. Linear interpolations of concentrations.  Also extended the 
+    ussa O3 profile to 121 km (from 74 km) using exponential scale height of 4.5 km.
+___________________________________________
+Version 4.5 July-September 2007, Sasha Madronich
+Added biological weighting functions for:
+	vitamin-D production (CIE, 2006a)
+	non-melanoma skin cancer spectrum (CIE, 2006b)
+Added photolysis reactions: 
+	CH3COCH2CH3 (MEK)
+	CH3CH2COO2NO2 (PPN) 
+	CH2=CHCHO (acrolein)
+	CH3CO(OOH) (peracetic acid)
+Modified:
+	CH2=C(CH3)CHO (methacrolein) updated to JPL2007
+	Put in quantum yields for PAN photolysis to NO2 and NO3
+Created z-grid for mexico city. Cleaned up some gridz options.
+Created option to overwrite PBL pollutants O3, SO2, NO2, aerosol
+   This is a preliminary add-on, with some cautions requred. See TUV.f
+Changed deltax to 1e-5 (in file params). This uncovered minor data 
+   termination error in file rxn.f, subroutine r43, for Halon-2402 (CF2BrCF2Br)
+Changed order of photolysis reactions (in swchem.f), to group together 
+   related reactions.
+Moved all input files (including default inputs, and user-defined inputs) 
+   to new directory INPUTS
+Regenerated SAMPLE files.  Most values are identical to before.  Some 
+   minor changes, mostly due to new/modifed photolysis reaction.
+
+_____
+15 November 2005, J. Lee-Taylor
+Version 4.4 includes calculation of snowpack radiative properties:
+* Lee-Taylor, J., and S. Madronich (2002), Calculation of actinic fluxes 
+* with a coupled atmosphere-snow radiative transfer model, J. Geophys. 
+* Res., 107(D24) 4796 (2002) doi:10.1029/2002JD002084
+It includes absorption by ice:
+*Grenfell and Perovich, J. Geophys. Res., 86, 7447-7450 (1981),
+*Perovich and Govoni, Geophys. Res. Lett.,18(7),1233-1235 (1991)
+and photodissociation of NO3-(aq):
+*Cross section: Burley & Johnston, Geophys. Res. Lett., 19, 1359-1362, (1992)
+*Quantum yield: Warneck & Wurzinger, J. Phys. Chem., 92, 6278-6283, (1988)   
+Snowpack properties are set manually in subroutine setsnw.f
+There are no other changes since V4.3
+______
+10 October 2005, S. Madronich
+Version 4.3 uses the new acetone (CH3COCH3) quantum yields from:
+* 4:  Blitz, M. A., D. E. Heard, M. J. Pilling, S. R. Arnold, and M. P. Chipperfield 
+*       (2004), Pressure and temperature-dependent quantum yields for the 
+*       photodissociation of acetone between 279 and 327.5 nm, Geophys. 
+*       Res. Lett., 31, L06111, doi:10.1029/2003GL018793.
+This was already implemented in version 4.2 on May 4 2004.  However, earlier versions of tuv4.2 may
+use the older data from McKeen et al.
+______
+10 October 2005, S. Madronich
+Version 4.3 corrects an error existing in version 4.2.  The error concerns
+the option to shift between in-vacuum and in-air wavelengths.  This option 
+is enabled by setting the logical variable lrefr=.TRUE. in the driver 
+program, TUV.f.  The error was in subroutine wshift.f, and applied the 
+shift in the wrong direction.  The correct eqations
+(used in version 4.3) are:
+
+      IF(mrefr .EQ. 1) THEN
+         DO i = 1, n
+            w(i) = w(i) * refrac(w(i),airden)
+         ENDDO
+      ELSEIF(mrefr .EQ. -1) THEN
+         DO i = 1, n
+            w(i) = w(i) / refrac(w(i),airden)
+         ENDDO
+      ENDIF
+
+and replace the incorrect equations (in version 4.2)
+
+      IF(mrefr .EQ. 1) THEN
+         DO i = 1, n
+            w(i) = w(i) * refrac(w(i),airden)  !! INCORRECT
+         ENDDO
+      ELSEIF(mrefr .EQ. -1) THEN
+         DO i = 1, n
+            w(i) = w(i) / refrac(w(i),airden)  !! INCORRECT
+         ENDDO
+      ENDIF
+
+* Thanks to Joe Michalsky (NOAA) for catching this error.
+

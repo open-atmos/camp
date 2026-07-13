@@ -179,7 +179,7 @@ module camp_rxn_factory
   use camp_mpi
   use camp_rxn_data
   use camp_util,                       only : die_msg, string_t, assert_msg, &
-                                             warn_msg
+    warn_msg
 
   ! Use all reaction modules
   use camp_rxn_aqueous_equilibrium
@@ -192,6 +192,7 @@ module camp_rxn_factory
   use camp_rxn_first_order_loss
   use camp_rxn_HL_phase_transfer
   use camp_rxn_photolysis
+  use camp_rxn_raoult_phase_transfer
   use camp_rxn_SIMPOL_phase_transfer
   use camp_rxn_surface
   use camp_rxn_ternary_chemical_activation
@@ -199,6 +200,8 @@ module camp_rxn_factory
   use camp_rxn_wennberg_no_ro2
   use camp_rxn_wennberg_tunneling
   use camp_rxn_wet_deposition
+  use camp_rxn_vbs_nox_dependent
+  use camp_rxn_isomerisation
 
   use iso_c_binding
 
@@ -226,6 +229,9 @@ module camp_rxn_factory
   integer(kind=i_kind), parameter, public :: RXN_WENNBERG_NO_RO2 = 17
   integer(kind=i_kind), parameter, public :: RXN_CONDENSED_PHASE_PHOTOLYSIS = 18
   integer(kind=i_kind), parameter, public :: RXN_SURFACE = 19
+  integer(kind=i_kind), parameter, public :: RXN_VBS_NOX_DEPENDENT = 20
+  integer(kind=i_kind), parameter, public :: RXN_RAOULT_PHASE_TRANSFER = 21
+  integer(kind=i_kind), parameter, public :: RXN_ISOMERISATION = 22
 
   !> Factory type for chemical reactions
   !!
@@ -267,43 +273,49 @@ contains
 
     ! Create a new reaction instance based on the type name supplied
     select case (type_name)
-      case ("ARRHENIUS")
-        new_obj => rxn_arrhenius_t()
-      case ("TROE")
-        new_obj => rxn_troe_t()
-      case ("CMAQ_H2O2")
-        new_obj => rxn_CMAQ_H2O2_t()
-      case ("CMAQ_OH_HNO3")
-        new_obj => rxn_CMAQ_OH_HNO3_t()
-      case ("PHOTOLYSIS")
-        new_obj => rxn_photolysis_t()
-      case ("HL_PHASE_TRANSFER")
-        new_obj => rxn_HL_phase_transfer_t()
-      case ("AQUEOUS_EQUILIBRIUM")
-        new_obj => rxn_aqueous_equilibrium_t()
-      case ("SIMPOL_PHASE_TRANSFER")
-        new_obj => rxn_SIMPOL_phase_transfer_t()
-      case ("CONDENSED_PHASE_ARRHENIUS")
-        new_obj => rxn_condensed_phase_arrhenius_t()
-      case ("CONDENSED_PHASE_PHOTOLYSIS")
-        new_obj => rxn_condensed_phase_photolysis_t()
-      case ("FIRST_ORDER_LOSS")
-        new_obj => rxn_first_order_loss_t()
-      case ("EMISSION")
-        new_obj => rxn_emission_t()
-      case ("WET_DEPOSITION")
-        new_obj => rxn_wet_deposition_t()
-      case ("TERNARY_CHEMICAL_ACTIVATION")
-        new_obj => rxn_ternary_chemical_activation_t()
-      case ("WENNBERG_TUNNELING")
-        new_obj => rxn_wennberg_tunneling_t()
-      case ("WENNBERG_NO_RO2")
-        new_obj => rxn_wennberg_no_ro2_t()
-      case ("SURFACE")
-        new_obj => rxn_surface_t()
-      case default
-        call die_msg(367114278, "Unknown chemical reaction type: " &
-                //type_name)
+     case ("ARRHENIUS")
+      new_obj => rxn_arrhenius_t()
+     case ("TROE")
+      new_obj => rxn_troe_t()
+     case ("CMAQ_H2O2")
+      new_obj => rxn_CMAQ_H2O2_t()
+     case ("CMAQ_OH_HNO3")
+      new_obj => rxn_CMAQ_OH_HNO3_t()
+     case ("PHOTOLYSIS")
+      new_obj => rxn_photolysis_t()
+     case ("HL_PHASE_TRANSFER")
+      new_obj => rxn_HL_phase_transfer_t()
+     case ("AQUEOUS_EQUILIBRIUM")
+      new_obj => rxn_aqueous_equilibrium_t()
+     case ("SIMPOL_PHASE_TRANSFER")
+      new_obj => rxn_SIMPOL_phase_transfer_t()
+     case ("CONDENSED_PHASE_ARRHENIUS")
+      new_obj => rxn_condensed_phase_arrhenius_t()
+     case ("CONDENSED_PHASE_PHOTOLYSIS")
+      new_obj => rxn_condensed_phase_photolysis_t()
+     case ("FIRST_ORDER_LOSS")
+      new_obj => rxn_first_order_loss_t()
+     case ("EMISSION")
+      new_obj => rxn_emission_t()
+     case ("WET_DEPOSITION")
+      new_obj => rxn_wet_deposition_t()
+     case ("TERNARY_CHEMICAL_ACTIVATION")
+      new_obj => rxn_ternary_chemical_activation_t()
+     case ("WENNBERG_TUNNELING")
+      new_obj => rxn_wennberg_tunneling_t()
+     case ("WENNBERG_NO_RO2")
+      new_obj => rxn_wennberg_no_ro2_t()
+     case ("SURFACE")
+      new_obj => rxn_surface_t()
+     case ("VBS_NOX_DEPENDENT")
+      new_obj => rxn_vbs_nox_dependent_t()
+     case ("RAOULT_PHASE_TRANSFER")
+      new_obj => rxn_raoult_phase_transfer_t()
+     case ("ISOMERISATION")
+      new_obj => rxn_isomerisation_t()
+     case default
+      call die_msg(367114278, "Unknown chemical reaction type: " &
+        //type_name)
     end select
 
   end function create
@@ -366,42 +378,48 @@ contains
     class(rxn_data_t), intent(in) :: rxn
 
     select type (rxn)
-      type is (rxn_arrhenius_t)
-        rxn_type = RXN_ARRHENIUS
-      type is (rxn_troe_t)
-        rxn_type = RXN_TROE
-      type is (rxn_CMAQ_H2O2_t)
-        rxn_type = RXN_CMAQ_H2O2
-      type is (rxn_CMAQ_OH_HNO3_t)
-        rxn_type = RXN_CMAQ_OH_HNO3
-      type is (rxn_photolysis_t)
-        rxn_type = RXN_PHOTOLYSIS
-      type is (rxn_HL_phase_transfer_t)
-        rxn_type = RXN_HL_PHASE_TRANSFER
-      type is (rxn_aqueous_equilibrium_t)
-        rxn_type = RXN_AQUEOUS_EQUILIBRIUM
-      type is (rxn_SIMPOL_phase_transfer_t)
-        rxn_type = RXN_SIMPOL_PHASE_TRANSFER
-      type is (rxn_condensed_phase_arrhenius_t)
-        rxn_type = RXN_CONDENSED_PHASE_ARRHENIUS
-      type is (rxn_condensed_phase_photolysis_t)
-        rxn_type = RXN_CONDENSED_PHASE_PHOTOLYSIS
-      type is (rxn_first_order_loss_t)
-        rxn_type = RXN_FIRST_ORDER_LOSS
-      type is (rxn_emission_t)
-        rxn_type = RXN_EMISSION
-      type is (rxn_wet_deposition_t)
-        rxn_type = RXN_WET_DEPOSITION
-      type is (rxn_ternary_chemical_activation_t)
-        rxn_type = RXN_TERNARY_CHEMICAL_ACTIVATION
-      type is (rxn_wennberg_tunneling_t)
-        rxn_type = RXN_WENNBERG_TUNNELING
-      type is (rxn_wennberg_no_ro2_t)
-        rxn_type = RXN_WENNBERG_NO_RO2
-      type is (rxn_surface_t)
-        rxn_type = RXN_SURFACE
-      class default
-        call die_msg(343941184, "Unknown reaction type.")
+     type is (rxn_arrhenius_t)
+      rxn_type = RXN_ARRHENIUS
+     type is (rxn_troe_t)
+      rxn_type = RXN_TROE
+     type is (rxn_CMAQ_H2O2_t)
+      rxn_type = RXN_CMAQ_H2O2
+     type is (rxn_CMAQ_OH_HNO3_t)
+      rxn_type = RXN_CMAQ_OH_HNO3
+     type is (rxn_photolysis_t)
+      rxn_type = RXN_PHOTOLYSIS
+     type is (rxn_HL_phase_transfer_t)
+      rxn_type = RXN_HL_PHASE_TRANSFER
+     type is (rxn_aqueous_equilibrium_t)
+      rxn_type = RXN_AQUEOUS_EQUILIBRIUM
+     type is (rxn_SIMPOL_phase_transfer_t)
+      rxn_type = RXN_SIMPOL_PHASE_TRANSFER
+     type is (rxn_condensed_phase_arrhenius_t)
+      rxn_type = RXN_CONDENSED_PHASE_ARRHENIUS
+     type is (rxn_condensed_phase_photolysis_t)
+      rxn_type = RXN_CONDENSED_PHASE_PHOTOLYSIS
+     type is (rxn_first_order_loss_t)
+      rxn_type = RXN_FIRST_ORDER_LOSS
+     type is (rxn_emission_t)
+      rxn_type = RXN_EMISSION
+     type is (rxn_wet_deposition_t)
+      rxn_type = RXN_WET_DEPOSITION
+     type is (rxn_ternary_chemical_activation_t)
+      rxn_type = RXN_TERNARY_CHEMICAL_ACTIVATION
+     type is (rxn_wennberg_tunneling_t)
+      rxn_type = RXN_WENNBERG_TUNNELING
+     type is (rxn_wennberg_no_ro2_t)
+      rxn_type = RXN_WENNBERG_NO_RO2
+     type is (rxn_surface_t)
+      rxn_type = RXN_SURFACE
+     type is (rxn_vbs_nox_dependent_t)
+      rxn_type = RXN_VBS_NOX_DEPENDENT
+     type is (rxn_raoult_phase_transfer_t)
+      rxn_type = RXN_RAOULT_PHASE_TRANSFER
+     type is (rxn_isomerisation_t)
+      rxn_type = RXN_ISOMERISATION
+     class default
+      call die_msg(343941184, "Unknown reaction type.")
     end select
 
   end function get_type
@@ -419,43 +437,43 @@ contains
     class(rxn_update_data_t), intent(out) :: update_data
 
     select type (update_data)
-      type is (rxn_update_data_wet_deposition_t)
-        select type (rxn)
-          type is (rxn_wet_deposition_t)
-            call rxn%update_data_initialize(update_data, RXN_WET_DEPOSITION)
-          class default
-            call die_msg(519416239, "Update data <-> rxn mismatch")
-        end select
-      type is (rxn_update_data_emission_t)
-        select type (rxn)
-          type is (rxn_emission_t)
-            call rxn%update_data_initialize(update_data, RXN_EMISSION)
-          class default
-            call die_msg(395116041, "Update data <-> rxn mismatch")
-        end select
-      type is (rxn_update_data_first_order_loss_t)
-        select type (rxn)
-          type is (rxn_first_order_loss_t)
-            call rxn%update_data_initialize(update_data, RXN_FIRST_ORDER_LOSS)
-          class default
-            call die_msg(172384885, "Update data <-> rxn mismatch")
-        end select
-      type is (rxn_update_data_photolysis_t)
-        select type (rxn)
-          type is (rxn_photolysis_t)
-            call rxn%update_data_initialize(update_data, RXN_PHOTOLYSIS)
-          class default
-            call die_msg(284703230, "Update data <-> rxn mismatch")
-        end select
-      type is (rxn_update_data_condensed_phase_photolysis_t)
-        select type (rxn)
-          type is (rxn_condensed_phase_photolysis_t)
-            call rxn%update_data_initialize(update_data, RXN_CONDENSED_PHASE_PHOTOLYSIS)
-          class default
-            call die_msg(284703230, "Update data <-> rxn mismatch")
-        end select
-      class default
-        call die_msg(239438576, "Internal error - update data type missing.")
+     type is (rxn_update_data_wet_deposition_t)
+      select type (rxn)
+       type is (rxn_wet_deposition_t)
+        call rxn%update_data_initialize(update_data, RXN_WET_DEPOSITION)
+       class default
+        call die_msg(519416239, "Update data <-> rxn mismatch")
+      end select
+     type is (rxn_update_data_emission_t)
+      select type (rxn)
+       type is (rxn_emission_t)
+        call rxn%update_data_initialize(update_data, RXN_EMISSION)
+       class default
+        call die_msg(395116041, "Update data <-> rxn mismatch")
+      end select
+     type is (rxn_update_data_first_order_loss_t)
+      select type (rxn)
+       type is (rxn_first_order_loss_t)
+        call rxn%update_data_initialize(update_data, RXN_FIRST_ORDER_LOSS)
+       class default
+        call die_msg(172384885, "Update data <-> rxn mismatch")
+      end select
+     type is (rxn_update_data_photolysis_t)
+      select type (rxn)
+       type is (rxn_photolysis_t)
+        call rxn%update_data_initialize(update_data, RXN_PHOTOLYSIS)
+       class default
+        call die_msg(284703230, "Update data <-> rxn mismatch")
+      end select
+     type is (rxn_update_data_condensed_phase_photolysis_t)
+      select type (rxn)
+       type is (rxn_condensed_phase_photolysis_t)
+        call rxn%update_data_initialize(update_data, RXN_CONDENSED_PHASE_PHOTOLYSIS)
+       class default
+        call die_msg(284703230, "Update data <-> rxn mismatch")
+      end select
+     class default
+      call die_msg(239438576, "Internal error - update data type missing.")
     end select
 
   end subroutine initialize_update_data
@@ -473,7 +491,7 @@ contains
     integer, intent(in) :: comm
 
     pack_size =  camp_mpi_pack_size_integer(int(1, kind=i_kind), comm) + &
-                 rxn%pack_size(comm)
+      rxn%pack_size(comm)
 
   end function pack_size
 
@@ -498,47 +516,53 @@ contains
 
     prev_position = pos
     select type (rxn)
-      type is (rxn_arrhenius_t)
-        rxn_type = RXN_ARRHENIUS
-      type is (rxn_troe_t)
-        rxn_type = RXN_TROE
-      type is (rxn_CMAQ_H2O2_t)
-        rxn_type = RXN_CMAQ_H2O2
-      type is (rxn_CMAQ_OH_HNO3_t)
-        rxn_type = RXN_CMAQ_OH_HNO3
-      type is (rxn_photolysis_t)
-        rxn_type = RXN_PHOTOLYSIS
-      type is (rxn_HL_phase_transfer_t)
-        rxn_type = RXN_HL_PHASE_TRANSFER
-      type is (rxn_aqueous_equilibrium_t)
-        rxn_type = RXN_AQUEOUS_EQUILIBRIUM
-      type is (rxn_SIMPOL_phase_transfer_t)
-        rxn_type = RXN_SIMPOL_PHASE_TRANSFER
-      type is (rxn_condensed_phase_arrhenius_t)
-        rxn_type = RXN_CONDENSED_PHASE_ARRHENIUS
-      type is (rxn_condensed_phase_photolysis_t)
-        rxn_type = RXN_CONDENSED_PHASE_PHOTOLYSIS
-      type is (rxn_first_order_loss_t)
-        rxn_type = RXN_FIRST_ORDER_LOSS
-      type is (rxn_emission_t)
-        rxn_type = RXN_EMISSION
-      type is (rxn_wet_deposition_t)
-        rxn_type = RXN_WET_DEPOSITION
-      type is (rxn_ternary_chemical_activation_t)
-        rxn_type = RXN_TERNARY_CHEMICAL_ACTIVATION
-      type is (rxn_wennberg_tunneling_t)
-        rxn_type = RXN_WENNBERG_TUNNELING
-      type is (rxn_wennberg_no_ro2_t)
-        rxn_type = RXN_WENNBERG_NO_RO2
-      type is (rxn_surface_t)
-        rxn_type = RXN_SURFACE
-      class default
-        call die_msg(343941184, "Trying to pack reaction of unknown type.")
+     type is (rxn_arrhenius_t)
+      rxn_type = RXN_ARRHENIUS
+     type is (rxn_troe_t)
+      rxn_type = RXN_TROE
+     type is (rxn_CMAQ_H2O2_t)
+      rxn_type = RXN_CMAQ_H2O2
+     type is (rxn_CMAQ_OH_HNO3_t)
+      rxn_type = RXN_CMAQ_OH_HNO3
+     type is (rxn_photolysis_t)
+      rxn_type = RXN_PHOTOLYSIS
+     type is (rxn_HL_phase_transfer_t)
+      rxn_type = RXN_HL_PHASE_TRANSFER
+     type is (rxn_aqueous_equilibrium_t)
+      rxn_type = RXN_AQUEOUS_EQUILIBRIUM
+     type is (rxn_SIMPOL_phase_transfer_t)
+      rxn_type = RXN_SIMPOL_PHASE_TRANSFER
+     type is (rxn_condensed_phase_arrhenius_t)
+      rxn_type = RXN_CONDENSED_PHASE_ARRHENIUS
+     type is (rxn_condensed_phase_photolysis_t)
+      rxn_type = RXN_CONDENSED_PHASE_PHOTOLYSIS
+     type is (rxn_first_order_loss_t)
+      rxn_type = RXN_FIRST_ORDER_LOSS
+     type is (rxn_emission_t)
+      rxn_type = RXN_EMISSION
+     type is (rxn_wet_deposition_t)
+      rxn_type = RXN_WET_DEPOSITION
+     type is (rxn_ternary_chemical_activation_t)
+      rxn_type = RXN_TERNARY_CHEMICAL_ACTIVATION
+     type is (rxn_wennberg_tunneling_t)
+      rxn_type = RXN_WENNBERG_TUNNELING
+     type is (rxn_wennberg_no_ro2_t)
+      rxn_type = RXN_WENNBERG_NO_RO2
+     type is (rxn_surface_t)
+      rxn_type = RXN_SURFACE
+     type is (rxn_vbs_nox_dependent_t)
+      rxn_type = RXN_VBS_NOX_DEPENDENT
+     type is (rxn_raoult_phase_transfer_t)
+      rxn_type = RXN_RAOULT_PHASE_TRANSFER
+     type is (rxn_isomerisation_t)
+      rxn_type = RXN_ISOMERISATION
+     class default
+      call die_msg(343941184, "Trying to pack reaction of unknown type.")
     end select
     call camp_mpi_pack_integer(buffer, pos, rxn_type, comm)
     call rxn%bin_pack(buffer, pos, comm)
     call assert(194676336, &
-         pos - prev_position <= this%pack_size(rxn, comm))
+      pos - prev_position <= this%pack_size(rxn, comm))
 #endif
 
   end subroutine bin_pack
@@ -565,48 +589,54 @@ contains
     prev_position = pos
     call camp_mpi_unpack_integer(buffer, pos, rxn_type, comm)
     select case (rxn_type)
-      case (RXN_ARRHENIUS)
-        rxn => rxn_arrhenius_t()
-      case (RXN_TROE)
-        rxn => rxn_troe_t()
-      case (RXN_CMAQ_H2O2)
-        rxn => rxn_CMAQ_H2O2_t()
-      case (RXN_CMAQ_OH_HNO3)
-        rxn => rxn_CMAQ_OH_HNO3_t()
-      case (RXN_PHOTOLYSIS)
-        rxn => rxn_photolysis_t()
-      case (RXN_HL_PHASE_TRANSFER)
-        rxn => rxn_HL_phase_transfer_t()
-      case (RXN_AQUEOUS_EQUILIBRIUM)
-        rxn => rxn_aqueous_equilibrium_t()
-      case (RXN_SIMPOL_PHASE_TRANSFER)
-        rxn => rxn_SIMPOL_phase_transfer_t()
-      case (RXN_CONDENSED_PHASE_ARRHENIUS)
-        rxn => rxn_condensed_phase_arrhenius_t()
-      case (RXN_CONDENSED_PHASE_PHOTOLYSIS)
-        rxn => rxn_condensed_phase_photolysis_t()
-      case (RXN_FIRST_ORDER_LOSS)
-        rxn => rxn_first_order_loss_t()
-      case (RXN_EMISSION)
-        rxn => rxn_emission_t()
-      case (RXN_WET_DEPOSITION)
-        rxn => rxn_wet_deposition_t()
-      case (RXN_TERNARY_CHEMICAL_ACTIVATION)
-        rxn => rxn_ternary_chemical_activation_t()
-      case (RXN_WENNBERG_TUNNELING)
-        rxn => rxn_wennberg_tunneling_t()
-      case (RXN_WENNBERG_NO_RO2)
-        rxn => rxn_wennberg_no_ro2_t()
-      case (RXN_SURFACE)
-        rxn => rxn_surface_t()
-      case default
-        call die_msg(659290342, &
-                "Trying to unpack reaction of unknown type:"// &
-                to_string(rxn_type))
+     case (RXN_ARRHENIUS)
+      rxn => rxn_arrhenius_t()
+     case (RXN_TROE)
+      rxn => rxn_troe_t()
+     case (RXN_CMAQ_H2O2)
+      rxn => rxn_CMAQ_H2O2_t()
+     case (RXN_CMAQ_OH_HNO3)
+      rxn => rxn_CMAQ_OH_HNO3_t()
+     case (RXN_PHOTOLYSIS)
+      rxn => rxn_photolysis_t()
+     case (RXN_HL_PHASE_TRANSFER)
+      rxn => rxn_HL_phase_transfer_t()
+     case (RXN_AQUEOUS_EQUILIBRIUM)
+      rxn => rxn_aqueous_equilibrium_t()
+     case (RXN_SIMPOL_PHASE_TRANSFER)
+      rxn => rxn_SIMPOL_phase_transfer_t()
+     case (RXN_CONDENSED_PHASE_ARRHENIUS)
+      rxn => rxn_condensed_phase_arrhenius_t()
+     case (RXN_CONDENSED_PHASE_PHOTOLYSIS)
+      rxn => rxn_condensed_phase_photolysis_t()
+     case (RXN_FIRST_ORDER_LOSS)
+      rxn => rxn_first_order_loss_t()
+     case (RXN_EMISSION)
+      rxn => rxn_emission_t()
+     case (RXN_WET_DEPOSITION)
+      rxn => rxn_wet_deposition_t()
+     case (RXN_TERNARY_CHEMICAL_ACTIVATION)
+      rxn => rxn_ternary_chemical_activation_t()
+     case (RXN_WENNBERG_TUNNELING)
+      rxn => rxn_wennberg_tunneling_t()
+     case (RXN_WENNBERG_NO_RO2)
+      rxn => rxn_wennberg_no_ro2_t()
+     case (RXN_SURFACE)
+      rxn => rxn_surface_t()
+     case (RXN_VBS_NOX_DEPENDENT)
+      rxn => rxn_vbs_nox_dependent_t()
+     case (RXN_RAOULT_PHASE_TRANSFER)
+      rxn => rxn_raoult_phase_transfer_t()
+     case (RXN_ISOMERISATION)
+      rxn => rxn_isomerisation_t()
+     case default
+      call die_msg(659290342, &
+        "Trying to unpack reaction of unknown type:"// &
+        to_string(rxn_type))
     end select
     call rxn%bin_unpack(buffer, pos, comm)
     call assert(880568259, &
-         pos - prev_position <= this%pack_size(rxn, comm))
+      pos - prev_position <= this%pack_size(rxn, comm))
 #endif
 
   end function bin_unpack

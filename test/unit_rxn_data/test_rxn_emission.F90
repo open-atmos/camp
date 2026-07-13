@@ -18,7 +18,6 @@ program camp_test_emission
   use camp_chem_spec_data
   use camp_camp_core
   use camp_camp_state
-  use camp_solver_stats
 #ifdef CAMP_USE_JSON
   use json_module
 #endif
@@ -99,8 +98,6 @@ contains
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: pack_size, pos, i_elem, results, rank_solve
 #endif
-
-    type(solver_stats_t), target :: solver_stats
 
     ! For setting rates
     type(mechanism_data_t), pointer :: mechanism
@@ -264,26 +261,12 @@ contains
       call rate_update_B%set_rate(rate_B)
       call camp_core%update_data(rate_update_B)
 
-#ifdef CAMP_DEBUG
-      ! Evaluate the Jacobian during solving
-      solver_stats%eval_Jac = .true.
-#endif
-
       ! Integrate the mechanism
       do i_time = 1, NUM_TIME_STEP
 
         ! Get the modeled conc
-        call camp_core%solve(camp_state, time_step, &
-                              solver_stats = solver_stats)
+        call camp_core%solve(camp_state, time_step)
         model_conc(i_time,:) = camp_state%state_var(:)
-
-#ifdef CAMP_DEBUG
-        ! Check the Jacobian evaluations
-        call assert_msg(823507267, solver_stats%Jac_eval_fails.eq.0, &
-                        trim( to_string( solver_stats%Jac_eval_fails ) )// &
-                        " Jacobian evaluation failures at time step "// &
-                        trim( to_string( i_time ) ) )
-#endif
 
         ! Get the analytic conc
         time = i_time * time_step

@@ -1,0 +1,247 @@
+{
+  "notes": [
+    "VBS NOx dependent SOA scheme from Shrivastava et al. (2019)",
+    "Gas-phase rate constants taken from CB05 reactions with same reactants"
+  ],
+  "camp-data": [
+    {
+      "name": "MONARCH mod37",
+      "type": "MECHANISM",
+      "reactions": [
+        {
+          "type": "VBS_NOX_DEPENDENT",
+          "reactants": {
+            "OH": {},
+            "ISOP": {}
+          },
+          "products": {
+            "VBS1": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 0.0
+            },
+            "VBS2": {
+              "high_nox_yield": 0.019,
+              "low_nox_yield": 0.01
+            },
+            "VBS3": {
+              "high_nox_yield": 0.063,
+              "low_nox_yield": 0.036
+            },
+            "VBS4": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 0.0008
+            },
+            "OH": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 1.0,
+              "note": "constant yields needed to recycle reactants"
+            },
+            "ISOP": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 1.0,
+              "note": "constant yields needed to recycle reactants"
+            }
+          },
+          "A": 2.54e-11,
+          "C": 407.6
+        },
+        {
+          "type": "VBS_NOX_DEPENDENT",
+          "reactants": {
+            "O3": {},
+            "ISOP": {}
+          },
+          "products": {
+            "VBS1": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 0.0
+            },
+            "VBS2": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 0.12
+            },
+            "VBS3": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 0.0
+            },
+            "VBS4": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 0.0
+            },
+            "O3": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 1.0,
+              "note": "constant yields needed to recycle reactants"
+            },
+            "ISOP": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 1.0,
+              "note": "constant yields needed to recycle reactants"
+            }
+          },
+          "A": 7.86e-15,
+          "C": -1912.0
+        },
+        {
+          "type": "VBS_NOX_DEPENDENT",
+          "reactants": {
+            "NO3": {},
+            "ISOP": {}
+          },
+          "products": {
+            "VBS1": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 0.0
+            },
+            "VBS2": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 0.001
+            },
+            "VBS3": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 0.149
+            },
+            "VBS4": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 0.237
+            },
+            "NO3": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 1.0,
+              "note": "constant yields needed to recycle reactants"
+            },
+            "ISOP": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 1.0,
+              "note": "constant yields needed to recycle reactants"
+            }
+          },
+          "A": 3.03E-12,
+          "B": 0.0E+00,
+          "C": -448.0
+        },
+        {
+          "type": "VBS_NOX_DEPENDENT",
+          "reactants": {
+            "OH": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 1.0,
+              "note": "constant yields needed to recycle reactants"
+            },
+            "TERP": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 1.0,
+              "note": "constant yields needed to recycle reactants"
+            }
+          },
+          "products": {
+            "VBS1": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 0.0
+            },
+            "VBS2": {
+              "high_nox_yield": 0.034,
+              "low_nox_yield": 0.275
+            },
+            "VBS3": {
+              "high_nox_yield": 0.199,
+              "low_nox_yield": 0.1
+            },
+            "VBS4": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 0.17
+            },
+            "OH": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 1.0,
+              "note": "constant yields needed to recycle reactants"
+            },
+            "TERP": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 1.0,
+              "note": "constant yields needed to recycle reactants"
+            }
+          },
+          "A": 1.5e-11,
+          "C": 449.0
+        },
+        {
+          "type": "VBS_NOX_DEPENDENT",
+          "reactants": {
+            "O3": {},
+            "TERP": {}
+          },
+          "products": {
+            "VBS1": {
+              "high_nox_yield": 0.014,
+              "low_nox_yield": 0.014
+            },
+            "VBS2": {
+              "high_nox_yield": 0.052,
+              "low_nox_yield": 0.052
+            },
+            "VBS3": {
+              "high_nox_yield": 0.046,
+              "low_nox_yield": 0.046
+            },
+            "VBS4": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 0.0
+            },
+            "O3": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 1.0,
+              "note": "constant yields needed to recycle reactants"
+            },
+            "TERP": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 1.0,
+              "note": "constant yields needed to recycle reactants"
+            }
+          },
+          "A": 1.2e-15,
+          "C": -821.0
+        },
+        {
+          "type": "VBS_NOX_DEPENDENT",
+          "reactants": {
+            "TERP": {},
+            "NO3": {}
+          },
+          "products": {
+            "VBS1": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 0.373
+            },
+            "VBS2": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 0.033
+            },
+            "VBS3": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 0.0
+            },
+            "VBS4": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 0.941
+            },
+            "TERP": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 1.0,
+              "note": "constant yields needed to recycle reactants"
+            },
+            "NO3": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 1.0,
+              "note": "constant yields needed to recycle reactants"
+            }
+          },
+          "orig params": "CMAQ_1to4(3.7E-12, 0.0E+00, -175.0)",
+          "A": 3.7E-12,
+          "B": 0.0E+00,
+          "C": 175.0
+        }
+      ]
+    }
+  ]
+}

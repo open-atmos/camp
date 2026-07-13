@@ -10,7 +10,7 @@ cd ${0%/*}
 mkdir -p out
 
 if [[ $1 = "MPI" ]]; then
-  exec_str="mpirun -v -np 2 ../../test_rxn_first_order_loss"
+  exec_str="mpirun -np 2 ../../test_rxn_first_order_loss"
 else
   exec_str="../../test_rxn_first_order_loss"
 fi

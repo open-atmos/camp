@@ -10,18 +10,18 @@ from mainMonarch import *
 def run_testMonarch():
     conf = TestMonarch()
     conf.timeSteps = 10  # Minimum value of 1
-    conf.loads_gpu = [100]  # e.g. Percentage; 0: CPU only, 100: GPU only
-    conf.is_load_balance = 1  # 0: Fixed, 1: Automatic in runtime
     conf.cells = [100]  # Minimum value of 1
-    conf.mpiProcessesCaseBase = 1  # Minimum value of 1
+    conf.mpiProcessesCaseBase = 2  # Minimum value of 1
     conf.caseBase = "CPU"  # CPU or GPU
-    conf.mpiProcessesCaseOptimList = [1]  # Minimum value of 1
+    conf.mpiProcessesCaseOptimList = [2]  # Minimum value of 1
     conf.casesOptim = ["GPU"]  # CPU or GPU
-    # conf.is_import = True # Import results for case Base and Optim
-    # conf.is_import_base = True # Import results for case Base
+    #conf.is_import = True # Import results for case Base and Optim
+    #conf.is_import_base = True # Import results for case Base
     #conf.profileCuda = "ncu"  # ncu or nsys
     # conf.profileCuda = "nsys"# ncu or nsys
     # conf.profileExtrae = True # Enable Extrae profiling
+    conf.loads_gpu = [95]  # e.g. Percentage; 0: CPU only, 100: GPU only
+    conf.is_load_balance = 1  # 0: Fixed, 1: Automatic in runtime
     datay = run_main(conf)  # Run
     plot_cases(conf, datay)  # Print results
 
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     - conf.loads_gpu (list of int): Percentage of computational load assigned to the GPU.
       For example, 0 means CPU-only, 100 means GPU-only, and values between 1-99 mean
       a combination of CPU and GPU.
-    - conf.load_balance (int): Flag to indicate if the load should be balanced at runtime.
+    - conf.is_load_balance (int): Flag to indicate if the load should be balanced at runtime.
       0 for fixed load, 1 for automatic load balancing.
     - conf.cells (list of int): Represents points in the map from the domain decomposition
       of an Earth Science Model, such as the atmosphere. Mathematically, it is a system

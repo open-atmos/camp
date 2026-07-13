@@ -1,0 +1,2 @@
+cd compile && ./run.sh
+

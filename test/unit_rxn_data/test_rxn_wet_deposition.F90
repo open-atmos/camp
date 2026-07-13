@@ -16,7 +16,6 @@ program camp_test_wet_deposition
   use camp_rxn_data
   use camp_rxn_wet_deposition
   use camp_rxn_factory
-  use camp_solver_stats
   use camp_util,                         only: i_kind, dp, assert, &
                                               almost_equal, string_t, &
                                               warn_msg
@@ -105,8 +104,6 @@ contains
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: pack_size, pos, i_elem, results, rank_solve
 #endif
-
-    type(solver_stats_t), target :: solver_stats
 
     ! For setting rates
     type(mechanism_data_t), pointer :: mechanism
@@ -306,7 +303,7 @@ contains
 #endif
 
       ! Initialize the solver
-      call camp_core%solver_initialize()
+      call camp_core%solver_initialize(load_gpu=0, is_load_balance=0)
 
       ! Get a model state variable
       camp_state => camp_core%new_state()
@@ -339,26 +336,12 @@ contains
       call rate_update_cloud%set_rate(rate_cloud)
       call camp_core%update_data(rate_update_cloud)
 
-#ifdef CAMP_DEBUG
-      ! Evaluate the Jacobian during solving
-      solver_stats%eval_Jac = .true.
-#endif
-
       ! Integrate the mechanism
       do i_time = 1, NUM_TIME_STEP
 
         ! Get the modeled conc
-        call camp_core%solve(camp_state, time_step, &
-                              solver_stats = solver_stats)
+        call camp_core%solve(camp_state, time_step)
         model_conc(i_time,:) = camp_state%state_var(:)
-
-#ifdef CAMP_DEBUG
-        ! Check the Jacobian evaluations
-        call assert_msg(172394787, solver_stats%Jac_eval_fails.eq.0, &
-                        trim( to_string( solver_stats%Jac_eval_fails ) )// &
-                        " Jacobian evaluation failures at time step "// &
-                        trim( to_string( i_time ) ) )
-#endif
 
         ! Get the analytic conc
         time = i_time * time_step

@@ -1,0 +1,26 @@
+{
+  "description": "These aerosol phases correspond to the MONARCH 'mod37' configuration",
+  "camp-data": [
+    {
+      "name": "cloud and rain water",
+      "type": "AERO_PHASE",
+      "species": [
+        "H2O_aq",
+        "O3_aq",
+        "H_p",
+        "OH_m",
+        "H2-SO4",
+        "HSO4_m",
+        "SO4_mm",
+        "H-HSO4",
+        "H2SO4_aq",
+        "NH4-H",
+        "NH3_aq",
+        "NH4_p",
+        "H-NO3",
+        "HNO3_aq",
+        "NO3_m"
+      ]
+    }
+  ]
+}

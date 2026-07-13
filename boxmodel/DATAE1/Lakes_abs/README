@@ -1,0 +1,51 @@
+** The actual data are stored in archived TUV Version 5.3
+Absorption coefficients have been measured for the following lakes. 
+Please contact PIs to obtain data.
+Acton.csv			  Grinnell.csv		 Rerewhakaaitu.csv
+AguasCalientas.csv		  Hamilton.csv		 Richie.csv
+Albino.csv			  Harrison.csv		 RockCreek.csv
+Allequash.csv			  Harvey.csv		 RockIsland.csv
+AlumCreek.csv			  HeartBeartooths.csv	 Ross.csv
+Amiskwi.csv			  HeartSierras.csv	 Rotoiti.csv
+AmiskwiFalls.csv		  Hidden.csv		 Rotoma.csv
+Avalanche.csv			  Hoover.csv		 Russell.csv
+Beartooth.csv			  Hungabee.csv		 Sargent.csv
+Beauty.csv			  Island.csv		 Sawtooth.csv
+Becker.csv			  Jasper.csv		 Schaffer.csv
+BlackCanyon.csv			  Jordan.csv		 Seasonal_GAA.abs
+Bowman.csv			  junk			 SecretaryTreasurer.csv
+Box.csv				  Kersey.csv		 SharonWoods.csv
+Bubble.csv			  Kintla.csv		 Simbad.csv
+BurrOak.csv			  LadyoftheLake.csv	 Sink.csv
+Cascade.csv			  Lejia.csv		 Siskiwit.csv
+Celeste.csv			  Lillis.csv		 Skull.csv
+Chain.csv			  Lily.csv		 SleepingPoets.csv
+Christmas.csv			  LittleBear.csv	 Sliderock.csv
+Clearfork.csv			  LittleHeart.csv	 Snowflake.csv
+Convict.csv			  LittleRainbow.csv	 Sparhawk.csv
+CrysBog.csv			  LongBeartooths.csv	 Sparkling.csv
+Crystal.abs			  LongMaine.csv		 Steelhead.csv
+Crystal.csv			  LongSierras.csv	 StMary.csv
+Daphnia.csv			  LowerAero.csv		 Summit.csv
+DeerCreek.csv			  LowerConness.csv	 Sundance.csv
+Delaware.csv			  LowerTreasure.csv	 Sunlite.csv
+Desor.csv			  Mack.csv		 Tahoe_2008.abs
+Dewey.csv			  Mary.csv		 Tahoe.csv
+Duchesnay.csv			  MiamiWhitewater.csv	 Tahoe_eo.abs
+Eagle.csv			  Mono.csv		 Tahoe_locations.csv
+EastRosebud.csv			  Moraine.csv		 Tarawera.csv
+Echo.csv			  Muskellunge.csv	 Taupo.csv
+Eifel.csv			  Mystic.csv		 t.f
+Elephant.csv			  NAMES_LIST		 Tikitapu.csv
+Emerald.csv			  Negra.abs		 TroutBog.csv
+Esconada.csv			  Negra.csv		 TroutGlacierNP.csv
+Falls.csv			  NorthSparklingBog.csv  TroutWisc.csv
+Fantan.csv			  Oesa.csv		 Twin.csv
+Fizzel.csv			  Ohara.csv		 TwoMedicine.csv
+Fossil.csv			  Okereka.csv		 UpperAero.csv
+Gardner.csv			  Opabin.csv		 UpperConness.csv
+Giles_dom.abs			  Ouzel.csv		 UpperHaddock.csv
+Glacier.csv			  Pipit.csv		 VicePresident.csv
+GreatLakes_Names.abs		  PleasantHill.csv	 White.csv
+GreatLakesUVDOCData2011_2015.abs  Promise.csv		 WintonWoods.csv
+GreatLakesUVDOCData2011_2015.csv  Rainbow.csv

@@ -8,11 +8,11 @@
 /** \file
  * \brief PDFiTE Activity sub model solver functions
  */
+#include "../Jacobian.h"
+#include "../sub_models.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../Jacobian.h"
-#include "../sub_models.h"
 
 // TODO Lookup environmental indices during initialization
 #define TEMPERATURE_K_ env_data[0]
@@ -29,7 +29,7 @@
 #define NUM_ENV_PARAM_ 1
 #define PHASE_ID_(x) (int_data[NUM_INT_PROP_ + x] - 1)
 #define PAIR_INT_PARAM_LOC_(x) (int_data[NUM_INT_PROP_ + NUM_PHASE_ + x] - 1)
-#define PAIR_FLOAT_PARAM_LOC_(x) \
+#define PAIR_FLOAT_PARAM_LOC_(x)                                               \
   (int_data[NUM_INT_PROP_ + NUM_PHASE_ + NUM_ION_PAIRS_ + x] - 1)
 #define ION_PAIR_ACT_ID_(x) (int_data[PAIR_INT_PARAM_LOC_(x)])
 #define NUM_CATION_(x) (int_data[PAIR_INT_PARAM_LOC_(x) + 1])
@@ -38,17 +38,17 @@
 #define ANION_ID_(x) (int_data[PAIR_INT_PARAM_LOC_(x) + 4])
 #define NUM_INTER_(x) (int_data[PAIR_INT_PARAM_LOC_(x) + 5])
 #define JAC_WATER_ID_(p, x) (int_data[PAIR_INT_PARAM_LOC_(x) + 6 + p])
-#define JAC_CATION_ID_(p, x, y) \
+#define JAC_CATION_ID_(p, x, y)                                                \
   (int_data[PAIR_INT_PARAM_LOC_(x) + 6 + NUM_PHASE_ + p * NUM_ION_PAIRS_ + y])
-#define JAC_ANION_ID_(p, x, y)                                               \
-  (int_data[PAIR_INT_PARAM_LOC_(x) + 6 + (1 + NUM_ION_PAIRS_) * NUM_PHASE_ + \
+#define JAC_ANION_ID_(p, x, y)                                                 \
+  (int_data[PAIR_INT_PARAM_LOC_(x) + 6 + (1 + NUM_ION_PAIRS_) * NUM_PHASE_ +   \
             p * NUM_ION_PAIRS_ + y])
-#define NUM_B_(x, y)                     \
-  (int_data[PAIR_INT_PARAM_LOC_(x) + 6 + \
+#define NUM_B_(x, y)                                                           \
+  (int_data[PAIR_INT_PARAM_LOC_(x) + 6 +                                       \
             (1 + 2 * NUM_ION_PAIRS_) * NUM_PHASE_ + y])
-#define INTER_SPEC_ID_(x, y)                                             \
-  (int_data[PAIR_INT_PARAM_LOC_(x) + 6 +                                 \
-            (1 + 2 * NUM_ION_PAIRS_) * NUM_PHASE_ + NUM_INTER_(x) + y] - \
+#define INTER_SPEC_ID_(x, y)                                                   \
+  (int_data[PAIR_INT_PARAM_LOC_(x) + 6 +                                       \
+            (1 + 2 * NUM_ION_PAIRS_) * NUM_PHASE_ + NUM_INTER_(x) + y] -       \
    1)
 #define INTER_SPEC_LOC_(x, y)                                                  \
   (int_data[PAIR_INT_PARAM_LOC_(x) + 6 +                                       \
@@ -145,13 +145,13 @@ void sub_model_PDFiTE_update_env_state(int *sub_model_int_data,
   // Calculate PPM_TO_RH_
   // From MOSAIC code - reference to Seinfeld & Pandis page 181
   // TODO Figure out how to have consistent RH<->ppm conversions
-  double t_steam = 373.15;  // steam temperature (K)
+  double t_steam = 373.15; // steam temperature (K)
   double a = 1.0 - t_steam / TEMPERATURE_K_;
 
   a = (((-0.1299 * a - 0.6445) * a - 1.976) * a + 13.3185) * a;
-  double water_vp = 101325.0 * exp(a);  // (Pa)
+  double water_vp = 101325.0 * exp(a); // (Pa)
 
-  PPM_TO_RH_ = PRESSURE_PA_ / water_vp / 1.0e6;  // (1/ppm)
+  PPM_TO_RH_ = PRESSURE_PA_ / water_vp / 1.0e6; // (1/ppm)
 
   return;
 }
@@ -177,8 +177,10 @@ void sub_model_PDFiTE_calculate(int *sub_model_int_data,
 
   // Keep a_w within 0-1
   // TODO Filter =( try to remove
-  if (a_w < 0.0) a_w = 0.0;
-  if (a_w > 1.0) a_w = 1.0;
+  if (a_w < 0.0)
+    a_w = 0.0;
+  if (a_w > 1.0)
+    a_w = 1.0;
 
   // Calculate ion_pair activity coefficients in each phase
   for (int i_phase = 0; i_phase < NUM_PHASE_; i_phase++) {
@@ -191,13 +193,14 @@ void sub_model_PDFiTE_calculate(int *sub_model_int_data,
       ANION_N_(i_ion_pair) = state[PHASE_ID_(i_phase) + ANION_ID_(i_ion_pair)] /
                              ANION_MW_(i_ion_pair) / 1000000.0;
 
-    }  // Loop on primary ion_pair
+    } // Loop on primary ion_pair
 
     // Calculate the activity coefficient
     for (int i_ion_pair = 0; i_ion_pair < NUM_ION_PAIRS_; i_ion_pair++) {
       // If there are no interactions, the remaining ion pairs will not
       // have activity calculations (they only participate in interactions)
-      if (NUM_INTER_(i_ion_pair) == 0) break;
+      if (NUM_INTER_(i_ion_pair) == 0)
+        break;
 
       // Calculate omega for this ion_pair
       // (eq. 15 in \cite{Topping2009}) as the sum of
@@ -207,7 +210,8 @@ void sub_model_PDFiTE_calculate(int *sub_model_int_data,
       // the other ion_pair and N_x is its concentration.
       double omega = 0.0;
       for (int j_ion_pair = 0; j_ion_pair < NUM_ION_PAIRS_; ++j_ion_pair) {
-        if (i_ion_pair == j_ion_pair) continue;
+        if (i_ion_pair == j_ion_pair)
+          continue;
         omega += (double)2.0 *
                  (NUM_CATION_(j_ion_pair) + NUM_ANION_(j_ion_pair)) *
                  CATION_N_(j_ion_pair) * ANION_N_(j_ion_pair);
@@ -253,14 +257,14 @@ void sub_model_PDFiTE_calculate(int *sub_model_int_data,
           }
         }
 
-      }  // Loop on interacting ion_pairs
+      } // Loop on interacting ion_pairs
 
       // Set the ion_pair activity
       state[PHASE_ID_(i_phase) + ION_PAIR_ACT_ID_(i_ion_pair)] = exp(ln_gamma);
 
-    }  // Loop on primary ion_pairs
+    } // Loop on primary ion_pairs
 
-  }  // Loop on aerosol phases
+  } // Loop on aerosol phases
 }
 
 /** \brief Add contributions to the Jacobian from derivates calculated using the
@@ -289,8 +293,10 @@ void sub_model_PDFiTE_get_jac_contrib(int *sub_model_int_data,
 
   // Keep a_w within 0-1
   // TODO Filter =( try to remove
-  if (a_w < 0.0) a_w = 0.0;
-  if (a_w > 1.0) a_w = 1.0;
+  if (a_w < 0.0)
+    a_w = 0.0;
+  if (a_w > 1.0)
+    a_w = 1.0;
 
   // Calculate ion_pair activity coefficients in each phase
   for (int i_phase = 0; i_phase < NUM_PHASE_; i_phase++) {
@@ -303,13 +309,14 @@ void sub_model_PDFiTE_get_jac_contrib(int *sub_model_int_data,
       ANION_N_(i_ion_pair) = state[PHASE_ID_(i_phase) + ANION_ID_(i_ion_pair)] /
                              ANION_MW_(i_ion_pair) / 1000000.0;
 
-    }  // Loop on primary ion_pair
+    } // Loop on primary ion_pair
 
     // Calculate the activity coefficient
     for (int i_ion_pair = 0; i_ion_pair < NUM_ION_PAIRS_; i_ion_pair++) {
       // If there are no interactions, the remaining ion pairs will not
       // have activity calculations (they only participate in interactions)
-      if (NUM_INTER_(i_ion_pair) == 0) break;
+      if (NUM_INTER_(i_ion_pair) == 0)
+        break;
 
       // Calculate omega for this ion_pair
       // (eq. 15 in \cite{Topping2009}) as the sum of
@@ -319,7 +326,8 @@ void sub_model_PDFiTE_get_jac_contrib(int *sub_model_int_data,
       // the other ion_pair and N_x is its concentration.
       double omega = 0.0;
       for (int j_ion_pair = 0; j_ion_pair < NUM_ION_PAIRS_; ++j_ion_pair) {
-        if (i_ion_pair == j_ion_pair) continue;
+        if (i_ion_pair == j_ion_pair)
+          continue;
         omega += (double)2.0 *
                  (NUM_CATION_(j_ion_pair) + NUM_ANION_(j_ion_pair)) *
                  CATION_N_(j_ion_pair) * ANION_N_(j_ion_pair);
@@ -365,7 +373,7 @@ void sub_model_PDFiTE_get_jac_contrib(int *sub_model_int_data,
           }
         }
 
-      }  // Loop on interacting ion_pairs
+      } // Loop on interacting ion_pairs
 
       double gamma_i = exp(ln_gamma);
 
@@ -427,7 +435,8 @@ void sub_model_PDFiTE_get_jac_contrib(int *sub_model_int_data,
                  ++k_ion_pair) {
               // The ion pair whose activity is being calculated is not
               // included in omega
-              if (k_ion_pair == i_ion_pair) continue;
+              if (k_ion_pair == i_ion_pair)
+                continue;
 
               // d_gamma / d_cation
               J[JAC_CATION_ID_(i_phase, i_ion_pair, k_ion_pair)] +=
@@ -446,11 +455,11 @@ void sub_model_PDFiTE_get_jac_contrib(int *sub_model_int_data,
           }
         }
 
-      }  // Loop over ion pairs for partial derivatives
+      } // Loop over ion pairs for partial derivatives
 
-    }  // Loop on primary ion_pairs
+    } // Loop on primary ion_pairs
 
-  }  // Loop on aerosol phases
+  } // Loop on aerosol phases
 }
 #endif
 

@@ -2,8 +2,10 @@
   "note": "Test mechanism for aqueous equilibrium reactions",
   "camp-data": [
     {
-      "type": "RELATIVE_TOLERANCE",
-      "value": 1.0e-15
+      "type": "CVODE CONFIGURATION",
+      "relative tolerance": 1.0e-15,
+      "max steps": 10000,
+      "max conv fails": 1000
     },
     {
       "name": "A",

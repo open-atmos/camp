@@ -1,0 +1,14 @@
+{
+  "description": "species in cloud and rain phases",
+  "camp-data": [
+    {
+      "name": "O3_aq",
+      "type": "CHEM_SPEC",
+      "phase": "AEROSOL",
+      "absolute integration tolerance": 1.0E-05,
+      "molecular weight [kg mol-1]": 0.04800,
+      "density [kg m-3]": 1000.0,
+      "description": "aqueous ozone"
+    }
+  ]
+}

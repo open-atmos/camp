@@ -1,0 +1,22 @@
+Solar-J/Cloud-J v7.6c setup core parameters
+  6375.0d5 RAD   radius of Earth
+     5.0d5 ZZHT  scale ht at top of atmos
+   1.050d0 ATAU  factor increase in cloud optical depth (OD) from layer to next below
+   0.005d0 ATAU0 minimum cloud OD in uppermost inserted layer
+    0.33d0 CLDCOR correlation of cloud overlap between blocks (0.00 = random)
+        18 NWBIN  # wavelength bins in uv-vis for J's
+        27 NSBIN  # total wavelength bins, including solar-ir
+        06 LNRG  correlated cloud overlap in 6 blocks,  =0=Max-Ran at gaps, =3=Max-Ran in 3 alt blocks
+        50 NRANDO # of random selections of ICAs to get average
+         0 ATM0  Option for spherical corrections: 0=flat 1=sphr 2=refr 3=geom
+         7 CLDFLAG
+=====================
+
+!       CLDFLAG = 1  :  Clear sky J's
+!       CLDFLAG = 2  :  Averaged cloud cover
+!       CLDFLAG = 3  :  cloud-fract**3/2, then average cloud cover
+!       CLDFLAG = 4  :  ****not used
+!       CLDFLAG = 5  :  Random select NRANDO ICA's from all(Independent Column Atmos.)
+!       CLDFLAG = 6  :  Use all (up to 4) quadrature cloud cover QCAs (mid-pts of bin)
+!       CLDFLAG = 7  :  Use all (up to 4) QCAs (average clouds within each Q-bin)
+!       CLDFLAG = 8  :  Calculate J's for ALL ICAs (up to 20,000 per cell!)

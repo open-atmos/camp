@@ -15,13 +15,13 @@ do
   echo Attempt $counter
 
 if [[ $1 == "MPI" ]]; then
-  exec_str="mpirun -v -np 2 ../../test_chem_mech_solver"
+  exec_str="mpirun -np 2 ../../test_chem_mech_solver"
 else
   exec_str="../../test_chem_mech_solver"
 fi
 if ! $exec_str; then 
 	  echo Failure "$counter"
-	  if [ "$counter" -gt 10 ]
+	  if [ "$counter" -gt 0 ]
 	  then
 		  echo FAIL
 		  exit 1

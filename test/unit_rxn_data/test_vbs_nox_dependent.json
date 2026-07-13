@@ -1,0 +1,60 @@
+{
+  "camp-data": [
+    {
+      "type": "CVODE CONFIGURATION",
+      "relative tolerance": 1.0e-30,
+      "max steps": 10000,
+      "max conv fails": 1000
+    },
+    {
+      "name": "A",
+      "type": "CHEM_SPEC",
+      "absolute tolerance": 1.0e-30
+    },
+    {
+      "name": "B",
+      "type": "CHEM_SPEC",
+      "absolute tolerance": 1.0e-30
+    },
+    {
+      "name": "C",
+      "type": "CHEM_SPEC",
+      "absolute tolerance": 1.0e-30
+    },
+    {
+      "name": "NO",
+      "type": "CHEM_SPEC",
+      "tracer type ": "CONSTANT",
+      "absolute tolerance": 1.0e-30
+    },
+    {
+      "name": "HO2",
+      "type": "CHEM_SPEC",
+      "tracer type ": "CONSTANT",
+      "absolute tolerance": 1.0e-30
+    },
+    {
+      "name": "VBS_NOX_DEPENDENT",
+      "type": "MECHANISM",
+      "reactions": [
+        {
+          "type": "VBS_NOX_DEPENDENT",
+          "reactants": {
+            "A": {}
+          },
+          "products": {
+            "B": {
+              "high_nox_yield": 0.2,
+              "low_nox_yield": 0.9
+            },
+            "C": {
+              "high_nox_yield": 0.8,
+              "low_nox_yield": 0.1
+            }
+          },
+          "A": 1e-4
+        }
+      ]
+    }
+  ]
+}

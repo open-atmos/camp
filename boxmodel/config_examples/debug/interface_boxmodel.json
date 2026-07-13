@@ -1,0 +1,114 @@
+{
+  "multiple-boxes": "monte carlo",
+  "ncells": 1000,
+  "load_gpu": 100,
+  "is_load_balance": 0,
+  "random_type": "SOBOL",
+  "experiment-name": "debug_arrhenius_gpu",
+  "boxmodel-data": [
+    {
+      "name": "species map",
+      "type": "SPECIES_MAP",
+      "mechanism_name": "MONARCH mod37",
+      "gas-phase water": "H2O",
+      "gas-phase water dimer": "H2O_dimer",
+      "photolysis_method": "TUV",
+      "photolysis_table": true
+    },
+    {
+      "name": "everything related to time",
+      "type": "TIME_CONTROL",
+      "time_control": {
+        "start_time": {
+          "year": 1987,
+          "month": 8,
+          "day": 10,
+          "hour": 0,
+          "tz": 0
+        },
+        "simulation_length": {
+          "time": 48,
+          "unit": "hour"
+        },
+        "timestep": {
+          "time": 15.0,
+          "unit": "min"
+        }
+      }
+    },
+    {
+      "name": "Initial concentrations",
+      "type": "INIT_CONC",
+      "gas-phase species": {
+        "O3": {
+          "init conc": {
+            "value": 50.0,
+            "unit": "ppb"
+          }
+        },
+        "NO": {
+          "init conc": {
+            "value": 20.0,
+            "unit": "ppb"
+          }
+        }
+      }
+    },
+    {
+      "name": "latitude",
+      "type": "LATITUDE",
+      "constant_constraint": {
+        "value": 41.382778,
+        "unit": "deg"
+      }
+    },
+    {
+      "name": "longitude",
+      "type": "LONGITUDE",
+      "constant_constraint": {
+        "value": 2.176944,
+        "unit": "deg"
+      }
+    },
+    {
+      "name": "altitude",
+      "type": "ALTITUDE",
+      "constant_constraint": {
+        "value": 20,
+        "unit": "m"
+      }
+    },
+    {
+      "name": "pressure",
+      "type": "PRESSURE",
+      "constant_constraint": {
+        "value": 1,
+        "unit": "atm"
+      }
+    },
+    {
+      "name": "temperature",
+      "type": "TEMPERATURE",
+      "constant_constraint": {
+        "value": 298,
+        "unit": "K"
+      }
+    },
+    {
+      "name": "humidity",
+      "type": "HUMIDITY",
+      "constant_constraint": {
+        "value": 80,
+        "unit": "%"
+      }
+    },
+    {
+      "name": "box height",
+      "type": "HEIGHT",
+      "constant_constraint": {
+        "value": 500,
+        "unit": "m"
+      }
+    }
+  ]
+}

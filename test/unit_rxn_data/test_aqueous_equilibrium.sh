@@ -10,12 +10,12 @@ cd ${0%/*}
 mkdir -p out
 
 if [[ $1 = "MPI" ]]; then
-  exec_str="mpirun -v -np 2 ../../test_rxn_aqueous_equilibrium"
+  exec_str="mpirun -np 2 ../../test_rxn_aqueous_equilibrium"
 else
   if [ -z ${SLURM_TASK_PID+x} ]; then
     exec_str="../../test_rxn_aqueous_equilibrium"
   else
-    exec_str="mpirun -v -np 1 --bind-to none  ../../test_rxn_aqueous_equilibrium"
+    exec_str="mpirun -np 1 --bind-to none  ../../test_rxn_aqueous_equilibrium"
   fi
 fi
 

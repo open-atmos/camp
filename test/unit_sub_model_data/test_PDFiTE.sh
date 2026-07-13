@@ -15,22 +15,17 @@ do
   echo Attempt $counter
 
 if [[ $1 = "MPI" ]]; then
-  exec_str="mpirun -v -np 2 ../../test_sub_model_PDFiTE"
+  exec_str="mpirun -np 2 ../../test_sub_model_PDFiTE"
 else
   exec_str="../../test_sub_model_PDFiTE"
 fi
 
 if ! $exec_str; then 
-	  echo Failure "$counter"
-	  if [ "$counter" -gt 10 ]
-	  then
-		  echo FAIL
-		  exit 1
-	  fi
-	  echo retrying...
-  else
-	  echo PASS
+	echo Failure "$counter"
+	echo FAIL
+	exit 1
+else
+	echo PASS
 	  exit 0
-  fi
-  ((counter++))
+fi
 done

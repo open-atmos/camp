@@ -65,8 +65,9 @@ static inline double mean_free_path__m(double diffusion_coeff__m2_s,
  *  @param radius__m Particle effective radius [m]
  *  @param alpha Mass accomodation coefficient [unitless]
  */
-static inline double transition_regime_correction_factor(
-    double mean_free_path__m, double radius__m, double alpha) {
+static inline double
+transition_regime_correction_factor(double mean_free_path__m, double radius__m,
+                                    double alpha) {
   double K_n = mean_free_path__m / radius__m;
   return (0.75 * alpha * (1.0 + K_n)) /
          (K_n * K_n + (1.0 + 0.283 * alpha) * K_n + 0.75 * alpha);
@@ -87,8 +88,9 @@ static inline double transition_regime_correction_factor(
  *  @param radius__m Particle effective radius [m]
  *  @param alpha Mass accomodation coefficient [unitless]
  */
-static inline double d_transition_regime_correction_factor_d_radius(
-    double mean_free_path__m, double radius__m, double alpha) {
+static inline double
+d_transition_regime_correction_factor_d_radius(double mean_free_path__m,
+                                               double radius__m, double alpha) {
   double K_n = mean_free_path__m / radius__m;
   return (0.75 * alpha * mean_free_path__m *
           (K_n * K_n + 2.0 * K_n + 1.0 + (0.283 - 0.75) * alpha)) /
@@ -125,9 +127,10 @@ static inline double d_transition_regime_correction_factor_d_radius(
  *  @param radius__m Particle radius [m]
  *  @param alpha Mass accomodation coefficient [unitless]
  */
-static inline double gas_aerosol_transition_rxn_rate_constant(
-    double diffusion_coeff__m2_s, double mean_free_path__m, double radius__m,
-    double alpha) {
+static inline double
+gas_aerosol_transition_rxn_rate_constant(double diffusion_coeff__m2_s,
+                                         double mean_free_path__m,
+                                         double radius__m, double alpha) {
   return 4.0 * M_PI * radius__m * diffusion_coeff__m2_s *
          transition_regime_correction_factor(mean_free_path__m, radius__m,
                                              alpha);
@@ -180,9 +183,10 @@ static inline double d_gas_aerosol_transition_rxn_rate_constant_d_radius(
  *  @param radius__m Particle radius [m]
  *  @param alpha Mass accomodation coefficient [unitless]
  */
-static inline double gas_aerosol_continuum_rxn_rate_constant(
-    double diffusion_coeff__m2_s, double mean_speed__m_s, double radius__m,
-    double alpha) {
+static inline double
+gas_aerosol_continuum_rxn_rate_constant(double diffusion_coeff__m2_s,
+                                        double mean_speed__m_s,
+                                        double radius__m, double alpha) {
   return 4.0 * M_PI * radius__m * radius__m /
          (radius__m / diffusion_coeff__m2_s + 4.0 / (mean_speed__m_s * alpha));
 }
@@ -192,7 +196,8 @@ static inline double gas_aerosol_continuum_rxn_rate_constant(
  * \f[
  *   \frac{dk_c}{dr} = 4 \pi \frac{\frac{r^2}{D_g} +
  *      \frac{8r}{v(T) \gamma}}{\left(\frac{r}{D_g} + \frac{4}{v(T)
- * \gamma}\right)^2} \f]
+ * \gamma}\right)^2}
+ * \f]
  *
  * where \f$r\f$ is the particle radius [m],
  * \f$D_g\f$ is the gas-phase diffusion coefficient of the reactant
@@ -214,4 +219,4 @@ static inline double d_gas_aerosol_continuum_rxn_rate_constant_d_radius(
       radius__m / diffusion_coeff__m2_s + 4.0 / (mean_speed__m_s * alpha);
   return 4.0 * M_PI * nom / (denom * denom);
 }
-#endif  // UTIL_H
+#endif // UTIL_H

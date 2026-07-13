@@ -19,12 +19,9 @@
 
 /* Time derivative for solver species */
 typedef struct {
-  unsigned int num_spec;     // Number of species in the derivative
-  double *production_rates;  // Production rates for all species
-  double *loss_rates;        // Loss rates for all species
-#ifdef CAMP_DEBUG
-  double last_max_loss_precision;  // Maximum loss of precision at last output
-#endif
+  unsigned int num_spec;    // Number of species in the derivative
+  double *production_rates; // Production rates for all species
+  double *loss_rates;       // Loss rates for all species
 } TimeDerivative;
 
 /** \brief Initialize the derivative
@@ -63,16 +60,6 @@ void time_derivative_output(TimeDerivative time_deriv, double *dest_array,
  */
 void time_derivative_add_value(TimeDerivative time_deriv, unsigned int spec_id,
                                double rate_contribution);
-
-#ifdef CAMP_DEBUG
-/** \brief Maximum loss of precision at the last output of the derivative
- *         in bits
- *
- * \param time_deriv TimeDerivative object
- * \return maximum loss of precision
- */
-double time_derivative_max_loss_precision(TimeDerivative time_deriv);
-#endif
 
 /** \brief Free memory associated with a TimeDerivative
  *

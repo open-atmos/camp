@@ -1,0 +1,11 @@
+{
+  "camp-files": [
+    "__BOXMODELPATH__/gecko-a/fixed_species.json",
+    "__BOXMODELPATH__/gecko-a/pentane/pentane.json",
+    "__BOXMODELPATH__/gecko-a/pentane/emissions.json",
+    "__BOXMODELPATH__/gecko-a/simple_aerosol_representation.json",
+    "__BOXMODELPATH__/gecko-a/poa.json",
+    "__BOXMODELPATH__/gecko-a/aqueous_sulfate.json",
+    "__BOXMODELPATH__/cvode_configuration.json"
+  ]
+}

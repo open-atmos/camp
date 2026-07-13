@@ -1,0 +1,37 @@
+CH3(OONO2) -> CH3(OO) + NO2 
+R. Atkinson, D.L. Baulch, R.A. Cox, J.N. Crowley, R.F. Hampson, R.G. G. Hynes, 
+M.E. Jenkin, M.J. Rossi, and J. Troe, "Evaluated kinetic and photochemical 
+data for atmospheric chemistry: Volume II  gas phase reactions of organic species", 
+Atmos. Chem. Phys. 6, 36254055 (2006).
+Comments: IUPAC(2005, 2006) recommendation:200-280 nm, data of
+I. Bridier, R. Lesclaux, and B. Veyret, "Flash photolysis kinetic study of the 
+equilibrium CH3O2 + NO2 « CH3O2NO2," Chemical Physics Letters 191, 259-263 (1992)
+nm     cm2
+200    5.00e-18
+205    3.60e-18
+210    2.40e-18
+215    1.50e-18
+220    1.05e-18
+225    8.00e-19
+230    6.80e-19
+235    6.00e-19
+240    5.30e-19
+245    4.60e-19
+250    3.90e-19
+255    3.20e-19
+260    2.60e-19
+265    2.00e-19
+270    1.60e-19
+275    1.30e-19
+280    1.05e-19
+285    6.20e-20
+290    3.90e-20
+295    2.40e-20
+300    1.40e-20
+305    8.50e-21
+310    5.30e-21
+315    3.90e-21
+320    2.40e-21
+325    1.50e-21
+
+

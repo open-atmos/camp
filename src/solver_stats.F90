@@ -8,7 +8,7 @@
 !> The solver_stats_t type and associated subroutines
 module camp_solver_stats
 
-  use camp_constants,                  only : i_kind, dp
+  use camp_constants, only: i_kind, dp
 
   implicit none
   private
@@ -20,123 +20,52 @@ module camp_solver_stats
   !! Holds information related to a solver run
   type :: solver_stats_t
     !> Status code
-    integer(kind=i_kind) :: status_code
+    integer(kind=i_kind), allocatable :: status_code(:)
     !> Integration start time [s]
     real(kind=dp) :: start_time__s
     !> Integration end time [s]
     real(kind=dp) :: end_time__s
     !> Last flag returned by the solver
-    integer(kind=i_kind) :: solver_flag
+    integer(kind=i_kind), allocatable :: solver_flag(:)
     !> Number of steps
-    integer(kind=i_kind) :: num_steps
-    !> Right-hand side evaluations
-    integer(kind=i_kind) :: RHS_evals
-    !> Linear solver setups
-    integer(kind=i_kind) :: LS_setups
-    !> Error test failures
-    integer(kind=i_kind) :: error_test_fails
-    !> Non-Linear solver iterations
-    integer(kind=i_kind) :: NLS_iters
-    !> Non-Linear solver convergence failures
-    integer(kind=i_kind) :: NLS_convergence_fails
-    !> Direct Linear Solver Jacobian evaluations
-    integer(kind=i_kind) :: DLS_Jac_evals
-    !> Direct Linear Solver right-hand size evaluations
-    integer(kind=i_kind) :: DLS_RHS_evals
-    !> Last time step [s]
-    real(kind=dp) :: last_time_step__s
-    !> Next time step [s]
-    real(kind=dp) :: next_time_step__s
-    !> Jacobian evaluation failures
-    integer(kind=i_kind) :: Jac_eval_fails
-    !> Maximum loss of precision on last deriv call
-    real(kind=dp) :: max_loss_precision
+    integer(kind=i_kind), allocatable :: num_steps(:)
 #ifdef CAMP_DEBUG
     !> Flag to output debugging info during solving
     !! THIS PRINTS A LOT OF TEXT TO THE STANDARD OUTPUT
     logical :: debug_out = .false.
     !> Evalute the Jacobian during solving
     logical :: eval_Jac = .false.
+    !> Jacobian evaluation failures
+    integer(kind=i_kind) :: Jac_eval_fails
 #endif
-  contains
-    !> Print the solver statistics
-    procedure :: print => do_print
-    !> Assignment
-    procedure :: assignValue
-    generic :: assignment(=) => assignValue
-  end type solver_stats_t
+  end type
+
+  interface solver_stats_t
+    procedure :: constructor
+  end interface solver_stats_t
 
 contains
-
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Print the solver statistics
-  subroutine do_print( this, file_unit )
+  function constructor(n_cells) result(this)
+    !> A new set of model parameters
+    type(solver_stats_t), pointer :: this
+    integer(kind=i_kind), optional :: n_cells
+    integer :: n_cells1
 
-    !> Solver statistics
-    class(solver_stats_t), intent(in) :: this
-    !> File unit to output to
-    integer(kind=i_kind), optional :: file_unit
-
-    integer(kind=i_kind) :: f_unit
-
-    f_unit = 6
-
-    if( present( file_unit ) ) f_unit = file_unit
-
-    write(f_unit,*) "Status code:                 ", this%status_code
-    write(f_unit,*) "Integration start time [s]:  ", this%start_time__s
-    write(f_unit,*) "Integration end time [s]:    ", this%end_time__s
-    write(f_unit,*) "Last solver flag:            ", this%solver_flag
-    write(f_unit,*) "Number of steps:             ", this%num_steps
-    write(f_unit,*) "Right-hand side evals:       ", this%RHS_evals
-    write(f_unit,*) "Linear solver setups:        ", this%LS_setups
-    write(f_unit,*) "Error test failures:         ", this%error_test_fails
-    write(f_unit,*) "Non-Linear solver iterations:", this%NLS_iters
-    write(f_unit,*) "Non-Linear convergence fails:", this%NLS_convergence_fails
-    write(f_unit,*) "DLS Jacobian evals:          ", this%DLS_Jac_evals
-    write(f_unit,*) "DLS Right-hand side evals:   ", this%DLS_RHS_evals
-    write(f_unit,*) "Last time step [s]:          ", this%last_time_step__s
-    write(f_unit,*) "Next time step [s]:          ", this%next_time_step__s
-    write(f_unit,*) "Maximum loss of precision    ", this%max_loss_precision
-#ifdef CAMP_DEBUG
-    write(f_unit,*) "Output debugging info:       ", this%debug_out
-    write(f_unit,*) "Evaluate Jacobian:           ", this%eval_Jac
-    if (this%eval_Jac) then
-      write(f_unit,*) "Jacobian evaluation failures:", this%Jac_eval_fails
+    n_cells1 = 1
+    if (present(n_cells)) then
+      n_cells1 = n_cells
     end if
-#endif
 
-  end subroutine do_print
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Assign a value to all members of solver stats
-  subroutine assignValue( this, new_value )
-
-    !> Solver statistics
-    class(solver_stats_t), intent(inout) :: this
-    !> Value to assign
-    integer(kind=i_kind), intent(in) :: new_value
-
-    this%status_code           = new_value
-    this%start_time__s         = real( new_value, kind=dp )
-    this%end_time__s           = real( new_value, kind=dp )
-    this%solver_flag           = new_value
-    this%num_steps             = new_value
-    this%RHS_evals             = new_value
-    this%LS_setups             = new_value
-    this%error_test_fails      = new_value
-    this%NLS_iters             = new_value
-    this%NLS_convergence_fails = new_value
-    this%DLS_Jac_evals         = new_value
-    this%DLS_RHS_evals         = new_value
-    this%last_time_step__s     = real( new_value, kind=dp )
-    this%next_time_step__s     = real( new_value, kind=dp )
-    this%Jac_eval_fails        = new_value
-    this%max_loss_precision    = new_value
-
-  end subroutine assignValue
+    allocate (this)
+    allocate (this%status_code(n_cells1))
+    allocate (this%solver_flag(n_cells1))
+    allocate (this%num_steps(n_cells1))
+    this%status_code(:) = -1
+    this%solver_flag(:) = -1
+    this%num_steps(:) = -1
+  end function constructor
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

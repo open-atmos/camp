@@ -14,7 +14,6 @@ program camp_test_chem_mech_solver
   use camp_camp_core
   use camp_camp_state
   use camp_chem_spec_data
-  use camp_solver_stats
 #ifdef CAMP_USE_JSON
   use json_module
 #endif
@@ -94,8 +93,6 @@ contains
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: pack_size, pos, i_elem, results, rank_solve
 #endif
-
-    type(solver_stats_t), target :: solver_stats
 
     ! Parameters for calculating true concentrations
     real(kind=dp) :: k1, k2, temp, pressure, Ea1, Ea2, A1, A2, time
@@ -214,26 +211,12 @@ contains
       ! Set the initial concentrations in the model
       camp_state%state_var(:) = model_conc(0,:)
 
-#ifdef CAMP_DEBUG
-      ! Evaluate the Jacobian during solving
-      solver_stats%eval_Jac = .true.
-#endif
-
       ! Integrate the mechanism
       do i_time = 1, NUM_TIME_STEP
 
         ! Get the modeled conc
-        call camp_core%solve(camp_state, time_step, &
-                              solver_stats = solver_stats)
+        call camp_core%solve(camp_state, time_step)
         model_conc(i_time,:) = camp_state%state_var(:)
-
-#ifdef CAMP_DEBUG
-        ! Check the Jacobian evaluations
-        call assert_msg(954300655, solver_stats%Jac_eval_fails.eq.0, &
-                        trim( to_string( solver_stats%Jac_eval_fails ) )// &
-                        " Jacobian evaluation failures at time step "// &
-                        trim( to_string( i_time ) ) )
-#endif
 
         ! Get the analytic conc
         time = i_time * time_step

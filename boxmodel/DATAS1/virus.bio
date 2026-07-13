@@ -1,0 +1,15 @@
+Action spectrum for the Inactivation of Viruses. 
+Lytle, C. D., and J.-L. Sagripanti, Predicted Inactivation of Viruses of Relevance to Biodefense by Solar Radiation, Journal of Virology, Nov. 2005, p. 14244-14252, doi:10.1128/JVI.79.22.14244-14252.2005.  Data from their figure 1.
+Wavelength    Response
+254.	      1.00
+280.	      0.7
+285.	      .45
+289.	      .4
+290.	      .2
+296.5	      .1
+301.5	      .02 
+305.	      .015
+310.	      8.e-4
+313.	      4.5e-4
+315.	      2.e-4
+320.	      1.1e-4

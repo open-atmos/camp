@@ -20,7 +20,6 @@ program camp_test_cb05cl_ae5
   use camp_camp_core
   use camp_camp_state
   use camp_camp_solver_data
-  use camp_solver_stats
   use camp_chem_spec_data
   use camp_mechanism_data
   use camp_mpi
@@ -190,7 +189,6 @@ contains
     integer(kind=i_kind), allocatable :: ebi_spec_map(:), kpp_spec_map(:)
     type(string_t) :: str_temp
     type(string_t), allocatable :: spec_names(:)
-    type(solver_stats_t), target :: solver_stats
 
     ! Pointer to the mechanism
     type(mechanism_data_t), pointer :: mechanism
@@ -599,15 +597,6 @@ contains
     ! Repeatedly solve the mechanism
     do i_repeat = 1, 100
 
-#ifdef DEBUG
-    ! Evaluate the Jacobian during solving on the first repeat
-    if (i_repeat.eq.1) then
-      solver_stats%eval_Jac = .true.
-    else
-      solver_stats%eval_Jac = .false.
-    end if
-#endif
-
     YC(:) = ebi_init(:)
     KPP_C(:) = kpp_init(:)
     camp_state%state_var(:) = camp_init(:)
@@ -685,27 +674,9 @@ contains
 
       ! CAMP-chem
       call cpu_time(comp_start)
-      call camp_core%solve(camp_state, real(EBI_TMSTEP*60.0, kind=dp), &
-                            solver_stats = solver_stats)
+      call camp_core%solve(camp_state, real(EBI_TMSTEP*60.0, kind=dp))
       call cpu_time(comp_end)
       comp_camp = comp_camp + (comp_end-comp_start)
-
-#ifdef DEBUG
-      if (i_repeat.eq.1) then
-        call solver_stats%print()
-
-        ! Check the Jacobian evaluations
-        call assert_msg(896545510, solver_stats%Jac_eval_fails.eq.0, &
-                        trim( to_string( solver_stats%Jac_eval_fails ) )// &
-                        " Jacobian evaluation failures at time "// &
-                        trim( to_string( (i_time-1) * EBI_TMSTEP*60.0 ) ) )
-        ! Reset the timers so they are not affected by debugging done
-        ! during the first solve
-        comp_ebi = 0.0
-        comp_kpp = 0.0
-        comp_camp = 0.0
-      end if
-#endif
 
     end do
     end do

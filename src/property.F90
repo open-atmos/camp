@@ -136,7 +136,7 @@ contains
   !> Load a property set from input data
 #ifdef CAMP_USE_JSON
   recursive subroutine load(this, json, j_obj, as_object, owner_name, &
-            allow_duplicates)
+    allow_duplicates)
 
     !> Property dataset
     class(property_t), intent(inout) :: this
@@ -192,48 +192,48 @@ contains
       select case (var_type)
 
         ! skip null objects
-        case (json_null)
+       case (json_null)
 
         ! integer
-        case (json_integer)
-          call json%get(child, int_val)
-          call this%put(prop_key, int(int_val, i_kind), allow_dup, &
-                        owner_name)
+       case (json_integer)
+        call json%get(child, int_val)
+        call this%put(prop_key, int(int_val, i_kind), allow_dup, &
+          owner_name)
 
         ! double
-        case (json_double)
-          call json%get(child, real_val)
-          call this%put(prop_key, real(real_val, dp), allow_dup, &
-                        owner_name)
+       case (json_double)
+        call json%get(child, real_val)
+        call this%put(prop_key, real(real_val, dp), allow_dup, &
+          owner_name)
 
         ! boolean
-        case (json_logical)
-          call json%get(child, bool_val)
-          call this%put(prop_key, logical(bool_val), allow_dup, &
-                        owner_name)
+       case (json_logical)
+        call json%get(child, bool_val)
+        call this%put(prop_key, logical(bool_val), allow_dup, &
+          owner_name)
 
         ! string
-        case (json_string)
-          call json%get(child, unicode_val)
-          str_val = unicode_val
-          call this%put(prop_key, str_val, allow_dup, owner_name)
+       case (json_string)
+        call json%get(child, unicode_val)
+        str_val = unicode_val
+        call this%put(prop_key, str_val, allow_dup, owner_name)
 
         ! sub-set of key-value pairs
-        case (json_object)
-          sub_prop => property_t()
-          call sub_prop%load(json, child, .true., owner_name, allow_dup)
-          call this%put(prop_key, sub_prop, allow_dup, owner_name)
-          deallocate(sub_prop)
+       case (json_object)
+        sub_prop => property_t()
+        call sub_prop%load(json, child, .true., owner_name, allow_dup)
+        call this%put(prop_key, sub_prop, allow_dup, owner_name)
+        deallocate(sub_prop)
 
         ! sub-set of values
-        case (json_array)
-          sub_prop => property_t()
-          call sub_prop%load(json, child, .true., owner_name, allow_dup)
-          call this%put(prop_key, sub_prop, allow_dup, owner_name)
-          deallocate(sub_prop)
+       case (json_array)
+        sub_prop => property_t()
+        call sub_prop%load(json, child, .true., owner_name, allow_dup)
+        call this%put(prop_key, sub_prop, allow_dup, owner_name)
+        deallocate(sub_prop)
 
         ! skip other types
-        case default
+       case default
       end select
 
       ! get the next object to add
@@ -285,24 +285,24 @@ contains
         if (associated(new_link)) then
           curr_val => new_link%val
           select type (curr_val)
-          class is (property_t)
+           class is (property_t)
             select type (val)
-            class is (property_t)
+             class is (property_t)
               sub_link => val%first_link
               do while (associated(sub_link))
                 call curr_val%put(sub_link%key_name, sub_link%val, .false., &
-                                  owner_name)
+                  owner_name)
                 sub_link => sub_link%next_link
               end do
-            class default
+             class default
               call new_link%print("")
               call die_msg(698012538, "Property type mismatch for "//key// &
-                           " in property set of "//owner_name)
+                " in property set of "//owner_name)
             end select
-          class default
+           class default
             call new_link%print("")
             call die_msg(359604264, "Trying to overwrite property "//key// &
-                         " in property set of "//owner_name)
+              " in property set of "//owner_name)
           end select
           return
         end if
@@ -314,19 +314,19 @@ contains
     ! create a new link. for property_t sub-property sets,
     ! copy the passed value to a new object
     select type (val)
-    class is (property_t)
+     class is (property_t)
       allocate(sub_prop_set)
       sub_link => val%first_link
       do while (associated(sub_link))
         call sub_prop_set%put(sub_link%key_name, sub_link%val, &
-                              allow_duplicates, owner_name)
+          allow_duplicates, owner_name)
         sub_link => sub_link%next_link
       end do
       new_link => property_link_t(key, sub_prop_set)
       sub_prop_set%first_link => null()
       sub_prop_set%last_link => null()
       deallocate(sub_prop_set)
-    class default
+     class default
       new_link => property_link_t(key, val)
     end select
 
@@ -742,28 +742,28 @@ contains
     select type(val)
 
       ! add integers, reals, logicals, and string_t as-is
-      type is (integer(kind=i_kind))
-      type is (real(kind=dp))
-      type is (logical)
-      type is (string_t)
+     type is (integer(kind=i_kind))
+     type is (real(kind=dp))
+     type is (logical)
+     type is (string_t)
 
       ! handle empty sub-sets
-      class is (property_t)
-        if (.not.associated(val%first_link)) then
-          this%val => property_t()
-          return
-        end if
+     class is (property_t)
+      if (.not.associated(val%first_link)) then
+        this%val => property_t()
+        return
+      end if
 
       ! convert character arrays to string_t objects
-      type is (character(len=*))
-        allocate(str_val)
-        str_val%string = val
-        this%val => str_val
-        return
+     type is (character(len=*))
+      allocate(str_val)
+      str_val%string = val
+      this%val => str_val
+      return
 
       ! error on unsupported types
-      class default
-        call die_msg(728532218, "Unsupported property type")
+     class default
+      call die_msg(728532218, "Unsupported property type")
     end select
 
     allocate(this%val, source=val)
@@ -784,11 +784,11 @@ contains
 
     this_val => this%val
     select type(this_val)
-      type is (integer(kind=i_kind))
-        val = this_val
-      class default
-        call die_msg(509101133, "Property type mismatch for key "//&
-                trim(this%key_name))
+     type is (integer(kind=i_kind))
+      val = this_val
+     class default
+      call die_msg(509101133, "Property type mismatch for key "//&
+        trim(this%key_name))
     end select
 
   end function value_int
@@ -807,13 +807,13 @@ contains
 
     this_val => this%val
     select type(this_val)
-      type is (integer(kind=i_kind))
-        val = real(this_val, kind=dp)
-      type is (real(kind=dp))
-        val = this_val
-      class default
-        call die_msg(151463892, "Property type mismatch for key "//&
-                trim(this%key_name))
+     type is (integer(kind=i_kind))
+      val = real(this_val, kind=dp)
+     type is (real(kind=dp))
+      val = this_val
+     class default
+      call die_msg(151463892, "Property type mismatch for key "//&
+        trim(this%key_name))
     end select
 
   end function value_real
@@ -832,11 +832,11 @@ contains
 
     this_val => this%val
     select type(this_val)
-      type is (logical)
-        val = this_val
-      class default
-        call die_msg(371288570, "Property type mismatch for key "//&
-                trim(this%key_name))
+     type is (logical)
+      val = this_val
+     class default
+      call die_msg(371288570, "Property type mismatch for key "//&
+        trim(this%key_name))
     end select
 
   end function value_logical
@@ -855,11 +855,11 @@ contains
 
     this_val => this%val
     select type (this_val)
-      type is (string_t)
-        val = this_val%string
-      class default
-        call die_msg(153505401, "Property type mismatch for key "//&
-                trim(this%key_name))
+     type is (string_t)
+      val = this_val%string
+     class default
+      call die_msg(153505401, "Property type mismatch for key "//&
+        trim(this%key_name))
     end select
 
   end function value_string
@@ -878,11 +878,11 @@ contains
 
     this_val => this%val
     select type(this_val)
-      type is (property_t)
-        val => this_val
-      class default
-        call die_msg(641781966, "Property type mismatch for key "//&
-                trim(this%key_name))
+     type is (property_t)
+      val => this_val
+     class default
+      call die_msg(641781966, "Property type mismatch for key "//&
+        trim(this%key_name))
     end select
 
   end function value_property_t
@@ -908,23 +908,23 @@ contains
 
     val => this%val
     select type(val)
-      type is (integer(kind=i_kind))
-        write(f_unit,*) '"'//this%key_name//'" : '//trim(to_string(val))// &
-                suffix
-      type is (real(kind=dp))
-        write(f_unit,*) '"'//this%key_name//'" : '//trim(to_string(val))// &
-                suffix
-      type is (logical)
-        write(f_unit,*) '"'//this%key_name//'" : '//trim(to_string(val))// &
-                suffix
-      type is (string_t)
-        write(f_unit,*) '"'//this%key_name//'" : "'//val%string//'"'//suffix
-      class is (property_t)
-        write(f_unit,*) '"'//this%key_name//'" : {'
-        call val%print(f_unit)
-        write(f_unit,*) '}'//suffix
-      class default
-        call die_msg(711028956, "Unsupported property type")
+     type is (integer(kind=i_kind))
+      write(f_unit,*) '"'//this%key_name//'" : '//trim(to_string(val))// &
+        suffix
+     type is (real(kind=dp))
+      write(f_unit,*) '"'//this%key_name//'" : '//trim(to_string(val))// &
+        suffix
+     type is (logical)
+      write(f_unit,*) '"'//this%key_name//'" : '//trim(to_string(val))// &
+        suffix
+     type is (string_t)
+      write(f_unit,*) '"'//this%key_name//'" : "'//val%string//'"'//suffix
+     class is (property_t)
+      write(f_unit,*) '"'//this%key_name//'" : {'
+      call val%print(f_unit)
+      write(f_unit,*) '}'//suffix
+     class default
+      call die_msg(711028956, "Unsupported property type")
     end select
 
   end subroutine link_do_print

@@ -1,0 +1,14 @@
+{
+  "camp-files": [
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/gas/craccm1/v1.0.0/craccm1_emissions.json",
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/gas/craccm1/v1.0.0/craccm1.json",
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/cvode_configuration.json",
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/aerosol/shrivastava_vbs_SOA_scheme/v1.0.1/species.json",
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/aerosol/shrivastava_vbs_SOA_scheme/v1.0.1/shrivastava_craccm1.json",
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/aerosol_representations/aerosol_representation_sectional_only_organics.json",
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/aerosol/shrivastava_vbs_SOA_scheme/v1.0.1/aerosol_phase.json",
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/aerosol/shrivastava_vbs_SOA_scheme/v1.0.1/species_properties.json",
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/aerosol/shrivastava_vbs_SOA_scheme/v1.0.1/phase_transfer.json",
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/aerosol/shrivastava_vbs_SOA_scheme/v1.0.1/aging_craccm1.json"
+  ]
+}

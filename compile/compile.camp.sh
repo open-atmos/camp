@@ -1,22 +1,27 @@
 #!/usr/bin/env bash
 set -e
 
+initial_dir=$(pwd)
 scriptdir="$(dirname "$0")"
 cd "$scriptdir"
 # get directory of CAMP suite (and force it to be an absolute path)
 case "$#" in
-    0) camp_suite_dir=../../ ;;
-    1) camp_suite_dir=$1     ;;
+  0) camp_suite_dir=../../
+    cd ../
+    camp_dir=$(pwd)
+    cd $initial_dir ;;
+  1) camp_suite_dir=$1     
+    camp_dir=${camp_suite_dir}/camp ;;
 esac
 camp_suite_dir=`cd ${camp_suite_dir} ; pwd`
-initial_dir=$(pwd)
 
 case "${BSC_MACHINE}-loadmodules" in
-    "mn5-loadmodules")
+"mn5-loadmodules")
   source load.modules.camp.sh
   ;;
 esac
-cd ${camp_suite_dir}/camp
+cd ${camp_dir}
+
 if [ "${BSC_MACHINE}" == "mn5" ]; then
   if module list 2>&1 | grep -q "\<intel\>"; then
     if module list 2>&1 | grep -q "\<nvidia-hpc-sdk\>"; then
@@ -29,33 +34,31 @@ if [ "${BSC_MACHINE}" == "mn5" ]; then
   fi
 fi
 export JSON_FORTRAN_HOME=${camp_suite_dir}/json-fortran-6.1.0/install/jsonfortran-gnu-6.1.0
-export SUNDIALS_HOME=${camp_suite_dir}/cvode-3.4-alpha/install
+export SUNDIALS_HOME=${camp_suite_dir}/cvode/install
 export SUITE_SPARSE_HOME=${camp_suite_dir}/SuiteSparse
-cd ${camp_suite_dir}/camp
 rm -rf build
 mkdir build
 cd build
 #if extrae:
 #- salloc a node with -C perfparanoid
-#  -D CMAKE_C_FLAGS_DEBUG="-O3 -g -finstrument-functions -rdynamic" \
-#  -D CMAKE_Fortran_FLAGS_DEBUG="-g -O3 -finstrument-functions -rdynamic" \
-#do not use normally because it slow downs the code by 25%
+#  -D CMAKE_C_FLAGS_DEBUG="-g -finstrument-functions -rdynamic" \
+#  -D CMAKE_Fortran_FLAGS_DEBUG="-g -finstrument-functions -rdynamic" \
+#   do not use normally because it slow downs the code by 25%
 #Warning: code crashes with -O0 in cpu
 cmake -D CMAKE_C_COMPILER=$(which mpicc) \
-  -D CMAKE_BUILD_TYPE=debug \
-  -D CMAKE_C_FLAGS_DEBUG="-O3 -g" \
-  -D CMAKE_Fortran_FLAGS_DEBUG="-g -O3" \
+  -D CMAKE_BUILD_TYPE=release \
+  -D CMAKE_C_FLAGS_DEBUG="-g -O0 -fp-trap-all=common -fp-stack-check" \
+  -D CMAKE_Fortran_FLAGS_DEBUG="-g -O0 -fp-trap-all=common -fp-stack-check" \
   -D CMAKE_C_FLAGS_RELEASE="-O3" \
-  -D CMAKE_Fortran_FLAGS_RELEASE="" \
+  -D CMAKE_Fortran_FLAGS_RELEASE="-O3" \
   -D CMAKE_Fortran_COMPILER=$mpifort \
   -D ENABLE_DEBUG=OFF \
   -D FAILURE_DETAIL=OFF \
   -D ENABLE_MPI=ON \
-  -D ENABLE_GPU=ON \
   -D ENABLE_PROFILE_SOLVING=ON \
   -D ENABLE_GSL:BOOL=FALSE \
   -D ENABLE_NETCDF=ON \
   ..
 
-make -j 4 VERBOSE=1
+make -j 8 VERBOSE=1
 cd $initial_dir

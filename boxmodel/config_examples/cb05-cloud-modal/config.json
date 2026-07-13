@@ -1,0 +1,20 @@
+{
+  "camp-files": [
+    "__BOXMODELPATH__/full_multiphase/cb05/cb05_species.json",
+    "__BOXMODELPATH__/full_multiphase/cb05/cb05_mechanism.json",
+    "__BOXMODELPATH__/full_multiphase/cb05/cb05_abs_tol.json",
+    "__BOXMODELPATH__/full_multiphase/custom_species.json",
+    "__BOXMODELPATH__/full_multiphase/cvode_configuration.json",
+    "__BOXMODELPATH__/full_multiphase/shrivastava_vbs_SOA_scheme/species.json",
+    "__BOXMODELPATH__/full_multiphase/shrivastava_vbs_SOA_scheme/mechanism.json",
+    "__BOXMODELPATH__/full_multiphase/shrivastava_vbs_SOA_scheme/aging.json",
+    "__BOXMODELPATH__/full_multiphase/aerosol_representation_cloud_rain.json",
+    "__BOXMODELPATH__/full_multiphase/species_properties_vbs.json",
+    "__BOXMODELPATH__/full_multiphase/inorganic_species.json",
+    "__BOXMODELPATH__/full_multiphase/inorganic_reactions_cloud.json",
+    "__BOXMODELPATH__/full_multiphase/inorganic_partitioning_cloud.json",
+    "__BOXMODELPATH__/full_multiphase/cloud_and_rain_species.json",
+    "__BOXMODELPATH__/full_multiphase/cloud_and_rain_partitioning.json",
+    "__BOXMODELPATH__/full_multiphase/cloud_and_rain_phases.json"
+  ]
+}

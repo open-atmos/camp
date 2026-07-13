@@ -1,0 +1,49 @@
+{
+  "description": [
+    "example emission file"
+  ],
+  "camp-data": [
+    {
+      "name": "MONARCH mod37",
+      "type": "MECHANISM",
+      "reactions": [
+        {
+          "type": "EMISSION",
+          "species": "SO2"
+        },
+        {
+          "type": "EMISSION",
+          "species": "NO"
+        },
+        {
+          "type": "EMISSION",
+          "species": "CO"
+        },
+        {
+          "type": "EMISSION",
+          "species": "ISOP"
+        },
+        {
+          "type": "EMISSION",
+          "species": "ALD2"
+        },
+        {
+          "type": "EMISSION",
+          "species": "FACD"
+        },
+        {
+          "type": "EMISSION",
+          "species": "AACD"
+        },
+        {
+          "type": "EMISSION",
+          "species": "MEOH"
+        },
+        {
+          "type": "EMISSION",
+          "species": "MEPX"
+        }
+      ]
+    }
+  ]
+}

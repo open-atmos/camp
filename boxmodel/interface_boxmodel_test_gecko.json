@@ -1,0 +1,342 @@
+{
+  "boxmodel-data": [
+    {
+      "name": "species map",
+      "type": "SPECIES_MAP",
+      "mechanism_name": "gecko-a mechanism",
+      "gas-phase water": "GH2O",
+      "gas-phase water dimer": "H2O_dimer",
+      "aerosol_flag": false
+    },
+    {
+      "name": "everything related to time",
+      "type": "TIME_CONTROL",
+      "time_control": {
+        "start_time": {
+          "year": 2018,
+          "month": 8,
+          "day": 13,
+          "hour": 0,
+          "tz": 0
+        },
+        "simulation_length": {
+          "time": 1,
+          "unit": "days"
+        },
+        "timestep": {
+          "time": 15.0,
+          "unit": "min"
+        }
+      }
+    },
+    {
+      "name": "Initial concentrations",
+      "type": "INIT_CONC",
+      "gas-phase species": {
+        "GSO2": {
+          "init conc": 1.0,
+          "unit": "ppb"
+        },
+        "GNO2": {
+          "init conc": 0.3,
+          "unit": "ppb"
+        },
+        "GHNO3": {
+          "init conc": 0.3,
+          "unit": "ppb"
+        },
+        "GO3": {
+          "init conc": 0.0,
+          "unit": "ppb"
+        },
+        "GH2O2": {
+          "init conc": 1.0,
+          "unit": "ppb"
+        },
+        "GCO": {
+          "init conc": 150.0,
+          "unit": "ppb"
+        },
+        "GHCOOH": {
+          "init conc": 0.5,
+          "unit": "ppb"
+        },
+        "GCH3OH": {
+          "init conc": 2.0,
+          "unit": "ppb"
+        },
+        "GCH3OOH": {
+          "init conc": 0.01,
+          "unit": "ppb"
+        },
+        "GCH4": {
+          "init conc": 1700.0,
+          "unit": "ppb"
+        },
+        "TBODY": {
+          "note": "by definition the third body is the concentration of air molecules = 1 ppp",
+          "init conc": 1.0,
+          "unit": "ppp"
+        },
+        "OXYGEN": {
+          "note": "molecular oxygen is a constant fraction of air molecules = 0.2095 ppp",
+          "init conc": 0.2095,
+          "unit": "ppp"
+        }
+      },
+      "aerosol-phase species": {
+        "aqueous_sulfate.1.aqueous_sulfate.H2SO4_aq": {
+          "init conc": 10,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.2.aqueous_sulfate.H2SO4_aq": {
+          "init conc": 10,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.3.aqueous_sulfate.H2SO4_aq": {
+          "init conc": 10,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.4.aqueous_sulfate.H2SO4_aq": {
+          "init conc": 10,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.5.aqueous_sulfate.H2SO4_aq": {
+          "init conc": 10,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.6.aqueous_sulfate.H2SO4_aq": {
+          "init conc": 10,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.7.aqueous_sulfate.H2SO4_aq": {
+          "init conc": 10,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.8.organic_matter.POA": {
+          "init conc": 11,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.4.organic_matter.POA": {
+          "init conc": 16,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.5.organic_matter.POA": {
+          "init conc": 1.7,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.6.organic_matter.POA": {
+          "init conc": 3.2,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.7.organic_matter.POA": {
+          "init conc": 2.0,
+          "unit": "ug/m3",
+          "aerosol representation name": "multiphase sectional"
+        }
+      }
+    },
+    {
+      "name": "Emissions",
+      "type": "EMISSIONS",
+      "gas-phase species": {
+        "GSO2": {
+          "constant_constraint": {
+            "value": 2.91e10,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "GNO": {
+          "constant_constraint": {
+            "value": 2.86e10,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "GCO": {
+          "constant_constraint": {
+            "value": 3.7e11,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "GC05000": {
+          "constant_constraint": {
+            "value": 7.5e11,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "GHCOOH": {
+          "constant_constraint": {
+            "value": 3.03e8,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "GCH3OH": {
+          "constant_constraint": {
+            "value": 1.07e9,
+            "unit": "molec/cm2/s"
+          }
+        },
+        "GCH3OOH": {
+          "constant_constraint": {
+            "value": 3.35e8,
+            "unit": "molec/cm2/s"
+          }
+        }
+      }
+    },
+    {
+      "name": "latitude",
+      "type": "LATITUDE",
+      "constant_constraint_old": {
+        "value": 41.382778,
+        "unit": "deg"
+      },
+      "file_constraint": {
+        "filename": "latitude.csv",
+        "time_unit": "h",
+        "value_unit": "deg",
+        "header": 1,
+        "separator": ",",
+        "diurnal": "n"
+      }
+    },
+    {
+      "name": "longitude",
+      "type": "LONGITUDE",
+      "constant_constraint_old": {
+        "value": 2.176944,
+        "unit": "deg"
+      },
+      "file_constraint": {
+        "filename": "longitude.csv",
+        "time_unit": "h",
+        "value_unit": "deg",
+        "header": 1,
+        "separator": ",",
+        "diurnal": "n"
+      }
+    },
+    {
+      "name": "altitude",
+      "type": "ALTITUDE",
+      "constant_constraint_old": {
+        "value": 200.0,
+        "unit": "m"
+      },
+      "file_constraint": {
+        "filename": "altitude.csv",
+        "time_unit": "h",
+        "value_unit": "m",
+        "header": 1,
+        "separator": ",",
+        "diurnal": "y"
+      }
+    },
+    {
+      "name": "pressure",
+      "type": "PRESSURE",
+      "constant_constraint_old": {
+        "value": 1.0,
+        "unit": "atm"
+      },
+      "monarch_constraint": {
+        "exp_name": "a6c5",
+        "ncfile_name": "MONARCH_d01_2018081212.nc",
+        "variable_name": "mid_layer_pressure",
+        "longitude_name": "rlon",
+        "latitude_name": "rlat",
+        "altitude_name": "mid_layer_height",
+        "time_name": "time",
+        "time_unit": "h",
+        "time_offset": 12,
+        "value_unit": "Pa"
+      }
+    },
+    {
+      "name": "temperature",
+      "type": "TEMPERATURE",
+      "constant_constraint_old": {
+        "value": 298.0,
+        "unit": "K"
+      },
+      "file_constraint_old": {
+        "filename": "temperature.csv",
+        "time_unit": "h",
+        "value_unit": "C",
+        "header": 1,
+        "separator": ",",
+        "diurnal": "y"
+      },
+      "monarch_constraint": {
+        "exp_name": "a6c5",
+        "ncfile_name": "MONARCH_d01_2018081212.nc",
+        "variable_name": "T",
+        "longitude_name": "rlon",
+        "latitude_name": "rlat",
+        "altitude_name": "mid_layer_height",
+        "time_name": "time",
+        "time_unit": "h",
+        "time_offset": 12,
+        "value_unit": "K"
+      }
+    },
+    {
+      "name": "humidity",
+      "type": "HUMIDITY",
+      "constant_constraint": {
+        "value": 90.0,
+        "unit": "%"
+      },
+      "monarch_constraint_old": {
+        "exp_name": "a6c5",
+        "ncfile_name": "MONARCH_d01_2018081212.nc",
+        "variable_name": "relative_humidity",
+        "longitude_name": "rlon",
+        "latitude_name": "rlat",
+        "altitude_name": "mid_layer_height",
+        "time_name": "time",
+        "time_unit": "h",
+        "time_offset": 12,
+        "value_unit": "dec"
+      }
+    },
+    {
+      "name": "box height",
+      "type": "HEIGHT",
+      "constant_constraint": {
+        "value": 1.0,
+        "unit": "km"
+      },
+      "file_constraint_old": {
+        "filename": "pbl_height.csv",
+        "time_unit": "h",
+        "value_unit": "m",
+        "header": 1,
+        "separator": ",",
+        "diurnal": "y"
+      },
+      "monarch_constraint_old": {
+        "exp_name": "a6c5",
+        "ncfile_name": "MONARCH_d01_2018081212.nc",
+        "variable_name": "PBLH",
+        "longitude_name": "rlon",
+        "latitude_name": "rlat",
+        "time_name": "time",
+        "time_unit": "h",
+        "time_offset": 12,
+        "value_unit": "m"
+      }
+    }
+  ]
+}

@@ -59,8 +59,8 @@ module camp_rxn_wet_deposition
   use camp_property
   use camp_rxn_data
   use camp_util,                             only: i_kind, dp, string_t, &
-                                                  to_string, assert, &
-                                                  assert_msg, die_msg
+    to_string, assert, &
+    assert_msg, die_msg
 
   use iso_c_binding
 
@@ -77,7 +77,7 @@ module camp_rxn_wet_deposition
 #define DERIV_ID_(s) this%condensed_data_int(NUM_INT_PROP_+NUM_SPEC_+s)
 #define JAC_ID_(s) this%condensed_data_int(NUM_INT_PROP_+2*NUM_SPEC_+s))
 
-public :: rxn_wet_deposition_t, rxn_update_data_wet_deposition_t
+  public :: rxn_wet_deposition_t, rxn_update_data_wet_deposition_t
 
   !> Generic test reaction data type
   type, extends(rxn_data_t) :: rxn_wet_deposition_t
@@ -99,7 +99,7 @@ public :: rxn_wet_deposition_t, rxn_update_data_wet_deposition_t
 
   !> Wet Deposition rate update object
   type, extends(rxn_update_data_t) :: rxn_update_data_wet_deposition_t
-  private
+    private
     !> Flag indicating whether the update data as been allocated
     logical :: is_malloced = .false.
     !> Unique id for finding reactions during model initialization
@@ -122,7 +122,7 @@ public :: rxn_wet_deposition_t, rxn_update_data_wet_deposition_t
 
     !> Allocate space for a rate update
     function rxn_wet_deposition_create_rate_update_data() &
-              result (update_data) bind (c)
+      result (update_data) bind (c)
       use iso_c_binding
       !> Allocated update_data object
       type(c_ptr) :: update_data
@@ -130,7 +130,7 @@ public :: rxn_wet_deposition_t, rxn_update_data_wet_deposition_t
 
     !> Set a new wet_deposition rate
     subroutine rxn_wet_deposition_set_rate_update_data(update_data, &
-              rxn_unique_id, base_rate) bind (c)
+      rxn_unique_id, base_rate) bind (c)
       use iso_c_binding
       !> Update data
       type(c_ptr), value :: update_data
@@ -180,41 +180,37 @@ contains
     !> Number of grid cells to solve simultaneously
     integer(kind=i_kind), intent(in) :: n_cells
 
-    type(property_t), pointer :: spec_props
     type(string_t), allocatable :: unique_names(:)
     character(len=:), allocatable :: key_name, phase_name
     integer(kind=i_kind) :: i_rep, i_spec, i_rep_spec, num_spec
 
-    integer(kind=i_kind) :: temp_int
-    real(kind=dp) :: temp_real
-
     ! Get the reaction property set
     call assert_msg(368664748, associated(this%property_set), &
-            "Missing property set needed to initialize reaction")
+      "Missing property set needed to initialize reaction")
 
     ! Get the aerosol phase name
     key_name = "aerosol phase"
     call assert_msg(133499444, &
-            this%property_set%get_string(key_name, phase_name), &
-            "Wet Deposition reaction is missing aerosol phase name")
+      this%property_set%get_string(key_name, phase_name), &
+      "Wet Deposition reaction is missing aerosol phase name")
 
     ! Check for aerosol representations
     call assert_msg(674938531, associated(aero_rep), &
-            "Missing aerosol representation for wet deposition reaction")
+      "Missing aerosol representation for wet deposition reaction")
     call assert_msg(731323851, size(aero_rep).gt.0, &
-            "Missing aerosol representation for wet deposition reaction")
+      "Missing aerosol representation for wet deposition reaction")
 
     ! Count the total number of species in the specified phase in each
     ! aerosol representation
     num_spec = 0
     do i_rep = 1, size(aero_rep)
       unique_names = aero_rep(i_rep)%val%unique_names( phase_name = &
-                                                       phase_name )
+        phase_name )
       num_spec = num_spec + size( unique_names )
     end do
     call assert_msg(332795980, num_spec.gt.0, &
-                    "No species found for wet deposition aerosol phase "// &
-                    phase_name)
+      "No species found for wet deposition aerosol phase "// &
+      phase_name)
 
     ! Allocate space in the condensed data arrays
     allocate(this%condensed_data_int(NUM_INT_PROP_+3*num_spec))
@@ -238,11 +234,11 @@ contains
     i_spec = 0
     do i_rep = 1, size(aero_rep)
       unique_names = aero_rep(i_rep)%val%unique_names( phase_name = &
-                                                       phase_name )
+        phase_name )
       do i_rep_spec = 1, size(unique_names)
         i_spec = i_spec + 1
         REACT_(i_spec) = aero_rep(i_rep)%val%spec_state_id( &
-                                         unique_names( i_rep_spec )%string )
+          unique_names( i_rep_spec )%string )
         call assert( 702159475, REACT_(i_spec) .gt. 0 )
       end do
     end do
@@ -276,11 +272,11 @@ contains
     type(rxn_wet_deposition_t), intent(inout) :: this
 
     if (associated(this%property_set)) &
-            deallocate(this%property_set)
+      deallocate(this%property_set)
     if (allocated(this%condensed_data_real)) &
-            deallocate(this%condensed_data_real)
+      deallocate(this%condensed_data_real)
     if (allocated(this%condensed_data_int)) &
-            deallocate(this%condensed_data_int)
+      deallocate(this%condensed_data_int)
 
   end subroutine finalize
 
@@ -295,7 +291,7 @@ contains
     real(kind=dp), intent(in) :: base_rate
 
     call rxn_wet_deposition_set_rate_update_data(this%get_data(), &
-            this%rxn_unique_id, base_rate)
+      this%rxn_unique_id, base_rate)
 
   end subroutine update_data_rate_set
 
@@ -329,7 +325,7 @@ contains
 
   !> Determine the size of a binary required to pack the reaction data
   integer(kind=i_kind) function internal_pack_size(this, comm) &
-      result(pack_size)
+    result(pack_size)
 
     !> Reaction update data
     class(rxn_update_data_wet_deposition_t), intent(in) :: this
@@ -363,7 +359,7 @@ contains
     call camp_mpi_pack_logical(buffer, pos, this%is_malloced, comm)
     call camp_mpi_pack_integer(buffer, pos, this%rxn_unique_id, comm)
     call assert(865557010, &
-         pos - prev_position <= this%pack_size(comm))
+      pos - prev_position <= this%pack_size(comm))
 #endif
 
   end subroutine internal_bin_pack
@@ -389,7 +385,7 @@ contains
     call camp_mpi_unpack_logical(buffer, pos, this%is_malloced, comm)
     call camp_mpi_unpack_integer(buffer, pos, this%rxn_unique_id, comm)
     call assert(135713915, &
-         pos - prev_position <= this%pack_size(comm))
+      pos - prev_position <= this%pack_size(comm))
     this%update_data = rxn_wet_deposition_create_rate_update_data()
 #endif
 

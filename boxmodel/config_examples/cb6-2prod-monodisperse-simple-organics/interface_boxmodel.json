@@ -1,0 +1,214 @@
+{
+  "multiple-boxes": "monte carlo",
+  "random_type": "SOBOL",
+  "experiment-name": "cb6_2prod_simpleorg_test",
+  "boxmodel-data": [
+    {
+      "name": "species map",
+      "type": "SPECIES_MAP",
+      "mechanism_name": "MONARCH mod37",
+      "gas-phase water": "H2O",
+      "gas-phase water dimer": "H2O_dimer",
+      "photolysis_method": "TUV"
+    },
+    {
+      "name": "everything related to time",
+      "type": "TIME_CONTROL",
+      "time_control": {
+        "start_time": {
+          "year": 2018,
+          "month": 8,
+          "day": 13,
+          "hour": 0,
+          "tz": 0
+        },
+        "simulation_length": {
+          "time": 1,
+          "unit": "days"
+        },
+        "timestep": {
+          "time": 15.0,
+          "unit": "min"
+        }
+      }
+    },
+    {
+      "name": "Initial concentrations",
+      "type": "INIT_CONC",
+      "gas-phase species": {
+        "ISOP": {
+          "init conc": {
+            "value": 0.0,
+            "unit": "ppb"
+          }
+        },
+        "APIN": {
+          "init conc": {
+            "value": 1.0,
+            "unit": "ppt",
+            "montecarlo": {
+              "type": "uniform",
+              "relative_factor": 10000.0,
+              "log_scale": true
+            }
+          }
+        },
+        "SO2": {
+          "init conc": {
+            "value": 1.0,
+            "unit": "ppb"
+          }
+        },
+        "NO": {
+          "init conc": {
+            "value": 1.0,
+            "unit": "ppt",
+            "montecarlo": {
+              "type": "uniform",
+              "relative_factor": 10000.0,
+              "log_scale": true
+            }
+          }
+        },
+        "HNO3": {
+          "init conc": {
+            "value": 0.3,
+            "unit": "ppb"
+          }
+        },
+        "NH3": {
+          "init conc": {
+            "value": 100.0,
+            "unit": "ppt"
+          }
+        },
+        "O3": {
+          "init conc": {
+            "value": 30.0,
+            "unit": "ppb"
+          }
+        },
+        "H2O2": {
+          "init conc": {
+            "value": 1.0,
+            "unit": "ppb"
+          }
+        },
+        "CO": {
+          "init conc": {
+            "value": 150.0,
+            "unit": "ppb"
+          }
+        },
+        "FACD": {
+          "init conc": {
+            "value": 0.5,
+            "unit": "ppb"
+          }
+        },
+        "MEOH": {
+          "init conc": {
+            "value": 2.0,
+            "unit": "ppb"
+          }
+        },
+        "MEPX": {
+          "init conc": {
+            "value": 0.01,
+            "unit": "ppb"
+          }
+        },
+        "CH4": {
+          "init conc": {
+            "value": 1700.0,
+            "unit": "ppb"
+          }
+        },
+        "M": {
+          "note": "by definition the third body is the concentration of air molecules = 1 ppp",
+          "init conc": {
+            "value": 1.0,
+            "unit": "ppp"
+          }
+        },
+        "O2": {
+          "note": "molecular oxygen is a constant fraction of air molecules = 0.2095 ppp",
+          "init conc": {
+            "value": 0.2095,
+            "unit": "ppp"
+          }
+        }
+      },
+      "aerosol-phase species": {
+        "organic_matter.4.organic_matter.POA": {
+          "init conc": {
+            "value": 0.1,
+            "unit": "ug/m3",
+            "montecarlo": {
+              "type": "uniform",
+              "relative_factor": 1000.0,
+              "log_scale": true
+            }
+          },
+          "aerosol representation name": "multiphase sectional"
+        }
+      }
+    },
+    {
+      "name": "latitude",
+      "type": "LATITUDE",
+      "constant_constraint": {
+        "value": 41.382778,
+        "unit": "deg"
+      }
+    },
+    {
+      "name": "longitude",
+      "type": "LONGITUDE",
+      "constant_constraint": {
+        "value": 50,
+        "unit": "deg"
+      }
+    },
+    {
+      "name": "altitude",
+      "type": "ALTITUDE",
+      "constant_constraint": {
+        "value": 200.0,
+        "unit": "m"
+      }
+    },
+    {
+      "name": "pressure",
+      "type": "PRESSURE",
+      "constant_constraint": {
+        "value": 1.0,
+        "unit": "atm"
+      }
+    },
+    {
+      "name": "temperature",
+      "type": "TEMPERATURE",
+      "constant_constraint": {
+        "value": 298.0,
+        "unit": "K"
+      }
+    },
+    {
+      "name": "humidity",
+      "type": "HUMIDITY",
+      "constant_constraint": {
+        "value": 90.0,
+        "unit": "%"
+      }
+    },
+    {
+      "name": "box height",
+      "type": "HEIGHT",
+      "constant_constraint": {
+        "value": 1.0,
+        "unit": "km"
+      }
+    }
+  ]
+}

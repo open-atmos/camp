@@ -1,0 +1,127 @@
+{
+  "multiple-boxes": "montecarlo",
+  "boxmodel-data": [
+    {
+      "name": "species map",
+      "type": "SPECIES_MAP",
+      "mechanism_name": "toy mechanism",
+      "gas-phase water": "H2O",
+      "gas-phase water dimer": "H2O_dimer",
+      "photolysis_method": "CLOUDJ",
+      "photolysis_table": false
+    },
+    {
+      "name": "everything related to time",
+      "type": "TIME_CONTROL",
+      "time_control": {
+        "start_time": {
+          "year": 2018,
+          "month": 8,
+          "day": 13,
+          "hour": 0,
+          "tz": 0
+        },
+        "simulation_length": {
+          "time": 1.0,
+          "unit": "days"
+        },
+        "timestep": {
+          "time": 1.0,
+          "unit": "min"
+        }
+      }
+    },
+    {
+      "name": "Initial concentrations",
+      "type": "INIT_CONC",
+      "gas-phase species": {
+        "A": {
+          "init conc": {
+            "value": 10.0,
+            "unit": "ppm",
+            "montecarlo": {
+              "type": "gaussian",
+              "standard_deviation": 3.0,
+              "lower_bound": 0.0,
+              "relative_factor": 0.5
+            }
+          }
+        },
+        "B": {
+          "init conc": {
+            "value": 10.0,
+            "unit": "ppm",
+            "montecarlo": {
+              "type": "gaussian",
+              "standard_deviation": 3.0,
+              "lower_bound": 0.0,
+              "relative_factor": 0.5
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "latitude",
+      "type": "LATITUDE",
+      "constant_constraint": {
+        "value": 41.382778,
+        "unit": "deg"
+      }
+    },
+    {
+      "name": "longitude",
+      "type": "LONGITUDE",
+      "constant_constraint": {
+        "value": 50,
+        "unit": "deg"
+      }
+    },
+    {
+      "name": "altitude",
+      "type": "ALTITUDE",
+      "constant_constraint": {
+        "value": 200.0,
+        "unit": "m"
+      }
+    },
+    {
+      "name": "pressure",
+      "type": "PRESSURE",
+      "constant_constraint": {
+        "value": 1.0,
+        "unit": "atm"
+      }
+    },
+    {
+      "name": "temperature",
+      "type": "TEMPERATURE",
+      "constant_constraint": {
+        "value": 298.15,
+        "unit": "K",
+        "montecarlo": {
+          "type": "gaussian",
+          "standard_deviation": 1.0,
+          "lower_bound": 273.15,
+          "relative_factor": 0.2
+        }
+      }
+    },
+    {
+      "name": "humidity",
+      "type": "HUMIDITY",
+      "constant_constraint": {
+        "value": 90.0,
+        "unit": "%"
+      }
+    },
+    {
+      "name": "box height",
+      "type": "HEIGHT",
+      "constant_constraint": {
+        "value": 1.0,
+        "unit": "km"
+      }
+    }
+  ]
+}

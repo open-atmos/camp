@@ -8,10 +8,10 @@
 /** \file
  * \brief Aqueous Equilibrium reaction solver functions
  */
+#include "../rxns.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../rxns.h"
 
 // TODO Lookup environmental indices during initialization
 #define TEMPERATURE_K_ env_data[0]
@@ -37,28 +37,28 @@
 #define NUM_FLOAT_PROP_ 5
 #define NUM_ENV_PARAM_ 1
 #define REACT_(x) (int_data[NUM_INT_PROP_ + x] - 1)
-#define PROD_(x) \
+#define PROD_(x)                                                               \
   (int_data[NUM_INT_PROP_ + NUM_REACT_ * NUM_AERO_PHASE_ + x] - 1)
-#define WATER_(x) \
+#define WATER_(x)                                                              \
   (int_data[NUM_INT_PROP_ + (NUM_REACT_ + NUM_PROD_) * NUM_AERO_PHASE_ + x] - 1)
-#define ACTIVITY_COEFF_(x)                                                   \
-  (int_data[NUM_INT_PROP_ + (NUM_REACT_ + NUM_PROD_ + 1) * NUM_AERO_PHASE_ + \
-            x] -                                                             \
+#define ACTIVITY_COEFF_(x)                                                     \
+  (int_data[NUM_INT_PROP_ + (NUM_REACT_ + NUM_PROD_ + 1) * NUM_AERO_PHASE_ +   \
+            x] -                                                               \
    1)
-#define DERIV_ID_(x) \
+#define DERIV_ID_(x)                                                           \
   (int_data[NUM_INT_PROP_ + (NUM_REACT_ + NUM_PROD_ + 2) * NUM_AERO_PHASE_ + x])
-#define JAC_ID_(x)          \
-  (int_data[NUM_INT_PROP_ + \
+#define JAC_ID_(x)                                                             \
+  (int_data[NUM_INT_PROP_ +                                                    \
             (2 * (NUM_REACT_ + NUM_PROD_) + 2) * NUM_AERO_PHASE_ + x])
 #define MASS_FRAC_TO_M_(x) (float_data[NUM_FLOAT_PROP_ + x])
-#define REACT_CONC_(x) \
+#define REACT_CONC_(x)                                                         \
   (float_data[NUM_FLOAT_PROP_ + NUM_REACT_ + NUM_PROD_ + x])
-#define PROD_CONC_(x) \
+#define PROD_CONC_(x)                                                          \
   (float_data[NUM_FLOAT_PROP_ + 2 * NUM_REACT_ + NUM_PROD_ + x])
-#define SMALL_WATER_CONC_(x) \
+#define SMALL_WATER_CONC_(x)                                                   \
   (float_data[NUM_FLOAT_PROP_ + 2 * NUM_REACT_ + 2 * NUM_PROD_ + x])
-#define SMALL_CONC_(x)                                           \
-  (float_data[NUM_FLOAT_PROP_ + 2 * NUM_REACT_ + 2 * NUM_PROD_ + \
+#define SMALL_CONC_(x)                                                         \
+  (float_data[NUM_FLOAT_PROP_ + 2 * NUM_REACT_ + 2 * NUM_PROD_ +               \
               NUM_AERO_PHASE_ + x])
 
 /** \brief Flag Jacobian elements used by this reaction
@@ -107,7 +107,8 @@ void rxn_aqueous_equilibrium_get_used_jac_elem(int *rxn_int_data,
       jacobian_register_element(jac, PROD_(i_prod_dep), WATER_(i_phase));
 
     // Add dependence on activity coefficients for reactants and products
-    if (ACTIVITY_COEFF_(i_phase) < 0) continue;
+    if (ACTIVITY_COEFF_(i_phase) < 0)
+      continue;
     for (int i_react_dep = i_phase * NUM_REACT_;
          i_react_dep < (i_phase + 1) * NUM_REACT_; ++i_react_dep)
       jacobian_register_element(jac, REACT_(i_react_dep),
@@ -375,12 +376,12 @@ void rxn_aqueous_equilibrium_calc_deriv_contrib(
         i_deriv++;
         continue;
       }
-      time_derivative_add_value(
-          time_deriv, DERIV_ID_(i_deriv),
-          rate_forward / MASS_FRAC_TO_M_(NUM_REACT_ + i_prod));
-      time_derivative_add_value(
-          time_deriv, DERIV_ID_(i_deriv++),
-          -rate_reverse / MASS_FRAC_TO_M_(NUM_REACT_ + i_prod));
+      time_derivative_add_value(time_deriv, DERIV_ID_(i_deriv),
+                                rate_forward /
+                                    MASS_FRAC_TO_M_(NUM_REACT_ + i_prod));
+      time_derivative_add_value(time_deriv, DERIV_ID_(i_deriv++),
+                                -rate_reverse /
+                                    MASS_FRAC_TO_M_(NUM_REACT_ + i_prod));
     }
   }
 
@@ -487,9 +488,9 @@ void rxn_aqueous_equilibrium_calc_jac_contrib(ModelData *model_data,
         i_jac++;
         continue;
       }
-      jacobian_add_value(
-          jac, (unsigned int)JAC_ID_(i_jac), JACOBIAN_LOSS,
-          -forward_rate / MASS_FRAC_TO_M_(i_react_dep) * (NUM_REACT_ - 1));
+      jacobian_add_value(jac, (unsigned int)JAC_ID_(i_jac), JACOBIAN_LOSS,
+                         -forward_rate / MASS_FRAC_TO_M_(i_react_dep) *
+                             (NUM_REACT_ - 1));
       jacobian_add_value(
           jac, (unsigned int)JAC_ID_(i_jac++), JACOBIAN_PRODUCTION,
           -reverse_rate / MASS_FRAC_TO_M_(i_react_dep) * (NUM_PROD_ - 1));

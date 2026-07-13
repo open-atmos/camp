@@ -45,7 +45,7 @@ contains
 
 #ifdef CAMP_USE_MPI
     if (ierr /= MPI_SUCCESS) then
-       call camp_mpi_abort(1)
+      call camp_mpi_abort(1)
     end if
 #endif
 
@@ -92,8 +92,9 @@ contains
 #ifdef CAMP_USE_MPI
     integer :: ierr
 
+    ierr = 0
     call mpi_finalize(ierr)
-! Removed camp_mpi_check_ierr because otherwise sometimes leads to segmentation fault 
+! Removed camp_mpi_check_ierr because otherwise sometimes leads to segmentation fault
 ! (tested on Marenostrum 5, icc 2021.10.0 -O3 -g)
 #endif
 
@@ -102,7 +103,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Synchronize all processes.
-  subroutine camp_mpi_barrier( comm )
+  subroutine camp_mpi_barrier(comm)
 
     !> MPI communicator
     integer, intent(in), optional :: comm
@@ -114,7 +115,7 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     call mpi_barrier(l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
@@ -125,7 +126,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Returns the rank of the current process.
-  integer function camp_mpi_rank( comm )
+  integer function camp_mpi_rank(comm)
 
     !> MPI communicator
     integer, intent(in), optional :: comm
@@ -137,7 +138,7 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     call mpi_comm_rank(l_comm, rank, ierr)
     call camp_mpi_check_ierr(ierr)
@@ -151,7 +152,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Returns the total number of processes.
-  integer function camp_mpi_size( comm )
+  integer function camp_mpi_size(comm)
 
     !> MPI communicator
     integer, intent(in), optional :: comm
@@ -163,7 +164,7 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     call mpi_comm_size(l_comm, size, ierr)
     call camp_mpi_check_ierr(ierr)
@@ -182,10 +183,10 @@ contains
 #ifdef CAMP_USE_MPI
     real(kind=dp), parameter :: test_real = 2.718281828459d0
     complex(kind=dc), parameter :: test_complex &
-         = (0.707106781187d0, 1.4142135624d0)
+                                   = (0.707106781187d0, 1.4142135624d0)
     logical, parameter :: test_logical = .true.
     character(len=100), parameter :: test_string &
-         = "a truth universally acknowledged"
+                                     = "a truth universally acknowledged"
     integer, parameter :: test_integer = 314159
 
     character, allocatable :: buffer(:)
@@ -199,113 +200,113 @@ contains
     real(kind=dp), allocatable :: recv_real_array(:)
 
     if (camp_mpi_rank() == 0) then
-       send_real = test_real
-       send_complex = test_complex
-       send_logical = test_logical
-       send_string = test_string
-       send_integer = test_integer
-       allocate(send_real_array(2))
-       send_real_array(1) = real(test_complex)
-       send_real_array(2) = aimag(test_complex)
+      send_real = test_real
+      send_complex = test_complex
+      send_logical = test_logical
+      send_string = test_string
+      send_integer = test_integer
+      allocate (send_real_array(2))
+      send_real_array(1) = real(test_complex)
+      send_real_array(2) = aimag(test_complex)
 
-       max_buffer_size = 0
-       max_buffer_size = max_buffer_size &
-            + camp_mpi_pack_size_integer(send_integer)
-       max_buffer_size = max_buffer_size &
-            + camp_mpi_pack_size_real(send_real)
-       max_buffer_size = max_buffer_size &
-            + camp_mpi_pack_size_complex(send_complex)
-       max_buffer_size = max_buffer_size &
-            + camp_mpi_pack_size_logical(send_logical)
-       max_buffer_size = max_buffer_size &
-            + camp_mpi_pack_size_string(send_string)
-       max_buffer_size = max_buffer_size &
-            + camp_mpi_pack_size_real_array(send_real_array)
+      max_buffer_size = 0
+      max_buffer_size = max_buffer_size &
+                        + camp_mpi_pack_size_integer(send_integer)
+      max_buffer_size = max_buffer_size &
+                        + camp_mpi_pack_size_real(send_real)
+      max_buffer_size = max_buffer_size &
+                        + camp_mpi_pack_size_complex(send_complex)
+      max_buffer_size = max_buffer_size &
+                        + camp_mpi_pack_size_logical(send_logical)
+      max_buffer_size = max_buffer_size &
+                        + camp_mpi_pack_size_string(send_string)
+      max_buffer_size = max_buffer_size &
+                        + camp_mpi_pack_size_real_array(send_real_array)
 
-       allocate(buffer(max_buffer_size))
+      allocate (buffer(max_buffer_size))
 
-       position = 0
-       call camp_mpi_pack_real(buffer, position, send_real)
-       call camp_mpi_pack_complex(buffer, position, send_complex)
-       call camp_mpi_pack_logical(buffer, position, send_logical)
-       call camp_mpi_pack_string(buffer, position, send_string)
-       call camp_mpi_pack_integer(buffer, position, send_integer)
-       call camp_mpi_pack_real_array(buffer, position, send_real_array)
-       call assert_msg(350740830, position <= max_buffer_size, &
-            "MPI test failure: pack position " &
-            // trim(integer_to_string(position)) &
-            // " greater than max_buffer_size " &
-            // trim(integer_to_string(max_buffer_size)))
-       buffer_size = position ! might be less than we allocated
+      position = 0
+      call camp_mpi_pack_real(buffer, position, send_real)
+      call camp_mpi_pack_complex(buffer, position, send_complex)
+      call camp_mpi_pack_logical(buffer, position, send_logical)
+      call camp_mpi_pack_string(buffer, position, send_string)
+      call camp_mpi_pack_integer(buffer, position, send_integer)
+      call camp_mpi_pack_real_array(buffer, position, send_real_array)
+      call assert_msg(350740830, position <= max_buffer_size, &
+                      "MPI test failure: pack position " &
+                      //trim(integer_to_string(position)) &
+                      //" greater than max_buffer_size " &
+                      //trim(integer_to_string(max_buffer_size)))
+      buffer_size = position ! might be less than we allocated
     end if
 
     call camp_mpi_bcast_integer(buffer_size)
 
     if (camp_mpi_rank() /= 0) then
-       allocate(buffer(buffer_size))
+      allocate (buffer(buffer_size))
     end if
 
     call camp_mpi_bcast_packed(buffer)
 
     if (camp_mpi_rank() /= 0) then
-       position = 0
-       call camp_mpi_unpack_real(buffer, position, recv_real)
-       call camp_mpi_unpack_complex(buffer, position, recv_complex)
-       call camp_mpi_unpack_logical(buffer, position, recv_logical)
-       call camp_mpi_unpack_string(buffer, position, recv_string)
-       call camp_mpi_unpack_integer(buffer, position, recv_integer)
-       call camp_mpi_unpack_real_array(buffer, position, recv_real_array)
-       call assert_msg(787677020, position == buffer_size, &
-            "MPI test failure: unpack position " &
-            // trim(integer_to_string(position)) &
-            // " not equal to buffer_size " &
-            // trim(integer_to_string(buffer_size)))
+      position = 0
+      call camp_mpi_unpack_real(buffer, position, recv_real)
+      call camp_mpi_unpack_complex(buffer, position, recv_complex)
+      call camp_mpi_unpack_logical(buffer, position, recv_logical)
+      call camp_mpi_unpack_string(buffer, position, recv_string)
+      call camp_mpi_unpack_integer(buffer, position, recv_integer)
+      call camp_mpi_unpack_real_array(buffer, position, recv_real_array)
+      call assert_msg(787677020, position == buffer_size, &
+                      "MPI test failure: unpack position " &
+                      //trim(integer_to_string(position)) &
+                      //" not equal to buffer_size " &
+                      //trim(integer_to_string(buffer_size)))
     end if
 
-    deallocate(buffer)
+    deallocate (buffer)
 
     if (camp_mpi_rank() /= 0) then
-       call assert_msg(567548916, recv_real == test_real, &
-            "MPI test failure: real recv " &
-            // trim(to_string(recv_real)) &
-            // " not equal to " &
-            // trim(to_string(test_real)))
-       call assert_msg(653908509, recv_complex == test_complex, &
-            "MPI test failure: complex recv " &
-            // trim(complex_to_string(recv_complex)) &
-            // " not equal to " &
-            // trim(complex_to_string(test_complex)))
-       call assert_msg(307746296, recv_logical .eqv. test_logical, &
-            "MPI test failure: logical recv " &
-            // trim(logical_to_string(recv_logical)) &
-            // " not equal to " &
-            // trim(logical_to_string(test_logical)))
-       call assert_msg(155693492, recv_string == test_string, &
-            "MPI test failure: string recv '" &
-            // trim(recv_string) &
-            // "' not equal to '" &
-            // trim(test_string) // "'")
-       call assert_msg(875699427, recv_integer == test_integer, &
-            "MPI test failure: integer recv " &
-            // trim(integer_to_string(recv_integer)) &
-            // " not equal to " &
-            // trim(integer_to_string(test_integer)))
-       call assert_msg(326982363, size(recv_real_array) == 2, &
-            "MPI test failure: real array recv size " &
-            // trim(integer_to_string(size(recv_real_array))) &
-            // " not equal to 2")
-       call assert_msg(744394323, &
-            recv_real_array(1) == real(test_complex), &
-            "MPI test failure: real array recv index 1 " &
-            // trim(to_string(recv_real_array(1))) &
-            // " not equal to " &
-            // trim(to_string(real(test_complex))))
-       call assert_msg(858902527, &
-            recv_real_array(2) == aimag(test_complex), &
-            "MPI test failure: real array recv index 2 " &
-            // trim(to_string(recv_real_array(2))) &
-            // " not equal to " &
-            // trim(to_string(aimag(test_complex))))
+      call assert_msg(567548916, recv_real == test_real, &
+                      "MPI test failure: real recv " &
+                      //trim(to_string(recv_real)) &
+                      //" not equal to " &
+                      //trim(to_string(test_real)))
+      call assert_msg(653908509, recv_complex == test_complex, &
+                      "MPI test failure: complex recv " &
+                      //trim(complex_to_string(recv_complex)) &
+                      //" not equal to " &
+                      //trim(complex_to_string(test_complex)))
+      call assert_msg(307746296, recv_logical .eqv. test_logical, &
+                      "MPI test failure: logical recv " &
+                      //trim(logical_to_string(recv_logical)) &
+                      //" not equal to " &
+                      //trim(logical_to_string(test_logical)))
+      call assert_msg(155693492, recv_string == test_string, &
+                      "MPI test failure: string recv '" &
+                      //trim(recv_string) &
+                      //"' not equal to '" &
+                      //trim(test_string)//"'")
+      call assert_msg(875699427, recv_integer == test_integer, &
+                      "MPI test failure: integer recv " &
+                      //trim(integer_to_string(recv_integer)) &
+                      //" not equal to " &
+                      //trim(integer_to_string(test_integer)))
+      call assert_msg(326982363, size(recv_real_array) == 2, &
+                      "MPI test failure: real array recv size " &
+                      //trim(integer_to_string(size(recv_real_array))) &
+                      //" not equal to 2")
+      call assert_msg(744394323, &
+                      recv_real_array(1) == real(test_complex), &
+                      "MPI test failure: real array recv index 1 " &
+                      //trim(to_string(recv_real_array(1))) &
+                      //" not equal to " &
+                      //trim(to_string(real(test_complex))))
+      call assert_msg(858902527, &
+                      recv_real_array(2) == aimag(test_complex), &
+                      "MPI test failure: real array recv index 2 " &
+                      //trim(to_string(recv_real_array(2))) &
+                      //" not equal to " &
+                      //trim(to_string(aimag(test_complex))))
     end if
 #endif
 
@@ -328,11 +329,11 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     root = 0 ! source of data to broadcast
     call mpi_bcast(val, 1, MPI_INTEGER, root, &
-         l_comm, ierr)
+                   l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
 #endif
 
@@ -355,11 +356,11 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     root = 0 ! source of data to broadcast
     call mpi_bcast(val, len(val), MPI_CHARACTER, root, &
-         l_comm, ierr)
+                   l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
 #endif
 
@@ -382,11 +383,11 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     root = 0 ! source of data to broadcast
     call mpi_bcast(val, size(val), MPI_CHARACTER, root, &
-         l_comm, ierr)
+                   l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
 #endif
 
@@ -409,10 +410,10 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     call mpi_pack_size(1, MPI_INTEGER, l_comm, &
-         camp_mpi_pack_size_integer, ierr)
+                       camp_mpi_pack_size_integer, ierr)
     call camp_mpi_check_ierr(ierr)
 #else
     camp_mpi_pack_size_integer = 0
@@ -437,10 +438,10 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     call mpi_pack_size(1, MPI_DOUBLE_PRECISION, l_comm, &
-         camp_mpi_pack_size_real, ierr)
+                       camp_mpi_pack_size_real, ierr)
     call camp_mpi_check_ierr(ierr)
 #else
     camp_mpi_pack_size_real = 0
@@ -465,18 +466,51 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     call mpi_pack_size(len_trim(val), MPI_CHARACTER, l_comm, &
-         camp_mpi_pack_size_string, ierr)
+                       camp_mpi_pack_size_string, ierr)
     call camp_mpi_check_ierr(ierr)
     camp_mpi_pack_size_string = camp_mpi_pack_size_string &
-         + camp_mpi_pack_size_integer(len_trim(val))
+                                + camp_mpi_pack_size_integer(len_trim(val))
 #else
     camp_mpi_pack_size_string = 0
 #endif
 
   end function camp_mpi_pack_size_string
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  integer function camp_mpi_pack_size_string_t_array(val, comm)
+
+    !> Value to pack.
+    type(string_t), allocatable, dimension(:), intent(in) :: val
+    !> MPI communicator
+    integer, intent(in), optional :: comm
+
+    integer :: ierr, l_comm, total_size, i
+
+#ifdef CAMP_USE_MPI
+    logical :: is_allocated
+    if (present(comm)) then
+      l_comm = comm
+    else
+      l_comm = MPI_COMM_WORLD
+    end if
+
+    is_allocated = allocated(val)
+    if (is_allocated) then
+      total_size = camp_mpi_pack_size_integer(size(val), l_comm)
+      do i = 1, size(val)
+        total_size = total_size + camp_mpi_pack_size_string(val(i)%string, l_comm)
+      end do
+    end if
+    total_size = total_size + camp_mpi_pack_size_logical(is_allocated, l_comm)
+    camp_mpi_pack_size_string_t_array = total_size
+#else
+    camp_mpi_pack_size_string_t_array = 0
+
+#endif
+  end function camp_mpi_pack_size_string_t_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -495,10 +529,10 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     call mpi_pack_size(1, MPI_LOGICAL, l_comm, &
-         camp_mpi_pack_size_logical, ierr)
+                       camp_mpi_pack_size_logical, ierr)
     call camp_mpi_check_ierr(ierr)
 #else
     camp_mpi_pack_size_logical = 0
@@ -523,10 +557,10 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     call mpi_pack_size(1, MPI_DOUBLE_COMPLEX, l_comm, &
-         camp_mpi_pack_size_complex, ierr)
+                       camp_mpi_pack_size_complex, ierr)
     call camp_mpi_check_ierr(ierr)
 #else
     camp_mpi_pack_size_complex = 0
@@ -553,15 +587,15 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     total_size = 0
     is_allocated = allocated(val)
     if (is_allocated) then
-       call mpi_pack_size(size(val), MPI_INTEGER, l_comm, &
-            total_size, ierr)
-       call camp_mpi_check_ierr(ierr)
-       total_size = total_size + camp_mpi_pack_size_integer(size(val), l_comm)
+      call mpi_pack_size(size(val), MPI_INTEGER, l_comm, &
+                         total_size, ierr)
+      call camp_mpi_check_ierr(ierr)
+      total_size = total_size + camp_mpi_pack_size_integer(size(val), l_comm)
     end if
     total_size = total_size + camp_mpi_pack_size_logical(is_allocated, l_comm)
 #else
@@ -573,6 +607,44 @@ contains
   end function camp_mpi_pack_size_integer_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Determines the number of bytes required to pack the given value.
+  integer function camp_mpi_pack_size_logical_array(val, comm)
+
+    !> Value to pack.
+    logical, allocatable, intent(in) :: val(:)
+    !> MPI communicator
+    integer, intent(in), optional :: comm
+
+    integer :: total_size, ierr, l_comm
+
+#ifdef CAMP_USE_MPI
+    logical :: is_allocated
+
+    if (present(comm)) then
+      l_comm = comm
+    else
+      l_comm = MPI_COMM_WORLD
+    end if
+
+    total_size = 0
+    is_allocated = allocated(val)
+    if (is_allocated) then
+      call mpi_pack_size(size(val), MPI_LOGICAL, l_comm, &
+                         total_size, ierr)
+      call camp_mpi_check_ierr(ierr)
+      total_size = total_size + camp_mpi_pack_size_integer(size(val), l_comm)
+    end if
+    total_size = total_size + camp_mpi_pack_size_logical(is_allocated, l_comm)
+#else
+    total_size = 0
+#endif
+
+    camp_mpi_pack_size_logical_array = total_size
+
+  end function camp_mpi_pack_size_logical_array
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Determines the number of bytes required to pack the given value.
   integer function camp_mpi_pack_size_real_array(val, comm)
@@ -591,15 +663,15 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     total_size = 0
     is_allocated = allocated(val)
     if (is_allocated) then
-       call mpi_pack_size(size(val), MPI_DOUBLE_PRECISION, l_comm, &
-            total_size, ierr)
-       call camp_mpi_check_ierr(ierr)
-       total_size = total_size + camp_mpi_pack_size_integer(size(val), l_comm)
+      call mpi_pack_size(size(val), MPI_DOUBLE_PRECISION, l_comm, &
+                         total_size, ierr)
+      call camp_mpi_check_ierr(ierr)
+      total_size = total_size + camp_mpi_pack_size_integer(size(val), l_comm)
     end if
     total_size = total_size + camp_mpi_pack_size_logical(is_allocated, l_comm)
 #else
@@ -628,19 +700,19 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     is_allocated = allocated(val)
     if (is_allocated) then
-       total_size = camp_mpi_pack_size_integer(size(val), l_comm)
-       do i = 1,size(val)
-          total_size = total_size + camp_mpi_pack_size_string(val(i), l_comm)
-       end do
+      total_size = camp_mpi_pack_size_integer(size(val), l_comm)
+      do i = 1, size(val)
+        total_size = total_size + camp_mpi_pack_size_string(val(i), l_comm)
+      end do
     end if
     total_size = total_size + camp_mpi_pack_size_logical(is_allocated, l_comm)
     camp_mpi_pack_size_string_array = total_size
 #else
-    total_size = 0
+    camp_mpi_pack_size_string_array = 0
 #endif
 
   end function camp_mpi_pack_size_string_array
@@ -651,7 +723,7 @@ contains
   integer function camp_mpi_pack_size_real_array_2d(val, comm)
 
     !> Value to pack.
-    real(kind=dp), allocatable, intent(in) :: val(:,:)
+    real(kind=dp), allocatable, intent(in) :: val(:, :)
     !> MPI communicator
     integer, intent(in), optional :: comm
 
@@ -664,17 +736,17 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     total_size = 0
     is_allocated = allocated(val)
     if (is_allocated) then
-       call mpi_pack_size(size(val), MPI_DOUBLE_PRECISION, l_comm, &
-            total_size, ierr)
-       call camp_mpi_check_ierr(ierr)
-       total_size = total_size &
-            + camp_mpi_pack_size_integer(size(val,1), l_comm) &
-            + camp_mpi_pack_size_integer(size(val,2), l_comm)
+      call mpi_pack_size(size(val), MPI_DOUBLE_PRECISION, l_comm, &
+                         total_size, ierr)
+      call camp_mpi_check_ierr(ierr)
+      total_size = total_size &
+                   + camp_mpi_pack_size_integer(size(val, 1), l_comm) &
+                   + camp_mpi_pack_size_integer(size(val, 2), l_comm)
     end if
     total_size = total_size + camp_mpi_pack_size_logical(is_allocated, l_comm)
 #else
@@ -684,6 +756,130 @@ contains
     camp_mpi_pack_size_real_array_2d = total_size
 
   end function camp_mpi_pack_size_real_array_2d
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Determines the number of bytes required to pack the given value.
+  integer function camp_mpi_pack_size_integer_array_2d(val, comm)
+
+    !> Value to pack.
+    integer(kind=i_kind), allocatable, intent(in) :: val(:, :)
+    !> MPI communicator
+    integer, intent(in), optional :: comm
+
+    integer :: total_size, ierr, l_comm
+
+#ifdef CAMP_USE_MPI
+    logical :: is_allocated
+
+    if (present(comm)) then
+      l_comm = comm
+    else
+      l_comm = MPI_COMM_WORLD
+    end if
+
+    total_size = 0
+    is_allocated = allocated(val)
+    if (is_allocated) then
+      call mpi_pack_size(size(val), MPI_INTEGER, l_comm, &
+                         total_size, ierr)
+      call camp_mpi_check_ierr(ierr)
+      total_size = total_size &
+                   + camp_mpi_pack_size_integer(size(val, 1), l_comm) &
+                   + camp_mpi_pack_size_integer(size(val, 2), l_comm)
+    end if
+    total_size = total_size + camp_mpi_pack_size_logical(is_allocated, l_comm)
+#else
+    total_size = 0
+#endif
+
+    camp_mpi_pack_size_integer_array_2d = total_size
+
+  end function camp_mpi_pack_size_integer_array_2d
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Determines the number of bytes required to pack the given value.
+  integer function camp_mpi_pack_size_integer_array_3d(val, comm)
+
+    !> Value to pack.
+    integer(kind=i_kind), allocatable, intent(in) :: val(:, :, :)
+    !> MPI communicator
+    integer, intent(in), optional :: comm
+
+    integer :: total_size, ierr, l_comm
+
+#ifdef CAMP_USE_MPI
+    logical :: is_allocated
+
+    if (present(comm)) then
+      l_comm = comm
+    else
+      l_comm = MPI_COMM_WORLD
+    end if
+
+    total_size = 0
+    is_allocated = allocated(val)
+    if (is_allocated) then
+      call mpi_pack_size(size(val), MPI_INTEGER, l_comm, &
+                         total_size, ierr)
+      call camp_mpi_check_ierr(ierr)
+      total_size = total_size &
+                   + camp_mpi_pack_size_integer(size(val, 1), l_comm) &
+                   + camp_mpi_pack_size_integer(size(val, 2), l_comm) &
+                   + camp_mpi_pack_size_integer(size(val, 3), l_comm)
+    end if
+    total_size = total_size + camp_mpi_pack_size_logical(is_allocated, l_comm)
+#else
+    total_size = 0
+#endif
+
+    camp_mpi_pack_size_integer_array_3d = total_size
+
+  end function camp_mpi_pack_size_integer_array_3d
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Determines the number of bytes required to pack the given value.
+  integer function camp_mpi_pack_size_integer_array_5d(val, comm)
+
+    !> Value to pack.
+    integer(kind=i_kind), allocatable, intent(in) :: val(:, :, :, :, :)
+    !> MPI communicator
+    integer, intent(in), optional :: comm
+
+    integer :: total_size, ierr, l_comm
+
+#ifdef CAMP_USE_MPI
+    logical :: is_allocated
+
+    if (present(comm)) then
+      l_comm = comm
+    else
+      l_comm = MPI_COMM_WORLD
+    end if
+
+    total_size = 0
+    is_allocated = allocated(val)
+    if (is_allocated) then
+      call mpi_pack_size(size(val), MPI_INTEGER, l_comm, &
+                         total_size, ierr)
+      call camp_mpi_check_ierr(ierr)
+      total_size = total_size &
+                   + camp_mpi_pack_size_integer(size(val, 1), l_comm) &
+                   + camp_mpi_pack_size_integer(size(val, 2), l_comm) &
+                   + camp_mpi_pack_size_integer(size(val, 3), l_comm) &
+                   + camp_mpi_pack_size_integer(size(val, 4), l_comm) &
+                   + camp_mpi_pack_size_integer(size(val, 5), l_comm)
+    end if
+    total_size = total_size + camp_mpi_pack_size_logical(is_allocated, l_comm)
+#else
+    total_size = 0
+#endif
+
+    camp_mpi_pack_size_integer_array_5d = total_size
+
+  end function camp_mpi_pack_size_integer_array_5d
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -706,14 +902,14 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     prev_position = position
     call mpi_pack(val, 1, MPI_INTEGER, buffer, size(buffer), &
-         position, l_comm, ierr)
+                  position, l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
     call assert(913495993, &
-         position - prev_position <= camp_mpi_pack_size_integer(val, l_comm))
+                position - prev_position <= camp_mpi_pack_size_integer(val, l_comm))
 #endif
 
   end subroutine camp_mpi_pack_integer
@@ -739,14 +935,14 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     prev_position = position
     call mpi_pack(val, 1, MPI_DOUBLE_PRECISION, buffer, size(buffer), &
-         position, l_comm, ierr)
+                  position, l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
     call assert(395354132, &
-         position - prev_position <= camp_mpi_pack_size_real(val, l_comm))
+                position - prev_position <= camp_mpi_pack_size_real(val, l_comm))
 #endif
 
   end subroutine camp_mpi_pack_real
@@ -772,16 +968,16 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     prev_position = position
     length = len_trim(val)
     call camp_mpi_pack_integer(buffer, position, length, l_comm)
     call mpi_pack(val, length, MPI_CHARACTER, buffer, size(buffer), &
-         position, l_comm, ierr)
+                  position, l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
     call assert(607212018, &
-         position - prev_position <= camp_mpi_pack_size_string(val, l_comm))
+                position - prev_position <= camp_mpi_pack_size_string(val, l_comm))
 #endif
 
   end subroutine camp_mpi_pack_string
@@ -807,14 +1003,14 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     prev_position = position
     call mpi_pack(val, 1, MPI_LOGICAL, buffer, size(buffer), &
-         position, l_comm, ierr)
+                  position, l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
     call assert(104535200, &
-         position - prev_position <= camp_mpi_pack_size_logical(val, l_comm))
+                position - prev_position <= camp_mpi_pack_size_logical(val, l_comm))
 #endif
 
   end subroutine camp_mpi_pack_logical
@@ -840,14 +1036,14 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     prev_position = position
     call mpi_pack(val, 1, MPI_DOUBLE_COMPLEX, buffer, size(buffer), &
-         position, l_comm, ierr)
+                  position, l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
     call assert(640416372, &
-         position - prev_position <= camp_mpi_pack_size_complex(val, l_comm))
+                position - prev_position <= camp_mpi_pack_size_complex(val, l_comm))
 #endif
 
   end subroutine camp_mpi_pack_complex
@@ -874,24 +1070,65 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     prev_position = position
     is_allocated = allocated(val)
     call camp_mpi_pack_logical(buffer, position, is_allocated, l_comm)
     if (is_allocated) then
-       n = size(val)
-       call camp_mpi_pack_integer(buffer, position, n, l_comm)
-       call mpi_pack(val, n, MPI_INTEGER, buffer, size(buffer), &
-            position, l_comm, ierr)
-       call camp_mpi_check_ierr(ierr)
+      n = size(val)
+      call camp_mpi_pack_integer(buffer, position, n, l_comm)
+      call mpi_pack(val, n, MPI_INTEGER, buffer, size(buffer), &
+                    position, l_comm, ierr)
+      call camp_mpi_check_ierr(ierr)
     end if
     call assert(698601296, &
-         position - prev_position <= &
-             camp_mpi_pack_size_integer_array(val, l_comm))
+                position - prev_position <= &
+                camp_mpi_pack_size_integer_array(val, l_comm))
 #endif
 
   end subroutine camp_mpi_pack_integer_array
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Packs the given value into the buffer, advancing position.
+  subroutine camp_mpi_pack_logical_array(buffer, position, val, comm)
+
+    !> Memory buffer.
+    character, intent(inout) :: buffer(:)
+    !> Current buffer position.
+    integer, intent(inout) :: position
+    !> Value to pack.
+    logical, allocatable, intent(in) :: val(:)
+    !> MPI communicator
+    integer, intent(in), optional :: comm
+
+#ifdef CAMP_USE_MPI
+    integer :: prev_position, n, ierr, l_comm
+    logical :: is_allocated
+
+    if (present(comm)) then
+      l_comm = comm
+    else
+      l_comm = MPI_COMM_WORLD
+    end if
+
+    prev_position = position
+    is_allocated = allocated(val)
+    call camp_mpi_pack_logical(buffer, position, is_allocated, l_comm)
+    if (is_allocated) then
+      n = size(val)
+      call camp_mpi_pack_integer(buffer, position, n, l_comm)
+      call mpi_pack(val, n, MPI_LOGICAL, buffer, size(buffer), &
+                    position, l_comm, ierr)
+      call camp_mpi_check_ierr(ierr)
+    end if
+    call assert(338032989, &
+                position - prev_position <= &
+                camp_mpi_pack_size_logical_array(val, l_comm))
+#endif
+
+  end subroutine camp_mpi_pack_logical_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -915,20 +1152,20 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     prev_position = position
     is_allocated = allocated(val)
     call camp_mpi_pack_logical(buffer, position, is_allocated, l_comm)
     if (is_allocated) then
-       n = size(val)
-       call camp_mpi_pack_integer(buffer, position, n, l_comm)
-       call mpi_pack(val, n, MPI_DOUBLE_PRECISION, buffer, size(buffer), &
-            position, l_comm, ierr)
-       call camp_mpi_check_ierr(ierr)
+      n = size(val)
+      call camp_mpi_pack_integer(buffer, position, n, l_comm)
+      call mpi_pack(val, n, MPI_DOUBLE_PRECISION, buffer, size(buffer), &
+                    position, l_comm, ierr)
+      call camp_mpi_check_ierr(ierr)
     end if
     call assert(825718791, &
-         position - prev_position <= camp_mpi_pack_size_real_array(val,l_comm))
+                position - prev_position <= camp_mpi_pack_size_real_array(val, l_comm))
 #endif
 
   end subroutine camp_mpi_pack_real_array
@@ -955,24 +1192,65 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     prev_position = position
     is_allocated = allocated(val)
     call camp_mpi_pack_logical(buffer, position, is_allocated, l_comm)
     if (is_allocated) then
-       n = size(val)
-       call camp_mpi_pack_integer(buffer, position, n, l_comm)
-       do i = 1,n
-          call camp_mpi_pack_string(buffer, position, val(i), l_comm)
-       end do
+      n = size(val)
+      call camp_mpi_pack_integer(buffer, position, n, l_comm)
+      do i = 1, n
+        call camp_mpi_pack_string(buffer, position, val(i), l_comm)
+      end do
     end if
     call assert(630900704, &
-         position - prev_position <= &
-             camp_mpi_pack_size_string_array(val, l_comm))
+                position - prev_position <= &
+                camp_mpi_pack_size_string_array(val, l_comm))
 #endif
 
   end subroutine camp_mpi_pack_string_array
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Packs the given value into the buffer, advancing position.
+  subroutine camp_mpi_pack_string_t_array(buffer, position, val, comm)
+
+    !> Memory buffer.
+    character, intent(inout) :: buffer(:)
+    !> Current buffer position.
+    integer, intent(inout) :: position
+    !> Value to pack.
+    type(string_t), allocatable, intent(in) :: val(:)
+    !> MPI communicator
+    integer, intent(in), optional :: comm
+
+#ifdef CAMP_USE_MPI
+    integer :: prev_position, i, n, l_comm
+    logical :: is_allocated
+
+    if (present(comm)) then
+      l_comm = comm
+    else
+      l_comm = MPI_COMM_WORLD
+    end if
+
+    prev_position = position
+    is_allocated = allocated(val)
+    call camp_mpi_pack_logical(buffer, position, is_allocated, l_comm)
+    if (is_allocated) then
+      n = size(val)
+      call camp_mpi_pack_integer(buffer, position, n, l_comm)
+      do i = 1, n
+        call camp_mpi_pack_string(buffer, position, val(i)%string, l_comm)
+      end do
+    end if
+    call assert(241782371, &
+                position - prev_position <= &
+                camp_mpi_pack_size_string_t_array(val, l_comm))
+#endif
+
+  end subroutine camp_mpi_pack_string_t_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -984,7 +1262,7 @@ contains
     !> Current buffer position.
     integer, intent(inout) :: position
     !> Value to pack.
-    real(kind=dp), allocatable, intent(in) :: val(:,:)
+    real(kind=dp), allocatable, intent(in) :: val(:, :)
     !> MPI communicator
     integer, intent(in), optional :: comm
 
@@ -996,26 +1274,163 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     prev_position = position
     is_allocated = allocated(val)
     call camp_mpi_pack_logical(buffer, position, is_allocated, l_comm)
     if (is_allocated) then
-       n1 = size(val, 1)
-       n2 = size(val, 2)
-       call camp_mpi_pack_integer(buffer, position, n1, l_comm)
-       call camp_mpi_pack_integer(buffer, position, n2, l_comm)
-       call mpi_pack(val, n1*n2, MPI_DOUBLE_PRECISION, buffer, size(buffer), &
-            position, l_comm, ierr)
-       call camp_mpi_check_ierr(ierr)
+      n1 = size(val, 1)
+      n2 = size(val, 2)
+      call camp_mpi_pack_integer(buffer, position, n1, l_comm)
+      call camp_mpi_pack_integer(buffer, position, n2, l_comm)
+      call mpi_pack(val, n1*n2, MPI_DOUBLE_PRECISION, buffer, size(buffer), &
+                    position, l_comm, ierr)
+      call camp_mpi_check_ierr(ierr)
     end if
     call assert(567349745, &
-         position - prev_position <= &
-             camp_mpi_pack_size_real_array_2d(val, l_comm))
+                position - prev_position <= &
+                camp_mpi_pack_size_real_array_2d(val, l_comm))
 #endif
 
   end subroutine camp_mpi_pack_real_array_2d
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Packs the given value into the buffer, advancing position.
+  subroutine camp_mpi_pack_integer_array_2d(buffer, position, val, comm)
+
+    !> Memory buffer.
+    character, intent(inout) :: buffer(:)
+    !> Current buffer position.
+    integer, intent(inout) :: position
+    !> Value to pack.
+    integer(kind=i_kind), allocatable, intent(in) :: val(:, :)
+    !> MPI communicator
+    integer, intent(in), optional :: comm
+
+#ifdef CAMP_USE_MPI
+    integer :: prev_position, n1, n2, ierr, l_comm
+    logical :: is_allocated
+
+    if (present(comm)) then
+      l_comm = comm
+    else
+      l_comm = MPI_COMM_WORLD
+    end if
+
+    prev_position = position
+    is_allocated = allocated(val)
+    call camp_mpi_pack_logical(buffer, position, is_allocated, l_comm)
+    if (is_allocated) then
+      n1 = size(val, 1)
+      n2 = size(val, 2)
+      call camp_mpi_pack_integer(buffer, position, n1, l_comm)
+      call camp_mpi_pack_integer(buffer, position, n2, l_comm)
+      call mpi_pack(val, n1*n2, MPI_INTEGER, buffer, size(buffer), &
+                    position, l_comm, ierr)
+      call camp_mpi_check_ierr(ierr)
+    end if
+    call assert(810527358, &
+                position - prev_position <= &
+                camp_mpi_pack_size_integer_array_2d(val, l_comm))
+#endif
+
+  end subroutine camp_mpi_pack_integer_array_2d
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Packs the given value into the buffer, advancing position.
+  subroutine camp_mpi_pack_integer_array_3d(buffer, position, val, comm)
+
+    !> Memory buffer.
+    character, intent(inout) :: buffer(:)
+    !> Current buffer position.
+    integer, intent(inout) :: position
+    !> Value to pack.
+    integer(kind=i_kind), allocatable, intent(in) :: val(:, :, :)
+    !> MPI communicator
+    integer, intent(in), optional :: comm
+
+#ifdef CAMP_USE_MPI
+    integer :: prev_position, n1, n2, n3, ierr, l_comm
+    logical :: is_allocated
+
+    if (present(comm)) then
+      l_comm = comm
+    else
+      l_comm = MPI_COMM_WORLD
+    end if
+
+    prev_position = position
+    is_allocated = allocated(val)
+    call camp_mpi_pack_logical(buffer, position, is_allocated, l_comm)
+    if (is_allocated) then
+      n1 = size(val, 1)
+      n2 = size(val, 2)
+      n3 = size(val, 3)
+      call camp_mpi_pack_integer(buffer, position, n1, l_comm)
+      call camp_mpi_pack_integer(buffer, position, n2, l_comm)
+      call camp_mpi_pack_integer(buffer, position, n3, l_comm)
+      call mpi_pack(val, n1*n2*n3, MPI_INTEGER, buffer, size(buffer), &
+                    position, l_comm, ierr)
+      call camp_mpi_check_ierr(ierr)
+    end if
+    call assert(319683256, &
+                position - prev_position <= &
+                camp_mpi_pack_size_integer_array_3d(val, l_comm))
+#endif
+
+  end subroutine camp_mpi_pack_integer_array_3d
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Packs the given value into the buffer, advancing position.
+  subroutine camp_mpi_pack_integer_array_5d(buffer, position, val, comm)
+
+    !> Memory buffer.
+    character, intent(inout) :: buffer(:)
+    !> Current buffer position.
+    integer, intent(inout) :: position
+    !> Value to pack.
+    integer(kind=i_kind), allocatable, intent(in) :: val(:, :, :, :, :)
+    !> MPI communicator
+    integer, intent(in), optional :: comm
+
+#ifdef CAMP_USE_MPI
+    integer :: prev_position, n1, n2, n3, n4, n5, ierr, l_comm
+    logical :: is_allocated
+
+    if (present(comm)) then
+      l_comm = comm
+    else
+      l_comm = MPI_COMM_WORLD
+    end if
+
+    prev_position = position
+    is_allocated = allocated(val)
+    call camp_mpi_pack_logical(buffer, position, is_allocated, l_comm)
+    if (is_allocated) then
+      n1 = size(val, 1)
+      n2 = size(val, 2)
+      n3 = size(val, 3)
+      n4 = size(val, 4)
+      n5 = size(val, 5)
+      call camp_mpi_pack_integer(buffer, position, n1, l_comm)
+      call camp_mpi_pack_integer(buffer, position, n2, l_comm)
+      call camp_mpi_pack_integer(buffer, position, n3, l_comm)
+      call camp_mpi_pack_integer(buffer, position, n4, l_comm)
+      call camp_mpi_pack_integer(buffer, position, n5, l_comm)
+      call mpi_pack(val, n1*n2*n3*n4*n5, MPI_INTEGER, buffer, size(buffer), &
+                    position, l_comm, ierr)
+      call camp_mpi_check_ierr(ierr)
+    end if
+    call assert(810527358, &
+                position - prev_position <= &
+                camp_mpi_pack_size_integer_array_5d(val, l_comm))
+#endif
+
+  end subroutine camp_mpi_pack_integer_array_5d
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -1038,14 +1453,14 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     prev_position = position
     call mpi_unpack(buffer, size(buffer), position, val, 1, MPI_INTEGER, &
-         l_comm, ierr)
+                    l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
     call assert(890243339, &
-         position - prev_position <= camp_mpi_pack_size_integer(val, l_comm))
+                position - prev_position <= camp_mpi_pack_size_integer(val, l_comm))
 #else
     val = 0
 #endif
@@ -1073,14 +1488,14 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     prev_position = position
     call mpi_unpack(buffer, size(buffer), position, val, 1, &
-         MPI_DOUBLE_PRECISION, l_comm, ierr)
+                    MPI_DOUBLE_PRECISION, l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
     call assert(570771632, &
-         position - prev_position <= camp_mpi_pack_size_real(val, l_comm))
+                position - prev_position <= camp_mpi_pack_size_real(val, l_comm))
 #else
     val = real(0.0, kind=dp)
 #endif
@@ -1108,17 +1523,18 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
+    val = ''
     prev_position = position
     call camp_mpi_unpack_integer(buffer, position, length, l_comm)
     call assert(946399479, length <= len(val))
-    val = ''
+
     call mpi_unpack(buffer, size(buffer), position, val, length, &
-         MPI_CHARACTER, l_comm, ierr)
+                    MPI_CHARACTER, l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
     call assert(503378058, &
-         position - prev_position <= camp_mpi_pack_size_string(val, l_comm))
+                position - prev_position <= camp_mpi_pack_size_string(val, l_comm))
 #else
     val = ''
 #endif
@@ -1146,14 +1562,14 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     prev_position = position
     call mpi_unpack(buffer, size(buffer), position, val, 1, MPI_LOGICAL, &
-         l_comm, ierr)
+                    l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
     call assert(694750528, &
-         position - prev_position <= camp_mpi_pack_size_logical(val, l_comm))
+                position - prev_position <= camp_mpi_pack_size_logical(val, l_comm))
 #else
     val = .false.
 #endif
@@ -1181,14 +1597,14 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     prev_position = position
     call mpi_unpack(buffer, size(buffer), position, val, 1, &
-         MPI_DOUBLE_COMPLEX, l_comm, ierr)
+                    MPI_DOUBLE_COMPLEX, l_comm, ierr)
     call camp_mpi_check_ierr(ierr)
     call assert(969672634, &
-         position - prev_position <= camp_mpi_pack_size_complex(val, l_comm))
+                position - prev_position <= camp_mpi_pack_size_complex(val, l_comm))
 #else
     val = cmplx(0)
 #endif
@@ -1217,24 +1633,65 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     prev_position = position
     call camp_mpi_unpack_logical(buffer, position, is_allocated, l_comm)
-    if (allocated(val)) deallocate(val)
+    if (allocated(val)) deallocate (val)
     if (is_allocated) then
-       call camp_mpi_unpack_integer(buffer, position, n, l_comm)
-       allocate(val(n))
-       call mpi_unpack(buffer, size(buffer), position, val, n, MPI_INTEGER, &
-            l_comm, ierr)
-       call camp_mpi_check_ierr(ierr)
+      call camp_mpi_unpack_integer(buffer, position, n, l_comm)
+      allocate (val(n))
+      call mpi_unpack(buffer, size(buffer), position, val, n, MPI_INTEGER, &
+                      l_comm, ierr)
+      call camp_mpi_check_ierr(ierr)
     end if
     call assert(565840919, &
-         position - prev_position <= &
-             camp_mpi_pack_size_integer_array(val, l_comm))
+                position - prev_position <= &
+                camp_mpi_pack_size_integer_array(val, l_comm))
 #endif
 
   end subroutine camp_mpi_unpack_integer_array
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Unpacks the given value from the buffer, advancing position.
+  subroutine camp_mpi_unpack_logical_array(buffer, position, val, comm)
+
+    !> Memory buffer.
+    character, intent(inout) :: buffer(:)
+    !> Current buffer position.
+    integer, intent(inout) :: position
+    !> Value to pack.
+    logical, allocatable, intent(inout) :: val(:)
+    !> MPI communicator
+    integer, intent(in), optional :: comm
+
+#ifdef CAMP_USE_MPI
+    integer :: prev_position, n, ierr, l_comm
+    logical :: is_allocated
+
+    if (present(comm)) then
+      l_comm = comm
+    else
+      l_comm = MPI_COMM_WORLD
+    end if
+
+    prev_position = position
+    call camp_mpi_unpack_logical(buffer, position, is_allocated, l_comm)
+    if (allocated(val)) deallocate (val)
+    if (is_allocated) then
+      call camp_mpi_unpack_integer(buffer, position, n, l_comm)
+      allocate (val(n))
+      call mpi_unpack(buffer, size(buffer), position, val, n, MPI_LOGICAL, &
+                      l_comm, ierr)
+      call camp_mpi_check_ierr(ierr)
+    end if
+    call assert(114303497, &
+                position - prev_position <= &
+                camp_mpi_pack_size_logical_array(val, l_comm))
+#endif
+
+  end subroutine camp_mpi_unpack_logical_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -1258,21 +1715,21 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     prev_position = position
     call camp_mpi_unpack_logical(buffer, position, is_allocated, l_comm)
-    if (allocated(val)) deallocate(val)
+    if (allocated(val)) deallocate (val)
     if (is_allocated) then
-       call camp_mpi_unpack_integer(buffer, position, n, l_comm)
-       allocate(val(n))
-       call mpi_unpack(buffer, size(buffer), position, val, n, &
-            MPI_DOUBLE_PRECISION, l_comm, ierr)
-       call camp_mpi_check_ierr(ierr)
+      call camp_mpi_unpack_integer(buffer, position, n, l_comm)
+      allocate (val(n))
+      call mpi_unpack(buffer, size(buffer), position, val, n, &
+                      MPI_DOUBLE_PRECISION, l_comm, ierr)
+      call camp_mpi_check_ierr(ierr)
     end if
     call assert(782875761, &
-         position - prev_position <= &
-           camp_mpi_pack_size_real_array(val, l_comm))
+                position - prev_position <= &
+                camp_mpi_pack_size_real_array(val, l_comm))
 #endif
 
   end subroutine camp_mpi_unpack_real_array
@@ -1299,24 +1756,65 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     prev_position = position
     call camp_mpi_unpack_logical(buffer, position, is_allocated, l_comm)
-    if (allocated(val)) deallocate(val)
+    if (allocated(val)) deallocate (val)
     if (is_allocated) then
-       call camp_mpi_unpack_integer(buffer, position, n, l_comm)
-       allocate(val(n))
-       do i = 1,n
-          call camp_mpi_unpack_string(buffer, position, val(i), l_comm)
-       end do
+      call camp_mpi_unpack_integer(buffer, position, n, l_comm)
+      allocate (val(n))
+      do i = 1, n
+        call camp_mpi_unpack_string(buffer, position, val(i), l_comm)
+      end do
     end if
     call assert(320065648, &
-         position - prev_position <= &
-             camp_mpi_pack_size_string_array(val, l_comm))
+                position - prev_position <= &
+                camp_mpi_pack_size_string_array(val, l_comm))
 #endif
 
   end subroutine camp_mpi_unpack_string_array
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Unpacks the given value from the buffer, advancing position.
+  subroutine camp_mpi_unpack_string_t_array(buffer, position, val, comm)
+
+    !> Memory buffer.
+    character, intent(inout) :: buffer(:)
+    !> Current buffer position.
+    integer, intent(inout) :: position
+    !> Value to pack.
+    type(string_t), allocatable, intent(inout) :: val(:)
+    !> MPI communicator
+    integer, intent(in), optional :: comm
+
+#ifdef CAMP_USE_MPI
+    integer :: prev_position, i, n, l_comm
+    logical :: is_allocated
+
+    if (present(comm)) then
+      l_comm = comm
+    else
+      l_comm = MPI_COMM_WORLD
+    end if
+
+    prev_position = position
+    call camp_mpi_unpack_logical(buffer, position, is_allocated, l_comm)
+    if (allocated(val)) deallocate (val)
+    if (is_allocated) then
+      call camp_mpi_unpack_integer(buffer, position, n, l_comm)
+      allocate (val(n))
+      do i = 1, n
+        call camp_mpi_unpack_string(buffer, position, val(i)%string, l_comm)
+      end do
+    end if
+    call assert(40459181, &
+                position - prev_position <= &
+                camp_mpi_pack_size_string_t_array(val, l_comm))
+#endif
+
+  end subroutine camp_mpi_unpack_string_t_array
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -1328,7 +1826,7 @@ contains
     !> Current buffer position.
     integer, intent(inout) :: position
     !> Value to pack.
-    real(kind=dp), allocatable, intent(inout) :: val(:,:)
+    real(kind=dp), allocatable, intent(inout) :: val(:, :)
     !> MPI communicator
     integer, intent(in), optional :: comm
 
@@ -1340,24 +1838,149 @@ contains
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     prev_position = position
     call camp_mpi_unpack_logical(buffer, position, is_allocated, l_comm)
-    if (allocated(val)) deallocate(val)
+    if (allocated(val)) deallocate (val)
     if (is_allocated) then
-       call camp_mpi_unpack_integer(buffer, position, n1, l_comm)
-       call camp_mpi_unpack_integer(buffer, position, n2, l_comm)
-       allocate(val(n1,n2))
-       call mpi_unpack(buffer, size(buffer), position, val, n1*n2, &
-            MPI_DOUBLE_PRECISION, l_comm, ierr)
-       call camp_mpi_check_ierr(ierr)
+      call camp_mpi_unpack_integer(buffer, position, n1, l_comm)
+      call camp_mpi_unpack_integer(buffer, position, n2, l_comm)
+      allocate (val(n1, n2))
+      call mpi_unpack(buffer, size(buffer), position, val, n1*n2, &
+                      MPI_DOUBLE_PRECISION, l_comm, ierr)
+      call camp_mpi_check_ierr(ierr)
     end if
     call assert(781681739, position - prev_position &
-         <= camp_mpi_pack_size_real_array_2d(val, l_comm))
+                <= camp_mpi_pack_size_real_array_2d(val, l_comm))
 #endif
 
   end subroutine camp_mpi_unpack_real_array_2d
+
+  !> Unpacks the given value from the buffer, advancing position.
+  subroutine camp_mpi_unpack_integer_array_2d(buffer, position, val, comm)
+
+    !> Memory buffer.
+    character, intent(inout) :: buffer(:)
+    !> Current buffer position.
+    integer, intent(inout) :: position
+    !> Value to pack.
+    integer(kind=i_kind), allocatable, intent(inout) :: val(:, :)
+    !> MPI communicator
+    integer, intent(in), optional :: comm
+
+#ifdef CAMP_USE_MPI
+    integer :: prev_position, n1, n2, ierr, l_comm
+    logical :: is_allocated
+
+    if (present(comm)) then
+      l_comm = comm
+    else
+      l_comm = MPI_COMM_WORLD
+    end if
+
+    prev_position = position
+    call camp_mpi_unpack_logical(buffer, position, is_allocated, l_comm)
+    if (allocated(val)) deallocate (val)
+    if (is_allocated) then
+      call camp_mpi_unpack_integer(buffer, position, n1, l_comm)
+      call camp_mpi_unpack_integer(buffer, position, n2, l_comm)
+      allocate (val(n1, n2))
+      call mpi_unpack(buffer, size(buffer), position, val, n1*n2, &
+                      MPI_INTEGER, l_comm, ierr)
+      call camp_mpi_check_ierr(ierr)
+    end if
+    call assert(57738210, position - prev_position &
+                <= camp_mpi_pack_size_integer_array_2d(val, l_comm))
+#endif
+
+  end subroutine camp_mpi_unpack_integer_array_2d
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Unpacks the given value from the buffer, advancing position.
+  subroutine camp_mpi_unpack_integer_array_3d(buffer, position, val, comm)
+
+    !> Memory buffer.
+    character, intent(inout) :: buffer(:)
+    !> Current buffer position.
+    integer, intent(inout) :: position
+    !> Value to pack.
+    integer(kind=i_kind), allocatable, intent(inout) :: val(:, :, :)
+    !> MPI communicator
+    integer, intent(in), optional :: comm
+
+#ifdef CAMP_USE_MPI
+    integer :: prev_position, n1, n2, n3, ierr, l_comm
+    logical :: is_allocated
+
+    if (present(comm)) then
+      l_comm = comm
+    else
+      l_comm = MPI_COMM_WORLD
+    end if
+
+    prev_position = position
+    call camp_mpi_unpack_logical(buffer, position, is_allocated, l_comm)
+    if (allocated(val)) deallocate (val)
+    if (is_allocated) then
+      call camp_mpi_unpack_integer(buffer, position, n1, l_comm)
+      call camp_mpi_unpack_integer(buffer, position, n2, l_comm)
+      call camp_mpi_unpack_integer(buffer, position, n3, l_comm)
+      allocate (val(n1, n2, n3))
+      call mpi_unpack(buffer, size(buffer), position, val, n1*n2*n3, &
+                      MPI_INTEGER, l_comm, ierr)
+      call camp_mpi_check_ierr(ierr)
+    end if
+    call assert(57738210, position - prev_position &
+                <= camp_mpi_pack_size_integer_array_3d(val, l_comm))
+#endif
+
+  end subroutine camp_mpi_unpack_integer_array_3d
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Unpacks the given value from the buffer, advancing position.
+  subroutine camp_mpi_unpack_integer_array_5d(buffer, position, val, comm)
+
+    !> Memory buffer.
+    character, intent(inout) :: buffer(:)
+    !> Current buffer position.
+    integer, intent(inout) :: position
+    !> Value to pack.
+    integer(kind=i_kind), allocatable, intent(inout) :: val(:, :, :, :, :)
+    !> MPI communicator
+    integer, intent(in), optional :: comm
+
+#ifdef CAMP_USE_MPI
+    integer :: prev_position, n1, n2, n3, n4, n5, ierr, l_comm
+    logical :: is_allocated
+
+    if (present(comm)) then
+      l_comm = comm
+    else
+      l_comm = MPI_COMM_WORLD
+    end if
+
+    prev_position = position
+    call camp_mpi_unpack_logical(buffer, position, is_allocated, l_comm)
+    if (allocated(val)) deallocate (val)
+    if (is_allocated) then
+      call camp_mpi_unpack_integer(buffer, position, n1, l_comm)
+      call camp_mpi_unpack_integer(buffer, position, n2, l_comm)
+      call camp_mpi_unpack_integer(buffer, position, n3, l_comm)
+      call camp_mpi_unpack_integer(buffer, position, n4, l_comm)
+      call camp_mpi_unpack_integer(buffer, position, n5, l_comm)
+      allocate (val(n1, n2, n3, n4, n5))
+      call mpi_unpack(buffer, size(buffer), position, val, n1*n2*n3*n4*n5, &
+                      MPI_INTEGER, l_comm, ierr)
+      call camp_mpi_check_ierr(ierr)
+    end if
+    call assert(57738210, position - prev_position &
+                <= camp_mpi_pack_size_integer_array_5d(val, l_comm))
+#endif
+
+  end subroutine camp_mpi_unpack_integer_array_5d
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -1374,10 +1997,10 @@ contains
     integer :: ierr
 
     call mpi_reduce(val, val_avg, 1, MPI_DOUBLE_PRECISION, MPI_SUM, 0, &
-         MPI_COMM_WORLD, ierr)
+                    MPI_COMM_WORLD, ierr)
     call camp_mpi_check_ierr(ierr)
     if (camp_mpi_rank() == 0) then
-       val_avg = val_avg / real(camp_mpi_size(), kind=dp)
+      val_avg = val_avg/real(camp_mpi_size(), kind=dp)
     end if
 #else
     val_avg = val
@@ -1404,19 +2027,19 @@ contains
 
     rank = camp_mpi_rank()
     if (from_proc == to_proc) then
-       if (rank == from_proc) then
-          to_val = from_val
-       end if
+      if (rank == from_proc) then
+        to_val = from_val
+      end if
     else
-       if (rank == from_proc) then
-          call mpi_send(from_val, 1, MPI_DOUBLE_PRECISION, to_proc, &
-               208020430, MPI_COMM_WORLD, ierr)
-          call camp_mpi_check_ierr(ierr)
-       elseif (rank == to_proc) then
-          call mpi_recv(to_val, 1, MPI_DOUBLE_PRECISION, from_proc, &
-               208020430, MPI_COMM_WORLD, status, ierr)
-          call camp_mpi_check_ierr(ierr)
-       end if
+      if (rank == from_proc) then
+        call mpi_send(from_val, 1, MPI_DOUBLE_PRECISION, to_proc, &
+                      20803, MPI_COMM_WORLD, ierr)
+        call camp_mpi_check_ierr(ierr)
+      elseif (rank == to_proc) then
+        call mpi_recv(to_val, 1, MPI_DOUBLE_PRECISION, from_proc, &
+                      20803, MPI_COMM_WORLD, status, ierr)
+        call camp_mpi_check_ierr(ierr)
+      end if
     end if
 #else
     to_val = from_val
@@ -1439,7 +2062,7 @@ contains
     integer :: ierr
 
     call mpi_reduce(val, val_sum, 1, MPI_INTEGER, MPI_SUM, 0, &
-         MPI_COMM_WORLD, ierr)
+                    MPI_COMM_WORLD, ierr)
     call camp_mpi_check_ierr(ierr)
 #else
     val_sum = val
@@ -1462,7 +2085,7 @@ contains
     integer :: ierr
 
     call mpi_allreduce(val, val_sum, 1, MPI_INTEGER, MPI_SUM, &
-         MPI_COMM_WORLD, ierr)
+                       MPI_COMM_WORLD, ierr)
     call camp_mpi_check_ierr(ierr)
 #else
     val_sum = val
@@ -1486,10 +2109,10 @@ contains
 
     call assert(915136121, size(val) == size(val_avg))
     call mpi_reduce(val, val_avg, size(val), MPI_DOUBLE_PRECISION, &
-         MPI_SUM, 0, MPI_COMM_WORLD, ierr)
+                    MPI_SUM, 0, MPI_COMM_WORLD, ierr)
     call camp_mpi_check_ierr(ierr)
     if (camp_mpi_rank() == 0) then
-       val_avg = val_avg / real(camp_mpi_size(), kind=dp)
+      val_avg = val_avg/real(camp_mpi_size(), kind=dp)
     end if
 #else
     val_avg = val
@@ -1504,20 +2127,20 @@ contains
   subroutine camp_mpi_reduce_avg_real_array_2d(val, val_avg)
 
     !> Value to average.
-    real(kind=dp), intent(in) :: val(:,:)
+    real(kind=dp), intent(in) :: val(:, :)
     !> Result.
-    real(kind=dp), intent(out) :: val_avg(:,:)
+    real(kind=dp), intent(out) :: val_avg(:, :)
 
 #ifdef CAMP_USE_MPI
     integer :: ierr
 
-    call assert(131229046, size(val,1) == size(val_avg,1))
-    call assert(992122167, size(val,2) == size(val_avg,2))
+    call assert(131229046, size(val, 1) == size(val_avg, 1))
+    call assert(992122167, size(val, 2) == size(val_avg, 2))
     call mpi_reduce(val, val_avg, size(val), MPI_DOUBLE_PRECISION, &
-         MPI_SUM, 0, MPI_COMM_WORLD, ierr)
+                    MPI_SUM, 0, MPI_COMM_WORLD, ierr)
     call camp_mpi_check_ierr(ierr)
     if (camp_mpi_rank() == 0) then
-       val_avg = val_avg / real(camp_mpi_size(), kind=dp)
+      val_avg = val_avg/real(camp_mpi_size(), kind=dp)
     end if
 #else
     val_avg = val
@@ -1540,9 +2163,9 @@ contains
     integer :: ierr
 
     call mpi_allreduce(val, val_avg, 1, MPI_DOUBLE_PRECISION, MPI_SUM, &
-         MPI_COMM_WORLD, ierr)
+                       MPI_COMM_WORLD, ierr)
     call camp_mpi_check_ierr(ierr)
-    val_avg = val_avg / real(camp_mpi_size(), kind=dp)
+    val_avg = val_avg/real(camp_mpi_size(), kind=dp)
 #else
     val_avg = val
 #endif
@@ -1565,9 +2188,9 @@ contains
 
     call assert(948533359, size(val) == size(val_avg))
     call mpi_allreduce(val, val_avg, size(val), MPI_DOUBLE_PRECISION, &
-         MPI_SUM, MPI_COMM_WORLD, ierr)
+                       MPI_SUM, MPI_COMM_WORLD, ierr)
     call camp_mpi_check_ierr(ierr)
-    val_avg = val_avg / real(camp_mpi_size(), kind=dp)
+    val_avg = val_avg/real(camp_mpi_size(), kind=dp)
 #else
     val_avg = val
 #endif
@@ -1589,7 +2212,7 @@ contains
     integer :: ierr
 
     call mpi_allreduce(val, val_min, 1, MPI_INTEGER, MPI_MIN, &
-         MPI_COMM_WORLD, ierr)
+                       MPI_COMM_WORLD, ierr)
     call camp_mpi_check_ierr(ierr)
 #else
     val_min = val
@@ -1612,7 +2235,7 @@ contains
     integer :: ierr
 
     call mpi_allreduce(val, val_max, 1, MPI_INTEGER, MPI_MAX, &
-         MPI_COMM_WORLD, ierr)
+                       MPI_COMM_WORLD, ierr)
     call camp_mpi_check_ierr(ierr)
 #else
     val_max = val
@@ -1635,7 +2258,7 @@ contains
     integer :: ierr
 
     call mpi_allreduce(val, val_min, 1, MPI_DOUBLE_PRECISION, MPI_MIN, &
-         MPI_COMM_WORLD, ierr)
+                       MPI_COMM_WORLD, ierr)
     call camp_mpi_check_ierr(ierr)
 #else
     val_min = val
@@ -1658,7 +2281,7 @@ contains
     integer :: ierr
 
     call mpi_allreduce(val, val_max, 1, MPI_DOUBLE_PRECISION, MPI_MAX, &
-         MPI_COMM_WORLD, ierr)
+                       MPI_COMM_WORLD, ierr)
     call camp_mpi_check_ierr(ierr)
 #else
     val_max = val
@@ -1680,9 +2303,9 @@ contains
     call camp_mpi_allreduce_min_integer(val, min_val)
     call camp_mpi_allreduce_max_integer(val, max_val)
     if (min_val == max_val) then
-       camp_mpi_allequal_integer = .true.
+      camp_mpi_allequal_integer = .true.
     else
-       camp_mpi_allequal_integer = .false.
+      camp_mpi_allequal_integer = .false.
     end if
 #else
     camp_mpi_allequal_integer = .true.
@@ -1704,9 +2327,9 @@ contains
     call camp_mpi_allreduce_min_real(val, min_val)
     call camp_mpi_allreduce_max_real(val, max_val)
     if (min_val == max_val) then
-       camp_mpi_allequal_real = .true.
+      camp_mpi_allequal_real = .true.
     else
-       camp_mpi_allequal_real = .false.
+      camp_mpi_allequal_real = .false.
     end if
 #else
     camp_mpi_allequal_real = .true.
@@ -1728,7 +2351,7 @@ contains
     integer :: ierr
 
     call mpi_alltoall(send, 1, MPI_INTEGER, recv, 1, MPI_INTEGER, &
-         MPI_COMM_WORLD, ierr)
+                      MPI_COMM_WORLD, ierr)
     call camp_mpi_check_ierr(ierr)
 #else
     recv = send
@@ -1745,7 +2368,7 @@ contains
     !> Values to send on each process.
     integer, intent(in) :: send(:)
     !> Values to receive (will be the same on all processes.
-    integer, intent(out) :: recv(:,:)
+    integer, intent(out) :: recv(:, :)
 
 #ifdef CAMP_USE_MPI
     integer :: n_proc, n_bin, n_data, ierr
@@ -1756,15 +2379,15 @@ contains
     call assert(353005542, all(shape(recv) == (/n_data, n_proc/)))
 
     ! use a new send_buf to make sure the memory is contiguous
-    allocate(send_buf(n_data))
-    allocate(recv_buf(n_data * n_proc))
+    allocate (send_buf(n_data))
+    allocate (recv_buf(n_data*n_proc))
     send_buf = send
     call mpi_allgather(send_buf, n_data, MPI_INTEGER, &
-         recv_buf, n_data, MPI_INTEGER, MPI_COMM_WORLD, ierr)
+                       recv_buf, n_data, MPI_INTEGER, MPI_COMM_WORLD, ierr)
     call camp_mpi_check_ierr(ierr)
     recv = reshape(recv_buf, (/n_data, n_proc/))
-    deallocate(send_buf)
-    deallocate(recv_buf)
+    deallocate (send_buf)
+    deallocate (recv_buf)
 #else
     recv(:, 1) = send
 #endif
@@ -1780,7 +2403,7 @@ contains
     !> Values to send on each process.
     real(kind=dp), intent(in) :: send(:)
     !> Values to receive (will be the same on all processes.
-    real(kind=dp), intent(out) :: recv(:,:)
+    real(kind=dp), intent(out) :: recv(:, :)
 
 #ifdef CAMP_USE_MPI
     integer :: n_proc, n_bin, n_data, ierr
@@ -1791,15 +2414,15 @@ contains
     call assert(291000580, all(shape(recv) == (/n_data, n_proc/)))
 
     ! use a new send_buf to make sure the memory is contiguous
-    allocate(send_buf(n_data))
-    allocate(recv_buf(n_data * n_proc))
+    allocate (send_buf(n_data))
+    allocate (recv_buf(n_data*n_proc))
     send_buf = send
     call mpi_allgather(send_buf, n_data, MPI_DOUBLE_PRECISION, &
-         recv_buf, n_data, MPI_DOUBLE_PRECISION, MPI_COMM_WORLD, ierr)
+                       recv_buf, n_data, MPI_DOUBLE_PRECISION, MPI_COMM_WORLD, ierr)
     call camp_mpi_check_ierr(ierr)
     recv = reshape(recv_buf, (/n_data, n_proc/))
-    deallocate(send_buf)
-    deallocate(recv_buf)
+    deallocate (send_buf)
+    deallocate (recv_buf)
 #else
     recv(:, 1) = send
 #endif

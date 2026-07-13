@@ -9,10 +9,10 @@
  * \brief Jacobian functions
  */
 #include "Jacobian.h"
+#include "time_derivative.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "time_derivative.h"
 
 #define BUFFER_SIZE 10
 #define SMALL_NUMBER 1e-90
@@ -49,7 +49,8 @@ int jacobian_column_elements_add_space(JacobianColumnElements *column) {
   unsigned int *temp_ids;
   column->array_size += BUFFER_SIZE;
   temp_ids = (unsigned int *)malloc(column->array_size * sizeof(unsigned int));
-  if (!temp_ids) return 0;
+  if (!temp_ids)
+    return 0;
   for (unsigned int i_elem = 0; i_elem < column->number_of_elements; ++i_elem) {
     temp_ids[i_elem] = column->row_ids[i_elem];
   }
@@ -61,14 +62,14 @@ int jacobian_column_elements_add_space(JacobianColumnElements *column) {
 void jacobian_register_element(Jacobian *jac, unsigned int dep_id,
                                unsigned int ind_id) {
   if (!jac->elements) {
-    printf(
-        "\n\nERROR - Trying to register elements in a Jacobian that has "
-        "already been built.\n\n");
+    printf("\n\nERROR - Trying to register elements in a Jacobian that has "
+           "already been built.\n\n");
     exit(EXIT_FAILURE);
   }
   JacobianColumnElements *column = &(jac->elements[ind_id]);
   for (unsigned int i_elem = 0; i_elem < column->number_of_elements; ++i_elem) {
-    if (column->row_ids[i_elem] == dep_id) return;
+    if (column->row_ids[i_elem] == dep_id)
+      return;
   }
   if (column->array_size == column->number_of_elements) {
     jacobian_column_elements_add_space(column);
@@ -84,9 +85,8 @@ int compare_ids(const void *a, const void *b) {
 
 unsigned int jacobian_build_matrix(Jacobian *jac) {
   if (!jac->elements) {
-    printf(
-        "\n\nERROR - Trying to build a Jacobian that has already been "
-        "built.\n\n");
+    printf("\n\nERROR - Trying to build a Jacobian that has already been "
+           "built.\n\n");
     exit(EXIT_FAILURE);
   }
   jac->num_elem = 0;
@@ -155,15 +155,15 @@ unsigned int jacobian_row_index(Jacobian jac, unsigned int elem_id) {
 unsigned int jacobian_get_element_id(Jacobian jac, unsigned int dep_id,
                                      unsigned int ind_id) {
   if (ind_id >= jac.num_spec || ind_id < 0) {
-    printf(
-        "\nError: Bad Jacobian column id: %u. Expected value between 0 and "
-        "%u\n",
-        ind_id, jac.num_spec);
+    printf("\nError: Bad Jacobian column id: %u. Expected value between 0 and "
+           "%u\n",
+           ind_id, jac.num_spec);
     exit(EXIT_FAILURE);
   }
   for (unsigned int i_elem = jac.col_ptrs[ind_id];
        i_elem < jac.col_ptrs[ind_id + 1]; ++i_elem) {
-    if (jac.row_ids[i_elem] == dep_id) return i_elem;
+    if (jac.row_ids[i_elem] == dep_id)
+      return i_elem;
   }
   return -1;
 }

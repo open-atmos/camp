@@ -1,0 +1,23 @@
+ClNO2 cross sections from IUPAC 
+R. Atkinson, D. L. Baulch, R. A. Cox, J. N. Crowley, R. F. Hampson, 
+R. G. Hynes, M. E. Jenkin, M. J. Rossi, and J. Troe, Evaluated kinetic 
+and photochemical data for atmospheric chemistry: Volume III  gas 
+phase reactions of inorganic halogens, Atmos. Chem. Phys., 7, 981-1191, 2007.
+nm      cm2
+210	3.2E-18
+220	3.39E-18
+230	2.26E-18
+240	1.33E-18
+250	9.06E-19
+260	6.13E-19
+270	3.53E-19
+280	2.2E-19
+290	1.73E-19
+300	1.49E-19
+310	1.21E-19
+320	8.87E-20
+330	5.84E-20
+340	3.54E-20
+350	2.04E-20
+360	1.15E-20
+370	6.9E-21

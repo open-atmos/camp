@@ -1,0 +1,92 @@
+{
+  "description" : [
+    "These species needed for the VBS scheme",
+    "(see mechanism.json for details)"
+  ],
+  "camp-data" : [
+    {
+      "name" : "VBS1",
+      "type" : "CHEM_SPEC",
+      "absolute integration tolerance" : 1.0E-03,
+      "molecular weight [kg mol-1]" : 0.250,
+      "description" : "VBS lowest volatility gas-phase product with C* = 0.1 ug/m3"      
+    },
+    {
+      "name" : "VBS2",
+      "type" : "CHEM_SPEC",
+      "absolute integration tolerance" : 1.0E-03,
+      "molecular weight [kg mol-1]" : 0.250,
+      "description" : "VBS gas-phase product with C* = 1 ug/m3"      
+    },
+    {
+      "name" : "VBS3",
+      "type" : "CHEM_SPEC",
+      "absolute integration tolerance" : 1.0E-03,
+      "molecular weight [kg mol-1]" : 0.250,
+      "description" : "VBS gas-phase product with C* = 10 ug/m3"      
+    },
+    {
+      "name" : "VBS4",
+      "type" : "CHEM_SPEC",
+      "absolute integration tolerance" : 1.0E-03,
+      "molecular weight [kg mol-1]" : 0.250,
+      "description" : "VBS highest volatility gas-phase product with C* = 100 ug/m3"      
+    },
+    {
+      "name" : "VBS1_aero",
+      "type" : "CHEM_SPEC",
+      "phase" : "AEROSOL",
+      "absolute integration tolerance" : 1.0E-03,
+      "density [kg m-3]" : 1800.0,
+      "molecular weight [kg mol-1]" : 0.250,
+      "description" : "VBS lowest volatility aerosol-phase product with C* = 0.1 ug/m3",
+      "num_ions" : 0,
+      "kappa"  : 0.1      
+    },
+    {
+      "name" : "VBS2_aero",
+      "type" : "CHEM_SPEC",
+      "phase" : "AEROSOL",
+      "absolute integration tolerance" : 1.0E-03,
+      "density [kg m-3]" : 1800.0,
+      "molecular weight [kg mol-1]" : 0.250,
+      "description" : "VBS aerosol-phase product with C* = 1 ug/m3",
+      "num_ions" : 0,
+      "kappa"  : 0.1      
+    },
+    {
+      "name" : "VBS3_aero",
+      "type" : "CHEM_SPEC",
+      "phase" : "AEROSOL",
+      "absolute integration tolerance" : 1.0E-03,
+      "density [kg m-3]" : 1800.0,
+      "molecular weight [kg mol-1]" : 0.250,
+      "description" : "VBS aerosol-phase product with C* = 10 ug/m3",
+      "num_ions" : 0,
+      "kappa"  : 0.1      
+    },
+    {
+      "name" : "VBS4_aero",
+      "type" : "CHEM_SPEC",
+      "phase" : "AEROSOL",
+      "absolute integration tolerance" : 1.0E-03,
+      "density [kg m-3]" : 1800.0,
+      "molecular weight [kg mol-1]" : 0.250,
+      "description" : "VBS highest volatility aerosol-phase product with C* = 100 ug/m3" ,
+      "num_ions" : 0,
+      "kappa"  : 0.1      
+    },
+    {
+      "name" : "POA",
+      "type" : "CHEM_SPEC",
+      "phase" : "AEROSOL",
+      "absolute integration tolerance" : 1.0E-05,
+      "density [kg m-3]" : 1800.0,
+      "molecular weight [kg mol-1]" : 0.41475,
+      "description" : "lumped hydrophobic particulate matter",
+      "num_ions" : 0,
+      "kappa" : 0.0,
+      "note" : "Using C30H54 for molecular weight. TODO find best surrogate"
+    }
+  ]
+}

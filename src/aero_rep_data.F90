@@ -175,200 +175,200 @@ module camp_aero_rep_data
     procedure :: print => do_aero_rep_update_data_print
   end type aero_rep_update_data_t
 
-interface
+  interface
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Initialize the aerosol representation data, validating component data and
-  !! loading any required information from the \c
-  !! aero_rep_data_t::property_set. This routine should be called once for
-  !! each aerosol representation at the beginning of a model run after all
-  !! the input files have been read in. It ensures all data required during
-  !! the model run are included in the condensed data arrays.
-  subroutine initialize(this, aero_phase_set, spec_state_id)
-    use camp_util,                                     only : i_kind
-    use camp_chem_spec_data
-    use camp_aero_phase_data
-    import :: aero_rep_data_t
+    !> Initialize the aerosol representation data, validating component data and
+    !! loading any required information from the \c
+    !! aero_rep_data_t::property_set. This routine should be called once for
+    !! each aerosol representation at the beginning of a model run after all
+    !! the input files have been read in. It ensures all data required during
+    !! the model run are included in the condensed data arrays.
+    subroutine initialize(this, aero_phase_set, spec_state_id)
+      use camp_util,                                     only : i_kind
+      use camp_chem_spec_data
+      use camp_aero_phase_data
+      import :: aero_rep_data_t
 
-    !> Aerosol representation data
-    class(aero_rep_data_t), intent(inout) :: this
-    !> The set of aerosol phases. Note that an aerosol representation may
-    !! implement any number of instances of each phase.
-    type(aero_phase_data_ptr), pointer, intent(in) :: aero_phase_set(:)
-    !> Beginning state id for this aerosol representation in the
-    !! \c camp_camp_state::camp_state_t::state_var array
-    integer(kind=i_kind), intent(in) :: spec_state_id
+      !> Aerosol representation data
+      class(aero_rep_data_t), intent(inout) :: this
+      !> The set of aerosol phases. Note that an aerosol representation may
+      !! implement any number of instances of each phase.
+      type(aero_phase_data_ptr), pointer, intent(in) :: aero_phase_set(:)
+      !> Beginning state id for this aerosol representation in the
+      !! \c camp_camp_state::camp_state_t::state_var array
+      integer(kind=i_kind), intent(in) :: spec_state_id
 
-  end subroutine initialize
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Extending-type binary pack size (internal use only)
-  integer(kind=i_kind) function internal_pack_size(this, comm)
-    use camp_util,                                only : i_kind
-    import :: aero_rep_update_data_t
-
-    !> Aerosol representation data
-    class(aero_rep_update_data_t), intent(in) :: this
-    !> MPI communicator
-    integer, intent(in) :: comm
-
-  end function internal_pack_size
+    end subroutine initialize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Extending-type binary pack function (Internal use only)
-  subroutine internal_bin_pack(this, buffer, pos, comm)
-    import :: aero_rep_update_data_t
+    !> Extending-type binary pack size (internal use only)
+    integer(kind=i_kind) function internal_pack_size(this, comm)
+      use camp_util,                                only : i_kind
+      import :: aero_rep_update_data_t
 
-    !> Aerosol representation data
-    class(aero_rep_update_data_t), intent(in) :: this
-    !> Memory buffer
-    character, intent(inout) :: buffer(:)
-    !> Current buffer position
-    integer, intent(inout) :: pos
-    !> MPI communicator
-    integer, intent(in) :: comm
+      !> Aerosol representation data
+      class(aero_rep_update_data_t), intent(in) :: this
+      !> MPI communicator
+      integer, intent(in) :: comm
 
-  end subroutine internal_bin_pack
+    end function internal_pack_size
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Extending-type binary unpack function (Internal use only)
-  subroutine internal_bin_unpack(this, buffer, pos, comm)
-    import :: aero_rep_update_data_t
+    !> Extending-type binary pack function (Internal use only)
+    subroutine internal_bin_pack(this, buffer, pos, comm)
+      import :: aero_rep_update_data_t
 
-    !> Aerosol representation data
-    class(aero_rep_update_data_t), intent(inout) :: this
-    !> Memory buffer
-    character, intent(inout) :: buffer(:)
-    !> Current buffer position
-    integer, intent(inout) :: pos
-    !> MPI communicator
-    integer, intent(in) :: comm
+      !> Aerosol representation data
+      class(aero_rep_update_data_t), intent(in) :: this
+      !> Memory buffer
+      character, intent(inout) :: buffer(:)
+      !> Current buffer position
+      integer, intent(inout) :: pos
+      !> MPI communicator
+      integer, intent(in) :: comm
 
-  end subroutine internal_bin_unpack
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Get the size of the section of the
-  !! \c camp_camp_state::camp_state_t::state_var array required for this
-  !! aerosol representation
-  function get_size(this) result (state_size)
-    use camp_util,                                     only : i_kind
-    import :: aero_rep_data_t
-
-    !> Size of the state array section
-    integer(kind=i_kind) :: state_size
-    !> Aerosol representation data
-    class(aero_rep_data_t), intent(in) :: this
-
-  end function get_size
+    end subroutine internal_bin_pack
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Get a list of unique names for each element on the
-  !! \c camp_camp_state::camp_state_t::state_var array for this aerosol
-  !! representation.
-  function unique_names(this, phase_name, tracer_type, spec_name)
-    use camp_util,                                     only : string_t, i_kind
-    import :: aero_rep_data_t
+    !> Extending-type binary unpack function (Internal use only)
+    subroutine internal_bin_unpack(this, buffer, pos, comm)
+      import :: aero_rep_update_data_t
 
-    !> List of unique names
-    type(string_t), allocatable :: unique_names(:)
-    !> Aerosol representation data
-    class(aero_rep_data_t), intent(in) :: this
-    !> Aerosol phase name
-    character(len=*), optional, intent(in) :: phase_name
-    !> Tracer type
-    integer(kind=i_kind), optional, intent(in) :: tracer_type
-    !> Aerosol-phase species name
-    character(len=*), optional, intent(in) :: spec_name
+      !> Aerosol representation data
+      class(aero_rep_update_data_t), intent(inout) :: this
+      !> Memory buffer
+      character, intent(inout) :: buffer(:)
+      !> Current buffer position
+      integer, intent(inout) :: pos
+      !> MPI communicator
+      integer, intent(in) :: comm
 
-  end function unique_names
+    end subroutine internal_bin_unpack
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Get a species id on the \c camp_camp_state::camp_state_t::state_var
-  !! array by unique name. These are unique ids for each element on the
-  !! state array for this \ref camp_aero_rep "aerosol representation" and
-  !! are numbered:
-  !!
-  !!   \f[x_u \in x_f ... (x_f+n-1)\f]
-  !!
-  !! where \f$x_u\f$ is the id of the element corresponding to the species
-  !! with unique name \f$u\f$ on the \c
-  !! camp_camp_state::camp_state_t::state_var array, \f$x_f\f$ is the index
-  !! of the first element for this aerosol representation on the state array
-  !! and \f$n\f$ is the total number of variables on the state array from
-  !! this aerosol representation.
-  !!
-  !! If the name is not found, the return value is 0.
-  function spec_state_id(this, unique_name) result (spec_id)
-    use camp_util,                                     only : i_kind
-    import :: aero_rep_data_t
+    !> Get the size of the section of the
+    !! \c camp_camp_state::camp_state_t::state_var array required for this
+    !! aerosol representation
+    function get_size(this) result (state_size)
+      use camp_util,                                     only : i_kind
+      import :: aero_rep_data_t
 
-    !> Species state id
-    integer(kind=i_kind) :: spec_id
-    !> Aerosol representation data
-    class(aero_rep_data_t), intent(in) :: this
-    !> Unique name
-    character(len=*), intent(in) :: unique_name
+      !> Size of the state array section
+      integer(kind=i_kind) :: state_size
+      !> Aerosol representation data
+      class(aero_rep_data_t), intent(in) :: this
 
-  end function spec_state_id
+    end function get_size
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Get the non-unique name of a chemical species by its unique name
-  function spec_name(this, unique_name)
-    use camp_util,                                       only : i_kind
-    import :: aero_rep_data_t
+    !> Get a list of unique names for each element on the
+    !! \c camp_camp_state::camp_state_t::state_var array for this aerosol
+    !! representation.
+    function unique_names(this, phase_name, tracer_type, spec_name)
+      use camp_util,                                     only : string_t, i_kind
+      import :: aero_rep_data_t
 
-    !> Chemical species name
-    character(len=:), allocatable :: spec_name
-    !> Aerosol representation data
-    class(aero_rep_data_t), intent(in) :: this
-    !> Unique name of the species  in this aerosol representation
-    character(len=*), intent(in) :: unique_name
+      !> List of unique names
+      type(string_t), allocatable :: unique_names(:)
+      !> Aerosol representation data
+      class(aero_rep_data_t), intent(in) :: this
+      !> Aerosol phase name
+      character(len=*), optional, intent(in) :: phase_name
+      !> Tracer type
+      integer(kind=i_kind), optional, intent(in) :: tracer_type
+      !> Aerosol-phase species name
+      character(len=*), optional, intent(in) :: spec_name
 
-  end function spec_name
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Get the number of instances of a specified aerosol phase
-  function num_phase_instances(this, phase_name)
-    use camp_util,                                       only : i_kind
-    import :: aero_rep_data_t
-
-    !> Number of instances of the aerosol phase
-    integer(kind=i_kind) :: num_phase_instances
-    !> Aerosol representation data
-    class(aero_rep_data_t), intent(in) :: this
-    !> Aerosol phase name
-    character(len=*), intent(in) :: phase_name
-
-  end function num_phase_instances
+    end function unique_names
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Get the number of Jacobian elements used in calculations of aerosol mass,
-  !! volume, number, etc. for a particular phase
-  function num_jac_elem(this, phase_id)
-    use camp_util,                                       only : i_kind
-    import :: aero_rep_data_t
+    !> Get a species id on the \c camp_camp_state::camp_state_t::state_var
+    !! array by unique name. These are unique ids for each element on the
+    !! state array for this \ref camp_aero_rep "aerosol representation" and
+    !! are numbered:
+    !!
+    !!   \f[x_u \in x_f ... (x_f+n-1)\f]
+    !!
+    !! where \f$x_u\f$ is the id of the element corresponding to the species
+    !! with unique name \f$u\f$ on the \c
+    !! camp_camp_state::camp_state_t::state_var array, \f$x_f\f$ is the index
+    !! of the first element for this aerosol representation on the state array
+    !! and \f$n\f$ is the total number of variables on the state array from
+    !! this aerosol representation.
+    !!
+    !! If the name is not found, the return value is 0.
+    function spec_state_id(this, unique_name) result (spec_id)
+      use camp_util,                                     only : i_kind
+      import :: aero_rep_data_t
 
-    !> Number of Jacobian elements used
-    integer(kind=i_kind) :: num_jac_elem
-    !> Aerosol respresentation data
-    class(aero_rep_data_t), intent(in) :: this
-    !> Aerosol phase id
-    integer(kind=i_kind), intent(in) :: phase_id
+      !> Species state id
+      integer(kind=i_kind) :: spec_id
+      !> Aerosol representation data
+      class(aero_rep_data_t), intent(in) :: this
+      !> Unique name
+      character(len=*), intent(in) :: unique_name
 
-  end function num_jac_elem
+    end function spec_state_id
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end interface
+    !> Get the non-unique name of a chemical species by its unique name
+    function spec_name(this, unique_name)
+      use camp_util,                                       only : i_kind
+      import :: aero_rep_data_t
+
+      !> Chemical species name
+      character(len=:), allocatable :: spec_name
+      !> Aerosol representation data
+      class(aero_rep_data_t), intent(in) :: this
+      !> Unique name of the species  in this aerosol representation
+      character(len=*), intent(in) :: unique_name
+
+    end function spec_name
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    !> Get the number of instances of a specified aerosol phase
+    function num_phase_instances(this, phase_name)
+      use camp_util,                                       only : i_kind
+      import :: aero_rep_data_t
+
+      !> Number of instances of the aerosol phase
+      integer(kind=i_kind) :: num_phase_instances
+      !> Aerosol representation data
+      class(aero_rep_data_t), intent(in) :: this
+      !> Aerosol phase name
+      character(len=*), intent(in) :: phase_name
+
+    end function num_phase_instances
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    !> Get the number of Jacobian elements used in calculations of aerosol mass,
+    !! volume, number, etc. for a particular phase
+    function num_jac_elem(this, phase_id)
+      use camp_util,                                       only : i_kind
+      import :: aero_rep_data_t
+
+      !> Number of Jacobian elements used
+      integer(kind=i_kind) :: num_jac_elem
+      !> Aerosol respresentation data
+      class(aero_rep_data_t), intent(in) :: this
+      !> Aerosol phase id
+      integer(kind=i_kind), intent(in) :: phase_id
+
+    end function num_jac_elem
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  end interface
 
 contains
 
@@ -443,12 +443,12 @@ contains
       ! aerosol representation name
       if (key.eq."name") then
         call assert_msg(196193896, var_type.eq.json_string, &
-                "Received non-string value for aerosol rep name")
+          "Received non-string value for aerosol rep name")
         call json%get(child, unicode_str_val)
         this%rep_name = unicode_str_val
         found_name = .true.
 
-      ! load remaining data tinto the property set
+        ! load remaining data tinto the property set
       else if (key.ne."type") then
         call this%property_set%load(json, child, .false., this%rep_name)
       end if
@@ -457,7 +457,7 @@ contains
       child => next
     end do
     call assert_msg(420903951, found_name, &
-            "Received unnamed aerosol representation.")
+      "Received unnamed aerosol representation.")
 #else
   subroutine load(this)
 
@@ -522,9 +522,9 @@ contains
     integer, intent(in) :: comm
 
     pack_size = &
-            camp_mpi_pack_size_real_array(this%condensed_data_real, comm) + &
-            camp_mpi_pack_size_integer_array(this%condensed_data_int, comm) + &
-            camp_mpi_pack_size_integer(this%num_env_params, comm)
+      camp_mpi_pack_size_real_array(this%condensed_data_real, comm) + &
+      camp_mpi_pack_size_integer_array(this%condensed_data_int, comm) + &
+      camp_mpi_pack_size_integer(this%num_env_params, comm)
 
   end function pack_size
 
@@ -550,7 +550,7 @@ contains
     call camp_mpi_pack_integer_array(buffer, pos, this%condensed_data_int,comm)
     call camp_mpi_pack_integer(buffer, pos, this%num_env_params,comm)
     call assert(257024095, &
-         pos - prev_position <= this%pack_size(comm))
+      pos - prev_position <= this%pack_size(comm))
 #endif
 
   end subroutine bin_pack
@@ -575,10 +575,10 @@ contains
     prev_position = pos
     call camp_mpi_unpack_real_array(buffer, pos, this%condensed_data_real,comm)
     call camp_mpi_unpack_integer_array(buffer, pos, this%condensed_data_int,  &
-                                                                         comm)
+      comm)
     call camp_mpi_unpack_integer(buffer, pos, this%num_env_params,comm)
     call assert(954732699, &
-         pos - prev_position <= this%pack_size(comm))
+      pos - prev_position <= this%pack_size(comm))
 #endif
 
   end subroutine bin_unpack
@@ -665,7 +665,7 @@ contains
 
 !> Determine the size of a binary required to pack the reaction data
   integer(kind=i_kind) function aero_rep_update_data_pack_size(this, comm) &
-      result(pack_size)
+    result(pack_size)
 
     !> Aerosol representation update data
     class(aero_rep_update_data_t), intent(in) :: this
@@ -683,9 +683,9 @@ contains
 
     pack_size = &
       camp_mpi_pack_size_integer(int(this%aero_rep_type, kind=i_kind),        &
-                                                                   l_comm) + &
+      l_comm) + &
       camp_mpi_pack_size_integer(int(this%aero_rep_solver_id, kind=i_kind),   &
-                                                                   l_comm) + &
+      l_comm) + &
       this%internal_pack_size(l_comm)
 #else
     pack_size = 0
@@ -718,13 +718,13 @@ contains
 
     prev_position = pos
     call camp_mpi_pack_integer(buffer, pos, &
-                              int(this%aero_rep_type, kind=i_kind), l_comm)
+      int(this%aero_rep_type, kind=i_kind), l_comm)
     call camp_mpi_pack_integer(buffer, pos, &
-                              int(this%aero_rep_solver_id, kind=i_kind),     &
-                              l_comm)
+      int(this%aero_rep_solver_id, kind=i_kind),     &
+      l_comm)
     call this%internal_bin_pack(buffer, pos, l_comm)
     call assert(538137635, &
-         pos - prev_position <= this%pack_size(l_comm))
+      pos - prev_position <= this%pack_size(l_comm))
 #endif
 
   end subroutine aero_rep_update_data_bin_pack
@@ -760,7 +760,7 @@ contains
     this%aero_rep_solver_id = int(temp_int, kind=c_int)
     call this%internal_bin_unpack(buffer, pos, l_comm)
     call assert(257567920, &
-         pos - prev_position <= this%pack_size(l_comm))
+      pos - prev_position <= this%pack_size(l_comm))
 #endif
 
   end subroutine aero_rep_update_data_bin_unpack

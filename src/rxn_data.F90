@@ -186,83 +186,83 @@ module camp_rxn_data
     procedure :: print => do_rxn_update_data_print
   end type rxn_update_data_t
 
-interface
+  interface
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Reaction initialization. Takes species, phase and reaction parameters
-  !! and packs required information into the condensed data arrays for use
-  !! during the model run.
-  !!
-  !! This routine should be called once for each reaction
-  !! at the beginning of a model run after all the input files have been
-  !! read in.
-  subroutine initialize(this, chem_spec_data, aero_rep, n_cells)
-    use camp_util,                                only : i_kind
-    import :: rxn_data_t, chem_spec_data_t, aero_rep_data_ptr
+    !> Reaction initialization. Takes species, phase and reaction parameters
+    !! and packs required information into the condensed data arrays for use
+    !! during the model run.
+    !!
+    !! This routine should be called once for each reaction
+    !! at the beginning of a model run after all the input files have been
+    !! read in.
+    subroutine initialize(this, chem_spec_data, aero_rep, n_cells)
+      use camp_util,                                only : i_kind
+      import :: rxn_data_t, chem_spec_data_t, aero_rep_data_ptr
 
-    !> Reaction data
-    class(rxn_data_t), intent(inout) :: this
-    !> Chemical species data
-    type(chem_spec_data_t), intent(in) :: chem_spec_data
-    !> Aerosol representations
-    type(aero_rep_data_ptr), pointer, intent(in) :: aero_rep(:)
-    !> Number of grid cells to solve simultaneously
-    integer(kind=i_kind), intent(in) :: n_cells
+      !> Reaction data
+      class(rxn_data_t), intent(inout) :: this
+      !> Chemical species data
+      type(chem_spec_data_t), intent(in) :: chem_spec_data
+      !> Aerosol representations
+      type(aero_rep_data_ptr), pointer, intent(in) :: aero_rep(:)
+      !> Number of grid cells to solve simultaneously
+      integer(kind=i_kind), intent(in) :: n_cells
 
-  end subroutine initialize
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  !> Extending-type binary pack size (internal use only)
-  integer(kind=i_kind) function internal_pack_size(this, comm)
-    use camp_util,                                only : i_kind
-    import :: rxn_update_data_t
-
-    !> Reaction data
-    class(rxn_update_data_t), intent(in) :: this
-    !> MPI communicator
-    integer, intent(in) :: comm
-
-  end function internal_pack_size
+    end subroutine initialize
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Extending-type binary pack function (Internal use only)
-  subroutine internal_bin_pack(this, buffer, pos, comm)
-    import :: rxn_update_data_t
+    !> Extending-type binary pack size (internal use only)
+    integer(kind=i_kind) function internal_pack_size(this, comm)
+      use camp_util,                                only : i_kind
+      import :: rxn_update_data_t
 
-    !> Reaction data
-    class(rxn_update_data_t), intent(in) :: this
-    !> Memory buffer
-    character, intent(inout) :: buffer(:)
-    !> Current buffer position
-    integer, intent(inout) :: pos
-    !> MPI communicator
-    integer, intent(in) :: comm
+      !> Reaction data
+      class(rxn_update_data_t), intent(in) :: this
+      !> MPI communicator
+      integer, intent(in) :: comm
 
-  end subroutine internal_bin_pack
+    end function internal_pack_size
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  !> Extending-type binary unpack function (Internal use only)
-  subroutine internal_bin_unpack(this, buffer, pos, comm)
-    import :: rxn_update_data_t
+    !> Extending-type binary pack function (Internal use only)
+    subroutine internal_bin_pack(this, buffer, pos, comm)
+      import :: rxn_update_data_t
 
-    !> Reaction data
-    class(rxn_update_data_t), intent(inout) :: this
-    !> Memory buffer
-    character, intent(inout) :: buffer(:)
-    !> Current buffer position
-    integer, intent(inout) :: pos
-    !> MPI communicator
-    integer, intent(in) :: comm
+      !> Reaction data
+      class(rxn_update_data_t), intent(in) :: this
+      !> Memory buffer
+      character, intent(inout) :: buffer(:)
+      !> Current buffer position
+      integer, intent(inout) :: pos
+      !> MPI communicator
+      integer, intent(in) :: comm
 
-  end subroutine internal_bin_unpack
+    end subroutine internal_bin_pack
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-end interface
+    !> Extending-type binary unpack function (Internal use only)
+    subroutine internal_bin_unpack(this, buffer, pos, comm)
+      import :: rxn_update_data_t
+
+      !> Reaction data
+      class(rxn_update_data_t), intent(inout) :: this
+      !> Memory buffer
+      character, intent(inout) :: buffer(:)
+      !> Current buffer position
+      integer, intent(inout) :: pos
+      !> MPI communicator
+      integer, intent(in) :: comm
+
+    end subroutine internal_bin_unpack
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  end interface
 
 contains
 
@@ -364,7 +364,7 @@ contains
     do while (associated(child))
       call json%info(child, name=key)
       if (key.ne."rxn type") call this%property_set%load(json, child, &
-                                     .false., owner_name)
+        .false., owner_name)
 
       call json%get_next(child, next)
       child => next
@@ -395,9 +395,9 @@ contains
     integer(kind=i_kind), intent(in) :: rxn_phase
 
     if (rxn_phase.eq.GAS_AERO_RXN .or. &
-        rxn_phase.eq.this%rxn_phase .or. &
-        (rxn_phase.eq.AERO_RXN .and. this%rxn_phase.eq.GAS_AERO_RXN)) then
-        valid_rxn = .true.
+      rxn_phase.eq.this%rxn_phase .or. &
+      (rxn_phase.eq.AERO_RXN .and. this%rxn_phase.eq.GAS_AERO_RXN)) then
+      valid_rxn = .true.
     else
       valid_rxn = .false.
     end if
@@ -415,10 +415,10 @@ contains
     integer, intent(in) :: comm
 
     pack_size = &
-            camp_mpi_pack_size_integer(this%rxn_phase, comm) + &
-            camp_mpi_pack_size_real_array(this%condensed_data_real, comm) + &
-            camp_mpi_pack_size_integer_array(this%condensed_data_int, comm) + &
-            camp_mpi_pack_size_integer(this%num_env_params, comm)
+      camp_mpi_pack_size_integer(this%rxn_phase, comm) + &
+      camp_mpi_pack_size_real_array(this%condensed_data_real, comm) + &
+      camp_mpi_pack_size_integer_array(this%condensed_data_int, comm) + &
+      camp_mpi_pack_size_integer(this%num_env_params, comm)
 
   end function pack_size
 
@@ -445,7 +445,7 @@ contains
     call camp_mpi_pack_integer_array(buffer, pos, this%condensed_data_int, comm)
     call camp_mpi_pack_integer(buffer, pos, this%num_env_params, comm)
     call assert(149359274, &
-         pos - prev_position <= this%pack_size(comm))
+      pos - prev_position <= this%pack_size(comm))
 #endif
 
   end subroutine bin_pack
@@ -471,10 +471,10 @@ contains
     call camp_mpi_unpack_integer(buffer, pos, this%rxn_phase, comm)
     call camp_mpi_unpack_real_array(buffer, pos, this%condensed_data_real,comm)
     call camp_mpi_unpack_integer_array(buffer, pos, this%condensed_data_int,  &
-                                                                         comm)
+      comm)
     call camp_mpi_unpack_integer(buffer, pos, this%num_env_params, comm)
     call assert(168345796, &
-         pos - prev_position <= this%pack_size(comm))
+      pos - prev_position <= this%pack_size(comm))
 #endif
 
   end subroutine bin_unpack
@@ -498,10 +498,10 @@ contains
     if (associated(this%property_set)) call this%property_set%print(f_unit)
     if (allocated(this%condensed_data_int)) &
       write (f_unit,*) "  *** condensed data int: ", &
-            this%condensed_data_int(:)
+      this%condensed_data_int(:)
     if (allocated(this%condensed_data_real)) &
       write (f_unit,*) "  *** condensed data real: ", &
-            this%condensed_data_real(:)
+      this%condensed_data_real(:)
   end subroutine do_print
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -562,7 +562,7 @@ contains
 
   !> Determine the size of a binary required to pack the reaction data
   integer(kind=i_kind) function rxn_update_data_pack_size(this, comm) &
-      result(pack_size)
+    result(pack_size)
 
     !> Reaction update data
     class(rxn_update_data_t), intent(in) :: this
@@ -581,7 +581,7 @@ contains
     pack_size = &
       camp_mpi_pack_size_integer(int(this%rxn_type, kind=i_kind), l_comm) +   &
       camp_mpi_pack_size_integer(int(this%rxn_solver_id, kind=i_kind),        &
-                                                                   l_comm) + &
+      l_comm) + &
       this%internal_pack_size(l_comm)
 #else
     pack_size = 0
@@ -614,12 +614,12 @@ contains
 
     prev_position = pos
     call camp_mpi_pack_integer(buffer, pos, &
-                              int(this%rxn_type, kind=i_kind), l_comm)
+      int(this%rxn_type, kind=i_kind), l_comm)
     call camp_mpi_pack_integer(buffer, pos, &
-                              int(this%rxn_solver_id, kind=i_kind), l_comm)
+      int(this%rxn_solver_id, kind=i_kind), l_comm)
     call this%internal_bin_pack(buffer, pos, l_comm)
     call assert(713360087, &
-         pos - prev_position <= this%pack_size(l_comm))
+      pos - prev_position <= this%pack_size(l_comm))
 #endif
 
   end subroutine rxn_update_data_bin_pack
@@ -655,7 +655,7 @@ contains
     this%rxn_solver_id = int(temp_int, kind=c_int)
     call this%internal_bin_unpack(buffer, pos, l_comm)
     call assert(107364895, &
-         pos - prev_position <= this%pack_size(l_comm))
+      pos - prev_position <= this%pack_size(l_comm))
 #endif
 
   end subroutine rxn_update_data_bin_unpack

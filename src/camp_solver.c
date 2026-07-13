@@ -13,16 +13,16 @@
  * \brief Interface to c solvers for chemistry
  */
 #include "camp_solver.h"
+#include "aero_rep_solver.h"
+#include "rxn_solver.h"
+#include "sub_model_solver.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "aero_rep_solver.h"
-#include "rxn_solver.h"
-#include "sub_model_solver.h"
 #ifdef CAMP_USE_GPU
-#include "cuda/cvode_gpu.h"
+#include "cuda/cvode_interface.h"
 #endif
 #ifdef CAMP_USE_GSL
 #include <gsl/gsl_deriv.h>
@@ -56,11 +56,6 @@
 #define CAMP_SOLVER_SUCCESS 0
 #define CAMP_SOLVER_FAIL 1
 
-#define CAMP_SOLVER_DEFAULT_MAX_STEPS \
-  10000  // Maximum number of internal integration steps
-#define CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS \
-  1000  // Maximum number of convergence failures
-
 /** \brief Get a new solver object
  *
  * Return a pointer to a new SolverData object
@@ -92,10 +87,6 @@
  *                              parameters
  * \param load_gpu Percentage of number of cells, equivalent to computational
  load, to compute on the GPU
- * \param is_reset_jac Flag to indicate that the Jacobian matrix must be
- re-initialized. It may accelerate solving. Enable reset when the inputs are
- very different between each other or to compare with the GPU version. Avoid
- reset when the inputs are similar like CAMP-MONARCH.
  * \param is_load_balance Flag to balance the load between CPU and GPU. 0 to
  fixed load balance during run time, while 1 to automatic load balance
  * \return Pointer to the new SolverData object
@@ -108,7 +99,7 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
                  int n_sub_model_float_param, int n_sub_model_env_param,
-                 int load_gpu, int is_reset_jac, int is_load_balance) {
+                 int load_gpu, int is_load_balance) {
   // Create the SolverData object
   SolverData *sd = (SolverData *)malloc(sizeof(SolverData));
   if (sd == NULL) {
@@ -134,10 +125,6 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
 
   // Save the number of state variables per grid cell
   sd->model_data.n_per_cell_state_var = n_state_var;
-
-  sd->load_gpu = (double)load_gpu;
-  sd->is_reset_jac = is_reset_jac;
-  sd->is_load_balance = is_load_balance;
   sd->model_data.n_cells = n_cells;
 
   // Add the variable types to the solver data
@@ -152,7 +139,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   // Get the number of solver variables per grid cell
   int n_dep_var = 0;
   for (int i = 0; i < n_state_var; i++)
-    if (var_type[i] == CHEM_SPEC_VARIABLE) n_dep_var++;
+    if (var_type[i] == CHEM_SPEC_VARIABLE)
+      n_dep_var++;
 
   // Save the number of solver variables per grid cell
   sd->model_data.n_per_cell_dep_var = n_dep_var;
@@ -167,6 +155,12 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   // Set up the solver variable array and helper derivative array
   sd->y = N_VNew_Serial(n_dep_var);
   sd->deriv = N_VNew_Serial(n_dep_var);
+  double *y = N_VGetArrayPointer(sd->y);
+  double *deriv = N_VGetArrayPointer(sd->deriv);
+  for (int i = 0; i < n_dep_var; i++) {
+    y[i] = deriv[i] = 0.;
+  }
+
 #endif
 
   // Allocate space for the reaction data and set the number
@@ -187,9 +181,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.rxn_env_data =
       (double *)calloc(n_cells * n_rxn_env_param, sizeof(double));
   if (sd->model_data.rxn_env_data == NULL) {
-    printf(
-        "\n\nERROR allocating space for environment-dependent "
-        "data\n\n");
+    printf("\n\nERROR allocating space for environment-dependent "
+           "data\n\n");
     exit(EXIT_FAILURE);
   }
 
@@ -206,9 +199,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   }
   sd->model_data.rxn_env_idx = (int *)malloc((n_rxn + 1) * sizeof(int));
   if (sd->model_data.rxn_env_idx == NULL) {
-    printf(
-        "\n\nERROR allocating space for reaction environment-dependent "
-        "data pointers\n\n");
+    printf("\n\nERROR allocating space for reaction environment-dependent "
+           "data pointers\n\n");
     exit(EXIT_FAILURE);
   }
 
@@ -221,10 +213,9 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.rxn_float_indices[0] = 0;
   sd->model_data.rxn_env_idx[0] = 0;
 
-  if (n_rxn == 0) {
-    printf("\n\nERROR There are no reactions\n\n");
-    exit(EXIT_FAILURE);
-  }
+  // If there are no reactions, flag the solver not to run (useful for sub_model
+  // reactions, which are computed apart)
+  sd->no_solve = (n_rxn == 0);
 
   // Allocate space for the aerosol phase data and st the number
   // of aerosol phases (including one int for the number of
@@ -238,9 +229,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.aero_phase_float_data =
       (double *)malloc(n_aero_phase_float_param * sizeof(double));
   if (sd->model_data.aero_phase_float_data == NULL) {
-    printf(
-        "\n\nERROR allocating space for aerosol phase floating-point "
-        "data\n\n");
+    printf("\n\nERROR allocating space for aerosol phase floating-point "
+           "data\n\n");
     exit(EXIT_FAILURE);
   }
 
@@ -273,25 +263,22 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.aero_rep_int_data =
       (int *)malloc((n_aero_rep_int_param + n_aero_rep) * sizeof(int));
   if (sd->model_data.aero_rep_int_data == NULL) {
-    printf(
-        "\n\nERROR allocating space for aerosol representation integer "
-        "data\n\n");
+    printf("\n\nERROR allocating space for aerosol representation integer "
+           "data\n\n");
     exit(EXIT_FAILURE);
   }
   sd->model_data.aero_rep_float_data =
       (double *)malloc(n_aero_rep_float_param * sizeof(double));
   if (sd->model_data.aero_rep_float_data == NULL) {
-    printf(
-        "\n\nERROR allocating space for aerosol representation "
-        "floating-point data\n\n");
+    printf("\n\nERROR allocating space for aerosol representation "
+           "floating-point data\n\n");
     exit(EXIT_FAILURE);
   }
   sd->model_data.aero_rep_env_data =
       (double *)calloc(n_cells * n_aero_rep_env_param, sizeof(double));
   if (sd->model_data.aero_rep_env_data == NULL) {
-    printf(
-        "\n\nERROR allocating space for aerosol representation "
-        "environmental parameters\n\n");
+    printf("\n\nERROR allocating space for aerosol representation "
+           "environmental parameters\n\n");
     exit(EXIT_FAILURE);
   }
 
@@ -311,15 +298,15 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.aero_rep_env_idx =
       (int *)malloc((n_aero_rep + 1) * sizeof(int));
   if (sd->model_data.aero_rep_env_idx == NULL) {
-    printf(
-        "\n\nERROR allocating space for aerosol representation "
-        "environment-dependent data pointers\n\n");
+    printf("\n\nERROR allocating space for aerosol representation "
+           "environment-dependent data pointers\n\n");
     exit(EXIT_FAILURE);
   }
 
   sd->model_data.n_aero_rep = n_aero_rep;
   sd->model_data.n_aero_rep_int_param = n_aero_rep_int_param;
   sd->model_data.n_aero_rep_float_param = n_aero_rep_float_param;
+  sd->model_data.n_aero_rep_env_param = n_aero_rep_env_param;
   sd->model_data.n_added_aero_reps = 0;
   sd->model_data.n_aero_rep_env_data = 0;
   sd->model_data.aero_rep_int_indices[0] = 0;
@@ -344,9 +331,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.sub_model_env_data =
       (double *)calloc(n_cells * n_sub_model_env_param, sizeof(double));
   if (sd->model_data.sub_model_env_data == NULL) {
-    printf(
-        "\n\nERROR allocating space for sub model environment-dependent "
-        "data\n\n");
+    printf("\n\nERROR allocating space for sub model environment-dependent "
+           "data\n\n");
     exit(EXIT_FAILURE);
   }
 
@@ -366,9 +352,8 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.sub_model_env_idx =
       (int *)malloc((n_sub_model + 1) * sizeof(int));
   if (sd->model_data.sub_model_env_idx == NULL) {
-    printf(
-        "\n\nERROR allocating space for sub model environment-dependent "
-        "data pointers\n\n");
+    printf("\n\nERROR allocating space for sub model environment-dependent "
+           "data pointers\n\n");
     exit(EXIT_FAILURE);
   }
 
@@ -378,6 +363,14 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
   sd->model_data.sub_model_int_indices[0] = 0;
   sd->model_data.sub_model_float_indices[0] = 0;
   sd->model_data.sub_model_env_idx[0] = 0;
+
+  sd->acc_load_balance = 0;
+  sd->iters_load_balance = 0;
+
+#ifdef CAMP_USE_GPU
+  sd->load_gpu = (double)load_gpu;
+  sd->is_load_balance = is_load_balance;
+#endif
 
 #ifdef PROFILE_SOLVING
   sd->timeCVode = 0.;
@@ -394,17 +387,20 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
  * \param solver_data Pointer to a SolverData object
  * \param abs_tol Pointer to array of absolute tolerances
  * \param rel_tol Relative integration tolerance
+ * \param max_steps Maximum number of internal integration steps
+ * \param max_conv_fails Maximum number of convergence failures
  * \return Pointer to an initialized SolverData object
  */
-void solver_initialize(void *solver_data, double *abs_tol, double rel_tol) {
+void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
+                       int max_steps, int max_conv_fails) {
 #ifdef CAMP_USE_SUNDIALS
-  SolverData *sd;   // SolverData object
-  int flag;         // return code from SUNDIALS functions
-  int n_dep_var;    // number of dependent variables per grid cell
-  int i_dep_var;    // index of dependent variables in loops
-  int n_state_var;  // number of variables on the state array per
-                    // grid cell
-  int *var_type;    // state variable types
+  SolverData *sd;  // SolverData object
+  int flag;        // return code from SUNDIALS functions
+  int n_dep_var;   // number of dependent variables per grid cell
+  int i_dep_var;   // index of dependent variables in loops
+  int n_state_var; // number of variables on the state array per
+                   // grid cell
+  int *var_type;   // state variable types
 
   // Seed the random number generator
   srand((unsigned int)100);
@@ -439,6 +435,10 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol) {
   flag = CVodeInit(sd->cvode_mem, f, (realtype)0.0, sd->y);
   check_flag_fail(&flag, "CVodeInit", 1);
 
+  // Set to 0 since it is used in the guess_helper
+  CVodeMem cv_mem = (CVodeMem)sd->cvode_mem;
+  N_VConst(0, cv_mem->cv_acor_init);
+
   // Set the relative and absolute tolerances
   sd->abs_tol_nv = N_VNew_Serial(n_dep_var);
   i_dep_var = 0;
@@ -453,17 +453,15 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol) {
   sd->model_data.abs_tol = abs_tol;
 
   // Set the maximum number of iterations
-  flag = CVodeSetMaxNumSteps(sd->cvode_mem, CAMP_SOLVER_DEFAULT_MAX_STEPS);
+  flag = CVodeSetMaxNumSteps(sd->cvode_mem, max_steps);
   check_flag_fail(&flag, "CVodeSetMaxNumSteps", 1);
 
   // Set the maximum number of convergence failures
-  flag =
-      CVodeSetMaxConvFails(sd->cvode_mem, CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS);
+  flag = CVodeSetMaxConvFails(sd->cvode_mem, max_conv_fails);
   check_flag_fail(&flag, "CVodeSetMaxConvFails", 1);
 
   // Set the maximum number of error test failures
-  flag = CVodeSetMaxErrTestFails(sd->cvode_mem,
-                                 CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS);
+  flag = CVodeSetMaxErrTestFails(sd->cvode_mem, max_conv_fails);
   check_flag_fail(&flag, "CVodeSetMaxErrTestFails", 1);
 
   // Set the maximum number of warnings about a too-small time step
@@ -500,13 +498,8 @@ void solver_initialize(void *solver_data, double *abs_tol, double rel_tol) {
 
 #ifdef CAMP_USE_GPU
   if (sd->load_gpu != 0) {
-    init_solve_gpu(sd);
+    init_solve_gpu(sd, max_steps, max_conv_fails);
   }
-#endif
-#ifdef FAILURE_DETAIL
-  // Set a custom error handling function
-  flag = CVodeSetErrHandlerFn(sd->cvode_mem, error_handler, (void *)sd);
-  check_flag_fail(&flag, "CVodeSetErrHandlerFn", 0);
 #endif
 #endif
 }
@@ -554,17 +547,17 @@ int solver_set_eval_jac(void *solver_data, bool eval_Jac) {
  * Update the dependent input and runs the solver on the CPU-GPU.
  *
  * @param sd The SolverData struct containing solver parameters.
- * @param state The array representing the state.
- * @param env The array representing the environment.
  * @param t_initial The initial time.
  * @param t_final The final time.
  * @return An integer indicating the status of the solver run.
  */
-int solver_run_cpu_gpu(SolverData *sd, double *state, double *env,
-                       double t_initial, double t_final) {
+int solver_run_cpu_gpu(SolverData *sd, double t_initial, double t_final,
+                       int is_get_solver_stats, int *status_code,
+                       int *solver_flag, int *num_steps) {
   ModelData *md = &(sd->model_data);
   int n_state_var = md->n_per_cell_state_var;
   int n_cells = md->n_cells;
+  double *state = md->total_state;
   int flag;
 
   // Update the dependent variables
@@ -589,11 +582,22 @@ int solver_run_cpu_gpu(SolverData *sd, double *state, double *env,
     rxn_update_env_state(md);
   }
 
+#ifdef IS_DEBUG_MODE_RESET_JAC
+  // Reset jac solving, enable for debug, disable for maybe speedup
+  N_VConst(0.0, md->J_state);
+  N_VConst(0.0, md->J_deriv);
+  SM_NNZ_S(md->J_solver) = SM_NNZ_S(md->J_init);
+  for (int i = 0; i < SM_NNZ_S(md->J_solver); i++) {
+    (SM_DATA_S(md->J_solver))[i] = 0.0;
+  }
+#endif
+
 #ifdef PROFILE_SOLVING
   double starttimeCvode = MPI_Wtime();
 #endif
   // Solve
-  cudaCVode(sd->cvode_mem, (realtype)t_final, sd->y, sd, t_initial);
+  cudaCVode((realtype)t_final, sd, t_initial, is_get_solver_stats, status_code,
+            solver_flag, num_steps);
 #ifdef PROFILE_SOLVING
   sd->timeCVode += (MPI_Wtime() - starttimeCvode);
 #endif
@@ -604,96 +608,151 @@ int solver_run_cpu_gpu(SolverData *sd, double *state, double *env,
 /** \brief Solve for a given timestep on the CPU
  *
  * \param solver_data A pointer to the initialized solver data
- * \param state A pointer to the full state array (all grid cells)
- * \param env A pointer to the full array of environmental conditions
- *            (all grid cells)
  * \param t_initial Initial time (s)
  * \param t_final (s)
  * \return Flag indicating CAMP_SOLVER_SUCCESS or CAMP_SOLVER_FAIL
  */
-int solver_run_cpu(SolverData *sd, double *state, double *env, double t_initial,
-                   double t_final) {
+int solver_run_cpu(SolverData *sd, double t_initial, double t_final,
+                   int is_get_solver_stats, int *status_code, int *solver_flag,
+                   int *num_steps) {
   ModelData *md = &(sd->model_data);
   int n_state_var = md->n_per_cell_state_var;
+  int n_cells = md->n_cells;
+  double *state = md->total_state;
+  double *env = md->total_env;
+  double *rxn_env_data = md->rxn_env_data;
+  double *aero_rep_env_data = md->aero_rep_env_data;
+  double *sub_model_env_data = md->sub_model_env_data;
   int flag;
 
-  int i_dep_var = 0;
-  for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
-    if (sd->model_data.var_type[i_spec] == CHEM_SPEC_VARIABLE) {
-      NV_Ith_S(sd->y, i_dep_var++) =
-          state[i_spec] > TINY ? (realtype)state[i_spec] : TINY;
-    } else if (md->var_type[i_spec] == CHEM_SPEC_CONSTANT) {
-      state[i_spec] = state[i_spec] > TINY ? state[i_spec] : TINY;
+  // loop over all cells
+  for (int i_cell = 0; i_cell < n_cells; i_cell++) {
+    int i_dep_var = 0;
+    for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
+      if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
+        NV_Ith_S(sd->y, i_dep_var++) = md->total_state[i_spec] > TINY
+                                           ? (realtype)md->total_state[i_spec]
+                                           : TINY;
+      } else if (md->var_type[i_spec] == CHEM_SPEC_CONSTANT) {
+        md->total_state[i_spec] =
+            md->total_state[i_spec] > TINY ? md->total_state[i_spec] : TINY;
+      }
     }
-  }
-  md->grid_cell_state = md->total_state;
-  md->grid_cell_env = md->total_env;
-  md->grid_cell_rxn_env_data = md->rxn_env_data;
-  md->grid_cell_aero_rep_env_data = md->aero_rep_env_data;
-  md->grid_cell_sub_model_env_data = md->sub_model_env_data;
-  // Update the model for the current environmental state
-  aero_rep_update_env_state(md);
-  sub_model_update_env_state(md);
-  rxn_update_env_state(md);
 
-  // Check whether there is anything to solve (filters empty air masses with no
-  // emissions)
-  if (is_anything_going_on_here(sd, t_initial, t_final) == false)
-    return CAMP_SOLVER_SUCCESS;
+    md->grid_cell_state = md->total_state;
+    md->grid_cell_env = md->total_env;
+    md->grid_cell_rxn_env_data = md->rxn_env_data;
+    md->grid_cell_aero_rep_env_data = md->aero_rep_env_data;
+    md->grid_cell_sub_model_env_data = md->sub_model_env_data;
+    // Update the model for the current environmental state
+    aero_rep_update_env_state(md);
+    sub_model_update_env_state(md);
+    rxn_update_env_state(md);
 
-  // Reinitialize the solver
-  flag = CVodeReInit(sd->cvode_mem, t_initial, sd->y);
-  check_flag_fail(&flag, "CVodeReInit", 1);
+#ifdef DEBUG_IS_ANYTHING_GOING_ON_HERE
+    // Check whether there is anything to solve (filters empty air masses with
+    // no emissions) Disable to accelerate run
+    if (is_anything_going_on_here(sd, t_initial, t_final) == false) {
+      if (is_get_solver_stats)
+        status_code[i_cell] = CAMP_SOLVER_SUCCESS;
+      continue;
+    }
+#endif
 
-  // Reinitialize the linear solver
-  flag = SUNKLUReInit(sd->ls, sd->J, SM_NNZ_S(sd->J), SUNKLU_REINIT_PARTIAL);
-  check_flag_fail(&flag, "SUNKLUReInit", 1);
+    if (sd->no_solve) {
+      // Re-run the pre-derivative calculations to update equilibrium species
+      // and apply adjustments to final state
+      sub_model_calculate(md);
+      if (is_get_solver_stats)
+        status_code[i_cell] = CAMP_SOLVER_SUCCESS;
+      continue;
+    }
 
-  // Set the inital time step
-  flag = CVodeSetInitStep(sd->cvode_mem, sd->init_time_step);
-  check_flag_fail(&flag, "CVodeSetInitStep", 1);
+#ifdef IS_DEBUG_MODE_RESET_JAC
+    // Reset jac solving, enable for debug, disable for maybe speedup
+    N_VConst(0.0, md->J_state);
+    N_VConst(0.0, md->J_deriv);
+    SM_NNZ_S(md->J_solver) = SM_NNZ_S(md->J_init);
+    for (int i = 0; i < SM_NNZ_S(md->J_solver); i++) {
+      (SM_DATA_S(md->J_solver))[i] = 0.0;
+    }
+#endif
 
-  // Run the solver
-  realtype t_rt = (realtype)t_initial;
+    // Reinitialize the solver
+    flag = CVodeReInit(sd->cvode_mem, t_initial, sd->y);
+    check_flag_fail(&flag, "CVodeReInit", 1);
+
+    // Reinitialize the linear solver
+    flag = SUNKLUReInit(sd->ls, sd->J, SM_NNZ_S(sd->J), SUNKLU_REINIT_PARTIAL);
+    check_flag_fail(&flag, "SUNKLUReInit", 1);
+
+    // Set the inital time step
+    flag = CVodeSetInitStep(sd->cvode_mem, sd->init_time_step);
+    check_flag_fail(&flag, "CVodeSetInitStep", 1);
+
+    // Run the solver
+    realtype t_rt = (realtype)t_initial;
 
 #ifdef PROFILE_SOLVING
-  double starttimeCvode = MPI_Wtime();
+    double starttimeCvode = MPI_Wtime();
 #endif
-  flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
+    flag = CVode(sd->cvode_mem, (realtype)t_final, sd->y, &t_rt, CV_NORMAL);
 #ifdef PROFILE_SOLVING
-  sd->timeCVode += (MPI_Wtime() - starttimeCvode);
+    sd->timeCVode += (MPI_Wtime() - starttimeCvode);
 #endif
-  sd->solver_flag = flag;
+    if (is_get_solver_stats) {
+      solver_flag[i_cell] = flag;
+      long int nst;
+      CVodeGetNumSteps(sd->cvode_mem, &nst);
+      num_steps[i_cell] = (int)nst;
+    }
 #ifdef FAILURE_DETAIL
-  if (check_flag(&flag, "CVode", 1) != CAMP_SOLVER_SUCCESS) {
-    if (flag == -6) {
-      long int lsflag;
-      int lastflag = CVDlsGetLastFlag(sd->cvode_mem, &lsflag);
-      printf("\nLinear Solver Setup Fail: %d %ld", lastflag, lsflag);
-    }
-    N_Vector deriv = N_VClone(sd->y);
-    flag = f(t_initial, sd->y, deriv, sd);
-    if (flag != 0)
-      printf("\nCall to f() at failed state failed with flag %d \n", flag);
-    solver_print_stats(sd->cvode_mem);
+    if (check_flag(&flag, "CVode", 1) != CAMP_SOLVER_SUCCESS) {
+      if (flag == -6) {
+        long int lsflag;
+        int lastflag = CVDlsGetLastFlag(sd->cvode_mem, &lsflag);
+        printf("\nLinear Solver Setup Fail: %d %ld", lastflag, lsflag);
+      }
+      N_Vector deriv = N_VClone(sd->y);
+      flag = f(t_initial, sd->y, deriv, sd);
+      if (flag != 0)
+        printf("\nCall to f() at failed state failed with flag %d \n", flag);
+      solver_print_stats(sd->cvode_mem);
 #else
-  if (flag < 0) {
+    if (flag < 0) {
 #endif
-    return CAMP_SOLVER_FAIL;
-  }
-  // Update the species concentrations on the state array
-  i_dep_var = 0;
-  for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
-    if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
-      state[i_spec] =
-          (double)(NV_Ith_S(sd->y, i_dep_var) > 0.0 ? NV_Ith_S(sd->y, i_dep_var)
-                                                    : 0.0);
-      i_dep_var++;
+      if (is_get_solver_stats)
+        status_code[i_cell] = CAMP_SOLVER_FAIL;
+      continue;
+    } else {
+      if (is_get_solver_stats)
+        status_code[i_cell] = CAMP_SOLVER_SUCCESS;
     }
+    // Update the species concentrations on the state array
+    i_dep_var = 0;
+    for (int i_spec = 0; i_spec < n_state_var; i_spec++) {
+      if (md->var_type[i_spec] == CHEM_SPEC_VARIABLE) {
+        md->total_state[i_spec] = (double)(NV_Ith_S(sd->y, i_dep_var) > 0.0
+                                               ? NV_Ith_S(sd->y, i_dep_var)
+                                               : 0.0);
+        i_dep_var++;
+      }
+    }
+
+    // update pointer for next iteration
+    md->total_state += n_state_var;
+    md->total_env += CAMP_NUM_ENV_PARAM_;
+    md->rxn_env_data += md->n_rxn_env_data;
+    md->aero_rep_env_data += md->n_aero_rep_env_data;
+    md->sub_model_env_data += md->n_sub_model_env_data;
   }
-  // Re-run the pre-derivative calculations to update equilibrium species
-  // and apply adjustments to final state
-  sub_model_calculate(md);
+
+  // reset pointers
+  md->total_state = state;
+  md->total_env = env;
+  md->rxn_env_data = rxn_env_data;
+  md->aero_rep_env_data = aero_rep_env_data;
+  md->sub_model_env_data = sub_model_env_data;
 
   return CAMP_SOLVER_SUCCESS;
 }
@@ -709,7 +768,8 @@ int solver_run_cpu(SolverData *sd, double *state, double *env, double t_initial,
  * \return Flag indicating CAMP_SOLVER_SUCCESS or CAMP_SOLVER_FAIL
  */
 int solver_run(void *solver_data, double *state, double *env, double t_initial,
-               double t_final) {
+               double t_final, int is_get_solver_stats, int *status_code,
+               int *solver_flag, int *num_steps) {
   SolverData *sd = (SolverData *)solver_data;
   ModelData *md = &(sd->model_data);
   int n_state_var = md->n_per_cell_state_var;
@@ -720,118 +780,20 @@ int solver_run(void *solver_data, double *state, double *env, double t_initial,
   sd->model_data.total_state = state;
   sd->model_data.total_env = env;
 
-  // Reset jac solving
-  if (sd->is_reset_jac == 1) {
-    N_VConst(0.0, md->J_state);
-    N_VConst(0.0, md->J_deriv);
-    SM_NNZ_S(md->J_solver) = SM_NNZ_S(md->J_init);
-    for (int i = 0; i < SM_NNZ_S(md->J_solver); i++) {
-      (SM_DATA_S(md->J_solver))[i] = 0.0;
-    }
-  }
-
   // Set the initial time step
   sd->init_time_step = (t_final - t_initial) * DEFAULT_TIME_STEP;
 
 #ifdef CAMP_USE_GPU
   if (sd->load_gpu == 0) {
-    return solver_run_cpu(sd, state, env, t_initial, t_final);
+    return solver_run_cpu(sd, t_initial, t_final, is_get_solver_stats,
+                          status_code, solver_flag, num_steps);
   } else {
-    return solver_run_cpu_gpu(sd, state, env, t_initial, t_final);
+    return solver_run_cpu_gpu(sd, t_initial, t_final, is_get_solver_stats,
+                              status_code, solver_flag, num_steps);
   }
 #else
-  return solver_run_cpu(sd, state, env, t_initial, t_final);
-#endif
-}
-/** \brief Get solver statistics after an integration attempt
- *
- * \param solver_data           Pointer to the solver data
- * \param solver_flag           Last flag returned by the solver
- * \param num_steps             Pointer to set to the number of integration
- *                              steps
- * \param RHS_evals             Pointer to set to the number of right-hand side
- *                              evaluations
- * \param LS_setups             Pointer to set to the number of linear solver
- *                              setups
- * \param error_test_fails      Pointer to set to the number of error test
- *                              failures
- * \param NLS_iters             Pointer to set to the non-linear solver
- *                              iterations
- * \param NLS_convergence_fails Pointer to set to the non-linear solver
- *                              convergence failures
- * \param DLS_Jac_evals         Pointer to set to the direct linear solver
- *                              Jacobian evaluations
- * \param DLS_RHS_evals         Pointer to set to the direct linear solver
- *                              right-hand side evaluations
- * \param last_time_step__s     Pointer to set to the last time step size [s]
- * \param next_time_step__s     Pointer to set to the next time step size [s]
- * \param Jac_eval_fails        Number of Jacobian evaluation failures
- * \param max_loss_precision    Indicators of loss of precision in derivative
- *                              calculation for each species
- */
-void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
-                           int *RHS_evals, int *LS_setups,
-                           int *error_test_fails, int *NLS_iters,
-                           int *NLS_convergence_fails, int *DLS_Jac_evals,
-                           int *DLS_RHS_evals, double *last_time_step__s,
-                           double *next_time_step__s, int *Jac_eval_fails,
-                           double *max_loss_precision) {
-  SolverData *sd = (SolverData *)solver_data;
-  long int nst, nfe, nsetups, nje, nfeLS, nni, ncfn, netf, nge;
-  realtype last_h, curr_h;
-  int flag;
-
-#ifdef CAMP_USE_GPU
-  if (sd->load_gpu == 0) {
-#endif
-    *solver_flag = sd->solver_flag;
-    flag = CVodeGetNumSteps(sd->cvode_mem, &nst);
-    if (check_flag(&flag, "CVodeGetNumSteps", 1) == CAMP_SOLVER_FAIL) return;
-    *num_steps = (int)nst;
-    flag = CVodeGetNumRhsEvals(sd->cvode_mem, &nfe);
-    if (check_flag(&flag, "CVodeGetNumRhsEvals", 1) == CAMP_SOLVER_FAIL) return;
-    *RHS_evals = (int)nfe;
-    flag = CVodeGetNumLinSolvSetups(sd->cvode_mem, &nsetups);
-    if (check_flag(&flag, "CVodeGetNumLinSolveSetups", 1) == CAMP_SOLVER_FAIL)
-      return;
-    *LS_setups = (int)nsetups;
-    flag = CVodeGetNumErrTestFails(sd->cvode_mem, &netf);
-    if (check_flag(&flag, "CVodeGetNumErrTestFails", 1) == CAMP_SOLVER_FAIL)
-      return;
-    *error_test_fails = (int)netf;
-    flag = CVodeGetNumNonlinSolvIters(sd->cvode_mem, &nni);
-    if (check_flag(&flag, "CVodeGetNonlinSolvIters", 1) == CAMP_SOLVER_FAIL)
-      return;
-    *NLS_iters = (int)nni;
-    flag = CVodeGetNumNonlinSolvConvFails(sd->cvode_mem, &ncfn);
-    if (check_flag(&flag, "CVodeGetNumNonlinSolvConvFails", 1) ==
-        CAMP_SOLVER_FAIL)
-      return;
-    *NLS_convergence_fails = ncfn;
-    flag = CVDlsGetNumJacEvals(sd->cvode_mem, &nje);
-    if (check_flag(&flag, "CVDlsGetNumJacEvals", 1) == CAMP_SOLVER_FAIL) return;
-    *DLS_Jac_evals = (int)nje;
-    flag = CVDlsGetNumRhsEvals(sd->cvode_mem, &nfeLS);
-    if (check_flag(&flag, "CVDlsGetNumRhsEvals", 1) == CAMP_SOLVER_FAIL) return;
-    *DLS_RHS_evals = (int)nfeLS;
-    flag = CVodeGetLastStep(sd->cvode_mem, &last_h);
-    if (check_flag(&flag, "CVodeGetLastStep", 1) == CAMP_SOLVER_FAIL) return;
-    *last_time_step__s = (double)last_h;
-    flag = CVodeGetCurrentStep(sd->cvode_mem, &curr_h);
-    if (check_flag(&flag, "CVodeGetCurrentStep", 1) == CAMP_SOLVER_FAIL) return;
-    *next_time_step__s = (double)curr_h;
-#ifdef CAMP_DEBUG
-    *Jac_eval_fails = sd->Jac_eval_fails;
-#else
-  *Jac_eval_fails = 0;
-#endif
-#ifdef CAMP_USE_GPU
-  }
-#endif
-#ifdef CAMP_DEBUG
-  *max_loss_precision = sd->max_loss_precision;
-#else
-  *max_loss_precision = 0.0;
+  return solver_run_cpu(sd, t_initial, t_final, is_get_solver_stats,
+                        status_code, solver_flag, num_steps);
 #endif
 }
 
@@ -844,21 +806,38 @@ void export_solver_state(void *solver_data) {
 
 void join_solver_state(void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
-  join_export_state(sd);
+  join_export_state();
 }
 
 void export_solver_stats(void *solver_data) {
   SolverData *sd = (SolverData *)solver_data;
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-  solver_get_statistics_gpu(sd);
-#endif
   export_stats(sd);
+}
+
+/** \brief Print execution time of GPU and CPU code
+ * \param solver_state Solver state
+ */
+void print_solver_stats(void *solver_data) {
+  SolverData *sd = (SolverData *)solver_data;
+#ifdef PROFILE_SOLVING
+#ifdef CAMP_USE_GPU
+  if (sd->iters_load_balance == 0)
+    sd->iters_load_balance = 1;
+  printf("timeCVode:%.17le\n avg_load_balance:%2.0lf\n", sd->timeCVode,
+         sd->acc_load_balance / sd->iters_load_balance);
+#else
+  printf("timeCVode:%.17le\n", sd->timeCVode);
+#endif
+#else
+  printf("To use this function, enable "
+         "PROFILE_SOLVING\n");
+#endif
 }
 
 #ifdef CAMP_USE_SUNDIALS
 /** \brief Update the model state from the current solver state
  *
- * \param solver_state Solver state vector
+ * \param solver_state Solver state
  * \param model_data Pointer to the model data (including the state array)
  * \param threshhold A lower limit for model concentrations below which the
  *                   solver value is replaced with a replacement value
@@ -926,7 +905,8 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
   // Update the state array with the current dependent variable values.
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  if (camp_solver_update_model_state(y, sd) != CAMP_SOLVER_SUCCESS) return 1;
+  if (camp_solver_update_model_state(y, sd) != CAMP_SOLVER_SUCCESS)
+    return 1;
 
   // Get the Jacobian-estimated derivative
   N_VLinearSum(1.0, y, -1.0, md->J_state, md->J_tmp);
@@ -960,9 +940,6 @@ int f(realtype t, N_Vector y, N_Vector deriv, void *solver_data) {
     time_derivative_output(sd->time_deriv, deriv_data, NULL,
                            sd->output_precision);
   }
-#ifdef CAMP_DEBUG
-  sd->max_loss_precision = time_derivative_max_loss_precision(sd->time_deriv);
-#endif
   // Return 0 if success
   return (0);
 }
@@ -1005,7 +982,8 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
   // Update the state array with the current dependent variable values
   // Signal a recoverable error (positive return value) for negative
   // concentrations.
-  if (camp_solver_update_model_state(y, sd) != CAMP_SOLVER_SUCCESS) return 1;
+  if (camp_solver_update_model_state(y, sd) != CAMP_SOLVER_SUCCESS)
+    return 1;
 
   // Get the current integrator time step (s)
   CVodeGetCurrentStep(sd->cvode_mem, &time_step);
@@ -1045,7 +1023,7 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *solver_data,
 
   // Set the solver Jacobian using the reaction and sub-model Jacobians
   JacMap *jac_map = md->jac_map;
-  SM_DATA_S(md->J_params)[0] = 1.0;  // dummy value for non-sub model calcs
+  SM_DATA_S(md->J_params)[0] = 1.0; // dummy value for non-sub model calcs
   for (int i_map = 0; i_map < md->n_mapped_values; ++i_map) {
     double drf_dy = sd->jac.production_partials[jac_map[i_map].rxn_id];
     double drr_dy = sd->jac.loss_partials[jac_map[i_map].rxn_id];
@@ -1135,7 +1113,8 @@ bool check_Jac(realtype t, N_Vector y, SUNMatrix J, N_Vector deriv,
     gsl_param.ind_var = i_ind;
 
     // Skip small concentrations
-    if (x < SMALL) continue;
+    if (x < SMALL)
+      continue;
 
     // Do the numerical differentiation for each potentially non-zero
     // Jacobian element
@@ -1180,11 +1159,10 @@ bool check_Jac(realtype t, N_Vector y, SUNMatrix J, N_Vector deriv,
       // If the test does not pass with any initial step size, print out the
       // failure, output the local derivative state and return false
       if (test_pass == false) {
-        printf(
-            "\nError in Jacobian[%d][%d]: Got %le; expected %le"
-            "\n  difference %le is greater than error %le",
-            i_ind, i_dep, SM_DATA_S(J)[i_elem], partial_deriv,
-            fabs(SM_DATA_S(J)[i_elem] - partial_deriv), abs_tol);
+        printf("\nError in Jacobian[%d][%d]: Got %le; expected %le"
+               "\n  difference %le is greater than error %le",
+               i_ind, i_dep, SM_DATA_S(J)[i_elem], partial_deriv,
+               fabs(SM_DATA_S(J)[i_elem] - partial_deriv), abs_tol);
         printf("\n  relative error %le intial step size %le", rel_diff, h);
         printf("\n  initial rate %le initial state %le", d_deriv[i_dep],
                d_state[i_ind]);
@@ -1274,7 +1252,8 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
   int n_elem = NV_LENGTH_S(y_n);
 
   // Only try improvements when negative concentrations are predicted
-  if (N_VMin(y_n) > -SMALL) return 0;
+  if (N_VMin(y_n) > -SMALL)
+    return 0;
 
   CAMP_DEBUG_PRINT_FULL("Trying to improve guess");
 
@@ -1298,30 +1277,29 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
     realtype h_j = t_n - (t_0 + t_j);
     int i_fast = -1;
     for (int i = 0; i < n_elem; i++) {
-      realtype t_star = -atmp1[i] / acorr[i];
-      if ((t_star > ZERO || (t_star == ZERO && acorr[i] < ZERO)) &&
-          t_star < h_j) {
-        h_j = t_star;
-        i_fast = i;
+      if (acorr[i] != 0.0) {
+        realtype t_star = -atmp1[i] / acorr[i];
+        if ((t_star > ZERO || (t_star == ZERO && acorr[i] < ZERO)) &&
+            t_star < h_j) {
+          h_j = t_star;
+          i_fast = i;
+        }
       }
     }
 
-    // Scale incomplete jumps
-    if (i_fast >= 0 && h_n > ZERO)
-      h_j *=
-          0.95 + 0.1 * iter /
-                     (double)GUESS_MAX_ITER;  // pending validation monarch long
-                                              // run mn5. remove for validation
-                                              // with MONARCH (experiment a7s4)
-    h_j = t_n < t_0 + t_j + h_j ? t_n - (t_0 + t_j) : h_j;
-
-    // Only make small changes to adjustment vectors used in Newton iteration
+    //  Only make small changes to adjustment vectors used in Newton iteration
     if (h_n == ZERO &&
-        t_n - (h_j + t_j + t_0) > ((CVodeMem)sd->cvode_mem)->cv_reltol)
+        t_n - (h_j + t_j + t_0) > ((CVodeMem)sd->cvode_mem)->cv_reltol) {
       return -1;
-
-    // Advance the state
+    }
+    //       Advance the state
     N_VLinearSum(ONE, tmp1, h_j, corr, tmp1);
+    //  Set to zero the value in case index is the one from
+    //  h_j, since prev division is equal to now multiplication
+
+    if (i_fast >= 0) {
+      atmp1[i_fast] = 0;
+    }
     CAMP_DEBUG_PRINT_FULL("Advanced state");
 
     // Advance t_j
@@ -1337,7 +1315,8 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
 
     if (iter == GUESS_MAX_ITER - 1 && t_0 + t_j < t_n) {
       CAMP_DEBUG_PRINT("Max guess iterations reached!");
-      if (h_n == ZERO) return -1;
+      if (h_n == ZERO)
+        return -1;
     }
   }
 
@@ -1347,7 +1326,8 @@ int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
   N_VLinearSum(ONE, tmp1, -ONE, y_n, corr);
 
   // Scale the initial corrections
-  if (h_n > ZERO) N_VScale(0.999, corr, corr);
+  if (h_n > ZERO)
+    N_VScale(0.999, corr, corr);
 
   // Update the hf vector
   N_VLinearSum(ONE, tmp1, -ONE, y_n1, hf);
@@ -1526,7 +1506,8 @@ SUNMatrix get_jac_init(SolverData *sd) {
 
   // Set the column and row indices
   for (unsigned int cell_col = 0; cell_col < n_state_var; ++cell_col) {
-    if (deriv_ids[cell_col] == -1) continue;
+    if (deriv_ids[cell_col] == -1)
+      continue;
     unsigned int i_col = deriv_ids[cell_col];
     (SM_INDEXPTRS_S(M))[i_col] =
         (SM_INDEXPTRS_S(sd->model_data.J_solver))[i_col] =
@@ -1672,9 +1653,11 @@ static void solver_print_stats(void *cvode_mem) {
   int flag;
 
   flag = CVodeGetNumSteps(cvode_mem, &nst);
-  if (check_flag(&flag, "CVodeGetNumSteps", 1) == CAMP_SOLVER_FAIL) return;
+  if (check_flag(&flag, "CVodeGetNumSteps", 1) == CAMP_SOLVER_FAIL)
+    return;
   flag = CVodeGetNumRhsEvals(cvode_mem, &nfe);
-  if (check_flag(&flag, "CVodeGetNumRhsEvals", 1) == CAMP_SOLVER_FAIL) return;
+  if (check_flag(&flag, "CVodeGetNumRhsEvals", 1) == CAMP_SOLVER_FAIL)
+    return;
   flag = CVodeGetNumLinSolvSetups(cvode_mem, &nsetups);
   if (check_flag(&flag, "CVodeGetNumLinSolveSetups", 1) == CAMP_SOLVER_FAIL)
     return;
@@ -1689,30 +1672,34 @@ static void solver_print_stats(void *cvode_mem) {
       CAMP_SOLVER_FAIL)
     return;
   flag = CVDlsGetNumJacEvals(cvode_mem, &nje);
-  if (check_flag(&flag, "CVDlsGetNumJacEvals", 1) == CAMP_SOLVER_FAIL) return;
+  if (check_flag(&flag, "CVDlsGetNumJacEvals", 1) == CAMP_SOLVER_FAIL)
+    return;
   flag = CVDlsGetNumRhsEvals(cvode_mem, &nfeLS);
-  if (check_flag(&flag, "CVDlsGetNumRhsEvals", 1) == CAMP_SOLVER_FAIL) return;
+  if (check_flag(&flag, "CVDlsGetNumRhsEvals", 1) == CAMP_SOLVER_FAIL)
+    return;
   flag = CVodeGetNumGEvals(cvode_mem, &nge);
-  if (check_flag(&flag, "CVodeGetNumGEvals", 1) == CAMP_SOLVER_FAIL) return;
+  if (check_flag(&flag, "CVodeGetNumGEvals", 1) == CAMP_SOLVER_FAIL)
+    return;
   flag = CVodeGetLastStep(cvode_mem, &last_h);
-  if (check_flag(&flag, "CVodeGetLastStep", 1) == CAMP_SOLVER_FAIL) return;
+  if (check_flag(&flag, "CVodeGetLastStep", 1) == CAMP_SOLVER_FAIL)
+    return;
   flag = CVodeGetCurrentStep(cvode_mem, &curr_h);
-  if (check_flag(&flag, "CVodeGetCurrentStep", 1) == CAMP_SOLVER_FAIL) return;
+  if (check_flag(&flag, "CVodeGetCurrentStep", 1) == CAMP_SOLVER_FAIL)
+    return;
 
   printf("\nSUNDIALS Solver Statistics:\n");
   printf("number of steps = %-6ld RHS evals = %-6ld LS setups = %-6ld\n", nst,
          nfe, nsetups);
   printf("error test fails = %-6ld LS iters = %-6ld NLS iters = %-6ld\n", netf,
          nni, ncfn);
-  printf(
-      "NL conv fails = %-6ld Dls Jac evals = %-6ld Dls RHS evals = %-6ld G "
-      "evals ="
-      " %-6ld\n",
-      ncfn, nje, nfeLS, nge);
+  printf("NL conv fails = %-6ld Dls Jac evals = %-6ld Dls RHS evals = %-6ld G "
+         "evals ="
+         " %-6ld\n",
+         ncfn, nje, nfeLS, nge);
   printf("Last time step = %le Next time step = %le\n", last_h, curr_h);
 }
 
-#endif  // CAMP_USE_SUNDIALS
+#endif // CAMP_USE_SUNDIALS
 
 /** \brief Free a SolverData object
  *
@@ -1749,9 +1736,8 @@ void solver_free(void *solver_data) {
 #endif
 
 #ifdef CAMP_USE_GPU
-  if (sd->load_gpu != 0) {
+  if (sd->load_gpu != 0)
     free_gpu_cu(sd);
-  }
 #endif
 
   // Free the allocated ModelData
@@ -1762,6 +1748,7 @@ void solver_free(void *solver_data) {
 }
 
 #ifdef CAMP_USE_SUNDIALS
+#ifdef DEBUG_IS_ANYTHING_GOING_ON_HERE
 /** \brief Determine if there is anything to solve
  *
  * If the solver state concentrations and the derivative vector are very small,
@@ -1785,26 +1772,13 @@ bool is_anything_going_on_here(SolverData *sd, realtype t_initial,
         i_dep_var_one_cell++;
       }
     }
-#ifdef CAMP_DEBUG
-    printf(
-        "DEBUG: is_anything_going_on_here is false, returning success without "
-        "cvode computing\n");
-#endif
+    printf("WARNING: is_anything_going_on_here is false\n");
     return false;
   }
   return true;
 }
 #endif
-
-/** \brief Custom error handling function
- *
- * This is used for quiet operation. Solver failures are returned with a flag
- * from the solver_run() function.
- */
-void error_handler(int error_code, const char *module, const char *function,
-                   char *msg, void *sd) {
-  // Do nothing
-}
+#endif
 
 /** \brief Free a ModelData object
  *

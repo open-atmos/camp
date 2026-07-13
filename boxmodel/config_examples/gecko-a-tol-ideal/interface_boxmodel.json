@@ -1,0 +1,153 @@
+{
+  "multiple-boxes": "monte carlo",
+  "experiment-name": "cb05_ideal_sensitivity",
+  "boxmodel-data": [
+    {
+      "name": "species map",
+      "type": "SPECIES_MAP",
+      "mechanism_name": "MONARCH mod37",
+      "gas-phase water": "H2O",
+      "gas-phase water dimer": "H2O_dimer",
+      "photolysis_method": "TUV",
+      "photolysis_table": true,
+      "sza_control": {
+        "fixed": 0.0
+      }
+    },
+    {
+      "name": "everything related to time",
+      "type": "TIME_CONTROL",
+      "time_control": {
+        "start_time": {
+          "year": 2018,
+          "month": 8,
+          "day": 13,
+          "hour": 8,
+          "tz": 0
+        },
+        "simulation_length": {
+          "time": 10,
+          "unit": "hour"
+        },
+        "timestep": {
+          "time": 15.0,
+          "unit": "min"
+        }
+      }
+    },
+    {
+      "name": "Initial concentrations",
+      "type": "INIT_CONC",
+      "gas-phase species": {
+        "NO": {
+          "init conc": {
+            "value": 1,
+            "unit": "ppb",
+            "montecarlo": {
+              "type": "uniform",
+              "relative_factor": 50.0,
+              "log_scale": true
+            }
+          }
+        },
+        "TOL": {
+          "init conc": {
+            "value": 50,
+            "unit": "ppb",
+            "montecarlo": {
+              "type": "uniform",
+              "relative_factor": 10.0,
+              "log_scale": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "latitude",
+      "type": "LATITUDE",
+      "constant_constraint": {
+        "value": 41.382778,
+        "unit": "deg"
+      }
+    },
+    {
+      "name": "longitude",
+      "type": "LONGITUDE",
+      "constant_constraint": {
+        "value": 2.176944,
+        "unit": "deg"
+      }
+    },
+    {
+      "name": "altitude",
+      "type": "ALTITUDE",
+      "constant_constraint": {
+        "value": 20,
+        "unit": "m"
+      }
+    },
+    {
+      "name": "pressure",
+      "type": "PRESSURE",
+      "constant_constraint": {
+        "value": 1,
+        "unit": "atm"
+      }
+    },
+    {
+      "name": "temperature",
+      "type": "TEMPERATURE",
+      "constant_constraint": {
+        "value": 298,
+        "unit": "K"
+      }
+    },
+    {
+      "name": "humidity",
+      "type": "HUMIDITY",
+      "constant_constraint": {
+        "value": 80,
+        "unit": "%"
+      }
+    },
+    {
+      "name": "box height",
+      "type": "HEIGHT",
+      "constant_constraint": {
+        "value": 500,
+        "unit": "m"
+      }
+    },
+    {
+      "name": "Constrained concentrations",
+      "type": "FORCED_CONC",
+      "gas-phase species": {
+        "M": {
+          "constant_constraint": {
+            "value": 1,
+            "unit": "ppp"
+          }
+        },
+        "O2": {
+          "constant_constraint": {
+            "value": 0.2095,
+            "unit": "ppp"
+          }
+        }
+      }
+    },
+    {
+      "name": "Emissions",
+      "type": "EMISSIONS",
+      "gas-phase species": {
+        "OH": {
+          "constant_constraint": {
+            "value": 1.23e11,
+            "unit": "molec/cm2/s"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,436 @@
+{
+  "multiple-boxes": "monte carlo",
+  "boxmodel-data": [
+    {
+      "name": "species map",
+      "type": "SPECIES_MAP",
+      "mechanism_name": "MONARCH mod37",
+      "gas-phase water": "H2O",
+      "gas-phase water dimer": "H2O_dimer"
+    },
+    {
+      "name": "everything related to time",
+      "type": "TIME_CONTROL",
+      "time_control": {
+        "start_time": {
+          "year": 2018,
+          "month": 8,
+          "day": 13,
+          "hour": 0,
+          "tz": 0
+        },
+        "simulation_length": {
+          "time": 1,
+          "unit": "days"
+        },
+        "timestep": {
+          "time": 15.0,
+          "unit": "min"
+        }
+      }
+    },
+    {
+      "name": "Initial concentrations",
+      "type": "INIT_CONC",
+      "gas-phase species": {
+        "ISOP": {
+          "init conc": {
+            "value": 1.0,
+            "unit": "ppb"
+          }
+        },
+        "SO2": {
+          "init conc": {
+            "value": 1.0,
+            "unit": "ppb"
+          }
+        },
+        "NO2": {
+          "init conc": {
+            "value": 0.3,
+            "unit": "ppb"
+          }
+        },
+        "HNO3": {
+          "init conc": {
+            "value": 0.3,
+            "unit": "ppb"
+          }
+        },
+        "O3": {
+          "init conc": {
+            "value": 30.0,
+            "unit": "ppb",
+            "montecarlo": {
+              "relative_factor": 0.5
+            }
+          }
+        },
+        "H2O2": {
+          "init conc": {
+            "value": 1.0,
+            "unit": "ppb"
+          }
+        },
+        "CO": {
+          "init conc": {
+            "value": 150.0,
+            "unit": "ppb"
+          }
+        },
+        "FACD": {
+          "init conc": {
+            "value": 0.5,
+            "unit": "ppb"
+          }
+        },
+        "MEOH": {
+          "init conc": {
+            "value": 2.0,
+            "unit": "ppb"
+          }
+        },
+        "MEPX": {
+          "init conc": {
+            "value": 0.01,
+            "unit": "ppb"
+          }
+        },
+        "CH4": {
+          "init conc": {
+            "value": 1700.0,
+            "unit": "ppb"
+          }
+        },
+        "M": {
+          "note": "by definition the third body is the concentration of air molecules = 1 ppp",
+          "init conc": {
+            "value": 1.0,
+            "unit": "ppp"
+          }
+        },
+        "O2": {
+          "note": "molecular oxygen is a constant fraction of air molecules = 0.2095 ppp",
+          "init conc": {
+            "value": 0.2095,
+            "unit": "ppp"
+          }
+        }
+      },
+      "aerosol-phase species": {
+        "clouds and rain.1.cloud and rain water.H2O_aq": {
+          "init conc": {
+            "value": 7.853982e-07,
+            "unit": "kg/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "clouds and rain.2.cloud and rain water.H2O_aq": {
+          "init conc": {
+            "value": 2.261947e-06,
+            "unit": "kg/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "clouds and rain.3.cloud and rain water.H2O_aq": {
+          "init conc": {
+            "value": 6.465398e-06,
+            "unit": "kg/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "clouds and rain.4.cloud and rain water.H2O_aq": {
+          "init conc": {
+            "value": 1.072330e-05,
+            "unit": "kg/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "clouds and rain.5.cloud and rain water.H2O_aq": {
+          "init conc": {
+            "value": 2.137540e-05,
+            "unit": "kg/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "clouds and rain.6.cloud and rain water.H2O_aq": {
+          "init conc": {
+            "value": 4.607669e-05,
+            "unit": "kg/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "clouds and rain.7.cloud and rain water.H2O_aq": {
+          "init conc": {
+            "value": 9.756740e-05,
+            "unit": "kg/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "clouds and rain.8.cloud and rain water.H2O_aq": {
+          "init conc": {
+            "value": 1.339072e-04,
+            "unit": "kg/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "clouds and rain.9.cloud and rain water.H2O_aq": {
+          "init conc": {
+            "value": 1.104333e-04,
+            "unit": "kg/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "clouds and rain.10.cloud and rain water.H2O_aq": {
+          "init conc": {
+            "value": 6.896424e-05,
+            "unit": "kg/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "clouds and rain.11.cloud and rain water.H2O_aq": {
+          "init conc": {
+            "value": 4.241150e-05,
+            "unit": "kg/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "clouds and rain.12.cloud and rain water.H2O_aq": {
+          "init conc": {
+            "value": 2.573593e-05,
+            "unit": "kg/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "clouds and rain.13.cloud and rain water.H2O_aq": {
+          "init conc": {
+            "value": 2.881134e-05,
+            "unit": "kg/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "clouds and rain.14.cloud and rain water.H2O_aq": {
+          "init conc": {
+            "value": 2.442902e-05,
+            "unit": "kg/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "clouds and rain.15.cloud and rain water.H2O_aq": {
+          "init conc": {
+            "value": 8.619274e-06,
+            "unit": "kg/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "clouds and rain.16.cloud and rain water.H2O_aq": {
+          "init conc": {
+            "value": 3.351032e-06,
+            "unit": "kg/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.1.organic_matter.POA": {
+          "init conc": {
+            "value": 1.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.2.organic_matter.POA": {
+          "init conc": {
+            "value": 1.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.3.organic_matter.POA": {
+          "init conc": {
+            "value": 1.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.4.organic_matter.POA": {
+          "init conc": {
+            "value": 4.0,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.5.organic_matter.POA": {
+          "init conc": {
+            "value": 4.0,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.6.organic_matter.POA": {
+          "init conc": {
+            "value": 4.0,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.7.organic_matter.POA": {
+          "init conc": {
+            "value": 26.0,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.8.organic_matter.POA": {
+          "init conc": {
+            "value": 26.0,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.3.aqueous_sulfate.NO3_m": {
+          "init conc": {
+            "value": 1e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.4.aqueous_sulfate.NO3_m": {
+          "init conc": {
+            "value": 2.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.5.aqueous_sulfate.NO3_m": {
+          "init conc": {
+            "value": 1e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.6.aqueous_sulfate.NO3_m": {
+          "init conc": {
+            "value": 5e-3,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.7.aqueous_sulfate.NO3_m": {
+          "init conc": {
+            "value": 1.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.8.aqueous_sulfate.NO3_m": {
+          "init conc": {
+            "value": 1.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.3.aqueous_sulfate.NH4_p": {
+          "init conc": {
+            "value": 1e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.4.aqueous_sulfate.NH4_p": {
+          "init conc": {
+            "value": 2.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.5.aqueous_sulfate.NH4_p": {
+          "init conc": {
+            "value": 1e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.6.aqueous_sulfate.NH4_p": {
+          "init conc": {
+            "value": 5e-3,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.7.aqueous_sulfate.NH4_p": {
+          "init conc": {
+            "value": 1.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        },
+        "aqueous_sulfate.8.aqueous_sulfate.NH4_p": {
+          "init conc": {
+            "value": 1.5e-2,
+            "unit": "ug/m3"
+          },
+          "aerosol representation name": "multiphase sectional"
+        }
+      }
+    },
+    {
+      "name": "latitude",
+      "type": "LATITUDE",
+      "constant_constraint": {
+        "value": 41.382778,
+        "unit": "deg"
+      }
+    },
+    {
+      "name": "longitude",
+      "type": "LONGITUDE",
+      "constant_constraint": {
+        "value": 50,
+        "unit": "deg"
+      }
+    },
+    {
+      "name": "altitude",
+      "type": "ALTITUDE",
+      "constant_constraint": {
+        "value": 200.0,
+        "unit": "m"
+      }
+    },
+    {
+      "name": "pressure",
+      "type": "PRESSURE",
+      "constant_constraint": {
+        "value": 1.0,
+        "unit": "atm"
+      }
+    },
+    {
+      "name": "temperature",
+      "type": "TEMPERATURE",
+      "constant_constraint": {
+        "value": 298.0,
+        "unit": "K"
+      }
+    },
+    {
+      "name": "humidity",
+      "type": "HUMIDITY",
+      "constant_constraint": {
+        "value": 90.0,
+        "unit": "%",
+        "montecarlo": {
+          "relative_factor": 0.5,
+          "upper_bound": 100.0
+        }
+      }
+    },
+    {
+      "name": "box height",
+      "type": "HEIGHT",
+      "constant_constraint": {
+        "value": 1.0,
+        "unit": "km"
+      }
+    }
+  ]
+}

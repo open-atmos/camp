@@ -8,10 +8,10 @@
 !> Interface for the MONACH model and PartMC-camp
 module camp_monarch_interface
 
-  use camp_constants,                  only : i_kind
+  use camp_constants, only: i_kind
   use camp_mpi
-  use camp_util,                       only : assert_msg, string_t, &
-                                              warn_assert_msg
+  use camp_util, only: assert_msg, string_t, &
+                       warn_assert_msg
   use camp_camp_core
   use camp_camp_state
   use camp_aero_rep_data
@@ -20,8 +20,8 @@ module camp_monarch_interface
   use camp_chem_spec_data
   use camp_property
   use camp_camp_solver_data
-  use camp_mechanism_data,            only : mechanism_data_t
-  use camp_rxn_data,                  only : rxn_data_t
+  use camp_mechanism_data, only: mechanism_data_t
+  use camp_rxn_data, only: rxn_data_t
   use camp_rxn_photolysis
   use camp_solver_stats
 #ifdef CAMP_USE_MPI
@@ -73,6 +73,7 @@ module camp_monarch_interface
     integer :: n_photo_rxn
     !> Solve multiple grid cells at once?
     logical :: solve_multiple_cells = .false.
+    type(solver_stats_t), pointer :: solver_stats
   contains
     !> Integrate PartMC for the current MONARCH state over a specified time step
     procedure :: integrate
@@ -106,7 +107,6 @@ module camp_monarch_interface
   real(kind=dp), parameter :: mwwat = 18.0153 ! mean molecular weight for water vapor [ g/mol ]
 contains
 
-
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Create and initialize a new monarch_interface_t object
@@ -117,7 +117,7 @@ contains
   !! configuration file and the starting and ending indices for chemical
   !! species in the tracer array.
   function constructor(camp_config_file, interface_config_file, &
-                       starting_id, ending_id, n_cells, mpi_comm) result (this)
+                       starting_id, ending_id, n_cells, mpi_comm) result(this)
 
     !> A new MONARCH interface
     type(monarch_interface_t), pointer :: this
@@ -156,44 +156,43 @@ contains
       local_comm = mpi_comm
     else
       local_comm = MPI_COMM_WORLD
-    endif
+    end if
 #endif
     ! Set the MPI rank (TODO replace with MONARCH param)
     MONARCH_PROCESS = camp_mpi_rank()
 
     ! Create a new interface object
-    allocate(this)
+    allocate (this)
 
-    if (.not.present(n_cells).or.n_cells.eq.1) then
+    if (.not. present(n_cells) .or. n_cells .eq. 1) then
       this%solve_multiple_cells = .false.
     else
       this%solve_multiple_cells = .true.
-      this%n_cells=n_cells
+      this%n_cells = n_cells
     end if
 
     ! Check for an available solver
     camp_solver_data => camp_solver_data_t()
     call assert_msg(332298164, camp_solver_data%is_solver_available(), &
-            "No solver available")
-    deallocate(camp_solver_data)
+                    "No solver available")
+    deallocate (camp_solver_data)
 
     ! Initialize the time-invariant model data on each node
-    if (MONARCH_PROCESS.eq.0) then
+    if (MONARCH_PROCESS .eq. 0) then
 
       ! Start the computation timer on the primary node
       call cpu_time(comp_start)
 
       call assert_msg(304676624, present(camp_config_file), &
-              "Missing PartMC-camp configuration file list")
+                      "Missing PartMC-camp configuration file list")
       call assert_msg(194027509, present(interface_config_file), &
-              "Missing MartMC-camp <-> MONARCH interface configuration file")
+                      "Missing MartMC-camp <-> MONARCH interface configuration file")
       call assert_msg(937567597, present(starting_id), &
-              "Missing starting tracer index for chemical species")
+                      "Missing starting tracer index for chemical species")
       call assert_msg(593895016, present(ending_id), &
-              "Missing ending tracer index for chemical species")
+                      "Missing ending tracer index for chemical species")
 
       ! Load the interface data
-      print*,"a",interface_config_file
       call this%load(interface_config_file)
 
       ! Initialize the camp-chem core
@@ -203,22 +202,22 @@ contains
       ! Set the aerosol representation id
       if (this%camp_core%get_aero_rep("MONARCH mass-based", aero_rep)) then
         select type (aero_rep)
-          type is (aero_rep_modal_binned_mass_t)
-            call this%camp_core%initialize_update_object( aero_rep, &
-                                                             update_data_GMD)
-            call this%camp_core%initialize_update_object( aero_rep, &
-                                                             update_data_GSD)
-            call assert(889473105, &
-                        aero_rep%get_section_id("organic_matter", i_sect_om))
-            call assert(648042550, &
-                        aero_rep%get_section_id("black_carbon", i_sect_bc))
-            i_sect_sulf=-1
-            call assert(307728742, &
-                        aero_rep%get_section_id("other_PM", i_sect_opm))
-          class default
-            call die_msg(351392791, &
-                         "Wrong type for aerosol representation "// &
-                         "'MONARCH mass-based'")
+        type is (aero_rep_modal_binned_mass_t)
+          call this%camp_core%initialize_update_object(aero_rep, &
+                                                       update_data_GMD)
+          call this%camp_core%initialize_update_object(aero_rep, &
+                                                       update_data_GSD)
+          call assert(889473105, &
+                      aero_rep%get_section_id("organic_matter", i_sect_om))
+          call assert(648042550, &
+                      aero_rep%get_section_id("black_carbon", i_sect_bc))
+          i_sect_sulf = -1
+          call assert(307728742, &
+                      aero_rep%get_section_id("other_PM", i_sect_opm))
+        class default
+          call die_msg(351392791, &
+                       "Wrong type for aerosol representation "// &
+                       "'MONARCH mass-based'")
         end select
       else
         i_sect_om = -1
@@ -240,18 +239,18 @@ contains
 #ifdef CAMP_USE_MPI
 
       pack_size = this%camp_core%pack_size() + &
-              update_data_GMD%pack_size() + &
-              update_data_GSD%pack_size() + &
-              camp_mpi_pack_size_integer_array(this%map_monarch_id) + &
-              camp_mpi_pack_size_integer_array(this%map_camp_id) + &
-              camp_mpi_pack_size_integer_array(this%init_conc_camp_id) + &
-              camp_mpi_pack_size_real_array(this%init_conc) + &
-              camp_mpi_pack_size_integer(this%gas_phase_water_id) + &
-              camp_mpi_pack_size_integer(i_sect_om) + &
-              camp_mpi_pack_size_integer(i_sect_bc) + &
-              camp_mpi_pack_size_integer(i_sect_sulf) + &
-              camp_mpi_pack_size_integer(i_sect_opm)
-      allocate(buffer(pack_size))
+                  update_data_GMD%pack_size() + &
+                  update_data_GSD%pack_size() + &
+                  camp_mpi_pack_size_integer_array(this%map_monarch_id) + &
+                  camp_mpi_pack_size_integer_array(this%map_camp_id) + &
+                  camp_mpi_pack_size_integer_array(this%init_conc_camp_id) + &
+                  camp_mpi_pack_size_real_array(this%init_conc) + &
+                  camp_mpi_pack_size_integer(this%gas_phase_water_id) + &
+                  camp_mpi_pack_size_integer(i_sect_om) + &
+                  camp_mpi_pack_size_integer(i_sect_bc) + &
+                  camp_mpi_pack_size_integer(i_sect_sulf) + &
+                  camp_mpi_pack_size_integer(i_sect_opm)
+      allocate (buffer(pack_size))
       pos = 0
       call this%camp_core%bin_pack(buffer, pos)
       call update_data_GMD%bin_pack(buffer, pos)
@@ -265,20 +264,20 @@ contains
       call camp_mpi_pack_integer(buffer, pos, i_sect_bc)
       call camp_mpi_pack_integer(buffer, pos, i_sect_sulf)
       call camp_mpi_pack_integer(buffer, pos, i_sect_opm)
-    endif
+    end if
 
     ! broadcast the buffer size
     call camp_mpi_bcast_integer(pack_size, local_comm)
 
-    if (MONARCH_PROCESS.ne.0) then
+    if (MONARCH_PROCESS .ne. 0) then
       ! allocate the buffer to receive data
-      allocate(buffer(pack_size))
+      allocate (buffer(pack_size))
     end if
 
     ! boradcast the buffer
     call camp_mpi_bcast_packed(buffer, local_comm)
 
-    if (MONARCH_PROCESS.ne.0) then
+    if (MONARCH_PROCESS .ne. 0) then
       ! unpack the data
       this%camp_core => camp_core_t()
       pos = 0
@@ -298,7 +297,7 @@ contains
     end if
 
 #ifdef CAMP_USE_MPI
-    deallocate(buffer)
+    deallocate (buffer)
 #endif
 
     ! Initialize the solver on all nodes
@@ -312,39 +311,40 @@ contains
     do i_photo_rxn = 1, this%n_photo_rxn
       call this%rate_update(i_photo_rxn)%set_rate(real(this%photo_rates(i_photo_rxn), kind=dp))
       call this%camp_core%update_data(this%rate_update(i_photo_rxn))
-      print*,'Set photolysis rates: ',i_photo_rxn,this%photo_rates(i_photo_rxn)
+      print *, 'Set photolysis rates: ', i_photo_rxn, this%photo_rates(i_photo_rxn)
     end do
 #endif
 
     ! Set the aerosol mode dimensions
-    print*,'i_sect_: ',i_sect_om,i_sect_bc,i_sect_sulf,i_sect_opm
+    print *, 'i_sect_: ', i_sect_om, i_sect_bc, i_sect_sulf, i_sect_opm
 
-    if (i_sect_bc.gt.0) then
-    ! black carbon
+    if (i_sect_bc .gt. 0) then
+      ! black carbon
       call update_data_GMD%set_GMD(i_sect_bc, 1.18d-8)
       call update_data_GSD%set_GSD(i_sect_bc, 2.00d0)
       call this%camp_core%update_data(update_data_GMD)
       call this%camp_core%update_data(update_data_GSD)
     end if
-    if (i_sect_sulf.gt.0) then
-    ! sulfate
+    if (i_sect_sulf .gt. 0) then
+      ! sulfate
       call update_data_GMD%set_GMD(i_sect_sulf, 6.95d-8)
       call update_data_GSD%set_GSD(i_sect_sulf, 2.12d0)
       call this%camp_core%update_data(update_data_GMD)
       call this%camp_core%update_data(update_data_GSD)
     end if
-    if (i_sect_opm.gt.0) then
-    ! other PM
+    if (i_sect_opm .gt. 0) then
+      ! other PM
       call update_data_GMD%set_GMD(i_sect_opm, 2.12d-8)
       call update_data_GSD%set_GSD(i_sect_opm, 2.24d0)
       call this%camp_core%update_data(update_data_GMD)
       call this%camp_core%update_data(update_data_GSD)
     end if
 
+    this%solver_stats => solver_stats_t()
     ! Calculate the intialization time
-    if (MONARCH_PROCESS.eq.0) then
+    if (MONARCH_PROCESS .eq. 0) then
       call cpu_time(comp_end)
-      write(*,*) "Initialization time: ", comp_end-comp_start, " s"
+      write (*, *) "Initialization time: ", comp_end - comp_start, " s"
     end if
 
   end function constructor
@@ -353,8 +353,8 @@ contains
 
   !> Integrate the PartMC mechanism for a particular set of cells and timestep
   subroutine integrate(this, start_time, time_step, i_start, i_end, j_start, &
-                  j_end, temperature, MONARCH_conc, water_conc, &
-                  water_vapor_index, air_density, pressure, conv, i_hour)
+                       j_end, temperature, MONARCH_conc, water_conc, &
+                       water_vapor_index, air_density, pressure, conv, i_hour)
 
     !> PartMC-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
@@ -373,19 +373,19 @@ contains
 
     !> NMMB style arrays (W->E, S->N, top->bottom, ...)
     !> Temperature (K)
-    real, intent(in) :: temperature(:,:,:)
+    real, intent(in) :: temperature(:, :, :)
     !> MONARCH species concentration (ppm or ug/m^3)
-    real, intent(inout) :: MONARCH_conc(:,:,:,:)
+    real, intent(inout) :: MONARCH_conc(:, :, :, :)
     !> Atmospheric water concentrations (kg_H2O/kg_air)
-    real, intent(in) :: water_conc(:,:,:,:)
+    real, intent(in) :: water_conc(:, :, :, :)
     !> Index in water_conc corresponding to water vapor
     integer, intent(in) :: water_vapor_index
 
     !> WRF-style arrays (W->E, bottom->top, N->S)
     !> Air density (kg_air/m^3)
-    real, intent(in) :: air_density(:,:,:)
+    real, intent(in) :: air_density(:, :, :)
     !> Pressure (Pa)
-    real, intent(in) :: pressure(:,:,:)
+    real, intent(in) :: pressure(:, :, :)
     real, intent(in) :: conv
     integer, intent(inout) :: i_hour
 
@@ -441,130 +441,129 @@ contains
     ! Computation time variables
     real(kind=dp) :: comp_start, comp_end
 
-    type(solver_stats_t), target :: solver_stats
     integer :: state_size_per_cell, n_cell_check
 
-    if(this%n_cells.eq.1) then
+    if (this%n_cells .eq. 1) then
       state_size_per_cell = 0
     else
       state_size_per_cell = this%camp_core%state_size_per_cell()
     end if
 
-    k_end = size(MONARCH_conc,3)
+    k_end = size(MONARCH_conc, 3)
 
 #ifndef ENABLE_CB05_SOA
     call assert_msg(731700229, &
-            this%camp_core%get_chem_spec_data(chem_spec_data), &
-            "No chemical species data in camp_core.")
-    SO2_emi = (/ 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09,  &
-                 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09,  &
-                 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09,  &
-                 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09,  &
-                 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09 /)
-    NO2_emi = (/ 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12,  &
-                 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12,  &
-                 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12,  &
-                 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12,  &
-                 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12 /)
-    NO_emi  = (/ 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10,  &
-                 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10,  &
-                 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10,  &
-                 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10,  &
-                 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10 /)
-    NH3_emi = (/ 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09,  &
-                 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09,  &
-                 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09,  &
-                 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09,  &
-                 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09 /)
-    CO_emi  = (/ 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09,  &
-                 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09,  &
-                 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09,  &
-                 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09,  &
-                 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09 /)
-    ALD2_emi = (/ 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, &
-                  4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, &
-                  4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, &
-                  4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, &
-                  4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12 /)
-    FORM_emi = (/ 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, &
-                  1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, &
-                  1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, &
-                  1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, &
-                  1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11 /)
-    ETH_emi = (/ 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11,  &
-                 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11,  &
-                 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11,  &
-                 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11,  &
-                 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11 /)
-    IOLE_emi = (/ 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, &
-                  1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, &
-                  1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, &
-                  1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, &
-                  1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11 /)
-    OLE_emi = (/ 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11,  &
-                 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11,  &
-                 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11,  &
-                 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11,  &
-                 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11 /)
-    TOL_emi = (/ 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11,  &
-                 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11,  &
-                 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11,  &
-                 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11,  &
-                 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11 /)
-    XYL_emi = (/ 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11,  &
-                 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11,  &
-                 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11,  &
-                 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11,  &
-                 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11 /)
-    PAR_emi = (/ 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10,  &
-                 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10,  &
-                 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10,  &
-                 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10,  &
-                 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10 /)
-    ISOP_emi = (/ 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, &
-                  6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, &
-                  6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, &
-                  6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, &
-                  6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12 /)
-    MEOH_emi = (/ 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, &
-                  5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, &
-                  5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, &
-                  5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, &
-                  5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13 /)
-    rate_emi = (/1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,  &
-                 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  &
-                 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 /)
+                    this%camp_core%get_chem_spec_data(chem_spec_data), &
+                    "No chemical species data in camp_core.")
+    SO2_emi = (/1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, &
+                1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, &
+                1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, &
+                1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, &
+                1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09, 1.06E-09/)
+    NO2_emi = (/7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, &
+                7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, &
+                7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, &
+                7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, &
+                7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12, 7.56E-12/)
+    NO_emi = (/1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, &
+               1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, &
+               1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, &
+               1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, &
+               1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10, 1.44E-10/)
+    NH3_emi = (/8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, &
+                8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, &
+                8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, &
+                8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, &
+                8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09, 8.93E-09/)
+    CO_emi = (/1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, &
+               1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, &
+               1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, &
+               1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, &
+               1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09, 1.96E-09/)
+    ALD2_emi = (/4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, &
+                 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, &
+                 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, &
+                 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, &
+                 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12, 4.25E-12/)
+    FORM_emi = (/1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, &
+                 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, &
+                 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, &
+                 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, &
+                 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11, 1.02E-11/)
+    ETH_emi = (/4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, &
+                4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, &
+                4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, &
+                4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, &
+                4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11, 4.62E-11/)
+    IOLE_emi = (/1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, &
+                 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, &
+                 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, &
+                 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, &
+                 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11/)
+    OLE_emi = (/1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, &
+                1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, &
+                1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, &
+                1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, &
+                1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11, 1.49E-11/)
+    TOL_emi = (/1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, &
+                1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, &
+                1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, &
+                1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, &
+                1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11, 1.53E-11/)
+    XYL_emi = (/1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, &
+                1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, &
+                1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, &
+                1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, &
+                1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11, 1.40E-11/)
+    PAR_emi = (/4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, &
+                4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, &
+                4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, &
+                4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, &
+                4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10, 4.27E-10/)
+    ISOP_emi = (/6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, &
+                 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, &
+                 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, &
+                 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, &
+                 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12, 6.03E-12/)
+    MEOH_emi = (/5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, &
+                 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, &
+                 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, &
+                 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, &
+                 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13, 5.92E-13/)
+    rate_emi = (/1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, &
+                 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, &
+                 0.0, 0.0, 0.0, 0.0, 0.0, 0.0/)
 
 #endif
 
     call cpu_time(comp_start)
 
-    if(.not.this%solve_multiple_cells) then
-      do i=i_start, i_end
-        do j=j_start, j_end
-          do k=1, k_end
+    if (.not. this%solve_multiple_cells) then
+      do i = i_start, i_end
+        do j = j_start, j_end
+          do k = 1, k_end
 
             ! Calculate the vertical index for NMMB-style arrays
-            k_flip = size(MONARCH_conc,3) - k + 1
+            k_flip = size(MONARCH_conc, 3) - k + 1
 
             ! Update the environmental state
             call this%camp_state%env_states(1)%set_temperature_K( &
-              real( temperature(i,j,k_flip), kind=dp ) )
-            call this%camp_state%env_states(1)%set_pressure_Pa(   &
-              real( pressure(i,k,j), kind=dp ) )
+              real(temperature(i, j, k_flip), kind=dp))
+            call this%camp_state%env_states(1)%set_pressure_Pa( &
+              real(pressure(i, k, j), kind=dp))
 
             this%camp_state%state_var(this%map_camp_id(:)) = &
-                            MONARCH_conc(i,j,k_flip,this%map_monarch_id(:))
+              MONARCH_conc(i, j, k_flip, this%map_monarch_id(:))
 
             this%camp_state%state_var(this%gas_phase_water_id) = &
-                    water_conc(i,j,k_flip,water_vapor_index) * &
-                    mwair / mwwat * 1.e6
-            if(mod(int(start_time),60).eq.0) then
-              write(*,*) "i_hour loop", i_hour
+              water_conc(i, j, k_flip, water_vapor_index)* &
+              mwair/mwwat*1.e6
+            if (mod(int(start_time), 60) .eq. 0) then
+              write (*, *) "i_hour loop", i_hour
               i_hour = i_hour + 1
             end if
 #ifndef ENABLE_CB05_SOA
-              if(.true.)then
+            if (.true.) then
               !Add emissions
               this%camp_state%state_var(chem_spec_data%gas_state_id("SO2")) = &
                 this%camp_state%state_var(chem_spec_data%gas_state_id("SO2")) &
@@ -572,26 +571,26 @@ contains
               this%camp_state%state_var(chem_spec_data%gas_state_id("NO2")) = &
                 this%camp_state%state_var(chem_spec_data%gas_state_id("NO2")) &
                 + NO2_emi(i_hour)*rate_emi(i_hour)*conv
-              this%camp_state%state_var(chem_spec_data%gas_state_id("NO")) =  &
-                this%camp_state%state_var(chem_spec_data%gas_state_id("NO"))  &
+              this%camp_state%state_var(chem_spec_data%gas_state_id("NO")) = &
+                this%camp_state%state_var(chem_spec_data%gas_state_id("NO")) &
                 + NO_emi(i_hour)*rate_emi(i_hour)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("NH3")) = &
                 this%camp_state%state_var(chem_spec_data%gas_state_id("NH3")) &
                 + NH3_emi(i_hour)*rate_emi(i_hour)*conv
-              this%camp_state%state_var(chem_spec_data%gas_state_id("CO")) =  &
-                this%camp_state%state_var(chem_spec_data%gas_state_id("CO"))  &
+              this%camp_state%state_var(chem_spec_data%gas_state_id("CO")) = &
+                this%camp_state%state_var(chem_spec_data%gas_state_id("CO")) &
                 + CO_emi(i_hour)*rate_emi(i_hour)*conv
-              this%camp_state%state_var(chem_spec_data%gas_state_id("ALD2")) =&
-                this%camp_state%state_var(chem_spec_data%gas_state_id("ALD2"))&
+              this%camp_state%state_var(chem_spec_data%gas_state_id("ALD2")) = &
+                this%camp_state%state_var(chem_spec_data%gas_state_id("ALD2")) &
                 + ALD2_emi(i_hour)*rate_emi(i_hour)*conv
-              this%camp_state%state_var(chem_spec_data%gas_state_id("FORM")) =&
-                this%camp_state%state_var(chem_spec_data%gas_state_id("FORM"))&
+              this%camp_state%state_var(chem_spec_data%gas_state_id("FORM")) = &
+                this%camp_state%state_var(chem_spec_data%gas_state_id("FORM")) &
                 + FORM_emi(i_hour)*rate_emi(i_hour)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("ETH")) = &
                 this%camp_state%state_var(chem_spec_data%gas_state_id("ETH")) &
                 + ETH_emi(i_hour)*rate_emi(i_hour)*conv
-              this%camp_state%state_var(chem_spec_data%gas_state_id("IOLE")) =&
-                this%camp_state%state_var(chem_spec_data%gas_state_id("IOLE"))&
+              this%camp_state%state_var(chem_spec_data%gas_state_id("IOLE")) = &
+                this%camp_state%state_var(chem_spec_data%gas_state_id("IOLE")) &
                 + IOLE_emi(i_hour)*rate_emi(i_hour)*conv
               this%camp_state%state_var(chem_spec_data%gas_state_id("OLE")) = &
                 this%camp_state%state_var(chem_spec_data%gas_state_id("OLE")) &
@@ -605,18 +604,18 @@ contains
               this%camp_state%state_var(chem_spec_data%gas_state_id("PAR")) = &
                 this%camp_state%state_var(chem_spec_data%gas_state_id("PAR")) &
                 + PAR_emi(i_hour)*rate_emi(i_hour)*conv
-              this%camp_state%state_var(chem_spec_data%gas_state_id("ISOP")) =&
-                this%camp_state%state_var(chem_spec_data%gas_state_id("ISOP"))&
+              this%camp_state%state_var(chem_spec_data%gas_state_id("ISOP")) = &
+                this%camp_state%state_var(chem_spec_data%gas_state_id("ISOP")) &
                 + ISOP_emi(i_hour)*rate_emi(i_hour)*conv
-              this%camp_state%state_var(chem_spec_data%gas_state_id("MEOH")) =&
-                this%camp_state%state_var(chem_spec_data%gas_state_id("MEOH"))&
+              this%camp_state%state_var(chem_spec_data%gas_state_id("MEOH")) = &
+                this%camp_state%state_var(chem_spec_data%gas_state_id("MEOH")) &
                 + MEOH_emi(i_hour)*rate_emi(i_hour)*conv
-              endif
+            end if
 #endif
 
             ! Start the computation timer
-            if (MONARCH_PROCESS.eq.0 .and. i.eq.i_start .and. j.eq.j_start &
-                    .and. k.eq.1) then
+            if (MONARCH_PROCESS .eq. 0 .and. i .eq. i_start .and. j .eq. j_start &
+                .and. k .eq. 1) then
               !solver_stats%debug_out = .false.
             else
               !solver_stats%debug_out = .false.
@@ -624,27 +623,15 @@ contains
 
             ! Integrate the CAMP mechanism
             call this%camp_core%solve(this%camp_state, &
-                    real(time_step*60., kind=dp), solver_stats = solver_stats)
+                                      real(time_step*60., kind=dp), solver_stats=this%solver_stats)
 
-            call assert_msg(376450931, solver_stats%status_code.eq.0, &
+            call assert_msg(376450931, this%solver_stats%status_code(1) .eq. 0, &
                             "Solver failed with code "// &
-                            to_string(solver_stats%solver_flag))
-
-#ifdef CAMP_DEBUG
-            ! Check the Jacobian evaluations
-            call assert_msg(611569150, solver_stats%Jac_eval_fails.eq.0,&
-                          trim( to_string( solver_stats%Jac_eval_fails ) )// &
-                          " Jacobian evaluation failures at time "// &
-                          trim( to_string( start_time ) ) )
-
-            ! Only evaluate the Jacobian for the first cell because it is
-            ! time consuming
-            solver_stats%eval_Jac = .false.
-#endif
+                            to_string(this%solver_stats%solver_flag(1)))
 
             ! Update the MONARCH tracer array with new species concentrations
-            MONARCH_conc(i,j,k_flip,this%map_monarch_id(:)) = &
-                    this%camp_state%state_var(this%map_camp_id(:))
+            MONARCH_conc(i, j, k_flip, this%map_monarch_id(:)) = &
+              this%camp_state%state_var(this%map_camp_id(:))
 
           end do
         end do
@@ -653,42 +640,42 @@ contains
     else
 
       ! Set initial conditions and environmental parameters for each grid cell
-      do i=i_start, i_end
-        do j=j_start, j_end
-          do k=1, k_end
+      do i = i_start, i_end
+        do j = j_start, j_end
+          do k = 1, k_end
             !Remember fortran read matrix in inverse order for optimization!
             ! TODO add descriptions for o and z, or preferably use descriptive
             !      variable names
-            o = (j-1)*(i_end) + (i-1) !Index to 3D
-            z = (k-1)*(i_end*j_end) + o !Index for 2D
+            o = (j - 1)*(i_end) + (i - 1) !Index to 3D
+            z = (k - 1)*(i_end*j_end) + o !Index for 2D
 
             ! Calculate the vertical index for NMMB-style arrays
-            k_flip = size(MONARCH_conc,3) - k + 1
+            k_flip = size(MONARCH_conc, 3) - k + 1
 
             ! Update the environmental state
-            call this%camp_state%env_states(z+1)%set_temperature_K( &
-                   real(temperature(i,j,k_flip),kind=dp))
-            call this%camp_state%env_states(z+1)%set_pressure_Pa(   &
-                   real(pressure(i,k,j),kind=dp))
+            call this%camp_state%env_states(z + 1)%set_temperature_K( &
+              real(temperature(i, j, k_flip), kind=dp))
+            call this%camp_state%env_states(z + 1)%set_pressure_Pa( &
+              real(pressure(i, k, j), kind=dp))
 
             !todo fix better Nan values
-            this%camp_state%state_var(this%map_camp_id(:)+(z*state_size_per_cell))=&
-                    this%camp_state%state_var(this%map_camp_id(:))
-            MONARCH_conc(i,j,k_flip,this%map_monarch_id(:)) = &
-                MONARCH_conc(1,1,1,this%map_monarch_id(:))
+            this%camp_state%state_var(this%map_camp_id(:) + (z*state_size_per_cell)) = &
+              this%camp_state%state_var(this%map_camp_id(:))
+            MONARCH_conc(i, j, k_flip, this%map_monarch_id(:)) = &
+              MONARCH_conc(1, 1, 1, this%map_monarch_id(:))
 
             !Reset state conc
             this%camp_state%state_var(this%map_camp_id(:) + &
-                                       (z*state_size_per_cell)) = 0.0
+                                      (z*state_size_per_cell)) = 0.0
 
             this%camp_state%state_var(this%map_camp_id(:) + &
-                                       (z*state_size_per_cell)) = &
-                    this%camp_state%state_var(this%map_camp_id(:) + &
-                                               (z*state_size_per_cell)) + &
-                    MONARCH_conc(i,j,k_flip,this%map_monarch_id(:))
+                                      (z*state_size_per_cell)) = &
+              this%camp_state%state_var(this%map_camp_id(:) + &
+                                        (z*state_size_per_cell)) + &
+              MONARCH_conc(i, j, k_flip, this%map_monarch_id(:))
             this%camp_state%state_var(this%gas_phase_water_id + &
-                                       (z*state_size_per_cell)) = &
-                   18233.287487107602 !to match PartMC
+                                      (z*state_size_per_cell)) = &
+              18233.287487107602 !to match PartMC
 
           end do
         end do
@@ -696,18 +683,18 @@ contains
 
       ! Integrate the CAMP mechanism
       call this%camp_core%solve(this%camp_state, &
-              real(time_step*60., kind=dp), solver_stats = solver_stats)
+                                real(time_step*60., kind=dp), solver_stats=this%solver_stats)
 
-      do i=i_start, i_end
-        do j=j_start, j_end
-          do k=1, k_end
-            o = (j-1)*(i_end) + (i-1) !Index to 3D
-            z = (k-1)*(i_end*j_end) + o !Index for 2D
+      do i = i_start, i_end
+        do j = j_start, j_end
+          do k = 1, k_end
+            o = (j - 1)*(i_end) + (i - 1) !Index to 3D
+            z = (k - 1)*(i_end*j_end) + o !Index for 2D
 
-            k_flip = size(MONARCH_conc,3) - k + 1
-            MONARCH_conc(i,j,k_flip,this%map_monarch_id(:)) = &
-                    this%camp_state%state_var(this%map_camp_id(:) + &
-                                               (z*state_size_per_cell))
+            k_flip = size(MONARCH_conc, 3) - k + 1
+            MONARCH_conc(i, j, k_flip, this%map_monarch_id(:)) = &
+              this%camp_state%state_var(this%map_camp_id(:) + &
+                                        (z*state_size_per_cell))
           end do
         end do
       end do
@@ -721,16 +708,7 @@ contains
 
     !todo move this comp_time to only the solve part, like the other tests
     call cpu_time(comp_end)
-    comp_time = comp_time + (comp_end-comp_start)
-
-
-#ifdef CAMP_USE_MPI
-
-if (camp_mpi_rank().eq.0) then
-  !call solver_stats%print( )
-end if
-
-#endif
+    comp_time = comp_time + (comp_end - comp_start)
 
   end subroutine integrate
 
@@ -761,7 +739,7 @@ end if
     this%property_set => property_t()
 
     ! Get a new json core
-    allocate(json)
+    allocate (json)
 
     ! Initialize the json objects
     j_obj => null()
@@ -771,13 +749,13 @@ end if
     call j_file%initialize()
     call j_file%get_core(json)
     call assert_msg(207035903, allocated(config_file), &
-              "Received non-allocated string for file path")
-    call assert_msg(368569727, trim(config_file).ne."", &
-              "Received empty string for file path")
-    inquire( file=config_file, exist=found )
+                    "Received non-allocated string for file path")
+    call assert_msg(368569727, trim(config_file) .ne. "", &
+                    "Received empty string for file path")
+    inquire (file=config_file, exist=found)
     call assert_msg(134309013, found, "Cannot find file: "// &
-              config_file)
-    call j_file%load_file(filename = config_file)
+                    config_file)
+    call j_file%load_file(filename=config_file)
 
     ! Find the interface data
     call j_file%get('monarch-data(1)', j_obj)
@@ -788,7 +766,7 @@ end if
       ! Find the object type
       call json%get(j_obj, 'type', unicode_str_val, found)
       call assert_msg(236838162, found, "Missing type in json input file "// &
-              config_file)
+                      config_file)
       str_val = unicode_str_val
 
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -796,30 +774,30 @@ end if
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       ! Species Map data
-      if (str_val.eq."SPECIES_MAP") then
+      if (str_val .eq. "SPECIES_MAP") then
         call json%get_child(j_obj, j_child)
         do while (associated(j_child))
           call json%info(j_child, name=key, var_type=var_type)
-          if (key.ne."type".and.key.ne."name") then
+          if (key .ne. "type" .and. key .ne. "name") then
             call this%species_map_data%load(json, j_child, .false., key)
           end if
           j_next => j_child
           call json%get_next(j_next, j_child)
         end do
 
-      ! Initial concentration data
-      else if (str_val.eq."INIT_CONC") then
+        ! Initial concentration data
+      else if (str_val .eq. "INIT_CONC") then
         call json%get_child(j_obj, j_child)
         do while (associated(j_child))
           call json%info(j_child, name=key, var_type=var_type)
-          if (key.ne."type".and.key.ne."name") then
+          if (key .ne. "type" .and. key .ne. "name") then
             call this%init_conc_data%load(json, j_child, .false., key)
           end if
           j_next => j_child
           call json%get_next(j_next, j_child)
         end do
 
-      ! Data of unknown type
+        ! Data of unknown type
       else
         call this%property_set%load(json, j_obj, .false., str_val)
       end if
@@ -831,11 +809,11 @@ end if
     ! Clean up the json objects
     call j_file%destroy()
     call json%destroy()
-    deallocate(json)
+    deallocate (json)
 
 #else
     call die_msg(635417227, "PartMC-camp <-> MONARCH interface requires "// &
-                  "JSON file support.")
+                 "JSON file support.")
 #endif
 
   end subroutine load
@@ -870,77 +848,77 @@ end if
     key = "base rate"
 
     this%n_photo_rxn = 0
-    do i_rxn = 1, mechanism%size( )
-      rxn => mechanism%get_rxn( i_rxn )
-      select type( rxn_photo => rxn )
-      class is( rxn_photolysis_t )
-        if( rxn%property_set%get_real( key, base_rate ) ) then
+    do i_rxn = 1, mechanism%size()
+      rxn => mechanism%get_rxn(i_rxn)
+      select type (rxn_photo => rxn)
+      class is (rxn_photolysis_t)
+        if (rxn%property_set%get_real(key, base_rate)) then
           this%n_photo_rxn = this%n_photo_rxn + 1
         end if
       end select
     end do
 
-    allocate(this%rate_update(this%n_photo_rxn))
-    allocate(this%photo_rates(this%n_photo_rxn))
+    allocate (this%rate_update(this%n_photo_rxn))
+    allocate (this%photo_rates(this%n_photo_rxn))
 
     ! Set the CAMP and Fast-J ids
     i_photo_rxn = 1
-    do i_rxn = 1, mechanism%size( )
-      rxn => mechanism%get_rxn( i_rxn )
-      select type( rxn_photo => rxn )
-      class is( rxn_photolysis_t )
-        if( rxn%property_set%get_real( key, base_rate ) ) then
+    do i_rxn = 1, mechanism%size()
+      rxn => mechanism%get_rxn(i_rxn)
+      select type (rxn_photo => rxn)
+      class is (rxn_photolysis_t)
+        if (rxn%property_set%get_real(key, base_rate)) then
 
           ! Initialize the update data object for this reaction
-          call this%camp_core%initialize_update_object( rxn,               &
-                  this%rate_update(i_photo_rxn))
+          call this%camp_core%initialize_update_object(rxn, &
+                                                       this%rate_update(i_photo_rxn))
 
           !Update photo_rate
-          this%photo_rates(i_photo_rxn)=base_rate
-          print*,i_photo_rxn,this%photo_rates(i_photo_rxn)
+          this%photo_rates(i_photo_rxn) = base_rate
+          print *, i_photo_rxn, this%photo_rates(i_photo_rxn)
 
-          write(*,*) "base rate", base_rate
+          write (*, *) "base rate", base_rate
 
-          i_photo_rxn = i_photo_rxn+1
+          i_photo_rxn = i_photo_rxn + 1
         end if
       end select
     end do
 
     ! Make sure nothing strange happened
-    call assert( 410333867, this%n_photo_rxn .eq. i_photo_rxn - 1 )
+    call assert(410333867, this%n_photo_rxn .eq. i_photo_rxn - 1)
 
     ! Get the gas-phase species ids
     key_name = "gas-phase species"
     call assert_msg(939097252, &
-            this%species_map_data%get_property_t(key_name, gas_species_list), &
-            "Missing set of gas-phase species MONARCH ids")
+                    this%species_map_data%get_property_t(key_name, gas_species_list), &
+                    "Missing set of gas-phase species MONARCH ids")
     num_spec = gas_species_list%size()
 
     ! Get the aerosol-phase species ids
     key_name = "aerosol-phase species"
     if (this%species_map_data%get_property_t(key_name, &
-            aero_species_list)) then
+                                             aero_species_list)) then
       num_spec = num_spec + aero_species_list%size()
     end if
 
     ! Set up the species map and MONARCH names array
-    allocate(this%monarch_species_names(num_spec))
-    allocate(this%map_monarch_id(num_spec))
-    allocate(this%map_camp_id(num_spec))
+    allocate (this%monarch_species_names(num_spec))
+    allocate (this%map_monarch_id(num_spec))
+    allocate (this%map_camp_id(num_spec))
 
     ! Get the chemical species data
     call assert_msg(731700229, &
-            this%camp_core%get_chem_spec_data(chem_spec_data), &
-            "No chemical species data in camp_core.")
+                    this%camp_core%get_chem_spec_data(chem_spec_data), &
+                    "No chemical species data in camp_core.")
 
     ! Set the gas-phase water id
     key_name = "gas-phase water"
     call assert_msg(413656652, &
-            this%species_map_data%get_string(key_name, spec_name), &
-            "Missing gas-phase water species for MONARCH interface.")
+                    this%species_map_data%get_string(key_name, spec_name), &
+                    "Missing gas-phase water species for MONARCH interface.")
     this%gas_phase_water_id = chem_spec_data%gas_state_id(spec_name)
-    call assert_msg(910692272, this%gas_phase_water_id.gt.0, &
-            "Could not find gas-phase water species '"//spec_name//"'.")
+    call assert_msg(910692272, this%gas_phase_water_id .gt. 0, &
+                    "Could not find gas-phase water species '"//spec_name//"'.")
 
     ! Loop through the gas-phase species and set up the map
     call gas_species_list%iter_reset()
@@ -950,25 +928,25 @@ end if
       this%monarch_species_names(i_spec)%string = spec_name
 
       call assert_msg(599522862, &
-              gas_species_list%get_property_t(val=species_data), &
-              "Missing species data for '"//spec_name//"' in PartMC-camp "// &
-              "<-> MONARCH species map.")
+                      gas_species_list%get_property_t(val=species_data), &
+                      "Missing species data for '"//spec_name//"' in PartMC-camp "// &
+                      "<-> MONARCH species map.")
 
       key_name = "monarch id"
       call assert_msg(643926329, &
-              species_data%get_int(key_name, this%map_monarch_id(i_spec)), &
-              "Missing monarch id for species '"//spec_name//" in "// &
-              "PartMC-camp <-> MONARCH species map.")
+                      species_data%get_int(key_name, this%map_monarch_id(i_spec)), &
+                      "Missing monarch id for species '"//spec_name//" in "// &
+                      "PartMC-camp <-> MONARCH species map.")
       this%map_monarch_id(i_spec) = this%map_monarch_id(i_spec) + &
-              this%tracer_starting_id - 1
+                                    this%tracer_starting_id - 1
       call assert_msg(450258014, &
-              this%map_monarch_id(i_spec).le.this%tracer_ending_id, &
-              "Monarch id for species '"//spec_name//"' out of specified "// &
-              "tracer array bounds.")
+                      this%map_monarch_id(i_spec) .le. this%tracer_ending_id, &
+                      "Monarch id for species '"//spec_name//"' out of specified "// &
+                      "tracer array bounds.")
 
       this%map_camp_id(i_spec) = chem_spec_data%gas_state_id(spec_name)
-      call assert_msg(916977002, this%map_camp_id(i_spec).gt.0, &
-                "Could not find species '"//spec_name//"' in PartMC-camp.")
+      call assert_msg(916977002, this%map_camp_id(i_spec) .gt. 0, &
+                      "Could not find species '"//spec_name//"' in PartMC-camp.")
 
       call gas_species_list%iter_next()
       i_spec = i_spec + 1
@@ -978,42 +956,42 @@ end if
     if (associated(aero_species_list)) then
 
       call aero_species_list%iter_reset()
-      do while(aero_species_list%get_key(spec_name))
+      do while (aero_species_list%get_key(spec_name))
 
         this%monarch_species_names(i_spec)%string = spec_name
 
         call assert_msg(567689501, &
-                aero_species_list%get_property_t(val=species_data), &
-                "Missing species data for '"//spec_name//"' in " //&
-                "PartMC-camp <-> MONARCH species map.")
+                        aero_species_list%get_property_t(val=species_data), &
+                        "Missing species data for '"//spec_name//"' in "// &
+                        "PartMC-camp <-> MONARCH species map.")
 
         key_name = "monarch id"
         call assert_msg(615451741, &
-                species_data%get_int(key_name, this%map_monarch_id(i_spec)), &
-                "Missing monarch id for species '"//spec_name//"' in "// &
-                "PartMC-camp <-> MONARCH species map.")
+                        species_data%get_int(key_name, this%map_monarch_id(i_spec)), &
+                        "Missing monarch id for species '"//spec_name//"' in "// &
+                        "PartMC-camp <-> MONARCH species map.")
         this%map_monarch_id(i_spec) = this%map_monarch_id(i_spec) + &
-                this%tracer_starting_id - 1
+                                      this%tracer_starting_id - 1
         call assert_msg(382644266, &
-                this%map_monarch_id(i_spec).le.this%tracer_ending_id, &
-                "Monarch id for species '"//spec_name//"' out of "// &
-                "specified tracer array bounds.")
+                        this%map_monarch_id(i_spec) .le. this%tracer_ending_id, &
+                        "Monarch id for species '"//spec_name//"' out of "// &
+                        "specified tracer array bounds.")
 
         key_name = "aerosol representation name"
         call assert_msg(963222513, &
-                species_data%get_string(key_name, rep_name), &
-                "Missing aerosol representation name for species '"// &
-                spec_name//"' in PartMC-camp <-> MONARCH species map.")
+                        species_data%get_string(key_name, rep_name), &
+                        "Missing aerosol representation name for species '"// &
+                        spec_name//"' in PartMC-camp <-> MONARCH species map.")
 
         ! Find the species PartMC id
         this%map_camp_id(i_spec) = 0
         call assert_msg(377850668, &
-                this%camp_core%get_aero_rep(rep_name, aero_rep_ptr), &
-                "Could not find aerosol representation '"//rep_name//"'")
+                        this%camp_core%get_aero_rep(rep_name, aero_rep_ptr), &
+                        "Could not find aerosol representation '"//rep_name//"'")
         this%map_camp_id(i_spec) = aero_rep_ptr%spec_state_id(spec_name)
         call assert_msg(887136850, this%map_camp_id(i_spec) .gt. 0, &
-                "Could not find aerosol species '"//spec_name//"' in "// &
-                "aerosol representation '"//rep_name//"'.")
+                        "Could not find aerosol species '"//spec_name//"' in "// &
+                        "aerosol representation '"//rep_name//"'.")
 
         call aero_species_list%iter_next()
         i_spec = i_spec + 1
@@ -1038,9 +1016,9 @@ end if
     real :: factor_ppb_to_ppm
 
 #ifndef ENABLE_CB05_SOA
-    factor_ppb_to_ppm=1.0E-3
+    factor_ppb_to_ppm = 1.0E-3
 #else
-    factor_ppb_to_ppm=1.0
+    factor_ppb_to_ppm = 1.0
 #endif
 
     num_spec = 0
@@ -1059,12 +1037,12 @@ end if
 
     ! Get the chemical species data
     call assert_msg(885063268, &
-            this%camp_core%get_chem_spec_data(chem_spec_data), &
-            "No chemical species data in camp_core.")
+                    this%camp_core%get_chem_spec_data(chem_spec_data), &
+                    "No chemical species data in camp_core.")
 
     ! Allocate space for the initial concentrations and indices
-    allocate(this%init_conc_camp_id(num_spec))
-    allocate(this%init_conc(num_spec))
+    allocate (this%init_conc_camp_id(num_spec))
+    allocate (this%init_conc(num_spec))
 
     ! Add the gas-phase initial concentrations
     if (associated(gas_species_list)) then
@@ -1075,22 +1053,22 @@ end if
       do while (gas_species_list%get_key(spec_name))
 
         call assert_msg(325582312, &
-                gas_species_list%get_property_t(val=species_data), &
-                "Missing species data for '"//spec_name//"' for "// &
-                "PartMC-camp initial concentrations.")
+                        gas_species_list%get_property_t(val=species_data), &
+                        "Missing species data for '"//spec_name//"' for "// &
+                        "PartMC-camp initial concentrations.")
 
         key_name = "init conc"
         call assert_msg(445070498, &
-                species_data%get_real(key_name, this%init_conc(i_spec)), &
-                "Missing 'init conc' for species '"//spec_name//" for "// &
-                "PartMC-camp initial concentrations.")
+                        species_data%get_real(key_name, this%init_conc(i_spec)), &
+                        "Missing 'init conc' for species '"//spec_name//" for "// &
+                        "PartMC-camp initial concentrations.")
         ! Unit change json gases in ppb - camp works with ppm
-        this%init_conc(i_spec) = this%init_conc(i_spec) * factor_ppb_to_ppm
+        this%init_conc(i_spec) = this%init_conc(i_spec)*factor_ppb_to_ppm
 
         this%init_conc_camp_id(i_spec) = &
-                chem_spec_data%gas_state_id(spec_name)
-        call assert_msg(940200584, this%init_conc_camp_id(i_spec).gt.0, &
-                "Could not find species '"//spec_name//"' in PartMC-camp.")
+          chem_spec_data%gas_state_id(spec_name)
+        call assert_msg(940200584, this%init_conc_camp_id(i_spec) .gt. 0, &
+                        "Could not find species '"//spec_name//"' in PartMC-camp.")
 
         call gas_species_list%iter_next()
         i_spec = i_spec + 1
@@ -1102,35 +1080,35 @@ end if
     if (associated(aero_species_list)) then
 
       call aero_species_list%iter_reset()
-      do while(aero_species_list%get_key(spec_name))
+      do while (aero_species_list%get_key(spec_name))
 
         call assert_msg(331096555, &
-                aero_species_list%get_property_t(val=species_data), &
-                "Missing species data for '"//spec_name//"' for " //&
-                "PartMC-camp initial concentrations.")
+                        aero_species_list%get_property_t(val=species_data), &
+                        "Missing species data for '"//spec_name//"' for "// &
+                        "PartMC-camp initial concentrations.")
 
         key_name = "init conc"
         call assert_msg(782275469, &
-                species_data%get_real(key_name, this%init_conc(i_spec)), &
-                "Missing 'init conc' for species '"//spec_name//"' for "// &
-                "PartMC-camp initial concentrations.")
+                        species_data%get_real(key_name, this%init_conc(i_spec)), &
+                        "Missing 'init conc' for species '"//spec_name//"' for "// &
+                        "PartMC-camp initial concentrations.")
         ! No Unit change required json aerosols in kg m-3 - camp works with kg m-3
         key_name = "aerosol representation name"
         call assert_msg(150863332, &
-                species_data%get_string(key_name, rep_name), &
-                "Missing aerosol representation name for species '"// &
-                spec_name//"' for PartMC-camp initial concentrations.")
+                        species_data%get_string(key_name, rep_name), &
+                        "Missing aerosol representation name for species '"// &
+                        spec_name//"' for PartMC-camp initial concentrations.")
 
         ! Find the species PartMC id
         this%init_conc_camp_id(i_spec) = 0
         call assert_msg(258814777, &
-                this%camp_core%get_aero_rep(rep_name, aero_rep_ptr), &
-                "Could not find aerosol representation '"//rep_name//"'")
+                        this%camp_core%get_aero_rep(rep_name, aero_rep_ptr), &
+                        "Could not find aerosol representation '"//rep_name//"'")
         this%init_conc_camp_id(i_spec) = &
-                aero_rep_ptr%spec_state_id(spec_name)
+          aero_rep_ptr%spec_state_id(spec_name)
         call assert_msg(437149649, this%init_conc_camp_id(i_spec) .gt. 0, &
-                "Could not find aerosol species '"//spec_name//"' in "// &
-                "aerosol representation '"//rep_name//"'.")
+                        "Could not find aerosol species '"//spec_name//"' in "// &
+                        "aerosol representation '"//rep_name//"'.")
 
         call aero_species_list%iter_next()
         i_spec = i_spec + 1
@@ -1143,43 +1121,43 @@ end if
 
   !> Get initial concentrations for the mock MONARCH model (for testing only)
   subroutine get_init_conc(this, MONARCH_conc, MONARCH_water_conc, &
-      WATER_VAPOR_ID, MONARCH_air_density)
+                           WATER_VAPOR_ID, MONARCH_air_density)
 
     !> PartMC-camp <-> MONARCH interface
     class(monarch_interface_t) :: this
     !> MONARCH species concentrations to update
-    real, intent(inout) :: MONARCH_conc(:,:,:,:)
+    real, intent(inout) :: MONARCH_conc(:, :, :, :)
     !> Atmospheric water concentrations (kg_H2O/kg_air)
-    real, intent(in) :: MONARCH_water_conc(:,:,:,:)
+    real, intent(in) :: MONARCH_water_conc(:, :, :, :)
     !> Index in water_conc corresponding to water vapor
     integer, intent(in) :: WATER_VAPOR_ID
     !> Air density (kg_air/m^3)
-    real, intent(in) :: MONARCH_air_density(:,:,:)
+    real, intent(in) :: MONARCH_air_density(:, :, :)
 
-    integer(kind=i_kind) :: i_spec, water_id, i,j,k
+    integer(kind=i_kind) :: i_spec, water_id, i, j, k
 
     ! Reset the species concentrations in CAMP and MONARCH
     this%camp_state%state_var(:) = 0.0
-    MONARCH_conc(:,:,:,:) = 0.0
+    MONARCH_conc(:, :, :, :) = 0.0
 
     ! Set the air density to a nominal value
-    print*,'MONARCH air denisty: ',MONARCH_air_density(:,:,:) ! = 1.225
+    print *, 'MONARCH air denisty: ', MONARCH_air_density(:, :, :) ! = 1.225
 
     ! Set initial concentrations in CAMP
     this%camp_state%state_var(this%init_conc_camp_id(:)) = this%init_conc(:)
 
     ! Copy species concentrations to MONARCH array
-    forall (i_spec = 1:size(this%map_monarch_id))
-      MONARCH_conc(:,:,:,this%map_monarch_id(i_spec)) = &
-              this%camp_state%state_var(this%map_camp_id(i_spec))
+    forall (i_spec=1:size(this%map_monarch_id))
+      MONARCH_conc(:, :, :, this%map_monarch_id(i_spec)) = &
+        this%camp_state%state_var(this%map_camp_id(i_spec))
     end forall
 
     ! Set the relative humidity
     this%camp_state%state_var(this%gas_phase_water_id) = &
-             MONARCH_water_conc(1,1,1,WATER_VAPOR_ID) * &
-             mwair / mwwat * 1.e6
-    print*,'GET_INIT_CONC SPECIES:'
-      print*,this%camp_state%state_var(:)
+      MONARCH_water_conc(1, 1, 1, WATER_VAPOR_ID)* &
+      mwair/mwwat*1.e6
+    print *, 'GET_INIT_CONC SPECIES:'
+    print *, this%camp_state%state_var(:)
   end subroutine get_init_conc
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1220,25 +1198,25 @@ end if
     type(monarch_interface_t), intent(inout) :: this
 
     if (associated(this%camp_core)) &
-            deallocate(this%camp_core)
+      deallocate (this%camp_core)
     if (associated(this%camp_state)) &
-            deallocate(this%camp_state)
+      deallocate (this%camp_state)
     if (allocated(this%monarch_species_names)) &
-            deallocate(this%monarch_species_names)
+      deallocate (this%monarch_species_names)
     if (allocated(this%map_monarch_id)) &
-            deallocate(this%map_monarch_id)
+      deallocate (this%map_monarch_id)
     if (allocated(this%map_camp_id)) &
-            deallocate(this%map_camp_id)
+      deallocate (this%map_camp_id)
     if (allocated(this%init_conc_camp_id)) &
-            deallocate(this%init_conc_camp_id)
+      deallocate (this%init_conc_camp_id)
     if (allocated(this%init_conc)) &
-            deallocate(this%init_conc)
+      deallocate (this%init_conc)
     if (associated(this%species_map_data)) &
-            deallocate(this%species_map_data)
+      deallocate (this%species_map_data)
     if (associated(this%init_conc_data)) &
-            deallocate(this%init_conc_data)
+      deallocate (this%init_conc_data)
     if (associated(this%property_set)) &
-            deallocate(this%property_set)
+      deallocate (this%property_set)
 
   end subroutine finalize
 

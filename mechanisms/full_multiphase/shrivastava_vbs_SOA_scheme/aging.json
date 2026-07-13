@@ -1,0 +1,93 @@
+{
+  "notes": [
+    "Aging reactions for VBS NOx dependent SOA scheme from Shrivastava et al. (2019)",
+    "Using a trick to reuse the VBS NOX DEPENDENT reactions types :",
+    "setting high_nox_yield = 1 and low_nox_yield = 0 for  the fragmentation product",
+    "and high_nox_yield =0 and low_nox_yield = 1 for the functionalisation product",
+    "the VBS nox dependent reaction behaves like the fragmentation reactions except",
+    "that alpha_frag is not limited to 0.75 like in the paper."
+  ],
+
+  "camp-data": [
+    {
+
+      "name": "MONARCH mod37",
+      "type": "MECHANISM",
+      "reactions": [
+        {
+          "type": "VBS_NOX_DEPENDENT",
+          "reactants": {
+            "OH": {},
+            "VBS1": {}
+          },
+          "products": {
+            "VBS2": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 0.0
+            }
+          },
+          "A": 2.0e-11,
+          "C": 0.0
+        },
+        {
+          "type": "VBS_NOX_DEPENDENT",
+          "reactants": {
+            "OH": {},
+            "VBS2": {}
+          },
+          "products": {
+            "VBS1": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 1.0
+            },
+            "VBS3": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 0.0
+            }
+          },
+          "A": 2.0e-11,
+          "C": 0.0
+        },
+        {
+          "type": "VBS_NOX_DEPENDENT",
+          "reactants": {
+            "OH": {},
+            "VBS3": {}
+          },
+          "products": {
+            "VBS2": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 1.0
+            },
+            "VBS4": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 0.0
+            }
+          },
+          "A": 2.0e-11,
+          "C": 0.0
+        },
+        {
+          "type": "VBS_NOX_DEPENDENT",
+          "reactants": {
+            "OH": {},
+            "VBS4": {}
+          },
+          "products": {
+            "VBS3": {
+              "high_nox_yield": 0.0,
+              "low_nox_yield": 1.0
+            },
+            "CO": {
+              "high_nox_yield": 1.0,
+              "low_nox_yield": 0.0,
+              "note" : "represent fragmentatino loss to non-condensible organic matter"
+            }
+          },
+          "A": 2.0e-11,
+          "C": 0.0
+        }
+      ]
+    }
+  ]
+}

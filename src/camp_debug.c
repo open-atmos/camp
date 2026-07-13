@@ -36,9 +36,9 @@ void get_export_state_name(char filename[]) {
  * Initializes the export state.
  *
  * This function is responsible for initializing the export state. It checks if
- * the PROFILE_SOLVING macro is defined and if so, it creates a file with the
- * given filename and closes it immediately. The export state is enabled only
- * for the process with rank 0.
+ * the PROFILE_SOLVING macro is defined and if so, it creates a file with
+ * the given filename and closes it immediately. The export state is enabled
+ * only for the process with rank 0.
  *
  */
 void init_export_state() {
@@ -58,8 +58,8 @@ void init_export_state() {
  * Export the state of the solver.
  *
  * This function exports the state of the solver to a file. It is only executed
- * when the `PROFILE_SOLVING` macro is defined. The state is exported for each
- * cell in the model data. The exported state variables are stored in the
+ * when the `PROFILE_SOLVING` macro is defined. The state is exported for
+ * each cell in the model data. The exported state variables are stored in the
  * `total_state` array of the model data.
  *
  * @param sd A pointer to the SolverData struct.
@@ -151,10 +151,12 @@ void export_stats(SolverData *sd) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   if (rank == 0) {
     FILE *fptr;
-    if (sd->iters_load_balance == 0)
-      sd->iters_load_balance = 1;  // avoid division by 0
+    if (sd->iters_load_balance == 0) sd->iters_load_balance = 1;
     if ((fptr = fopen("out/stats.csv", "w")) != NULL) {
-      fprintf(fptr, "timeCVode,avg_load_balance\n");
+      fprintf(fptr,
+              "timeCVode"
+              ",avg_load_balance"
+              "\n");
       fprintf(fptr, "%.17le,%.17le", sd->timeCVode,
               sd->acc_load_balance / sd->iters_load_balance);
       fprintf(fptr, "\n");

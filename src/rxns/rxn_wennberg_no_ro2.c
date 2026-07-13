@@ -9,10 +9,10 @@
 /** \file
  * \brief Wennberg NO + RO2 reaction solver functions
  */
+#include "../rxns.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../rxns.h"
 
 // TODO Lookup environmental indices during initialization
 #define TEMPERATURE_K_ env_data[0]
@@ -36,8 +36,8 @@
 #define DERIV_ID_(x)                                                           \
   int_data[NUM_INT_PROP_ + NUM_REACT_ + NUM_ALKOXY_PROD_ + NUM_NITRATE_PROD_ + \
            x]
-#define JAC_ID_(x)         \
-  int_data[NUM_INT_PROP_ + \
+#define JAC_ID_(x)                                                             \
+  int_data[NUM_INT_PROP_ +                                                     \
            2 * (NUM_REACT_ + NUM_ALKOXY_PROD_ + NUM_NITRATE_PROD_) + x]
 #define YIELD_(x) float_data[NUM_FLOAT_PROP_ + x]
 
@@ -80,7 +80,8 @@ void rxn_wennberg_no_ro2_update_ids(ModelData *model_data, int *deriv_ids,
   double *float_data = rxn_float_data;
 
   // Update the time derivative ids
-  for (int i = 0; i < NUM_REACT_; i++) DERIV_ID_(i) = deriv_ids[REACT_(i)];
+  for (int i = 0; i < NUM_REACT_; i++)
+    DERIV_ID_(i) = deriv_ids[REACT_(i)];
   for (int i = 0; i < NUM_ALKOXY_PROD_ + NUM_NITRATE_PROD_; i++)
     DERIV_ID_(i + NUM_REACT_) = deriv_ids[PROD_(i)];
 
@@ -139,7 +140,7 @@ void rxn_wennberg_no_ro2_update_env_state(ModelData *model_data,
   // Calculate the rate constant in (#/cc)
   base_rate = X_ * exp(-Y_ / TEMPERATURE_K_) *
               pow(CONV_ * PRESSURE_PA_ / TEMPERATURE_K_, NUM_REACT_ - 1);
-  M = CONV_ * PRESSURE_PA_ / TEMPERATURE_K_ * 1e6;  // [#/cm3]
+  M = CONV_ * PRESSURE_PA_ / TEMPERATURE_K_ * 1e6; // [#/cm3]
   Z = calculate_A(293.0, 2.45e19, n_) * (1.0 - a0_) / a0_;
   A = calculate_A(TEMPERATURE_K_, M, n_);
   ALKOXY_RATE_CONSTANT_ = base_rate * Z / (Z + A);
@@ -177,12 +178,14 @@ void rxn_wennberg_no_ro2_calc_deriv_contrib(
   if (rate != ZERO) {
     int i_dep_var = 0;
     for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++, i_dep_var++) {
-      if (DERIV_ID_(i_dep_var) < 0) continue;
+      if (DERIV_ID_(i_dep_var) < 0)
+        continue;
       time_derivative_add_value(time_deriv, DERIV_ID_(i_dep_var),
                                 -(k_a + k_n) * rate);
     }
     for (int i_spec = 0; i_spec < NUM_ALKOXY_PROD_; i_spec++, i_dep_var++) {
-      if (DERIV_ID_(i_dep_var) < 0) continue;
+      if (DERIV_ID_(i_dep_var) < 0)
+        continue;
 
       // Negative yields are allowed, but prevented from causing negative
       // concentrations that lead to solver failures
@@ -193,7 +196,8 @@ void rxn_wennberg_no_ro2_calc_deriv_contrib(
     }
     for (int i_spec = NUM_ALKOXY_PROD_;
          i_spec < NUM_ALKOXY_PROD_ + NUM_NITRATE_PROD_; i_spec++, i_dep_var++) {
-      if (DERIV_ID_(i_dep_var) < 0) continue;
+      if (DERIV_ID_(i_dep_var) < 0)
+        continue;
 
       // Negative yields are allowed, but prevented from causing negative
       // concentrations that lead to solver failures
@@ -236,15 +240,18 @@ void rxn_wennberg_no_ro2_calc_jac_contrib(ModelData *model_data, Jacobian jac,
     realtype k_a = ALKOXY_RATE_CONSTANT_;
     realtype k_n = NITRATE_RATE_CONSTANT_;
     for (int i_spec = 0; i_spec < NUM_REACT_; i_spec++)
-      if (i_spec != i_ind) rate *= state[REACT_(i_spec)];
+      if (i_spec != i_ind)
+        rate *= state[REACT_(i_spec)];
 
     for (int i_dep = 0; i_dep < NUM_REACT_; i_dep++, i_elem++) {
-      if (JAC_ID_(i_elem) < 0) continue;
+      if (JAC_ID_(i_elem) < 0)
+        continue;
       jacobian_add_value(jac, (unsigned int)JAC_ID_(i_elem), JACOBIAN_LOSS,
                          (k_a + k_n) * rate);
     }
     for (int i_dep = 0; i_dep < NUM_ALKOXY_PROD_; i_dep++, i_elem++) {
-      if (JAC_ID_(i_elem) < 0) continue;
+      if (JAC_ID_(i_elem) < 0)
+        continue;
       // Negative yields are allowed, but prevented from causing negative
       // concentrations that lead to solver failures
       if (-k_a * rate * state[REACT_(i_ind)] * YIELD_(i_dep) * time_step <=
@@ -255,7 +262,8 @@ void rxn_wennberg_no_ro2_calc_jac_contrib(ModelData *model_data, Jacobian jac,
     }
     for (int i_dep = NUM_ALKOXY_PROD_;
          i_dep < NUM_ALKOXY_PROD_ + NUM_NITRATE_PROD_; i_dep++, i_elem++) {
-      if (JAC_ID_(i_elem) < 0) continue;
+      if (JAC_ID_(i_elem) < 0)
+        continue;
       // Negative yields are allowed, but prevented from causing negative
       // concentrations that lead to solver failures
       if (-k_n * rate * state[REACT_(i_ind)] * YIELD_(i_dep) * time_step <=

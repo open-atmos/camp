@@ -253,20 +253,20 @@ contains
       ! phase name
       if (key.eq."name") then
         if (var_type.ne.json_string) call die_msg(429142134, &
-                "Received non-string aerosol phase name.")
+          "Received non-string aerosol phase name.")
         call json%get(child, unicode_str_val)
         this%phase_name = unicode_str_val
 
-      ! chemical species in the phase
+        ! chemical species in the phase
       else if (key.eq."species") then
         if (var_type.ne.json_array) call die_msg(293312378, &
-                "Received non-array list of aerosol phase species: "//&
-                to_string(var_type))
+          "Received non-array list of aerosol phase species: "//&
+          to_string(var_type))
         call json%get_child(child, species)
         do while (associated(species))
           call json%info(species, var_type=var_type)
           if (var_type.ne.json_string) call die_msg(669858868, &
-                  "Received non-string aerosol phase species name.")
+            "Received non-string aerosol phase species name.")
           call json%get(species, unicode_str_val)
           str_val = unicode_str_val
           call this%add(str_val)
@@ -274,7 +274,7 @@ contains
           species => next
         end do
 
-      ! load remaining properties into the phase property set
+        ! load remaining properties into the phase property set
       else if (key.ne."type") then
         call property_set%load(json, child, .false., this%phase_name)
       end if
@@ -326,50 +326,50 @@ contains
 
       ! Get the species properties
       call assert_msg(140971956, chem_spec_data%get_property_set( &
-              this%spec_name(i_spec)%string, spec_props), &
-              "Missing property set for species '"// &
-              this%spec_name(i_spec)%string// &
-              "' in aerosol phase '"//this%phase_name//"'")
+        this%spec_name(i_spec)%string, spec_props), &
+        "Missing property set for species '"// &
+        this%spec_name(i_spec)%string// &
+        "' in aerosol phase '"//this%phase_name//"'")
 
       ! Get the species type
       call assert_msg(129442398, chem_spec_data%get_type( &
-              this%spec_name(i_spec)%string, SPEC_TYPE_(i_spec)), &
-              "Missing type for species '"// &
-              this%spec_name(i_spec)%string// &
-              "' in aerosol phase '"//this%phase_name//"'")
+        this%spec_name(i_spec)%string, SPEC_TYPE_(i_spec)), &
+        "Missing type for species '"// &
+        this%spec_name(i_spec)%string// &
+        "' in aerosol phase '"//this%phase_name//"'")
 
       ! Make sure the species is an aerosol-phase species
       call assert_msg(136357145, chem_spec_data%get_phase( &
-              this%spec_name(i_spec)%string, i_spec_phase_type ), &
-              "Error getting phase for species "// &
-              this%spec_name(i_spec)%string)
+        this%spec_name(i_spec)%string, i_spec_phase_type ), &
+        "Error getting phase for species "// &
+        this%spec_name(i_spec)%string)
       call assert_msg(861388228, i_spec_phase_type.eq.CHEM_SPEC_AERO_PHASE, &
-              "Trying to add non-aerosol phase species to aerosol phase "// &
-              this%phase_name//"; species: "//this%spec_name(i_spec)%string)
+        "Trying to add non-aerosol phase species to aerosol phase "// &
+        this%phase_name//"; species: "//this%spec_name(i_spec)%string)
 
       ! get the molecular weight and density of species
       ! present in the phase
       if (SPEC_TYPE_(i_spec).eq.CHEM_SPEC_VARIABLE .or. &
-          SPEC_TYPE_(i_spec).eq.CHEM_SPEC_CONSTANT .or. &
-          SPEC_TYPE_(i_spec).eq.CHEM_SPEC_PSSA) then
+        SPEC_TYPE_(i_spec).eq.CHEM_SPEC_CONSTANT .or. &
+        SPEC_TYPE_(i_spec).eq.CHEM_SPEC_PSSA) then
 
         ! Get the molecular weight
         key_name = "molecular weight [kg mol-1]"
         call assert_msg(512254139, &
-                spec_props%get_real(key_name, MW_(i_spec)), &
-                "Missing molecular weight for species '"// &
-                this%spec_name(i_spec)%string// &
-                "' in aerosol phase '"//this%phase_name//"'")
+          spec_props%get_real(key_name, MW_(i_spec)), &
+          "Missing molecular weight for species '"// &
+          this%spec_name(i_spec)%string// &
+          "' in aerosol phase '"//this%phase_name//"'")
 
         ! Get the density
         key_name = "density [kg m-3]"
         call assert_msg(224966878, &
-                spec_props%get_real(key_name, DENSITY_(i_spec)), &
-                "Missing density for species '"// &
-                this%spec_name(i_spec)%string// &
-                "' in aerosol phase '"//this%phase_name//"'")
+          spec_props%get_real(key_name, DENSITY_(i_spec)), &
+          "Missing density for species '"// &
+          this%spec_name(i_spec)%string// &
+          "' in aerosol phase '"//this%phase_name//"'")
 
-      ! activity coefficients do not need molecular weight or density
+        ! activity coefficients do not need molecular weight or density
       else
 
         MW_(i_spec) = 0.0
@@ -423,9 +423,9 @@ contains
     num_elem = 0
     do i_spec = 1, this%num_spec
       if (SPEC_TYPE_(i_spec) == CHEM_SPEC_VARIABLE .or.                      &
-          SPEC_TYPE_(i_spec) == CHEM_SPEC_CONSTANT .or.                      &
-          SPEC_TYPE_(i_spec) == CHEM_SPEC_PSSA) then
-          num_elem = num_elem + 1
+        SPEC_TYPE_(i_spec) == CHEM_SPEC_CONSTANT .or.                      &
+        SPEC_TYPE_(i_spec) == CHEM_SPEC_PSSA) then
+        num_elem = num_elem + 1
       end if
     end do
 
@@ -477,8 +477,8 @@ contains
     character(len=*), intent(in) :: spec_name
 
     call assert_msg(163269315, this%find(spec_name).gt.0, &
-            "Species '"//spec_name//"' is not in aerosol phase '"// &
-            this%phase_name//"'.")
+      "Species '"//spec_name//"' is not in aerosol phase '"// &
+      this%phase_name//"'.")
     call assert(255786656, this%chem_spec_data%get_type(spec_name, spec_type))
 
   end function get_species_type
@@ -495,8 +495,8 @@ contains
     integer, intent(in) :: comm
 
     pack_size = &
-            camp_mpi_pack_size_real_array(this%condensed_data_real, comm) + &
-            camp_mpi_pack_size_integer_array(this%condensed_data_int, comm)
+      camp_mpi_pack_size_real_array(this%condensed_data_real, comm) + &
+      camp_mpi_pack_size_integer_array(this%condensed_data_int, comm)
 
   end function pack_size
 
@@ -521,7 +521,7 @@ contains
     call camp_mpi_pack_real_array(buffer, pos, this%condensed_data_real, comm)
     call camp_mpi_pack_integer_array(buffer, pos, this%condensed_data_int,comm)
     call assert(561436372, &
-         pos - prev_position <= this%pack_size(comm))
+      pos - prev_position <= this%pack_size(comm))
 #endif
 
   end subroutine bin_pack
@@ -546,9 +546,9 @@ contains
     prev_position = pos
     call camp_mpi_unpack_real_array(buffer, pos, this%condensed_data_real,comm)
     call camp_mpi_unpack_integer_array(buffer, pos, this%condensed_data_int,  &
-                                                                         comm)
+      comm)
     call assert(219217030, &
-         pos - prev_position <= this%pack_size(comm))
+      pos - prev_position <= this%pack_size(comm))
 #endif
 
   end subroutine bin_unpack
@@ -584,7 +584,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Finalize the aerosol phase data
-  elemental subroutine finalize(this)
+  subroutine finalize(this)
 
     !> Aerosol phase data
     type(aero_phase_data_t), intent(inout) :: this
@@ -593,9 +593,9 @@ contains
     if (associated(this%spec_name))    deallocate(this%spec_name)
     if (associated(this%property_set)) deallocate(this%property_set)
     if (allocated(this%condensed_data_real)) &
-                                       deallocate(this%condensed_data_real)
+      deallocate(this%condensed_data_real)
     if (allocated(this%condensed_data_int)) &
-                                       deallocate(this%condensed_data_int)
+      deallocate(this%condensed_data_int)
 
   end subroutine finalize
 
@@ -637,7 +637,7 @@ contains
     i_spec = this%find(spec_name)
     if (i_spec.ne.0) then
       call warn_msg(980242449, "Species "//spec_name//&
-              " added more than once to phase "//this%name())
+        " added more than once to phase "//this%name())
       return
     end if
     call this%ensure_size(1)
@@ -651,7 +651,7 @@ contains
   !> Get the index of an aerosol-phase species by name. Return 0 if the
   !! species is not found
   integer(kind=i_kind) function find(this, spec_name) &
-                  result (spec_id)
+    result (spec_id)
 
     !> Aerosol phase data
     class(aero_phase_data_t), intent(in) :: this

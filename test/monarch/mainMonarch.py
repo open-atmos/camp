@@ -1,9 +1,9 @@
 # import plot_functions  # comment to save ~2s execution time
-import math_functions
 import os
 import numpy as np
 import json
 import subprocess
+from math import sqrt
 from pandas import read_csv as pd_read_csv
 
 
@@ -11,6 +11,7 @@ class TestMonarch:
 
     def __init__(self):
         # Case configuration
+        self.tolerance_RMSE = 0.1  # % RMSE tolerance
         self.chemFile = "cb05_paperV2"  # Folder with chemical mechanism
         self.timeSteps = 1  # Number of chemistry time steps
         self.timeStepsDt = 2  # Time-step size
@@ -42,9 +43,34 @@ class TestMonarch:
         self.loads_gpu = [100
                           ]  # Percentage of computational load (cells) to GPU
         # 0 to Fixed load balance during run time 1 to Automatic load balance
-        self.load_balance = 0  # Flag to indicate if the balance should be balanced in run-time
+        self.is_load_balance = 0  # Flag to indicate if the balance should be balanced in run-time
         # 0: Fixed, 1: Automatic
         self.timeFromStats = "timeCVode"  # Name of variable from the stats file.
+
+
+def check_RMSE(conf, species1, species2, nCells):
+    n_state = int(len(species1))
+    n_species = int(n_state / nCells)
+    RMSEs_species = [0.] * n_species
+    max_RMSEs_species = 0.
+    for j2 in range(nCells):
+        for k in range(n_species):
+            k2 = k + j2 * n_species
+            y1 = species1[k2]
+            y2 = species2[k2]
+            RMSEs_species[k] += (y1 - y2)**2
+    for k in range(n_species):
+        RMSEs_species[k] = sqrt(RMSEs_species[k] / nCells)
+        if RMSEs_species[k] > max_RMSEs_species:
+            max_RMSEs_species = RMSEs_species[k]
+        RMSEs_species[k] = 0.
+    RMSE = max_RMSEs_species * 100
+    tol = conf.tolerance_RMSE
+    tol = 0.1  # % error
+    if RMSE > tol:
+        raise Exception("ERROR: RMSE > tolerance; RMSE:", RMSE, "tolerance:",
+                        tol, "check debug utilities like debug.camp.diff.sh")
+    print("RMSE:", RMSE)
 
 
 # from line_profiler_pycharm import profile
@@ -116,7 +142,7 @@ def run(conf):
         "Cells to GPU:",
         str(conf.load_gpu) + "%",
         "Load_balance: ",
-        str(conf.load_balance),
+        str(conf.is_load_balance),
     )
     conf_name = "settings/TestMonarch.json"
     with open(conf_name, "w", encoding="utf-8") as jsonFile:
@@ -129,12 +155,12 @@ def run(conf):
     is_import = False
     data_path = "out/stats"
     if conf.caseGpuCpu == "GPU":
-        data_path += str(conf.load_gpu) + str(conf.load_balance)
+        data_path += str(conf.load_gpu) + str(conf.is_load_balance)
     data_path += (caseGpuCpuName + nCellsStr + "cells" + str(conf.timeSteps) +
                   "tsteps.csv")
     data_path2 = "out/state"
     if conf.caseGpuCpu == "GPU":
-        data_path2 += str(conf.load_gpu) + str(conf.load_balance)
+        data_path2 += str(conf.load_gpu) + str(conf.is_load_balance)
     data_path2 += (caseGpuCpuName + nCellsStr + "cells" + str(conf.timeSteps) +
                    "tsteps.csv")
     if conf.is_import and os.path.exists(data_path):
@@ -142,7 +168,6 @@ def run(conf):
         df = pd_read_csv(data_path, nrows=nRows_csv)
         data = df.to_dict("list")
         data = data[conf.timeFromStats]
-        print(conf.timeFromStats + ":", data)
         if data:
             is_import = True
         if os.path.exists(data_path2):
@@ -157,7 +182,6 @@ def run(conf):
         df = pd_read_csv(data_path, nrows=nRows_csv)
         data = df.to_dict("list")
         data = data[conf.timeFromStats]
-        print(conf.timeFromStats + ":", data)
     if os.path.exists(data_path2):
         df = pd_read_csv(data_path2, header=None, names=["Column1"])
         out = df["Column1"].tolist()
@@ -213,8 +237,7 @@ def run_cases(conf):
                       "accuracy, only speedup can use different number")
                 conf.check_accuracy_error = False
             else:
-                math_functions.check_NRMSE(valuesBase, valuesOptim,
-                                           conf.nCellsProcesses)
+                check_RMSE(conf, valuesBase, valuesOptim, conf.nCellsProcesses)
             datay = timeBase / timeOptim
             print("Speedup", datay)
             datacases.append(datay)
@@ -238,7 +261,10 @@ def run_loads_gpu(conf):
 
 
 def plot_cases(conf, datay):
-    conf.caseGpuCpu = conf.casesOptim[0]
+    try:
+        conf.caseGpuCpu = conf.casesOptim[0]
+    except IndexError:
+        print("Warning: conf.casesOptim is not set")
     last_arch_optim = conf.caseGpuCpu
     is_same_arch_optim = True
     for caseOptim in conf.casesOptim:
@@ -295,13 +321,14 @@ def plot_cases(conf, datay):
                       str(conf.loads_gpu[0]))
         datax = list(range(1, conf.timeSteps + 1, 1))
         namex = "Time-steps"
-    print(namex + ":", datax[0], "to", datax[-1])
+    #print(namex + ":", datax[0], "to", datax[-1])
+    print(namex + ":", datax[-1])
     if legend:
-        print("plotTitle: ", plotTitle, " legend:", legend)
+        print(plotTitle, legend)
     else:
-        print("plotTitle: ", plotTitle)
-    print(namex, ":", datax)
-    print(namey, ":", datay)
+        print(plotTitle)
+    #print(namex, ":", datax)
+    #print(namey, ":", datay)
     # plot_functions.plotsns(namex, namey, datax, datay, plotTitle, legend)
 
 

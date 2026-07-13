@@ -1,0 +1,10 @@
+{
+  "camp-data": [
+    {
+      "type": "CVODE CONFIGURATION",
+      "relative tolerance": 5.0E-03,
+      "max steps": 10000,
+      "max conv fails": 1000
+    }
+  ]
+}

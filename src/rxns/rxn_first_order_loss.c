@@ -8,10 +8,10 @@
 /** \file
  * \brief First-Order loss reaction solver functions
  */
+#include "../rxns.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../rxns.h"
 
 // TODO Lookup environmental indicies during initialization
 #define TEMPERATURE_K_ env_data[0]
@@ -152,7 +152,8 @@ void rxn_first_order_loss_calc_deriv_contrib(
   double rate = RATE_CONSTANT_ * state[REACT_];
 
   // Add contributions to the time derivative
-  if (DERIV_ID_ >= 0) time_derivative_add_value(time_deriv, DERIV_ID_, -rate);
+  if (DERIV_ID_ >= 0)
+    time_derivative_add_value(time_deriv, DERIV_ID_, -rate);
 
   return;
 }

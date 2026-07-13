@@ -1,0 +1,73 @@
+{
+  "description": [
+    "emission file for CB05 mechanism"
+  ],
+  "camp-data": [
+    {
+      "name": "MONARCH mod37",
+      "type": "MECHANISM",
+      "reactions": [
+        {
+          "type": "EMISSION",
+          "species": "NO"
+        },
+        {
+          "type": "EMISSION",
+          "species": "NO2"
+        },
+        {
+          "type": "EMISSION",
+          "species": "CO"
+        },
+        {
+          "type": "EMISSION",
+          "species": "SO2"
+        },
+        {
+          "type": "EMISSION",
+          "species": "NH3"
+        },
+        {
+          "type": "EMISSION",
+          "species": "FORM"
+        },
+        {
+          "type": "EMISSION",
+          "species": "MEOH"
+        },
+        {
+          "type": "EMISSION",
+          "species": "ALD2"
+        },
+        {
+          "type": "EMISSION",
+          "species": "PAR"
+        },
+        {
+          "type": "EMISSION",
+          "species": "ETH"
+        },
+        {
+          "type": "EMISSION",
+          "species": "OLE"
+        },
+        {
+          "type": "EMISSION",
+          "species": "IOLE"
+        },
+        {
+          "type": "EMISSION",
+          "species": "TOL"
+        },
+        {
+          "type": "EMISSION",
+          "species": "XYL"
+        },
+        {
+          "type": "EMISSION",
+          "species": "ISOP"
+        }
+      ]
+    }
+  ]
+}

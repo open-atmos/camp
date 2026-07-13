@@ -83,7 +83,6 @@
 !! Follow the \ref camp_tutorial "Boot CAMP" tutorial to see how to
 !! integrate CAMP into your favorite model!
 
-
 !> The camp_core_t structure and associated subroutines.
 module camp_camp_core
 
@@ -95,7 +94,7 @@ module camp_camp_core
   use camp_aero_rep_data
   use camp_aero_rep_factory
   use camp_chem_spec_data
-  use camp_constants,                  only : i_kind, dp
+  use camp_constants, only: i_kind, dp
   use camp_env_state
   use camp_mechanism_data
   use camp_camp_solver_data
@@ -106,7 +105,7 @@ module camp_camp_core
   use camp_sub_model_data
   use camp_sub_model_factory
   use camp_sub_model_factory
-  use camp_util,                       only : die_msg, string_t
+  use camp_util, only: die_msg, string_t
 
   implicit none
   private
@@ -117,6 +116,7 @@ module camp_camp_core
   !!
   !! Contains all time-invariant data for a Part-MC model run.
   type :: camp_core_t
+    private
     !> Chemical mechanisms
     !! FIXME set up an iterator for external modules to use and
     !! make all data members private
@@ -128,9 +128,9 @@ module camp_camp_core
     !> Aerosol representations
     type(aero_rep_data_ptr), pointer, public :: aero_rep(:) => null()
     !> Aerosol phases
-    type(aero_phase_data_ptr), pointer :: aero_phase(:) => null()
+    type(aero_phase_data_ptr), pointer, public :: aero_phase(:) => null()
     !> Size of the state array per grid cell
-    integer(kind=i_kind) :: size_state_per_cell
+    integer(kind=i_kind), public :: size_state_per_cell
     !> Number of cells to compute
     integer(kind=i_kind) :: n_cells = 1
     !> Initial state values
@@ -141,6 +141,10 @@ module camp_camp_core
     logical :: split_gas_aero = .false.
     !> Relative integration tolerance
     real(kind=dp) :: rel_tol = 0.0
+    !> maximum number of integration substeps
+    integer(kind=i_kind) :: max_steps = 10000
+    !> maximum number of convergence failures
+    integer(kind=i_kind) :: max_conv_fails = 1000
     ! Absolute integration tolerances
     ! (Values for non-solver species will be ignored)
     real(kind=dp), allocatable :: abs_tol(:)
@@ -189,8 +193,11 @@ module camp_camp_core
     procedure :: export_solver_state
     !> Join the files created by each MPI process at "export_solver_state" function into a single file.
     procedure :: join_solver_state
-    !> Export execution time of GPU and CPU code to calculate speedups at TestMonarch.py
+    !> Export execution time of GPU and CPU code to calculate speedups
     procedure :: export_solver_stats
+    !> Print execution time of GPU and CPU code
+    procedure :: print_solver_stats
+
     !> Get a new model state variable
     procedure :: new_state_one_cell
     procedure :: new_state_multi_cell
@@ -212,17 +219,17 @@ module camp_camp_core
     procedure, private :: initialize_rxn_update_object
     procedure, private :: initialize_sub_model_update_object
     generic :: initialize_update_object => &
-               initialize_aero_rep_update_object, &
-               initialize_rxn_update_object, &
-               initialize_sub_model_update_object
+      initialize_aero_rep_update_object, &
+      initialize_rxn_update_object, &
+      initialize_sub_model_update_object
     !> Update model data
     procedure, private :: aero_rep_update_data
     procedure, private :: rxn_update_data
     procedure, private :: sub_model_update_data
     generic :: update_data => &
-               aero_rep_update_data, &
-               rxn_update_data, &
-               sub_model_update_data
+      aero_rep_update_data, &
+      rxn_update_data, &
+      sub_model_update_data
     !> Run the chemical mechanisms
     procedure :: solve
     !> Determine the number of bytes required to pack the variable
@@ -268,15 +275,15 @@ contains
     logical :: flag
     integer(kind=i_kind) :: err
 
-    allocate(new_obj)
-    allocate(new_obj%mechanism(0))
+    allocate (new_obj)
+    allocate (new_obj%mechanism(0))
     new_obj%chem_spec_data => chem_spec_data_t()
-    allocate(new_obj%aero_phase(0))
-    allocate(new_obj%aero_rep(0))
-    allocate(new_obj%sub_model(0))
+    allocate (new_obj%aero_phase(0))
+    allocate (new_obj%aero_rep(0))
+    allocate (new_obj%sub_model(0))
 
     if (present(n_cells)) then
-      new_obj%n_cells=n_cells
+      new_obj%n_cells = n_cells
     end if
 
     if (present(input_file_path)) then
@@ -284,9 +291,9 @@ contains
     end if
 #ifdef CAMP_USE_MPI
     call MPI_INITIALIZED(flag, err)
-    if (.not.flag) then
-      call camp_mpi_init( )
-    endif
+    if (.not. flag) then
+      call camp_mpi_init()
+    end if
 #endif
   end function constructor
 
@@ -336,29 +343,29 @@ contains
     ! load the file containing the paths to the configuration files
     call j_file%initialize()
     call j_file%get_core(json)
-    call assert_msg(600888426, trim(input_file_path).ne."", &
-            "Received empty string for file path")
-    inquire( file=trim(input_file_path), exist=file_exists )
-    call assert_msg(433777575, file_exists, "Cannot find file: "//&
-            trim(input_file_path))
-    call j_file%load_file(filename = trim(input_file_path))
+    call assert_msg(600888426, trim(input_file_path) .ne. "", &
+                    "Received empty string for file path")
+    inquire (file=trim(input_file_path), exist=file_exists)
+    call assert_msg(433777575, file_exists, "Cannot find file: "// &
+                    trim(input_file_path))
+    call j_file%load_file(filename=trim(input_file_path))
 
     ! get the set of configuration file names
     call j_file%get('camp-files(1)', j_obj, found)
     call assert_msg(405149265, found, &
-            "Could not find camp-files object in input file: "// &
-            input_file_path)
+                    "Could not find camp-files object in input file: "// &
+                    input_file_path)
     call json%validate(j_obj, valid, json_err_msg)
-    if(.not.valid) then
+    if (.not. valid) then
       call die_msg(959537834, "Bad JSON format in file '"// &
                    trim(input_file_path)//"': "//trim(json_err_msg))
     end if
-    call j_file%info('camp-files', n_children = num_files)
-    call assert_msg(411804027, num_files.gt.0, &
-            "No file names were found in "//input_file_path)
+    call j_file%info('camp-files', n_children=num_files)
+    call assert_msg(411804027, num_files .gt. 0, &
+                    "No file names were found in "//input_file_path)
 
     ! allocate space for the configurtaion file names
-    allocate(file_list(num_files))
+    allocate (file_list(num_files))
 
     ! cycle through the list of file names, adding each to the list
     j_next => null()
@@ -378,7 +385,7 @@ contains
     call this%load(file_list)
 
 #else
-    call warn_msg(171627969, "No support for input files.");
+    call warn_msg(171627969, "No support for input files."); 
 #endif
 
   end subroutine load_files
@@ -453,6 +460,7 @@ contains
     character(kind=json_ck, len=:), allocatable :: json_err_msg
     character(len=:), allocatable :: str_val
     real(kind=json_rk) :: real_val
+    integer(kind=json_ik) :: int_val
     logical :: file_exists, found
     CHARACTER(len=255) :: cwd
 
@@ -482,29 +490,29 @@ contains
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     j_obj => null()
     j_next => null()
-    allocate(json)
+    allocate (json)
     do i_file = 1, size(input_file_path)
 
       ! load the configuration file
       call j_file%initialize()
       call j_file%get_core(json)
       call assert_msg(366175417, allocated(input_file_path(i_file)%string), &
-              "Received non-allocated string for file path")
-      call assert_msg(936390222, trim(input_file_path(i_file)%string).ne."", &
-              "Received empty string for file path")
-      inquire( file=input_file_path(i_file)%string, exist=file_exists )
-      if(.not.file_exists) then
+                      "Received non-allocated string for file path")
+      call assert_msg(936390222, trim(input_file_path(i_file)%string) .ne. "", &
+                      "Received empty string for file path")
+      inquire (file=input_file_path(i_file)%string, exist=file_exists)
+      if (.not. file_exists) then
         call getcwd(cwd)
-        print*, "Current working directory:", trim(cwd)
+        print *, "Current working directory:", trim(cwd)
       end if
       call assert_msg(910660557, file_exists, "Cannot file file: "// &
-              input_file_path(i_file)%string)
-      call j_file%load_file(filename = input_file_path(i_file)%string)
+                      input_file_path(i_file)%string)
+      call j_file%load_file(filename=input_file_path(i_file)%string)
 
       ! get the CAMP objects
       call j_file%get('camp-data(1)', j_obj)
       call json%validate(j_obj, valid, json_err_msg)
-      if (.not.valid) then
+      if (.not. valid) then
         call die_msg(560270545, "Bad JSON format in file '"// &
                      trim(input_file_path(i_file)%string)//"': "// &
                      trim(json_err_msg))
@@ -515,59 +523,59 @@ contains
         ! derived type
         call json%get(j_obj, 'type', unicode_str_val, found)
         call assert_msg(689470331, found, &
-                "Missing type in json input file "// &
-                input_file_path(i_file)%string)
+                        "Missing type in json input file "// &
+                        input_file_path(i_file)%string)
         str_val = unicode_str_val
 
         !!!!!!!!!!!!!!!!!!!!!!!!
         !!! load a mechanism !!!
         !!!!!!!!!!!!!!!!!!!!!!!!
-        if (str_val.eq.'MECHANISM') then
+        if (str_val .eq. 'MECHANISM') then
           call json%get(j_obj, 'name', unicode_str_val, found)
           call assert_msg(822680732, found, &
-                  "Missing mechanism name in file "// &
-                  input_file_path(i_file)%string)
+                          "Missing mechanism name in file "// &
+                          input_file_path(i_file)%string)
           str_val = unicode_str_val
 
           ! if a mechanism with the same name already exists, add data to it
           ! otherwise, add a new mechanism
-          if (.not.this%get_mechanism(str_val, mech_ptr)) then
+          if (.not. this%get_mechanism(str_val, mech_ptr)) then
             call this%add_mechanism(str_val)
             call assert(105816325, this%get_mechanism(str_val, mech_ptr))
           end if
           call mech_ptr%load(json, j_obj)
 
-        ! load a chemical species
-        else if (str_val.eq.'CHEM_SPEC') then
+          ! load a chemical species
+        else if (str_val .eq. 'CHEM_SPEC') then
           call this%chem_spec_data%load(json, j_obj)
 
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        !!! load an aerosol representation !!!
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        else if (str_val(1:8).eq.'AERO_REP') then
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          !!! load an aerosol representation !!!
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        else if (str_val(1:8) .eq. 'AERO_REP') then
           aero_rep_ptr%val => aero_rep_factory%load(json, j_obj)
           str_val = aero_rep_ptr%val%name()
 
           ! if an aerosol representation with the same name already exists,
           ! add data to it. otherwise, add a new aerosol representation
           if (this%get_aero_rep(str_val, existing_aero_rep_ptr)) then
-            deallocate(aero_rep_ptr%val)
+            deallocate (aero_rep_ptr%val)
             call existing_aero_rep_ptr%load(json, j_obj)
           else
-            allocate(new_aero_rep(size(this%aero_rep)+1))
+            allocate (new_aero_rep(size(this%aero_rep) + 1))
             new_aero_rep(1:size(this%aero_rep)) = &
-                    this%aero_rep(1:size(this%aero_rep))
+              this%aero_rep(1:size(this%aero_rep))
             new_aero_rep(size(new_aero_rep))%val => aero_rep_ptr%val
             call this%aero_rep(:)%dereference()
-            deallocate(this%aero_rep)
+            deallocate (this%aero_rep)
             this%aero_rep => new_aero_rep
             call aero_rep_ptr%dereference()
           end if
 
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        !!! load an aerosol phase !!!
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        else if (str_val.eq.'AERO_PHASE') then
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          !!! load an aerosol phase !!!
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        else if (str_val .eq. 'AERO_PHASE') then
           aero_phase => aero_phase_data_t()
           call aero_phase%load(json, j_obj)
           str_val = aero_phase%name()
@@ -575,79 +583,95 @@ contains
           ! if an aerosol phase with the same name already exists, add data to
           ! it. otherwise, add a new aerosol phase
           if (this%get_aero_phase(str_val, existing_aero_phase)) then
-            deallocate(aero_phase)
+            deallocate (aero_phase)
             call existing_aero_phase%load(json, j_obj)
           else
-            allocate(new_aero_phase(size(this%aero_phase)+1))
+            allocate (new_aero_phase(size(this%aero_phase) + 1))
             new_aero_phase(1:size(this%aero_phase)) = &
-                    this%aero_phase(1:size(this%aero_phase))
+              this%aero_phase(1:size(this%aero_phase))
             new_aero_phase(size(new_aero_phase))%val => aero_phase
             call this%aero_phase(:)%dereference()
-            deallocate(this%aero_phase)
+            deallocate (this%aero_phase)
             this%aero_phase => new_aero_phase
           end if
 
-        !!!!!!!!!!!!!!!!!!!!!!!!
-        !!! load a sub-model !!!
-        !!!!!!!!!!!!!!!!!!!!!!!!
-        else if (str_val(1:9).eq.'SUB_MODEL') then
+          !!!!!!!!!!!!!!!!!!!!!!!!
+          !!! load a sub-model !!!
+          !!!!!!!!!!!!!!!!!!!!!!!!
+        else if (str_val(1:9) .eq. 'SUB_MODEL') then
           sub_model_ptr%val => sub_model_factory%load(json, j_obj)
           str_val = sub_model_ptr%val%name()
 
           ! if an sub-model with the same name already exists, add data to it.
           ! otherwise, add a new sub-model
           if (this%get_sub_model(str_val, existing_sub_model_ptr)) then
-            deallocate(sub_model_ptr%val)
+            deallocate (sub_model_ptr%val)
             call existing_sub_model_ptr%load(json, j_obj)
           else
             sub_model_placed = .false.
-            allocate(new_sub_model(size(this%sub_model)+1))
+            allocate (new_sub_model(size(this%sub_model) + 1))
             j_sub_model = 1
             do i_sub_model = 1, size(this%sub_model)
-              if (.not.sub_model_placed .and. &
+              if (.not. sub_model_placed .and. &
                   sub_model_ptr%val%priority() < &
                   this%sub_model(i_sub_model)%val%priority()) then
-                    sub_model_placed = .true.
-                    new_sub_model(j_sub_model)%val => sub_model_ptr%val
-                    j_sub_model = j_sub_model + 1
+                sub_model_placed = .true.
+                new_sub_model(j_sub_model)%val => sub_model_ptr%val
+                j_sub_model = j_sub_model + 1
               end if
               new_sub_model(j_sub_model) = &
-                      this%sub_model(i_sub_model)
+                this%sub_model(i_sub_model)
               j_sub_model = j_sub_model + 1
             end do
-            if (.not.sub_model_placed) then
+            if (.not. sub_model_placed) then
               new_sub_model(j_sub_model)%val => sub_model_ptr%val
             end if
             call this%sub_model(:)%dereference()
-            deallocate(this%sub_model)
+            deallocate (this%sub_model)
             this%sub_model => new_sub_model
             call sub_model_ptr%dereference()
           end if
 
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        !!! set the relative tolerance for the model !!!
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        else if (str_val.eq.'RELATIVE_TOLERANCE') then
-          call json%get(j_obj, 'value', real_val, found)
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          !!! set the custom options for the model !!!
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        else if (str_val .eq. 'CVODE CONFIGURATION') then
+          call json%get(j_obj, 'relative tolerance', real_val, found)
           call assert_msg(761842352, found, &
-                  "Missing value for relative tolerance")
-          call assert_msg(162564706, real_val.gt.0.0.and.real_val.lt.1.0, &
-                  "Invalid relative tolerance: "// &
-                  trim(to_string(real(real_val, kind=dp))))
+                          "Missing value for relative tolerance")
+          call assert_msg(162564706, real_val .gt. 0.0 .and. real_val .lt. 1.0, &
+                          "Invalid relative tolerance: "// &
+                          trim(to_string(real(real_val, kind=dp))))
           this%rel_tol = real(real_val, kind=dp)
 
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        !!! set whether to solve gas and aerosol phases separately !!!
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        else if (str_val.eq.'SPLIT_GAS_AERO') then
+          call json%get(j_obj, 'max steps', int_val, found)
+          call assert_msg(37824956, found, &
+                          "Missing value for max steps")
+          call assert_msg(23973791, int_val .gt. 0, &
+                          "Invalid max steps: "// &
+                          trim(to_string(int(int_val, kind=i_kind))))
+          this%max_steps = int(int_val, kind=i_kind)
+
+          call json%get(j_obj, 'max conv fails', int_val, found)
+          call assert_msg(12625721, found, &
+                          "Missing value for max conv fails")
+          call assert_msg(354717738, int_val .gt. 0, &
+                          "Invalid max conv fails: "// &
+                          trim(to_string(int(int_val, kind=i_kind))))
+          this%max_conv_fails = int(int_val, kind=i_kind)
+
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          !!! set whether to solve gas and aerosol phases separately !!!
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        else if (str_val .eq. 'SPLIT_GAS_AERO') then
           this%split_gas_aero = .true.
 
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        !!! fail on invalid object type !!!
-        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          !!! fail on invalid object type !!!
+          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         else
           call die_msg(448039776, &
-                  "Received invalid json input object type: "//str_val)
+                       "Received invalid json input object type: "//str_val)
         end if
 
         ! get the next object
@@ -661,9 +685,9 @@ contains
     end do
 
     ! free the json core
-    deallocate(json)
+    deallocate (json)
 #else
-    call warn_msg(350136328, "No support for input files.");
+    call warn_msg(350136328, "No support for input files."); 
 #endif
 
   end subroutine load
@@ -694,8 +718,8 @@ contains
     type(string_t), allocatable :: unique_names(:)
 
     ! make sure the core has not already been initialized
-    call assert_msg(157261665, .not.this%core_is_initialized, &
-            "Attempting to initialize a camp_core_t object twice.")
+    call assert_msg(157261665,.not. this%core_is_initialized, &
+                    "Attempting to initialize a camp_core_t object twice.")
 
     ! Initialize the species database
     call this%chem_spec_data%initialize()
@@ -713,7 +737,7 @@ contains
     do i_aero_rep = 1, size(this%aero_rep)
       call assert(251590193, associated(this%aero_rep(i_aero_rep)%val))
       call this%aero_rep(i_aero_rep)%val%initialize(this%aero_phase, &
-              i_state_var)
+                                                    i_state_var)
       i_state_var = i_state_var + this%aero_rep(i_aero_rep)%val%size()
     end do
 
@@ -721,7 +745,7 @@ contains
     do i_sub_model = 1, size(this%sub_model)
       call assert(565644925, associated(this%sub_model(i_sub_model)%val))
       call this%sub_model(i_sub_model)%val%initialize(this%aero_rep, &
-                this%aero_phase, this%chem_spec_data)
+                                                      this%aero_phase, this%chem_spec_data)
     end do
 
     ! Set the size of the state array per grid cell
@@ -730,28 +754,28 @@ contains
     ! Initialize the mechanisms
     do i_mech = 1, size(this%mechanism)
       call this%mechanism(i_mech)%val%initialize(this%chem_spec_data, &
-              this%aero_rep, this%n_cells)
+                                                 this%aero_rep, this%n_cells)
     end do
 
     ! Allocate space for the variable types and absolute tolerances
-    allocate(this%abs_tol(this%size_state_per_cell))
-    allocate(this%var_type(this%size_state_per_cell))
+    allocate (this%abs_tol(this%size_state_per_cell))
+    allocate (this%var_type(this%size_state_per_cell))
 
     ! Start at the first state array element
     i_state_var = 0
 
     ! Add gas-phase species variable types and absolute tolerances
     gas_spec_names = &
-            this%chem_spec_data%get_spec_names(spec_phase = &
-            CHEM_SPEC_GAS_PHASE)
+      this%chem_spec_data%get_spec_names(spec_phase= &
+                                         CHEM_SPEC_GAS_PHASE)
     do i_spec = 1, size(gas_spec_names)
       i_state_var = i_state_var + 1
       call assert(716433999, &
-              this%chem_spec_data%get_abs_tol(gas_spec_names(i_spec)%string, &
-              this%abs_tol(i_state_var)))
+                  this%chem_spec_data%get_abs_tol(gas_spec_names(i_spec)%string, &
+                                                  this%abs_tol(i_state_var)))
       call assert(888496437, &
-              this%chem_spec_data%get_type(gas_spec_names(i_spec)%string, &
-              this%var_type(i_state_var)))
+                  this%chem_spec_data%get_type(gas_spec_names(i_spec)%string, &
+                                               this%var_type(i_state_var)))
     end do
 
     ! Loop through aerosol representations
@@ -764,56 +788,56 @@ contains
       do i_spec = 1, this%aero_rep(i_aero_rep)%val%size()
         i_state_var = i_state_var + 1
         spec_name = this%aero_rep(i_aero_rep)%val%spec_name( &
-                  unique_names(i_spec)%string)
+                    unique_names(i_spec)%string)
         call assert(709716453, &
-                this%chem_spec_data%get_abs_tol(spec_name, &
-                this%abs_tol(i_state_var)))
+                    this%chem_spec_data%get_abs_tol(spec_name, &
+                                                    this%abs_tol(i_state_var)))
         call assert(257084300, &
-                this%chem_spec_data%get_type(spec_name, &
-                this%var_type(i_state_var)))
+                    this%chem_spec_data%get_type(spec_name, &
+                                                 this%var_type(i_state_var)))
       end do
-      deallocate(unique_names)
+      deallocate (unique_names)
     end do
 
     ! Make sure absolute tolerance and variable type arrays are completely
     ! filled
-    call assert_msg(501609702, i_state_var.eq.this%size_state_per_cell, &
-            "Internal error. Filled "//trim(to_string(i_state_var))// &
-            " of "//trim(to_string(this%size_state_per_cell))// &
-            " elements of absolute tolerance and variable type arrays")
+    call assert_msg(501609702, i_state_var .eq. this%size_state_per_cell, &
+                    "Internal error. Filled "//trim(to_string(i_state_var))// &
+                    " of "//trim(to_string(this%size_state_per_cell))// &
+                    " elements of absolute tolerance and variable type arrays")
 
     this%core_is_initialized = .true.
 
     ! Set the initial state values
-    allocate(this%init_state_cell(this%size_state_per_cell))
-    allocate(this%init_state(this%size_state_per_cell * this%n_cells))
+    allocate (this%init_state_cell(this%size_state_per_cell))
+    allocate (this%init_state(this%size_state_per_cell*this%n_cells))
 
     ! Set species concentrations to zero
     this%init_state_cell(:) = 0.0
     this%init_state(:) = 0.0
 
     ! Set activity coefficients to 1.0
-      do i_cell = 0, this%n_cells - 1
-        do i_aero_rep = 1, size(this%aero_rep)
+    do i_cell = 0, this%n_cells - 1
+      do i_aero_rep = 1, size(this%aero_rep)
 
-          rep => this%aero_rep(i_aero_rep)%val
+        rep => this%aero_rep(i_aero_rep)%val
 
-          ! Get the ion pairs for which activity coefficients can be calculated
-          unique_names = rep%unique_names(tracer_type = CHEM_SPEC_ACTIVITY_COEFF)
+        ! Get the ion pairs for which activity coefficients can be calculated
+        unique_names = rep%unique_names(tracer_type=CHEM_SPEC_ACTIVITY_COEFF)
 
-          ! Set the activity coefficients to 1.0 as default
-          do i_name = 1, size(unique_names)
-            i_state_elem = rep%spec_state_id(unique_names(i_name)%string)
-            this%init_state(i_state_elem + i_cell * this%size_state_per_cell) = &
-                    real(1.0d0, kind=dp)
-            this%init_state_cell(i_state_elem) = &
-                    this%init_state(i_state_elem + i_cell * this%size_state_per_cell)
-          end do
-
-          deallocate(unique_names)
-
+        ! Set the activity coefficients to 1.0 as default
+        do i_name = 1, size(unique_names)
+          i_state_elem = rep%spec_state_id(unique_names(i_name)%string)
+          this%init_state(i_state_elem + i_cell*this%size_state_per_cell) = &
+            real(1.0d0, kind=dp)
+          this%init_state_cell(i_state_elem) = &
+            this%init_state(i_state_elem + i_cell*this%size_state_per_cell)
         end do
+
+        deallocate (unique_names)
+
       end do
+    end do
 
   end subroutine initialize
 
@@ -845,7 +869,7 @@ contains
 
   !> Get a pointer to an aerosol phase by name
   logical function get_aero_phase(this, aero_phase_name, aero_phase) &
-            result (found)
+    result(found)
 
     !> Model data
     class(camp_core_t), intent(in) :: this
@@ -858,9 +882,9 @@ contains
 
     found = .false.
     aero_phase => null()
-    if (.not.associated(this%aero_phase)) return
+    if (.not. associated(this%aero_phase)) return
     do i_aero_phase = 1, size(this%aero_phase)
-      if (this%aero_phase(i_aero_phase)%val%name().eq.aero_phase_name) then
+      if (this%aero_phase(i_aero_phase)%val%name() .eq. aero_phase_name) then
         found = .true.
         aero_phase => this%aero_phase(i_aero_phase)%val
         return
@@ -872,7 +896,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get a pointer to an aerosol representation by name
-  logical function get_aero_rep(this, aero_rep_name, aero_rep) result (found)
+  logical function get_aero_rep(this, aero_rep_name, aero_rep) result(found)
 
     !> Model data
     class(camp_core_t), intent(in) :: this
@@ -885,9 +909,9 @@ contains
 
     found = .false.
     aero_rep => null()
-    if (.not.associated(this%aero_rep)) return
+    if (.not. associated(this%aero_rep)) return
     do i_aero_rep = 1, size(this%aero_rep)
-      if (this%aero_rep(i_aero_rep)%val%name().eq.trim(aero_rep_name)) then
+      if (this%aero_rep(i_aero_rep)%val%name() .eq. trim(aero_rep_name)) then
         aero_rep => this%aero_rep(i_aero_rep)%val
         found = .true.
         return
@@ -899,7 +923,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get a pointer to the chemical species data
-  logical function get_chem_spec_data(this, chem_spec_data) result (found)
+  logical function get_chem_spec_data(this, chem_spec_data) result(found)
 
     !> Model data
     class(camp_core_t), intent(in) :: this
@@ -915,7 +939,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get a pointer to a mechanism by name
-  logical function get_mechanism(this, mech_name, mechanism) result (found)
+  logical function get_mechanism(this, mech_name, mechanism) result(found)
 
     !> Model data
     class(camp_core_t), intent(in) :: this
@@ -928,9 +952,9 @@ contains
 
     found = .false.
     mechanism => null()
-    if (.not.associated(this%mechanism)) return
+    if (.not. associated(this%mechanism)) return
     do i_mech = 1, size(this%mechanism)
-      if (this%mechanism(i_mech)%val%name().eq.mech_name) then
+      if (this%mechanism(i_mech)%val%name() .eq. mech_name) then
         found = .true.
         mechanism => this%mechanism(i_mech)%val
         return
@@ -943,7 +967,7 @@ contains
 
   !> Find an sub-model by name
   logical function get_sub_model(this, sub_model_name, sub_model) &
-            result (found)
+    result(found)
 
     !> Model data
     class(camp_core_t), intent(in) :: this
@@ -956,9 +980,9 @@ contains
 
     found = .false.
     sub_model => null()
-    if (.not.associated(this%sub_model)) return
+    if (.not. associated(this%sub_model)) return
     do i_sub_model = 1, size(this%sub_model)
-      if (this%sub_model(i_sub_model)%val%name().eq.sub_model_name) then
+      if (this%sub_model(i_sub_model)%val%name() .eq. sub_model_name) then
         sub_model => this%sub_model(i_sub_model)%val
         found = .true.
         return
@@ -970,7 +994,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get the relative tolerance for the solver
-  function get_rel_tol( this )
+  function get_rel_tol(this)
 
     !> Relative tolerance
     real(kind=dp) :: get_rel_tol
@@ -984,7 +1008,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get the absolute tolerance for a species on the state array
-  function get_abs_tol( this, spec_id )
+  function get_abs_tol(this, spec_id)
 
     !> Absolute tolerance
     real(kind=dp) :: get_abs_tol
@@ -993,18 +1017,18 @@ contains
     !> Species id
     integer(kind=i_kind), intent(in) :: spec_id
 
-    call assert_msg( 374310824, spec_id .ge. 1 .and. &
-                                spec_id .le. size( this%abs_tol ), &
-                     "Species id out of bounds: "// &
-                     trim( to_string( spec_id ) ) )
-    get_abs_tol = this%abs_tol( spec_id )
+    call assert_msg(374310824, spec_id .ge. 1 .and. &
+                    spec_id .le. size(this%abs_tol), &
+                    "Species id out of bounds: "// &
+                    trim(to_string(spec_id)))
+    get_abs_tol = this%abs_tol(spec_id)
 
   end function get_abs_tol
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get a model state variable based on the this set of model data
-  function new_state_multi_cell(this, env_states) result (new_state)
+  function new_state_multi_cell(this, env_states) result(new_state)
 
     !> New model state
     type(camp_state_t), pointer :: new_state
@@ -1018,7 +1042,7 @@ contains
     new_state => camp_state_t(this%n_cells, env_states)
 
     ! Set up the state variable array
-    allocate(new_state%state_var, source=this%init_state)
+    allocate (new_state%state_var, source=this%init_state)
 
   end function new_state_multi_cell
 
@@ -1027,7 +1051,7 @@ contains
   !> Get a model state variable based on the this set of model data
   !! This is also called for multi-cell systems when no env_state_t array
   !! is passed.
-  function new_state_one_cell(this, env_state) result (new_state)
+  function new_state_one_cell(this, env_state) result(new_state)
 
     !> New model state
     type(camp_state_t), pointer :: new_state
@@ -1038,17 +1062,17 @@ contains
     type(env_state_t), optional, target, intent(in) :: env_state
 
     ! Initialize camp_state
-    if (this%n_cells.eq.1) then
+    if (this%n_cells .eq. 1) then
       new_state => camp_state_t(env_state)
     else
-      call assert_msg(386790682, .not.present(env_state), &
+      call assert_msg(386790682,.not. present(env_state), &
                       "Cannot use a single env_state_t object to create "// &
                       "a new camp_state_t in a multi-cell system")
       new_state => camp_state_t(this%n_cells)
     end if
 
     ! Set up the state variable array
-    allocate(new_state%state_var, source=this%init_state)
+    allocate (new_state%state_var, source=this%init_state)
 
   end function new_state_one_cell
 
@@ -1093,7 +1117,7 @@ contains
   !> Get an array of unique names for all species on the state array
   !!
   !! The order of this array is the same as the state array for one grid cell
-  function unique_names( this )
+  function unique_names(this)
 
     !> Array of unique species names
     type(string_t), allocatable :: unique_names(:)
@@ -1104,29 +1128,29 @@ contains
     type(string_t), allocatable :: new_names(:), temp_list(:)
 
     unique_names = this%chem_spec_data%get_spec_names( &
-                       spec_phase = CHEM_SPEC_GAS_PHASE )
+                   spec_phase=CHEM_SPEC_GAS_PHASE)
 
-    if( .not. associated( this%aero_rep ) ) return
-    do i_aero_rep = 1, size( this%aero_rep )
-      new_names = this%aero_rep( i_aero_rep )%val%unique_names( )
-      if( .not. allocated( new_names ) ) cycle
-      if( size( new_names ).eq.0 ) cycle
-      allocate( temp_list( size( unique_names ) + size( new_names ) ) )
-      temp_list( 1 : size( unique_names ) ) = unique_names( : )
-      temp_list( size( unique_names ) + 1 : size( temp_list ) ) = &
-        new_names( : )
-      deallocate( unique_names )
-      allocate( unique_names, source = temp_list )
+    if (.not. associated(this%aero_rep)) return
+    do i_aero_rep = 1, size(this%aero_rep)
+      new_names = this%aero_rep(i_aero_rep)%val%unique_names()
+      if (.not. allocated(new_names)) cycle
+      if (size(new_names) .eq. 0) cycle
+      allocate (temp_list(size(unique_names) + size(new_names)))
+      temp_list(1:size(unique_names)) = unique_names(:)
+      temp_list(size(unique_names) + 1:size(temp_list)) = &
+        new_names(:)
+      deallocate (unique_names)
+      allocate (unique_names, source=temp_list)
     end do
-    if( allocated( new_names ) ) deallocate( new_names )
-    if( allocated( temp_list ) ) deallocate( temp_list )
+    if (allocated(new_names)) deallocate (new_names)
+    if (allocated(temp_list)) deallocate (temp_list)
 
   end function unique_names
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Get the id of a species on the state array by its unique name
-  function spec_state_id( this, spec_name, state_id ) result( found )
+  function spec_state_id(this, spec_name, state_id) result(found)
 
     !> Flag indicating whether the species was found
     logical :: found
@@ -1140,13 +1164,13 @@ contains
     integer(kind=i_kind) :: i_spec, i_aero_rep
 
     found = .false.
-    i_spec = this%chem_spec_data%gas_state_id( spec_name )
-    do i_aero_rep = 1, size( this%aero_rep )
-      if( i_spec .eq. 0 ) &
-        i_spec = this%aero_rep( i_aero_rep )%val%spec_state_id( spec_name )
+    i_spec = this%chem_spec_data%gas_state_id(spec_name)
+    do i_aero_rep = 1, size(this%aero_rep)
+      if (i_spec .eq. 0) &
+        i_spec = this%aero_rep(i_aero_rep)%val%spec_state_id(spec_name)
     end do
 
-    if( i_spec .gt. 0 ) then
+    if (i_spec .gt. 0) then
       state_id = i_spec
       found = .true.
     end if
@@ -1156,25 +1180,33 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize the solver
-  subroutine solver_initialize(this, load_gpu, is_reset_jac, is_load_balance)
+  subroutine solver_initialize(this, load_gpu, is_load_balance)
     class(camp_core_t), intent(inout) :: this
-    integer, intent(in), optional :: load_gpu, is_reset_jac, is_load_balance
+    integer, intent(in), optional :: load_gpu, is_load_balance
     type(string_t), allocatable :: spec_names(:)
-    integer :: i_spec, n_gas_spec, load_gpu1, is_reset_jac1, is_load_balance1
-    call assert_msg(662920365, .not.this%solver_is_initialized, &
-            "Attempting to initialize the solver twice.")
-
-    load_gpu1=0
+    integer :: i_spec, n_gas_spec, load_gpu1, is_load_balance1
+    call assert_msg(662920365,.not. this%solver_is_initialized, &
+                    "Attempting to initialize the solver twice.")
+#ifdef DEBUG_USE_GPU_RXN_TESTS
+    print *, "WARNING: Using GPU as default for the solver. &
+&    Use this as a debug tool only. To disable, disable the &
+&     DEBUG_USE_GPU_RXN_TESTS preprocessor flag."
+    load_gpu1 = 100
+    is_load_balance1 = 0
+#else
+#ifdef CAMP_USE_GPU
+    load_gpu1 = 95 ! Optimal value, get after manual testing on MONARCH and test/MONARCH
+    is_load_balance1 = 1
+#else
+    load_gpu1 = 0
+    is_load_balance1 = 0
+#endif
+#endif
     if (present(load_gpu)) then
-      load_gpu1=load_gpu
+      load_gpu1 = load_gpu
     end if
-    is_reset_jac1=0
-    if (present(is_reset_jac)) then
-      is_reset_jac1=is_reset_jac
-    end if
-    is_load_balance1=1
     if (present(is_load_balance)) then
-      is_load_balance1=is_load_balance
+      is_load_balance1 = is_load_balance
     end if
 
     ! Set up either two solvers (gas and aerosol) or one solver (combined)
@@ -1184,60 +1216,66 @@ contains
       this%solver_data_gas => camp_solver_data_t()
       this%solver_data_aero => camp_solver_data_t()
 
-      ! Set custom relative integration tolerance, if present
-      if (this%rel_tol.ne.real(0.0, kind=dp)) then
+      ! Set custom solver options, if present
+      if (this%rel_tol .ne. real(0.0, kind=dp)) then
         this%solver_data_gas%rel_tol = this%rel_tol
         this%solver_data_aero%rel_tol = this%rel_tol
       end if
+      this%solver_data_gas%max_steps = this%max_steps
+      this%solver_data_aero%max_steps = this%max_steps
+      this%solver_data_gas%max_conv_fails = this%max_conv_fails
+      this%solver_data_aero%max_conv_fails = this%max_conv_fails
 
       ! Initialize the solvers
       call this%solver_data_gas%initialize( &
-                this%var_type,   & ! State array variable types
-                this%abs_tol,    & ! Absolute tolerances for each state var
-                this%mechanism,  & ! Pointer to the mechanisms
-                this%aero_phase, & ! Pointer to the aerosol phases
-                this%aero_rep,   & ! Pointer to the aerosol representations
-                this%sub_model,  & ! Pointer to the sub-models
-                GAS_RXN,         & ! Reaction phase
-                this%n_cells,    & ! # of cells computed simultaneosly
-                spec_names,       & ! Species names
-                load_gpu1, is_reset_jac1, is_load_balance1 &
-      )
+        this%var_type, & ! State array variable types
+        this%abs_tol, & ! Absolute tolerances for each state var
+        this%mechanism, & ! Pointer to the mechanisms
+        this%aero_phase, & ! Pointer to the aerosol phases
+        this%aero_rep, & ! Pointer to the aerosol representations
+        this%sub_model, & ! Pointer to the sub-models
+        GAS_RXN, & ! Reaction phase
+        this%n_cells, & ! # of cells computed simultaneosly
+        spec_names, & ! Species names
+        load_gpu1, is_load_balance1 &
+        )
       call this%solver_data_aero%initialize( &
-                this%var_type,   & ! State array variable types
-                this%abs_tol,    & ! Absolute tolerances for each state var
-                this%mechanism,  & ! Pointer to the mechanisms
-                this%aero_phase, & ! Pointer to the aerosol phases
-                this%aero_rep,   & ! Pointer to the aerosol representations
-                this%sub_model,  & ! Pointer to the sub-models
-                AERO_RXN,        & ! Reaction phase
-                this%n_cells,    & ! # of cells computed simultaneosly
-                spec_names,       & ! Species names
-                load_gpu1, is_reset_jac1, is_load_balance1 &
-              )
+        this%var_type, & ! State array variable types
+        this%abs_tol, & ! Absolute tolerances for each state var
+        this%mechanism, & ! Pointer to the mechanisms
+        this%aero_phase, & ! Pointer to the aerosol phases
+        this%aero_rep, & ! Pointer to the aerosol representations
+        this%sub_model, & ! Pointer to the sub-models
+        AERO_RXN, & ! Reaction phase
+        this%n_cells, & ! # of cells computed simultaneosly
+        spec_names, & ! Species names
+        load_gpu1, is_load_balance1 &
+        )
     else
 
       ! Create a new solver data object
       this%solver_data_gas_aero => camp_solver_data_t()
 
-      ! Set custom relative integration tolerance, if present
-      if (this%rel_tol.ne.0.0) then
+      ! Set custom solver options, if present
+      if (this%rel_tol .ne. 0.0) then
         this%solver_data_gas_aero%rel_tol = this%rel_tol
       end if
+      this%solver_data_gas_aero%max_steps = this%max_steps
+      this%solver_data_gas_aero%max_conv_fails = this%max_conv_fails
 
       ! Initialize the solver
       call this%solver_data_gas_aero%initialize( &
-                this%var_type,   & ! State array variable types
-                this%abs_tol,    & ! Absolute tolerances for each state var
-                this%mechanism,  & ! Pointer to the mechanisms
-                this%aero_phase, & ! Pointer to the aerosol phases
-                this%aero_rep,   & ! Pointer to the aerosol representations
-                this%sub_model,  & ! Pointer to the sub-models
-                GAS_AERO_RXN,    & ! Reaction phase
-                this%n_cells,    & ! # of cells computed simultaneosly
-                spec_names,       & ! Species names
-                load_gpu1, is_reset_jac1, is_load_balance1 &
-                )
+        this%var_type, & ! State array variable types
+        this%abs_tol, & ! Absolute tolerances for each state var
+        this%mechanism, & ! Pointer to the mechanisms
+        this%aero_phase, & ! Pointer to the aerosol phases
+        this%aero_rep, & ! Pointer to the aerosol representations
+        this%sub_model, & ! Pointer to the sub-models
+        GAS_AERO_RXN, & ! Reaction phase
+        this%n_cells, & ! # of cells computed simultaneosly
+        spec_names, & ! Species names
+        load_gpu1, is_load_balance1 &
+        )
     end if
 
     this%solver_is_initialized = .true.
@@ -1252,19 +1290,19 @@ contains
     !> CAMP-core
     class(camp_core_t), intent(inout) :: this
 
-    if( associated( this%solver_data_gas ) )  &
-        deallocate( this%solver_data_gas )
-    if( associated( this%solver_data_aero ) ) &
-        deallocate( this%solver_data_aero )
-    if( associated( this%solver_data_gas_aero ) ) &
-        deallocate( this%solver_data_gas_aero )
+    if (associated(this%solver_data_gas)) &
+      deallocate (this%solver_data_gas)
+    if (associated(this%solver_data_aero)) &
+      deallocate (this%solver_data_aero)
+    if (associated(this%solver_data_gas_aero)) &
+      deallocate (this%solver_data_gas_aero)
 
   end subroutine free_solver
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize an update data object for an aerosol representation
-  subroutine initialize_aero_rep_update_object( this, aero_rep, update_data )
+  subroutine initialize_aero_rep_update_object(this, aero_rep, update_data)
 
     !> CAMP core
     class(camp_core_t), intent(in) :: this
@@ -1275,9 +1313,9 @@ contains
 
     type(aero_rep_factory_t) :: factory
 
-    call assert_msg( 962343826, .not. this%is_solver_initialized( ), &
-                     "Cannot initialize update data objects after the "// &
-                     "solver has been initialized." )
+    call assert_msg(962343826,.not. this%is_solver_initialized(), &
+                    "Cannot initialize update data objects after the "// &
+                    "solver has been initialized.")
     call factory%initialize_update_data(aero_rep, update_data)
 
   end subroutine initialize_aero_rep_update_object
@@ -1285,20 +1323,20 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize an update data object for a reaction
-  subroutine initialize_rxn_update_object( this, rxn, update_data )
+  subroutine initialize_rxn_update_object(this, rxn, update_data)
 
     !> CAMP core
     class(camp_core_t), intent(inout) :: this
     !> Reaction to be updated
-    class(rxn_data_t),target, intent(inout) :: rxn
+    class(rxn_data_t), target, intent(inout) :: rxn
     !> Update data object
     class(rxn_update_data_t), intent(out) :: update_data
 
     type(rxn_factory_t) :: factory
 
-    call assert_msg( 166064689, .not. this%is_solver_initialized( ), &
-                     "Cannot initialize update data objects after the "// &
-                     "solver has been initialized." )
+    call assert_msg(166064689,.not. this%is_solver_initialized(), &
+                    "Cannot initialize update data objects after the "// &
+                    "solver has been initialized.")
     call factory%initialize_update_data(rxn, update_data)
 
   end subroutine initialize_rxn_update_object
@@ -1306,7 +1344,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Initialize an update data object for a sub model
-  subroutine initialize_sub_model_update_object( this, sub_model, update_data )
+  subroutine initialize_sub_model_update_object(this, sub_model, update_data)
 
     !> CAMP core
     class(camp_core_t), intent(in) :: this
@@ -1317,9 +1355,9 @@ contains
 
     type(sub_model_factory_t) :: factory
 
-    call assert_msg( 771607586, .not. this%is_solver_initialized( ), &
-                     "Cannot initialize update data objects after the "// &
-                     "solver has been initialized." )
+    call assert_msg(771607586,.not. this%is_solver_initialized(), &
+                    "Cannot initialize update data objects after the "// &
+                    "solver has been initialized.")
     call factory%initialize_update_data(sub_model, update_data)
 
   end subroutine initialize_sub_model_update_object
@@ -1343,21 +1381,21 @@ contains
 
     n_cells_update = 1
     if (present(cell_id)) then
-      update_data%cell_id=cell_id;
+      update_data%cell_id = cell_id; 
     else
-      if(.not.this%n_cells.eq.1) then
-        print*,"aero_rep_update_data with more than 1 cell needs to specify cell_id this%n_cells",this%n_cells
+      if (.not. this%n_cells .eq. 1) then
+        print *, "aero_rep_update_data with more than 1 cell needs to specify cell_id this%n_cells", this%n_cells
         stop
       end if
-      update_data%cell_id=1;
+      update_data%cell_id = 1; 
     end if
 
     if (associated(this%solver_data_gas)) &
-            call this%solver_data_gas%update_aero_rep_data(update_data)
+      call this%solver_data_gas%update_aero_rep_data(update_data)
     if (associated(this%solver_data_aero)) &
-            call this%solver_data_aero%update_aero_rep_data(update_data)
+      call this%solver_data_aero%update_aero_rep_data(update_data)
     if (associated(this%solver_data_gas_aero)) &
-            call this%solver_data_gas_aero%update_aero_rep_data(update_data)
+      call this%solver_data_gas_aero%update_aero_rep_data(update_data)
 
   end subroutine aero_rep_update_data
 
@@ -1379,21 +1417,21 @@ contains
 
     n_cells_update = 1
     if (present(cell_id)) then
-      update_data%cell_id=cell_id;
+      update_data%cell_id = cell_id; 
     else
-      if(.not.this%n_cells.eq.1) then
-        print*,"rxn_update_data with more than 1 cell needs to specify cell_id this%n_cells",this%n_cells
+      if (.not. this%n_cells .eq. 1) then
+        print *, "rxn_update_data with more than 1 cell needs to specify cell_id this%n_cells", this%n_cells
         stop
       end if
-      update_data%cell_id=1;
+      update_data%cell_id = 1; 
     end if
 
     if (associated(this%solver_data_gas)) &
-            call this%solver_data_gas%update_rxn_data(update_data)
+      call this%solver_data_gas%update_rxn_data(update_data)
     if (associated(this%solver_data_aero)) &
-            call this%solver_data_aero%update_rxn_data(update_data)
+      call this%solver_data_aero%update_rxn_data(update_data)
     if (associated(this%solver_data_gas_aero)) &
-            call this%solver_data_gas_aero%update_rxn_data(update_data)
+      call this%solver_data_gas_aero%update_rxn_data(update_data)
 
   end subroutine rxn_update_data
 
@@ -1413,21 +1451,21 @@ contains
 
     n_cells_update = 1
     if (present(cell_id)) then
-      update_data%cell_id=cell_id;
+      update_data%cell_id = cell_id; 
     else
-      if(.not.this%n_cells.eq.1) then
-        print*,"sub_model_update_data with more than 1 cell needs to specify cell_id this%n_cells",this%n_cells
+      if (.not. this%n_cells .eq. 1) then
+        print *, "sub_model_update_data with more than 1 cell needs to specify cell_id this%n_cells", this%n_cells
         stop
       end if
-      update_data%cell_id=1;
+      update_data%cell_id = 1; 
     end if
 
     if (associated(this%solver_data_gas)) &
-            call this%solver_data_gas%update_sub_model_data(update_data)
+      call this%solver_data_gas%update_sub_model_data(update_data)
     if (associated(this%solver_data_aero)) &
-            call this%solver_data_aero%update_sub_model_data(update_data)
+      call this%solver_data_aero%update_sub_model_data(update_data)
     if (associated(this%solver_data_gas_aero)) &
-            call this%solver_data_gas_aero%update_sub_model_data(update_data)
+      call this%solver_data_gas_aero%update_sub_model_data(update_data)
 
   end subroutine sub_model_update_data
 
@@ -1461,8 +1499,8 @@ contains
     ! Pointer to solver data
     type(camp_solver_data_t), pointer :: solver
 
-    call assert_msg(593328365, this%solver_is_initialized,                   &
-                    "Trying to solve system with uninitialized solver" )
+    call assert_msg(593328365, this%solver_is_initialized, &
+                    "Trying to solve system with uninitialized solver")
 
     ! Get the phase(s) to solve for
     if (present(rxn_phase)) then
@@ -1472,18 +1510,18 @@ contains
     end if
 
     ! Update the solver array of environmental states
-    call camp_state%update_env_state( )
+    call camp_state%update_env_state()
 
     ! Determine the solver to use
-    if (phase.eq.GAS_RXN) then
-        solver => this%solver_data_gas
-    else if (phase.eq.AERO_RXN) then
-        solver => this%solver_data_aero
-    else if (phase.eq.GAS_AERO_RXN) then
-        solver => this%solver_data_gas_aero
+    if (phase .eq. GAS_RXN) then
+      solver => this%solver_data_gas
+    else if (phase .eq. AERO_RXN) then
+      solver => this%solver_data_aero
+    else if (phase .eq. GAS_AERO_RXN) then
+      solver => this%solver_data_gas_aero
     else
       call die_msg(704896254, "Invalid rxn phase specified for chemistry "// &
-              "solver: "//to_string(phase))
+                   "solver: "//to_string(phase))
     end if
 
     ! Make sure the requested solver was loaded
@@ -1494,17 +1532,15 @@ contains
 
     ! Run the integration
     if (present(solver_stats)) then
-      call solver%get_solver_stats( solver_stats )
-      solver_status = solver%solve(camp_state, t_initial, t_final, solver_stats)
-      solver_stats%status_code   = solver_status
+      solver_status = solver%solve_with_stats(camp_state, t_initial, t_final, solver_stats)
       solver_stats%start_time__s = t_initial
-      solver_stats%end_time__s   = t_final
+      solver_stats%end_time__s = t_final
     else
       solver_status = solver%solve(camp_state, t_initial, t_final)
     end if
 
-    if (.not.present(solver_stats)) then
-      call warn_assert_msg(997420005, solver_status.eq.0, "Solver failed")
+    if (.not. present(solver_stats)) then
+      call warn_assert_msg(997420005, solver_status .eq. 0, "Solver failed")
     end if
 
   end subroutine solve
@@ -1516,11 +1552,11 @@ contains
     integer(kind=i_kind) :: phase
     type(camp_solver_data_t), pointer :: solver
     phase = GAS_AERO_RXN
-    if (phase.eq.GAS_RXN) then
+    if (phase .eq. GAS_RXN) then
       solver => this%solver_data_gas
-    else if (phase.eq.AERO_RXN) then
+    else if (phase .eq. AERO_RXN) then
       solver => this%solver_data_aero
-    else if (phase.eq.GAS_AERO_RXN) then
+    else if (phase .eq. GAS_AERO_RXN) then
       solver => this%solver_data_gas_aero
     end if
     call solver%init_export_solver_data_state()
@@ -1534,11 +1570,11 @@ contains
     integer(kind=i_kind) :: phase
     type(camp_solver_data_t), pointer :: solver
     phase = GAS_AERO_RXN
-    if (phase.eq.GAS_RXN) then
+    if (phase .eq. GAS_RXN) then
       solver => this%solver_data_gas
-    else if (phase.eq.AERO_RXN) then
+    else if (phase .eq. AERO_RXN) then
       solver => this%solver_data_aero
-    else if (phase.eq.GAS_AERO_RXN) then
+    else if (phase .eq. GAS_AERO_RXN) then
       solver => this%solver_data_gas_aero
     end if
     call solver%export_solver_data_state()
@@ -1552,17 +1588,17 @@ contains
     integer(kind=i_kind) :: phase
     type(camp_solver_data_t), pointer :: solver
     phase = GAS_AERO_RXN
-    if (phase.eq.GAS_RXN) then
+    if (phase .eq. GAS_RXN) then
       solver => this%solver_data_gas
-    else if (phase.eq.AERO_RXN) then
+    else if (phase .eq. AERO_RXN) then
       solver => this%solver_data_aero
-    else if (phase.eq.GAS_AERO_RXN) then
+    else if (phase .eq. GAS_AERO_RXN) then
       solver => this%solver_data_gas_aero
     end if
     call solver%join_solver_data_state()
   end subroutine
 
-  !> Export execution time of GPU and CPU code to calculate speedups at TestMonarch.py
+  !> Export execution time of GPU and CPU code to calculate speedups
   subroutine export_solver_stats(this)
     use camp_rxn_data
     use iso_c_binding
@@ -1570,14 +1606,32 @@ contains
     integer(kind=i_kind) :: phase
     type(camp_solver_data_t), pointer :: solver
     phase = GAS_AERO_RXN
-    if (phase.eq.GAS_RXN) then
+    if (phase .eq. GAS_RXN) then
       solver => this%solver_data_gas
-    else if (phase.eq.AERO_RXN) then
+    else if (phase .eq. AERO_RXN) then
       solver => this%solver_data_aero
-    else if (phase.eq.GAS_AERO_RXN) then
+    else if (phase .eq. GAS_AERO_RXN) then
       solver => this%solver_data_gas_aero
     end if
     call solver%export_solver_data_stats()
+  end subroutine
+
+  !> Print execution time of GPU and CPU code
+  subroutine print_solver_stats(this)
+    use camp_rxn_data
+    use iso_c_binding
+    class(camp_core_t), intent(inout) :: this
+    integer(kind=i_kind) :: phase
+    type(camp_solver_data_t), pointer :: solver
+    phase = GAS_AERO_RXN
+    if (phase .eq. GAS_RXN) then
+      solver => this%solver_data_gas
+    else if (phase .eq. AERO_RXN) then
+      solver => this%solver_data_aero
+    else if (phase .eq. GAS_AERO_RXN) then
+      solver => this%solver_data_gas_aero
+    end if
+    call solver%print_solver_data_stats()
   end subroutine
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -1594,23 +1648,23 @@ contains
     type(sub_model_factory_t) :: sub_model_factory
     class(aero_rep_data_t), pointer :: aero_rep
     class(sub_model_data_t), pointer :: sub_model
-    integer(kind=i_kind) :: i_mech, i_phase, i_rep,&
-            i_sub_model, l_comm
+    integer(kind=i_kind) :: i_mech, i_phase, i_rep, &
+                            i_sub_model, l_comm
 
 #ifdef CAMP_USE_MPI
     if (present(comm)) then
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     call assert_msg(143374295, this%core_is_initialized, &
-            "Trying to get the buffer size of an uninitialized core.")
+                    "Trying to get the buffer size of an uninitialized core.")
 
-    pack_size =  camp_mpi_pack_size_integer(size(this%mechanism),  l_comm) + &
-                 camp_mpi_pack_size_integer(size(this%aero_phase), l_comm) + &
-                 camp_mpi_pack_size_integer(size(this%aero_rep),   l_comm) + &
-                 camp_mpi_pack_size_integer(size(this%sub_model),  l_comm)
+    pack_size = camp_mpi_pack_size_integer(size(this%mechanism), l_comm) + &
+                camp_mpi_pack_size_integer(size(this%aero_phase), l_comm) + &
+                camp_mpi_pack_size_integer(size(this%aero_rep), l_comm) + &
+                camp_mpi_pack_size_integer(size(this%sub_model), l_comm)
     do i_mech = 1, size(this%mechanism)
       pack_size = pack_size + this%mechanism(i_mech)%val%pack_size(l_comm)
     end do
@@ -1659,22 +1713,22 @@ contains
     class(aero_rep_data_t), pointer :: aero_rep
     class(sub_model_data_t), pointer :: sub_model
     integer(kind=i_kind) :: i_mech, i_phase, i_rep, i_sub_model, &
-            prev_position, l_comm
+                            prev_position, l_comm
 
     if (present(comm)) then
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     call assert_msg(143374295, this%core_is_initialized, &
-            "Trying to pack an uninitialized core.")
+                    "Trying to pack an uninitialized core.")
 
     prev_position = pos
-    call camp_mpi_pack_integer(buffer, pos, size(this%mechanism),  l_comm)
+    call camp_mpi_pack_integer(buffer, pos, size(this%mechanism), l_comm)
     call camp_mpi_pack_integer(buffer, pos, size(this%aero_phase), l_comm)
-    call camp_mpi_pack_integer(buffer, pos, size(this%aero_rep),   l_comm)
-    call camp_mpi_pack_integer(buffer, pos, size(this%sub_model),  l_comm)
+    call camp_mpi_pack_integer(buffer, pos, size(this%aero_rep), l_comm)
+    call camp_mpi_pack_integer(buffer, pos, size(this%sub_model), l_comm)
     do i_mech = 1, size(this%mechanism)
       call this%mechanism(i_mech)%val%bin_pack(buffer, pos, l_comm)
     end do
@@ -1698,7 +1752,7 @@ contains
     call camp_mpi_pack_integer_array(buffer, pos, this%var_type, l_comm)
     call camp_mpi_pack_real_array(buffer, pos, this%init_state_cell, l_comm)
     call assert(184050835, &
-         pos - prev_position <= this%pack_size(l_comm))
+                pos - prev_position <= this%pack_size(l_comm))
 #endif
 
   end subroutine bin_pack
@@ -1722,27 +1776,27 @@ contains
     type(aero_rep_factory_t) :: aero_rep_factory
     type(sub_model_factory_t) :: sub_model_factory
     integer(kind=i_kind) :: i_mech, i_phase, i_rep, i_sub_model, &
-            prev_position, num_mech, num_phase, num_rep, num_sub_model, &
-            l_comm
+                            prev_position, num_mech, num_phase, num_rep, num_sub_model, &
+                            l_comm
 
     if (present(comm)) then
       l_comm = comm
     else
       l_comm = MPI_COMM_WORLD
-    endif
+    end if
 
     call finalize(this)
     this%chem_spec_data => chem_spec_data_t()
 
     prev_position = pos
-    call camp_mpi_unpack_integer(buffer, pos, num_mech,      l_comm)
-    call camp_mpi_unpack_integer(buffer, pos, num_phase,     l_comm)
-    call camp_mpi_unpack_integer(buffer, pos, num_rep,       l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, num_mech, l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, num_phase, l_comm)
+    call camp_mpi_unpack_integer(buffer, pos, num_rep, l_comm)
     call camp_mpi_unpack_integer(buffer, pos, num_sub_model, l_comm)
-    allocate(this%mechanism(num_mech))
-    allocate(this%aero_phase(num_phase))
-    allocate(this%aero_rep(num_rep))
-    allocate(this%sub_model(num_sub_model))
+    allocate (this%mechanism(num_mech))
+    allocate (this%aero_phase(num_phase))
+    allocate (this%aero_rep(num_rep))
+    allocate (this%sub_model(num_sub_model))
     do i_mech = 1, num_mech
       this%mechanism(i_mech)%val => mechanism_data_t()
       call this%mechanism(i_mech)%val%bin_unpack(buffer, pos, l_comm)
@@ -1756,7 +1810,7 @@ contains
     end do
     do i_sub_model = 1, num_sub_model
       this%sub_model(i_sub_model)%val => &
-              sub_model_factory%bin_unpack(buffer, pos, l_comm)
+        sub_model_factory%bin_unpack(buffer, pos, l_comm)
     end do
     call camp_mpi_unpack_integer(buffer, pos, this%size_state_per_cell, l_comm)
     call camp_mpi_unpack_logical(buffer, pos, this%split_gas_aero, l_comm)
@@ -1765,17 +1819,17 @@ contains
     call camp_mpi_unpack_integer_array(buffer, pos, this%var_type, l_comm)
     call camp_mpi_unpack_real_array(buffer, pos, this%init_state_cell, l_comm)
 
-    allocate(this%init_state(this%size_state_per_cell * this%n_cells))
+    allocate (this%init_state(this%size_state_per_cell*this%n_cells))
     do i_cell = 0, this%n_cells - 1
       do i_state_elem = 1, this%size_state_per_cell
-        this%init_state(i_state_elem + i_cell * this%size_state_per_cell)=&
-                this%init_state_cell(i_state_elem)
+        this%init_state(i_state_elem + i_cell*this%size_state_per_cell) = &
+          this%init_state_cell(i_state_elem)
       end do
     end do
 
     this%core_is_initialized = .true.
     call assert(291557168, &
-            pos - prev_position <= this%pack_size(l_comm))
+                pos - prev_position <= this%pack_size(l_comm))
 #endif
 
   end subroutine bin_unpack
@@ -1804,86 +1858,86 @@ contains
     if (present(file_unit)) f_unit = file_unit
     if (present(solver_data_only)) sd_only = solver_data_only
 
-    write(f_unit,*) "*********************"
-    write(f_unit,*) "** CAMP core data **"
-    write(f_unit,*) "*********************"
-    if (.not.sd_only ) then
-      write(f_unit,*) "Number of grid cells to solve simultaneously: ", &
-                      this%n_cells
-      write(f_unit,*) "Relative integration tolerance: ", this%rel_tol
+    write (f_unit, *) "*********************"
+    write (f_unit, *) "** CAMP core data **"
+    write (f_unit, *) "*********************"
+    if (.not. sd_only) then
+      write (f_unit, *) "Number of grid cells to solve simultaneously: ", &
+        this%n_cells
+      write (f_unit, *) "Relative integration tolerance: ", this%rel_tol
       call this%chem_spec_data%print(f_unit)
-      write(f_unit,*) "*** Aerosol Phases ***"
-      do i_phase=1, size(this%aero_phase)
+      write (f_unit, *) "*** Aerosol Phases ***"
+      do i_phase = 1, size(this%aero_phase)
         call this%aero_phase(i_phase)%val%print(f_unit)
       end do
-      write(f_unit,*) "*** Aerosol Representations ***"
-      do i_aero_rep=1, size(this%aero_rep)
-        write(f_unit,*) "Aerosol representation ", i_aero_rep
+      write (f_unit, *) "*** Aerosol Representations ***"
+      do i_aero_rep = 1, size(this%aero_rep)
+        write (f_unit, *) "Aerosol representation ", i_aero_rep
         call this%aero_rep(i_aero_rep)%val%print(f_unit)
       end do
-      write(f_unit,*) "*** Sub Models ***"
-      do i_sub_model=1, size(this%sub_model)
-        write(f_unit,*) "Sub model: ", i_sub_model
+      write (f_unit, *) "*** Sub Models ***"
+      do i_sub_model = 1, size(this%sub_model)
+        write (f_unit, *) "Sub model: ", i_sub_model
         call this%sub_model(i_sub_model)%val%print(f_unit)
       end do
-      write(f_unit,*) "*** Mechanisms ***"
-      write(f_unit,*) "Number of mechanisms: ", size(this%mechanism)
-      do i_mech=1, size(this%mechanism)
+      write (f_unit, *) "*** Mechanisms ***"
+      write (f_unit, *) "Number of mechanisms: ", size(this%mechanism)
+      do i_mech = 1, size(this%mechanism)
         call this%mechanism(i_mech)%val%print(f_unit)
       end do
-      write(f_unit,*) "*** State Array ***"
-      write(f_unit,*) "Number of species on the state array per grid cell: ", &
-                      this%size_state_per_cell
-      allocate(state_names(this%size_state_per_cell))
+      write (f_unit, *) "*** State Array ***"
+      write (f_unit, *) "Number of species on the state array per grid cell: ", &
+        this%size_state_per_cell
+      allocate (state_names(this%size_state_per_cell))
       i_spec = 0
       do i_gas_spec = 1, &
-              this%chem_spec_data%size(spec_phase=CHEM_SPEC_GAS_PHASE)
+        this%chem_spec_data%size(spec_phase=CHEM_SPEC_GAS_PHASE)
         i_spec = i_gas_spec
         state_names(i_spec)%string = &
-                this%chem_spec_data%gas_state_name(i_gas_spec)
+          this%chem_spec_data%gas_state_name(i_gas_spec)
       end do
-      write(f_unit,*) "Gas-phase species: ", i_spec
+      write (f_unit, *) "Gas-phase species: ", i_spec
       do i_aero_rep = 1, size(this%aero_rep)
         rep_spec_names = this%aero_rep(i_aero_rep)%val%unique_names()
         call assert(620697091, allocated(rep_spec_names))
-        call assert(787495222, size(rep_spec_names).gt.0)
+        call assert(787495222, size(rep_spec_names) .gt. 0)
         forall (j_spec=1:size(rep_spec_names)) &
-            state_names(i_spec+j_spec)%string = &
-                rep_spec_names(j_spec)%string
+          state_names(i_spec + j_spec)%string = &
+          rep_spec_names(j_spec)%string
         i_spec = i_spec + size(rep_spec_names)
-        write(f_unit,*) "Aerosol rep ", &
-                this%aero_rep(i_aero_rep)%val%rep_name, &
-                " species: ", size(rep_spec_names)
-        deallocate(rep_spec_names)
+        write (f_unit, *) "Aerosol rep ", &
+          this%aero_rep(i_aero_rep)%val%rep_name, &
+          " species: ", size(rep_spec_names)
+        deallocate (rep_spec_names)
       end do
       do i_spec = 1, size(state_names)
-        write(f_unit,*) i_spec-1, state_names(i_spec)%string
+        write (f_unit, *) i_spec - 1, state_names(i_spec)%string
       end do
 
-      write(f_unit,*) "*** Solver Data ***"
-      write(f_unit,*) "Relative tolerance:", this%rel_tol
-      write(f_unit,*) " Solver id  |    Absolute Tolerance     "// &
-                      "| Species Name"
+      write (f_unit, *) "*** Solver Data ***"
+      write (f_unit, *) "Relative tolerance:", this%rel_tol
+      write (f_unit, *) " Solver id  |    Absolute Tolerance     "// &
+        "| Species Name"
       i_solver_spec = 0
       do i_spec = 1, size(state_names)
-        if (this%var_type(i_spec).eq.CHEM_SPEC_VARIABLE) then
-          write(f_unit,*) i_solver_spec, "|", this%abs_tol(i_spec), "| ", &
-                          state_names(i_spec)%string
+        if (this%var_type(i_spec) .eq. CHEM_SPEC_VARIABLE) then
+          write (f_unit, *) i_solver_spec, "|", this%abs_tol(i_spec), "| ", &
+            state_names(i_spec)%string
           i_solver_spec = i_solver_spec + 1
         end if
       end do
-      write(f_unit,*) ""
-      deallocate(state_names)
+      write (f_unit, *) ""
+      deallocate (state_names)
     end if
 
-    flush(f_unit)
+    flush (f_unit)
 
     if (associated(this%solver_data_gas)) &
-            call this%solver_data_gas%print()
+      call this%solver_data_gas%print()
     if (associated(this%solver_data_gas_aero)) &
-            call this%solver_data_gas_aero%print()
+      call this%solver_data_gas_aero%print()
 
-    flush(f_unit)
+    flush (f_unit)
 
   end subroutine do_print
 
@@ -1896,25 +1950,25 @@ contains
     type(camp_core_t), intent(inout) :: this
 
     if (associated(this%mechanism)) &
-            deallocate(this%mechanism)
+      deallocate (this%mechanism)
     if (associated(this%chem_spec_data)) &
-            deallocate(this%chem_spec_data)
+      deallocate (this%chem_spec_data)
     if (associated(this%sub_model)) &
-            deallocate(this%sub_model)
+      deallocate (this%sub_model)
     if (associated(this%aero_rep)) &
-            deallocate(this%aero_rep)
+      deallocate (this%aero_rep)
     if (associated(this%aero_phase)) &
-            deallocate(this%aero_phase)
+      deallocate (this%aero_phase)
     if (allocated(this%abs_tol)) &
-            deallocate(this%abs_tol)
+      deallocate (this%abs_tol)
     if (allocated(this%var_type)) &
-            deallocate(this%var_type)
+      deallocate (this%var_type)
     if (associated(this%solver_data_gas)) &
-            deallocate(this%solver_data_gas)
+      deallocate (this%solver_data_gas)
     if (associated(this%solver_data_aero)) &
-            deallocate(this%solver_data_aero)
+      deallocate (this%solver_data_aero)
     if (associated(this%solver_data_gas_aero)) &
-            deallocate(this%solver_data_gas_aero)
+      deallocate (this%solver_data_gas_aero)
 
   end subroutine finalize
 
@@ -1930,14 +1984,14 @@ contains
 
     type(aero_phase_data_ptr), pointer :: new_aero_phase(:)
 
-    allocate(new_aero_phase(size(this%aero_phase)+1))
+    allocate (new_aero_phase(size(this%aero_phase) + 1))
 
     new_aero_phase(1:size(this%aero_phase)) = &
-            this%aero_phase(1:size(this%aero_phase))
+      this%aero_phase(1:size(this%aero_phase))
 
     new_aero_phase(size(new_aero_phase))%val => aero_phase_data_t(phase_name)
 
-    deallocate(this%aero_phase)
+    deallocate (this%aero_phase)
     this%aero_phase => new_aero_phase
 
   end subroutine add_aero_phase
@@ -1956,14 +2010,14 @@ contains
     type(aero_rep_factory_t) :: aero_rep_factory
 
     !TODO: Improve this multiple reallocation
-    allocate(new_aero_rep(size(this%aero_rep)+1))
+    allocate (new_aero_rep(size(this%aero_rep) + 1))
 
     new_aero_rep(1:size(this%aero_rep)) = &
-            this%aero_rep(1:size(this%aero_rep))
+      this%aero_rep(1:size(this%aero_rep))
     new_aero_rep(size(new_aero_rep))%val => aero_rep_factory%create(rep_name)
 
     call this%aero_rep(:)%dereference()
-    deallocate(this%aero_rep)
+    deallocate (this%aero_rep)
     this%aero_rep => new_aero_rep
 
   end subroutine add_aero_rep
@@ -1980,15 +2034,15 @@ contains
 
     type(mechanism_data_ptr), pointer :: new_mechanism(:)
 
-    allocate(new_mechanism(size(this%mechanism)+1))
+    allocate (new_mechanism(size(this%mechanism) + 1))
 
     new_mechanism(1:size(this%mechanism)) = &
-            this%mechanism(1:size(this%mechanism))
+      this%mechanism(1:size(this%mechanism))
 
     new_mechanism(size(new_mechanism))%val => mechanism_data_t(mech_name)
 
     call this%mechanism(:)%dereference()
-    deallocate(this%mechanism)
+    deallocate (this%mechanism)
     this%mechanism => new_mechanism
 
   end subroutine add_mechanism
@@ -2006,14 +2060,14 @@ contains
     type(sub_model_data_ptr), pointer :: new_sub_model(:)
     type(sub_model_factory_t) :: sub_model_factory
 
-    allocate(new_sub_model(size(this%sub_model)+1))
+    allocate (new_sub_model(size(this%sub_model) + 1))
 
     new_sub_model(1:size(this%sub_model)) = &
-            this%sub_model(1:size(this%sub_model))
+      this%sub_model(1:size(this%sub_model))
     new_sub_model(size(new_sub_model))%val => &
-            sub_model_factory%create(sub_model_name)
+      sub_model_factory%create(sub_model_name)
 
-    deallocate(this%sub_model)
+    deallocate (this%sub_model)
     this%sub_model => new_sub_model
 
   end subroutine add_sub_model

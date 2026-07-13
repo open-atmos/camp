@@ -139,6 +139,7 @@ function install_jsonfortran() {
   fi
 
   if [[ $flags == *2* ]]; then
+    cd ${camp_suite_dir}/camp/compile
     # load modules and compile
     ${camp_suite_dir}/camp/compile/compile.json-fortran-6.1.0.sh ${camp_suite_dir}
   fi
@@ -180,6 +181,7 @@ function install_suitesparse() {
   fi
 
   if [[ $flags == *2* ]]; then
+    cd ${camp_suite_dir}/camp/compile
     # load modules and compile
     ${camp_suite_dir}/camp/compile/compile.suiteSparse.sh ${camp_suite_dir}
   fi
@@ -192,18 +194,19 @@ function install_suitesparse() {
 function install_cvode() {
   # prepare directories
   if [[ $flags == *0* ]]; then
-    rm -rf ${camp_suite_dir}/cvode-3.4-alpha
-    cp -rf ${source_dir}/cvode-3.4-alpha ${camp_suite_dir}
+    rm -rf ${camp_suite_dir}/cvode
+    cp -rf ${source_dir}/cvode ${camp_suite_dir}
   fi
   if [[ $flags == *1* ]]; then
     # git-clone
-    rm -rf ${camp_suite_dir}/cvode-3.4-alpha
+    rm -rf ${camp_suite_dir}/cvode
     cd ${camp_suite_dir}
-    git clone https://github.com/mattldawson/cvode.git cvode-3.4-alpha
+    git clone https://github.com/mattldawson/cvode.git cvode
   fi
   if [[ $flags == *2* ]]; then
+    cd ${camp_suite_dir}/camp/compile
     # load modules and compile
-    ${camp_suite_dir}/camp/compile/compile.cvode-3.4-alpha.sh ${camp_suite_dir}
+    ${camp_suite_dir}/camp/compile/compile.cvode.sh ${camp_suite_dir}
   fi
   cd $initial_dir
 }
@@ -220,6 +223,7 @@ function install_camp() {
   fi
 
   if [[ $flags == *2* ]]; then
+    cd ${camp_suite_dir}/camp/compile
     # load modules and compile
     source ${camp_suite_dir}/camp/compile/load.modules.camp.sh
     ${camp_suite_dir}/camp/compile/compile.camp.sh ${camp_suite_dir}
@@ -232,7 +236,9 @@ function install_camp() {
 #########################################################
 function install_boxmodel() {
   if [[ $flags == *2* ]]; then
+    cd ${camp_suite_dir}/camp/compile
     # load modules and compile
+    source ${camp_suite_dir}/camp/compile/load.modules.camp.sh
     ${camp_suite_dir}/camp/compile/compile.boxmodel.sh ${camp_suite_dir}
   fi
   cd $initial_dir
@@ -241,6 +247,9 @@ function install_boxmodel() {
 #########################################################
 #  main
 #########################################################
+
+# purge
+module purge
 
 # check if correct flags combination are requted, and
 # check if the modules to be load are specified for the current HPC machine
@@ -261,7 +270,7 @@ for componentflags in $arguments; do
     case $component in
     'jsonfortran') ok=$(grep '"'${BSC_MACHINE}'-loadmodules"' compile/compile.json-fortran-6.1.0.sh | wc -l) ;;
     'suitesparse') ok=$(grep '"'${BSC_MACHINE}'-loadmodules"' compile/compile.suiteSparse.sh | wc -l) ;;
-    'cvode') ok=$(grep '"'${BSC_MACHINE}'-loadmodules"' compile/compile.cvode-3.4-alpha.sh | wc -l) ;;
+    'cvode') ok=$(grep '"'${BSC_MACHINE}'-loadmodules"' compile/compile.cvode.sh | wc -l) ;;
     'camp') ok=$(grep '"'${BSC_MACHINE}'-loadmodules"' compile/compile.camp.sh | wc -l) ;;
     'boxmodel') ok=$(grep '"'${BSC_MACHINE}'-loadmodules"' compile/compile.boxmodel.sh | wc -l) ;;
     esac

@@ -22,18 +22,16 @@ endif ()
 
 ######################################################################
 
-#Set all options to OFF by default due to bug on CMake 3.15
 option(ENABLE_GSL "Enable GSL library for Jacobian evaluation" OFF)
 option(ENABLE_MPI "Enable MPI parallel support" OFF)
 option(ENABLE_DEBUG "Compile debugging functions" OFF)
 option(FAILURE_DETAIL "Output conditions before and after solver failures" OFF)
-option(ENABLE_GPU "Enable use of GPUs in chemistry solving" OFF)
-option(ENABLE_PROFILE_SOLVING "" OFF)
-option(DEBUG_SOLVER_FAILURES "" OFF)
+option(ENABLE_PROFILE_SOLVING "Profile solver" OFF)
 option(ENABLE_NETCDF "Include NETCDF package" OFF)
-option(DISABLE_INSTALL_OPTIONS "" OFF)
-SET(USE_TESTS OFF)
-add_definitions(-DDEBUG_SOLVER_FAILURES)
+option(DISABLE_INSTALL_OPTIONS "Disable export camp lib" OFF)
+option(USE_TESTS "Enable all validation tests" OFF)
+#add_definitions(-DDEBUG_USE_GPU_RXN_TESTS) #Use as a debug option when the default GPU test fails to find which reaction cause problems.
+# add_definitions(-DDEBUG_SOLVER_FAILURES) # Debugging option
 
 mark_as_advanced(FORCE ENABLE_DEBUG FAILURE_DETAIL)
 
@@ -124,7 +122,7 @@ endif()
 set(SUITE_SPARSE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../SuiteSparse)
 set(SUITE_SPARSE_INCLUDE ${SUITE_SPARSE_PATH}/include)
 set(SUITE_SPARSE_LIB ${SUITE_SPARSE_PATH}/lib)
-set(SUNDIALS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cvode-3.4-alpha/install)
+set(SUNDIALS_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cvode/install)
 set(SUNDIALS_PATH_INCLUDE ${SUNDIALS_PATH}/include)
 set(SUNDIALS_PATH_LIB ${SUNDIALS_PATH}/lib)
 
@@ -199,11 +197,26 @@ add_definitions(-DCAMP_USE_JSON)
 ######################################################################
 # GPU support
 
-if (ENABLE_GPU)
-  find_package(CUDA)
-  enable_language(CUDA)
-  add_definitions(-DCAMP_USE_GPU)
+include(CheckLanguage)
+check_language(CUDA)
+SET (ENABLE_GPU OFF)
+
+if(CMAKE_CUDA_COMPILER)
+  SET(ENABLE_GPU ON)
 endif()
+
+if(ENABLE_GPU)
+    find_package(CUDA)
+    enable_language(CUDA)
+    add_definitions(-DCAMP_USE_GPU)
+endif()
+
+######################################################################
+# NetCDF support
+if (ENABLE_NETCDF)
+  execute_process(COMMAND nf-config --flibs OUTPUT_VARIABLE NetCDF_LIBRARY OUTPUT_STRIP_TRAILING_WHITESPACE)
+  execute_process(COMMAND nf-config --fflags OUTPUT_VARIABLE NetCDF_INCLUDE_DIR OUTPUT_STRIP_TRAILING_WHITESPACE)
+endif ()
 
 ######################################################################
 # debugging options
@@ -232,7 +245,7 @@ endif()
 if (USE_TESTS)
 macro(do_unit_test test_name result)
 if(ENABLE_MPI)
-  add_test(unit_test_${test_name} mpirun -v -np 2 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
+  add_test(unit_test_${test_name} mpirun -np 2 ${CMAKE_BINARY_DIR}/unit_test_${test_name})
 else()
   add_test(unit_test_${test_name} ${CMAKE_BINARY_DIR}/unit_test_${test_name})
 endif()
@@ -262,21 +275,15 @@ else()
   set(MPI_TEST_FLAG serial)
 endif()
 
-#todo:
-#if (ENABLE_GPU)
-#  add_test(NAME test_gpu COMMAND checkGPU.sh WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch)
-#endif()
-
 if (USE_TESTS)
-  # Old-style unit tests
-  #add_test(test_rxn_arrhenius ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_arrhenius.sh ${MPI_TEST_FLAG}) #pending merge with main gitlab
+  add_test(test_rxn_arrhenius ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_arrhenius.sh ${MPI_TEST_FLAG}) #pending merge with main gitlab
   add_test(test_rxn_aqueous_equilibrium ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_aqueous_equilibrium.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_CMAQ_H2O2 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_CMAQ_H2O2.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_CMAQ_OH_HNO3 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_CMAQ_OH_HNO3.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_condensed_phase_arrhenius ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_condensed_phase_arrhenius.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_condensed_phase_photolysis ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_condensed_phase_photolysis.sh ${MPI_TEST_FLAG})
-  add_test(test_rxn_emission ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_emission.sh ${MPI_TEST_FLAG})
-  add_test(test_rxn_first_order_loss ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_first_order_loss.sh ${MPI_TEST_FLAG})
+  add_test(test_rxn_emission ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_emission.sh ${MPI_TEST_FLAG}) #Fails with BCG linear solver in CVODE, but BCG makes CAMP 2x times faster in MONARCH
+  add_test(test_rxn_first_order_loss ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_first_order_loss.sh ${MPI_TEST_FLAG}) #Fails with BCG linear solver in CVODE, but BCG makes CAMP 2x times faster in MONARCH
   if(NOT $ENV{BSC_MACHINE} MATCHES "mn5") #this test does not work in mn5
     add_test(test_rxn_HL_phase_transfer ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_HL_phase_transfer.sh ${MPI_TEST_FLAG})
   endif()
@@ -288,7 +295,7 @@ if (USE_TESTS)
   add_test(test_rxn_wennberg_no_ro2 ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wennberg_no_ro2.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_wennberg_tunneling ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wennberg_tunneling.sh ${MPI_TEST_FLAG})
   add_test(test_rxn_wet_deposition ${CMAKE_BINARY_DIR}/test_run/unit_rxn_data/test_wet_deposition.sh ${MPI_TEST_FLAG})
-  add_test(test_sub_model_PDFiTE ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_PDFiTE.sh ${MPI_TEST_FLAG})
+  add_test(test_sub_model_PDFiTE ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_PDFiTE.sh ${MPI_TEST_FLAG}) 
   add_test(test_sub_model_UNIFAC ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_UNIFAC.sh ${MPI_TEST_FLAG})
   add_test(test_sub_model_ZSR_aerosol_water ${CMAKE_BINARY_DIR}/test_run/unit_sub_model_data/test_ZSR_aerosol_water.sh ${MPI_TEST_FLAG})
   add_test(test_chem_mech_solver ${CMAKE_BINARY_DIR}/test_run/chemistry/test_chemistry_1.sh ${MPI_TEST_FLAG})
@@ -301,12 +308,24 @@ if (USE_TESTS)
   add_test(camp_v1_paper_modal ${CMAKE_BINARY_DIR}/data_run/CAMP_v1_paper/modal/test_monarch_modal.sh ${MPI_TEST_FLAG})
 endif()
 
+if (ENABLE_GPU)
+  add_test(
+  NAME test_gpu
+  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch/checkGPU.sh
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test/monarch
+)
+endif()
+
 ######################################################################
 # camp library
 
 #-lnvToolsExt for nsys profiling
 #WARNING: -dc flag does not work with MONARCH, avoid that
-set(STD_CUDA_FLAGS "-g -O3 --default-stream per-thread") #-G for assembly code nsight
+if(CMAKE_BUILD_TYPE STREQUAL "debug")
+    set(STD_CUDA_FLAGS "-O0 -g -G --default-stream per-thread") #-G is slow but generates assembly info
+else()
+    set(STD_CUDA_FLAGS "-O3 --default-stream per-thread")
+endif()
 
 if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
   if(${CMAKE_Fortran_COMPILER_VERSION} GREATER_EQUAL 2021.10.0)
@@ -317,8 +336,9 @@ if(${CMAKE_Fortran_COMPILER_ID} MATCHES "Intel")
   endif ()
 elseif(${CMAKE_Fortran_COMPILER_ID} MATCHES "GNU")
   set(STD_F_FLAGS "-ffree-line-length-none")
+  set(STD_C_FLAGS "-std=c99")
 else()
-  set(STD_C_FLAGS "-std=c99 ")
+  set(STD_C_FLAGS "-std=c99")
 endif()
 
 set(REACTIONS_F_SRC
@@ -331,11 +351,14 @@ set(REACTIONS_F_SRC
 	src/rxns/rxn_emission.F90
 	src/rxns/rxn_first_order_loss.F90
 	src/rxns/rxn_HL_phase_transfer.F90
+  src/rxns/rxn_isomerisation.F90
 	src/rxns/rxn_photolysis.F90
+  src/rxns/rxn_raoult_phase_transfer.F90
   src/rxns/rxn_SIMPOL_phase_transfer.F90
   src/rxns/rxn_surface.F90
   src/rxns/rxn_ternary_chemical_activation.F90
   src/rxns/rxn_troe.F90
+  src/rxns/rxn_vbs_nox_dependent.F90
   src/rxns/rxn_wennberg_no_ro2.F90
   src/rxns/rxn_wennberg_tunneling.F90
   src/rxns/rxn_wet_deposition.F90)
@@ -350,11 +373,14 @@ set(REACTIONS_C_SRC
 	src/rxns/rxn_emission.c
 	src/rxns/rxn_first_order_loss.c
 	src/rxns/rxn_HL_phase_transfer.c
+  src/rxns/rxn_isomerisation.c
 	src/rxns/rxn_photolysis.c
+  src/rxns/rxn_raoult_phase_transfer.c
   src/rxns/rxn_SIMPOL_phase_transfer.c
   src/rxns/rxn_surface.c
   src/rxns/rxn_ternary_chemical_activation.c
 	src/rxns/rxn_troe.c
+  src/rxns/rxn_vbs_nox_dependent.c
   src/rxns/rxn_wennberg_no_ro2.c
   src/rxns/rxn_wennberg_tunneling.c
   src/rxns/rxn_wet_deposition.c)
@@ -413,10 +439,9 @@ set_source_files_properties(${CAMP_C_SRC} PROPERTIES COMPILE_FLAGS
 
 if (ENABLE_GPU)
   set(CAMP_CUDA_SRC
-          src/cuda/cvode_cuda.cu
-          src/cuda/cvode_gpu.cu
-          src/cuda/cvode_init.cu
+          src/cuda/cvode_interface.cu
           )
+  include_directories(src/cuda src/cuda/rxns src/cuda/rxns/aero)
   set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES COMPILE_FLAGS
         ${STD_CUDA_FLAGS})
   set_source_files_properties(${CAMP_CUDA_SRC} PROPERTIES LANGUAGE CUDA)
@@ -525,26 +550,23 @@ endif()
 
 set_source_files_properties(${CB5_EBI_SOLVER} PROPERTIES COMPILE_FLAGS
 	${CB5_EBI_FLAGS})
+
+######################################################################
+# MONARCH interface
+
 add_executable(mock_monarch test/monarch/mock_monarch.F90
     test/monarch/camp_monarch_interface.F90)
 target_link_libraries(mock_monarch camplib)
-
-#Binned GPU is in development. It may fail running it as a test
-if (CHECK_BINNED_GPU)
-  add_executable(binned_gpu test/binned_gpu/mock_monarch.F90
-      test/binned_gpu/camp_monarch_interface.F90)
-  target_link_libraries(binned_gpu camplib)
-endif()
 
 if (USE_TESTS)
 
 ######################################################################
 # camp-chem box model
 
-add_executable(camp_box_model test/camp_box_model_data.F90
-    test/camp_box_model.F90)
+  add_executable(camp_box_model test/camp_box_model_data.F90
+      test/camp_box_model.F90)
 
-target_link_libraries(camp_box_model camplib)
+  target_link_libraries(camp_box_model camplib)
 
 ######################################################################
 # test_chemistry_cb05cl_ae5
@@ -556,115 +578,124 @@ add_executable(test_chemistry_cb05cl_ae5
 target_link_libraries(test_chemistry_cb05cl_ae5 camplib)
 
 ######################################################################
-# test_property
+  # test_property
 
-add_executable(unit_test_property test/unit_property/test_property.F90)
+  add_executable(unit_test_property test/unit_property/test_property.F90)
 
-target_link_libraries(unit_test_property camplib)
+  target_link_libraries(unit_test_property camplib)
 
 ######################################################################
 # test_jacobian
 
-add_executable(unit_test_jacobian test/unit_jacobian/test_jacobian.c)
+  add_executable(unit_test_jacobian test/unit_jacobian/test_jacobian.c)
 
-target_link_libraries(unit_test_jacobian camplib)
+  target_compile_options(unit_test_jacobian PUBLIC ${STD_C_FLAGS})
+  target_link_libraries(unit_test_jacobian camplib)
 
 ######################################################################
 # test_chem_spec_data
 
-add_executable(unit_test_chem_spec_data test/unit_chem_spec_data/test_chem_spec_data.F90)
+  add_executable(unit_test_chem_spec_data test/unit_chem_spec_data/test_chem_spec_data.F90)
 
-target_link_libraries(unit_test_chem_spec_data camplib)
+  target_link_libraries(unit_test_chem_spec_data camplib)
 
 ######################################################################
-# test_rxn_data
-
-add_executable(test_rxn_aqueous_equilibrium test/unit_rxn_data/test_rxn_aqueous_equilibrium.F90)
-target_link_libraries(test_rxn_aqueous_equilibrium camplib)
-add_executable(test_rxn_CMAQ_H2O2 test/unit_rxn_data/test_rxn_CMAQ_H2O2.F90)
-target_link_libraries(test_rxn_CMAQ_H2O2 camplib)
-add_executable(test_rxn_CMAQ_OH_HNO3 test/unit_rxn_data/test_rxn_CMAQ_OH_HNO3.F90)
-target_link_libraries(test_rxn_CMAQ_OH_HNO3 camplib)
-add_executable(test_rxn_condensed_phase_arrhenius test/unit_rxn_data/test_rxn_condensed_phase_arrhenius.F90)
-target_link_libraries(test_rxn_condensed_phase_arrhenius camplib)
-add_executable(test_rxn_condensed_phase_photolysis test/unit_rxn_data/test_rxn_condensed_phase_photolysis.F90)
-target_link_libraries(test_rxn_condensed_phase_photolysis camplib)
-add_executable(test_rxn_emission test/unit_rxn_data/test_rxn_emission.F90)
-target_link_libraries(test_rxn_emission camplib)
-add_executable(test_rxn_first_order_loss test/unit_rxn_data/test_rxn_first_order_loss.F90)
-target_link_libraries(test_rxn_first_order_loss camplib)
-if(NOT $ENV{BSC_MACHINE} MATCHES "mn5") #this test does not work in mn5
-  add_executable(test_rxn_HL_phase_transfer test/unit_rxn_data/test_rxn_HL_phase_transfer.F90)
-  target_link_libraries(test_rxn_HL_phase_transfer camplib)
-endif()
-add_executable(test_rxn_photolysis test/unit_rxn_data/test_rxn_photolysis.F90)
-target_link_libraries(test_rxn_photolysis camplib)
-add_executable(test_rxn_SIMPOL_phase_transfer test/unit_rxn_data/test_rxn_SIMPOL_phase_transfer.F90)
-target_link_libraries(test_rxn_SIMPOL_phase_transfer camplib)
-add_executable(test_rxn_surface test/unit_rxn_data/test_rxn_surface.F90)
-target_link_libraries(test_rxn_surface camplib)
-add_executable(test_rxn_ternary_chemical_activation test/unit_rxn_data/test_rxn_ternary_chemical_activation.F90)
-target_link_libraries(test_rxn_ternary_chemical_activation camplib)
-add_executable(test_rxn_troe test/unit_rxn_data/test_rxn_troe.F90)
-target_link_libraries(test_rxn_troe camplib)
-add_executable(test_rxn_wennberg_no_ro2 test/unit_rxn_data/test_rxn_wennberg_no_ro2.F90)
-target_link_libraries(test_rxn_wennberg_no_ro2 camplib)
-add_executable(test_rxn_wennberg_tunneling test/unit_rxn_data/test_rxn_wennberg_tunneling.F90)
-target_link_libraries(test_rxn_wennberg_tunneling camplib)
-add_executable(test_rxn_wet_deposition test/unit_rxn_data/test_rxn_wet_deposition.F90)
-target_link_libraries(test_rxn_wet_deposition camplib)
+  # test_rxn_data
+  add_executable(test_rxn_arrhenius test/unit_rxn_data/test_rxn_arrhenius.F90)
+  target_link_libraries(test_rxn_arrhenius camplib)
+  add_executable(test_rxn_aqueous_equilibrium test/unit_rxn_data/test_rxn_aqueous_equilibrium.F90)
+  target_link_libraries(test_rxn_aqueous_equilibrium camplib)
+  add_executable(test_rxn_CMAQ_H2O2 test/unit_rxn_data/test_rxn_CMAQ_H2O2.F90)
+  target_link_libraries(test_rxn_CMAQ_H2O2 camplib)
+  add_executable(test_rxn_CMAQ_OH_HNO3 test/unit_rxn_data/test_rxn_CMAQ_OH_HNO3.F90)
+  target_link_libraries(test_rxn_CMAQ_OH_HNO3 camplib)
+  add_executable(test_rxn_condensed_phase_arrhenius test/unit_rxn_data/test_rxn_condensed_phase_arrhenius.F90)
+  target_link_libraries(test_rxn_condensed_phase_arrhenius camplib)
+  add_executable(test_rxn_condensed_phase_photolysis test/unit_rxn_data/test_rxn_condensed_phase_photolysis.F90)
+  target_link_libraries(test_rxn_condensed_phase_photolysis camplib)
+  add_executable(test_rxn_emission test/unit_rxn_data/test_rxn_emission.F90)
+  target_link_libraries(test_rxn_emission camplib)
+  add_executable(test_rxn_first_order_loss test/unit_rxn_data/test_rxn_first_order_loss.F90)
+  target_link_libraries(test_rxn_first_order_loss camplib)
+  if(NOT $ENV{BSC_MACHINE} MATCHES "mn5") #this test does not work in mn5
+    add_executable(test_rxn_HL_phase_transfer test/unit_rxn_data/test_rxn_HL_phase_transfer.F90)
+    target_link_libraries(test_rxn_HL_phase_transfer camplib)
+  endif()
+  add_executable(test_rxn_photolysis test/unit_rxn_data/test_rxn_photolysis.F90)
+  target_link_libraries(test_rxn_photolysis camplib)
+  add_executable(test_rxn_raoult_phase_transfer test/unit_rxn_data/test_rxn_raoult_phase_transfer.F90)
+  target_link_libraries(test_rxn_raoult_phase_transfer camplib)
+  add_executable(test_rxn_SIMPOL_phase_transfer test/unit_rxn_data/test_rxn_SIMPOL_phase_transfer.F90)
+  target_link_libraries(test_rxn_SIMPOL_phase_transfer camplib)
+  add_executable(test_rxn_surface test/unit_rxn_data/test_rxn_surface.F90)
+  target_link_libraries(test_rxn_surface camplib)
+  add_executable(test_rxn_ternary_chemical_activation test/unit_rxn_data/test_rxn_ternary_chemical_activation.F90)
+  target_link_libraries(test_rxn_ternary_chemical_activation camplib)
+  add_executable(test_rxn_troe test/unit_rxn_data/test_rxn_troe.F90)
+  target_link_libraries(test_rxn_troe camplib)
+  add_executable(test_rxn_vbs_nox_dependent test/unit_rxn_data/test_rxn_vbs_nox_dependent.F90)
+  target_link_libraries(test_rxn_vbs_nox_dependent camplib)
+  add_executable(test_rxn_wennberg_no_ro2 test/unit_rxn_data/test_rxn_wennberg_no_ro2.F90)
+  target_link_libraries(test_rxn_wennberg_no_ro2 camplib)
+  add_executable(test_rxn_wennberg_tunneling test/unit_rxn_data/test_rxn_wennberg_tunneling.F90)
+  target_link_libraries(test_rxn_wennberg_tunneling camplib)
+  add_executable(test_rxn_wet_deposition test/unit_rxn_data/test_rxn_wet_deposition.F90)
+  target_link_libraries(test_rxn_wet_deposition camplib)
 
 ######################################################################
 # test_sub_model_data
 
-add_executable(test_sub_model_PDFiTE test/unit_sub_model_data/test_sub_model_PDFiTE.F90)
-target_link_libraries(test_sub_model_PDFiTE camplib)
-add_executable(test_sub_model_UNIFAC test/unit_sub_model_data/test_sub_model_UNIFAC.F90)
-target_link_libraries(test_sub_model_UNIFAC camplib)
-add_executable(test_sub_model_ZSR_aerosol_water
-               test/unit_sub_model_data/test_sub_model_ZSR_aerosol_water.c
-               test/unit_sub_model_data/test_sub_model_ZSR_aerosol_water.F90)
-target_link_libraries(test_sub_model_ZSR_aerosol_water camplib)
+  add_executable(test_sub_model_PDFiTE test/unit_sub_model_data/test_sub_model_PDFiTE.F90)
+  target_link_libraries(test_sub_model_PDFiTE camplib)
+  add_executable(test_sub_model_UNIFAC test/unit_sub_model_data/test_sub_model_UNIFAC.F90)
+  target_link_libraries(test_sub_model_UNIFAC camplib)
+  add_executable(test_sub_model_ZSR_aerosol_water
+                test/unit_sub_model_data/test_sub_model_ZSR_aerosol_water.c
+                test/unit_sub_model_data/test_sub_model_ZSR_aerosol_water.F90)
+  target_link_libraries(test_sub_model_ZSR_aerosol_water camplib)
 
 ######################################################################
 # test_camp_core
 
-add_executable(unit_test_camp_core test/unit_camp_core/test_camp_core.F90)
+  add_executable(unit_test_camp_core test/unit_camp_core/test_camp_core.F90)
 
-target_link_libraries(unit_test_camp_core camplib)
+  target_link_libraries(unit_test_camp_core camplib)
 
 ######################################################################
 # test_aero_phase_data
 
-add_executable(unit_test_aero_phase_data test/unit_aero_phase_data/test_aero_phase_data.F90)
+  add_executable(unit_test_aero_phase_data test/unit_aero_phase_data/test_aero_phase_data.F90)
 
-target_link_libraries(unit_test_aero_phase_data camplib)
+  target_link_libraries(unit_test_aero_phase_data camplib)
 
 ######################################################################
 # test_aero_rep_single_particle
 
-add_executable(unit_test_aero_rep_single_particle
-	test/unit_aero_rep_data/test_aero_rep_single_particle.c
-	test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
+  add_executable(unit_test_aero_rep_single_particle
+    test/unit_aero_rep_data/test_aero_rep_single_particle.c
+    test/unit_aero_rep_data/test_aero_rep_single_particle.F90)
 
-target_link_libraries(unit_test_aero_rep_single_particle camplib)
+  target_compile_options(unit_test_aero_rep_single_particle PUBLIC ${STD_C_FLAGS})
+  target_link_libraries(unit_test_aero_rep_single_particle camplib)
 
 ######################################################################
 # test_aero_rep_modal_binned_mass
 
-add_executable(unit_test_aero_rep_modal_binned_mass
-        test/unit_aero_rep_data/test_aero_rep_modal_binned_mass.c
-	test/unit_aero_rep_data/test_aero_rep_modal_binned_mass.F90)
+  add_executable(unit_test_aero_rep_modal_binned_mass
+          test/unit_aero_rep_data/test_aero_rep_modal_binned_mass.c
+    test/unit_aero_rep_data/test_aero_rep_modal_binned_mass.F90)
 
-target_link_libraries(unit_test_aero_rep_modal_binned_mass camplib)
+  target_compile_options(unit_test_aero_rep_modal_binned_mass PUBLIC ${STD_C_FLAGS})
+  target_link_libraries(unit_test_aero_rep_modal_binned_mass camplib)
 
 ######################################################################
 # test_chem_mech_solver
 
-add_executable(test_chem_mech_solver test/chemistry/test_chem_mech_solver.F90)
+  add_executable(test_chem_mech_solver test/chemistry/test_chem_mech_solver.F90)
 
-target_link_libraries(test_chem_mech_solver camplib)
-
+  target_compile_options(test_chem_mech_solver PUBLIC ${STD_C_FLAGS})
+  target_link_libraries(test_chem_mech_solver camplib)
+  
 ######################################################################
 # BootCAMP Tutorial Exercises
 ######################################################################
@@ -707,4 +738,118 @@ add_executable(camp_v1_paper_modal data/CAMP_v1_paper/modal/camp_monarch_interfa
 target_link_libraries(camp_v1_paper_modal camplib)
 
 ######################################################################
+# full multiphase boxmodel
+
+add_executable(full_multiphase_boxmodel mock_monarch/src/mock_monarch.F90
+                                        mock_monarch/src/camp_monarch_interface.F90)
+
+#target_compile_options(full_multiphase_boxmodel PUBLIC "-DENABLE_CB05_SOA")
+target_link_libraries(full_multiphase_boxmodel camplib)
+
+######################################################################
+# Enhanced Boxmodel
+
+
+if (ENABLE_NETCDF)
+  # cloud j library needed by boxmodel_v2
+  set(CLOUDJ_SRC
+        boxmodel/src/cloud-j/cld_sub_mod.F90
+        boxmodel/src/cloud-j/cldj_cmn_mod.F90
+        boxmodel/src/cloud-j/cldj_error_mod.F90
+        boxmodel/src/cloud-j/cldj_init_mod.F90
+        boxmodel/src/cloud-j/fjx_sub_mod.F90
+        boxmodel/src/cloud-j/osa_sub_mod.F90)
+
+  add_library(cloudjlib SHARED ${CLOUDJ_SRC})
+
+  # tuv radiative transfer code needed by boxmodel_v2
+  set(TUV_SRC
+        boxmodel/src/tuv/tuv_params.f90
+        boxmodel/src/tuv/grids.f
+        boxmodel/src/tuv/rdinp.f
+        boxmodel/src/tuv/rdetfl.f 
+        boxmodel/src/tuv/rdxs.f 
+        boxmodel/src/tuv/swphys.f 
+        boxmodel/src/tuv/swbiol.f
+        boxmodel/src/tuv/swchem.f
+        boxmodel/src/tuv/swchem_gecko.f90
+        boxmodel/src/tuv/rxn.f 
+        boxmodel/src/tuv/qys.f 
+        boxmodel/src/tuv/wshift.f
+        boxmodel/src/tuv/vpair.f
+        boxmodel/src/tuv/vptmp.f
+        boxmodel/src/tuv/vpo3.f
+        boxmodel/src/tuv/odrl.f
+        boxmodel/src/tuv/odo3.f
+        boxmodel/src/tuv/setaer.f 
+        boxmodel/src/tuv/setalb.f 
+        boxmodel/src/tuv/setcld.f 
+        boxmodel/src/tuv/setsnw.f 
+        boxmodel/src/tuv/setno2.f 
+        boxmodel/src/tuv/seto2.f 
+        boxmodel/src/tuv/setso2.f 
+        boxmodel/src/tuv/sphers.f
+        boxmodel/src/tuv/la_srb.f 
+        boxmodel/src/tuv/rtrans.f 
+        boxmodel/src/tuv/savout.f 
+        boxmodel/src/tuv/newlst.f  
+        boxmodel/src/tuv/wrflut.f
+        boxmodel/src/tuv/waters.f 
+        boxmodel/src/tuv/swdom.f
+        boxmodel/src/tuv/numer.f
+        boxmodel/src/tuv/functs.f 
+        boxmodel/src/tuv/orbit.f 
+        boxmodel/src/tuv/terint.f )
+
+  add_library(tuvlib SHARED ${TUV_SRC})
+
+  # ntergeo interpolation library needed by boxmodel_v2
+  set(NTERGEO_SRC
+        boxmodel/src/NTerGeo.v2020a/ntergeo.F90)
+
+  add_library(ntergeolib SHARED ${NTERGEO_SRC})
+
+  # sobol sequence library needed by boxmodel_v2
+  set(SOBSEQ_SRC
+        boxmodel/src/sobseq/mod_sobseq.f90)
+
+  add_library(sobseqlib SHARED ${SOBSEQ_SRC})
+
+  # flogger library needed by boxmodel_v2
+  set(FLOGGER_SRC
+        boxmodel/src/flogger/flogger.f90
+        boxmodel/src/flogger/flogger_ansistyling.f90
+        boxmodel/src/flogger/flogger_formatter.f90
+      )
+
+  add_library(floggerlib SHARED ${FLOGGER_SRC})
+
+  add_executable(boxmodel_v2 boxmodel/src/boxmodel_v2.F90
+                           boxmodel/src/boxmodel_cloudj_interface.F90
+                           boxmodel/src/boxmodel_constant_constraint.F90
+                           boxmodel/src/boxmodel_constraints_utils.F90
+                           boxmodel/src/boxmodel_constraints.F90
+                           boxmodel/src/boxmodel_deposition.F90
+                           boxmodel/src/boxmodel_emissions.F90
+                           boxmodel/src/boxmodel_file_constraint.F90
+                           boxmodel/src/boxmodel_forced_species.F90
+                           boxmodel/src/boxmodel_io.F90
+                           boxmodel/src/boxmodel_log.F90
+                           boxmodel/src/boxmodel_microphysics.F90
+                           boxmodel/src/boxmodel_monarch_constraint.F90
+                           boxmodel/src/boxmodel_montecarlo.F90
+                           boxmodel/src/boxmodel_montecarlo_gaussian.F90
+                           boxmodel/src/boxmodel_montecarlo_uniform.F90
+                           boxmodel/src/boxmodel_montecarlo_utils.F90
+                           boxmodel/src/boxmodel_photolysis.F90
+                           boxmodel/src/boxmodel_sobol_numbers.F90
+                           boxmodel/src/boxmodel_sum_species.F90
+                           boxmodel/src/boxmodel_time_control.F90
+                           boxmodel/src/boxmodel_tuv_module.F90
+                           boxmodel/src/boxmodel_update_netcdf.F90
+                           boxmodel/src/camp_boxmodel_interface.F90)
+
+  target_link_libraries(boxmodel_v2 cloudjlib camplib ntergeolib tuvlib sobseqlib floggerlib ${NETCDF_LIBS})
+
+endif ()
 endif()

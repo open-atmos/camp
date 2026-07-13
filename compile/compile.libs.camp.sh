@@ -6,5 +6,5 @@ cd "$scriptdir"
 ./get.libs.sh
 ./compile.json-fortran-6.1.0.sh
 ./compile.suiteSparse.sh
-./compile.cvode-3.4-alpha.sh
+./compile.cvode.sh
 ./compile.camp.sh

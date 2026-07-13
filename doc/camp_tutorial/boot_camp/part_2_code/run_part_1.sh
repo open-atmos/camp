@@ -10,7 +10,7 @@ cd ${0%/*}
 mkdir -p out
 
 if [[ $1 = "MPI" ]]; then
-  exec_str="mpirun -v -np 1 ../../boot_camp_part_1"
+  exec_str="mpirun -np 1 ../../boot_camp_part_1"
 else
   exec_str="../../boot_camp_part_1"
 fi

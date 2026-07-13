@@ -103,6 +103,19 @@ typedef struct {
   int n_per_cell_state_var;  // number of state variables per cell
   int n_rxn_env_data;        // Number of reaction environmental parameters
   int n_rxn;                 // Number of reactions
+  int n_aero_phase;          // Number of aerosol phases
+  int n_added_aero_phases;   // The number of aerosol phases whose data has
+                             // been added to the aerosol phase data arrays
+  int n_aero_rep;            // Number of aerosol representations
+  int n_added_aero_reps;     // The number of aerosol representations whose
+                             // data has been added to the aerosol
+                             // representation data arrays
+  int n_aero_rep_env_data;   // Number of aerosol representation environmental
+                             // parameters for all aerosol representations
+  int n_aero_rep_int_param;
+  int n_aero_rep_env_param;
+  int max_steps;             // Maximum number of internal integration steps
+  int max_conv_fails;        // Maximum number of convergence failures
 #ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
   int clock_khz;  // Clock frequency
 #endif
@@ -116,9 +129,26 @@ typedef struct {
   int *rxn_float_indices;  // Array of indices of float data
   int *rxn_env_idx;  // Mapping of the environment-dependent data and reaction
                      // types
-#ifdef DEBUG_SOLVER_FAILURES
-  int *flags;  // Error failures on solving
-#endif
+
+
+  // **********************
+  int *aero_phase_int_data;  // Pointer to the aerosol phase integer parameters
+  int *aero_phase_int_indices;    // Array of indices of integer data
+  int *aero_phase_float_indices;  // Array of indices of float data
+  int *aero_rep_int_data;       // Pointer to the aerosol representation integer
+                                // parameters
+  int *aero_rep_int_indices;    // Array of indices of integer data
+  int *aero_rep_float_indices;  // Array of indices of float data
+  int *aero_rep_env_idx;        // Array of offsets for the environment-
+                          // dependent data for each aerosol representation
+                          // from the beginning of the environment-
+                          // dependent data for the current grid cell
+  double *aero_phase_float_data;  // Pointer to the aerosol phase floating-point
+                                  // parameters
+  double *aero_rep_float_data;    // Pointer to the aerosol representation
+                                  // floating-point parameters
+  double *aero_rep_env_data;
+
 
   // Parameters from CAMP chemical model
   double init_time_step;  // Initial time step (s)
@@ -182,13 +212,17 @@ typedef struct {
   ModelDataVariable *sCells;  // Variables for each cell in the model.
   // Parameters from CAMP chemical model
   JacMap *jac_map;  // Mapping JacobianGPU to the solver Jacobian
-#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
-  ModelDataVariable
-      *mdvo;  // Out device for time measurement. Warning: Long time without
-              // using, it may fail or exist a better implementation
-#endif
   JacobianGPU jac;  // Auxiliar structure to store positive and negative
                     // contributions to the Jacobian
+#ifndef GET_NUM_STEPS
+  int *num_steps;  // Solver steps from most external loop.
+#endif
+#ifdef DEBUG_SOLVER_FAILURES
+  int *flags;  // Error failures on solving
+#endif
+#ifdef CAMP_PROFILE_DEVICE_FUNCTIONS
+  ModelDataVariable *mdvo;  // Out device for time measurement.
+#endif
 } ModelDataGPU;
 
 #endif  // CAMPGPU_CUDA_STRUCTS_H

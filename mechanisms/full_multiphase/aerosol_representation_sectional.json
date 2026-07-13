@@ -1,0 +1,26 @@
+{
+  "description": [
+    "This is the mass-based MONARCH aerosol representation for the 'mod37' configuration",
+    "Parameter for the bins and modes were taken from Spada et al. (2015) manuscript -",
+    "'Global aerosols in the online multiscale NMMB/BSC Chemical Transport Model'"
+  ],
+  "camp-data": [
+    {
+      "name": "multiphase sectional",
+      "type": "AERO_REP_MODAL_BINNED_MASS",
+      "modes/bins": {
+        "aqueous_sulfate": {
+          "type": "BINNED",
+          "phases": [
+            "aqueous_sulfate",
+            "organic_matter"
+          ],
+          "bins": 8,
+          "minimum diameter [m]": 1.0e-7,
+          "maximum diameter [m]": 1.5e-5,
+          "scale": "LOG"
+        }
+      }
+    }
+  ]
+}

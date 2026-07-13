@@ -1,0 +1,8 @@
+{
+  "camp-files": [
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/gas/debug/arrhenius/species.json",
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/gas/debug/arrhenius/mechanism.json",
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/gas/debug/arrhenius/abs_tol.json",
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/cvode_configuration.json"
+  ]
+}

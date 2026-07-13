@@ -20,7 +20,6 @@ program camp_test_SIMPOL_phase_transfer
   use camp_aero_rep_factory
   use camp_aero_rep_modal_binned_mass
   use camp_aero_rep_single_particle
-  use camp_solver_stats
 #ifdef CAMP_USE_JSON
   use json_module
 #endif
@@ -138,7 +137,6 @@ contains
     type(aero_rep_update_data_modal_binned_mass_GMD_t) :: update_data_GMD
     type(aero_rep_update_data_modal_binned_mass_GSD_t) :: update_data_GSD
 
-    type(solver_stats_t), target :: solver_stats
 
     call assert_msg(378317062, scenario.ge.1 .and. scenario.le.2, &
                     "Invalid scenario specified: "//to_string( scenario ) )
@@ -314,7 +312,7 @@ contains
 #endif
 
       ! Initialize the solver
-      call camp_core%solver_initialize()
+      call camp_core%solver_initialize(load_gpu=0, is_load_balance=0)
 
       ! Get a model state variable
       camp_state => camp_core%new_state()
@@ -416,26 +414,12 @@ contains
       ! Set the initial state in the model
       camp_state%state_var(:) = model_conc(0,:)
 
-#ifdef CAMP_DEBUG
-      ! Evaluate the Jacobian during solving
-      solver_stats%eval_Jac = .true.
-#endif
-
       ! Integrate the mechanism
       do i_time = 1, NUM_TIME_STEP
 
         ! Get the modeled conc
-        call camp_core%solve(camp_state, time_step, &
-                              solver_stats = solver_stats)
+        call camp_core%solve(camp_state, time_step)
         model_conc(i_time,:) = camp_state%state_var(:)
-
-#ifdef CAMP_DEBUG
-        ! Check the Jacobian evaluations
-        call assert_msg(173108608, solver_stats%Jac_eval_fails.eq.0, &
-                        trim( to_string( solver_stats%Jac_eval_fails ) )// &
-                        " Jacobian evaluation failures at time step "// &
-                        trim( to_string( i_time ) ) )
-#endif
 
         ! Get the analytic conc
         !

@@ -2,8 +2,10 @@
   "note": "Test mechanism for arrhenius reactions",
   "camp-data": [
     {
-      "type": "RELATIVE_TOLERANCE",
-      "value": 1.0e-8
+      "type": "CVODE CONFIGURATION",
+      "relative tolerance": 1.0e-8,
+      "max steps": 10000,
+      "max conv fails": 1000
     },
     {
       "name": "A",

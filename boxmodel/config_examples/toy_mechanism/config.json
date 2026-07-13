@@ -1,0 +1,6 @@
+{
+  "camp-files": [
+    "__BOXMODELPATH__/toy_mechanism.json",
+    "__BOXMODELPATH__/cvode_configuration.json"
+  ]
+}

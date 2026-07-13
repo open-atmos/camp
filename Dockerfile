@@ -33,8 +33,8 @@ RUN curl -LO https://github.com/jacobwilliams/json-fortran/archive/6.1.0.tar.gz 
 COPY cvode-3.4-alpha.tar.gz /cvode-3.4-alpha.tar.gz
 
 # Install a modified version of CVODE
-RUN tar -zxvf /cvode-3.4-alpha.tar.gz \
-    && cd cvode-3.4-alpha \
+RUN tar -zxvf /cvode-3.4-alpha.tar.gz cvode \
+    && cd cvode \
     && mkdir build \
     && cd build \
     && cmake -D CMAKE_BUILD_TYPE=release \

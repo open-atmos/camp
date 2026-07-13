@@ -1,0 +1,13 @@
+/esarchive/scratch/amelli/camp/test/boxmodel
+[ 80%] Built target camplib
+[ 86%] Built target cloudjlib
+[ 86%] Built target ntergeolib
+[100%] Built target boxmodel_v2
+Attempt 1
+  1905750903 time_offset=   43200.000000000000     
+  1905750903 time_offset=   43200.000000000000     
+  1905750903 time_offset=   43200.000000000000     
+  1905750903 time_offset=   43200.000000000000     
+   196645784 time_dimbounds=          13          25
+Failure 1
+FAIL

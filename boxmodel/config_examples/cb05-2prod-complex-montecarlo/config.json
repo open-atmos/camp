@@ -1,0 +1,19 @@
+{
+  "camp-files": [
+    "__BOXMODELPATH__/full_multiphase/cb05/cb05_species.json",
+    "__BOXMODELPATH__/full_multiphase/cb05/cb05_mechanism.json",
+    "__BOXMODELPATH__/full_multiphase/cb05/cb05_abs_tol.json",
+    "__BOXMODELPATH__/full_multiphase/custom_species.json",
+    "__BOXMODELPATH__/full_multiphase/cvode_configuration.json",
+    "__BOXMODELPATH__/full_multiphase/tsigaridis_2_product_SOA_scheme/species.json",
+    "__BOXMODELPATH__/full_multiphase/tsigaridis_2_product_SOA_scheme/mechanism.json",
+    "__BOXMODELPATH__/full_multiphase/aerosol_representation_external_mixing.json",
+    "__BOXMODELPATH__/full_multiphase/aerosol_phases.json",
+    "__BOXMODELPATH__/full_multiphase/species_properties.json",
+    "__BOXMODELPATH__/full_multiphase/inorganic_species.json",
+    "__BOXMODELPATH__/full_multiphase/inorganic_reactions.json",
+    "__BOXMODELPATH__/full_multiphase/inorganic_partitioning.json",
+    "__BOXMODELPATH__/full_multiphase/inorganic_ZSR_water.json",
+    "__BOXMODELPATH__/full_multiphase/inorganic_activity.json"
+  ]
+}

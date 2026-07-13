@@ -19,7 +19,6 @@ program camp_test_ZSR_aerosol_water
   use camp_aero_rep_data
   use camp_aero_rep_factory
   use camp_aero_rep_single_particle
-  use camp_solver_stats
 #ifdef CAMP_USE_JSON
   use json_module
 #endif
@@ -114,8 +113,6 @@ contains
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: pack_size, pos, i_elem, results, rank_solve
 #endif
-
-    type(solver_stats_t), target :: solver_stats
 
     run_ZSR_aerosol_water_test = .true.
 
@@ -219,7 +216,7 @@ contains
 #endif
 
       ! Initialize the solver
-      call camp_core%solver_initialize()
+      call camp_core%solver_initialize(load_gpu=0, is_load_balance=0)
 
       ! Get a model state variable
       camp_state => camp_core%new_state()
@@ -245,11 +242,6 @@ contains
       ppm_to_RH = exp(ppm_to_RH)  ! VP of water (atm)
       ppm_to_RH = (pressure/101325.0d0) / ppm_to_RH * 1.0d-6 ! ppm -> RH (0-1)
 
-#ifdef CAMP_DEBUG
-      ! Evaluate the Jacobian during solving
-      solver_stats%eval_Jac = .true.
-#endif
-
       ! Integrate the mechanism
       do i_RH = 1, NUM_RH_STEP
 
@@ -262,17 +254,8 @@ contains
 
         ! Get the modeled conc
         ! time step is arbitrary - equilibrium calculatuions only
-        call camp_core%solve(camp_state, real(1.0, kind=dp), &
-                              solver_stats = solver_stats)
+        call camp_core%solve(camp_state, real(1.0, kind=dp))
         model_conc(i_RH,:) = camp_state%state_var(:)
-
-#ifdef CAMP_DEBUG
-        ! Check the Jacobian evaluations
-        call assert_msg(961242557, solver_stats%Jac_eval_fails.eq.0, &
-                        trim( to_string( solver_stats%Jac_eval_fails ) )// &
-                        " Jacobian evaluation failures for i_RH "// &
-                        trim( to_string( i_RH ) ) )
-#endif
 
         ! Get the analytic conc
         ! Jacobson molality (eq. 29 in \cite{Jacobson1996}) :

@@ -1,0 +1,7 @@
+{
+  "camp-files": [
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/gas/gecko_toluene_4gen/v1.0.0/gecko_toluene.json",
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/gas/gecko_toluene_4gen/v1.0.0/emissions.json",
+    "/gpfs/projects/bsc32/models/camp/data/mechanisms/cvode_configuration.json"
+  ]
+}

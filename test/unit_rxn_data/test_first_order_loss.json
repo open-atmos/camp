@@ -1,35 +1,37 @@
 {
-  "camp-data" : [
-  {
-    "type" : "RELATIVE_TOLERANCE",
-    "value" : 1.0e-30
-  },
-  {
-    "name" : "A",
-    "type" : "CHEM_SPEC",
-    "absolute tolerance" : 1.0e-30
-  },
-  {
-    "name" : "B",
-    "type" : "CHEM_SPEC",
-    "absolute tolerance" : 1.0e-30
-  },
-  {
-    "name" : "first order loss",
-    "type" : "MECHANISM",
-    "reactions" : [
-      {
-	"type" : "FIRST_ORDER_LOSS",
-	"species" : "A",
-	"rxn id" : "rxn A"
-      },
-      {
-	"type" : "FIRST_ORDER_LOSS",
-	"species" : "B",
-	"rxn id" : "rxn B",
-	"scaling factor" : 12.3
-      }
-    ]
-  }
+  "camp-data": [
+    {
+      "type": "CVODE CONFIGURATION",
+      "relative tolerance": 1.0e-30,
+      "max steps": 10000,
+      "max conv fails": 1000
+    },
+    {
+      "name": "A",
+      "type": "CHEM_SPEC",
+      "absolute tolerance": 1.0e-30
+    },
+    {
+      "name": "B",
+      "type": "CHEM_SPEC",
+      "absolute tolerance": 1.0e-30
+    },
+    {
+      "name": "first order loss",
+      "type": "MECHANISM",
+      "reactions": [
+        {
+          "type": "FIRST_ORDER_LOSS",
+          "species": "A",
+          "rxn id": "rxn A"
+        },
+        {
+          "type": "FIRST_ORDER_LOSS",
+          "species": "B",
+          "rxn id": "rxn B",
+          "scaling factor": 12.3
+        }
+      ]
+    }
   ]
 }

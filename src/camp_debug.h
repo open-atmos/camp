@@ -15,6 +15,21 @@ void export_state(SolverData *sd);
 void join_export_state();
 void export_stats(SolverData *sd);
 
+void print_double(double *x, int len, const char *s) {
+#ifndef USE_PRINT_ARRAYS
+  for (int i = 0; i < len; i++) {
+    printf("%s[%d]=%.17le\n", s, i, x[i]);
+  }
+#endif
+}
+
+void print_int(int *x, int len, const char *s) {
+#ifndef USE_PRINT_ARRAYS
+  for (int i = 0; i < len; i++) {
+    printf("%s[%d]=%d\n", s, i, x[i]);
+  }
+#endif
+}
 // File name prefix
 int file_name_prefix = 1;
 

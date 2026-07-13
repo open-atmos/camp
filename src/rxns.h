@@ -125,22 +125,20 @@ void rxn_condensed_phase_arrhenius_calc_jac_contrib(
 
 // condensed_phase_photolysis
 void rxn_condensed_phase_photolysis_get_used_jac_elem(int *rxn_int_data,
-                                                      double *rxn_float_data,
-                                                      Jacobian *jac);
-void rxn_condensed_phase_photolysis_update_ids(ModelData *model_data,
-                                               int *deriv_ids, Jacobian jac,
-                                               int *rxn_int_data,
-                                               double *rxn_float_data);
-void rxn_condensed_phase_photolysis_update_env_state(ModelData *model_data,
-                                                     int *rxn_int_data,
                                                      double *rxn_float_data,
-                                                     double *rxn_env_data);
+                                                     Jacobian *jac);
+void rxn_condensed_phase_photolysis_update_ids(ModelData *model_data,
+                                              int *deriv_ids, Jacobian jac,
+                                              int *rxn_int_data,
+                                              double *rxn_float_data);
+void rxn_condensed_phase_photolysis_update_env_state(ModelData *model_data,
+                                                    int *rxn_int_data,
+                                                    double *rxn_float_data,
+                                                    double *rxn_env_data);
 void rxn_condensed_phase_photolysis_print(int *rxn_int_data,
-                                          double *rxn_float_data);
-bool rxn_condensed_phase_photolysis_update_data(void *update_data,
-                                                int *rxn_int_data,
-                                                double *rxn_float_data,
-                                                double *rxn_env_data);
+                                         double *rxn_float_data);
+bool rxn_condensed_phase_photolysis_update_data(void *update_data, int *rxn_int_data,
+                                double *rxn_float_data, double *rxn_env_data);
 #ifdef CAMP_USE_SUNDIALS
 void rxn_condensed_phase_photolysis_calc_deriv_contrib(
     ModelData *model_data, TimeDerivative time_deriv, int *rxn_int_data,
@@ -150,9 +148,8 @@ void rxn_condensed_phase_photolysis_calc_jac_contrib(
     double *rxn_float_data, double *rxn_env_data, realtype time_step);
 #endif
 void *rxn_condensed_phase_photolysis_create_rate_update_data();
-void rxn_condensed_phase_photolysis_set_rate_update_data(void *update_data,
-                                                         int photo_id,
-                                                         double base_rate);
+void rxn_condensed_phase_photolysis_set_rate_update_data(void *update_data, int photo_id,
+                                         double base_rate);
 
 // emission
 void rxn_emission_get_used_jac_elem(int *rxn_int_data, double *rxn_float_data,
@@ -255,6 +252,30 @@ void rxn_photolysis_calc_jac_contrib(ModelData *model_data, Jacobian jac,
 void *rxn_photolysis_create_rate_update_data();
 void rxn_photolysis_set_rate_update_data(void *update_data, int photo_id,
                                          double base_rate);
+// Raoult_phase_transfer
+void rxn_raoult_phase_transfer_get_used_jac_elem(ModelData *model_data,
+                                                 int *rxn_int_data,
+                                                 double *rxn_float_data,
+                                                 Jacobian *jac);
+void rxn_raoult_phase_transfer_update_ids(ModelData *model_data, int *deriv_ids,
+                                          Jacobian jac, int *rxn_int_data,
+                                          double *rxn_float_data);
+void rxn_raoult_phase_transfer_update_env_state(ModelData *model_data,
+                                                int *rxn_int_data,
+                                                double *rxn_float_data,
+                                                double *rxn_env_data);
+void rxn_raoult_phase_transfer_print(int *rxn_int_data, double *rxn_float_data);
+#ifdef CAMP_USE_SUNDIALS
+void rxn_raoult_phase_transfer_calc_deriv_contrib(
+    ModelData *model_data, TimeDerivative time_deriv, int *rxn_int_data,
+    double *rxn_float_data, double *rxn_env_data, realtype time_step);
+void rxn_raoult_phase_transfer_calc_jac_contrib(ModelData *model_data,
+                                                Jacobian jac, int *rxn_int_data,
+                                                double *rxn_float_data,
+                                                double *rxn_env_data,
+                                                realtype time_step);
+#endif
+
 
 // SIMPOL_phase_transfer
 void rxn_SIMPOL_phase_transfer_get_used_jac_elem(ModelData *model_data,
@@ -281,21 +302,27 @@ void rxn_SIMPOL_phase_transfer_calc_jac_contrib(ModelData *model_data,
 #endif
 
 // surface
-void rxn_surface_get_used_jac_elem(ModelData *model_data, int *rxn_int_data,
-                                   double *rxn_float_data, Jacobian *jac);
-void rxn_surface_update_ids(ModelData *model_data, int *deriv_ids, Jacobian jac,
-                            int *rxn_int_data, double *rxn_float_data);
-void rxn_surface_update_env_state(ModelData *model_data, int *rxn_int_data,
-                                  double *rxn_float_data, double *rxn_env_data);
+void rxn_surface_get_used_jac_elem(ModelData *model_data,
+                                   int *rxn_int_data,
+                                   double *rxn_float_data,
+                                   Jacobian *jac);
+void rxn_surface_update_ids(ModelData *model_data, int *deriv_ids,
+                            Jacobian jac, int *rxn_int_data,
+                            double *rxn_float_data);
+void rxn_surface_update_env_state(ModelData *model_data,
+                                  int *rxn_int_data,
+                                  double *rxn_float_data,
+                                  double *rxn_env_data);
 void rxn_surface_print(int *rxn_int_data, double *rxn_float_data);
 #ifdef CAMP_USE_SUNDIALS
-void rxn_surface_calc_deriv_contrib(ModelData *model_data,
-                                    TimeDerivative time_deriv,
-                                    int *rxn_int_data, double *rxn_float_data,
-                                    double *rxn_env_data, realtype time_step);
-void rxn_surface_calc_jac_contrib(ModelData *model_data, Jacobian jac,
-                                  int *rxn_int_data, double *rxn_float_data,
-                                  double *rxn_env_data, realtype time_step);
+void rxn_surface_calc_deriv_contrib(
+    ModelData *model_data, TimeDerivative time_deriv, int *rxn_int_data,
+    double *rxn_float_data, double *rxn_env_data, realtype time_step);
+void rxn_surface_calc_jac_contrib(ModelData *model_data,
+                                  Jacobian jac, int *rxn_int_data,
+                                  double *rxn_float_data,
+                                  double *rxn_env_data,
+                                  realtype time_step);
 #endif
 
 // ternary_chemical_activation
@@ -425,5 +452,28 @@ void rxn_wet_deposition_calc_jac_contrib(ModelData *model_data, Jacobian jac,
 void *rxn_wet_deposition_create_rate_update_data();
 void rxn_wet_deposition_set_rate_update_data(void *update_data, int rxn_id,
                                              double base_rate);
+
+
+// vbs nox-dependent
+void rxn_vbs_nox_dependent_get_used_jac_elem(int *rxn_int_data, double *rxn_float_data,
+                                     Jacobian *jac);
+void rxn_vbs_nox_dependent_update_ids(ModelData *model_data, int *deriv_ids,
+                              Jacobian jac, int *rxn_int_data,
+                              double *rxn_float_data);
+void rxn_vbs_nox_dependent_update_env_state(ModelData *model_data, int *rxn_int_data,
+                                    double *rxn_float_data,
+                                    double *rxn_env_data);
+void rxn_vbs_nox_dependent_print(int *rxn_int_data, double *rxn_float_data);
+double nox_dependent_yield(int i_prod, ModelData *model_data, 
+                int *rxn_int_data, double *rxn_float_data);
+#ifdef CAMP_USE_SUNDIALS
+void rxn_vbs_nox_dependent_calc_deriv_contrib(ModelData *model_data,
+                                      TimeDerivative time_deriv,
+                                      int *rxn_int_data, double *rxn_float_data,
+                                      double *rxn_env_data, realtype time_step);
+void rxn_vbs_nox_dependent_calc_jac_contrib(ModelData *model_data, Jacobian jac,
+                                    int *rxn_int_data, double *rxn_float_data,
+                                    double *rxn_env_data, realtype time_step);
+#endif
 
 #endif

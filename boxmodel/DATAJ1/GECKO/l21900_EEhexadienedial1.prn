@@ -1,0 +1,19 @@
+!  EEhexadiendial
+!Absorption cross section from  Klotz 95
+!The overall quantum yield (0.3) is optimised to fit the photolysis
+!constant measured by Klotz 99 in EUPHORE. Each part of reaction assumed
+!to be equivalent (0.25 * overall quantum yield)  	  
+292.5  1.67E-18  0.075
+297.5  1.19E-18  0.075
+302.5  7.51E-19  0.075
+307.5  4.39E-19  0.075
+312.5  2.45E-19  0.075
+317.5  1.41E-19  0.075
+322.5  8.13E-20  0.075
+327.5  5.55E-20  0.075
+332.5   4.3E-20  0.075
+337.5  2.73E-20  0.075
+342.5  3.43E-20  0.075
+347.5  3.02E-20  0.075
+352.5  1.06E-20  0.075
+END

@@ -31,7 +31,7 @@ module camp_util
   !> Interface for to_string functions
   interface to_string
     module procedure integer_to_string, real_dp_to_string, real_sp_to_string, &
-                     logical_to_string, complex_to_string
+      logical_to_string, complex_to_string
   end interface to_string
 
   !> String type for building arrays of string of various size
@@ -66,7 +66,7 @@ contains
     !> String value
     character(len=:), allocatable, intent(in) :: val
 
-    allocate(new_obj)
+    allocate (new_obj)
     new_obj%string = val
 
   end function string_t_constructor
@@ -79,7 +79,7 @@ contains
     !> String to finalize
     type(string_t), intent(inout) :: this
 
-    if (allocated(this%string)) deallocate(this%string)
+    if (allocated(this%string)) deallocate (this%string)
 
   end subroutine string_t_finalize
 
@@ -96,12 +96,12 @@ contains
     logical, intent(inout), optional :: already_warned
 
     if (present(already_warned)) then
-       if (already_warned) return
-       ! set already_warned so next time we will immediately return
-       already_warned = .true.
+      if (already_warned) return
+      ! set already_warned so next time we will immediately return
+      already_warned = .true.
     end if
-    write(0,'(a)') 'WARNING (CAMP-' // trim(integer_to_string(code)) &
-         // '): ' // trim(warning_msg)
+    write (0, '(a)') 'WARNING (CAMP-'//trim(integer_to_string(code)) &
+      //'): '//trim(warning_msg)
 
   end subroutine warn_msg
 
@@ -118,7 +118,7 @@ contains
     character(len=*), intent(in) :: warning_msg
 
     if (.not. condition_ok) then
-       call warn_msg(code, warning_msg)
+      call warn_msg(code, warning_msg)
     end if
 
   end subroutine warn_assert_msg
@@ -140,19 +140,19 @@ contains
     integer :: ierr
 #endif
     if (.not. condition_ok) then
-      write(0,'(a)') 'ERROR (CAMP-' // trim(integer_to_string(code)) &
-            // '): ' // trim(error_msg)
-      open(unit=kErrorFileId, file = "error.json", action = "WRITE")
-      write(kErrorFileId,'(A)') '{'
-      write(kErrorFileId,'(A)') '  "code" : "'//                              &
-                                    trim(integer_to_string(code))//'",'
-      write(kErrorFileId,'(A)') '  "message" : "'//trim(error_msg)//'"'
-      write(kErrorFileId,'(A)') '}'
-      close(kErrorFileId)
+      write (0, '(a)') 'ERROR (CAMP-'//trim(integer_to_string(code)) &
+        //'): '//trim(error_msg)
+      open (unit=kErrorFileId, file="error.json", action="WRITE")
+      write (kErrorFileId, '(A)') '{'
+      write (kErrorFileId, '(A)') '  "code" : "'// &
+        trim(integer_to_string(code))//'",'
+      write (kErrorFileId, '(A)') '  "message" : "'//trim(error_msg)//'"'
+      write (kErrorFileId, '(A)') '}'
+      close (kErrorFileId)
 #ifdef CAMP_USE_MPI
-       call mpi_abort(MPI_COMM_WORLD, code, ierr)
+      call mpi_abort(MPI_COMM_WORLD, code, ierr)
 #else
-       stop 3
+      stop 3
 #endif
     end if
 
@@ -169,10 +169,10 @@ contains
     logical, intent(in) :: condition_ok
 
     if (.not. condition_ok) then
-       ! much faster with gfortran 4.4.5 to do this extra test
-       ! FIXME: is it still faster now that assert_msg doesn't
-       ! unconditionally construct a code_str?
-       call assert_msg(code, condition_ok, 'assertion failed')
+      ! much faster with gfortran 4.4.5 to do this extra test
+      ! FIXME: is it still faster now that assert_msg doesn't
+      ! unconditionally construct a code_str?
+      call assert_msg(code, condition_ok, 'assertion failed')
     end if
 
   end subroutine assert
@@ -212,15 +212,15 @@ contains
     logical found_unit
 
     found_unit = .false.
-    do i = 1,max_units
-       if (.not. unit_used(i)) then
-          found_unit = .true.
-          exit
-       end if
+    do i = 1, max_units
+      if (.not. unit_used(i)) then
+        found_unit = .true.
+        exit
+      end if
     end do
     if (.not. found_unit) then
-       call die_msg(690355443, &
-            'no more units available - need to free_unit()')
+      call die_msg(690355443, &
+        'no more units available - need to free_unit()')
     end if
     unit_used(i) = .true.
     get_unit = i + unit_offset
@@ -253,9 +253,9 @@ contains
     integer :: ios
 
     unit = get_unit()
-    open(unit=unit, file=filename, status='old', action='read', iostat=ios)
+    open (unit=unit, file=filename, status='old', action='read', iostat=ios)
     call assert_msg(544344918, ios == 0, 'unable to open file ' &
-         // trim(filename) // ' for reading: ' // integer_to_string(ios))
+      //trim(filename)//' for reading: '//integer_to_string(ios))
 
   end subroutine open_file_read
 
@@ -274,10 +274,10 @@ contains
     integer :: ios
 
     unit = get_unit()
-    open(unit=unit, file=filename, status='replace', action='write', &
-         iostat=ios)
+    open (unit=unit, file=filename, status='replace', action='write', &
+      iostat=ios)
     call assert_msg(609624199, ios == 0, 'unable to open file ' &
-         // trim(filename) // ' for writing: ' // integer_to_string(ios))
+      //trim(filename)//' for writing: '//integer_to_string(ios))
 
   end subroutine open_file_write
 
@@ -289,7 +289,7 @@ contains
     !> Unit to close.
     integer, intent(in) :: unit
 
-    close(unit)
+    close (unit)
     call free_unit(unit)
 
   end subroutine close_file
@@ -303,7 +303,7 @@ contains
     !> Particle mass-equivalent volume (m^3).
     real(kind=dp), intent(in) :: v
 
-    sphere_vol2rad = (3d0 * v / 4d0 / const%pi)**(1d0 / 3d0)
+    sphere_vol2rad = (3d0*v/4d0/const%pi)**(1d0/3d0)
 
   end function sphere_vol2rad
 
@@ -315,7 +315,7 @@ contains
     !> Radius (m).
     real(kind=dp), intent(in) :: r
 
-    rad2diam = 2d0 * r
+    rad2diam = 2d0*r
 
   end function rad2diam
 
@@ -328,7 +328,7 @@ contains
     !> Geometric radius (m).
     real(kind=dp), intent(in) :: r
 
-    sphere_rad2vol = 4d0 * const%pi * r**3 / 3d0
+    sphere_rad2vol = 4d0*const%pi*r**3/3d0
 
   end function sphere_rad2vol
 
@@ -340,7 +340,7 @@ contains
     !> Diameter (m).
     real(kind=dp), intent(in) :: d
 
-    diam2rad = d / 2d0
+    diam2rad = d/2d0
 
   end function diam2rad
 
@@ -355,20 +355,20 @@ contains
     real(kind=dp), intent(in) :: pressure
 
     real(kind=dp) :: boltz, avogad, mwair, rgas, rhoair, viscosd, &
-         viscosk, gasspeed
+      viscosk, gasspeed
 
     boltz = const%boltzmann
     avogad = const%avagadro
     mwair = const%air_molec_weight
     rgas = const%univ_gas_const
 
-    rhoair = (pressure * mwair) / (rgas * temp)
+    rhoair = (pressure*mwair)/(rgas*temp)
 
-    viscosd = (1.8325d-5 * (296.16d0 + 120d0) / (temp + 120d0)) &
-         * (temp / 296.16d0)**1.5d0
-    viscosk = viscosd / rhoair
-    gasspeed = sqrt(8d0 * boltz * temp * avogad / (const%pi * mwair))
-    air_mean_free_path = 2d0 * viscosk / gasspeed
+    viscosd = (1.8325d-5*(296.16d0 + 120d0)/(temp + 120d0)) &
+      *(temp/296.16d0)**1.5d0
+    viscosk = viscosd/rhoair
+    gasspeed = sqrt(8d0*boltz*temp*avogad/(const%pi*mwair))
+    air_mean_free_path = 2d0*viscosk/gasspeed
 
   end function air_mean_free_path
 
@@ -395,21 +395,21 @@ contains
     eps = 1d-8
     at = 1d-30
     if (present(rel_tol)) eps = rel_tol
-    if (present(abs_tol)) at  = abs_tol
+    if (present(abs_tol)) at = abs_tol
 
     ! handle the 0.0 case
     if (d1 .eq. d2) then
-       almost_equal = .true.
+      almost_equal = .true.
     else
-       if (abs(d1 - d2) / (abs(d1) + abs(d2)) .lt. eps) then
+      if (abs(d1 - d2)/(abs(d1) + abs(d2)) .lt. eps) then
+        almost_equal = .true.
+      else
+        if (abs(d1 - d2) .le. at) then
           almost_equal = .true.
-       else
-         if (abs(d1 - d2) .le. at) then
-           almost_equal = .true.
-           return
-         end if
-         almost_equal = .false.
-       end if
+          return
+        end if
+        almost_equal = .false.
+      end if
     end if
 
   end function almost_equal
@@ -432,14 +432,14 @@ contains
 
     ! handle the 0.0 case
     if (d1 .eq. d2) then
-       almost_equal_abs = .true.
+      almost_equal_abs = .true.
     else
-       if ((abs(d1 - d2) .lt. abs_tol) .or. &
-            (abs(d1 - d2) / (abs(d1) + abs(d2)) .lt. eps)) then
-          almost_equal_abs = .true.
-       else
-          almost_equal_abs = .false.
-       end if
+      if ((abs(d1 - d2) .lt. abs_tol) .or. &
+        (abs(d1 - d2)/(abs(d1) + abs(d2)) .lt. eps)) then
+        almost_equal_abs = .true.
+      else
+        almost_equal_abs = .false.
+      end if
     end if
 
   end function almost_equal_abs
@@ -449,7 +449,7 @@ contains
   !> Check that the first time interval is close to an integer
   !> multiple of the second, and warn if it is not.
   subroutine check_time_multiple(first_name, first_time, &
-       second_name, second_time)
+    second_name, second_time)
 
     !> Name of the first time variable.
     character(len=*), intent(in) :: first_name
@@ -462,10 +462,10 @@ contains
 
     real(kind=dp) :: ratio
 
-    ratio = first_time / second_time
+    ratio = first_time/second_time
     if (abs(ratio - aint(ratio)) > 1d-6) then
-       call warn_msg(952299377, trim(first_name) &
-            // " is not an integer multiple of " // trim(second_name))
+      call warn_msg(952299377, trim(first_name) &
+        //" is not an integer multiple of "//trim(second_name))
     end if
 
   end subroutine check_time_multiple
@@ -480,7 +480,7 @@ contains
   !! the next call is guaranteed to do the event. Otherwise the
   !! timestep is used to guess whether to do the event.
   subroutine check_event(time, timestep, interval, last_time, &
-       do_event)
+    do_event)
 
     !> Current time.
     real(kind=dp), intent(in) :: time
@@ -500,32 +500,32 @@ contains
 
     ! if we are at time 0 then do the event unconditionally
     if (time .eq. 0d0) then
-       do_event = .true.
+      do_event = .true.
     else
-       ! if we are too close to the last time then don't do it
-       if ((time - last_time) .lt. interval * (1d0 - tolerance)) then
-          do_event = .false.
-       else
-          ! if it's been too long since the last time then do it
-          if ((time - last_time) .ge. interval) then
-             do_event = .true.
+      ! if we are too close to the last time then don't do it
+      if ((time - last_time) .lt. interval*(1d0 - tolerance)) then
+        do_event = .false.
+      else
+        ! if it's been too long since the last time then do it
+        if ((time - last_time) .ge. interval) then
+          do_event = .true.
+        else
+          ! gray area -- if we are closer than we will be next
+          ! time then do it
+          closest_interval_time = anint(time/interval)*interval
+          if (abs(time - closest_interval_time) &
+            .lt. abs(time + timestep - closest_interval_time)) &
+            then
+            do_event = .true.
           else
-             ! gray area -- if we are closer than we will be next
-             ! time then do it
-             closest_interval_time = anint(time / interval) * interval
-             if (abs(time - closest_interval_time) &
-                  .lt. abs(time + timestep - closest_interval_time)) &
-                  then
-                do_event = .true.
-             else
-                do_event = .false.
-             end if
+            do_event = .false.
           end if
-       end if
+        end if
+      end if
     end if
 
     if (do_event) then
-       last_time = time
+      last_time = time
     end if
 
   end subroutine check_event
@@ -548,16 +548,16 @@ contains
     integer :: i
     real(kind=dp) :: a
 
-    allocate(linspace(n))
+    allocate (linspace(n))
     call assert(999299119, n >= 0)
     do i = 2, (n - 1)
-       a = real(i - 1, kind=dp) / real(n - 1, kind=dp)
-       linspace(i) = (1d0 - a) * min_x + a * max_x
+      a = real(i - 1, kind=dp)/real(n - 1, kind=dp)
+      linspace(i) = (1d0 - a)*min_x + a*max_x
     end do
     if (n > 0) then
-       ! make sure these values are exact
-       linspace(1) = min_x
-       linspace(n) = max_x
+      ! make sure these values are exact
+      linspace(1) = min_x
+      linspace(n) = max_x
     end if
 
   end function linspace
@@ -579,7 +579,7 @@ contains
 
     real(kind=dp), allocatable :: log_x(:)
 
-    allocate(logspace(n))
+    allocate (logspace(n))
 
     call assert(804623592, n >= 0)
     if (n == 0) return
@@ -617,11 +617,11 @@ contains
     real(kind=dp), intent(in) :: x
 
     if (x == max_x) then
-       linspace_find = n - 1
-       return
+      linspace_find = n - 1
+      return
     end if
-    linspace_find = floor((x - min_x) / (max_x - min_x) &
-         * real(n - 1, kind=dp)) + 1
+    linspace_find = floor((x - min_x)/(max_x - min_x) &
+      *real(n - 1, kind=dp)) + 1
     linspace_find = min(linspace_find, n)
     linspace_find = max(linspace_find, 0)
 
@@ -677,15 +677,15 @@ contains
     integer p
 
     if (n == 0) then
-       find_1d = 0
-       return
+      find_1d = 0
+      return
     end if
     p = 1
     do while (x >= x_vals(p))
-       p = p + 1
-       if (p > n) then
-          exit
-       end if
+      p = p + 1
+      if (p > n) then
+        exit
+      end if
     end do
     p = p - 1
     find_1d = p
@@ -714,16 +714,16 @@ contains
     n = size(x_vals)
     p = find_1d(n, x_vals, x)
     if (p == 0) then
-       y = y_vals(1)
+      y = y_vals(1)
     elseif (p == n) then
-       y = y_vals(n)
+      y = y_vals(n)
     else
-       if (y_vals(p) == y_vals(p+1)) then
-          y = y_vals(p)
-       else
-          alpha = (x - x_vals(p)) / (x_vals(p+1) - x_vals(p))
-          y = (1d0 - alpha) * y_vals(p) + alpha * y_vals(p+1)
-       end if
+      if (y_vals(p) == y_vals(p + 1)) then
+        y = y_vals(p)
+      else
+        alpha = (x - x_vals(p))/(x_vals(p + 1) - x_vals(p))
+        y = (1d0 - alpha)*y_vals(p) + alpha*y_vals(p + 1)
+      end if
     end if
     interp_1d = y
 
@@ -750,10 +750,10 @@ contains
     real(kind=dp) :: alpha
 
     if (x_1 == x_n) then
-       interp_linear_disc = x_1
+      interp_linear_disc = x_1
     else
-       alpha = real(i - 1, kind=dp) / real(n - 1, kind=dp)
-       interp_linear_disc = (1d0 - alpha) * x_1 + alpha * x_n
+      alpha = real(i - 1, kind=dp)/real(n - 1, kind=dp)
+      interp_linear_disc = (1d0 - alpha)*x_1 + alpha*x_n
     end if
 
   end function interp_linear_disc
@@ -770,12 +770,12 @@ contains
     integer :: ios
 
     call assert_msg(447772570, len_trim(string) <= 20, &
-         'error converting "' // trim(string) &
-         // '" to integer: string too long')
-    read(string, '(i20)', iostat=ios) val
+      'error converting "'//trim(string) &
+      //'" to integer: string too long')
+    read (string, '(i20)', iostat=ios) val
     call assert_msg(895881873, ios == 0, &
-         'error converting "' // trim(string) &
-         // '" to integer: IOSTAT = ' // trim(integer_to_string(ios)))
+      'error converting "'//trim(string) &
+      //'" to integer: IOSTAT = '//trim(integer_to_string(ios)))
     string_to_integer = val
 
   end function string_to_integer
@@ -792,11 +792,11 @@ contains
     integer :: ios
 
     call assert_msg(733728030, len_trim(string) <= 30, &
-         'error converting "' // trim(string) // '" to real: string too long')
-    read(string, '(f30.0)', iostat=ios) val
+      'error converting "'//trim(string)//'" to real: string too long')
+    read (string, '(f30.0)', iostat=ios) val
     call assert_msg(727430097, ios == 0, &
-         'error converting "' // trim(string) &
-         // '" to real: IOSTAT = ' // trim(integer_to_string(ios)))
+      'error converting "'//trim(string) &
+      //'" to real: IOSTAT = '//trim(integer_to_string(ios)))
     string_to_real = val
 
   end function string_to_real
@@ -813,20 +813,20 @@ contains
 
     val = .false.
     if ((trim(string) == 'yes') &
-         .or. (trim(string) == 'y') &
-         .or. (trim(string) == 'true') &
-         .or. (trim(string) == 't') &
-         .or. (trim(string) == '1')) then
-       val = .true.
+      .or. (trim(string) == 'y') &
+      .or. (trim(string) == 'true') &
+      .or. (trim(string) == 't') &
+      .or. (trim(string) == '1')) then
+      val = .true.
     elseif ((trim(string) == 'no') &
-         .or. (trim(string) == 'n') &
-         .or. (trim(string) == 'false') &
-         .or. (trim(string) == 'f') &
-         .or. (trim(string) == '0')) then
-       val = .false.
+      .or. (trim(string) == 'n') &
+      .or. (trim(string) == 'false') &
+      .or. (trim(string) == 'f') &
+      .or. (trim(string) == '0')) then
+      val = .false.
     else
-       call die_msg(985010153, 'error converting "' // trim(string) &
-            // '" to logical')
+      call die_msg(985010153, 'error converting "'//trim(string) &
+        //'" to logical')
     end if
     string_to_logical = val
 
@@ -843,7 +843,7 @@ contains
     character(len=CAMP_UTIL_CONVERT_STRING_LEN) :: ret_val
 
     ret_val = ""
-    write(ret_val, '(i30)') val
+    write (ret_val, '(i30)') val
     integer_to_string = adjustl(ret_val)
 
   end function integer_to_string
@@ -859,7 +859,7 @@ contains
     character(len=CAMP_UTIL_CONVERT_STRING_LEN) :: ret_val
 
     ret_val = ""
-    write(ret_val, '(g30.20)') val
+    write (ret_val, '(g30.20)') val
     real_dp_to_string = adjustl(ret_val)
 
   end function real_dp_to_string
@@ -875,7 +875,7 @@ contains
     character(len=CAMP_UTIL_CONVERT_STRING_LEN) :: ret_val
 
     ret_val = ""
-    write(ret_val, '(g30.20)') val
+    write (ret_val, '(g30.20)') val
     real_sp_to_string = adjustl(ret_val)
 
   end function real_sp_to_string
@@ -892,9 +892,9 @@ contains
 
     ret_val = ""
     if (val) then
-       ret_val = "TRUE"
+      ret_val = "TRUE"
     else
-       ret_val = "FALSE"
+      ret_val = "FALSE"
     end if
     logical_to_string = ret_val
 
@@ -911,8 +911,8 @@ contains
     character(len=CAMP_UTIL_CONVERT_STRING_LEN) :: ret_val
 
     ret_val = ""
-    ret_val = "(" // trim(to_string(real(val))) &
-         // ", " // trim(to_string(aimag(val))) // ")"
+    ret_val = "("//trim(to_string(real(val))) &
+      //", "//trim(to_string(aimag(val)))//")"
     complex_to_string = adjustl(ret_val)
 
   end function complex_to_string
@@ -921,7 +921,7 @@ contains
 
   !> Convert an integer to a string format of maximum length.
   character(len=CAMP_UTIL_CONVERT_STRING_LEN) &
-       function integer_to_string_max_len(val, max_len)
+    function integer_to_string_max_len(val, max_len)
 
     !> Value to convert.
     integer, intent(in) :: val
@@ -932,7 +932,7 @@ contains
 
     ret_val = integer_to_string(val)
     if (len_trim(ret_val) > max_len) then
-       ret_val = real_to_string_max_len(real(val, kind=dp), max_len)
+      ret_val = real_to_string_max_len(real(val, kind=dp), max_len)
     end if
     integer_to_string_max_len = adjustl(ret_val)
 
@@ -942,7 +942,7 @@ contains
 
   !> Convert a real to a string format of maximum length.
   character(len=CAMP_UTIL_CONVERT_STRING_LEN) &
-       function real_to_string_max_len(val, max_len)
+    function real_to_string_max_len(val, max_len)
 
     !> Value to convert.
     real(kind=dp), intent(in) :: val
@@ -955,19 +955,19 @@ contains
 
     ret_val = ""
     if (val == 0d0) then
-       if (max_len >= 3) then
-          ret_val = "0e0"
-       else
-          do i = 1,max_len
-             ret_val(i:i) = "*"
-          end do
-       end if
-       real_to_string_max_len = adjustl(ret_val)
-       return
+      if (max_len >= 3) then
+        ret_val = "0e0"
+      else
+        do i = 1, max_len
+          ret_val(i:i) = "*"
+        end do
+      end if
+      real_to_string_max_len = adjustl(ret_val)
+      return
     end if
 
     exp_val = floor(log10(abs(val)))
-    frac_val = val / 10d0**exp_val
+    frac_val = val/10d0**exp_val
     exp_str = integer_to_string(exp_val)
     frac_str = real_dp_to_string(frac_val)
 
@@ -975,19 +975,19 @@ contains
     frac_len = len_trim(frac_str)
     use_frac_len = max_len - 1 - exp_len
     if (use_frac_len > frac_len) then
-       use_frac_len = frac_len
+      use_frac_len = frac_len
     end if
     if (val < 0d0) then
-       min_frac_len = 2
+      min_frac_len = 2
     else
-       min_frac_len = 1
+      min_frac_len = 1
     end if
     if (use_frac_len < min_frac_len) then
-       do i = 1,max_len
-          ret_val(i:i) = "*"
-       end do
+      do i = 1, max_len
+        ret_val(i:i) = "*"
+      end do
     else
-       ret_val = frac_str(1:use_frac_len) // "e" // trim(exp_str)
+      ret_val = frac_str(1:use_frac_len)//"e"//trim(exp_str)
     end if
     real_to_string_max_len = adjustl(ret_val)
 
@@ -997,15 +997,15 @@ contains
 
   !> Convert a time to a string format of maximum length.
   character(len=CAMP_UTIL_CONVERT_STRING_LEN) &
-       function time_to_string_max_len(time, max_len)
+    function time_to_string_max_len(time, max_len)
 
     !> Time to convert (s).
     real(kind=dp), intent(in) :: time
     !> Maximum length of resulting string.
     integer, intent(in) :: max_len
 
-    integer, dimension(4), parameter :: scale  = (/   1,  60,  60,  24 /)
-    character, dimension(4), parameter :: unit = (/ "s", "m", "h", "d" /)
+    integer, dimension(4), parameter :: scale = (/1, 60, 60, 24/)
+    character, dimension(4), parameter :: unit = (/"s", "m", "h", "d"/)
 
     character(len=CAMP_UTIL_CONVERT_STRING_LEN) :: ret_val
     integer :: i
@@ -1014,19 +1014,19 @@ contains
 
     scaled_time = time
     len_ok = .false.
-    do i = 1,4
-       scaled_time = scaled_time / real(scale(i), kind=dp)
-       ret_val = trim(integer_to_string(nint(scaled_time))) // unit(i)
-       if (len_trim(ret_val) <= max_len) then
-          len_ok = .true.
-          exit
-       end if
+    do i = 1, 4
+      scaled_time = scaled_time/real(scale(i), kind=dp)
+      ret_val = trim(integer_to_string(nint(scaled_time)))//unit(i)
+      if (len_trim(ret_val) <= max_len) then
+        len_ok = .true.
+        exit
+      end if
     end do
     if (.not. len_ok) then
-       ret_val = ""
-       do i = 1,max_len
-          ret_val(i:i) = "*"
-       end do
+      ret_val = ""
+      do i = 1, max_len
+        ret_val(i:i) = "*"
+      end do
     end if
     time_to_string_max_len = adjustl(ret_val)
 
@@ -1065,7 +1065,7 @@ contains
   !!            3  string
   !! \endcode
   !!
-  function split_char( this, splitter, compress ) result( sub_strings )
+  function split_char(this, splitter, compress) result(sub_strings)
 
     !> Split string
     type(string_t), allocatable :: sub_strings(:)
@@ -1083,27 +1083,27 @@ contains
     integer :: i, start_str, i_substr, sl, count
     logical :: l_comp, is_string
 
-    if( .not. allocated( this%string ) ) return
-    if( present( compress ) ) then
+    if (.not. allocated(this%string)) return
+    if (present(compress)) then
       l_comp = compress
     else
       l_comp = .false.
     end if
 
-    sl        = len( splitter )
-    if( sl .eq. 0 ) then
-      allocate( sub_strings( 1 ) )
+    sl = len(splitter)
+    if (sl .eq. 0) then
+      allocate (sub_strings(1))
       sub_strings(1)%string = this%string
       return
     end if
 
-    count     = 0
-    i         = 1
+    count = 0
+    i = 1
     start_str = 1
     is_string = .not. l_comp
-    do while( i .le. len( this%string ) - sl + 1 )
-      if( this%string(i:i+sl-1) .eq. splitter ) then
-        if( is_string ) then
+    do while (i .le. len(this%string) - sl + 1)
+      if (this%string(i:i + sl - 1) .eq. splitter) then
+        if (is_string) then
           count = count + 1
         end if
         i = i + sl
@@ -1113,21 +1113,21 @@ contains
         is_string = .true.
       end if
     end do
-    if( is_string ) count = count + 1
+    if (is_string) count = count + 1
 
-    allocate( sub_strings( count ) )
+    allocate (sub_strings(count))
 
-    i         = 1
+    i = 1
     start_str = 1
-    i_substr  = 1
+    i_substr = 1
     is_string = .not. l_comp
-    do while( i .le. len( this%string ) - sl + 1 )
-      if( this%string(i:i+sl-1) .eq. splitter ) then
-        if( is_string ) then
-          if( i .eq. start_str ) then
-            sub_strings( i_substr )%string = ""
+    do while (i .le. len(this%string) - sl + 1)
+      if (this%string(i:i + sl - 1) .eq. splitter) then
+        if (is_string) then
+          if (i .eq. start_str) then
+            sub_strings(i_substr)%string = ""
           else
-            sub_strings( i_substr )%string = this%string(start_str:i-1)
+            sub_strings(i_substr)%string = this%string(start_str:i - 1)
           end if
           i_substr = i_substr + 1
         end if
@@ -1140,12 +1140,12 @@ contains
       end if
     end do
 
-    if( is_string ) then
-      if( i .eq. start_str ) then
-        sub_strings( i_substr )%string = ""
+    if (is_string) then
+      if (i .eq. start_str) then
+        sub_strings(i_substr)%string = ""
       else
-        sub_strings( i_substr )%string = &
-            this%string( start_str:len( this%string ) )
+        sub_strings(i_substr)%string = &
+          this%string(start_str:len(this%string))
       end if
     end if
 
@@ -1157,7 +1157,7 @@ contains
   !!
   !! See \c string_split_char for description and example
   !!
-  function split_string( this, splitter, compress ) result( sub_strings )
+  function split_string(this, splitter, compress) result(sub_strings)
 
     !> Split string
     type(string_t), allocatable :: sub_strings(:)
@@ -1172,7 +1172,7 @@ contains
     !! ignored)
     logical, intent(in), optional :: compress
 
-    sub_strings = this%split_char( splitter%string, compress )
+    sub_strings = this%split_char(splitter%string, compress)
 
   end function split_string
 
@@ -1199,24 +1199,24 @@ contains
     vec_tot = sum(vec_cts)
 
     ! assign a best guess for each bin independently
-    vec_disc = nint(vec_cts / vec_tot * real(n_samp, kind=dp))
+    vec_disc = nint(vec_cts/vec_tot*real(n_samp, kind=dp))
 
     ! if we have too few particles then add more
     do while (sum(vec_disc) < n_samp)
-       k = minloc(abs(real(vec_disc + 1, kind=dp) - vec_cts) &
-            - abs(real(vec_disc, kind=dp) - vec_cts))
-       vec_disc(k) = vec_disc(k) + 1
+      k = minloc(abs(real(vec_disc + 1, kind=dp) - vec_cts) &
+        - abs(real(vec_disc, kind=dp) - vec_cts))
+      vec_disc(k) = vec_disc(k) + 1
     end do
 
     ! if we have too many particles then remove some
     do while (sum(vec_disc) > n_samp)
-       k = minloc(abs(real(vec_disc - 1, kind=dp) - vec_cts) &
-            - abs(real(vec_disc, kind=dp) - vec_cts))
-       vec_disc(k) = vec_disc(k) - 1
+      k = minloc(abs(real(vec_disc - 1, kind=dp) - vec_cts) &
+        - abs(real(vec_disc, kind=dp) - vec_cts))
+      vec_disc(k) = vec_disc(k) - 1
     end do
 
     call assert_msg(323412496, sum(vec_disc) == n_samp, &
-         'generated incorrect number of samples')
+      'generated incorrect number of samples')
 
   end subroutine vec_cts_to_disc
 
@@ -1230,7 +1230,7 @@ contains
     !> Average of int_vec.
     integer, intent(out) :: int_avg
 
-    int_avg = sum(int_vec) / size(int_vec)
+    int_avg = sum(int_vec)/size(int_vec)
 
   end subroutine average_integer
 
@@ -1244,7 +1244,7 @@ contains
     !> Average of real_vec.
     real(kind=dp), intent(out) :: real_avg
 
-    real_avg = sum(real_vec) / real(size(real_vec), kind=dp)
+    real_avg = sum(real_vec)/real(size(real_vec), kind=dp)
 
   end subroutine average_real
 
@@ -1259,8 +1259,8 @@ contains
     !> Value to find.
     character(len=*), intent(in) :: val
 
-    do string_array_find = 1,size(array)
-       if (trim(array(string_array_find)) == trim(val)) return
+    do string_array_find = 1, size(array)
+      if (trim(array(string_array_find)) == trim(val)) return
     end do
     string_array_find = 0
 
@@ -1283,19 +1283,19 @@ contains
     real(kind=dp), allocatable :: tmp_x(:)
 
     if (allocated(x)) then
-       new_n = n
-       if (present(only_grow)) then
-          new_n = max(new_n, size(x))
-       end if
-       if (size(x) /= new_n) then
-          allocate(tmp_x(new_n))
-          tmp_x = 0d0
-          tmp_x(1:min(new_n, size(x))) = x(1:min(new_n, size(x)))
-          call move_alloc(tmp_x, x)
-       end if
+      new_n = n
+      if (present(only_grow)) then
+        new_n = max(new_n, size(x))
+      end if
+      if (size(x) /= new_n) then
+        allocate (tmp_x(new_n))
+        tmp_x = 0d0
+        tmp_x(1:min(new_n, size(x))) = x(1:min(new_n, size(x)))
+        call move_alloc(tmp_x, x)
+      end if
     else
-       allocate(x(n))
-       x = 0d0
+      allocate (x(n))
+      x = 0d0
     end if
 
   end subroutine ensure_real_array_size
@@ -1319,23 +1319,23 @@ contains
     real(kind=dp), allocatable :: tmp_x(:, :)
 
     if (allocated(x)) then
-       new_n1 = n1
-       new_n2 = n2
-       if (present(only_grow)) then
-          new_n1 = max(new_n1, size(x, 1))
-          new_n2 = max(new_n2, size(x, 2))
-       end if
-       if ((size(x, 1) /= new_n1) .or. (size(x, 2) /= new_n2)) then
-          allocate(tmp_x(new_n1, new_n2))
-          n1_min = min(new_n1, size(x, 1))
-          n2_min = min(new_n2, size(x, 2))
-          tmp_x = 0d0
-          tmp_x(1:n1_min, 1:n2_min) = x(1:n1_min, 1:n2_min)
-          call move_alloc(tmp_x, x)
-       end if
+      new_n1 = n1
+      new_n2 = n2
+      if (present(only_grow)) then
+        new_n1 = max(new_n1, size(x, 1))
+        new_n2 = max(new_n2, size(x, 2))
+      end if
+      if ((size(x, 1) /= new_n1) .or. (size(x, 2) /= new_n2)) then
+        allocate (tmp_x(new_n1, new_n2))
+        n1_min = min(new_n1, size(x, 1))
+        n2_min = min(new_n2, size(x, 2))
+        tmp_x = 0d0
+        tmp_x(1:n1_min, 1:n2_min) = x(1:n1_min, 1:n2_min)
+        call move_alloc(tmp_x, x)
+      end if
     else
-       allocate(x(n1, n2))
-       x = 0d0
+      allocate (x(n1, n2))
+      x = 0d0
     end if
 
   end subroutine ensure_real_array_2d_size
@@ -1357,19 +1357,19 @@ contains
     integer, allocatable :: tmp_x(:)
 
     if (allocated(x)) then
-       new_n = n
-       if (present(only_grow)) then
-          new_n = max(new_n, size(x))
-       end if
-       if (size(x) /= new_n) then
-          allocate(tmp_x(new_n))
-          tmp_x = 0
-          tmp_x(1:min(new_n, size(x))) = x(1:min(new_n, size(x)))
-          call move_alloc(tmp_x, x)
-       end if
+      new_n = n
+      if (present(only_grow)) then
+        new_n = max(new_n, size(x))
+      end if
+      if (size(x) /= new_n) then
+        allocate (tmp_x(new_n))
+        tmp_x = 0
+        tmp_x(1:min(new_n, size(x))) = x(1:min(new_n, size(x)))
+        call move_alloc(tmp_x, x)
+      end if
     else
-       allocate(x(n))
-       x = 0
+      allocate (x(n))
+      x = 0
     end if
 
   end subroutine ensure_integer_array_size
@@ -1393,23 +1393,23 @@ contains
     integer, allocatable :: tmp_x(:, :)
 
     if (allocated(x)) then
-       new_n1 = n1
-       new_n2 = n2
-       if (present(only_grow)) then
-          new_n1 = max(new_n1, size(x, 1))
-          new_n2 = max(new_n2, size(x, 2))
-       end if
-       if ((size(x, 1) /= new_n1) .or. (size(x, 2) /= new_n2)) then
-          allocate(tmp_x(new_n1, new_n2))
-          n1_min = min(new_n1, size(x, 1))
-          n2_min = min(new_n2, size(x, 2))
-          tmp_x = 0
-          tmp_x(1:n1_min, 1:n2_min) = x(1:n1_min, 1:n2_min)
-          call move_alloc(tmp_x, x)
-       end if
+      new_n1 = n1
+      new_n2 = n2
+      if (present(only_grow)) then
+        new_n1 = max(new_n1, size(x, 1))
+        new_n2 = max(new_n2, size(x, 2))
+      end if
+      if ((size(x, 1) /= new_n1) .or. (size(x, 2) /= new_n2)) then
+        allocate (tmp_x(new_n1, new_n2))
+        n1_min = min(new_n1, size(x, 1))
+        n2_min = min(new_n2, size(x, 2))
+        tmp_x = 0
+        tmp_x(1:n1_min, 1:n2_min) = x(1:n1_min, 1:n2_min)
+        call move_alloc(tmp_x, x)
+      end if
     else
-       allocate(x(n1, n2))
-       x = 0
+      allocate (x(n1, n2))
+      x = 0
     end if
 
   end subroutine ensure_integer_array_2d_size
@@ -1426,12 +1426,12 @@ contains
     integer, intent(in) :: n
 
     if (allocated(x)) then
-       if (size(x) /= n) then
-          deallocate(x)
-          allocate(x(n))
-       end if
+      if (size(x) /= n) then
+        deallocate (x)
+        allocate (x(n))
+      end if
     else
-       allocate(x(n))
+      allocate (x(n))
     end if
 
   end subroutine ensure_string_array_size
@@ -1457,18 +1457,18 @@ contains
     i = len_trim(basename)
     found_period = .false.
     do while ((i > 0) .and. (.not. found_period))
-       ! Fortran .and. does not short-circuit, so we can't do the
-       ! obvious do while ((i > 0) .and. (basename(i:i) /= ".")),
-       ! instead we have to use this hack with the found_period
-       ! logical variable.
-       if (basename(i:i) == ".") then
-          found_period = .true.
-       else
-          i = i - 1
-       end if
+      ! Fortran .and. does not short-circuit, so we can't do the
+      ! obvious do while ((i > 0) .and. (basename(i:i) /= ".")),
+      ! instead we have to use this hack with the found_period
+      ! logical variable.
+      if (basename(i:i) == ".") then
+        found_period = .true.
+      else
+        i = i - 1
+      end if
     end do
     if (i > 0) then
-       basename(i:) = ""
+      basename(i:) = ""
     end if
 
   end subroutine get_basename
@@ -1484,12 +1484,12 @@ contains
     character(len=10) :: date, time, zone
 
     call assert_msg(893219839, len(date_time) >= 29, &
-         "date_time string must have length at least 29")
+      "date_time string must have length at least 29")
     call date_and_time(date, time, zone)
     date_time = ""
-    write(date_time, '(14a)') date(1:4), "-", date(5:6), "-", &
-         date(7:8), "T", time(1:2), ":", time(3:4), ":", &
-         time(5:10), zone(1:3), ":", zone(4:5)
+    write (date_time, '(14a)') date(1:4), "-", date(5:6), "-", &
+      date(7:8), "T", time(1:2), ":", time(3:4), ":", &
+      time(5:10), zone(1:3), ":", zone(4:5)
 
   end subroutine iso8601_date_and_time
 
@@ -1501,7 +1501,7 @@ contains
     !> Input degrees.
     real(kind=dp), intent(in) :: deg
 
-    deg2rad = deg / 180d0 * const%pi
+    deg2rad = deg/180d0*const%pi
 
   end function deg2rad
 
@@ -1513,7 +1513,7 @@ contains
     !> Input radians.
     real(kind=dp), intent(in) :: rad
 
-    rad2deg = rad / const%pi * 180d0
+    rad2deg = rad/const%pi*180d0
 
   end function rad2deg
 
@@ -1539,11 +1539,11 @@ contains
 
 #ifndef DOXYGEN_SKIP_DOC
     interface
-       subroutine integer_sort_c(n_c, data_ptr, perm_ptr) bind(c)
-         use iso_c_binding
-         integer(kind=c_int), value :: n_c
-         type(c_ptr), value :: data_ptr, perm_ptr
-       end subroutine integer_sort_c
+      subroutine integer_sort_c(n_c, data_ptr, perm_ptr) bind(c)
+        use iso_c_binding
+        integer(kind=c_int), value :: n_c
+        type(c_ptr), value :: data_ptr, perm_ptr
+      end subroutine integer_sort_c
     end interface
 #endif
 
@@ -1569,57 +1569,57 @@ contains
     !> Filename to read from.
     character(len=*), intent(in) :: filename
     !> Array to store data in.
-    real(kind=dp), intent(inout), allocatable :: data(:,:)
+    real(kind=dp), intent(inout), allocatable :: data(:, :)
 
     integer :: unit, row, col
     logical :: eol, eof
     character(len=1000) :: word
 
-    deallocate(data)
-    allocate(data(1,0))
+    deallocate (data)
+    allocate (data(1, 0))
     call open_file_read(filename, unit)
 
     eof = .false.
     row = 1
     col = 1
     do while (.not. eof)
-       call read_word_raw(unit, word, eol, eof)
-       if (len_trim(word) > 0) then
-          if (row == 1) then
-             if (col > size(data, 2)) then
-                call reallocate_real_array2d(data, 1, 2 * col)
-             end if
-          else
-             if (col > size(data, 2)) then
-                call assert_msg(516120334, col <= size(data, 2), &
-                     trim(filename) // ": line " &
-                     // trim(integer_to_string(row)) // " too long")
-             end if
+      call read_word_raw(unit, word, eol, eof)
+      if (len_trim(word) > 0) then
+        if (row == 1) then
+          if (col > size(data, 2)) then
+            call reallocate_real_array2d(data, 1, 2*col)
           end if
-          if (row > size(data, 1)) then
-             call reallocate_real_array2d(data, 2 * row, size(data, 2))
+        else
+          if (col > size(data, 2)) then
+            call assert_msg(516120334, col <= size(data, 2), &
+              trim(filename)//": line " &
+              //trim(integer_to_string(row))//" too long")
           end if
-          data(row, col) = string_to_real(word)
-          col = col + 1
-       end if
-       if (eol .or. eof) then
-          if (row == 1) then
-             call reallocate_real_array2d(data, 1, col - 1)
-          else
-             call assert_msg(266924956, &
-                  (col == 1) .or. (col == size(data, 2) + 1), &
-                  trim(filename) // ": line " &
-                  // trim(integer_to_string(row)) // " too short")
-          end if
-       end if
-       if (eol) then
-          row = row + 1
-          col = 1
-       end if
+        end if
+        if (row > size(data, 1)) then
+          call reallocate_real_array2d(data, 2*row, size(data, 2))
+        end if
+        data(row, col) = string_to_real(word)
+        col = col + 1
+      end if
+      if (eol .or. eof) then
+        if (row == 1) then
+          call reallocate_real_array2d(data, 1, col - 1)
+        else
+          call assert_msg(266924956, &
+            (col == 1) .or. (col == size(data, 2) + 1), &
+            trim(filename)//": line " &
+            //trim(integer_to_string(row))//" too short")
+        end if
+      end if
+      if (eol) then
+        row = row + 1
+        col = 1
+      end if
     end do
 
     if (col == 1) then
-       call reallocate_real_array2d(data, row - 1, size(data, 2))
+      call reallocate_real_array2d(data, row - 1, size(data, 2))
     end if
     call close_file(unit)
 
@@ -1638,8 +1638,8 @@ contains
     integer :: unit, i
 
     call open_file_write(filename, unit)
-    do i = 1,size(data)
-       write(unit, '(e30.15e3)') data(i)
+    do i = 1, size(data)
+      write (unit, '(e30.15e3)') data(i)
     end do
     call close_file(unit)
 
@@ -1653,16 +1653,16 @@ contains
     !> Filename to write to.
     character(len=*), intent(in) :: filename
     !> Array of data to write.
-    real(kind=dp), intent(in) :: data(:,:)
+    real(kind=dp), intent(in) :: data(:, :)
 
     integer :: unit, i, j
 
     call open_file_write(filename, unit)
-    do i = 1,size(data, 1)
-       do j = 1,size(data, 2)
-          write(unit, '(e30.15e3)', advance='no') data(i, j)
-       end do
-       write(unit, *) ''
+    do i = 1, size(data, 1)
+      do j = 1, size(data, 2)
+        write (unit, '(e30.15e3)', advance='no') data(i, j)
+      end do
+      write (unit, *) ''
     end do
     call close_file(unit)
 
@@ -1674,7 +1674,7 @@ contains
   subroutine reallocate_real_array2d(data, rows, cols)
 
     !> Array to reallocate.
-    real(kind=dp), allocatable, intent(inout) :: data(:,:)
+    real(kind=dp), allocatable, intent(inout) :: data(:, :)
     !> New leading dimension.
     integer, intent(in) :: rows
     !> New trailing dimension.
@@ -1686,8 +1686,8 @@ contains
     data_rows = min(rows, size(data, 1))
     data_cols = min(cols, size(data, 2))
     tmp_data(1:data_rows, 1:data_cols) = data(1:data_rows, 1:data_cols)
-    deallocate(data)
-    allocate(data(rows, cols))
+    deallocate (data)
+    allocate (data(rows, cols))
     data(1:data_rows, 1:data_cols) = tmp_data(1:data_rows, 1:data_cols)
 
   end subroutine reallocate_real_array2d
@@ -1737,11 +1737,11 @@ contains
     eof = .false.
     char = " " ! shut up uninitialized variable warnings
     read_char = "" ! needed for pgf95 for reading blank lines
-    read(unit=unit, fmt='(a)', advance='no', end=100, eor=110, &
-         iostat=ios) read_char
+    read (unit=unit, fmt='(a)', advance='no', end=100, eor=110, &
+      iostat=ios) read_char
     if (ios /= 0) then
-       write(0,*) 'ERROR: reading file: IOSTAT = ', ios
-       stop 2
+      write (0, *) 'ERROR: reading file: IOSTAT = ', ios
+      stop 2
     end if
     ! only reach here if we didn't hit end-of-record (end-of-line) in
     ! the above read
@@ -1782,8 +1782,8 @@ contains
     ! skip over spaces
     call read_char_raw(unit, char, eol, eof)
     do while (((ichar(char) == 9) .or. (ichar(char) == 32)) &
-         .and. (.not. eol) .and. (.not. eof))
-       call read_char_raw(unit, char, eol, eof)
+      .and. (.not. eol) .and. (.not. eof))
+      call read_char_raw(unit, char, eol, eof)
     end do
     if (eol .or. eof) return
 
@@ -1792,12 +1792,12 @@ contains
     word(i:i) = char
     call read_char_raw(unit, char, eol, eof)
     do while ((ichar(char) /= 9) .and. (ichar(char) /= 32) &
-         .and. (.not. eol) .and. (.not. eof) .and. (i < len(word)))
-       i = i + 1
-       word(i:i) = char
-       if (i < len(word)) then
-          call read_char_raw(unit, char, eol, eof)
-       end if
+      .and. (.not. eol) .and. (.not. eof) .and. (i < len(word)))
+      i = i + 1
+      word(i:i) = char
+      if (i < len(word)) then
+        call read_char_raw(unit, char, eol, eof)
+      end if
     end do
 
   end subroutine read_word_raw
@@ -1816,13 +1816,13 @@ contains
     character(len=*), intent(in) :: start_string
 
     if (len(string) < len(start_string)) then
-       starts_with = .false.
-       return
+      starts_with = .false.
+      return
     end if
     if (string(1:len(start_string)) == start_string) then
-       starts_with = .true.
+      starts_with = .true.
     else
-       starts_with = .false.
+      starts_with = .false.
     end if
 
   end function starts_with
@@ -1837,7 +1837,7 @@ contains
     !> Second number to average.
     real(kind=dp), intent(in) :: x2
 
-    harmonic_mean = 1d0 / (1d0 / x1 + 1d0 / x2)
+    harmonic_mean = 1d0/(1d0/x1 + 1d0/x2)
 
   end function harmonic_mean
 
@@ -1850,9 +1850,9 @@ contains
     real(kind=dp), intent(in) :: p
 
     if (p <= 0d0) then
-       nplogp = 0d0
+      nplogp = 0d0
     else
-       nplogp = - p * log(p)
+      nplogp = -p*log(p)
     end if
 
   end function nplogp
@@ -1866,7 +1866,7 @@ contains
     !> Probability mass function, will be normalized before use.
     real(kind=dp), intent(in) :: p(:)
 
-    entropy = sum(nplogp(p / sum(p)))
+    entropy = sum(nplogp(p/sum(p)))
 
   end function entropy
 
@@ -1879,14 +1879,43 @@ contains
     integer, intent(in) :: n
 
     if (n <= 0) then
-       pow2_above = 0
-       return
+      pow2_above = 0
+      return
     end if
 
     ! LEADZ is in Fortran 2008
     pow2_above = ibset(0, bit_size(n) - leadz(n - 1))
 
   end function pow2_above
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> returns unique elements in string_t array
+  function unique_character(input)
+    ! the input array
+    character(len=*), dimension(:), intent(in) :: input
+
+    ! the output array
+    character(len=len(input)), dimension(:), allocatable :: unique_character
+
+    ! temporary array
+    character(len=len(input)) :: temp_output(size(input))
+
+    integer :: i, n_elements
+
+    n_elements = 0
+    do i = 1, size(input)
+      if (.not. any(temp_output == input(i))) then
+        n_elements = n_elements + 1
+        temp_output(n_elements) = input(i)
+      end if
+    end do
+
+    allocate (unique_character(n_elements))
+
+    unique_character = temp_output(1:n_elements)
+
+  end function unique_character
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

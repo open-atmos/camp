@@ -1,0 +1,26 @@
+HO2 + hv -> OH + O
+Reference: JPL Publication 10-6 Final 15 June2011.pdf
+           Chemical Kinetics and Photochemical Data for Use in Stratospheric
+           Modeling
+           page 4B-1
+Independent of temperature over 200-300K
+Table 4B-1.  Absorption Cross Sections of HO2 at 298K
+=====================================================
+  lambda (nm)		1E20 sigma(cm^2)
+=====================================================
+190			368
+195			402
+200			423
+205 			427
+210			415
+215			385
+220			341
+225			288
+230			230
+235			173
+240			122
+245			79.7
+250			48.0
+255			26.3
+260			12.9
+

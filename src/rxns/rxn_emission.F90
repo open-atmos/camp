@@ -56,7 +56,7 @@ module camp_rxn_emission
   use camp_property
   use camp_rxn_data
   use camp_util,                             only: i_kind, dp, to_string, &
-                                                  assert_msg
+    assert_msg
 
   use iso_c_binding
 
@@ -71,7 +71,7 @@ module camp_rxn_emission
 #define NUM_REAL_PROP_ 1
 #define NUM_ENV_PARAM_ 2
 
-public :: rxn_emission_t, rxn_update_data_emission_t
+  public :: rxn_emission_t, rxn_update_data_emission_t
 
   !> Generic test reaction data type
   type, extends(rxn_data_t) :: rxn_emission_t
@@ -93,7 +93,7 @@ public :: rxn_emission_t, rxn_update_data_emission_t
 
   !> Emission rate update object
   type, extends(rxn_update_data_t) :: rxn_update_data_emission_t
-  private
+    private
     !> Flag indicating whether the update data as been allocated
     logical :: is_malloced = .false.
     !> Unique id for finding reactions during model initialization
@@ -116,7 +116,7 @@ public :: rxn_emission_t, rxn_update_data_emission_t
 
     !> Allocate space for a rate update
     function rxn_emission_create_rate_update_data() &
-              result (update_data) bind (c)
+      result (update_data) bind (c)
       use iso_c_binding
       !> Allocated update_data object
       type(c_ptr) :: update_data
@@ -124,7 +124,7 @@ public :: rxn_emission_t, rxn_update_data_emission_t
 
     !> Set a new emission rate
     subroutine rxn_emission_set_rate_update_data(update_data, &
-              rxn_unique_id, base_rate) bind (c)
+      rxn_unique_id, base_rate) bind (c)
       use iso_c_binding
       !> Update data
       type(c_ptr), value :: update_data
@@ -174,20 +174,15 @@ contains
     !> Number of grid cells to solve simultaneously
     integer(kind=i_kind), intent(in) :: n_cells
 
-    type(property_t), pointer :: spec_props
     character(len=:), allocatable :: key_name, spec_name
-    integer(kind=i_kind) :: i_spec, i_qty
-
-    integer(kind=i_kind) :: temp_int
-    real(kind=dp) :: temp_real
 
     ! Get the species involved
     call assert_msg(135066145, associated(this%property_set), &
-            "Missing property set needed to initialize reaction")
+      "Missing property set needed to initialize reaction")
     key_name = "species"
     call assert_msg(247384490, &
-            this%property_set%get_string(key_name, spec_name), &
-            "Emission reaction is missing species name")
+      this%property_set%get_string(key_name, spec_name), &
+      "Emission reaction is missing species name")
 
     ! Allocate space in the condensed data arrays
     allocate(this%condensed_data_int(NUM_INT_PROP_))
@@ -209,7 +204,7 @@ contains
 
     ! Make sure the species exists
     call assert_msg(814240522, SPECIES_.gt.0, &
-            "Missing emission species: "//spec_name)
+      "Missing emission species: "//spec_name)
 
     ! Initialize the rxn id
     RXN_ID_ = -1
@@ -239,11 +234,11 @@ contains
     type(rxn_emission_t), intent(inout) :: this
 
     if (associated(this%property_set)) &
-            deallocate(this%property_set)
+      deallocate(this%property_set)
     if (allocated(this%condensed_data_real)) &
-            deallocate(this%condensed_data_real)
+      deallocate(this%condensed_data_real)
     if (allocated(this%condensed_data_int)) &
-            deallocate(this%condensed_data_int)
+      deallocate(this%condensed_data_int)
 
   end subroutine finalize
 
@@ -258,7 +253,7 @@ contains
     real(kind=dp), intent(in) :: base_rate
 
     call rxn_emission_set_rate_update_data(this%get_data(), &
-            this%rxn_unique_id, base_rate)
+      this%rxn_unique_id, base_rate)
 
   end subroutine update_data_rate_set
 
@@ -292,7 +287,7 @@ contains
 
   !> Determine the size of a binary required to pack the reaction data
   integer(kind=i_kind) function internal_pack_size(this, comm) &
-      result(pack_size)
+    result(pack_size)
 
     !> Reaction update data
     class(rxn_update_data_emission_t), intent(in) :: this
@@ -326,7 +321,7 @@ contains
     call camp_mpi_pack_logical(buffer, pos, this%is_malloced, comm)
     call camp_mpi_pack_integer(buffer, pos, this%rxn_unique_id, comm)
     call assert(945453741, &
-         pos - prev_position <= this%pack_size(comm))
+      pos - prev_position <= this%pack_size(comm))
 #endif
 
   end subroutine internal_bin_pack
@@ -352,7 +347,7 @@ contains
     call camp_mpi_unpack_logical(buffer, pos, this%is_malloced, comm)
     call camp_mpi_unpack_integer(buffer, pos, this%rxn_unique_id, comm)
     call assert(775296837, &
-         pos - prev_position <= this%pack_size(comm))
+      pos - prev_position <= this%pack_size(comm))
     this%update_data = rxn_emission_create_rate_update_data()
 #endif
 

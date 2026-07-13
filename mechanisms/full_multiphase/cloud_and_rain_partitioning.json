@@ -1,0 +1,20 @@
+{
+  "description": [
+    "Partitioning of species to cloud and rain water. Parameters are from existing wet-deposition module."
+  ],
+  "camp-data": [
+    {
+      "name": "MONARCH mod37",
+      "type": "MECHANISM",
+      "reactions": [
+        {
+          "type": "HL_PHASE_TRANSFER",
+          "gas-phase species": "O3",
+          "aerosol phase": "cloud and rain water",
+          "aerosol-phase species": "O3_aq",
+          "aerosol-phase water": "H2O_aq"
+        }
+      ]
+    }
+  ]
+}

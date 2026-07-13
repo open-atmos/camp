@@ -8,13 +8,13 @@
 /** \file
  * \brief Phase Transfer reaction solver functions
  */
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "../aero_rep_solver.h"
 #include "../rxns.h"
 #include "../sub_model_solver.h"
 #include "../util.h"
+#include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 // TODO Lookup environmental indices during initialization
 #define TEMPERATURE_K_ env_data[0]
@@ -49,29 +49,29 @@
 #define NUM_ENV_PARAM_ 4
 #define AERO_SPEC_(x) (int_data[NUM_INT_PROP_ + x] - 1)
 #define AERO_ACT_ID_(x) (int_data[NUM_INT_PROP_ + NUM_AERO_PHASE_ + x] - 1)
-#define AERO_PHASE_ID_(x) \
+#define AERO_PHASE_ID_(x)                                                      \
   (int_data[NUM_INT_PROP_ + 2 * (NUM_AERO_PHASE_) + x] - 1)
-#define AERO_REP_ID_(x) \
+#define AERO_REP_ID_(x)                                                        \
   (int_data[NUM_INT_PROP_ + 3 * (NUM_AERO_PHASE_) + x] - 1)
 #define DERIV_ID_(x) (int_data[NUM_INT_PROP_ + 4 * (NUM_AERO_PHASE_) + x])
-#define GAS_ACT_JAC_ID_(x) \
+#define GAS_ACT_JAC_ID_(x)                                                     \
   int_data[NUM_INT_PROP_ + 1 + 5 * (NUM_AERO_PHASE_) + x]
-#define AERO_ACT_JAC_ID_(x) \
+#define AERO_ACT_JAC_ID_(x)                                                    \
   int_data[NUM_INT_PROP_ + 1 + 6 * (NUM_AERO_PHASE_) + x]
 #define JAC_ID_(x) (int_data[NUM_INT_PROP_ + 1 + 7 * (NUM_AERO_PHASE_) + x])
-#define PHASE_INT_LOC_(x) \
+#define PHASE_INT_LOC_(x)                                                      \
   (int_data[NUM_INT_PROP_ + 2 + 10 * (NUM_AERO_PHASE_) + x] - 1)
-#define PHASE_FLOAT_LOC_(x) \
+#define PHASE_FLOAT_LOC_(x)                                                    \
   (int_data[NUM_INT_PROP_ + 2 + 11 * (NUM_AERO_PHASE_) + x] - 1)
 #define NUM_AERO_PHASE_JAC_ELEM_(x) (int_data[PHASE_INT_LOC_(x)])
-#define PHASE_JAC_ID_(x, s, e) \
+#define PHASE_JAC_ID_(x, s, e)                                                 \
   int_data[PHASE_INT_LOC_(x) + 1 + (s) * NUM_AERO_PHASE_JAC_ELEM_(x) + e]
 #define EFF_RAD_JAC_ELEM_(x, e) float_data[PHASE_FLOAT_LOC_(x) + e]
-#define NUM_CONC_JAC_ELEM_(x, e) \
+#define NUM_CONC_JAC_ELEM_(x, e)                                               \
   float_data[PHASE_FLOAT_LOC_(x) + NUM_AERO_PHASE_JAC_ELEM_(x) + e]
-#define MASS_JAC_ELEM_(x, e) \
+#define MASS_JAC_ELEM_(x, e)                                                   \
   float_data[PHASE_FLOAT_LOC_(x) + 2 * NUM_AERO_PHASE_JAC_ELEM_(x) + e]
-#define MW_JAC_ELEM_(x, e) \
+#define MW_JAC_ELEM_(x, e)                                                     \
   float_data[PHASE_FLOAT_LOC_(x) + 3 * NUM_AERO_PHASE_JAC_ELEM_(x) + e]
 
 /** \brief Flag Jacobian elements used by this reaction
@@ -91,9 +91,8 @@ void rxn_SIMPOL_phase_transfer_get_used_jac_elem(ModelData *model_data,
   bool *aero_jac_elem =
       (bool *)malloc(sizeof(bool) * model_data->n_per_cell_state_var);
   if (aero_jac_elem == NULL) {
-    printf(
-        "\n\nERROR allocating space for 1D Jacobian structure array for "
-        "SIMPOL phase transfer reaction\n\n");
+    printf("\n\nERROR allocating space for 1D Jacobian structure array for "
+           "SIMPOL phase transfer reaction\n\n");
     exit(1);
   }
 
@@ -139,10 +138,9 @@ void rxn_SIMPOL_phase_transfer_get_used_jac_elem(ModelData *model_data,
       PHASE_JAC_ID_(i_aero_phase, JAC_AERO, i_used_elem) = -1;
     }
     if (i_used_elem != n_jac_elem) {
-      printf(
-          "\n\nERROR setting used Jacobian elements in SIMPOL phase "
-          "transfer reaction %d %d\n\n",
-          i_used_elem, n_jac_elem);
+      printf("\n\nERROR setting used Jacobian elements in SIMPOL phase "
+             "transfer reaction %d %d\n\n",
+             i_used_elem, n_jac_elem);
       rxn_SIMPOL_phase_transfer_print(rxn_int_data, rxn_float_data);
       exit(1);
     }
@@ -256,11 +254,11 @@ void rxn_SIMPOL_phase_transfer_update_env_state(ModelData *model_data,
   //   [X]_gas = [X]_aero * activity_coeff_X * K_eq * MW_tot_aero / [tot]_aero
   // where 'tot' indicates all species within an aerosol phase combined
   // with []_gas in (ppm) and []_aero in (kg/m^3)
-  EQUIL_CONST_ = vp              // Pa_x / (mol_x_aero/mol_tot_aero)
-                 / PRESSURE_PA_  // 1/Pa_air
-                 / MW_           // mol_x_aero/kg_x_aero
-                 * 1.0e6;        // ppm_x / (Pa_x/P_air)
-                                 // = ppm_x * mol_tot_aero / kg_x_aero
+  EQUIL_CONST_ = vp             // Pa_x / (mol_x_aero/mol_tot_aero)
+                 / PRESSURE_PA_ // 1/Pa_air
+                 / MW_          // mol_x_aero/kg_x_aero
+                 * 1.0e6;       // ppm_x / (Pa_x/P_air)
+                                // = ppm_x * mol_tot_aero / kg_x_aero
 
   return;
 }
@@ -289,45 +287,45 @@ void rxn_SIMPOL_phase_transfer_calc_deriv_contrib(
     // Get the particle effective radius (m)
     realtype radius;
     aero_rep_get_effective_radius__m(
-        model_data,               // model data
-        AERO_REP_ID_(i_phase),    // aerosol representation index
-        AERO_PHASE_ID_(i_phase),  // aerosol phase index
-        &radius,                  // particle effective radius (m)
-        NULL);                    // partial derivative
+        model_data,              // model data
+        AERO_REP_ID_(i_phase),   // aerosol representation index
+        AERO_PHASE_ID_(i_phase), // aerosol phase index
+        &radius,                 // particle effective radius (m)
+        NULL);                   // partial derivative
 
     // Check the aerosol concentration type (per-particle or total per-phase
     // mass)
     int aero_conc_type = aero_rep_get_aero_conc_type(
-        model_data,                // model data
-        AERO_REP_ID_(i_phase),     // aerosol representation index
-        AERO_PHASE_ID_(i_phase));  // aerosol phase index
+        model_data,               // model data
+        AERO_REP_ID_(i_phase),    // aerosol representation index
+        AERO_PHASE_ID_(i_phase)); // aerosol phase index
 
     // Get the particle number concentration (#/m3)
     realtype number_conc;
     aero_rep_get_number_conc__n_m3(
-        model_data,               // model data
-        AERO_REP_ID_(i_phase),    // aerosol representation index
-        AERO_PHASE_ID_(i_phase),  // aerosol phase index
-        &number_conc,             // particle number conc (#/m3)
-        NULL);                    // partial derivative
+        model_data,              // model data
+        AERO_REP_ID_(i_phase),   // aerosol representation index
+        AERO_PHASE_ID_(i_phase), // aerosol phase index
+        &number_conc,            // particle number conc (#/m3)
+        NULL);                   // partial derivative
 
     // Get the total mass of the aerosol phase (kg/m3)
     realtype aero_phase_mass;
     aero_rep_get_aero_phase_mass__kg_m3(
-        model_data,               // model data
-        AERO_REP_ID_(i_phase),    // aerosol representation index
-        AERO_PHASE_ID_(i_phase),  // aerosol phase index
-        &aero_phase_mass,         // total aerosol-phase mass (kg/m3)
-        NULL);                    // partial derivatives
+        model_data,              // model data
+        AERO_REP_ID_(i_phase),   // aerosol representation index
+        AERO_PHASE_ID_(i_phase), // aerosol phase index
+        &aero_phase_mass,        // total aerosol-phase mass (kg/m3)
+        NULL);                   // partial derivatives
 
     // Get the total mass of the aerosol phase (kg/mol)
     realtype aero_phase_avg_MW;
     aero_rep_get_aero_phase_avg_MW__kg_mol(
-        model_data,               // model data
-        AERO_REP_ID_(i_phase),    // aerosol representation index
-        AERO_PHASE_ID_(i_phase),  // aerosol phase index
-        &aero_phase_avg_MW,       // avg MW in the aerosol phase (kg/mol)
-        NULL);                    // partial derivatives
+        model_data,              // model data
+        AERO_REP_ID_(i_phase),   // aerosol representation index
+        AERO_PHASE_ID_(i_phase), // aerosol phase index
+        &aero_phase_avg_MW,      // avg MW in the aerosol phase (kg/mol)
+        NULL);                   // partial derivatives
 
     // This was replaced with the transition-regime condensation rate
     // equations
@@ -427,45 +425,45 @@ void rxn_SIMPOL_phase_transfer_calc_jac_contrib(ModelData *model_data,
     // Get the particle effective radius (m)
     realtype radius;
     aero_rep_get_effective_radius__m(
-        model_data,                         // model data
-        AERO_REP_ID_(i_phase),              // aerosol representation index
-        AERO_PHASE_ID_(i_phase),            // aerosol phase index
-        &radius,                            // particle effective radius (m)
-        &(EFF_RAD_JAC_ELEM_(i_phase, 0)));  // partial derivative
+        model_data,                        // model data
+        AERO_REP_ID_(i_phase),             // aerosol representation index
+        AERO_PHASE_ID_(i_phase),           // aerosol phase index
+        &radius,                           // particle effective radius (m)
+        &(EFF_RAD_JAC_ELEM_(i_phase, 0))); // partial derivative
 
     // Check the aerosol concentration type (per-particle or total per-phase
     // mass)
     int aero_conc_type = aero_rep_get_aero_conc_type(
-        model_data,                // model data
-        AERO_REP_ID_(i_phase),     // aerosol representation index
-        AERO_PHASE_ID_(i_phase));  // aerosol phase index
+        model_data,               // model data
+        AERO_REP_ID_(i_phase),    // aerosol representation index
+        AERO_PHASE_ID_(i_phase)); // aerosol phase index
 
     // Get the particle number concentration (#/m3)
     realtype number_conc;
     aero_rep_get_number_conc__n_m3(
-        model_data,                          // model data
-        AERO_REP_ID_(i_phase),               // aerosol representation index
-        AERO_PHASE_ID_(i_phase),             // aerosol phase index
-        &number_conc,                        // particle number conc (#/m3)
-        &(NUM_CONC_JAC_ELEM_(i_phase, 0)));  // partial derivative
+        model_data,                         // model data
+        AERO_REP_ID_(i_phase),              // aerosol representation index
+        AERO_PHASE_ID_(i_phase),            // aerosol phase index
+        &number_conc,                       // particle number conc (#/m3)
+        &(NUM_CONC_JAC_ELEM_(i_phase, 0))); // partial derivative
 
     // Get the total mass of the aerosol phase (kg/m3)
     realtype aero_phase_mass;
     aero_rep_get_aero_phase_mass__kg_m3(
-        model_data,                      // model data
-        AERO_REP_ID_(i_phase),           // aerosol representation index
-        AERO_PHASE_ID_(i_phase),         // aerosol phase index
-        &aero_phase_mass,                // total aerosol-phase mass (kg/m3)
-        &(MASS_JAC_ELEM_(i_phase, 0)));  // partial derivatives
+        model_data,                     // model data
+        AERO_REP_ID_(i_phase),          // aerosol representation index
+        AERO_PHASE_ID_(i_phase),        // aerosol phase index
+        &aero_phase_mass,               // total aerosol-phase mass (kg/m3)
+        &(MASS_JAC_ELEM_(i_phase, 0))); // partial derivatives
 
     // Get the total average MW of the aerosol phase (kg/mol)
     realtype aero_phase_avg_MW;
     aero_rep_get_aero_phase_avg_MW__kg_mol(
-        model_data,                    // model data
-        AERO_REP_ID_(i_phase),         // aerosol representation index
-        AERO_PHASE_ID_(i_phase),       // aerosol phase index
-        &aero_phase_avg_MW,            // avg MW in the aerosol phase (kg/mol)
-        &(MW_JAC_ELEM_(i_phase, 0)));  // partial derivatives
+        model_data,                   // model data
+        AERO_REP_ID_(i_phase),        // aerosol representation index
+        AERO_PHASE_ID_(i_phase),      // aerosol phase index
+        &aero_phase_avg_MW,           // avg MW in the aerosol phase (kg/mol)
+        &(MW_JAC_ELEM_(i_phase, 0))); // partial derivatives
 
     // This was replaced with the transition-regime condensation rate
     // equations

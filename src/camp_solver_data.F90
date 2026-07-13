@@ -11,7 +11,7 @@ module camp_camp_solver_data
   use camp_aero_phase_data
   use camp_aero_rep_data
   use camp_aero_rep_factory
-  use camp_constants,                   only : i_kind, dp
+  use camp_constants, only: i_kind, dp
   use camp_mechanism_data
   use camp_camp_state
   use camp_rxn_data
@@ -19,9 +19,9 @@ module camp_camp_solver_data
   use camp_solver_stats
   use camp_sub_model_data
   use camp_sub_model_factory
-  use camp_util,                        only : assert_msg, to_string, &
-                                              warn_assert_msg, die_msg,&
-                                              string_t
+  use camp_util, only: assert_msg, to_string, &
+                       warn_assert_msg, die_msg, &
+                       string_t
 
   use iso_c_binding
 
@@ -44,13 +44,13 @@ module camp_camp_solver_data
   interface
     !> Get a new solver
     type(c_ptr) function solver_new(n_state_var, n_cells, var_type, &
-                    n_rxn, n_rxn_int_param, n_rxn_float_param, &
-                    n_rxn_env_param, n_aero_phase, n_aero_phase_int_param, &
-                    n_aero_phase_float_param, n_aero_rep, &
-                    n_aero_rep_int_param, n_aero_rep_float_param, &
-                    n_aero_rep_env_param, n_sub_model, n_sub_model_int_param,&
-                    n_sub_model_float_param, n_sub_model_env_param,&
-                    load_gpu, is_reset_jac, is_load_balance) bind (c)
+                                    n_rxn, n_rxn_int_param, n_rxn_float_param, &
+                                    n_rxn_env_param, n_aero_phase, n_aero_phase_int_param, &
+                                    n_aero_phase_float_param, n_aero_rep, &
+                                    n_aero_rep_int_param, n_aero_rep_float_param, &
+                                    n_aero_rep_env_param, n_sub_model, n_sub_model_int_param, &
+                                    n_sub_model_float_param, n_sub_model_env_param, &
+                                    load_gpu, is_load_balance) bind(c)
       use iso_c_binding
       !> Number of variables on the state array per grid cell
       !! (including const, PSSA, etc.)
@@ -92,12 +92,11 @@ module camp_camp_solver_data
       !> Total number of environment-dependent parameters for all sub models
       integer(kind=c_int), value :: n_sub_model_env_param
       integer(kind=c_int), value :: load_gpu
-      integer(kind=c_int), value :: is_reset_jac
       integer(kind=c_int), value :: is_load_balance
     end function solver_new
 
     !> Set specie name
-    subroutine solver_set_spec_name(solver_data, spec_name, size_spec_name, i) bind (c)
+    subroutine solver_set_spec_name(solver_data, spec_name, size_spec_name, i) bind(c)
       use iso_c_binding
       !> Pointer to a SolverData object
       type(c_ptr), value :: solver_data
@@ -110,7 +109,8 @@ module camp_camp_solver_data
     end subroutine solver_set_spec_name
 
     !> Solver initialization
-    subroutine solver_initialize(solver_data, abs_tol, rel_tol) bind (c)
+    subroutine solver_initialize(solver_data, abs_tol, rel_tol, max_steps, &
+                                 max_conv_fails) bind(c)
       use iso_c_binding
       !> Pointer to a SolverData object
       type(c_ptr), value :: solver_data
@@ -118,12 +118,16 @@ module camp_camp_solver_data
       type(c_ptr), value :: abs_tol
       !> Relative integration tolerance
       real(kind=c_double), value :: rel_tol
+      !> Maximum number of internal integration steps
+      integer(kind=c_int), value :: max_steps
+      !> Maximum number of convergence failures
+      integer(kind=c_int), value :: max_conv_fails
     end subroutine solver_initialize
 
 #ifdef CAMP_DEBUG
     !> Set the debug output flag for the solver
     integer(kind=c_int) function solver_set_debug_out(solver_data, &
-                    do_output) bind (c)
+                                                      do_output) bind(c)
       use iso_c_binding
       !> Pointer to a SolverData object
       type(c_ptr), value :: solver_data
@@ -133,7 +137,7 @@ module camp_camp_solver_data
 
     !> Set the Jacobian evaluation flag for the solver
     integer(kind=c_int) function solver_set_eval_jac(solver_data, &
-                    eval_Jac) bind (c)
+                                                     eval_Jac) bind(c)
       use iso_c_binding
       !> Pointer to a SolverData object
       type(c_ptr), value :: solver_data
@@ -144,7 +148,8 @@ module camp_camp_solver_data
 
     !> Run the solver
     integer(kind=c_int) function solver_run(solver_data, state, env, &
-                    t_initial, t_final) bind (c)
+                                            t_initial, t_final, is_get_solver_stats, &
+                                            status_code, solver_flag, num_steps) bind(c)
       use iso_c_binding
       !> Pointer to the initialized solver data
       type(c_ptr), value :: solver_data
@@ -156,68 +161,44 @@ module camp_camp_solver_data
       real(kind=c_double), value :: t_initial
       !> Final time (s)
       real(kind=c_double), value :: t_final
+      !> Flag indicating whether to get the solver statistics
+      integer(kind=c_int), value :: is_get_solver_stats
+      !> Pointer to the solver status codes
+      type(c_ptr), value :: status_code
+      !Pointer to the solver flags
+      type(c_ptr), value :: solver_flag
+      !> Pointer to the number of steps
+      type(c_ptr), value :: num_steps
     end function solver_run
 
-    !> Get the solver statistics
-    subroutine solver_get_statistics( solver_data, solver_flag, num_steps, &
-                    RHS_evals, LS_setups, error_test_fails, NLS_iters, &
-                    NLS_convergence_fails, DLS_Jac_evals, DLS_RHS_evals, &
-                    last_time_step__s, next_time_step__s, Jac_eval_fails, &
-                    max_loss_precision) bind (c)
-      use iso_c_binding
-      !> Pointer to the solver data
-      type(c_ptr), value :: solver_data
-      !> Last flag returned by the solver
-      type(c_ptr), value :: solver_flag
-      !> Number of steps
-      type(c_ptr), value :: num_steps
-      !> Right-hand side evaluations
-      type(c_ptr), value :: RHS_evals
-      !> Linear solver setups
-      type(c_ptr), value :: LS_setups
-      !> Error test failures
-      type(c_ptr), value :: error_test_fails
-      !> Non-Linear solver iterations
-      type(c_ptr), value :: NLS_iters
-      !> Non-Linear solver failures
-      type(c_ptr), value :: NLS_convergence_fails
-      !> Direct Linear Solver Jacobian evaluations
-      type(c_ptr), value :: DLS_Jac_evals
-      !> Direct Linear Solver right-hand side evaluations
-      type(c_ptr), value :: DLS_RHS_evals
-      !> Last time step [s]
-      type(c_ptr), value :: last_time_step__s
-      !> Next time step [s]
-      type(c_ptr), value :: next_time_step__s
-      !> Number of Jacobian evaluation failures
-      type(c_ptr), value :: Jac_eval_fails
-      !> Maximum loss of precision on last call the f()
-      type(c_ptr), value :: max_loss_precision
-    end subroutine solver_get_statistics
-
-    subroutine init_export_solver_state() bind (c)
+    subroutine init_export_solver_state() bind(c)
       use iso_c_binding
     end subroutine
 
-    subroutine export_solver_state( solver_data) bind (c)
+    subroutine export_solver_state(solver_data) bind(c)
       use iso_c_binding
       type(c_ptr), value :: solver_data
     end subroutine
 
-    subroutine join_solver_state( solver_data) bind (c)
+    subroutine join_solver_state(solver_data) bind(c)
       use iso_c_binding
       type(c_ptr), value :: solver_data
     end subroutine
 
-    subroutine export_solver_stats( solver_data) bind (c)
+    subroutine export_solver_stats(solver_data) bind(c)
+      use iso_c_binding
+      type(c_ptr), value :: solver_data
+    end subroutine
+
+    subroutine print_solver_stats(solver_data) bind(c)
       use iso_c_binding
       type(c_ptr), value :: solver_data
     end subroutine
 
     !> Add condensed reaction data to the solver data block
     subroutine rxn_add_condensed_data(rxn_type, n_int_param, &
-                    n_float_param, n_env_param, int_param, float_param, &
-                    solver_data)  bind (c)
+                                      n_float_param, n_env_param, int_param, float_param, &
+                                      solver_data) bind(c)
       use iso_c_binding
       !> Reaction type
       integer(kind=c_int), value :: rxn_type
@@ -237,7 +218,7 @@ module camp_camp_solver_data
 
     !> Update reaction data
     subroutine rxn_update_data(cell_id, rxn_id, rxn_type, update_data, &
-        solver_data) bind(c)
+                               solver_data) bind(c)
       use iso_c_binding
       !> Grid cell to update
       integer(kind=c_int), value :: cell_id
@@ -260,8 +241,8 @@ module camp_camp_solver_data
 
     !> Add condensed sub model data to the solver data block
     subroutine sub_model_add_condensed_data(sub_model_type, n_int_param, &
-                  n_float_param, n_env_param, int_param, float_param, &
-                  solver_data) bind(c)
+                                            n_float_param, n_env_param, int_param, float_param, &
+                                            solver_data) bind(c)
       use iso_c_binding
       !> Sub model  type
       integer(kind=c_int), value :: sub_model_type
@@ -281,7 +262,7 @@ module camp_camp_solver_data
 
     !> Update reaction data
     subroutine sub_model_update_data(cell_id, sub_model_id, sub_model_type, &
-        update_data, solver_data) bind(c)
+                                     update_data, solver_data) bind(c)
       use iso_c_binding
       !> Grid cell to update
       integer(kind=c_int), value :: cell_id
@@ -304,7 +285,7 @@ module camp_camp_solver_data
 
     !> Add condensed aerosol phase data to the solver data block
     subroutine aero_phase_add_condensed_data(n_int_param, n_float_param, &
-                  int_param, float_param, solver_data) bind(c)
+                                             int_param, float_param, solver_data) bind(c)
       use iso_c_binding
       !> Number of integer parameters to add
       integer(kind=c_int), value :: n_int_param
@@ -327,8 +308,8 @@ module camp_camp_solver_data
 
     !> Add condensed aerosol representation data to the solver data block
     subroutine aero_rep_add_condensed_data(aero_rep_type, n_int_param, &
-                  n_float_param, n_env_param, int_param, float_param, &
-                  solver_data) bind(c)
+                                           n_float_param, n_env_param, int_param, float_param, &
+                                           solver_data) bind(c)
       use iso_c_binding
       !> Aerosol representation type
       integer(kind=c_int), value :: aero_rep_type
@@ -348,7 +329,7 @@ module camp_camp_solver_data
 
     !> Update aerosol representation data
     subroutine aero_rep_update_data(cell_id, aero_rep_id, aero_rep_type, &
-        update_data, solver_data)  bind(c)
+                                    update_data, solver_data) bind(c)
       use iso_c_binding
       !> Grid cell to update
       integer(kind=c_int), value :: cell_id
@@ -394,7 +375,7 @@ module camp_camp_solver_data
     integer(kind=i_kind), public :: max_steps = CAMP_SOLVER_DEFAULT_MAX_STEPS
     !> Maximum number of convergence failures
     integer(kind=i_kind), public :: max_conv_fails = &
-            CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS
+                                    CAMP_SOLVER_DEFAULT_MAX_CONV_FAILS
     !> Flag indicating whether the solver was intialized
     logical :: initialized = .false.
   contains
@@ -408,16 +389,19 @@ module camp_camp_solver_data
     procedure :: update_aero_rep_data
     !> Integrate over a given time step
     procedure :: solve
-    !> Get solver statistics after an integration attempt
-    procedure:: get_solver_stats
+    !> Integrate over a given time step with statistics
+    procedure :: solve_with_stats
     !> Create a file for saving output concentrations
     procedure:: init_export_solver_data_state
     !> Export output concentrations to calculate accuracy between CPU and GPU versions at checkGPU test
     procedure:: export_solver_data_state
     !> Join the files created by each MPI process at "export_solver_state" function into a single file.
     procedure:: join_solver_data_state
-    !> Export execution time of GPU and CPU code to calculate speedups at TestMonarch.py
+    !> Export execution time of GPU and CPU code
     procedure:: export_solver_data_stats
+    !> Print execution time of GPU and CPU code
+    procedure:: print_solver_data_stats
+
     !> Checks whether a solver is available
     procedure :: is_solver_available
     !> Print the solver data
@@ -436,13 +420,13 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Constructor for camp_solver_data_t
-  function constructor() result (new_obj)
+  function constructor() result(new_obj)
 
     !> New solver variable
     type(camp_solver_data_t), pointer :: new_obj
 
     !> Allocate space for the new object
-    allocate(new_obj)
+    allocate (new_obj)
 
   end function constructor
 
@@ -450,8 +434,8 @@ contains
 
   !> Initialize the solver
   subroutine initialize(this, var_type, abs_tol, mechanisms, aero_phases, &
-          aero_reps, sub_models, rxn_phase, n_cells,&
-          spec_names, load_gpu, is_reset_jac, is_load_balance)
+                        aero_reps, sub_models, rxn_phase, n_cells, &
+                        spec_names, load_gpu, is_load_balance)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
@@ -470,7 +454,7 @@ contains
     type(aero_rep_data_ptr), pointer, intent(in) :: aero_reps(:)
     !> Sub models to include
     type(sub_model_data_ptr), pointer, intent(in) :: sub_models(:)
-    integer, intent(in) :: load_gpu, is_reset_jac, is_load_balance
+    integer, intent(in) :: load_gpu, is_load_balance
     !> Reactions phase to solve -- gas, aerosol, or both (default)
     !! Use parameters in camp_rxn_data to specify phase:
     !! GAS_RXN, AERO_RXN, GAS_AERO_RXN
@@ -486,7 +470,7 @@ contains
     character(len=:), allocatable :: spec_name
     ! Indices for iteration
     integer(kind=i_kind) :: i_mech, i_rxn, i_aero_phase, i_aero_rep, &
-            i_sub_model, i
+                            i_sub_model, i
     ! Reaction pointer
     class(rxn_data_t), pointer :: rxn
     ! Reaction factory object for getting reaction type
@@ -547,14 +531,14 @@ contains
 
     ! Make sure the variable type and absolute tolerance arrays are of
     ! equal length
-    call assert_msg(825843466, size(abs_tol).eq.size(var_type), &
-            "Mismatched absolute tolerance and variable type arrays: "// &
-            "abs_tol size: "//trim(to_string(size(abs_tol)))// &
-            "; var_type: "//trim(to_string(size(var_type))))
+    call assert_msg(825843466, size(abs_tol) .eq. size(var_type), &
+                    "Mismatched absolute tolerance and variable type arrays: "// &
+                    "abs_tol size: "//trim(to_string(size(abs_tol)))// &
+                    "; var_type: "//trim(to_string(size(var_type))))
 
     ! Set the absolute tolerance and variable type arrays
-    allocate(var_type_c(size(var_type)))
-    allocate(abs_tol_c(size(abs_tol)))
+    allocate (var_type_c(size(var_type)))
+    allocate (abs_tol_c(size(abs_tol)))
     var_type_c(:) = int(var_type(:), kind=c_int)
     abs_tol_c(:) = real(abs_tol(:), kind=c_double)
 
@@ -565,16 +549,16 @@ contains
     n_rxn_env_param = 0
 
     ! Calculate the number of reactions and the size of the condensed data
-    do i_mech=1, size(mechanisms)
-      do i_rxn=1, mechanisms(i_mech)%val%size()
+    do i_mech = 1, size(mechanisms)
+      do i_rxn = 1, mechanisms(i_mech)%val%size()
         rxn => mechanisms(i_mech)%val%get_rxn(i_rxn)
         select case (rxn%rxn_phase)
-          case (GAS_RXN)
-            if (rxn_phase.eq.AERO_RXN) cycle
-          case (AERO_RXN)
-            if (rxn_phase.eq.GAS_RXN) cycle
-          case (GAS_AERO_RXN)
-            if (rxn_phase.eq.GAS_RXN) cycle
+        case (GAS_RXN)
+          if (rxn_phase .eq. AERO_RXN) cycle
+        case (AERO_RXN)
+          if (rxn_phase .eq. GAS_RXN) cycle
+        case (GAS_AERO_RXN)
+          if (rxn_phase .eq. GAS_RXN) cycle
         end select
         n_rxn = n_rxn + 1
         n_rxn_int_param = n_rxn_int_param + size(rxn%condensed_data_int)
@@ -590,12 +574,12 @@ contains
     n_aero_phase_float_param = 0
 
     ! Calculate the size of the aerosol phases condensed data
-    do i_aero_phase=1, n_aero_phase
+    do i_aero_phase = 1, n_aero_phase
       aero_phase => aero_phases(i_aero_phase)%val
       n_aero_phase_int_param = n_aero_phase_int_param + &
-              size(aero_phase%condensed_data_int)
+                               size(aero_phase%condensed_data_int)
       n_aero_phase_float_param = n_aero_phase_float_param + &
-              size(aero_phase%condensed_data_real)
+                                 size(aero_phase%condensed_data_real)
     end do
     aero_phase => null()
 
@@ -606,14 +590,14 @@ contains
     n_aero_rep_env_param = 0
 
     ! Calculate the size of the aerosol representations condensed data
-    do i_aero_rep=1, n_aero_rep
+    do i_aero_rep = 1, n_aero_rep
       aero_rep => aero_reps(i_aero_rep)%val
       n_aero_rep_int_param = n_aero_rep_int_param + &
-              size(aero_rep%condensed_data_int)
+                             size(aero_rep%condensed_data_int)
       n_aero_rep_float_param = n_aero_rep_float_param + &
-              size(aero_rep%condensed_data_real)
+                               size(aero_rep%condensed_data_real)
       n_aero_rep_env_param = n_aero_rep_env_param + &
-              aero_rep%num_env_params
+                             aero_rep%num_env_params
     end do
     aero_rep => null()
 
@@ -624,43 +608,44 @@ contains
     n_sub_model_env_param = 0
 
     ! Calculate the size of the sub model condensed data
-    do i_sub_model=1, n_sub_model
+    do i_sub_model = 1, n_sub_model
       sub_model => sub_models(i_sub_model)%val
       n_sub_model_int_param = n_sub_model_int_param + &
-              size(sub_model%condensed_data_int)
+                              size(sub_model%condensed_data_int)
       n_sub_model_float_param = n_sub_model_float_param + &
-              size(sub_model%condensed_data_real)
+                                size(sub_model%condensed_data_real)
       n_sub_model_env_param = n_sub_model_env_param + sub_model%num_env_params
     end do
     sub_model => null()
 
+    
     ! Get a new solver object
     this%solver_c_ptr = solver_new( &
-            int(size(var_type_c), kind=c_int), & ! Size of the state variable
-            l_n_cells,                         & ! # of cells computed at once
-            c_loc(var_type_c),                 & ! Variable types
-            n_rxn,                             & ! # of reactions
-            n_rxn_int_param,                   & ! # of rxn data int params
-            n_rxn_float_param,                 & ! # of rxn data real params
-            n_rxn_env_param,                   & ! # of rxn env-dependent params
-            n_aero_phase,                      & ! # of aero phases
-            n_aero_phase_int_param,            & ! # of aero phase int params
-            n_aero_phase_float_param,          & ! # of aero phase real params
-            n_aero_rep,                        & ! # of aero reps
-            n_aero_rep_int_param,              & ! # of aero rep int params
-            n_aero_rep_float_param,            & ! # of aero rep real params
-            n_aero_rep_env_param,              & ! # of aero rep env params
-            n_sub_model,                       & ! # of sub models
-            n_sub_model_int_param,             & ! # of sub model int params
-            n_sub_model_float_param,           & ! # of sub model real params
-            n_sub_model_env_param,              & ! # of sub model env params
-            load_gpu, is_reset_jac, is_load_balance &
-            )
+                        int(size(var_type_c), kind=c_int), & ! Size of the state variable
+                        l_n_cells, & ! # of cells computed at once
+                        c_loc(var_type_c), & ! Variable types
+                        n_rxn, & ! # of reactions
+                        n_rxn_int_param, & ! # of rxn data int params
+                        n_rxn_float_param, & ! # of rxn data real params
+                        n_rxn_env_param, & ! # of rxn env-dependent params
+                        n_aero_phase, & ! # of aero phases
+                        n_aero_phase_int_param, & ! # of aero phase int params
+                        n_aero_phase_float_param, & ! # of aero phase real params
+                        n_aero_rep, & ! # of aero reps
+                        n_aero_rep_int_param, & ! # of aero rep int params
+                        n_aero_rep_float_param, & ! # of aero rep real params
+                        n_aero_rep_env_param, & ! # of aero rep env params
+                        n_sub_model, & ! # of sub models
+                        n_sub_model_int_param, & ! # of sub model int params
+                        n_sub_model_float_param, & ! # of sub model real params
+                        n_sub_model_env_param, & ! # of sub model env params
+                        load_gpu, is_load_balance &
+                        )
 
     ! Add all the condensed reaction data to the solver data block for
     ! reactions of the specified phase
-    do i_mech=1, size(mechanisms)
-      do i_rxn=1, mechanisms(i_mech)%val%size()
+    do i_mech = 1, size(mechanisms)
+      do i_rxn = 1, mechanisms(i_mech)%val%size()
 
         ! FIXME Put ZSR aerosol water first, so water is available for other
         ! reactions - and find a better way to account for inter-dependence
@@ -671,143 +656,145 @@ contains
 
         ! Check reaction phase
         select case (rxn%rxn_phase)
-          case (GAS_RXN)
-            if (rxn_phase.eq.AERO_RXN) cycle
-          case (AERO_RXN)
-            if (rxn_phase.eq.GAS_RXN) cycle
-          case (GAS_AERO_RXN)
-            if (rxn_phase.eq.GAS_RXN) cycle
+        case (GAS_RXN)
+          if (rxn_phase .eq. AERO_RXN) cycle
+        case (AERO_RXN)
+          if (rxn_phase .eq. GAS_RXN) cycle
+        case (GAS_AERO_RXN)
+          if (rxn_phase .eq. GAS_RXN) cycle
         end select
 
         ! Load temporary data arrays
-        allocate(int_param(size(rxn%condensed_data_int)))
-        allocate(float_param(size(rxn%condensed_data_real)))
+        allocate (int_param(size(rxn%condensed_data_int)))
+        allocate (float_param(size(rxn%condensed_data_real)))
         int_param(:) = int(rxn%condensed_data_int(:), kind=c_int)
         float_param(:) = real(rxn%condensed_data_real(:), kind=c_double)
 
         ! Send the condensed data to the solver
-        call rxn_add_condensed_data ( &
-                int(rxn_factory%get_type(rxn), kind=c_int),& ! Rxn type
-                int(size(int_param), kind=c_int),          & ! Int array size
-                int(size(float_param), kind=c_int),        & ! Real array size
-                rxn%num_env_params,                        & ! Env-dep array size
-                c_loc(int_param),                          & ! Int array ptr
-                c_loc(float_param),                        & ! Real array ptr
-                this%solver_c_ptr                          & ! Solver data ptr
-                )
+        call rxn_add_condensed_data( &
+          int(rxn_factory%get_type(rxn), kind=c_int), & ! Rxn type
+          int(size(int_param), kind=c_int), & ! Int array size
+          int(size(float_param), kind=c_int), & ! Real array size
+          rxn%num_env_params, & ! Env-dep array size
+          c_loc(int_param), & ! Int array ptr
+          c_loc(float_param), & ! Real array ptr
+          this%solver_c_ptr & ! Solver data ptr
+          )
 
         ! Deallocate temporary arrays
-        deallocate(int_param)
-        deallocate(float_param)
+        deallocate (int_param)
+        deallocate (float_param)
 
       end do
     end do
     rxn => null()
 
     ! Add all the condensed aerosol phase data to the solver data block
-    do i_aero_phase=1, size(aero_phases)
+    do i_aero_phase = 1, size(aero_phases)
 
       ! Assign aero_phase to the current aerosol phase
       aero_phase => aero_phases(i_aero_phase)%val
 
       ! Load temporary data arrays
-      allocate(int_param(size(aero_phase%condensed_data_int)))
-      allocate(float_param(size(aero_phase%condensed_data_real)))
+      allocate (int_param(size(aero_phase%condensed_data_int)))
+      allocate (float_param(size(aero_phase%condensed_data_real)))
       int_param(:) = int(aero_phase%condensed_data_int(:), kind=c_int)
       float_param(:) = real(aero_phase%condensed_data_real(:), kind=c_double)
 
       ! Send the condensed data to the solver
-      call aero_phase_add_condensed_data ( &
-              int(size(int_param), kind=c_int),   & ! Int array size
-              int(size(float_param), kind=c_int), & ! Real array size
-              c_loc(int_param),                   & ! Int array ptr
-              c_loc(float_param),                 & ! Real array ptr
-              this%solver_c_ptr                   & ! Solver data ptr
-              )
+      call aero_phase_add_condensed_data( &
+        int(size(int_param), kind=c_int), & ! Int array size
+        int(size(float_param), kind=c_int), & ! Real array size
+        c_loc(int_param), & ! Int array ptr
+        c_loc(float_param), & ! Real array ptr
+        this%solver_c_ptr & ! Solver data ptr
+        )
 
       ! Deallocate temporary arrays
-      deallocate(int_param)
-      deallocate(float_param)
+      deallocate (int_param)
+      deallocate (float_param)
 
     end do
     aero_phase => null()
 
     ! Add all the condensed aerosol representation data to the solver data
     ! block
-    do i_aero_rep=1, size(aero_reps)
+    do i_aero_rep = 1, size(aero_reps)
 
       ! Assign aero_rep to the current aerosol representation
       aero_rep => aero_reps(i_aero_rep)%val
 
       ! Load temporary data arrays
-      allocate(int_param(size(aero_rep%condensed_data_int)))
-      allocate(float_param(size(aero_rep%condensed_data_real)))
+      allocate (int_param(size(aero_rep%condensed_data_int)))
+      allocate (float_param(size(aero_rep%condensed_data_real)))
       int_param(:) = int(aero_rep%condensed_data_int(:), kind=c_int)
       float_param(:) = real(aero_rep%condensed_data_real(:), kind=c_double)
 
       ! Send the condensed data to the solver
-      call aero_rep_add_condensed_data ( &
-              int(aero_rep_factory%get_type(aero_rep), kind=c_int), &
-                                                    ! Aero rep type
-              int(size(int_param), kind=c_int),   & ! Int array size
-              int(size(float_param), kind=c_int), & ! Real array size
-              aero_rep%num_env_params,            & ! Env-dep array size
-              c_loc(int_param),                   & ! Int array ptr
-              c_loc(float_param),                 & ! Real array ptr
-              this%solver_c_ptr                   & ! Solver data ptr
-              )
+      call aero_rep_add_condensed_data( &
+        int(aero_rep_factory%get_type(aero_rep), kind=c_int), &
+        ! Aero rep type
+        int(size(int_param), kind=c_int), & ! Int array size
+        int(size(float_param), kind=c_int), & ! Real array size
+        aero_rep%num_env_params, & ! Env-dep array size
+        c_loc(int_param), & ! Int array ptr
+        c_loc(float_param), & ! Real array ptr
+        this%solver_c_ptr & ! Solver data ptr
+        )
 
       ! Deallocate temporary arrays
-      deallocate(int_param)
-      deallocate(float_param)
+      deallocate (int_param)
+      deallocate (float_param)
 
     end do
     aero_rep => null()
 
     ! Add all the condensed sub model data to the solver data block
-    do i_sub_model=1, size(sub_models)
+    do i_sub_model = 1, size(sub_models)
 
       ! Assign sub_model to the current sub model
       sub_model => sub_models(i_sub_model)%val
 
       ! Load temporary data arrays
-      allocate(int_param(size(sub_model%condensed_data_int)))
-      allocate(float_param(size(sub_model%condensed_data_real)))
+      allocate (int_param(size(sub_model%condensed_data_int)))
+      allocate (float_param(size(sub_model%condensed_data_real)))
       int_param(:) = int(sub_model%condensed_data_int(:), kind=c_int)
       float_param(:) = real(sub_model%condensed_data_real(:), kind=c_double)
 
       ! Send the condensed data to the solver
-      call sub_model_add_condensed_data ( &
-              int(sub_model_factory%get_type(sub_model), kind=c_int), &
-                                                    ! Sub model type
-              int(size(int_param), kind=c_int),   & ! Int array size
-              int(size(float_param), kind=c_int), & ! Real array size
-              sub_model%num_env_params,           & ! Env-dep array size
-              c_loc(int_param),                   & ! Int array ptr
-              c_loc(float_param),                 & ! Real array ptr
-              this%solver_c_ptr                   & ! Solver data ptr
-              )
+      call sub_model_add_condensed_data( &
+        int(sub_model_factory%get_type(sub_model), kind=c_int), &
+        ! Sub model type
+        int(size(int_param), kind=c_int), & ! Int array size
+        int(size(float_param), kind=c_int), & ! Real array size
+        sub_model%num_env_params, & ! Env-dep array size
+        c_loc(int_param), & ! Int array ptr
+        c_loc(float_param), & ! Real array ptr
+        this%solver_c_ptr & ! Solver data ptr
+        )
 
       ! Deallocate temporary arrays
-      deallocate(int_param)
-      deallocate(float_param)
+      deallocate (int_param)
+      deallocate (float_param)
 
     end do
     sub_model => null()
 
     ! Initialize the solver
     call solver_initialize( &
-            this%solver_c_ptr,                  & ! Pointer to solver data
-            c_loc(abs_tol_c),                   & ! Absolute tolerances
-            real(this%rel_tol, kind=c_double)  & ! Relative tolerance
-            )
+      this%solver_c_ptr, & ! Pointer to solver data
+      c_loc(abs_tol_c), & ! Absolute tolerances
+      real(this%rel_tol, kind=c_double), & ! Relative tolerance
+      int(this%max_steps, kind=c_int), & ! Max # of integration steps
+      int(this%max_conv_fails, kind=c_int) & ! Max # of convergence fails
+      )
 
     ! Flag the solver as initialized
     this%initialized = .true.
 
     ! Free memory allocated for solver initialization
-    deallocate(abs_tol_c)
-    deallocate(var_type_c)
+    deallocate (abs_tol_c)
+    deallocate (var_type_c)
 
   end subroutine initialize
 
@@ -819,20 +806,19 @@ contains
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
     !> Update data
-    class(sub_model_update_data_t), intent(inout) :: update_data
-    integer :: i
+    class(sub_model_update_data_t), intent(in) :: update_data
 
     call sub_model_update_data( &
-            update_data%get_cell_id()-1,      & ! Grid cell to update
-            update_data%sub_model_solver_id, & ! Solver's sub model id
-            update_data%get_type(),          & ! Sub-model type to update
-            update_data%get_data(),          & ! Data needed to perform update
-            this%solver_c_ptr                & ! Pointer to solver data
-            )
+      update_data%get_cell_id() - 1, & ! Grid cell to update
+      update_data%sub_model_solver_id, & ! Solver's sub model id
+      update_data%get_type(), & ! Sub-model type to update
+      update_data%get_data(), & ! Data needed to perform update
+      this%solver_c_ptr & ! Pointer to solver data
+      )
 
   end subroutine update_sub_model_data
 
-  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Update reaction data
   subroutine update_rxn_data(this, update_data)
@@ -840,20 +826,19 @@ contains
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
     !> Update data
-    class(rxn_update_data_t), intent(inout) :: update_data
-    integer :: i
+    class(rxn_update_data_t), intent(in) :: update_data
 
     call rxn_update_data( &
-            update_data%get_cell_id()-1,      & ! Grid cell to update
-            update_data%rxn_solver_id,       & ! Solver's reaction id
-            update_data%get_type(),          & ! Reaction type to update
-            update_data%get_data(),          & ! Data needed to perform update
-            this%solver_c_ptr                & ! Pointer to solver data
-            )
+      update_data%get_cell_id() - 1, & ! Grid cell to update
+      update_data%rxn_solver_id, & ! Solver's reaction id
+      update_data%get_type(), & ! Reaction type to update
+      update_data%get_data(), & ! Data needed to perform update
+      this%solver_c_ptr & ! Pointer to solver data
+      )
 
   end subroutine update_rxn_data
 
-  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Update aerosol representation data based on data passed from the host
   !! model related to aerosol properties
@@ -863,14 +848,13 @@ contains
     class(camp_solver_data_t), intent(inout) :: this
     !> Update data
     class(aero_rep_update_data_t), intent(inout) :: update_data
-    integer :: i
 
     call aero_rep_update_data( &
-            update_data%get_cell_id()-1,      & ! Grid cell to update
-            update_data%aero_rep_solver_id,  & ! Solver's aero rep id
-            update_data%get_type(),          & ! Aerosol representation type
-            update_data%get_data(),          & ! Data needed to perform update
-            this%solver_c_ptr                & ! Pointer to solver data
+      update_data%get_cell_id() - 1, & ! Grid cell to update
+      update_data%aero_rep_solver_id, & ! Solver's aero rep id
+      update_data%get_type(), & ! Aerosol representation type
+      update_data%get_data(), & ! Data needed to perform update
+      this%solver_c_ptr & ! Pointer to solver data
       )
 
   end subroutine update_aero_rep_data
@@ -878,7 +862,7 @@ contains
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   !> Solve the mechanism(s) for a specified timestep
-  function solve(this, camp_state, t_initial, t_final, solver_stats) result (solver_status)
+  function solve(this, camp_state, t_initial, t_final, solver_stats) result(solver_status)
 
     !> Solver data
     class(camp_solver_data_t), intent(inout) :: this
@@ -890,96 +874,114 @@ contains
     real(kind=dp), intent(in) :: t_final
     !> Solver statistics
     type(solver_stats_t), intent(inout), optional, target :: solver_stats
+    integer, pointer :: tmp
 
     integer(kind=c_int) :: solver_status
+    integer(kind=c_int) :: is_get_solver_stats
+
+    is_get_solver_stats = 0
+
+    ! Send empty data
+    ! Run the solver
+    solver_status = solver_run( &
+                    this%solver_c_ptr, & ! Pointer to intialized solver
+                    c_loc(camp_state%state_var), & ! Pointer to state array
+                    c_loc(camp_state%env_var), & ! Pointer to environmental vars
+                    real(t_initial, kind=c_double), & ! Start time (s)
+                    real(t_final, kind=c_double), & ! Final time (s)
+                    is_get_solver_stats, &
+                    c_loc(tmp), &
+                    c_loc(tmp), &
+                    c_loc(tmp) &
+                    )
+  end function solve
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  !> Solve the mechanism(s) for a specified timestep
+  function solve_with_stats(this, camp_state, t_initial, t_final, solver_stats) result(solver_status)
+
+    !> Solver data
+    class(camp_solver_data_t), intent(inout) :: this
+    !> Model state
+    type(camp_state_t), target, intent(inout) :: camp_state
+    !> Start time (s)
+    real(kind=dp), intent(in) :: t_initial
+    !> End time (s)
+    real(kind=dp), intent(in) :: t_final
+    !> Solver statistics
+    type(solver_stats_t), intent(inout), target :: solver_stats
+
+    integer(kind=c_int) :: solver_status
+    integer(kind=c_int) :: is_get_solver_stats
+
+    is_get_solver_stats = 1
 
 #ifdef CAMP_DEBUG
-    if (present(solver_stats)) then
       ! Update the debugging output flag in the solver data
       if (solver_stats%debug_out) then
         solver_status = solver_set_debug_out( &
-            this%solver_c_ptr,              & ! Pointer to the solver data
-            int(1, kind=c_int)              & ! Debug flag
-            )
+                        this%solver_c_ptr, & ! Pointer to the solver data
+                        int(1, kind=c_int) & ! Debug flag
+                        )
       else
         solver_status = solver_set_debug_out( &
-            this%solver_c_ptr,              & ! Pointer to the solver data
-            int(0, kind=c_int)              & ! Debug flag
-            )
+                        this%solver_c_ptr, & ! Pointer to the solver data
+                        int(0, kind=c_int) & ! Debug flag
+                        )
       end if
       ! Update Jacobian evaluation flag in the solver data
       if (solver_stats%eval_Jac) then
         solver_stats = solver_set_eval_jac( &
-            this%solver_c_ptr,              & ! Pointer to the solver data
-            int(1, kind=c_int)              & ! Jac eval flag
-            )
+                       this%solver_c_ptr, & ! Pointer to the solver data
+                       int(1, kind=c_int) & ! Jac eval flag
+                       )
       else
         solver_stats = solver_set_eval_jac( &
-            this%solver_c_ptr,              & ! Pointer to the solver data
-            int(0, kind=c_int)              & ! Jac eval flag
-            )
-      end if
+                       this%solver_c_ptr, & ! Pointer to the solver data
+                       int(0, kind=c_int) & ! Jac eval flag
+                       )
     end if
 
 #endif
 
     ! Run the solver
     solver_status = solver_run( &
-            this%solver_c_ptr,              & ! Pointer to intialized solver
-            c_loc(camp_state%state_var),    & ! Pointer to state array
-            c_loc(camp_state%env_var),      & ! Pointer to environmental vars
-            real(t_initial, kind=c_double), & ! Start time (s)
-            real(t_final, kind=c_double)    & ! Final time (s)
-            )
+                    this%solver_c_ptr, & ! Pointer to intialized solver
+                    c_loc(camp_state%state_var), & ! Pointer to state array
+                    c_loc(camp_state%env_var), & ! Pointer to environmental vars
+                    real(t_initial, kind=c_double), & ! Start time (s)
+                    real(t_final, kind=c_double), & ! Final time (s)
+                    is_get_solver_stats, & ! Flag to get solver stats)
+                    c_loc(solver_stats%status_code), & ! Status code
+      c_loc(solver_stats%solver_flag), & ! Last flag returned CVode
+                    c_loc(solver_stats%num_steps) & ! Number of steps
+                    )
+  end function
 
-  end function solve
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  subroutine get_solver_stats( this, solver_stats)
-
-    !> Solver data
-    class(camp_solver_data_t), intent(inout) :: this
-    !> Solver statistics
-    type(solver_stats_t), intent(inout), target :: solver_stats
-
-    call solver_get_statistics( &
-            this%solver_c_ptr,                             & ! Solver data
-            c_loc( solver_stats%solver_flag           ),   & ! Last flag returned CVode
-            c_loc( solver_stats%num_steps             ),   & ! Number of steps
-            c_loc( solver_stats%RHS_evals             ),   & ! Right-hand side evals
-            c_loc( solver_stats%LS_setups             ),   & ! Linear solver setups
-            c_loc( solver_stats%error_test_fails      ),   & ! Error test failures
-            c_loc( solver_stats%NLS_iters             ),   & ! Non-Linear solver interations
-            c_loc( solver_stats%NLS_convergence_fails ),   & ! Non-Linear solver fails
-            c_loc( solver_stats%DLS_Jac_evals         ),   & ! Jacobian evals
-            c_loc( solver_stats%DLS_RHS_evals         ),   & ! DLS Right-hand side evals
-            c_loc( solver_stats%last_time_step__s     ),   & ! Last time step [s]
-            c_loc( solver_stats%next_time_step__s     ),   & ! Next time step [s]
-            c_loc( solver_stats%Jac_eval_fails        ),   & ! Number of Jac eval fails
-            c_loc( solver_stats%max_loss_precision) & ! Maximum loss of precision
-    )
-
-  end subroutine
-
-  subroutine init_export_solver_data_state( this)
+  subroutine init_export_solver_data_state(this)
     class(camp_solver_data_t), intent(inout) :: this
     call init_export_solver_state()
   end subroutine
 
-  subroutine export_solver_data_state( this)
+  subroutine export_solver_data_state(this)
     class(camp_solver_data_t), intent(inout) :: this
     call export_solver_state(this%solver_c_ptr)
   end subroutine
 
-  subroutine join_solver_data_state( this)
+  subroutine join_solver_data_state(this)
     class(camp_solver_data_t), intent(inout) :: this
     call join_solver_state(this%solver_c_ptr)
   end subroutine
 
-  subroutine export_solver_data_stats( this)
+  subroutine export_solver_data_stats(this)
     class(camp_solver_data_t), intent(inout) :: this
     call export_solver_stats(this%solver_c_ptr)
+  end subroutine
+
+  subroutine print_solver_data_stats(this)
+    class(camp_solver_data_t), intent(inout) :: this
+    call print_solver_stats(this%solver_c_ptr)
   end subroutine
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

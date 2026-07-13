@@ -8,10 +8,10 @@
 /** \file
  * \brief Emission reaction solver functions
  */
+#include "../rxns.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../rxns.h"
 
 // TODO Lookup environmental indicies during initialization
 #define TEMPERATURE_K_ env_data[0]

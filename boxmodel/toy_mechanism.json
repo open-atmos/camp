@@ -1,0 +1,41 @@
+{
+  "camp-data": [
+    {
+      "name": "H2O_dimer",
+      "type": "CHEM_SPEC"
+    },
+    {
+      "name": "H2O",
+      "type": "CHEM_SPEC"
+    },
+    {
+      "name": "A",
+      "type": "CHEM_SPEC"
+    },
+    {
+      "name": "B",
+      "type": "CHEM_SPEC"
+    },
+    {
+      "name": "C",
+      "type": "CHEM_SPEC"
+    },
+    {
+      "name": "toy mechanism",
+      "type": "MECHANISM",
+      "reactions": [
+        {
+          "type": "ARRHENIUS",
+          "reactants": {
+            "A": {},
+            "B": {}
+          },
+          "products": {
+            "C": {}
+          },
+          "A": 1.312e-18
+        }
+      ]
+    }
+  ]
+}

@@ -21,27 +21,23 @@ void *solver_new(int n_state_var, int n_cells, int *var_type, int n_rxn,
                  int n_aero_rep_float_param, int n_aero_rep_env_param,
                  int n_sub_model, int n_sub_model_int_param,
                  int n_sub_model_float_param, int n_sub_model_env_param,
-                 int load_gpu, int is_reset_jac, int is_load_balance);
+                 int load_gpu, int is_load_balance);
 void solver_set_spec_name(void *solver_data, char *spec_name,
                           int size_spec_name, int i);
-void solver_initialize(void *solver_data, double *abs_tol, double rel_tol);
+void solver_initialize(void *solver_data, double *abs_tol, double rel_tol,
+                       int max_steps, int max_conv_fails);
 #ifdef CAMP_DEBUG
 int solver_set_debug_out(void *solver_data, bool do_output);
 int solver_set_eval_jac(void *solver_data, bool eval_Jac);
 #endif
 int solver_run(void *solver_data, double *state, double *env, double t_initial,
-               double t_final);
-void solver_get_statistics(void *solver_data, int *solver_flag, int *num_steps,
-                           int *RHS_evals, int *LS_setups,
-                           int *error_test_fails, int *NLS_iters,
-                           int *NLS_convergence_fails, int *DLS_Jac_evals,
-                           int *DLS_RHS_evals, double *last_time_step__s,
-                           double *next_time_step__s, int *Jac_eval_fails,
-                           double *max_loss_precision);
+               double t_final, int is_get_solver_stats, int *status_code,
+               int *solver_flag, int *num_steps);
 void init_export_solver_state();
 void export_solver_state(void *solver_data);
 void join_solver_state(void *solver_data);
 void export_solver_stats(void *solver_data);
+void print_solver_stats(void *solver_data);
 void solver_free(void *solver_data);
 void model_free(ModelData model_data);
 
@@ -53,8 +49,6 @@ int Jac(realtype t, N_Vector y, N_Vector deriv, SUNMatrix J, void *model_data,
 int guess_helper(const realtype t_n, const realtype h_n, N_Vector y_n,
                  N_Vector y_n1, N_Vector hf, void *solver_data, N_Vector tmp1,
                  N_Vector corr);
-void error_handler(int error_code, const char *module, const char *function,
-                   char *msg, void *sd);
 
 /* SUNDIALS support functions d */
 SUNMatrix get_jac_init(SolverData *sd);

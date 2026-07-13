@@ -110,8 +110,10 @@ void aero_phase_get_mass__kg_m3(ModelData *model_data, int aero_phase_idx,
         SPEC_TYPE_(i_spec) == CHEM_SPEC_PSSA) {
       l_mass += state_var[i_spec];
       moles += state_var[i_spec] / (double)MW_(i_spec);
-      if (jac_elem_mass) jac_elem_mass[i_jac] = 1.0L;
-      if (jac_elem_MW) jac_elem_MW[i_jac] = 1.0L / MW_(i_spec);
+      if (jac_elem_mass)
+        jac_elem_mass[i_jac] = 1.0L;
+      if (jac_elem_MW)
+        jac_elem_MW[i_jac] = 1.0L / MW_(i_spec);
       i_jac++;
     }
   }

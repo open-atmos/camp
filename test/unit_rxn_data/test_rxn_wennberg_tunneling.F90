@@ -15,7 +15,6 @@ program camp_test_wennberg_tunneling
   use camp_camp_core
   use camp_camp_state
   use camp_chem_spec_data
-  use camp_solver_stats
 #ifdef CAMP_USE_JSON
   use json_module
 #endif
@@ -89,8 +88,6 @@ contains
     character, allocatable :: buffer(:), buffer_copy(:)
     integer(kind=i_kind) :: pack_size, pos, i_elem, results, rank_solve
 #endif
-
-    type(solver_stats_t), target :: solver_stats
 
     run_wennberg_tunneling_test = .true.
 
@@ -184,7 +181,7 @@ contains
 #endif
 
       ! Initialize the solver
-      call camp_core%solver_initialize()
+      call camp_core%solver_initialize(load_gpu=0, is_load_balance=0)
 
       ! Get a model state variable
       camp_state => camp_core%new_state()
@@ -202,26 +199,12 @@ contains
       ! Set the initial concentrations in the model
       camp_state%state_var(:) = model_conc(0,:)
 
-#ifdef CAMP_DEBUG
-      ! Evaluate the Jacobian during solving
-      solver_stats%eval_Jac = .true.
-#endif
-
       ! Integrate the mechanism
       do i_time = 1, NUM_TIME_STEP
 
         ! Get the modeled conc
-        call camp_core%solve(camp_state, time_step, &
-                              solver_stats = solver_stats)
+        call camp_core%solve(camp_state, time_step)
         model_conc(i_time,:) = camp_state%state_var(:)
-
-#ifdef CAMP_DEBUG
-        ! Check the Jacobian evaluations
-        call assert_msg(519867769, solver_stats%Jac_eval_fails.eq.0, &
-                        trim( to_string( solver_stats%Jac_eval_fails ) )// &
-                        " Jacobian evaluation failures at time step "// &
-                        trim( to_string( i_time ) ) )
-#endif
 
         ! Get the analytic conc
         time = i_time * time_step

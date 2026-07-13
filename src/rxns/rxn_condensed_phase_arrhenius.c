@@ -8,10 +8,10 @@
 /** \file
  * \brief Condensed Phase Arrhenius reaction solver functions
  */
+#include "../rxns.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../rxns.h"
 
 // TODO Lookup environmental indices during initialization
 #define TEMPERATURE_K_ env_data[0]
@@ -30,14 +30,14 @@
 #define NUM_FLOAT_PROP_ 5
 #define NUM_ENV_PARAM_ 1
 #define REACT_(x) (int_data[NUM_INT_PROP_ + x] - 1)
-#define PROD_(x) \
+#define PROD_(x)                                                               \
   (int_data[NUM_INT_PROP_ + NUM_REACT_ * NUM_AERO_PHASE_ + x] - 1)
-#define WATER_(x) \
+#define WATER_(x)                                                              \
   (int_data[NUM_INT_PROP_ + (NUM_REACT_ + NUM_PROD_) * NUM_AERO_PHASE_ + x] - 1)
-#define DERIV_ID_(x) \
+#define DERIV_ID_(x)                                                           \
   (int_data[NUM_INT_PROP_ + (NUM_REACT_ + NUM_PROD_ + 1) * NUM_AERO_PHASE_ + x])
-#define JAC_ID_(x)          \
-  (int_data[NUM_INT_PROP_ + \
+#define JAC_ID_(x)                                                             \
+  (int_data[NUM_INT_PROP_ +                                                    \
             (2 * (NUM_REACT_ + NUM_PROD_) + 1) * NUM_AERO_PHASE_ + x])
 #define YIELD_(x) (float_data[NUM_FLOAT_PROP_ + x])
 #define KGM3_TO_MOLM3_(x) (float_data[NUM_FLOAT_PROP_ + NUM_PROD_ + x])
@@ -194,7 +194,7 @@ void rxn_condensed_phase_arrhenius_calc_deriv_contrib(
     // If this is an aqueous reaction, get the unit conversion from mol/m3 -> M
     double unit_conv = 1.0;
     if (WATER_(i_phase) >= 0) {
-      unit_conv = state[WATER_(i_phase)];  // convert from kg/m3->L/m3
+      unit_conv = state[WATER_(i_phase)]; // convert from kg/m3->L/m3
 
       // For aqueous reactions, if no aerosol water is present, no reaction
       // occurs
@@ -262,7 +262,7 @@ void rxn_condensed_phase_arrhenius_calc_jac_contrib(
     // If this is an aqueous reaction, get the unit conversion from mol/m3 -> M
     realtype unit_conv = 1.0;
     if (WATER_(i_phase) >= 0) {
-      unit_conv = state[WATER_(i_phase)];  // convert from kg/m3->L/m3
+      unit_conv = state[WATER_(i_phase)]; // convert from kg/m3->L/m3
 
       // For aqueous reactions, if no aerosol water is present, no reaction
       // occurs
@@ -330,9 +330,9 @@ void rxn_condensed_phase_arrhenius_calc_jac_contrib(
         i_jac++;
         continue;
       }
-      jacobian_add_value(
-          jac, (unsigned int)JAC_ID_(i_jac++), JACOBIAN_LOSS,
-          -(NUM_REACT_ - 1) * rate / KGM3_TO_MOLM3_(i_react_dep));
+      jacobian_add_value(jac, (unsigned int)JAC_ID_(i_jac++), JACOBIAN_LOSS,
+                         -(NUM_REACT_ - 1) * rate /
+                             KGM3_TO_MOLM3_(i_react_dep));
     }
     // Dependence of products on aerosol-phase water
     for (int i_prod_dep = 0; i_prod_dep < NUM_PROD_; i_prod_dep++) {
@@ -429,11 +429,11 @@ void rxn_condensed_phase_arrhenius_print(int *rxn_int_data,
   for (int i_prod = 0; i_prod < NUM_PROD_; ++i_prod) {
     printf("\n  P->W");
     for (int i_phase = 0; i_phase < NUM_AERO_PHASE_; ++i_phase) {
-      printf(
-          " Jac[%d][%d] = %d;", PROD_(i_phase * NUM_PROD_ + i_prod),
-          WATER_(i_phase),
-          JAC_ID_(i_phase * phase_jac_size +
-                  NUM_REACT_ * (NUM_REACT_ + NUM_PROD_) + NUM_REACT_ + i_prod));
+      printf(" Jac[%d][%d] = %d;", PROD_(i_phase * NUM_PROD_ + i_prod),
+             WATER_(i_phase),
+             JAC_ID_(i_phase * phase_jac_size +
+                     NUM_REACT_ * (NUM_REACT_ + NUM_PROD_) + NUM_REACT_ +
+                     i_prod));
     }
   }
   return;

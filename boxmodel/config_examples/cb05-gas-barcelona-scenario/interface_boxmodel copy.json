@@ -1,0 +1,386 @@
+{
+  "multiple-boxes": "monte carlo",
+  "experiment-name": "cb05_gas_barcelona_scenario_temp_sensitivity",
+  "boxmodel-data": [
+    {
+      "name": "species map",
+      "type": "SPECIES_MAP",
+      "mechanism_name": "MONARCH mod37",
+      "gas-phase water": "H2O",
+      "gas-phase water dimer": "H2O_dimer",
+      "photolysis_method": "TUV",
+      "photolysis_table": true
+    },
+    {
+      "name": "everything related to time",
+      "type": "TIME_CONTROL",
+      "time_control": {
+        "start_time": {
+          "year": 2018,
+          "month": 8,
+          "day": 13,
+          "hour": 0,
+          "tz": 0
+        },
+        "simulation_length": {
+          "time": 10,
+          "unit": "days"
+        },
+        "timestep": {
+          "time": 15.0,
+          "unit": "min"
+        }
+      }
+    },
+    {
+      "name": "Initial concentrations",
+      "type": "INIT_CONC",
+      "gas-phase species": {
+        "CH4": {
+          "init conc": {
+            "value": 1700.0,
+            "unit": "ppb"
+          }
+        },
+        "M": {
+          "note": "by definition the third body is the concentration of air molecules = 1 ppp",
+          "init conc": {
+            "value": 1.0,
+            "unit": "ppp"
+          }
+        },
+        "O2": {
+          "note": "molecular oxygen is a constant fraction of air molecules = 0.2095 ppp",
+          "init conc": {
+            "value": 0.2095,
+            "unit": "ppp"
+          }
+        }
+      }
+    },
+    {
+      "name": "latitude",
+      "type": "LATITUDE",
+      "file_constraint": {
+        "filename": "./test_barcelona_august2018/latitude.csv",
+        "time_unit": "h",
+        "value_unit": "deg",
+        "header": 1,
+        "separator": ",",
+        "diurnal": "y"
+      }
+    },
+    {
+      "name": "longitude",
+      "type": "LONGITUDE",
+      "file_constraint": {
+        "filename": "./test_barcelona_august2018/longitude.csv",
+        "time_unit": "h",
+        "value_unit": "deg",
+        "header": 1,
+        "separator": ",",
+        "diurnal": "y"
+      }
+    },
+    {
+      "name": "altitude",
+      "type": "ALTITUDE",
+      "file_constraint": {
+        "filename": "./test_barcelona_august2018/altitude.csv",
+        "time_unit": "h",
+        "value_unit": "m",
+        "header": 1,
+        "separator": ",",
+        "diurnal": "y"
+      }
+    },
+    {
+      "name": "pressure",
+      "type": "PRESSURE",
+      "file_constraint": {
+        "filename": "./test_barcelona_august2018/pressure.csv",
+        "time_unit": "h",
+        "value_unit": "Pa",
+        "header": 1,
+        "separator": ",",
+        "diurnal": "y"
+      }
+    },
+    {
+      "name": "temperature",
+      "type": "TEMPERATURE",
+      "file_constraint": {
+        "filename": "./test_barcelona_august2018/temperature.csv",
+        "time_unit": "h",
+        "value_unit": "K",
+        "header": 1,
+        "separator": ",",
+        "diurnal": "y"
+      }
+    },
+    {
+      "name": "humidity",
+      "type": "HUMIDITY",
+      "file_constraint": {
+        "filename": "./test_barcelona_august2018/rh.csv",
+        "time_unit": "h",
+        "value_unit": "%",
+        "header": 1,
+        "separator": ",",
+        "diurnal": "y"
+      }
+    },
+    {
+      "name": "box height",
+      "type": "HEIGHT",
+      "file_constraint": {
+        "filename": "./test_barcelona_august2018/pbl.csv",
+        "time_unit": "h",
+        "value_unit": "m",
+        "header": 1,
+        "separator": ",",
+        "diurnal": "y"
+      }
+    },
+    {
+      "name": "Constrained concentrations",
+      "type": "FORCED_CONC",
+      "gas-phase species": {
+        "CO": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/co.csv",
+            "time_unit": "h",
+            "value_unit": "ppm",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        }
+      }
+    },
+    {
+      "name": "Emissions",
+      "type": "EMISSIONS",
+      "gas-phase species": {
+        "NO": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/no.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y",
+            "montecarlo": {
+              "type": "uniform",
+              "relative_factor": 10.0
+            }
+          }
+        },
+        "NO2": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/no2.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "HONO": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/hono.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "SO2": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/so2.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "FORM": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/form.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "MEOH": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/meoh.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "ALD2": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/ald2.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "ALDX": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/aldx.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "BENZENE": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/benzene.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "ETH": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/eth.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "ETHA": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/etha.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "ETOH": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/etoh.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "OLE": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/ole.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "IOLE": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/iole.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "TOL": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/tol.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y",
+            "montecarlo": {
+              "type": "uniform",
+              "relative_factor": 10.0
+            }
+          }
+        },
+        "XYL": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/xyl.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "ISOP": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/isop.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "PAR": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/par.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "SESQ": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/sesq.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "TERP": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/terp.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        },
+        "HCL": {
+          "file_constraint": {
+            "filename": "./test_barcelona_august2018/hcl.csv",
+            "time_unit": "h",
+            "value_unit": "m-2.s-1.mol",
+            "header": 1,
+            "separator": ",",
+            "diurnal": "y"
+          }
+        }
+      }
+    }
+  ]
+}

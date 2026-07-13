@@ -196,7 +196,7 @@ module camp_aero_rep_factory
   use camp_constants,                  only : i_kind, dp
   use camp_mpi
   use camp_util,                       only : die_msg, string_t, assert_msg, &
-                                             warn_msg
+    warn_msg
 
   ! Use all aerosol representation modules
   use camp_aero_rep_modal_binned_mass
@@ -255,13 +255,13 @@ contains
     new_obj => null()
 
     select case (type_name)
-      case ("AERO_REP_MODAL_BINNED_MASS")
-        new_obj => aero_rep_modal_binned_mass_t()
-      case ("AERO_REP_SINGLE_PARTICLE")
-        new_obj => aero_rep_single_particle_t()
-      case default
-        call die_msg(792930166, "Unknown aerosol representation type: " &
-                //type_name)
+     case ("AERO_REP_MODAL_BINNED_MASS")
+      new_obj => aero_rep_modal_binned_mass_t()
+     case ("AERO_REP_SINGLE_PARTICLE")
+      new_obj => aero_rep_single_particle_t()
+     case default
+      call die_msg(792930166, "Unknown aerosol representation type: " &
+        //type_name)
     end select
 
   end function create
@@ -323,12 +323,12 @@ contains
     class(aero_rep_data_t), intent(in) :: aero_rep
 
     select type (aero_rep)
-      type is (aero_rep_modal_binned_mass_t)
-        aero_rep_type = AERO_REP_MODAL_BINNED_MASS
-      type is (aero_rep_single_particle_t)
-        aero_rep_type = AERO_REP_SINGLE_PARTICLE
-      class default
-        call die_msg(865927801, "Unknown aerosol representation type")
+     type is (aero_rep_modal_binned_mass_t)
+      aero_rep_type = AERO_REP_MODAL_BINNED_MASS
+     type is (aero_rep_single_particle_t)
+      aero_rep_type = AERO_REP_SINGLE_PARTICLE
+     class default
+      call die_msg(865927801, "Unknown aerosol representation type")
     end select
 
   end function get_type
@@ -346,32 +346,32 @@ contains
     class(aero_rep_update_data_t), intent(out) :: update_data
 
     select type (update_data)
-      type is (aero_rep_update_data_single_particle_number_t)
-        select type (aero_rep)
-          type is (aero_rep_single_particle_t)
-            call aero_rep%update_data_initialize_number(update_data, &
-                                                 AERO_REP_SINGLE_PARTICLE)
-          class default
-            call die_msg(584145506, "Update data <-> aero rep mismatch")
-        end select
-      type is (aero_rep_update_data_modal_binned_mass_GMD_t)
-        select type (aero_rep)
-          type is (aero_rep_modal_binned_mass_t)
-            call aero_rep%update_data_initialize_GMD(update_data, &
-                                                 AERO_REP_MODAL_BINNED_MASS)
-          class default
-            call die_msg(696463851, "Update data <-> aero rep mismatch")
-        end select
-      type is (aero_rep_update_data_modal_binned_mass_GSD_t)
-        select type (aero_rep)
-          type is (aero_rep_modal_binned_mass_t)
-            call aero_rep%update_data_initialize_GSD(update_data, &
-                                                 AERO_REP_MODAL_BINNED_MASS)
-          class default
-            call die_msg(526306947, "Update data <-> aero rep mismatch")
-        end select
-      class default
-        call die_msg(916635086, "Internal error - update data type missing.")
+     type is (aero_rep_update_data_single_particle_number_t)
+      select type (aero_rep)
+       type is (aero_rep_single_particle_t)
+        call aero_rep%update_data_initialize_number(update_data, &
+          AERO_REP_SINGLE_PARTICLE)
+       class default
+        call die_msg(584145506, "Update data <-> aero rep mismatch")
+      end select
+     type is (aero_rep_update_data_modal_binned_mass_GMD_t)
+      select type (aero_rep)
+       type is (aero_rep_modal_binned_mass_t)
+        call aero_rep%update_data_initialize_GMD(update_data, &
+          AERO_REP_MODAL_BINNED_MASS)
+       class default
+        call die_msg(696463851, "Update data <-> aero rep mismatch")
+      end select
+     type is (aero_rep_update_data_modal_binned_mass_GSD_t)
+      select type (aero_rep)
+       type is (aero_rep_modal_binned_mass_t)
+        call aero_rep%update_data_initialize_GSD(update_data, &
+          AERO_REP_MODAL_BINNED_MASS)
+       class default
+        call die_msg(526306947, "Update data <-> aero rep mismatch")
+      end select
+     class default
+      call die_msg(916635086, "Internal error - update data type missing.")
     end select
 
   end subroutine initialize_update_data
@@ -389,7 +389,7 @@ contains
     integer, intent(in) :: comm
 
     pack_size =  camp_mpi_pack_size_integer(int(1, kind=i_kind), comm) + &
-                 aero_rep%pack_size(comm)
+      aero_rep%pack_size(comm)
 
   end function pack_size
 
@@ -414,18 +414,18 @@ contains
 
     prev_position = pos
     select type (aero_rep)
-      type is (aero_rep_modal_binned_mass_t)
-        aero_rep_type = AERO_REP_MODAL_BINNED_MASS
-      type is (aero_rep_single_particle_t)
-        aero_rep_type = AERO_REP_SINGLE_PARTICLE
-      class default
-        call die_msg(278244560, &
-                "Trying to pack aerosol representation of unknown type.")
+     type is (aero_rep_modal_binned_mass_t)
+      aero_rep_type = AERO_REP_MODAL_BINNED_MASS
+     type is (aero_rep_single_particle_t)
+      aero_rep_type = AERO_REP_SINGLE_PARTICLE
+     class default
+      call die_msg(278244560, &
+        "Trying to pack aerosol representation of unknown type.")
     end select
     call camp_mpi_pack_integer(buffer, pos, aero_rep_type, comm)
     call aero_rep%bin_pack(buffer, pos, comm)
     call assert(897674844, &
-         pos - prev_position <= this%pack_size(aero_rep, comm))
+      pos - prev_position <= this%pack_size(aero_rep, comm))
 #endif
 
   end subroutine bin_pack
@@ -452,18 +452,18 @@ contains
     prev_position = pos
     call camp_mpi_unpack_integer(buffer, pos, aero_rep_type, comm)
     select case (aero_rep_type)
-      case (AERO_REP_MODAL_BINNED_MASS)
-        aero_rep => aero_rep_modal_binned_mass_t()
-      case (AERO_REP_SINGLE_PARTICLE)
-        aero_rep => aero_rep_single_particle_t()
-      case default
-        call die_msg(106634417, &
-                "Trying to unpack aerosol representation of unknown type:"// &
-                to_string(aero_rep_type))
+     case (AERO_REP_MODAL_BINNED_MASS)
+      aero_rep => aero_rep_modal_binned_mass_t()
+     case (AERO_REP_SINGLE_PARTICLE)
+      aero_rep => aero_rep_single_particle_t()
+     case default
+      call die_msg(106634417, &
+        "Trying to unpack aerosol representation of unknown type:"// &
+        to_string(aero_rep_type))
     end select
     call aero_rep%bin_unpack(buffer, pos, comm)
     call assert(948795857, &
-         pos - prev_position <= this%pack_size(aero_rep, comm))
+      pos - prev_position <= this%pack_size(aero_rep, comm))
 #endif
 
   end function bin_unpack

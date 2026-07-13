@@ -1,0 +1,20 @@
+{
+  "camp-files": [
+    "full_multiphase/cb05/cb05_species.json",
+    "full_multiphase/cb05/cb05_mechanism.json",
+    "full_multiphase/cb05/cb05_abs_tol.json",
+    "full_multiphase/custom_species.json",
+    "full_multiphase/cvode_configuration.json",
+    "full_multiphase/shrivastava_vbs_SOA_scheme/species.json",
+    "full_multiphase/shrivastava_vbs_SOA_scheme/mechanism.json",
+    "full_multiphase/shrivastava_vbs_SOA_scheme/aging.json",
+    "full_multiphase/aerosol_representation_sectional.json",
+    "full_multiphase/aerosol_phases_vbs.json",
+    "full_multiphase/species_properties_vbs.json",
+    "full_multiphase/inorganic_species.json",
+    "full_multiphase/inorganic_reactions.json",
+    "full_multiphase/inorganic_partitioning.json",
+    "full_multiphase/inorganic_ZSR_water.json",
+    "full_multiphase/inorganic_activity.json"
+  ]
+}
