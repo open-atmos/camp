@@ -378,26 +378,6 @@ contains
       i_aero_id = i_aero_id + 1
     end do
 
-    ! DEBUG: print all preprocessor variable values/indices for this reaction
-    write(*,*) "[rxn_condensed_phase_diffusion.F90] NUM_ADJACENT_PAIRS_ =", &
-               NUM_ADJACENT_PAIRS_
-    do i_adj_pairs = 1, NUM_ADJACENT_PAIRS_
-      write(*,*) "  pair", i_adj_pairs
-      write(*,*) "    PHASE_ID_INNER_ =", PHASE_ID_INNER_(i_adj_pairs), &
-                 " PHASE_ID_OUTER_ =", PHASE_ID_OUTER_(i_adj_pairs)
-      write(*,*) "    AERO_REP_ID_ =", AERO_REP_ID_(i_adj_pairs)
-      write(*,*) "    DIFF_COEFF_INNER_ =", DIFF_COEFF_INNER_(i_adj_pairs), &
-                 " DIFF_COEFF_OUTER_ =", DIFF_COEFF_OUTER_(i_adj_pairs)
-      write(*,*) "    AERO_SPEC_INNER_ =", AERO_SPEC_INNER_(i_adj_pairs), &
-                 " AERO_SPEC_OUTER_ =", AERO_SPEC_OUTER_(i_adj_pairs)
-      write(*,*) "    NUM_JAC_ELEM_INNER_ =", &
-                 NUM_JAC_ELEM_INNER_(i_adj_pairs), &
-                 " NUM_JAC_ELEM_OUTER_ =", &
-                 NUM_JAC_ELEM_OUTER_(i_adj_pairs)
-      write(*,*) "    NUM_JAC_ELEM_TOTAL_ (cumulative) =", &
-                 NUM_JAC_ELEM_TOTAL_(i_adj_pairs)
-    end do
-
     deallocate(adj_phase_size)
 
   end subroutine initialize

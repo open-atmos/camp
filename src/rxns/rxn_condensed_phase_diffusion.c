@@ -249,41 +249,7 @@ void rxn_condensed_phase_diffusion_update_ids(ModelData *model_data, int *deriv_
         }
       }
     }
-
-  // DEBUG: print all preprocessor variable values/indices for this reaction
-  //printf("[rxn_condensed_phase_diffusion.c] NUM_ADJACENT_PAIRS_ = %d\n", NUM_ADJACENT_PAIRS_);
-  //for (int i_adj_pairs = 0; i_adj_pairs < NUM_ADJACENT_PAIRS_; ++i_adj_pairs) {
-  //  printf("  pair %d:\n", i_adj_pairs);
-  //  printf("    PHASE_ID_INNER_ = %d, PHASE_ID_OUTER_ = %d\n",
-  //         PHASE_ID_INNER_(i_adj_pairs), PHASE_ID_OUTER_(i_adj_pairs));
-  //  printf("    AERO_REP_ID_ = %d\n", AERO_REP_ID_(i_adj_pairs));
-  //  printf("    DIFF_COEFF_INNER_ = %le, DIFF_COEFF_OUTER_ = %le\n",
-  //         DIFF_COEFF_INNER_(i_adj_pairs), DIFF_COEFF_OUTER_(i_adj_pairs));
-  //  printf("    AERO_SPEC_INNER_ = %d, AERO_SPEC_OUTER_ = %d\n",
-  //         AERO_SPEC_INNER_(i_adj_pairs), AERO_SPEC_OUTER_(i_adj_pairs));
-  //  printf("    DERIV_ID_INNER_ = %d, DERIV_ID_OUTER_ = %d\n",
-  //         DERIV_ID_INNER_(i_adj_pairs), DERIV_ID_OUTER_(i_adj_pairs));
-  //  printf("    JAC_ID_INNER_INNER_ = %d, JAC_ID_INNER_OUTER_ = %d, "
-  //         "JAC_ID_OUTER_OUTER_ = %d, JAC_ID_OUTER_INNER_ = %d\n",
-  //         JAC_ID_INNER_INNER_(i_adj_pairs), JAC_ID_INNER_OUTER_(i_adj_pairs),
-  //         JAC_ID_OUTER_OUTER_(i_adj_pairs), JAC_ID_OUTER_INNER_(i_adj_pairs));
-  //  printf("    NUM_JAC_ELEM_INNER_ = %d, "
-  //         "NUM_JAC_ELEM_OUTER_ = %d\n",
-  //         NUM_JAC_ELEM_INNER_(i_adj_pairs),
-//           NUM_JAC_ELEM_OUTER_(i_adj_pairs));
-  //    printf("    NUM_JAC_ELEM_TOTAL_ (cumulative) = %d\n",
-  //         NUM_JAC_ELEM_TOTAL_(i_adj_pairs));
-  //  for (int i_elem = 0; i_elem < NUM_JAC_ELEM_INNER_(i_adj_pairs);
-  //       ++i_elem) {
-  //    printf("      PHASE_JAC_ID_INNER_(%d, %d) = %d\n", i_adj_pairs, i_elem,
-  //           PHASE_JAC_ID_INNER_(i_adj_pairs, i_elem));
-  //  }
-  //  for (int i_elem = 0; i_elem < NUM_JAC_ELEM_OUTER_(i_adj_pairs);
-  //       ++i_elem) {
-  //    printf("      PHASE_JAC_ID_OUTER_(%d, %d) = %d\n", i_adj_pairs, i_elem,
-  //           PHASE_JAC_ID_OUTER_(i_adj_pairs, i_elem));
-  //  }
-  //}
+    
 }
 
 /** \brief Update reaction data for new environmental conditions

@@ -271,9 +271,9 @@ contains
         call assert(102439885, idx_org_l0.gt.0)
         call assert(309792114, idx_solute_l0_org.gt.0)
         call assert(943449331, idx_solute_l1.gt.0)
-        call assert(987654321, idx_H2O_l1.gt.0)
+        call assert(970000987, idx_H2O_l1.gt.0)
         call assert(192837465, idx_org_l1.gt.0)
-        call assert(564738291, idx_solute_l1_org.gt.0)
+        call assert(679424709, idx_solute_l1_org.gt.0)
 
         scenario2_state_ids(:,1) = (/idx_solute_l0, idx_H2O_l0, idx_org_l0, &
                                      idx_solute_l0_org, idx_solute_l1, &
@@ -414,56 +414,6 @@ contains
       true_conc(0,:) = true_conc(0,:) / (number_conc * 1000.0) ! convert to kg/m3 per particle
       model_conc(0,:) = true_conc(0,:)
 
-      if (scenario.eq.2) then
-        do i_particle = 1, 2
-          layer_volume_inner = sum(true_conc(0,scenario2_state_ids(1:4,i_particle)))
-          layer_volume_outer = sum(true_conc(0,scenario2_state_ids(5:8,i_particle)))
-          radius_inner = (layer_volume_inner * 3.0 / 4.0 / 3.14159265359)**(1.0/3.0)
-          radius_outer = ((layer_volume_inner + layer_volume_outer) * &
-                          3.0 / 4.0 / 3.14159265359)**(1.0/3.0)
-          total_layer_thickness = radius_outer
-
-          do i_pair = 1, 2
-            if (i_pair.eq.1) then
-              inner_state_id = scenario2_state_ids(1,i_particle)
-              outer_state_id = scenario2_state_ids(8,i_particle)
-              phase_volume_inner = sum(true_conc(0,scenario2_state_ids(1:2,i_particle)))
-              phase_volume_outer = sum(true_conc(0,scenario2_state_ids(7:8,i_particle)))
-              interface_area = (phase_volume_inner / layer_volume_inner) * &
-                               (phase_volume_outer / layer_volume_outer) * &
-                               4.0 * 3.14159265359 * radius_inner**2
-              scenario2_k_inner(i_pair,i_particle) = &
-                  2.0 * interface_area / phase_volume_inner * (1.5d-9 / total_layer_thickness)
-              scenario2_k_outer(i_pair,i_particle) = &
-                  2.0 * interface_area / phase_volume_outer * (1.5d-10 / total_layer_thickness)
-            else
-              inner_state_id = scenario2_state_ids(4,i_particle)
-              outer_state_id = scenario2_state_ids(5,i_particle)
-              phase_volume_inner = sum(true_conc(0,scenario2_state_ids(3:4,i_particle)))
-              phase_volume_outer = sum(true_conc(0,scenario2_state_ids(5:6,i_particle)))
-              interface_area = (phase_volume_inner / layer_volume_inner) * &
-                               (phase_volume_outer / layer_volume_outer) * &
-                               4.0 * 3.14159265359 * radius_inner**2
-              scenario2_k_inner(i_pair,i_particle) = &
-                  2.0 * interface_area / phase_volume_inner * (1.5d-10 / total_layer_thickness)
-              scenario2_k_outer(i_pair,i_particle) = &
-                  2.0 * interface_area / phase_volume_outer * (1.5d-9 / total_layer_thickness)
-            end if
-
-            scenario2_initial_inner(i_pair,i_particle) = true_conc(0,inner_state_id)
-            scenario2_initial_outer(i_pair,i_particle) = true_conc(0,outer_state_id)
-            concentration_sum = scenario2_initial_inner(i_pair,i_particle) + &
-                                scenario2_initial_outer(i_pair,i_particle)
-            decay_rate = scenario2_k_inner(i_pair,i_particle) + scenario2_k_outer(i_pair,i_particle)
-            scenario2_equil_inner(i_pair,i_particle) = &
-                concentration_sum * scenario2_k_outer(i_pair,i_particle) / decay_rate
-            scenario2_equil_outer(i_pair,i_particle) = &
-                concentration_sum * scenario2_k_inner(i_pair,i_particle) / decay_rate
-          end do
-        end do
-        test_tolerance = 1.0d-1
-      end if
-
       ! single particle aerosol mass concentrations are per particle
       ! radius (m) calculated based on particle mass
 
@@ -532,32 +482,53 @@ contains
                      true_conc(0,idx_H2O_l0) ) &
                      * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0)
       else if (scenario.eq.2) then
-        radius = ( ( true_conc(0,idx_solute_l0) +  &
-                     true_conc(0,idx_H2O_l0) + &
-                     true_conc(0,idx_org_l0) + &
-                     true_conc(0,idx_solute_l0_org) + &
-                     true_conc(0,idx_solute_l1) +  &
-                     true_conc(0,idx_H2O_l1) + &
-                     true_conc(0,idx_org_l1) + &
-                     true_conc(0,idx_solute_l1_org) ) &
-                     * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
-        layer_thickness_l1 = ( ( true_conc(0,idx_solute_l0) +  &
-                     true_conc(0,idx_H2O_l0) + &
-                     true_conc(0,idx_org_l0) +  &
-                     true_conc(0,idx_solute_l0_org) + &
-                     true_conc(0,idx_solute_l1) + &
-                     true_conc(0,idx_H2O_l1) + &
-                     true_conc(0,idx_org_l1) + &
-                     true_conc(0,idx_solute_l1_org) ) &
-                     * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0) - &
-                     ( ( true_conc(0,idx_solute_l0) +  &
-                     true_conc(0,idx_org_l0) ) &
-                     * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
-        layer_thickness_l0 = ( ( true_conc(0,idx_solute_l0) +  &
-                     true_conc(0,idx_H2O_l0) + &
-                     true_conc(0,idx_org_l0) + &
-                     true_conc(0,idx_solute_l0_org) ) &
-                     * 3.0 / 4.0 / 3.14159265359 )**(1.0/3.0)
+        do i_particle = 1, 2
+          layer_volume_inner = sum(true_conc(0,scenario2_state_ids(1:4,i_particle)))
+          layer_volume_outer = sum(true_conc(0,scenario2_state_ids(5:8,i_particle)))
+          radius_inner = (layer_volume_inner * 3.0 / 4.0 / 3.14159265359)**(1.0/3.0)
+          radius_outer = ((layer_volume_inner + layer_volume_outer) * &
+                          3.0 / 4.0 / 3.14159265359)**(1.0/3.0)
+          total_layer_thickness = radius_outer
+
+          do i_pair = 1, 2
+            if (i_pair.eq.1) then
+              inner_state_id = scenario2_state_ids(1,i_particle)
+              outer_state_id = scenario2_state_ids(8,i_particle)
+              phase_volume_inner = sum(true_conc(0,scenario2_state_ids(1:2,i_particle)))
+              phase_volume_outer = sum(true_conc(0,scenario2_state_ids(7:8,i_particle)))
+              interface_area = (phase_volume_inner / layer_volume_inner) * &
+                               (phase_volume_outer / layer_volume_outer) * &
+                               4.0 * 3.14159265359 * radius_inner**2
+              scenario2_k_inner(i_pair,i_particle) = &
+                  2.0 * interface_area / phase_volume_inner * (1.5d-9 / total_layer_thickness)
+              scenario2_k_outer(i_pair,i_particle) = &
+                  2.0 * interface_area / phase_volume_outer * (1.5d-10 / total_layer_thickness)
+            else
+              inner_state_id = scenario2_state_ids(4,i_particle)
+              outer_state_id = scenario2_state_ids(5,i_particle)
+              phase_volume_inner = sum(true_conc(0,scenario2_state_ids(3:4,i_particle)))
+              phase_volume_outer = sum(true_conc(0,scenario2_state_ids(5:6,i_particle)))
+              interface_area = (phase_volume_inner / layer_volume_inner) * &
+                               (phase_volume_outer / layer_volume_outer) * &
+                               4.0 * 3.14159265359 * radius_inner**2
+              scenario2_k_inner(i_pair,i_particle) = &
+                  2.0 * interface_area / phase_volume_inner * (1.5d-10 / total_layer_thickness)
+              scenario2_k_outer(i_pair,i_particle) = &
+                  2.0 * interface_area / phase_volume_outer * (1.5d-9 / total_layer_thickness)
+            end if
+
+            scenario2_initial_inner(i_pair,i_particle) = true_conc(0,inner_state_id)
+            scenario2_initial_outer(i_pair,i_particle) = true_conc(0,outer_state_id)
+            concentration_sum = scenario2_initial_inner(i_pair,i_particle) + &
+                                scenario2_initial_outer(i_pair,i_particle)
+            decay_rate = scenario2_k_inner(i_pair,i_particle) + scenario2_k_outer(i_pair,i_particle)
+            scenario2_equil_inner(i_pair,i_particle) = &
+                concentration_sum * scenario2_k_outer(i_pair,i_particle) / decay_rate
+            scenario2_equil_outer(i_pair,i_particle) = &
+                concentration_sum * scenario2_k_inner(i_pair,i_particle) / decay_rate
+          end do
+        end do
+        test_tolerance = 2.0d-2
       end if
 
       ! Update the aerosol representation (single particle only)
@@ -668,7 +639,9 @@ contains
                ' ', model_conc(i_time, idx_solute_l1), &
                ' ', model_conc(i_time, idx_H2O_l1), &
                ' ', model_conc(i_time, idx_org_l1), &
-               ' ', model_conc(i_time, idx_solute_l1_org)
+               ' ', model_conc(i_time, idx_solute_l1_org), &
+               ' ', true_conc(i_time, inner_state_id), &
+               ' ', true_conc(i_time, outer_state_id)
         end if
       end do
       if (scenario.eq.1) then
@@ -789,99 +762,6 @@ contains
                                   trim(to_string(aero_spec_outer(i)))//" expected "// &
                                   trim(to_string(aero_spec_outer_expected(i))))
                 end do
-              end if
-              ! Test rate_inner and rate_outer calculations based on surface_area and layer_thickness
-              ! 
-              ! Formula from condensed phase diffusion solver:
-              ! rate_inner = (eff_sa / volume_phase_inner) * (
-              !     (-DIFF_COEFF_INNER_ / layer_thickness_inner) * state[PHASE_ID_INNER_] +
-              !     (DIFF_COEFF_OUTER_ / layer_thickness_outer) * state[PHASE_ID_OUTER_]
-              ! )
-              !
-              ! rate_outer = (eff_sa / volume_phase_outer) * (
-              !     (DIFF_COEFF_INNER_ / layer_thickness_inner) * state[PHASE_ID_INNER_] -
-              !     (DIFF_COEFF_OUTER_ / layer_thickness_outer) * state[PHASE_ID_OUTER_]
-              ! )
-              !
-              ! Where:
-              ! - eff_sa = interface surface area between layers (m2)
-              ! - volume_phase_inner = total mass of inner phase (kg per particle)
-              ! - volume_phase_outer = total mass of outer phase (kg per particle)
-              ! - state values = concentrations of species in each layer (kg/m3 per particle)
-              
-              ! TODO: Temporary tests for forcing function. Update when the full implementation is available.
-              
-              if (scenario.eq.1) then
-                test_tolerance = 1.0d-6
-                
-                ! Calculate volume (mass) of each phase
-                volume_phase_l3 = true_conc(0,idx_solute_l3) + true_conc(0,idx_H2O_l3)
-                volume_phase_l2 = true_conc(0,idx_solute_l2) + true_conc(0,idx_H2O_l2)
-
-                ! Calculate expected rate_inner
-                expected_rate_inner = (surface_area_l2 / volume_phase_l2) * ( &
-                  (-diff_coeff_inner(6) / layer_thickness_l2) * true_conc(0,idx_solute_l2) + &
-                  (diff_coeff_outer(6) / layer_thickness_l3) * true_conc(0,idx_solute_l3) )
-                !call assert_msg(470271032, almost_equal(1.37301d-7, expected_rate_inner, test_tolerance), &
-                !      "rate_inner is expected "// &
-                !      trim(to_string(expected_rate_inner)))
-
-                ! Calculate expected rate_outer
-                expected_rate_outer = (surface_area_l2 / volume_phase_l3) * ( &
-                  (diff_coeff_inner(6) / layer_thickness_l2) * true_conc(0,idx_solute_l2) - &
-                  (diff_coeff_outer(6) / layer_thickness_l3) * true_conc(0,idx_solute_l3) )
-                !call assert_msg(994658337, almost_equal(-9.56945d-8, expected_rate_outer, test_tolerance), &
-                !      "rate_outer is expected "// &
-               !       trim(to_string(expected_rate_outer)))
-
-              else if (scenario.eq.2) then
-                ! Test rates for pair 1: inner layer (solute) and outer layer (organic)
-                surface_area_l0 = (true_conc(0,idx_solute_l0) / &
-                  (true_conc(0,idx_solute_l0) + true_conc(0,idx_org_l0))) * &
-                  (true_conc(0,idx_org_l1) / &
-                  (true_conc(0,idx_solute_l1) + true_conc(0,idx_org_l1))) * &
-                  (4.0 * 3.14159265359 * ( ( true_conc(0,idx_solute_l0) + &
-                    true_conc(0,idx_org_l0) ) &
-                    * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0))
-                test_tolerance = 1.0d-6
-                ! Calculate expected rate_inner
-                expected_rate_inner = (surface_area_l0 / true_conc(0,idx_solute_l0)) * ( &
-                  (-diff_coeff_inner(1) / layer_thickness_l0) * true_conc(0,idx_solute_l0) + &
-                  (diff_coeff_outer(1) / layer_thickness_l1) * true_conc(0,idx_org_l1) )
-                !call assert_msg(138444863, almost_equal(1.64175d-09, expected_rate_inner, test_tolerance), &
-                !      "rate_inner is expected "// &
-                !      trim(to_string(expected_rate_inner)))
-                ! Calculate expected rate_outer
-                expected_rate_outer = (surface_area_l0 / true_conc(0,idx_org_l1)) * ( &
-                  (diff_coeff_inner(1) / layer_thickness_l0) * true_conc(0,idx_solute_l0) - &
-                  (diff_coeff_outer(1) / layer_thickness_l1) * true_conc(0,idx_org_l1) )
-                !call assert_msg(132778198, almost_equal(-8.20876d-13, expected_rate_outer, test_tolerance), &
-                !      "rate_outer is expected "// &
-                !      trim(to_string(expected_rate_outer)))
-
-                ! Test rates for pair 2: inner layer (organic) and outer layer (solute)
-                surface_area_l0 = (true_conc(0,idx_org_l0) / &
-                  (true_conc(0,idx_solute_l0) + true_conc(0,idx_org_l0))) * &
-                  (true_conc(0,idx_solute_l1) / &
-                  (true_conc(0,idx_solute_l1) + true_conc(0,idx_org_l1))) * &
-                  (4.0 * 3.14159265359 * ( ( true_conc(0,idx_solute_l0) + &
-                    true_conc(0,idx_org_l0) ) &
-                    * 3.0 / 4.0 / 3.14159265359 )**(2.0/3.0))
-                
-                ! Calculate expected rate_inner
-                expected_rate_inner = (surface_area_l0 / true_conc(0,idx_org_l0)) * ( &
-                  (-diff_coeff_inner(2) / layer_thickness_l0) * true_conc(0,idx_org_l0) + &
-                  (diff_coeff_outer(2) / layer_thickness_l1) * true_conc(0,idx_solute_l1) )
-                !call assert_msg(337953799, almost_equal(5.4735d-08, expected_rate_inner, test_tolerance), &
-                !      "rate_inner is expected "// &
-               !       trim(to_string(expected_rate_inner)))
-                ! Calculate expected rate_outer
-                expected_rate_outer = (surface_area_l0 / true_conc(0,idx_solute_l1)) * ( &
-                  (diff_coeff_inner(2) / layer_thickness_l0) * true_conc(0,idx_org_l0) - &
-                  (diff_coeff_outer(2) / layer_thickness_l1) * true_conc(0,idx_solute_l1) )
-                !call assert_msg(047874970, almost_equal(-1.08222d-08, expected_rate_outer, test_tolerance), &
-                !      "rate_outer is expected "// &
-                !      trim(to_string(expected_rate_outer)))
               end if
               
           end select
