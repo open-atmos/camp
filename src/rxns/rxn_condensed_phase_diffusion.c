@@ -403,6 +403,7 @@ void rxn_condensed_phase_diffusion_calc_deriv_contrib(
  * Here L_X = delta'_X + delta''_X; the phase-volume and layer-thickness
  * derivatives are supplied by the aerosol-representation routines.
  */
+
 #ifdef CAMP_USE_SUNDIALS
 void rxn_condensed_phase_diffusion_calc_jac_contrib(ModelData *model_data,
                                                 Jacobian jac, int *rxn_int_data,
