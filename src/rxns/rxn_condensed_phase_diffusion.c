@@ -27,8 +27,6 @@
 #define NUM_INT_PROP_ 2
 #define NUM_FLOAT_PROP_ 0
 #define NUM_ENV_PARAM_ 0
-//#define JAC_INNER_ 0
-//#define JAC_OUTER_ 1
 
 #define DIFF_COEFF_INNER_(x) (float_data[(NUM_FLOAT_PROP_) + (x)])
 #define DIFF_COEFF_OUTER_(x) (float_data[(NUM_FLOAT_PROP_) + (NUM_ADJACENT_PAIRS_) + (x)])
@@ -280,7 +278,16 @@ void rxn_condensed_phase_diffusion_update_env_state(ModelData *model_data,
  * \param rxn_float_data Pointer to the reaction floating-point data
  * \param rxn_env_data Pointer to the environment-dependent parameters
  * \param time_step Current time step being computed (s)
+
+ * For an adjacent inner/outer phase pair, let Y' and Y'' be the species
+ * concentrations, A the interface area, V' and V'' the phase volumes, and
+ * L = delta' + delta'' the sum of the layer thicknesses. The transfer rates
+ * and resulting tendencies are
+ *
+ *   gamma   = (2 D' A / (V' L)) Y',   epsilon = (2 D'' A / (V'' L)) Y'',
+ *   dY'/dt  = -gamma + epsilon,       dY''/dt = gamma - epsilon.
  */
+ 
 #ifdef CAMP_USE_SUNDIALS
 void rxn_condensed_phase_diffusion_calc_deriv_contrib(
     ModelData *model_data, TimeDerivative time_deriv, int *rxn_int_data,
@@ -377,6 +384,24 @@ void rxn_condensed_phase_diffusion_calc_deriv_contrib(
  * \param rxn_float_data Pointer to the reaction floating-point data
  * \param rxn_env_data Pointer to the environment-dependent parameters
  * \param time_step Current time step being calculated (s)
+ * 
+ * With k' = 2 D' A / (V' L) and k'' = 2 D'' A / (V'' L), the direct
+ * tendency Jacobian entries are d(dY'/dt)/dY' = -k',
+ * d(dY'/dt)/dY'' = k'', d(dY''/dt)/dY' = k', and
+ * d(dY''/dt)/dY'' = -k''. The Jacobian stores these in separate LOSS and
+ * PRODUCTION entries, using the positive coefficients k' and k''.
+ *
+ * For any state variable X, denote partial derivatives by subscripts
+ * (for example, A_X = dA/dX). The geometry-dependent LOSS and PRODUCTION
+ * entries accumulated below are:
+ *
+ *   inner LOSS:        Y' [-k' A_X/A + k' V'_X/V' + 2 k' L_X/L]
+ *   inner PRODUCTION:  Y''[ k'' A_X/A - k'' V''_X/V'' - 2 k'' L_X/L]
+ *   outer LOSS:        Y''[-k'' A_X/A + k'' V''_X/V'' + 2 k'' L_X/L]
+ *   outer PRODUCTION:  Y' [ k' A_X/A - k' V'_X/V' - 2 k' L_X/L]
+ *
+ * Here L_X = delta'_X + delta''_X; the phase-volume and layer-thickness
+ * derivatives are supplied by the aerosol-representation routines.
  */
 #ifdef CAMP_USE_SUNDIALS
 void rxn_condensed_phase_diffusion_calc_jac_contrib(ModelData *model_data,
