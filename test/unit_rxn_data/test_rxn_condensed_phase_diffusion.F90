@@ -598,7 +598,7 @@ contains
                     " particle "//trim(to_string(i_particle))//" pair "//trim(to_string(i_pair))// &
                     ": model="//trim(to_string(model_conc(i_time,inner_state_id)))// &
                     " analytic="//trim(to_string(true_conc(i_time,inner_state_id))))
-              call assert_msg(730184622, &
+              call assert_msg(678744896, &
                   almost_equal(model_conc(i_time,outer_state_id), &
                                true_conc(i_time,outer_state_id), test_tolerance, 1.0d-24), &
                   "Scenario 2 outer analytic mismatch at t="//trim(to_string(i_time*time_step))// &
@@ -629,7 +629,15 @@ contains
                ' ', model_conc(i_time, idx_H2O_l0), &
                ' ', model_conc(i_time, idx_H2O_l1), &
                ' ', model_conc(i_time, idx_H2O_l2), &
-               ' ', model_conc(i_time, idx_H2O_l3)
+               ' ', model_conc(i_time, idx_H2O_l3), &
+               ' ', true_conc(i_time, idx_solute_l0), &
+               ' ', true_conc(i_time, idx_solute_l1), &
+               ' ', true_conc(i_time, idx_solute_l2), &
+               ' ', true_conc(i_time, idx_solute_l3), &
+               ' ', true_conc(i_time, idx_H2O_l0), &
+               ' ', true_conc(i_time, idx_H2O_l1), &
+               ' ', true_conc(i_time, idx_H2O_l2), &
+               ' ', true_conc(i_time, idx_H2O_l3)
         else if (scenario.eq.2) then
           write(7,*) i_time*time_step, &
                ' ', model_conc(i_time, idx_solute_l0), &
