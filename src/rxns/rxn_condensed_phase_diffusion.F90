@@ -59,8 +59,9 @@ module camp_rxn_condensed_phase_diffusion
   private
 
 #define NUM_ADJACENT_PAIRS_ this%condensed_data_int(1)
+#define MAX_JAC_ELEM_ this%condensed_data_int(2)
 
-#define NUM_INT_PROP_ 1
+#define NUM_INT_PROP_ 2
 #define NUM_REAL_PROP_ 0
 #define NUM_ENV_PARAM_ 0
 #define BLOCK_SIZE_ 1000
@@ -71,19 +72,31 @@ module camp_rxn_condensed_phase_diffusion
 ! length NUM_ADJACENT_PAIRS_
 #define PHASE_ID_INNER_(x) this%condensed_data_int(NUM_INT_PROP_ + (x))
 #define PHASE_ID_OUTER_(x) this%condensed_data_int(NUM_INT_PROP_ + NUM_ADJACENT_PAIRS_ + (x))
-#define AERO_SPEC_INNER_(x) this%condensed_data_int(NUM_INT_PROP_ + 2*NUM_ADJACENT_PAIRS_ + (x))
-#define AERO_SPEC_OUTER_(x) this%condensed_data_int(NUM_INT_PROP_ + 3*NUM_ADJACENT_PAIRS_ + (x))
-#define AERO_REP_ID_(x) this%condensed_data_int(NUM_INT_PROP_ + 4*NUM_ADJACENT_PAIRS_ + (x))
-#define DERIV_ID_INNER_(x) this%condensed_data_int(NUM_INT_PROP_ + 5*NUM_ADJACENT_PAIRS_ + (x))
-#define DERIV_ID_OUTER_(x) this%condensed_data_int(NUM_INT_PROP_ + 6*NUM_ADJACENT_PAIRS_ + (x))
-!#define JAC_ID_(x) this%condensed_data_int(4*BLOCK_SIZE_ + x)
-!#define PHASE_INT_LOC_(x) this%condensed_data_int(5*BLOCK_SIZE_ + x) 
-!#define PHASE_REAL_LOC_(x) this%condensed_data_int(6*BLOCK_SIZE_ + x)
-!#define NUM_AERO_PHASE_JAC_ELEM_INNER_(x) this%condensed_data_int(10*BLOCK_SIZE_ + x)
-!#define NUM_AERO_PHASE_JAC_ELEM_OUTER_(x) this%condensed_data_int(11*BLOCK_SIZE_ + x)
-!#define PHASE_JAC_ID_(x) this%condensed_data_int(12*BLOCK_SIZE_ + x)
-!#define NUM_CONC_JAC_ELEM_(x) this%condensed_data_int(13*BLOCK_SIZE_ + x)
-!#define MASS_JAC_ELEM_(x) this%condensed_data_int(14*BLOCK_SIZE_ + x)
+#define NUM_JAC_ELEM_INNER_(x) this%condensed_data_int(NUM_INT_PROP_ + 2*NUM_ADJACENT_PAIRS_ + (x))
+#define NUM_JAC_ELEM_OUTER_(x) this%condensed_data_int(NUM_INT_PROP_ + 3*NUM_ADJACENT_PAIRS_ + (x))
+! Cumulative sum of the number of Jacobian elements for each pair, used to index into the condensed_data_real array
+#define NUM_JAC_ELEM_TOTAL_(x) this%condensed_data_int(NUM_INT_PROP_ + 4*NUM_ADJACENT_PAIRS_ + (x))
+#define AERO_SPEC_INNER_(x) this%condensed_data_int(NUM_INT_PROP_ + 5*NUM_ADJACENT_PAIRS_ + (x))
+#define AERO_SPEC_OUTER_(x) this%condensed_data_int(NUM_INT_PROP_ + 6*NUM_ADJACENT_PAIRS_ + (x))
+#define AERO_REP_ID_(x) this%condensed_data_int(NUM_INT_PROP_ + 7*NUM_ADJACENT_PAIRS_ + (x))
+
+#define DERIV_ID_INNER_(x) this%condensed_data_int(NUM_INT_PROP_ + 8*NUM_ADJACENT_PAIRS_ + (x))
+#define DERIV_ID_OUTER_(x) this%condensed_data_int(NUM_INT_PROP_ + 9*NUM_ADJACENT_PAIRS_ + (x))
+! Direct Jacobian slots for the 2x2 inner/outer block for each pair
+#define JAC_ID_INNER_INNER_(x) this%condensed_data_int(NUM_INT_PROP_ + 10*NUM_ADJACENT_PAIRS_ + (x))
+#define JAC_ID_INNER_OUTER_(x) this%condensed_data_int(NUM_INT_PROP_ + 11*NUM_ADJACENT_PAIRS_ + (x))
+#define JAC_ID_OUTER_OUTER_(x) this%condensed_data_int(NUM_INT_PROP_ + 12*NUM_ADJACENT_PAIRS_ + (x))
+#define JAC_ID_OUTER_INNER_(x) this%condensed_data_int(NUM_INT_PROP_ + 13*NUM_ADJACENT_PAIRS_ + (x))
+
+#define PHASE_JAC_ID_INNER_(x,e) this%condensed_data_int(NUM_INT_PROP_ + 14*NUM_ADJACENT_PAIRS_ + NUM_JAC_ELEM_TOTAL_(x) + (e))
+#define PHASE_JAC_ID_OUTER_(x,e) this%condensed_data_int(NUM_INT_PROP_ + 14*NUM_ADJACENT_PAIRS_ + NUM_JAC_ELEM_TOTAL_(x) + NUM_JAC_ELEM_INNER_(x) + (e))
+
+#define LAYER_THICKNESS_JAC_ELEM_INNER_(e) this%condensed_data_real(NUM_REAL_PROP_ + 2*NUM_ADJACENT_PAIRS_ + (e))
+#define LAYER_THICKNESS_JAC_ELEM_OUTER_(e) this%condensed_data_real(NUM_REAL_PROP_ + 2*NUM_ADJACENT_PAIRS_ + 5*MAX_JAC_ELEM_ + (e))
+#define PHASE_VOLUME_JAC_ELEM_INNER_(e) this%condensed_data_real(NUM_REAL_PROP_ + 2*NUM_ADJACENT_PAIRS_ + 10*MAX_JAC_ELEM_ + (e))
+#define PHASE_VOLUME_JAC_ELEM_OUTER_(e) this%condensed_data_real(NUM_REAL_PROP_ + 2*NUM_ADJACENT_PAIRS_ + 15*MAX_JAC_ELEM_ + (e))
+#define INTERFACE_SURFACE_AREA_JAC_ELEM_(e) this%condensed_data_real(NUM_REAL_PROP_ + 2*NUM_ADJACENT_PAIRS_ + 20*MAX_JAC_ELEM_ + (e))
+
 
   public :: rxn_condensed_phase_diffusion_t
 
@@ -152,6 +165,7 @@ contains
     type(index_pair_t), allocatable :: adjacent_phases(:)
     integer(kind=i_kind), allocatable :: phase_ids(:)
     real(kind=dp) :: temp_real
+    integer(kind=i_kind) :: max_jac_elem
 
     ! Get the property set
     if (.not. associated(this%property_set)) call die_msg(300992470, &
@@ -172,8 +186,10 @@ contains
 
 
     ! Allocate space for phases and species involved in reaction
-    allocate(diffusion_phase_names(species%size()))
-    allocate(diffusion_species_names(species%size()))
+    !allocate(diffusion_phase_names(species%size()))
+    !allocate(diffusion_species_names(species%size()))
+    allocate(diffusion_phase_names(2))
+    allocate(diffusion_species_names(2))
     
     call species%iter_reset()
     do i_species = 1, species%size()
@@ -203,11 +219,11 @@ contains
 
     ! If only one phase/species pair is found then add that phase/species pair
     ! to the second element of the diffusion_phase_names and diffusion_species_names
-    ! arrays for indexing purposes
-    if (allocated(diffusion_species_names)) then
-      if (size(diffusion_species_names) == 1) then
-        diffusion_phase_names = [diffusion_phase_names, diffusion_phase_names(1)]
-        diffusion_species_names = [diffusion_species_names, diffusion_species_names(1)]
+    ! arrays for indexing purposes.
+    if (allocated(diffusion_species_names) .and. size(diffusion_species_names) .ge. 2) then
+      if (len_trim(diffusion_species_names(2)%string) == 0) then
+        diffusion_phase_names(2) = diffusion_phase_names(1)
+        diffusion_species_names(2) = diffusion_species_names(1)
       end if
     end if
 
@@ -219,8 +235,8 @@ contains
     
     ! Allocate space in the condensed data arrays early so macros can be used
     ! TODO: allocate int data and real data once length is known
-    allocate(this%condensed_data_int(BLOCK_SIZE_ * 20 ))
-    allocate(this%condensed_data_real(BLOCK_SIZE_ * 2 ))
+    allocate(this%condensed_data_int(BLOCK_SIZE_ * 100 ))
+    allocate(this%condensed_data_real(BLOCK_SIZE_ * 100 ))
     this%condensed_data_int(:) = int(0, kind=i_kind)
     this%condensed_data_real(:) = real(0.0, kind=dp)
 
@@ -230,7 +246,7 @@ contains
     ! Accumulate adjacent phase pairs from all aerosol representations
     allocate(adj_phase_size(size(aero_rep)))
     num_adjacent_pairs = 0
-    do i_aero_rep = 1, size(aero_rep) 
+    do i_aero_rep = 1, size(aero_rep)
       adjacent_phases = aero_rep(i_aero_rep)%val%adjacent_phases(diffusion_phase_names(1)%string, &
          diffusion_phase_names(SIZE(diffusion_phase_names))%string)
       adj_phase_size(i_aero_rep) = size(adjacent_phases)
@@ -239,18 +255,7 @@ contains
     NUM_ADJACENT_PAIRS_ = num_adjacent_pairs
 
     i_adj_pairs = 0
-    do i_aero_rep = 1, size(aero_rep)
-      adjacent_phases = aero_rep(i_aero_rep)%val%adjacent_phases(diffusion_phase_names(1)%string, &
-         diffusion_phase_names(SIZE(diffusion_phase_names))%string)
-      do i = 1, size(adjacent_phases)
-        i_adj_pairs = i_adj_pairs + 1
-        PHASE_ID_INNER_(i_adj_pairs) = adjacent_phases(i)%first_
-        PHASE_ID_OUTER_(i_adj_pairs) = adjacent_phases(i)%second_
-      end do
-    end do
-
-    ! Map the diffusing phases and species to the inner and outer phases for each adjacent phase pair. 
-    i_adj_pairs = 0
+    max_jac_elem = 0
     allocate(diffusion_phase_names_inner(num_adjacent_pairs))
     allocate(diffusion_phase_names_outer(num_adjacent_pairs))
     allocate(diffusion_species_names_inner(num_adjacent_pairs))
@@ -260,6 +265,20 @@ contains
           diffusion_phase_names(SIZE(diffusion_phase_names))%string)
       do i = 1, size(adjacent_phases)
         i_adj_pairs = i_adj_pairs + 1
+        PHASE_ID_INNER_(i_adj_pairs) = adjacent_phases(i)%first_
+        PHASE_ID_OUTER_(i_adj_pairs) = adjacent_phases(i)%second_
+        ! Set the number of Jacobian elements for each adjacent phase pair
+        NUM_JAC_ELEM_INNER_(i_adj_pairs) = aero_rep(i_aero_rep)%val%num_jac_elem(adjacent_phases(i)%first_)
+        NUM_JAC_ELEM_OUTER_(i_adj_pairs) = aero_rep(i_aero_rep)%val%num_jac_elem(adjacent_phases(i)%second_)
+        ! Cumulative sum of the number of Jacobian elements for each adjacent phase pair, used to index into the condensed_data_real array
+        if (i_adj_pairs == 1) then
+          NUM_JAC_ELEM_TOTAL_(i_adj_pairs) = 0
+        else
+          NUM_JAC_ELEM_TOTAL_(i_adj_pairs) = NUM_JAC_ELEM_TOTAL_(i_adj_pairs-1) + NUM_JAC_ELEM_INNER_(i_adj_pairs) + NUM_JAC_ELEM_OUTER_(i_adj_pairs)
+        end if
+        max_jac_elem = max(max_jac_elem, &
+                            NUM_JAC_ELEM_INNER_(i_adj_pairs) + NUM_JAC_ELEM_OUTER_(i_adj_pairs))
+
         inner_phase_name = aero_rep(i_aero_rep)%val%aero_phase(adjacent_phases(i)%first_)%val%name()
         outer_phase_name = aero_rep(i_aero_rep)%val%aero_phase(adjacent_phases(i)%second_)%val%name()
 
@@ -281,8 +300,15 @@ contains
         else
           call die_msg(286189763, "Could not map outer phase name to diffusing species.")
         end if
+
+        AERO_SPEC_INNER_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id_by_phase( &
+              adjacent_phases(i)%first_, diffusion_species_names_inner(i_adj_pairs)%string)
+        AERO_SPEC_OUTER_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id_by_phase( &
+              adjacent_phases(i)%second_, diffusion_species_names_outer(i_adj_pairs)%string)
       end do
     end do
+    MAX_JAC_ELEM_ = max_jac_elem
+
     if (i_adj_pairs .ne. NUM_ADJACENT_PAIRS_ .or. &
         size(diffusion_phase_names_inner) .ne. NUM_ADJACENT_PAIRS_ .or. &
         size(diffusion_phase_names_outer) .ne. NUM_ADJACENT_PAIRS_ .or. &
@@ -290,19 +316,6 @@ contains
         size(diffusion_species_names_outer) .ne. NUM_ADJACENT_PAIRS_) then
       call die_msg(286189821, "Mismatch between number of adjacent phase pairs and number of diffusion species.")
     end if
-
-    i_adj_pairs = 0
-    do i_aero_rep = 1, size(aero_rep)
-      adjacent_phases = aero_rep(i_aero_rep)%val%adjacent_phases(diffusion_phase_names(1)%string, &
-         diffusion_phase_names(SIZE(diffusion_phase_names))%string)
-      do i = 1, size(adjacent_phases)
-        i_adj_pairs = i_adj_pairs + 1
-        AERO_SPEC_INNER_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id_by_phase( &
-              adjacent_phases(i)%first_, diffusion_species_names_inner(i_adj_pairs)%string)
-        AERO_SPEC_OUTER_(i_adj_pairs) = aero_rep(i_aero_rep)%val%spec_state_id_by_phase( &
-              adjacent_phases(i)%second_, diffusion_species_names_outer(i_adj_pairs)%string)
-      end do
-    end do
 
     call assert_msg(051987857, num_adjacent_pairs .gt. 0, &
        "No adjacent phases found condensed phase diffusion reaction.")
@@ -354,7 +367,7 @@ contains
     ! Save space for the environment-dependent parameters
     this%num_env_params = NUM_ENV_PARAM_
 
-     ! Set aerosol phase specific indices
+    ! Set aerosol phase specific indices
     i_adj_rep_id = 1
     i_aero_id = 1
     do i_aero_rep = 1, size(aero_rep)

@@ -50,6 +50,7 @@ function(add_camp_test test_name test_binary test_args working_dir result_string
     add_test(NAME memcheck_${test_name}
       COMMAND mpirun -v -np 2 ${memcheck} ${CMAKE_BINARY_DIR}/${test_binary} ${test_args}
              WORKING_DIRECTORY ${working_dir})
+    set_tests_properties(memcheck_${test_name} PROPERTIES TIMEOUT 3000)
     
     # add dependency between memcheck and previous test
     # https://stackoverflow.com/a/66931930/5217293
@@ -59,6 +60,7 @@ function(add_camp_test test_name test_binary test_args working_dir result_string
     add_test(NAME memcheck_${test_name}
              COMMAND ${memcheck} ${CMAKE_BINARY_DIR}/${test_binary} ${test_args}
              WORKING_DIRECTORY ${working_dir})
+    set_tests_properties(memcheck_${test_name} PROPERTIES TIMEOUT 3000)
   endif()
   if(NOT "${result_string}" STREQUAL "")
     set_tests_properties(${test_name}

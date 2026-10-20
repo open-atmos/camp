@@ -26,7 +26,7 @@
       "species": [
             {
                     "name": "solute_aq",
-                    "diffusion coefficient [m2 s-1]": 1.5e-5
+                    "diffusion coefficient [m2 s-1]": 1.5e-10
             },
             {
                     "name": "H2O_aq"
